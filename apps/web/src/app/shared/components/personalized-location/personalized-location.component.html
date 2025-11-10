@@ -1,7 +1,7 @@
 <!-- Permission Modal -->
 <div
   *ngIf="showPermissionModal()"
-  class="permission-modal fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+  class="permission-modal fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 backdrop-blur-sm"
   (click)="dismissPermissionModal()"
 >
   <div
@@ -36,7 +36,7 @@
 <!-- Radius Control Panel -->
 <div
   *ngIf="permissionGranted() && showRadiusSlider"
-  class="radius-control fixed bottom-20 right-4 z-40 bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-lg p-4 border border-border-default dark:border-gray-600"
+  class="radius-control fixed bottom-20 right-4 z-40 bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-lg p-4 border border-border-default dark:border-border-default"
 >
   <div class="flex items-center justify-between mb-3">
     <span class="text-sm font-medium text-text-primary dark:text-text-secondary"

@@ -35,14 +35,14 @@ import { IonicModule } from '@ionic/angular';
                   trend === 'up' ? 'trending-up' : trend === 'down' ? 'trending-down' : 'remove'
                 "
                 [class.text-success-light]="trend === 'up'"
-                [class.text-red-500]="trend === 'down'"
-                [class.text-gray-500]="trend === 'neutral'"
+                [class.text-error-500]="trend === 'down'"
+                [class.text-text-secondary]="trend === 'neutral'"
                 class="mr-1"
               ></ion-icon>
               <span
                 [class.text-success-light]="trend === 'up'"
-                [class.text-red-500]="trend === 'down'"
-                [class.text-gray-500]="trend === 'neutral'"
+                [class.text-error-500]="trend === 'down'"
+                [class.text-text-secondary]="trend === 'neutral'"
               >
                 {{ change }}%
               </span>

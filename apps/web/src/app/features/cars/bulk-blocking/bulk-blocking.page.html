@@ -11,7 +11,7 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
     <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-gray-500">Cargando autos...</p>
+    <p class="mt-4 text-text-secondary">Cargando autos...</p>
   </div>
 
   <!-- Error Message -->
@@ -48,12 +48,12 @@
     <ion-card-content>
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <p class="text-sm text-gray-500">Exitosos</p>
+          <p class="text-sm text-text-secondary">Exitosos</p>
           <p class="text-2xl font-bold text-success-light">{{ result()!.success }}</p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Fallidos</p>
-          <p class="text-2xl font-bold text-red-600">{{ result()!.failed }}</p>
+          <p class="text-sm text-text-secondary">Fallidos</p>
+          <p class="text-2xl font-bold text-error-600">{{ result()!.failed }}</p>
         </div>
       </div>
     </ion-card-content>
@@ -78,7 +78,7 @@
         </ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
-        <div *ngIf="cars().length === 0" class="text-center py-8 text-gray-500">
+        <div *ngIf="cars().length === 0" class="text-center py-8 text-text-secondary">
           <p>No tienes autos registrados</p>
         </div>
         <div *ngIf="cars().length > 0" class="space-y-2">

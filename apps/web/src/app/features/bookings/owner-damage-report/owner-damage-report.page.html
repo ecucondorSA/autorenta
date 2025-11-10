@@ -44,10 +44,10 @@
     </div>
 
     <!-- Important Notice -->
-    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+    <div class="bg-warning-50 border border-warning-200 rounded-xl p-4 mb-6">
       <div class="flex items-start gap-3">
         <svg
-          class="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5"
+          class="w-6 h-6 text-warning-600 flex-shrink-0 mt-0.5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -60,8 +60,8 @@
           />
         </svg>
         <div>
-          <h3 class="font-semibold text-amber-900 mb-1">Importante</h3>
-          <p class="text-sm text-amber-800">
+          <h3 class="font-semibold text-warning-900 mb-1">Importante</h3>
+          <p class="text-sm text-warning-800">
             El monto reportado será deducido del depósito de garantía del locatario (máximo
             {{ maxFormattedAmount }}). Asegurate de incluir fotos claras del daño y una descripción
             detallada. Una vez enviado, no podrás modificar este reporte.
@@ -90,9 +90,9 @@
         </ion-item>
         <div
           *ngIf="descriptionCharCount() > 0 && descriptionCharCount() < 20"
-          class="mt-2 p-3 bg-red-50 rounded-lg"
+          class="mt-2 p-3 bg-error-50 rounded-lg"
         >
-          <p class="text-sm text-red-800">
+          <p class="text-sm text-error-800">
             ⚠️ La descripción debe tener al menos 20 caracteres para ser válida
           </p>
         </div>
@@ -120,8 +120,8 @@
             <span class="font-bold text-cta-default">{{ formattedAmount }}</span>
           </div>
         </div>
-        <div *ngIf="damageAmount() > maxDepositAmount()" class="mt-2 p-3 bg-red-50 rounded-lg">
-          <p class="text-sm text-red-800">
+        <div *ngIf="damageAmount() > maxDepositAmount()" class="mt-2 p-3 bg-error-50 rounded-lg">
+          <p class="text-sm text-error-800">
             ⚠️ El monto no puede exceder el depósito de garantía ({{ maxFormattedAmount }})
           </p>
         </div>
@@ -172,7 +172,7 @@
               <button
                 type="button"
                 (click)="removeFile(i)"
-                class="absolute -top-2 -right-2 w-8 h-8 bg-red-600 text-text-inverse rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors"
+                class="absolute -top-2 -right-2 w-8 h-8 bg-error-600 text-text-inverse rounded-full flex items-center justify-center shadow-lg hover:bg-error-700 transition-colors"
               >
                 <ion-icon name="close" class="text-lg"></ion-icon>
               </button>
@@ -183,8 +183,8 @@
           </p>
         </div>
 
-        <div *ngIf="uploadedFiles().length === 0" class="mt-4 p-3 bg-amber-50 rounded-lg">
-          <p class="text-sm text-amber-800">
+        <div *ngIf="uploadedFiles().length === 0" class="mt-4 p-3 bg-warning-50 rounded-lg">
+          <p class="text-sm text-warning-800">
             ⚠️ Debes subir al menos 1 foto para enviar el reporte
           </p>
         </div>
@@ -198,7 +198,7 @@
             <span class="text-text-secondary">Descripción:</span>
             <span
               class="font-semibold"
-              [class.text-red-600]="descriptionCharCount() < 20"
+              [class.text-error-600]="descriptionCharCount() < 20"
               [class.text-success-light]="descriptionCharCount() >= 20"
             >
               {{ descriptionCharCount() >= 20 ? '✓ Completa' : '✗ Incompleta' }}
@@ -208,7 +208,7 @@
             <span class="text-text-secondary">Monto del daño:</span>
             <span
               class="font-semibold"
-              [class.text-red-600]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()"
+              [class.text-error-600]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()"
               [class.text-success-light]="damageAmount() > 0 && damageAmount() <= maxDepositAmount()"
             >
               {{ formattedAmount }}
@@ -218,7 +218,7 @@
             <span class="text-text-secondary">Fotos de evidencia:</span>
             <span
               class="font-semibold"
-              [class.text-red-600]="uploadedFiles().length === 0"
+              [class.text-error-600]="uploadedFiles().length === 0"
               [class.text-success-light]="uploadedFiles().length > 0"
             >
               {{ uploadedFiles().length }} foto(s)
@@ -229,18 +229,18 @@
         <div
           class="mt-4 p-3 rounded-lg"
           [class.bg-success-light-10]="canSubmit()"
-          [class.bg-gray-50]="!canSubmit()">
+          [class.bg-surface-base]="!canSubmit()">
           <div class="flex items-center gap-2">
             <ion-icon
               [name]="canSubmit() ? 'checkmark-circle' : 'alert-circle'"
               [class.text-success-light]="canSubmit()"
-              [class.text-gray-400]="!canSubmit()"
+              [class.text-text-muted]="!canSubmit()"
               class="text-xl"
             ></ion-icon>
             <span
               class="text-sm"
               [class.text-success-light]="canSubmit()"
-              [class.text-gray-600]="!canSubmit()"
+              [class.text-text-secondary]="!canSubmit()"
             >
               {{ canSubmit() ? 'Listo para enviar' : 'Completa todos los campos requeridos' }}
             </span>
@@ -262,7 +262,7 @@
           type="button"
           (click)="submitDamageReport()"
           [disabled]="!canSubmit() || submitting()"
-          class="flex-1 px-6 py-3 rounded-xl bg-red-600 text-text-inverse-pure font-semibold hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          class="flex-1 px-6 py-3 rounded-xl bg-error-600 text-text-inverse-pure font-semibold hover:bg-error-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ion-spinner *ngIf="submitting()" name="crescent" class="mr-2"></ion-spinner>
           {{ submitting() ? 'Enviando reporte...' : 'Enviar Reporte de Daños' }}
@@ -270,8 +270,8 @@
       </div>
 
       <!-- Disclaimer -->
-      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-        <p class="text-xs text-gray-600">
+      <div class="bg-surface-base border border-border-default rounded-lg p-4">
+        <p class="text-xs text-text-secondary">
           Al enviar este reporte, confirmas que la información proporcionada es precisa y que el
           daño ocurrió durante el período de alquiler. El locatario será notificado inmediatamente y
           podrá ver el reporte en el detalle de la reserva.

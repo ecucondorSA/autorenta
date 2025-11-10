@@ -17,15 +17,15 @@
       <div
         class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"
       ></div>
-      <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Cargando cuentas...</p>
+      <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary">Cargando cuentas...</p>
     </div>
   }
 
   <!-- Empty State -->
   @if (!loading && accounts.length === 0) {
-    <div class="text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
+    <div class="text-center py-12 bg-surface-base rounded-2xl border-2 border-dashed border-border-subtle">
       <svg
-        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-300"
+        class="mx-auto h-12 w-12 text-text-muted dark:text-text-secondary"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -37,8 +37,8 @@
           d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
         ></path>
       </svg>
-      <h3 class="mt-2 text-sm font-semibold text-gray-900">No hay cuentas bancarias</h3>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+      <h3 class="mt-2 text-sm font-semibold text-text-primary">No hay cuentas bancarias</h3>
+      <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">
         Agregá una cuenta para poder retirar tus ganancias
       </p>
       <button
@@ -57,13 +57,13 @@
         <div
           class="bg-surface-raised border-2 rounded-xl p-4 transition-all"
           [class.border-cta-default]="account.is_default"
-          [class.border-gray-200]="!account.is_default"
+          [class.border-border-default]="!account.is_default"
         >
           <div class="flex items-start justify-between">
             <!-- Account Info -->
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-2">
-                <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-lg">
+                <span class="px-2 py-1 bg-surface-raised text-text-primary text-xs font-semibold rounded-lg">
                   {{ getAccountTypeLabel(account.account_type) }}
                 </span>
                 @if (account.is_default) {
@@ -82,16 +82,16 @@
                 }
               </div>
 
-              <p class="font-mono text-sm text-gray-900 mb-1">
+              <p class="font-mono text-sm text-text-primary mb-1">
                 {{ maskAccountNumber(account.account_number, account.account_type) }}
               </p>
 
-              <p class="text-sm text-gray-600 dark:text-gray-300">
+              <p class="text-sm text-text-secondary dark:text-text-secondary">
                 {{ account.account_holder_name }}
               </p>
 
               @if (account.bank_name) {
-                <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
+                <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
                   {{ account.bank_name }}
                 </p>
               }
@@ -110,17 +110,17 @@
 
               @if (confirmingDelete() === account.id) {
                 <div class="flex flex-col gap-1">
-                  <p class="text-xs text-red-600 font-semibold">¿Confirmar?</p>
+                  <p class="text-xs text-error-600 font-semibold">¿Confirmar?</p>
                   <div class="flex gap-1">
                     <button
                       (click)="onConfirmDelete(account.id)"
-                      class="px-2 py-1 text-xs bg-red-600 text-text-inverse rounded hover:bg-red-700 transition"
+                      class="px-2 py-1 text-xs bg-error-600 text-text-inverse rounded hover:bg-error-700 transition"
                     >
                       Sí, eliminar
                     </button>
                     <button
                       (click)="onCancelDelete()"
-                      class="px-2 py-1 text-xs border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition"
+                      class="px-2 py-1 text-xs border border-border-subtle text-text-primary rounded hover:bg-surface-base transition"
                     >
                       Cancelar
                     </button>
@@ -129,7 +129,7 @@
               } @else {
                 <button
                   (click)="onDeleteClick(account.id)"
-                  class="px-3 py-1 text-xs border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition"
+                  class="px-3 py-1 text-xs border border-error-300 text-error-600 rounded-lg hover:bg-error-50 transition"
                 >
                   Eliminar
                 </button>

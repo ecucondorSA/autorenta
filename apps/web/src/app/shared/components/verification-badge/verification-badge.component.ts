@@ -93,9 +93,9 @@ export class VerificationBadgeComponent implements OnInit {
       case 'VERIFICADO':
         return 'bg-success-light/20 text-success-light border border-success-light/40';
       case 'RECHAZADO':
-        return 'bg-red-100 text-red-800 border border-red-200';
+        return 'bg-error-100 text-error-800 border border-error-200';
       default:
-        return 'bg-yellow-100 text-yellow-800 border border-yellow-200';
+        return 'bg-warning-100 text-warning-800 border border-warning-200';
     }
   }
 

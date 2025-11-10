@@ -27,7 +27,7 @@ interface BadgeConfig {
 
       <!-- Tooltip -->
       <div
-        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-text-inverse text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg"
+        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-raised text-text-inverse text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg"
       >
         {{ config.tooltip }}
         <!-- Arrow -->
@@ -53,9 +53,9 @@ export class DepositStatusBadgeComponent {
     none: {
       icon: '⚪',
       label: 'Sin garantía',
-      bgColor: 'bg-gray-50 dark:bg-gray-900/20',
-      textColor: 'text-gray-700 dark:text-gray-300',
-      borderColor: 'border-gray-200 dark:border-gray-700',
+      bgColor: 'bg-surface-base dark:bg-surface-raised/20',
+      textColor: 'text-text-primary dark:text-text-secondary',
+      borderColor: 'border-border-default dark:border-border-subtle',
       tooltip: 'No se requiere depósito de garantía para esta reserva',
     },
     locked: {

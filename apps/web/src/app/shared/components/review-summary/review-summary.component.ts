@@ -8,8 +8,8 @@ import type { ReviewSummary } from '../../../core/models';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
-      <h3 class="mb-4 text-lg font-semibold text-gray-900">Resumen de Reviews</h3>
+    <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
+      <h3 class="mb-4 text-lg font-semibold text-text-primary">Resumen de Reviews</h3>
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
@@ -36,15 +36,15 @@ import type { ReviewSummary } from '../../../core/models';
           <!-- Distribución -->
           @if (s.rating_distribution) {
             <div>
-              <h4 class="mb-3 text-sm font-semibold text-gray-700">
+              <h4 class="mb-3 text-sm font-semibold text-text-primary">
                 Distribución de Calificaciones
               </h4>
               <div class="space-y-2">
                 @for (rating of [5, 4, 3, 2, 1]; track rating) {
                   <div class="flex items-center gap-3">
-                    <span class="w-8 text-sm font-medium text-gray-600">{{ rating }}⭐</span>
+                    <span class="w-8 text-sm font-medium text-text-secondary">{{ rating }}⭐</span>
                     <div class="flex-1">
-                      <div class="h-4 w-full rounded-full bg-gray-200">
+                      <div class="h-4 w-full rounded-full bg-surface-hover">
                         <div
                           class="h-4 rounded-full bg-cta-default"
                           [style.width.%]="
@@ -56,7 +56,7 @@ import type { ReviewSummary } from '../../../core/models';
                         ></div>
                       </div>
                     </div>
-                    <span class="w-12 text-right text-sm text-gray-600">
+                    <span class="w-12 text-right text-sm text-text-secondary">
                       {{ getRatingCount(s.rating_distribution, rating) }}
                     </span>
                   </div>
@@ -68,41 +68,41 @@ import type { ReviewSummary } from '../../../core/models';
           <!-- Promedios por Categoría -->
           @if (s.category_averages) {
             <div>
-              <h4 class="mb-3 text-sm font-semibold text-gray-700">Promedios por Categoría</h4>
+              <h4 class="mb-3 text-sm font-semibold text-text-primary">Promedios por Categoría</h4>
               <div class="grid grid-cols-2 gap-3">
-                <div class="rounded-lg border border-gray-200 p-3">
-                  <p class="text-xs font-medium text-gray-600">Limpieza</p>
-                  <p class="text-lg font-bold text-gray-900">
+                <div class="rounded-lg border border-border-default p-3">
+                  <p class="text-xs font-medium text-text-secondary">Limpieza</p>
+                  <p class="text-lg font-bold text-text-primary">
                     {{ formatRating(s.category_averages.cleanliness) }} ⭐
                   </p>
                 </div>
-                <div class="rounded-lg border border-gray-200 p-3">
-                  <p class="text-xs font-medium text-gray-600">Comunicación</p>
-                  <p class="text-lg font-bold text-gray-900">
+                <div class="rounded-lg border border-border-default p-3">
+                  <p class="text-xs font-medium text-text-secondary">Comunicación</p>
+                  <p class="text-lg font-bold text-text-primary">
                     {{ formatRating(s.category_averages.communication) }} ⭐
                   </p>
                 </div>
-                <div class="rounded-lg border border-gray-200 p-3">
-                  <p class="text-xs font-medium text-gray-600">Precisión</p>
-                  <p class="text-lg font-bold text-gray-900">
+                <div class="rounded-lg border border-border-default p-3">
+                  <p class="text-xs font-medium text-text-secondary">Precisión</p>
+                  <p class="text-lg font-bold text-text-primary">
                     {{ formatRating(s.category_averages.accuracy) }} ⭐
                   </p>
                 </div>
-                <div class="rounded-lg border border-gray-200 p-3">
-                  <p class="text-xs font-medium text-gray-600">Ubicación</p>
-                  <p class="text-lg font-bold text-gray-900">
+                <div class="rounded-lg border border-border-default p-3">
+                  <p class="text-xs font-medium text-text-secondary">Ubicación</p>
+                  <p class="text-lg font-bold text-text-primary">
                     {{ formatRating(s.category_averages.location) }} ⭐
                   </p>
                 </div>
-                <div class="rounded-lg border border-gray-200 p-3">
-                  <p class="text-xs font-medium text-gray-600">Check-in</p>
-                  <p class="text-lg font-bold text-gray-900">
+                <div class="rounded-lg border border-border-default p-3">
+                  <p class="text-xs font-medium text-text-secondary">Check-in</p>
+                  <p class="text-lg font-bold text-text-primary">
                     {{ formatRating(s.category_averages.checkin) }} ⭐
                   </p>
                 </div>
-                <div class="rounded-lg border border-gray-200 p-3">
-                  <p class="text-xs font-medium text-gray-600">Valor</p>
-                  <p class="text-lg font-bold text-gray-900">
+                <div class="rounded-lg border border-border-default p-3">
+                  <p class="text-xs font-medium text-text-secondary">Valor</p>
+                  <p class="text-lg font-bold text-text-primary">
                     {{ formatRating(s.category_averages.value) }} ⭐
                   </p>
                 </div>
@@ -111,7 +111,7 @@ import type { ReviewSummary } from '../../../core/models';
           }
         </div>
       } @else {
-        <div class="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-600">
+        <div class="rounded-lg bg-surface-base p-4 text-center text-sm text-text-secondary">
           No hay reviews disponibles.
         </div>
       }

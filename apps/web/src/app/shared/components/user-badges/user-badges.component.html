@@ -14,14 +14,14 @@
 
     <p
       *ngIf="showLabels"
-      class="badge-label text-xs text-gray-600 dark:text-gray-300 mt-1 text-center font-medium"
+      class="badge-label text-xs text-text-secondary dark:text-text-secondary mt-1 text-center font-medium"
     >
       {{ badge.label }}
     </p>
   </div>
 
   <!-- No badges message -->
-  <div *ngIf="activeBadges.length === 0" class="text-gray-400 dark:text-gray-300 text-sm italic">
+  <div *ngIf="activeBadges.length === 0" class="text-text-muted dark:text-text-secondary text-sm italic">
     Sin insignias aún
   </div>
 </div>

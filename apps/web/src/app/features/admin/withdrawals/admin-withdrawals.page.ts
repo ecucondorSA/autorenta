@@ -192,15 +192,15 @@ export class AdminWithdrawalsPage implements OnInit {
 
   getStatusBadgeClass(status: WithdrawalStatus): string {
     const classes: Record<WithdrawalStatus, string> = {
-      pending: 'bg-yellow-100 text-yellow-800',
+      pending: 'bg-warning-100 text-warning-800',
       approved: 'bg-cta-default/20 text-cta-default',
       processing: 'bg-cta-default/20 text-cta-default',
       completed: 'bg-success-light/20 text-success-light',
-      failed: 'bg-red-100 text-red-800',
-      rejected: 'bg-gray-100 text-gray-800',
-      cancelled: 'bg-gray-100 text-gray-800',
+      failed: 'bg-error-100 text-error-800',
+      rejected: 'bg-surface-raised text-text-primary',
+      cancelled: 'bg-surface-raised text-text-primary',
     };
-    return classes[status] || 'bg-gray-100 text-gray-800';
+    return classes[status] || 'bg-surface-raised text-text-primary';
   }
 
   getStatusText(status: WithdrawalStatus): string {

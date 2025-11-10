@@ -73,7 +73,7 @@ import { UserProfile } from '../../../core/models';
                 >
                   <svg
                     *ngIf="verificationProgress() < 100"
-                    class="h-3 w-3 text-yellow-300 animate-pulse"
+                    class="h-3 w-3 text-warning-300 animate-pulse"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -193,7 +193,7 @@ import { UserProfile } from '../../../core/models';
     <!-- Benefits Modal (inline simple version) -->
     <div
       *ngIf="showBenefits()"
-      class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      class="fixed inset-0 bg-surface-overlay/50 z-50 flex items-center justify-center p-4"
       (click)="closeBenefits()"
     >
       <div
@@ -302,10 +302,10 @@ import { UserProfile } from '../../../core/models';
 
           <div class="flex items-start gap-3">
             <div
-              class="flex-shrink-0 w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center"
+              class="flex-shrink-0 w-10 h-10 bg-warning-100 dark:bg-warning-900/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-yellow-600 dark:text-yellow-400"
+                class="w-5 h-5 text-warning-600 dark:text-warning-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

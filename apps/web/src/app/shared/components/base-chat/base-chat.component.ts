@@ -38,7 +38,7 @@ export interface ChatContext {
   template: `
     <!-- WhatsApp-style Chat Container -->
     <div
-      class="whatsapp-chat-container flex h-[600px] flex-col overflow-hidden rounded-lg border border-gray-200 bg-surface-raised shadow-lg dark:border-gray-700 dark:bg-gray-900"
+      class="whatsapp-chat-container flex h-[600px] flex-col overflow-hidden rounded-lg border border-border-default bg-surface-raised shadow-lg dark:border-border-subtle dark:bg-surface-raised"
     >
       <!-- Header estilo WhatsApp -->
       <div
@@ -97,9 +97,9 @@ export interface ChatContext {
         <div *ngIf="loading()" class="flex h-full items-center justify-center">
           <div class="text-center">
             <div
-              class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-[#075E54]"
+              class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-subtle border-t-[#075E54]"
             ></div>
-            <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
               Cargando mensajes...
             </p>
           </div>
@@ -108,7 +108,7 @@ export interface ChatContext {
         <!-- Error -->
         <div
           *ngIf="error()"
-          class="mx-4 mt-4 rounded-lg bg-red-100 p-3 text-sm text-red-800 dark:bg-red-900/30 dark:text-red-200"
+          class="mx-4 mt-4 rounded-lg bg-error-100 p-3 text-sm text-error-800 dark:bg-error-900/30 dark:text-error-200"
         >
           ⚠️ {{ error() }}
         </div>
@@ -119,10 +119,10 @@ export interface ChatContext {
           class="flex h-full flex-col items-center justify-center px-4 text-center"
         >
           <div
-            class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-surface-raised/70 dark:bg-gray-800/70"
+            class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-surface-raised/70 dark:bg-surface-base/70"
           >
             <svg
-              class="h-10 w-10 text-[#075E54] dark:text-gray-400 dark:text-gray-300"
+              class="h-10 w-10 text-[#075E54] dark:text-text-muted dark:text-text-secondary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -135,10 +135,10 @@ export interface ChatContext {
               />
             </svg>
           </div>
-          <p class="mb-2 text-base font-medium text-gray-700 dark:text-gray-300">
+          <p class="mb-2 text-base font-medium text-text-primary dark:text-text-secondary">
             {{ getEmptyStateTitle() }}
           </p>
-          <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
+          <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
             {{ getEmptyStateSubtitle() }}
           </p>
         </div>
@@ -156,11 +156,11 @@ export interface ChatContext {
               *ngIf="!isOwnMessage(message)"
               class="message-received relative max-w-[75%] rounded-lg rounded-tl-none bg-surface-raised px-3 py-2 shadow-sm dark:bg-[#202C33]"
             >
-              <p class="break-words text-sm text-gray-800 dark:text-gray-200">
+              <p class="break-words text-sm text-text-primary dark:text-text-primary">
                 {{ message.body }}
               </p>
               <div class="mt-1 flex items-center justify-end gap-1">
-                <span class="text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-300">{{
+                <span class="text-[10px] text-text-secondary dark:text-text-secondary dark:text-text-secondary">{{
                   formatTime(message.created_at)
                 }}</span>
               </div>
@@ -175,18 +175,18 @@ export interface ChatContext {
               *ngIf="isOwnMessage(message)"
               class="message-sent relative max-w-[75%] rounded-lg rounded-tr-none bg-[#D9FDD3] px-3 py-2 shadow-sm dark:bg-[#005C4B]"
             >
-              <p class="break-words text-sm text-gray-800 dark:text-gray-100">
+              <p class="break-words text-sm text-text-primary dark:text-text-primary">
                 {{ message.body }}
               </p>
               <div class="mt-1 flex items-center justify-end gap-1">
-                <span class="text-[10px] text-gray-600 dark:text-gray-300">{{
+                <span class="text-[10px] text-text-secondary dark:text-text-secondary">{{
                   formatTime(message.created_at)
                 }}</span>
 
                 <!-- Check marks - Single check (sent) -->
                 <svg
                   *ngIf="getMessageStatus(message) === 'sent'"
-                  class="h-4 w-4 text-gray-500 dark:text-gray-300 dark:text-gray-300"
+                  class="h-4 w-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
                   fill="currentColor"
                   viewBox="0 0 16 15"
                 >
@@ -198,7 +198,7 @@ export interface ChatContext {
                 <!-- Double check (delivered) -->
                 <svg
                   *ngIf="getMessageStatus(message) === 'delivered'"
-                  class="h-4 w-4 text-gray-500 dark:text-gray-300 dark:text-gray-300"
+                  class="h-4 w-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
                   fill="currentColor"
                   viewBox="0 0 16 15"
                 >
@@ -255,7 +255,7 @@ export interface ChatContext {
         <!-- Emoji button -->
         <button
           type="button"
-          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-gray-500 dark:text-gray-300 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
+          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-text-secondary dark:text-text-secondary hover:bg-surface-hover dark:text-text-muted dark:hover:bg-gray-700"
         >
           <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -273,7 +273,7 @@ export interface ChatContext {
             name="message"
             [disabled]="sending()"
             placeholder="Escribe un mensaje"
-            class="flex-1 rounded-full bg-surface-raised px-4 py-2 text-sm text-gray-800 placeholder-gray-500 focus:outline-none dark:bg-[#2A3942] dark:text-gray-100 dark:placeholder-gray-400"
+            class="flex-1 rounded-full bg-surface-raised px-4 py-2 text-sm text-text-primary placeholder-gray-500 focus:outline-none dark:bg-[#2A3942] dark:text-text-primary dark:placeholder-gray-400"
           />
 
           <!-- Send button -->
@@ -306,7 +306,7 @@ export interface ChatContext {
         <!-- Mic button -->
         <button
           type="button"
-          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-gray-500 dark:text-gray-300 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
+          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-text-secondary dark:text-text-secondary hover:bg-surface-hover dark:text-text-muted dark:hover:bg-gray-700"
         >
           <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
             <path

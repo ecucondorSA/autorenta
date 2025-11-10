@@ -16,14 +16,14 @@
   <!-- Last Checked -->
   <ion-card *ngIf="lastChecked()" class="mb-4">
     <ion-card-content>
-      <p class="text-sm text-gray-500">Última verificación: {{ lastChecked()! | date: 'short' }}</p>
+      <p class="text-sm text-text-secondary">Última verificación: {{ lastChecked()! | date: 'short' }}</p>
     </ion-card-content>
   </ion-card>
 
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
     <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-gray-500">Verificando salud financiera...</p>
+    <p class="mt-4 text-text-secondary">Verificando salud financiera...</p>
   </div>
 
   <!-- Health Status -->
@@ -54,7 +54,7 @@
               ></ion-icon>
               <div>
                 <p class="font-semibold">Conciliación Wallet</p>
-                <p class="text-sm text-gray-500">
+                <p class="text-sm text-text-secondary">
                   {{
                     health()!.walletReconciled
                       ? 'OK - Sin diferencias'
@@ -78,7 +78,7 @@
               ></ion-icon>
               <div>
                 <p class="font-semibold">Provisión FGO</p>
-                <p class="text-sm text-gray-500">
+                <p class="text-sm text-text-secondary">
                   {{
                     health()!.fgoAdequate ? 'Adecuada (≥5% de depósitos)' : 'Insuficiente - Revisar'
                   }}
@@ -97,7 +97,7 @@
               <ion-icon [name]="getProfitabilityIcon()" class="text-2xl mr-3"></ion-icon>
               <div>
                 <p class="font-semibold">Rentabilidad</p>
-                <p class="text-sm text-gray-500">
+                <p class="text-sm text-text-secondary">
                   {{
                     health()!.profitability === 'GOOD'
                       ? 'Buena (margen ≥5%)'

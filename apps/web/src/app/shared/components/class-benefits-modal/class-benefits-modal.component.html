@@ -2,7 +2,7 @@
 <div
   *ngIf="isOpen"
   (click)="onBackdropClick($event)"
-  class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto"
+  class="fixed inset-0 bg-surface-overlay bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto"
 >
   <!-- Modal Content -->
   <div
@@ -41,11 +41,11 @@
       </div>
 
       <!-- Error State -->
-      <div *ngIf="error && !loading" class="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p class="text-red-600">{{ error }}</p>
+      <div *ngIf="error && !loading" class="bg-error-50 border border-error-200 rounded-lg p-4">
+        <p class="text-error-600">{{ error }}</p>
         <button
           (click)="loadBenefits()"
-          class="mt-2 text-red-600 hover:text-red-700 font-medium text-sm"
+          class="mt-2 text-error-600 hover:text-error-700 font-medium text-sm"
         >
           Reintentar
         </button>
@@ -55,9 +55,9 @@
       <div *ngIf="benefits && !loading" class="space-y-6">
         <!-- Current Status -->
         <div
-          class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-6 border border-gray-200"
+          class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-6 border border-border-default"
         >
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Tu Clase Actual</h3>
+          <h3 class="text-lg font-semibold text-text-primary mb-4">Tu Clase Actual</h3>
           <div class="grid grid-cols-2 gap-4">
             <!-- Current Class -->
             <div class="bg-surface-raised rounded-lg p-4">
@@ -69,21 +69,21 @@
                   <span class="text-text-inverse text-lg font-bold">{{ benefits.current_class }}</span>
                 </div>
                 <div>
-                  <p class="text-xs text-gray-600 dark:text-gray-300">Clase Actual</p>
-                  <p class="text-sm font-medium text-gray-900">
+                  <p class="text-xs text-text-secondary dark:text-text-secondary">Clase Actual</p>
+                  <p class="text-sm font-medium text-text-primary">
                     {{ benefits.current_class_description }}
                   </p>
                 </div>
               </div>
               <div class="mt-3 space-y-1">
                 <div class="flex justify-between text-xs">
-                  <span class="text-gray-600 dark:text-gray-300">Tarifa:</span>
+                  <span class="text-text-secondary dark:text-text-secondary">Tarifa:</span>
                   <span class="font-medium">{{
                     getFeeDiscountLabel(benefits.current_fee_multiplier)
                   }}</span>
                 </div>
                 <div class="flex justify-between text-xs">
-                  <span class="text-gray-600 dark:text-gray-300">Garantía:</span>
+                  <span class="text-text-secondary dark:text-text-secondary">Garantía:</span>
                   <span class="font-medium">{{
                     getGuaranteeDiscountLabel(benefits.current_guarantee_multiplier)
                   }}</span>
@@ -104,21 +104,21 @@
                   <span class="text-text-inverse text-lg font-bold">{{ benefits.next_better_class }}</span>
                 </div>
                 <div>
-                  <p class="text-xs text-gray-600 dark:text-gray-300">Siguiente Clase</p>
-                  <p class="text-sm font-medium text-gray-900">
+                  <p class="text-xs text-text-secondary dark:text-text-secondary">Siguiente Clase</p>
+                  <p class="text-sm font-medium text-text-primary">
                     {{ benefits.next_better_description }}
                   </p>
                 </div>
               </div>
               <div class="mt-3 space-y-1">
                 <div class="flex justify-between text-xs">
-                  <span class="text-gray-600 dark:text-gray-300">Tarifa:</span>
+                  <span class="text-text-secondary dark:text-text-secondary">Tarifa:</span>
                   <span class="font-medium text-success-light">{{
                     getFeeDiscountLabel(benefits.next_better_fee_multiplier)
                   }}</span>
                 </div>
                 <div class="flex justify-between text-xs">
-                  <span class="text-gray-600 dark:text-gray-300">Garantía:</span>
+                  <span class="text-text-secondary dark:text-text-secondary">Garantía:</span>
                   <span class="font-medium text-success-light">{{
                     getGuaranteeDiscountLabel(benefits.next_better_guarantee_multiplier)
                   }}</span>
@@ -226,7 +226,7 @@
                 )
               }}
             </p>
-            <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">
+            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
               Basado en reserva promedio de $50/día con garantía de $200
             </p>
           </div>
@@ -234,29 +234,29 @@
 
         <!-- All Classes Table -->
         <div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Todas las Clases</h3>
-          <div class="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+          <h3 class="text-lg font-semibold text-text-primary mb-4">Todas las Clases</h3>
+          <div class="bg-surface-base rounded-lg border border-border-default overflow-hidden">
             <div class="overflow-x-auto">
               <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-100">
+                <thead class="bg-surface-raised">
                   <tr>
                     <th
-                      class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                      class="px-4 py-3 text-left text-xs font-medium text-text-primary uppercase tracking-wider"
                     >
                       Clase
                     </th>
                     <th
-                      class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                      class="px-4 py-3 text-left text-xs font-medium text-text-primary uppercase tracking-wider"
                     >
                       Descripción
                     </th>
                     <th
-                      class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                      class="px-4 py-3 text-left text-xs font-medium text-text-primary uppercase tracking-wider"
                     >
                       Tarifa
                     </th>
                     <th
-                      class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                      class="px-4 py-3 text-left text-xs font-medium text-text-primary uppercase tracking-wider"
                     >
                       Garantía
                     </th>
@@ -282,7 +282,7 @@
                         >
                       </div>
                     </td>
-                    <td class="px-4 py-3 text-sm text-gray-900">
+                    <td class="px-4 py-3 text-sm text-text-primary">
                       {{
                         class === 0
                           ? 'Excelente (10+ años sin reclamos)'
@@ -313,8 +313,8 @@
                           class < 5
                             ? 'text-success-light font-medium'
                             : class > 5
-                              ? 'text-red-600 font-medium'
-                              : 'text-gray-900'
+                              ? 'text-error-600 font-medium'
+                              : 'text-text-primary'
                         "
                       >
                         {{
@@ -348,8 +348,8 @@
                           class < 5
                             ? 'text-success-light font-medium'
                             : class > 5
-                              ? 'text-red-600 font-medium'
-                              : 'text-gray-900'
+                              ? 'text-error-600 font-medium'
+                              : 'text-text-primary'
                         "
                       >
                         {{
@@ -385,8 +385,8 @@
         </div>
 
         <!-- Info Footer -->
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-          <p class="text-xs text-gray-600 dark:text-gray-300">
+        <div class="bg-surface-base border border-border-default rounded-lg p-4">
+          <p class="text-xs text-text-secondary dark:text-text-secondary">
             <strong>ℹ️ Nota:</strong> Los ajustes de tarifa y garantía se aplican automáticamente en
             cada reserva. Tu clase se actualiza automáticamente después de cada reserva completada.
           </p>
@@ -395,7 +395,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="bg-gray-50 px-6 py-4 rounded-b-lg border-t border-gray-200">
+    <div class="bg-surface-base px-6 py-4 rounded-b-lg border-t border-border-default">
       <button
         (click)="onClose()"
         class="w-full bg-cta-default text-cta-text font-medium py-2 px-4 rounded-lg transition-colors"

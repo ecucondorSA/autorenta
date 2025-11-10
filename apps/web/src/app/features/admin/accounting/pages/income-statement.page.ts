@@ -55,7 +55,7 @@ import { AccountingService, IncomeStatement } from '../../../../core/services/ac
               </div>
               <div>
                 <p class="text-sm opacity-70">Utilidad Neta</p>
-                <p class="text-xl font-bold" [class.text-red-500]="netProfit() < 0">
+                <p class="text-xl font-bold" [class.text-error-500]="netProfit() < 0">
                   {{ formatCurrency(netProfit()) }}
                 </p>
               </div>
@@ -74,13 +74,13 @@ import { AccountingService, IncomeStatement } from '../../../../core/services/ac
             <ion-item *ngFor="let item of incomeItems()" lines="full">
               <ion-label>
                 <h4>{{ item.code }} - {{ item.name }}</h4>
-                <p class="text-sm text-gray-500">{{ item.period }}</p>
+                <p class="text-sm text-text-secondary">{{ item.period }}</p>
               </ion-label>
               <ion-note slot="end" class="text-lg font-semibold" color="success">
                 {{ formatCurrency(item.amount) }}
               </ion-note>
             </ion-item>
-            <ion-item class="bg-gray-100">
+            <ion-item class="bg-surface-raised">
               <ion-label><strong>Total Ingresos</strong></ion-label>
               <ion-note slot="end" class="text-xl font-bold" color="success">
                 {{ formatCurrency(totalIncome()) }}
@@ -99,13 +99,13 @@ import { AccountingService, IncomeStatement } from '../../../../core/services/ac
             <ion-item *ngFor="let item of expenseItems()" lines="full">
               <ion-label>
                 <h4>{{ item.code }} - {{ item.name }}</h4>
-                <p class="text-sm text-gray-500">{{ item.period }}</p>
+                <p class="text-sm text-text-secondary">{{ item.period }}</p>
               </ion-label>
               <ion-note slot="end" class="text-lg font-semibold" color="danger">
                 {{ formatCurrency(item.amount) }}
               </ion-note>
             </ion-item>
-            <ion-item class="bg-gray-100">
+            <ion-item class="bg-surface-raised">
               <ion-label><strong>Total Gastos</strong></ion-label>
               <ion-note slot="end" class="text-xl font-bold" color="danger">
                 {{ formatCurrency(totalExpenses()) }}
@@ -169,13 +169,13 @@ import { AccountingService, IncomeStatement } from '../../../../core/services/ac
       .opacity-70 {
         opacity: 0.7;
       }
-      .text-gray-500 {
+      .text-text-secondary {
         color: #6b7280;
       }
-      .text-red-500 {
+      .text-error-500 {
         color: #ef4444;
       }
-      .bg-gray-100 {
+      .bg-surface-raised {
         background-color: #f3f4f6;
       }
       .mb-2 {

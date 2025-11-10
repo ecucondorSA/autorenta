@@ -16,7 +16,7 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
   selector: 'app-email-verification',
   imports: [CommonModule, TranslateModule],
   template: `
-    <div class="bg-surface-raised rounded-lg border border-gray-200 p-6">
+    <div class="bg-surface-raised rounded-lg border border-border-default p-6">
       <!-- Header -->
       <div class="flex items-start justify-between mb-4">
         <div class="flex items-center gap-3">
@@ -27,8 +27,8 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
             {{ getStatusIcon() }}
           </div>
           <div>
-            <h4 class="font-semibold text-gray-900">Verificación de Email</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-300">
+            <h4 class="font-semibold text-text-primary">Verificación de Email</h4>
+            <p class="text-sm text-text-secondary dark:text-text-secondary">
               {{ status().value || 'No configurado' }}
             </p>
           </div>
@@ -60,8 +60,8 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
 
       <!-- Pending State -->
       <div *ngIf="!status().isVerified" class="space-y-4">
-        <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p class="text-sm text-yellow-800">
+        <div class="p-4 bg-warning-50 border border-warning-200 rounded-lg">
+          <p class="text-sm text-warning-800">
             Te enviamos un email de verificación a
             <strong>{{ status().value }}</strong
             >. Por favor revisa tu bandeja de entrada y haz click en el link de confirmación.
@@ -78,7 +78,7 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
             [class]="
               canResend()
                 ? 'bg-cta-default text-cta-text hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2'
-                : 'bg-gray-200 text-gray-500 dark:text-gray-300 cursor-not-allowed'
+                : 'bg-surface-hover text-text-secondary dark:text-text-secondary cursor-not-allowed'
             "
           >
             <span *ngIf="!loading()" class="flex items-center justify-center gap-2">
@@ -112,13 +112,13 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
         <!-- Error Message -->
         <div
           *ngIf="error()"
-          class="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800"
+          class="p-3 bg-error-50 border border-error-200 rounded-lg text-sm text-error-800"
         >
           {{ error() }}
         </div>
 
         <!-- Help Text -->
-        <div class="text-xs text-gray-500 dark:text-gray-300">
+        <div class="text-xs text-text-secondary dark:text-text-secondary">
           <p>• Revisa tu carpeta de spam si no encuentras el email</p>
           <p>• El link de verificación expira en 24 horas</p>
           <p>• Puedes reenviar el email cada 60 segundos</p>
@@ -201,7 +201,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
   getStatusBadgeClass(): string {
     return this.status().isVerified
       ? 'bg-success-light/20 text-success-light'
-      : 'bg-yellow-100 text-yellow-600';
+      : 'bg-warning-100 text-warning-600';
   }
 
   getStatusLabel(): string {
@@ -211,7 +211,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
   getStatusLabelClass(): string {
     return this.status().isVerified
       ? 'bg-success-light/20 text-success-light'
-      : 'bg-yellow-100 text-yellow-800';
+      : 'bg-warning-100 text-warning-800';
   }
 
   formatDate(dateStr: string | null | undefined): string {

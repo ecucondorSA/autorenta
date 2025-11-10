@@ -13,7 +13,7 @@
 }
 
 /* Hover effect for available days */
-.grid > div:not(.bg-success-light):not(.bg-red-500):not(.bg-gray-200):hover {
+.grid > div:not(.bg-success-light):not(.bg-error-500):not(.bg-surface-hover):hover {
   transform: scale(1.1);
 }
 

@@ -91,7 +91,7 @@ import { DynamicPricingService } from '../../../core/services/dynamic-pricing.se
       <!-- Mensaje de no disponibilidad -->
       <div
         *ngIf="!availability()?.available"
-        class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700"
+        class="bg-error-50 border border-error-200 rounded-lg p-3 text-sm text-error-700"
       >
         <p class="font-semibold">⚠️ No disponible ahora</p>
         <p *ngIf="availability()?.reason">{{ availability()!.reason }}</p>

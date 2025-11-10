@@ -95,11 +95,11 @@ import {
                 class="text-xs px-2 py-0.5 rounded"
                 [class.bg-success-light/20]="factor.value < 0"
                 [class.text-success-light]="factor.value < 0"
-                [class.bg-amber-100]="factor.value > 0"
-                [class.text-amber-700]="factor.value > 0"
-                [class.bg-gray-100]="factor.value === 0"
-                [class.text-gray-600
-                dark:text-gray-300]="factor.value === 0"
+                [class.bg-warning-100]="factor.value > 0"
+                [class.text-warning-700]="factor.value > 0"
+                [class.bg-surface-raised]="factor.value === 0"
+                [class.text-text-secondary
+                dark:text-text-secondary]="factor.value === 0"
               >
                 {{ formatFactor(factor.value) }}
               </span>
@@ -117,7 +117,7 @@ import {
             <span
               class="text-lg"
               [class.text-success-light]="pricing()!.breakdown.total_multiplier < 1"
-              [class.text-amber-600]="pricing()!.breakdown.total_multiplier > 1.1"
+              [class.text-warning-600]="pricing()!.breakdown.total_multiplier > 1.1"
               [class.text-text-primary]="
                 pricing()!.breakdown.total_multiplier >= 1 &&
                 pricing()!.breakdown.total_multiplier <= 1.1
@@ -147,7 +147,7 @@ import {
       </div>
 
       <!-- Error State -->
-      <div *ngIf="error()" class="text-sm text-red-600 dark:text-red-400">
+      <div *ngIf="error()" class="text-sm text-error-600 dark:text-error-400">
         {{ error() }}
       </div>
     </div>

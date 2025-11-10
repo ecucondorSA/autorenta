@@ -31,7 +31,7 @@ export interface BlockDateRequest {
   template: `
     <div
       *ngIf="isOpen()"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
       (click)="onBackdropClick($event)"
     >
       <div
@@ -74,7 +74,7 @@ export interface BlockDateRequest {
               type="text"
               placeholder="Seleccionar fechas"
               readonly
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all cursor-pointer"
+              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all cursor-pointer"
             />
             <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
               {{ dateRangeText() }}
@@ -90,7 +90,7 @@ export interface BlockDateRequest {
             </label>
             <select
               [(ngModel)]="selectedReason"
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
+              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
             >
               <option value="">-- Seleccionar motivo --</option>
               <option value="maintenance">🔧 Mantenimiento</option>
@@ -111,14 +111,14 @@ export interface BlockDateRequest {
               [(ngModel)]="notes"
               rows="3"
               placeholder="Ej: Cambio de aceite programado, revisión técnica, etc."
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
+              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
             ></textarea>
           </div>
 
           <!-- Apply to All Cars (only show if has multiple cars) -->
           <div
             *ngIf="hasMultipleCars()"
-            class="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl"
+            class="flex items-start gap-3 p-4 bg-warning-50 dark:bg-warning-900/20 rounded-xl"
           >
             <input
               type="checkbox"
@@ -131,7 +131,7 @@ export interface BlockDateRequest {
               class="flex-1 text-sm text-text-primary dark:text-text-secondary cursor-pointer"
             >
               <span class="font-semibold">Aplicar a todos mis autos</span>
-              <p class="text-xs text-text-secondary dark:text-gray-400 mt-0.5">
+              <p class="text-xs text-text-secondary dark:text-text-muted mt-0.5">
                 Bloqueará estas fechas en todos tus vehículos
               </p>
             </label>
@@ -140,7 +140,7 @@ export interface BlockDateRequest {
           <!-- Error Message -->
           <div
             *ngIf="errorMessage()"
-            class="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-700 dark:text-red-400"
+            class="p-3 bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-xl text-sm text-error-700 dark:text-error-400"
           >
             {{ errorMessage() }}
           </div>
@@ -151,7 +151,7 @@ export interface BlockDateRequest {
           <button
             type="button"
             (click)="close()"
-            class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 text-text-secondary hover:bg-gray-100 dark:hover:bg-slate-deep transition-all font-medium"
+            class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-secondary hover:bg-surface-raised dark:hover:bg-slate-deep transition-all font-medium"
           >
             Cancelar
           </button>

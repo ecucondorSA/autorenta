@@ -47,12 +47,12 @@
     <!-- Error State -->
     @if (error(); as errorMsg) {
       <div
-        class="bg-red-50 border border-red-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4"
+        class="bg-error-50 border border-error-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4"
       >
-        <p class="text-sm text-red-800 dark:text-error-200">{{ errorMsg }}</p>
+        <p class="text-sm text-error-800 dark:text-error-200">{{ errorMsg }}</p>
         <button
           (click)="loadBookings()"
-          class="mt-2 text-sm font-medium text-red-600 dark:text-error-300 underline"
+          class="mt-2 text-sm font-medium text-error-600 dark:text-error-300 underline"
         >
           Intentar de nuevo
         </button>
@@ -63,7 +63,7 @@
       @if (marketplaceStatus(); as mpStatus) {
         @if (!mpStatus.isApproved) {
           <div
-            class="mb-8 rounded-lg border border-amber-300 bg-amber-50 px-4 py-4 text-sm text-amber-800 dark:border-amber-600/60 dark:bg-amber-900/25 dark:text-amber-100"
+            class="mb-8 rounded-lg border border-warning-300 bg-warning-50 px-4 py-4 text-sm text-warning-800 dark:border-warning-600/60 dark:bg-warning-900/25 dark:text-warning-100"
           >
             <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div class="flex items-start gap-3">
@@ -79,7 +79,7 @@
               <a
                 [routerLink]="['/profile']"
                 [queryParams]="{ section: 'payments' }"
-                class="inline-flex items-center gap-2 rounded-lg border border-amber-400 bg-surface-raised dark:bg-surface-secondary px-3 py-2 text-sm font-medium text-amber-800 transition hover:bg-amber-100 dark:border-amber-500/70 dark:bg-transparent dark:text-amber-100 dark:hover:bg-amber-900/40"
+                class="inline-flex items-center gap-2 rounded-lg border border-warning-400 bg-surface-raised dark:bg-surface-secondary px-3 py-2 text-sm font-medium text-warning-800 transition hover:bg-warning-100 dark:border-warning-500/70 dark:bg-transparent dark:text-warning-100 dark:hover:bg-warning-900/40"
               >
                 Vincular ahora →
               </a>
@@ -101,7 +101,7 @@
 
         @if (leadsLoading()) {
           <div
-            class="flex items-center gap-3 rounded-lg border border-border-default dark:border-gray-600/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3 text-sm text-text-secondary dark:text-text-secondary/70"
+            class="flex items-center gap-3 rounded-lg border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3 text-sm text-text-secondary dark:text-text-secondary/70"
           >
             <svg
               class="h-5 w-5 animate-spin text-primary-600 dark:text-cta-default"
@@ -340,7 +340,7 @@
                   <button
                     (click)="onCancelBooking(booking.id)"
                     [disabled]="processingAction() === booking.id"
-                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-text-inverse text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    class="px-4 py-2 bg-error-600 hover:bg-error-700 text-text-inverse text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {{ processingAction() === booking.id ? '...' : '❌ Cancelar' }}
                   </button>

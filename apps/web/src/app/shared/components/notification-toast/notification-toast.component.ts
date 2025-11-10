@@ -61,9 +61,9 @@ export class NotificationToastComponent implements OnInit {
         'bg-success-light/10 border-success-light/40 text-success-light dark:bg-success-light/20 dark:border-success-light dark:text-success-light',
       info: 'bg-cta-default/10 border-cta-default/40 text-cta-default dark:bg-cta-default/20 dark:border-cta-default dark:text-cta-default',
       warning:
-        'bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-200',
+        'bg-warning-50 border-warning-200 text-warning-800 dark:bg-warning-900/20 dark:border-warning-800 dark:text-warning-200',
       error:
-        'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200',
+        'bg-error-50 border-error-200 text-error-800 dark:bg-error-900/20 dark:border-error-800 dark:text-error-200',
     };
     return colors[this.type];
   }

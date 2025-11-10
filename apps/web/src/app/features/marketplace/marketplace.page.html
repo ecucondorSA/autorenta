@@ -81,7 +81,7 @@
 
   <!-- Drawer lateral (40% desktop, bottom sheet mobile) -->
   <div
-    class="drawer-section lg:w-[40%] bg-surface-raised dark:bg-surface-secondary border-t lg:border-t-0 lg:border-l border-border-default dark:border-gray-600 flex flex-col overflow-hidden transition-transform duration-300"
+    class="drawer-section lg:w-[40%] bg-surface-raised dark:bg-surface-secondary border-t lg:border-t-0 lg:border-l border-border-default dark:border-border-default flex flex-col overflow-hidden transition-transform duration-300"
     [class.drawer-open]="drawerOpen()"
     [class.drawer-closed]="!drawerOpen()"
     [class.fixed]="isMobile()"
@@ -93,7 +93,7 @@
   >
     <!-- Drawer header -->
     <div
-      class="drawer-header flex items-center justify-between p-4 border-b border-border-default dark:border-gray-600 flex-shrink-0"
+      class="drawer-header flex items-center justify-between p-4 border-b border-border-default dark:border-border-default flex-shrink-0"
     >
       <div>
         <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure">
@@ -197,7 +197,7 @@
     <!-- Drawer footer con CTA (desktop) -->
     <div
       *ngIf="selectedCar() && !isMobile()"
-      class="drawer-footer p-4 border-t border-border-default dark:border-gray-600 flex-shrink-0"
+      class="drawer-footer p-4 border-t border-border-default dark:border-border-default flex-shrink-0"
     >
       <app-sticky-cta-mobile
         [pricePerDay]="selectedCar()!.price_per_day"

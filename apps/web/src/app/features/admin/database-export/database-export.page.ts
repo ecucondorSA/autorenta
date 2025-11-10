@@ -11,15 +11,15 @@ import { ToastService } from '../../../core/services/toast.service';
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Exportación de Base de Datos</h1>
-        <p class="mt-2 text-sm text-gray-600">
+        <h1 class="text-2xl font-bold text-text-primary">Exportación de Base de Datos</h1>
+        <p class="mt-2 text-sm text-text-secondary">
           Genera un snapshot de la base de datos y storage para inspección o backup.
         </p>
       </div>
 
-      <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
+      <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
         <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">
+          <label class="block text-sm font-medium text-text-primary">
             Límite de registros por tabla
           </label>
           <input
@@ -27,9 +27,9 @@ import { ToastService } from '../../../core/services/toast.service';
             [(ngModel)]="limit"
             min="1"
             max="100"
-            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-cta-default focus:outline-none focus:ring-cta-default"
+            class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 shadow-sm focus:border-cta-default focus:outline-none focus:ring-cta-default"
           />
-          <p class="mt-1 text-xs text-gray-500">
+          <p class="mt-1 text-xs text-text-secondary">
             Número de registros de muestra a incluir por tabla (1-100)
           </p>
         </div>
@@ -62,7 +62,7 @@ import { ToastService } from '../../../core/services/toast.service';
         </button>
 
         @if (error()) {
-          <div class="mt-4 rounded-lg bg-red-50 p-4 text-red-800">
+          <div class="mt-4 rounded-lg bg-error-50 p-4 text-error-800">
             <p class="font-medium">Error al exportar</p>
             <p class="text-sm">{{ error() }}</p>
           </div>

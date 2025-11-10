@@ -18,15 +18,15 @@ import { CarChatComponent } from './components/car-chat.component';
   standalone: true,
   imports: [CommonModule, RouterLink, BookingChatComponent, CarChatComponent],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
       <!-- Header -->
-      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-gray-800">
+      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <div class="flex items-center gap-4">
             <!-- Back button -->
             <button
               (click)="goBack()"
-              class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+              class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-raised dark:hover:bg-gray-700"
               type="button"
             >
               <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,8 +40,8 @@ import { CarChatComponent } from './components/car-chat.component';
             </button>
 
             <div>
-              <h1 class="text-xl font-semibold text-gray-900 dark:text-text-inverse">Mensajes</h1>
-              <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
+              <h1 class="text-xl font-semibold text-text-primary dark:text-text-inverse">Mensajes</h1>
+              <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                 @if (bookingId()) {
                   Conversación sobre reserva
                 } @else if (carId()) {
@@ -98,8 +98,8 @@ import { CarChatComponent } from './components/car-chat.component';
                       bookingContext()!.status === 'confirmed' ||
                       bookingContext()!.status === 'in_progress'
                     "
-                    [class.bg-yellow-100]="bookingContext()!.status === 'pending'"
-                    [class.text-yellow-800]="bookingContext()!.status === 'pending'"
+                    [class.bg-warning-100]="bookingContext()!.status === 'pending'"
+                    [class.text-warning-800]="bookingContext()!.status === 'pending'"
                     [class.bg-success-light/20]="bookingContext()!.status === 'completed'"
                     [class.text-success-light]="bookingContext()!.status === 'completed'"
                   >
@@ -121,17 +121,17 @@ import { CarChatComponent } from './components/car-chat.component';
           <div class="flex h-96 items-center justify-center">
             <div class="text-center">
               <div
-                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"
+                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-subtle border-t-blue-500"
               ></div>
-              <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">Cargando chat...</p>
+              <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">Cargando chat...</p>
             </div>
           </div>
         } @else if (error()) {
-          <div class="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-            <p class="text-sm text-red-800 dark:text-red-200">{{ error() }}</p>
+          <div class="rounded-lg bg-error-50 p-4 dark:bg-error-900/20">
+            <p class="text-sm text-error-800 dark:text-error-200">{{ error() }}</p>
             <button
               (click)="goBack()"
-              class="mt-2 text-sm text-red-600 underline hover:text-red-800 dark:text-red-400"
+              class="mt-2 text-sm text-error-600 underline hover:text-error-800 dark:text-error-400"
               type="button"
             >
               Volver
@@ -152,13 +152,13 @@ import { CarChatComponent } from './components/car-chat.component';
             [recipientName]="recipientName()!"
           />
         } @else {
-          <div class="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900/20">
-            <p class="text-sm text-yellow-800 dark:text-yellow-200">
+          <div class="rounded-lg bg-warning-50 p-4 dark:bg-warning-900/20">
+            <p class="text-sm text-warning-800 dark:text-warning-200">
               ⚠️ Faltan parámetros para iniciar el chat
             </p>
             <button
               (click)="goBack()"
-              class="mt-2 text-sm text-yellow-600 underline hover:text-yellow-800 dark:text-yellow-400"
+              class="mt-2 text-sm text-warning-600 underline hover:text-warning-800 dark:text-warning-400"
               type="button"
             >
               Volver

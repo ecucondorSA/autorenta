@@ -16,7 +16,7 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
     <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-gray-500">Cargando contratos...</p>
+    <p class="mt-4 text-text-secondary">Cargando contratos...</p>
   </div>
 
   <!-- Error Message -->
@@ -48,8 +48,8 @@
   <!-- Contracts List -->
   <div *ngIf="!loading()">
     <div *ngIf="contracts().length === 0" class="text-center py-12">
-      <ion-icon name="document-text-outline" class="text-6xl text-gray-400 mb-4"></ion-icon>
-      <p class="text-gray-500 mb-4">No hay contratos disponibles</p>
+      <ion-icon name="document-text-outline" class="text-6xl text-text-muted mb-4"></ion-icon>
+      <p class="text-text-secondary mb-4">No hay contratos disponibles</p>
       <ion-button (click)="openCreateModal()">
         <ion-icon name="add" slot="start"></ion-icon>
         Crear Contrato
@@ -116,7 +116,7 @@
   <!-- Create Contract Modal -->
   <div
     *ngIf="showCreateModal()"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
     (click)="closeCreateModal()"
   >
     <ion-card class="max-w-md w-full" (click)="$event.stopPropagation()">

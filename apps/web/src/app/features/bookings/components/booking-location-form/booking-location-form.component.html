@@ -1,17 +1,17 @@
-<div class="booking-location-form bg-surface-raised dark:bg-gray-900 rounded-lg shadow-lg p-6">
+<div class="booking-location-form bg-surface-raised dark:bg-surface-raised rounded-lg shadow-lg p-6">
   <!-- Header -->
   <div class="mb-6">
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-text-inverse mb-2">
+    <h2 class="text-2xl font-bold text-text-primary dark:text-text-inverse mb-2">
       ¿Dónde es el retiro y devolución del auto?
     </h2>
-    <p class="text-gray-600 dark:text-gray-400">
+    <p class="text-text-secondary dark:text-text-muted">
       Selecciona ubicaciones para calcular la tarifa de delivery si es necesario
     </p>
   </div>
 
   <!-- Pickup Location -->
   <div class="mb-8">
-    <h3 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+    <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
       📍 Lugar de retiro
     </h3>
     <div class="location-input-group">
@@ -20,22 +20,22 @@
         type="text"
         [(ngModel)]="pickupAddress"
         placeholder="Ej: Av. Corrientes 1234, Buenos Aires"
-        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cta-default dark:bg-gray-800 dark:text-text-inverse"
+        class="w-full px-4 py-2 border border-border-subtle dark:border-border-default rounded-lg focus:ring-2 focus:ring-cta-default dark:bg-surface-base dark:text-text-inverse"
         (input)="onPickupAddressChange()"
         [disabled]="loading()"
       />
       @if (pickupSuggestions().length > 0) {
-        <div class="mt-2 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+        <div class="mt-2 border border-border-default dark:border-border-subtle rounded-lg overflow-hidden">
           @for (suggestion of pickupSuggestions(); track suggestion.address) {
             <button
               type="button"
               (click)="selectPickupSuggestion(suggestion)"
-              class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+              class="w-full text-left px-4 py-2 hover:bg-surface-raised dark:hover:bg-surface-base border-b border-border-default dark:border-border-subtle last:border-b-0"
             >
-              <div class="font-medium text-gray-900 dark:text-text-inverse">
+              <div class="font-medium text-text-primary dark:text-text-inverse">
                 {{ suggestion.address }}
               </div>
-              <div class="text-sm text-gray-500">{{ suggestion.city }}</div>
+              <div class="text-sm text-text-secondary">{{ suggestion.city }}</div>
             </button>
           }
         </div>
@@ -51,7 +51,7 @@
 
   <!-- Dropoff Location -->
   <div class="mb-8">
-    <h3 class="text-lg font-semibold text-gray-900 dark:text-text-inverse mb-4">
+    <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
       📍 Lugar de devolución
     </h3>
     <div class="location-input-group">
@@ -60,22 +60,22 @@
         type="text"
         [(ngModel)]="dropoffAddress"
         placeholder="Ej: Av. Rivadavia 5678, Buenos Aires"
-        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cta-default dark:bg-gray-800 dark:text-text-inverse"
+        class="w-full px-4 py-2 border border-border-subtle dark:border-border-default rounded-lg focus:ring-2 focus:ring-cta-default dark:bg-surface-base dark:text-text-inverse"
         (input)="onDropoffAddressChange()"
         [disabled]="loading()"
       />
       @if (dropoffSuggestions().length > 0) {
-        <div class="mt-2 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+        <div class="mt-2 border border-border-default dark:border-border-subtle rounded-lg overflow-hidden">
           @for (suggestion of dropoffSuggestions(); track suggestion.address) {
             <button
               type="button"
               (click)="selectDropoffSuggestion(suggestion)"
-              class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+              class="w-full text-left px-4 py-2 hover:bg-surface-raised dark:hover:bg-surface-base border-b border-border-default dark:border-border-subtle last:border-b-0"
             >
-              <div class="font-medium text-gray-900 dark:text-text-inverse">
+              <div class="font-medium text-text-primary dark:text-text-inverse">
                 {{ suggestion.address }}
               </div>
-              <div class="text-sm text-gray-500">{{ suggestion.city }}</div>
+              <div class="text-sm text-text-secondary">{{ suggestion.city }}</div>
             </button>
           }
         </div>
@@ -111,7 +111,7 @@
   }
 
   <!-- Delivery Toggle -->
-  <div class="mb-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+  <div class="mb-8 p-4 bg-surface-base dark:bg-surface-base rounded-lg">
     <label class="flex items-center cursor-pointer">
       <input
         type="checkbox"
@@ -121,10 +121,10 @@
         class="w-5 h-5 text-cta-default rounded focus:ring-2 focus:ring-cta-default"
       />
       <div class="ml-3 flex-1">
-        <div class="font-semibold text-gray-900 dark:text-text-inverse">
+        <div class="font-semibold text-text-primary dark:text-text-inverse">
           ¿Necesitas delivery del auto?
         </div>
-        <div class="text-sm text-gray-600 dark:text-gray-400">
+        <div class="text-sm text-text-secondary dark:text-text-muted">
           Entrega del auto en tu ubicación de retiro
         </div>
         @if (!isWithinDeliveryRange()) {
@@ -137,11 +137,11 @@
 
     <!-- Delivery Fee Display -->
     @if (deliveryRequired() && deliveryFeeCents() > 0) {
-      <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-        <div class="text-lg font-semibold text-gray-900 dark:text-text-inverse">
+      <div class="mt-4 pt-4 border-t border-border-default dark:border-border-subtle">
+        <div class="text-lg font-semibold text-text-primary dark:text-text-inverse">
           Tarifa de delivery: ARS ${{ deliveryFeeCents() / 100 | number: '1.2-2' }}
         </div>
-        <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+        <div class="text-sm text-text-secondary dark:text-text-muted mt-1">
           Se agregará al precio total del alquiler
         </div>
       </div>
@@ -151,9 +151,9 @@
   <!-- Error Messages -->
   @if (errorMessage()) {
     <div
-      class="mb-6 p-4 bg-red-50 dark:bg-red-900 rounded-lg border border-red-200 dark:border-red-700"
+      class="mb-6 p-4 bg-error-50 dark:bg-error-900 rounded-lg border border-error-200 dark:border-error-700"
     >
-      <div class="text-red-700 dark:text-red-100">{{ errorMessage() }}</div>
+      <div class="text-error-700 dark:text-error-100">{{ errorMessage() }}</div>
     </div>
   }
 
@@ -163,7 +163,7 @@
       type="button"
       (click)="onCancel()"
       [disabled]="loading()"
-      class="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-text-inverse rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 font-semibold"
+      class="flex-1 px-4 py-2 bg-surface-hover dark:bg-surface-base text-text-primary dark:text-text-inverse rounded-lg hover:bg-surface-pressed dark:hover:bg-gray-600 disabled:opacity-50 font-semibold"
     >
       Cancelar
     </button>

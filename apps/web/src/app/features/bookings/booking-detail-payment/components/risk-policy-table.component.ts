@@ -26,23 +26,23 @@ import {
 
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-800">
-          <thead class="bg-gray-50 dark:bg-surface-secondary/50">
+          <thead class="bg-surface-base dark:bg-surface-secondary/50">
             <tr>
               <th
                 scope="col"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-text-secondary/60 uppercase tracking-wider"
+                class="px-4 py-3 text-left text-xs font-medium text-text-secondary dark:text-text-secondary/60 uppercase tracking-wider"
               >
                 Tipo de protección
               </th>
               <th
                 scope="col"
-                class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-text-secondary/60 uppercase tracking-wider"
+                class="px-4 py-3 text-right text-xs font-medium text-text-secondary dark:text-text-secondary/60 uppercase tracking-wider"
               >
                 Límite (USD)
               </th>
               <th
                 scope="col"
-                class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-text-secondary/60 uppercase tracking-wider"
+                class="px-4 py-3 text-right text-xs font-medium text-text-secondary dark:text-text-secondary/60 uppercase tracking-wider"
               >
                 Límite (ARS)
               </th>
@@ -103,7 +103,7 @@ import {
             </tr>
 
             <!-- Row 2: Franquicia Daño/Robo -->
-            <tr class="bg-gray-50 dark:bg-surface-secondary/40">
+            <tr class="bg-surface-base dark:bg-surface-secondary/40">
               <td class="px-4 py-4 text-sm">
                 <div class="flex items-start space-x-2">
                   <svg
@@ -146,7 +146,7 @@ import {
               <td class="px-4 py-4 text-sm">
                 <div class="flex items-start space-x-2">
                   <svg
-                    class="w-5 h-5 text-red-500 dark:text-error-300 flex-shrink-0 mt-0.5"
+                    class="w-5 h-5 text-error-500 dark:text-error-300 flex-shrink-0 mt-0.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -161,7 +161,7 @@ import {
                   <div>
                     <p class="font-medium text-text-primary dark:text-text-primary">
                       Cobertura por vuelco
-                      <span class="text-red-600 dark:text-error-300">(límite mayor)</span>
+                      <span class="text-error-600 dark:text-error-300">(límite mayor)</span>
                     </p>
                     <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
                       Límite más alto si el auto se da vuelta (situaciones más graves)
@@ -170,12 +170,12 @@ import {
                 </div>
               </td>
               <td
-                class="px-4 py-4 text-sm text-right font-semibold text-red-600 dark:text-error-300"
+                class="px-4 py-4 text-sm text-right font-semibold text-error-600 dark:text-error-300"
               >
                 {{ formatUsd(riskSnapshot.rolloverDeductibleUsd) }}
               </td>
               <td
-                class="px-4 py-4 text-sm text-right font-semibold text-red-600 dark:text-error-300"
+                class="px-4 py-4 text-sm text-right font-semibold text-error-600 dark:text-error-300"
               >
                 {{ formatArs(riskSnapshot.rolloverDeductibleUsd * fxSnapshot.rate) }}
               </td>
@@ -204,7 +204,7 @@ import {
         <div class="text-xs text-cta-default dark:text-cta-default space-y-2">
           <div
             *ngIf="paymentMode === 'card'"
-            class="bg-surface-raised/50 dark:bg-gray-800/30 rounded p-3"
+            class="bg-surface-raised/50 dark:bg-surface-base/30 rounded p-3"
           >
             <p class="font-medium mb-1">Con tarjeta:</p>
             <p>
@@ -214,7 +214,7 @@ import {
           </div>
           <div
             *ngIf="paymentMode === 'wallet'"
-            class="bg-surface-raised/50 dark:bg-gray-800/30 rounded p-3"
+            class="bg-surface-raised/50 dark:bg-surface-base/30 rounded p-3"
           >
             <p class="font-medium mb-1">Con wallet:</p>
             <p>• Solo se usa tu saldo bloqueado si hay gastos o daños.</p>

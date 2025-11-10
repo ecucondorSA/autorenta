@@ -7,7 +7,7 @@
     [class.ring-2]="isSelected('credit_card')"
     [class.ring-cta-default]="isSelected('credit_card')"
     [class.bg-cta-default/5]="isSelected('credit_card')"
-    class="w-full p-4 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
+    class="w-full p-4 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
   >
     <!-- Recommended Badge -->
     <div
@@ -71,7 +71,7 @@
     [class.ring-2]="isSelected('wallet')"
     [class.ring-cta-default]="isSelected('wallet')"
     [class.bg-cta-default/5]="isSelected('wallet')"
-    class="w-full p-4 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
+    class="w-full p-4 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
   >
     <!-- Recommended Badge -->
     <div
@@ -142,12 +142,12 @@
           <div
             class="flex items-center gap-2 px-3 py-2 rounded-lg"
             [class.bg-success-light/10]="hasSufficientFunds()"
-            [class.bg-red-50]="!hasSufficientFunds()"
+            [class.bg-error-50]="!hasSufficientFunds()"
           >
             <svg
               class="w-4 h-4"
               [class.text-success-light]="hasSufficientFunds()"
-              [class.text-red-600]="!hasSufficientFunds()"
+              [class.text-error-600]="!hasSufficientFunds()"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -170,7 +170,7 @@
             <span
               class="text-xs font-medium"
               [class.text-success-light]="hasSufficientFunds()"
-              [class.text-red-700]="!hasSufficientFunds()"
+              [class.text-error-700]="!hasSufficientFunds()"
             >
               Balance disponible: <strong>{{ walletBalance() | money }}</strong>
             </span>
@@ -186,7 +186,7 @@
               <span>Bloqueo de garantía:</span>
               <span class="font-semibold">{{ depositAmount | money }}</span>
             </div>
-            <div class="flex justify-between pt-1 border-t border-border-default dark:border-gray-600">
+            <div class="flex justify-between pt-1 border-t border-border-default dark:border-border-default">
               <span class="font-semibold">Total bloqueado:</span>
               <span class="font-bold text-cta-default">{{ totalRequired() | money }}</span>
             </div>
@@ -195,9 +195,9 @@
           <!-- Insufficient Funds Warning -->
           <div
             *ngIf="!hasSufficientFunds()"
-            class="px-3 py-2 bg-red-50 border border-red-200 rounded-lg"
+            class="px-3 py-2 bg-error-50 border border-error-200 rounded-lg"
           >
-            <p class="text-xs text-red-700">
+            <p class="text-xs text-error-700">
               <svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -226,9 +226,9 @@
 
         <!-- Loading Template -->
         <ng-template #loadingTemplate>
-          <div class="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg animate-pulse">
-            <div class="w-4 h-4 bg-gray-300 rounded-full"></div>
-            <div class="h-3 bg-gray-300 rounded w-32"></div>
+          <div class="flex items-center gap-2 px-3 py-2 bg-surface-raised rounded-lg animate-pulse">
+            <div class="w-4 h-4 bg-surface-pressed rounded-full"></div>
+            <div class="h-3 bg-surface-pressed rounded w-32"></div>
           </div>
         </ng-template>
       </div>

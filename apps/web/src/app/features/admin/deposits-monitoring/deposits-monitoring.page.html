@@ -1,11 +1,11 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
+<div class="min-h-screen bg-surface-base dark:bg-surface-raised py-8 px-4">
   <div class="max-w-7xl mx-auto">
     <!-- Header -->
     <div class="mb-8 flex items-center justify-between">
       <div>
         <button
           (click)="goBack()"
-          class="mb-4 text-gray-600 dark:text-gray-300 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 flex items-center gap-2"
+          class="mb-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-gray-100 flex items-center gap-2"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -17,10 +17,10 @@
           </svg>
           Volver al Dashboard
         </button>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+        <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">
           💰 Monitoreo de Depósitos
         </h1>
-        <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300 mt-2">
+        <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-2">
           Vista en tiempo real del sistema de depósitos
         </p>
       </div>
@@ -65,14 +65,14 @@
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6">
+      <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-sm font-medium text-gray-600 dark:text-gray-300 dark:text-gray-300">
+          <p class="text-sm font-medium text-text-secondary dark:text-text-secondary dark:text-text-secondary">
             Total Depósitos
           </p>
           <span class="text-2xl">📊</span>
         </div>
-        <p class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+        <p class="text-3xl font-bold text-text-primary dark:text-text-inverse">
           {{ stats().total_deposits }}
         </p>
       </div>
@@ -90,34 +90,34 @@
         </p>
       </div>
 
-      <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg shadow p-6">
+      <div class="bg-warning-50 dark:bg-warning-900/20 rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-sm font-medium text-yellow-700 dark:text-yellow-400">Pendientes</p>
+          <p class="text-sm font-medium text-warning-700 dark:text-warning-400">Pendientes</p>
           <span class="text-2xl">⏳</span>
         </div>
-        <p class="text-3xl font-bold text-yellow-900 dark:text-yellow-100">{{ stats().pending }}</p>
+        <p class="text-3xl font-bold text-warning-900 dark:text-warning-100">{{ stats().pending }}</p>
       </div>
 
-      <div class="bg-red-50 dark:bg-red-900/20 rounded-lg shadow p-6">
+      <div class="bg-error-50 dark:bg-error-900/20 rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-sm font-medium text-red-700 dark:text-red-400">Fallidos</p>
+          <p class="text-sm font-medium text-error-700 dark:text-error-400">Fallidos</p>
           <span class="text-2xl">❌</span>
         </div>
-        <p class="text-3xl font-bold text-red-900 dark:text-red-100">{{ stats().failed }}</p>
-        <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ failureRate() }}% tasa error</p>
+        <p class="text-3xl font-bold text-error-900 dark:text-error-100">{{ stats().failed }}</p>
+        <p class="text-sm text-error-600 dark:text-error-400 mt-1">{{ failureRate() }}% tasa error</p>
       </div>
     </div>
 
     <!-- Tabs -->
-    <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow">
-      <div class="border-b border-gray-200 dark:border-gray-700">
+    <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow">
+      <div class="border-b border-border-default dark:border-border-subtle">
         <nav class="flex gap-4 px-6" aria-label="Tabs">
           <button
             (click)="selectedTab.set('pending')"
             [class.border-cta-default]="selectedTab() === 'pending'"
             [class.text-cta-default]="selectedTab() === 'pending'"
             [class.dark:text-cta-default]="selectedTab() === 'pending'"
-            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-300"
           >
             ⏳ Pendientes ({{ pendingDeposits().length }})
           </button>
@@ -126,7 +126,7 @@
             [class.border-cta-default]="selectedTab() === 'recent'"
             [class.text-cta-default]="selectedTab() === 'recent'"
             [class.dark:text-cta-default]="selectedTab() === 'recent'"
-            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-300"
           >
             ✅ Recientes ({{ recentDeposits().length }})
           </button>
@@ -135,7 +135,7 @@
             [class.border-cta-default]="selectedTab() === 'failed'"
             [class.text-cta-default]="selectedTab() === 'failed'"
             [class.dark:text-cta-default]="selectedTab() === 'failed'"
-            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-300"
           >
             ❌ Fallidos ({{ failedDeposits().length }})
           </button>
@@ -146,29 +146,29 @@
       <div *ngIf="selectedTab() === 'pending'" class="p-6">
         <div
           *ngIf="pendingDeposits().length === 0"
-          class="text-center py-12 text-gray-500 dark:text-gray-300 dark:text-gray-300"
+          class="text-center py-12 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
         >
           No hay depósitos pendientes
         </div>
         <div *ngIf="pendingDeposits().length > 0" class="space-y-4">
           <div
             *ngFor="let deposit of pendingDeposits()"
-            class="border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 bg-yellow-50 dark:bg-yellow-900/10"
+            class="border border-warning-200 dark:border-warning-800 rounded-lg p-4 bg-warning-50 dark:bg-warning-900/10"
           >
             <div class="flex justify-between items-start">
               <div>
-                <p class="font-medium text-gray-900 dark:text-text-inverse">
+                <p class="font-medium text-text-primary dark:text-text-inverse">
                   {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                   {{ formatCurrency(deposit.amount, deposit.currency) }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
                   {{ formatRelativeTime(deposit.created_at) }}
                 </p>
               </div>
               <span
-                class="px-3 py-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 text-xs font-medium rounded-full"
+                class="px-3 py-1 bg-warning-100 dark:bg-warning-800 text-warning-800 dark:text-warning-100 text-xs font-medium rounded-full"
               >
                 Pendiente
               </span>
@@ -181,7 +181,7 @@
       <div *ngIf="selectedTab() === 'recent'" class="p-6">
         <div
           *ngIf="recentDeposits().length === 0"
-          class="text-center py-12 text-gray-500 dark:text-gray-300 dark:text-gray-300"
+          class="text-center py-12 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
         >
           No hay depósitos recientes
         </div>
@@ -192,13 +192,13 @@
           >
             <div class="flex justify-between items-start">
               <div>
-                <p class="font-medium text-gray-900 dark:text-text-inverse">
+                <p class="font-medium text-text-primary dark:text-text-inverse">
                   {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                   {{ formatCurrency(deposit.amount, deposit.currency) }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
                   {{ formatRelativeTime(deposit.completed_at || deposit.created_at) }}
                   <span *ngIf="deposit.time_to_complete_minutes" class="ml-2">
                     (Confirmado en {{ formatDuration(deposit.time_to_complete_minutes) }})
@@ -219,29 +219,29 @@
       <div *ngIf="selectedTab() === 'failed'" class="p-6">
         <div
           *ngIf="failedDeposits().length === 0"
-          class="text-center py-12 text-gray-500 dark:text-gray-300 dark:text-gray-300"
+          class="text-center py-12 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
         >
           No hay depósitos fallidos
         </div>
         <div *ngIf="failedDeposits().length > 0" class="space-y-4">
           <div
             *ngFor="let deposit of failedDeposits()"
-            class="border border-red-200 dark:border-red-800 rounded-lg p-4 bg-red-50 dark:bg-red-900/10"
+            class="border border-error-200 dark:border-error-800 rounded-lg p-4 bg-error-50 dark:bg-error-900/10"
           >
             <div class="flex justify-between items-start">
               <div>
-                <p class="font-medium text-gray-900 dark:text-text-inverse">
+                <p class="font-medium text-text-primary dark:text-text-inverse">
                   {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                   {{ formatCurrency(deposit.amount, deposit.currency) }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
                   {{ formatRelativeTime(deposit.updated_at) }}
                 </p>
               </div>
               <span
-                class="px-3 py-1 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-100 text-xs font-medium rounded-full"
+                class="px-3 py-1 bg-error-100 dark:bg-error-800 text-error-800 dark:text-error-100 text-xs font-medium rounded-full"
               >
                 Fallido
               </span>

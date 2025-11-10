@@ -54,7 +54,7 @@ interface DurationOption {
   template: `
     <div
       *ngIf="isOpen"
-      class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm"
+      class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-surface-overlay/50 backdrop-blur-sm"
       (click)="handleBackdropClick($event)"
     >
       <div
@@ -62,12 +62,12 @@ interface DurationOption {
         (click)="$event.stopPropagation()"
       >
         <!-- Header -->
-        <div class="sticky top-0 bg-surface-raised border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
-          <h2 class="text-xl font-bold text-gray-900">Reserva rápida</h2>
+        <div class="sticky top-0 bg-surface-raised border-b border-border-default px-6 py-4 flex items-center justify-between z-10">
+          <h2 class="text-xl font-bold text-text-primary">Reserva rápida</h2>
           <button
             type="button"
             (click)="handleCancel()"
-            class="text-gray-400 hover:text-gray-600 transition-colors"
+            class="text-text-muted hover:text-text-secondary transition-colors"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -83,7 +83,7 @@ interface DurationOption {
         <!-- Content -->
         <div class="px-6 py-5 space-y-6">
           <!-- Car Info -->
-          <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+          <div class="flex items-center gap-4 p-4 bg-surface-base rounded-xl">
             <img
               *ngIf="carPhotoUrl()"
               [src]="carPhotoUrl()"
@@ -91,10 +91,10 @@ interface DurationOption {
               class="w-20 h-20 rounded-lg object-cover"
             />
             <div class="flex-1 min-w-0">
-              <h3 class="text-base font-semibold text-gray-900 truncate">
+              <h3 class="text-base font-semibold text-text-primary truncate">
                 {{ carTitle() }}
               </h3>
-              <p class="text-sm text-gray-600 mt-0.5">
+              <p class="text-sm text-text-secondary mt-0.5">
                 {{ car.price_per_day | money: (car.currency || 'ARS') }}/día
               </p>
             </div>
@@ -102,7 +102,7 @@ interface DurationOption {
 
           <!-- Duration Selection -->
           <div>
-            <label class="block text-sm font-semibold text-gray-900 mb-3">
+            <label class="block text-sm font-semibold text-text-primary mb-3">
               ¿Cuándo lo necesitas?
             </label>
             <div class="grid grid-cols-1 gap-2">
@@ -113,18 +113,18 @@ interface DurationOption {
                 [class.ring-2]="selectedDuration() === option.id"
                 [class.ring-blue-600]="selectedDuration() === option.id"
                 [class.bg-cta-default/10]="selectedDuration() === option.id"
-                class="text-left p-3 rounded-lg border border-gray-200 hover:border-cta-default/50 transition-all"
+                class="text-left p-3 rounded-lg border border-border-default hover:border-cta-default/50 transition-all"
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-semibold text-gray-900">{{ option.label }}</p>
-                    <p class="text-xs text-gray-600 mt-0.5">{{ option.description }}</p>
+                    <p class="text-sm font-semibold text-text-primary">{{ option.label }}</p>
+                    <p class="text-xs text-text-secondary mt-0.5">{{ option.description }}</p>
                   </div>
                   <div class="text-right">
-                    <p class="text-sm font-bold text-gray-900">
+                    <p class="text-sm font-bold text-text-primary">
                       {{ calculatePrice(option.hours) | money: (car.currency || 'ARS') }}
                     </p>
-                    <p class="text-xs text-gray-600">{{ option.hours }}h</p>
+                    <p class="text-xs text-text-secondary">{{ option.hours }}h</p>
                   </div>
                 </div>
               </button>
@@ -133,7 +133,7 @@ interface DurationOption {
 
           <!-- Payment Method -->
           <div>
-            <label class="block text-sm font-semibold text-gray-900 mb-3">
+            <label class="block text-sm font-semibold text-text-primary mb-3">
               Método de pago
             </label>
             <div class="space-y-2">
@@ -147,7 +147,7 @@ interface DurationOption {
                 [class.bg-cta-default/10]="selectedPaymentMethod() === 'wallet'"
                 [class.opacity-50]="!hasWalletBalance()"
                 [class.cursor-not-allowed]="!hasWalletBalance()"
-                class="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-cta-default/50 transition-all"
+                class="w-full text-left p-3 rounded-lg border border-border-default hover:border-cta-default/50 transition-all"
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
@@ -164,8 +164,8 @@ interface DurationOption {
                       </svg>
                     </div>
                     <div>
-                      <p class="text-sm font-semibold text-gray-900">Wallet AutoRenta</p>
-                      <p class="text-xs text-gray-600">
+                      <p class="text-sm font-semibold text-text-primary">Wallet AutoRenta</p>
+                      <p class="text-xs text-text-secondary">
                         Saldo: {{ walletBalance() | money: (car.currency || 'ARS') }}
                       </p>
                     </div>
@@ -192,7 +192,7 @@ interface DurationOption {
                 [class.ring-2]="selectedPaymentMethod() === 'cash'"
                 [class.ring-blue-600]="selectedPaymentMethod() === 'cash'"
                 [class.bg-cta-default/10]="selectedPaymentMethod() === 'cash'"
-                class="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-cta-default/50 transition-all"
+                class="w-full text-left p-3 rounded-lg border border-border-default hover:border-cta-default/50 transition-all"
               >
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full bg-cta-default/20 flex items-center justify-center">
@@ -205,8 +205,8 @@ interface DurationOption {
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm font-semibold text-gray-900">Efectivo</p>
-                    <p class="text-xs text-gray-600">Paga al retirar el auto</p>
+                    <p class="text-sm font-semibold text-text-primary">Efectivo</p>
+                    <p class="text-xs text-text-secondary">Paga al retirar el auto</p>
                   </div>
                 </div>
               </button>
@@ -218,7 +218,7 @@ interface DurationOption {
                 [class.ring-2]="selectedPaymentMethod() === 'transfer'"
                 [class.ring-blue-600]="selectedPaymentMethod() === 'transfer'"
                 [class.bg-cta-default/10]="selectedPaymentMethod() === 'transfer'"
-                class="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-cta-default/50 transition-all"
+                class="w-full text-left p-3 rounded-lg border border-border-default hover:border-cta-default/50 transition-all"
               >
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full bg-cta-default/20 flex items-center justify-center">
@@ -234,8 +234,8 @@ interface DurationOption {
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm font-semibold text-gray-900">Tarjeta de crédito</p>
-                    <p class="text-xs text-gray-600">Se preautoriza 600 USD</p>
+                    <p class="text-sm font-semibold text-text-primary">Tarjeta de crédito</p>
+                    <p class="text-xs text-text-secondary">Se preautoriza 600 USD</p>
                   </div>
                 </div>
               </button>
@@ -243,22 +243,22 @@ interface DurationOption {
           </div>
 
           <!-- Price Summary -->
-          <div class="bg-gray-50 rounded-xl p-4 space-y-2">
+          <div class="bg-surface-base rounded-xl p-4 space-y-2">
             <div class="flex items-center justify-between text-sm">
-              <span class="text-gray-600">Subtotal</span>
-              <span class="font-semibold text-gray-900">
+              <span class="text-text-secondary">Subtotal</span>
+              <span class="font-semibold text-text-primary">
                 {{ totalPrice() | money: (car.currency || 'ARS') }}
               </span>
             </div>
             <div class="flex items-center justify-between text-sm">
-              <span class="text-gray-600">Comisión (10%)</span>
-              <span class="font-semibold text-gray-900">
+              <span class="text-text-secondary">Comisión (10%)</span>
+              <span class="font-semibold text-text-primary">
                 {{ platformFee() | money: (car.currency || 'ARS') }}
               </span>
             </div>
-            <div class="border-t border-gray-200 pt-2 mt-2">
+            <div class="border-t border-border-default pt-2 mt-2">
               <div class="flex items-center justify-between">
-                <span class="text-base font-bold text-gray-900">Total</span>
+                <span class="text-base font-bold text-text-primary">Total</span>
                 <span class="text-2xl font-bold text-cta-default">
                   {{ totalWithFees() | money: (car.currency || 'ARS') }}
                 </span>
@@ -267,7 +267,7 @@ interface DurationOption {
           </div>
 
           <!-- No Credit Card Badge -->
-          <div class="flex items-center justify-center gap-2 text-sm text-gray-600 py-2 bg-success-light/10 rounded-lg">
+          <div class="flex items-center justify-center gap-2 text-sm text-text-secondary py-2 bg-success-light/10 rounded-lg">
             <svg class="w-5 h-5 text-success-light" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
@@ -281,18 +281,18 @@ interface DurationOption {
           <!-- Error Message -->
           <div
             *ngIf="errorMessage()"
-            class="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800"
+            class="p-3 bg-error-50 border border-error-200 rounded-lg text-sm text-error-800"
           >
             {{ errorMessage() }}
           </div>
         </div>
 
         <!-- Footer -->
-        <div class="sticky bottom-0 bg-surface-raised border-t border-gray-200 px-6 py-4 flex gap-3">
+        <div class="sticky bottom-0 bg-surface-raised border-t border-border-default px-6 py-4 flex gap-3">
           <button
             type="button"
             (click)="handleCancel()"
-            class="flex-1 py-3 px-4 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+            class="flex-1 py-3 px-4 rounded-lg border border-border-subtle text-text-primary font-semibold hover:bg-surface-base transition-colors"
           >
             Cancelar
           </button>

@@ -42,7 +42,7 @@ interface TierConfig {
 
       <!-- Tooltip with distance and guarantee info -->
       <div
-        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-text-inverse text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg"
+        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-raised text-text-inverse text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg"
       >
         {{ config.tooltip }}
         <div class="text-xs mt-1 font-medium text-gray-300">
@@ -79,9 +79,9 @@ export class DistanceRiskTierBadgeComponent {
     regional: {
       icon: '🚗',
       label: 'Distancia Media',
-      bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
-      textColor: 'text-yellow-700 dark:text-yellow-300',
-      borderColor: 'border-yellow-200 dark:border-yellow-700',
+      bgColor: 'bg-warning-50 dark:bg-warning-900/20',
+      textColor: 'text-warning-700 dark:text-warning-300',
+      borderColor: 'border-warning-200 dark:border-warning-700',
       tooltip: 'Auto a distancia media (50-200 km)',
       guaranteeMultiplier: 1.15,
     },

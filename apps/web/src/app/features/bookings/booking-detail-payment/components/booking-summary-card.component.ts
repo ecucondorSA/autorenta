@@ -29,7 +29,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       </h2>
 
       <!-- Car Info -->
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-neutral-800">
+      <div class="mb-4 pb-4 border-b border-border-default dark:border-neutral-800">
         <div class="flex items-start space-x-3">
           <div class="flex-shrink-0">
             <img
@@ -40,10 +40,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             />
             <div
               *ngIf="!carImage"
-              class="w-16 h-16 rounded bg-gray-200 dark:bg-neutral-700 flex items-center justify-center transition-colors duration-300"
+              class="w-16 h-16 rounded bg-surface-hover dark:bg-neutral-700 flex items-center justify-center transition-colors duration-300"
             >
               <svg
-                class="w-8 h-8 text-gray-400 dark:text-neutral-300"
+                class="w-8 h-8 text-text-muted dark:text-neutral-300"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -66,23 +66,23 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       </div>
 
       <!-- Dates -->
-      <div *ngIf="dates" class="mb-4 pb-4 border-b border-gray-200 dark:border-neutral-800">
+      <div *ngIf="dates" class="mb-4 pb-4 border-b border-border-default dark:border-neutral-800">
         <div class="space-y-2">
           <div class="flex justify-between text-sm">
-            <span class="text-gray-600 dark:text-text-secondary/70">Retiro:</span>
-            <span class="font-medium text-gray-900 dark:text-text-primary">{{
+            <span class="text-text-secondary dark:text-text-secondary/70">Retiro:</span>
+            <span class="font-medium text-text-primary dark:text-text-primary">{{
               dates.startDate | date: 'dd/MM/yyyy HH:mm'
             }}</span>
           </div>
           <div class="flex justify-between text-sm">
-            <span class="text-gray-600 dark:text-text-secondary/70">Devolución:</span>
-            <span class="font-medium text-gray-900 dark:text-text-primary">{{
+            <span class="text-text-secondary dark:text-text-secondary/70">Devolución:</span>
+            <span class="font-medium text-text-primary dark:text-text-primary">{{
               dates.endDate | date: 'dd/MM/yyyy HH:mm'
             }}</span>
           </div>
           <div class="flex justify-between text-sm">
-            <span class="text-gray-600 dark:text-text-secondary/70">Total de días:</span>
-            <span class="font-medium text-gray-900 dark:text-text-primary"
+            <span class="text-text-secondary dark:text-text-secondary/70">Total de días:</span>
+            <span class="font-medium text-text-primary dark:text-text-primary"
               >{{ dates.totalDays }} {{ dates.totalDays === 1 ? 'día' : 'días' }}</span
             >
           </div>
@@ -92,44 +92,44 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <!-- Price Breakdown -->
       <div
         *ngIf="priceBreakdown"
-        class="mb-4 pb-4 border-b border-gray-200 dark:border-neutral-800"
+        class="mb-4 pb-4 border-b border-border-default dark:border-neutral-800"
       >
-        <h3 class="text-sm font-semibold text-gray-900 dark:text-text-primary mb-3">
+        <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-3">
           Desglose de Precios
         </h3>
         <div class="space-y-2">
           <!-- Daily Rate -->
           <div class="flex justify-between text-sm">
-            <span class="text-gray-600 dark:text-text-secondary/70">
+            <span class="text-text-secondary dark:text-text-secondary/70">
               Tarifa diaria × {{ priceBreakdown.totalDays }}
             </span>
-            <span class="font-medium text-gray-900 dark:text-text-primary">
+            <span class="font-medium text-text-primary dark:text-text-primary">
               {{ formatUsd(priceBreakdown.dailyRateUsd * priceBreakdown.totalDays) }}
             </span>
           </div>
 
           <!-- FGO Contribution -->
           <div class="flex justify-between text-sm" *ngIf="priceBreakdown.fgoContributionUsd > 0">
-            <span class="text-gray-600 dark:text-text-secondary/70">
+            <span class="text-text-secondary dark:text-text-secondary/70">
               Aporte FGO ({{ calculateFgoPercentage() }}%)
             </span>
-            <span class="font-medium text-gray-900 dark:text-text-primary">
+            <span class="font-medium text-text-primary dark:text-text-primary">
               {{ formatUsd(priceBreakdown.fgoContributionUsd) }}
             </span>
           </div>
 
           <!-- Platform Fee -->
           <div class="flex justify-between text-sm" *ngIf="priceBreakdown.platformFeeUsd > 0">
-            <span class="text-gray-600 dark:text-text-secondary/70">Cargo de servicio</span>
-            <span class="font-medium text-gray-900 dark:text-text-primary">
+            <span class="text-text-secondary dark:text-text-secondary/70">Cargo de servicio</span>
+            <span class="font-medium text-text-primary dark:text-text-primary">
               {{ formatUsd(priceBreakdown.platformFeeUsd) }}
             </span>
           </div>
 
           <!-- Insurance Fee -->
           <div class="flex justify-between text-sm" *ngIf="priceBreakdown.insuranceFeeUsd > 0">
-            <span class="text-gray-600 dark:text-text-secondary/70">Seguro básico</span>
-            <span class="font-medium text-gray-900 dark:text-text-primary">
+            <span class="text-text-secondary dark:text-text-secondary/70">Seguro básico</span>
+            <span class="font-medium text-text-primary dark:text-text-primary">
               {{ formatUsd(priceBreakdown.insuranceFeeUsd) }}
             </span>
           </div>
@@ -137,7 +137,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           <!-- Coverage Upgrade -->
           <div class="flex justify-between text-sm" *ngIf="priceBreakdown.coverageUpgradeUsd > 0">
             <span
-              class="text-gray-600 dark:text-text-secondary/70 font-medium text-primary-600 dark:text-cta-default"
+              class="text-text-secondary dark:text-text-secondary/70 font-medium text-primary-600 dark:text-cta-default"
               >Upgrade de cobertura</span
             >
             <span class="font-medium text-primary-600 dark:text-cta-default">
@@ -150,8 +150,8 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             class="flex justify-between text-sm"
             *ngIf="priceBreakdown.distanceKm !== undefined && priceBreakdown.distanceKm > 0"
           >
-            <span class="text-gray-600 dark:text-text-secondary/70"> Distancia de entrega </span>
-            <span class="font-medium text-gray-900 dark:text-text-primary">
+            <span class="text-text-secondary dark:text-text-secondary/70"> Distancia de entrega </span>
+            <span class="font-medium text-text-primary dark:text-text-primary">
               {{ priceBreakdown.distanceKm.toFixed(1) }} km
             </span>
           </div>
@@ -161,8 +161,8 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             class="flex justify-between text-sm"
             *ngIf="priceBreakdown.deliveryFeeUsd !== undefined && priceBreakdown.deliveryFeeUsd > 0"
           >
-            <span class="text-gray-600 dark:text-text-secondary/70"> Cargo por entrega </span>
-            <span class="font-medium text-gray-900 dark:text-text-primary">
+            <span class="text-text-secondary dark:text-text-secondary/70"> Cargo por entrega </span>
+            <span class="font-medium text-text-primary dark:text-text-primary">
               {{ formatUsd(priceBreakdown.deliveryFeeUsd) }}
             </span>
           </div>
@@ -171,10 +171,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           <div
             class="flex justify-between text-sm pt-2 border-t border-gray-100 dark:border-neutral-800/80"
           >
-            <span class="text-gray-700 dark:text-text-secondary/80 font-medium"
+            <span class="text-text-primary dark:text-text-secondary/80 font-medium"
               >Subtotal (USD)</span
             >
-            <span class="font-semibold text-gray-900 dark:text-text-primary">
+            <span class="font-semibold text-text-primary dark:text-text-primary">
               {{ formatUsd(priceBreakdown.totalUsd) }}
             </span>
           </div>
@@ -184,14 +184,14 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <!-- ✅ NUEVA SECCIÓN: Garantía -->
       <div *ngIf="riskSnapshot && fxSnapshot" class="mb-4">
         <div
-          class="bg-gray-50 dark:bg-surface-secondary/40 border border-gray-200 dark:border-neutral-700 rounded-lg p-4 transition-colors duration-300"
+          class="bg-surface-base dark:bg-surface-secondary/40 border border-border-default dark:border-neutral-700 rounded-lg p-4 transition-colors duration-300"
         >
           <div class="flex items-center justify-between mb-2">
-            <span class="text-sm font-medium text-gray-700 dark:text-text-secondary/80">
+            <span class="text-sm font-medium text-text-primary dark:text-text-secondary/80">
               Garantía {{ paymentMode === 'card' ? '(Hold)' : '(Crédito)' }}
             </span>
             <svg
-              class="w-4 h-4 text-gray-400 dark:text-text-secondary/60 cursor-help"
+              class="w-4 h-4 text-text-muted dark:text-text-secondary/60 cursor-help"
               fill="currentColor"
               viewBox="0 0 20 20"
               [attr.title]="
@@ -209,12 +209,12 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           </div>
 
           <div class="flex justify-between items-start mb-2">
-            <span class="text-xs text-gray-600 dark:text-text-secondary/70">Monto</span>
+            <span class="text-xs text-text-secondary dark:text-text-secondary/70">Monto</span>
             <div class="text-right">
-              <p class="text-lg font-bold text-gray-900 dark:text-text-primary">
+              <p class="text-lg font-bold text-text-primary dark:text-text-primary">
                 {{ formatArs(guaranteeAmountArs()) }}
               </p>
-              <p class="text-xs text-gray-500 dark:text-text-secondary/60">
+              <p class="text-xs text-text-secondary dark:text-text-secondary/60">
                 ≈ {{ formatUsd(guaranteeAmountUsd()) }}
               </p>
             </div>
@@ -238,7 +238,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             ></app-reembolsability-badge>
           </div>
 
-          <p class="text-xs text-gray-500 dark:text-text-secondary/50 mt-2">
+          <p class="text-xs text-text-secondary dark:text-text-secondary/50 mt-2">
             {{
               paymentMode === 'card' ? 'Se bloquea en tu tarjeta' : 'Se bloquea de tu saldo wallet'
             }}
@@ -281,14 +281,14 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           class="bg-gradient-to-r from-primary-50 to-primary-100 dark:from-cta-default/20 dark:to-cta-default/10 rounded-lg p-4 transition-colors duration-300"
         >
           <div class="flex justify-between items-baseline">
-            <span class="text-sm font-medium text-gray-700 dark:text-text-secondary/80"
+            <span class="text-sm font-medium text-text-primary dark:text-text-secondary/80"
               >Total del alquiler</span
             >
             <div class="text-right">
               <p class="text-2xl font-bold text-primary-900 dark:text-cta-default">
                 {{ formatArs(priceBreakdown.totalArs) }}
               </p>
-              <p class="text-xs text-gray-600 dark:text-text-secondary/70 mt-1">
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
                 ≈ {{ formatUsd(priceBreakdown.totalUsd) }}
               </p>
             </div>
@@ -299,11 +299,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
       <!-- FX Expiration Warning -->
       <div
         *ngIf="fxSnapshot && fxSnapshot.isExpired"
-        class="mt-4 bg-yellow-50 border border-yellow-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg p-3 transition-colors duration-300"
+        class="mt-4 bg-warning-50 border border-warning-200 dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg p-3 transition-colors duration-300"
       >
         <div class="flex space-x-2">
           <svg
-            class="w-5 h-5 text-yellow-600 dark:text-warning-200 flex-shrink-0"
+            class="w-5 h-5 text-warning-600 dark:text-warning-200 flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -314,10 +314,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-medium text-yellow-800 dark:text-warning-50">
+            <p class="text-sm font-medium text-warning-800 dark:text-warning-50">
               Tipo de cambio vencido
             </p>
-            <p class="text-xs text-yellow-700 dark:text-warning-200 mt-1">
+            <p class="text-xs text-warning-700 dark:text-warning-200 mt-1">
               Se actualizará antes de confirmar la reserva
             </p>
           </div>

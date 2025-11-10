@@ -10,8 +10,8 @@ import { environment } from '../../../../../environments/environment';
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Flujo de Caja</h1>
-        <p class="mt-2 text-sm text-gray-600">Visualiza el flujo de efectivo de la plataforma.</p>
+        <h1 class="text-2xl font-bold text-text-primary">Flujo de Caja</h1>
+        <p class="mt-2 text-sm text-text-secondary">Visualiza el flujo de efectivo de la plataforma.</p>
       </div>
 
       @if (loading()) {
@@ -21,41 +21,41 @@ import { environment } from '../../../../../environments/environment';
           ></div>
         </div>
       } @else if (cashFlow().length === 0) {
-        <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-          <p class="text-gray-600">No hay datos de flujo de caja disponibles.</p>
+        <div class="rounded-lg border border-border-default bg-surface-base p-8 text-center">
+          <p class="text-text-secondary">No hay datos de flujo de caja disponibles.</p>
         </div>
       } @else {
-        <div class="overflow-x-auto rounded-lg border border-gray-200 bg-surface-raised shadow-sm">
+        <div class="overflow-x-auto rounded-lg border border-border-default bg-surface-raised shadow-sm">
           <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+            <thead class="bg-surface-base">
               <tr>
                 <th
-                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary"
                 >
                   Fecha
                 </th>
                 <th
-                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary"
                 >
                   Tipo
                 </th>
                 <th
-                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary"
                 >
                   Descripción
                 </th>
                 <th
-                  class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+                  class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary"
                 >
                   Entrada
                 </th>
                 <th
-                  class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+                  class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary"
                 >
                   Salida
                 </th>
                 <th
-                  class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+                  class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary"
                 >
                   Balance
                 </th>
@@ -64,13 +64,13 @@ import { environment } from '../../../../../environments/environment';
             <tbody class="divide-y divide-gray-200 bg-surface-raised">
               @for (entry of cashFlow(); track entry.id ?? $index) {
                 <tr>
-                  <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                  <td class="whitespace-nowrap px-6 py-4 text-sm text-text-primary">
                     {{ entry.date || entry.created_at | date: 'short' }}
                   </td>
-                  <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                  <td class="whitespace-nowrap px-6 py-4 text-sm text-text-secondary">
                     {{ entry.type || entry.transaction_type || 'N/A' }}
                   </td>
-                  <td class="px-6 py-4 text-sm text-gray-600">
+                  <td class="px-6 py-4 text-sm text-text-secondary">
                     {{ entry.description || 'Sin descripción' }}
                   </td>
                   <td
@@ -83,7 +83,7 @@ import { environment } from '../../../../../environments/environment';
                     }
                   </td>
                   <td
-                    class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-red-600"
+                    class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-error-600"
                   >
                     @if (entry.outflow || entry.credit) {
                       \${{ entry.outflow || entry.credit | number: '1.2-2' }}
@@ -92,7 +92,7 @@ import { environment } from '../../../../../environments/environment';
                     }
                   </td>
                   <td
-                    class="whitespace-nowrap px-6 py-4 text-right text-sm font-semibold text-gray-900"
+                    class="whitespace-nowrap px-6 py-4 text-right text-sm font-semibold text-text-primary"
                   >
                     \${{ entry.balance || 0 | number: '1.2-2' }}
                   </td>

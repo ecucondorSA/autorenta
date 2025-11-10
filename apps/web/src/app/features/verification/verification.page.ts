@@ -58,7 +58,7 @@ import {
                     }
                     @case ('PENDIENTE') {
                       <span
-                        class="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-200 rounded-full font-medium text-sm"
+                        class="inline-flex items-center gap-2 px-3 py-1 bg-warning-100 dark:bg-warning-900/40 text-warning-900 dark:text-warning-200 rounded-full font-medium text-sm"
                       >
                         <span>⏳</span>
                         <span>Pendiente</span>
@@ -66,7 +66,7 @@ import {
                     }
                     @case ('RECHAZADO') {
                       <span
-                        class="inline-flex items-center gap-2 px-3 py-1 bg-red-100 dark:bg-red-900/40 text-red-900 dark:text-red-200 rounded-full font-medium text-sm"
+                        class="inline-flex items-center gap-2 px-3 py-1 bg-error-100 dark:bg-error-900/40 text-error-900 dark:text-error-200 rounded-full font-medium text-sm"
                       >
                         <span>❌</span>
                         <span>Rechazado</span>
@@ -88,7 +88,7 @@ import {
 
             @if (status.notes) {
               <div
-                class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded p-3 text-sm text-red-800 dark:text-red-300"
+                class="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800/40 rounded p-3 text-sm text-error-800 dark:text-error-300"
               >
                 {{ status.notes }}
               </div>
@@ -108,20 +108,20 @@ import {
                 @for (docId of missingDocs(); track docId) {
                   @if (getDocConfig(docId); as docConfig) {
                     <div
-                      class="border border-amber-200 dark:border-amber-800/40 rounded-lg p-4 bg-amber-50 dark:bg-amber-900/20 hover:shadow-md transition-shadow"
+                      class="border border-warning-200 dark:border-warning-800/40 rounded-lg p-4 bg-warning-50 dark:bg-warning-900/20 hover:shadow-md transition-shadow"
                     >
                       <div class="flex items-start gap-4">
                         <span class="text-3xl flex-shrink-0">{{ docConfig.emoji }}</span>
                         <div class="flex-1 min-w-0">
-                          <h3 class="font-semibold text-amber-900 dark:text-amber-200 mb-1">
+                          <h3 class="font-semibold text-warning-900 dark:text-warning-200 mb-1">
                             {{ docConfig.label }}
                           </h3>
-                          <p class="text-sm text-amber-800 dark:text-amber-300 mb-3">
+                          <p class="text-sm text-warning-800 dark:text-warning-300 mb-3">
                             {{ docConfig.description }}
                           </p>
                           <a
                             routerLink="/profile"
-                            class="inline-flex items-center gap-2 px-3 py-1 bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 text-text-inverse font-medium rounded text-sm transition-colors"
+                            class="inline-flex items-center gap-2 px-3 py-1 bg-warning-600 hover:bg-warning-700 dark:bg-warning-700 dark:hover:bg-warning-600 text-text-inverse font-medium rounded text-sm transition-colors"
                           >
                             <span>📤</span>
                             <span>Subir Documento</span>

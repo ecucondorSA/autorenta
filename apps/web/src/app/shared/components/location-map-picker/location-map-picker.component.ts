@@ -38,20 +38,20 @@ export interface LocationCoordinates {
         <div class="flex items-start gap-2">
           <span class="text-cta-default text-lg">ℹ️</span>
           <div class="flex-1">
-            <p class="text-sm font-medium text-gray-800">
+            <p class="text-sm font-medium text-text-primary">
               {{ isLoading() ? 'Cargando mapa...' : 'Ajusta la ubicación' }}
             </p>
-            <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">
+            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
               {{
                 isLoading()
                   ? 'Por favor espera...'
                   : 'Arrastra el marcador para ajustar la ubicación exacta de tu auto'
               }}
             </p>
-            <div *ngIf="currentAddress()" class="mt-2 text-xs text-gray-700 bg-gray-50 p-2 rounded">
+            <div *ngIf="currentAddress()" class="mt-2 text-xs text-text-primary bg-surface-base p-2 rounded">
               📍 {{ currentAddress() }}
             </div>
-            <div *ngIf="coordinates()" class="mt-1 text-xs text-gray-500 dark:text-gray-300">
+            <div *ngIf="coordinates()" class="mt-1 text-xs text-text-secondary dark:text-text-secondary">
               Lat: {{ coordinates()!.latitude.toFixed(6) }}, Lng:
               {{ coordinates()!.longitude.toFixed(6) }}
             </div>

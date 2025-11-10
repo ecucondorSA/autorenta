@@ -1,5 +1,5 @@
 <div
-  class="review-card bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
+  class="review-card bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
 >
   <!-- Header with user info and rating -->
   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
@@ -40,11 +40,11 @@
       <div>
         <a
           [routerLink]="['/users', review.reviewer_id]"
-          class="font-semibold text-gray-900 hover:text-cta-default transition-colors focus:outline-none focus:underline"
+          class="font-semibold text-text-primary hover:text-cta-default transition-colors focus:outline-none focus:underline"
         >
           {{ review.reviewer_name || 'Usuario' }}
         </a>
-        <p class="text-sm text-gray-500 dark:text-gray-300 flex items-center gap-1">
+        <p class="text-sm text-text-secondary dark:text-text-secondary flex items-center gap-1">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -57,7 +57,7 @@
         </p>
         <p
           *ngIf="showCarTitle && review.car_title"
-          class="text-xs text-gray-400 dark:text-gray-300 mt-1"
+          class="text-xs text-text-muted dark:text-text-secondary mt-1"
         >
           {{ review.car_title }}
         </p>
@@ -66,13 +66,13 @@
 
     <div class="flex flex-col items-end gap-2">
       <!-- Overall rating -->
-      <div class="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">
-        <span class="text-2xl font-bold text-gray-900">{{ getOverallRating() }}</span>
+      <div class="flex items-center space-x-2 bg-surface-base dark:bg-surface-base rounded-lg px-3 py-2">
+        <span class="text-2xl font-bold text-text-primary">{{ getOverallRating() }}</span>
         <div class="flex items-center">
           @for (star of getRatingStars(getOverallRating()); track $index) {
             <svg
               class="w-5 h-5"
-              [class.text-yellow-400]="star === 'filled'"
+              [class.text-warning-400]="star === 'filled'"
               [class.text-gray-300]="star === 'empty'"
               fill="currentColor"
               viewBox="0 0 20 20"
@@ -100,23 +100,23 @@
   <!-- Public comment -->
   <div
     *ngIf="review.comment_public"
-    class="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-l-4 border-cta-default"
+    class="mb-4 p-4 bg-surface-base dark:bg-surface-base rounded-lg border-l-4 border-cta-default"
   >
-    <p class="text-gray-700 leading-relaxed">{{ review.comment_public }}</p>
+    <p class="text-text-primary leading-relaxed">{{ review.comment_public }}</p>
   </div>
 
   <!-- Category ratings -->
   <div
-    class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
+    class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-surface-base dark:bg-surface-base rounded-lg"
   >
     <div class="category-rating" *ngIf="review.rating_cleanliness">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600 dark:text-gray-300">Limpieza</span>
+        <span class="text-text-secondary dark:text-text-secondary">Limpieza</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_cleanliness)"
             class="w-4 h-4"
-            [class.text-yellow-400]="star === 'filled'"
+            [class.text-warning-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -131,12 +131,12 @@
 
     <div class="category-rating" *ngIf="review.rating_communication">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600 dark:text-gray-300">Comunicación</span>
+        <span class="text-text-secondary dark:text-text-secondary">Comunicación</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_communication)"
             class="w-4 h-4"
-            [class.text-yellow-400]="star === 'filled'"
+            [class.text-warning-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -151,12 +151,12 @@
 
     <div class="category-rating" *ngIf="review.rating_accuracy">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600 dark:text-gray-300">Precisión</span>
+        <span class="text-text-secondary dark:text-text-secondary">Precisión</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_accuracy)"
             class="w-4 h-4"
-            [class.text-yellow-400]="star === 'filled'"
+            [class.text-warning-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -171,12 +171,12 @@
 
     <div class="category-rating" *ngIf="review.rating_location">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600 dark:text-gray-300">Ubicación</span>
+        <span class="text-text-secondary dark:text-text-secondary">Ubicación</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_location)"
             class="w-4 h-4"
-            [class.text-yellow-400]="star === 'filled'"
+            [class.text-warning-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -191,12 +191,12 @@
 
     <div class="category-rating" *ngIf="review.rating_checkin">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600 dark:text-gray-300">Check-in</span>
+        <span class="text-text-secondary dark:text-text-secondary">Check-in</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_checkin)"
             class="w-4 h-4"
-            [class.text-yellow-400]="star === 'filled'"
+            [class.text-warning-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -211,12 +211,12 @@
 
     <div class="category-rating" *ngIf="review.rating_value">
       <div class="flex items-center justify-between text-sm">
-        <span class="text-gray-600 dark:text-gray-300">Valor</span>
+        <span class="text-text-secondary dark:text-text-secondary">Valor</span>
         <div class="flex">
           <svg
             *ngFor="let star of getRatingStars(review.rating_value)"
             class="w-4 h-4"
-            [class.text-yellow-400]="star === 'filled'"
+            [class.text-warning-400]="star === 'filled'"
             [class.text-gray-300]="star === 'empty'"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -234,7 +234,7 @@
   <div *ngIf="canFlag" class="border-t border-gray-100 pt-3">
     <button
       (click)="onFlagReview()"
-      class="text-sm text-gray-500 dark:text-gray-300 hover:text-red-600 transition-colors flex items-center space-x-1"
+      class="text-sm text-text-secondary dark:text-text-secondary hover:text-error-600 transition-colors flex items-center space-x-1"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path

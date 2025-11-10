@@ -5,9 +5,9 @@
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error() && !loading()" class="bg-red-50 border border-red-200 rounded-lg p-4">
-    <p class="text-red-600 text-sm">{{ error()?.message }}</p>
-    <button (click)="refresh()" class="mt-2 text-red-600 hover:text-red-700 text-sm font-medium">
+  <div *ngIf="error() && !loading()" class="bg-error-50 border border-error-200 rounded-lg p-4">
+    <p class="text-error-600 text-sm">{{ error()?.message }}</p>
+    <button (click)="refresh()" class="mt-2 text-error-600 hover:text-error-700 text-sm font-medium">
       Reintentar
     </button>
   </div>
@@ -24,10 +24,10 @@
           <span class="text-text-inverse text-xl font-bold">{{ driverClass() }}</span>
         </div>
         <div>
-          <h3 class="text-lg font-semibold text-gray-900" [class.text-base]="compact">
+          <h3 class="text-lg font-semibold text-text-primary" [class.text-base]="compact">
             Clase {{ driverClass() }}
           </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-300">{{ classDescription() }}</p>
+          <p class="text-sm text-text-secondary dark:text-text-secondary">{{ classDescription() }}</p>
         </div>
       </div>
 
@@ -43,11 +43,11 @@
 
     <!-- Progress Bar -->
     <div class="mb-4" *ngIf="!compact">
-      <div class="flex justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
+      <div class="flex justify-between text-xs text-text-secondary dark:text-text-secondary mb-1">
         <span>Clase 10 (Inicial)</span>
         <span>Clase 0 (Mejor)</span>
       </div>
-      <div class="w-full bg-gray-200 rounded-full h-2">
+      <div class="w-full bg-surface-hover rounded-full h-2">
         <div
           [style.width]="getProgressBarWidth()"
           [class]="getClassBadgeColor(driverClass())"
@@ -59,69 +59,69 @@
     <!-- Stats Grid -->
     <div *ngIf="showDetails" class="grid grid-cols-2 gap-4" [class.grid-cols-1]="compact">
       <!-- Driver Score -->
-      <div class="bg-gray-50 rounded-lg p-3">
+      <div class="bg-surface-base rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-600 dark:text-gray-300">Score de Conducción</span>
+          <span class="text-xs text-text-secondary dark:text-text-secondary">Score de Conducción</span>
           <span [class]="getScoreColor(driverScore())" class="text-sm font-semibold">
             {{ driverScore() }}/100
           </span>
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
+        <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
           {{ getScoreLabel(driverScore()) }}
         </p>
       </div>
 
       <!-- Clean Bookings Percentage -->
-      <div class="bg-gray-50 rounded-lg p-3">
+      <div class="bg-surface-base rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-600 dark:text-gray-300">Reservas Sin Daños</span>
+          <span class="text-xs text-text-secondary dark:text-text-secondary">Reservas Sin Daños</span>
           <span class="text-sm font-semibold text-success-light"> {{ cleanPercentage() }}% </span>
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
+        <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
           {{ profile()?.clean_bookings || 0 }} de {{ profile()?.total_bookings || 0 }} reservas
         </p>
       </div>
 
       <!-- Fee Multiplier -->
-      <div class="bg-gray-50 rounded-lg p-3">
+      <div class="bg-surface-base rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-600 dark:text-gray-300">Ajuste en Tarifas</span>
+          <span class="text-xs text-text-secondary dark:text-text-secondary">Ajuste en Tarifas</span>
           <span
             [class]="
               feeMultiplier() < 1
                 ? 'text-success-light'
                 : feeMultiplier() > 1
-                  ? 'text-red-600'
-                  : 'text-gray-600 dark:text-gray-300'
+                  ? 'text-error-600'
+                  : 'text-text-secondary dark:text-text-secondary'
             "
             class="text-sm font-semibold"
           >
             {{ getFeeMultiplierLabel(feeMultiplier()) }}
           </span>
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
+        <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
           Multiplicador: {{ feeMultiplier() }}
         </p>
       </div>
 
       <!-- Guarantee Multiplier -->
-      <div class="bg-gray-50 rounded-lg p-3">
+      <div class="bg-surface-base rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-600 dark:text-gray-300">Ajuste en Garantía</span>
+          <span class="text-xs text-text-secondary dark:text-text-secondary">Ajuste en Garantía</span>
           <span
             [class]="
               guaranteeMultiplier() < 1
                 ? 'text-success-light'
                 : guaranteeMultiplier() > 1
-                  ? 'text-red-600'
-                  : 'text-gray-600 dark:text-gray-300'
+                  ? 'text-error-600'
+                  : 'text-text-secondary dark:text-text-secondary'
             "
             class="text-sm font-semibold"
           >
             {{ getGuaranteeMultiplierLabel(guaranteeMultiplier()) }}
           </span>
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
+        <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
           Multiplicador: {{ guaranteeMultiplier() }}
         </p>
       </div>
@@ -129,7 +129,7 @@
 
     <!-- Compact Stats -->
     <div *ngIf="!showDetails && compact" class="mt-2 text-center">
-      <p class="text-sm text-gray-600 dark:text-gray-300">
+      <p class="text-sm text-text-secondary dark:text-text-secondary">
         Score:
         <span [class]="getScoreColor(driverScore())" class="font-semibold">{{
           driverScore()

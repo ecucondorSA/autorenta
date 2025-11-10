@@ -12,8 +12,8 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Gestión de Retiros</h1>
-        <p class="mt-2 text-sm text-gray-600">
+        <h1 class="text-2xl font-bold text-text-primary">Gestión de Retiros</h1>
+        <p class="mt-2 text-sm text-text-secondary">
           Aprueba o rechaza solicitudes de retiro de fondos.
         </p>
       </div>
@@ -24,7 +24,7 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
           class="rounded-lg px-4 py-2 text-sm font-medium"
           [class.bg-cta-default]="filterStatus() === 'pending'"
           [class.text-text-inverse]="filterStatus() === 'pending'"
-          [class.bg-gray-200]="filterStatus() !== 'pending'"
+          [class.bg-surface-hover]="filterStatus() !== 'pending'"
         >
           Pendientes
         </button>
@@ -33,7 +33,7 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
           class="rounded-lg px-4 py-2 text-sm font-medium"
           [class.bg-cta-default]="filterStatus() === 'completed'"
           [class.text-text-inverse]="filterStatus() === 'completed'"
-          [class.bg-gray-200]="filterStatus() !== 'completed'"
+          [class.bg-surface-hover]="filterStatus() !== 'completed'"
         >
           Completados
         </button>
@@ -42,7 +42,7 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
           class="rounded-lg px-4 py-2 text-sm font-medium"
           [class.bg-cta-default]="filterStatus() === 'rejected'"
           [class.text-text-inverse]="filterStatus() === 'rejected'"
-          [class.bg-gray-200]="filterStatus() !== 'rejected'"
+          [class.bg-surface-hover]="filterStatus() !== 'rejected'"
         >
           Rechazados
         </button>
@@ -53,52 +53,52 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
           <div class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"></div>
         </div>
       } @else if (withdrawals().length === 0) {
-        <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-          <p class="text-gray-600">No hay solicitudes de retiro.</p>
+        <div class="rounded-lg border border-border-default bg-surface-base p-8 text-center">
+          <p class="text-text-secondary">No hay solicitudes de retiro.</p>
         </div>
       } @else {
         <div class="space-y-4">
           @for (withdrawal of withdrawals(); track withdrawal.id) {
-            <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
+            <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
               <div class="mb-4 flex items-start justify-between">
                 <div>
-                  <h3 class="font-semibold text-gray-900">Solicitud #{{ withdrawal.id.slice(0, 8) }}</h3>
-                  <p class="text-sm text-gray-600">
+                  <h3 class="font-semibold text-text-primary">Solicitud #{{ withdrawal.id.slice(0, 8) }}</h3>
+                  <p class="text-sm text-text-secondary">
                     Usuario: {{ withdrawal.user_id.slice(0, 8) }}... |
                     Monto: \${{ withdrawal.amount | number: '1.2-2' }}
                   </p>
-                  <p class="text-xs text-gray-500">
+                  <p class="text-xs text-text-secondary">
                     {{ withdrawal.created_at | date: 'short' }}
                   </p>
                 </div>
                 <span
                   class="rounded-full px-3 py-1 text-xs font-medium"
-                  [class.bg-yellow-100]="withdrawal.status === 'pending'"
-                  [class.text-yellow-800]="withdrawal.status === 'pending'"
+                  [class.bg-warning-100]="withdrawal.status === 'pending'"
+                  [class.text-warning-800]="withdrawal.status === 'pending'"
                   [class.bg-success-light/20]="withdrawal.status === 'completed'"
                   [class.text-success-light]="withdrawal.status === 'completed'"
-                  [class.bg-red-100]="withdrawal.status === 'rejected'"
-                  [class.text-red-800]="withdrawal.status === 'rejected'"
+                  [class.bg-error-100]="withdrawal.status === 'rejected'"
+                  [class.text-error-800]="withdrawal.status === 'rejected'"
                 >
                   {{ withdrawal.status }}
                 </span>
               </div>
 
               @if (withdrawal.user_notes) {
-                <div class="mb-4 rounded-lg bg-gray-50 p-3">
-                  <p class="text-xs font-medium text-gray-600">Notas del usuario:</p>
-                  <p class="text-sm text-gray-700">{{ withdrawal.user_notes }}</p>
+                <div class="mb-4 rounded-lg bg-surface-base p-3">
+                  <p class="text-xs font-medium text-text-secondary">Notas del usuario:</p>
+                  <p class="text-sm text-text-primary">{{ withdrawal.user_notes }}</p>
                 </div>
               }
 
               @if (withdrawal.status === 'pending') {
                 <div class="space-y-3">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700">Notas de administración</label>
+                    <label class="block text-sm font-medium text-text-primary">Notas de administración</label>
                     <textarea
                       [(ngModel)]="adminNotes[withdrawal.id]"
                       rows="3"
-                      class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                      class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
                       placeholder="Opcional: Agrega notas sobre esta decisión"
                     ></textarea>
                   </div>
@@ -113,7 +113,7 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
                     <button
                       (click)="showRejectModal(withdrawal.id)"
                       [disabled]="processing()"
-                      class="flex-1 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-text-inverse hover:bg-red-700 disabled:opacity-50"
+                      class="flex-1 rounded-lg bg-error-600 px-4 py-2 text-sm font-medium text-text-inverse hover:bg-error-700 disabled:opacity-50"
                     >
                       Rechazar
                     </button>
@@ -122,9 +122,9 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
               }
 
               @if (withdrawal.rejection_reason) {
-                <div class="mt-3 rounded-lg bg-red-50 p-3">
-                  <p class="text-xs font-medium text-red-800">Razón de rechazo:</p>
-                  <p class="text-sm text-red-700">{{ withdrawal.rejection_reason }}</p>
+                <div class="mt-3 rounded-lg bg-error-50 p-3">
+                  <p class="text-xs font-medium text-error-800">Razón de rechazo:</p>
+                  <p class="text-sm text-error-700">{{ withdrawal.rejection_reason }}</p>
                 </div>
               }
             </div>
@@ -135,7 +135,7 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
       <!-- Modal de rechazo -->
       @if (rejectingId()) {
         <div
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
           (click)="cancelReject()"
         >
           <div
@@ -144,27 +144,27 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
           >
             <h3 class="mb-4 text-lg font-semibold">Rechazar Retiro</h3>
             <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700">
+              <label class="block text-sm font-medium text-text-primary">
                 Razón del rechazo (requerido)
               </label>
               <textarea
                 [(ngModel)]="rejectionReason"
                 rows="4"
-                class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
                 placeholder="Explica por qué se rechaza esta solicitud"
               ></textarea>
             </div>
             <div class="flex gap-2">
               <button
                 (click)="cancelReject()"
-                class="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                class="flex-1 rounded-lg border border-border-subtle px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base"
               >
                 Cancelar
               </button>
               <button
                 (click)="confirmReject()"
                 [disabled]="!rejectionReason || processing()"
-                class="flex-1 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-text-inverse hover:bg-red-700 disabled:opacity-50"
+                class="flex-1 rounded-lg bg-error-600 px-4 py-2 text-sm font-medium text-text-inverse hover:bg-error-700 disabled:opacity-50"
               >
                 Rechazar
               </button>

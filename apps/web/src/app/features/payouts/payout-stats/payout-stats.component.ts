@@ -8,8 +8,8 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
-      <h3 class="mb-4 text-lg font-semibold text-gray-900">Estadísticas de Payouts</h3>
+    <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
+      <h3 class="mb-4 text-lg font-semibold text-text-primary">Estadísticas de Payouts</h3>
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
@@ -29,10 +29,10 @@ import { AuthService } from '../../../core/services/auth.service';
               {{ formatCurrency(s.totalAmount) }}
             </p>
           </div>
-          <div class="rounded-lg bg-yellow-50 p-4">
-            <p class="text-sm font-medium text-yellow-600">Pendientes</p>
-            <p class="text-2xl font-bold text-yellow-900">{{ s.pendingPayouts }}</p>
-            <p class="text-xs text-yellow-700">
+          <div class="rounded-lg bg-warning-50 p-4">
+            <p class="text-sm font-medium text-warning-600">Pendientes</p>
+            <p class="text-2xl font-bold text-warning-900">{{ s.pendingPayouts }}</p>
+            <p class="text-xs text-warning-700">
               {{ formatCurrency(s.pendingAmount) }}
             </p>
           </div>
@@ -51,7 +51,7 @@ import { AuthService } from '../../../core/services/auth.service';
           </div>
         </div>
       } @else {
-        <div class="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-600">
+        <div class="rounded-lg bg-surface-base p-4 text-center text-sm text-text-secondary">
           No hay estadísticas disponibles.
         </div>
       }

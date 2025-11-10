@@ -32,11 +32,11 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
   imports: [CommonModule, MoneyPipe],
   template: `
     <div
-      class="enhanced-tooltip bg-surface-raised rounded-xl shadow-2xl border border-gray-200 overflow-hidden max-w-[320px] transition-all duration-200 hover:shadow-3xl"
+      class="enhanced-tooltip bg-surface-raised rounded-xl shadow-2xl border border-border-default overflow-hidden max-w-[320px] transition-all duration-200 hover:shadow-3xl"
       [class.enhanced-tooltip--selected]="selected"
     >
       <!-- Car Image -->
-      <div class="relative w-full aspect-[16/9] bg-gray-100 overflow-hidden">
+      <div class="relative w-full aspect-[16/9] bg-surface-raised overflow-hidden">
         <img
           *ngIf="car.photoUrl"
           [src]="car.photoUrl"
@@ -49,7 +49,7 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
           class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200"
         >
           <svg
-            class="w-16 h-16 text-gray-400"
+            class="w-16 h-16 text-text-muted"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -116,7 +116,7 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
         <!-- Distance Badge (Bottom Left) -->
         <div *ngIf="distanceKm() !== null" class="absolute bottom-2 left-2">
           <span
-            class="inline-flex items-center gap-1 rounded-full bg-surface-raised/95 backdrop-blur-sm text-gray-800 px-2.5 py-1 text-xs font-semibold shadow-md"
+            class="inline-flex items-center gap-1 rounded-full bg-surface-raised/95 backdrop-blur-sm text-text-primary px-2.5 py-1 text-xs font-semibold shadow-md"
           >
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -141,10 +141,10 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
       <div class="p-4 space-y-3">
         <!-- Title & Location -->
         <div>
-          <h3 class="text-base font-bold text-gray-900 line-clamp-1 mb-0.5">
+          <h3 class="text-base font-bold text-text-primary line-clamp-1 mb-0.5">
             {{ car.title }}
           </h3>
-          <p class="text-xs text-gray-600 flex items-center gap-1">
+          <p class="text-xs text-text-secondary flex items-center gap-1">
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
@@ -159,10 +159,10 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
 
         <!-- Price -->
         <div class="flex items-baseline gap-1.5">
-          <span class="text-2xl font-bold text-gray-900">
+          <span class="text-2xl font-bold text-text-primary">
             {{ car.pricePerDay | money: car.currency || 'ARS' }}
           </span>
-          <span class="text-sm text-gray-600 font-medium">/día</span>
+          <span class="text-sm text-text-secondary font-medium">/día</span>
         </div>
 
         <!-- CTAs -->
@@ -188,14 +188,14 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
           <button
             type="button"
             (click)="handleViewDetails($event)"
-            class="w-full py-2.5 px-4 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium transition-colors duration-200"
+            class="w-full py-2.5 px-4 rounded-lg bg-surface-raised hover:bg-surface-hover text-text-primary text-sm font-medium transition-colors duration-200"
           >
             Ver detalles
           </button>
         </div>
 
         <!-- P2P Badge -->
-        <div class="flex items-center justify-center gap-1 text-xs text-gray-600 pt-1">
+        <div class="flex items-center justify-center gap-1 text-xs text-text-secondary pt-1">
           <svg class="w-3.5 h-3.5 text-success-light" fill="currentColor" viewBox="0 0 20 20">
             <path
               fill-rule="evenodd"

@@ -1,8 +1,8 @@
 <div class="payment-method-selector">
   <!-- Header -->
   <div class="mb-4">
-    <h3 class="text-lg font-semibold text-gray-900 mb-1">Método de Pago</h3>
-    <p class="text-sm text-gray-600 dark:text-gray-300">Selecciona cómo deseas pagar tu reserva</p>
+    <h3 class="text-lg font-semibold text-text-primary mb-1">Método de Pago</h3>
+    <p class="text-sm text-text-secondary dark:text-text-secondary">Selecciona cómo deseas pagar tu reserva</p>
   </div>
 
   <!-- Loading State -->
@@ -10,7 +10,7 @@
     <div
       class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cta-default"
     ></div>
-    <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">Cargando información del wallet...</p>
+    <p class="text-sm text-text-secondary dark:text-text-secondary mt-2">Cargando información del wallet...</p>
   </div>
 
   <!-- Payment Options -->
@@ -20,8 +20,8 @@
       class="payment-option border rounded-lg p-4 cursor-pointer transition-all"
       [class.border-cta-default]="selectedMethod() === 'credit_card'"
       [class.bg-cta-default/10]="selectedMethod() === 'credit_card'"
-      [class.border-gray-200]="selectedMethod() !== 'credit_card'"
-      [class.hover:border-gray-300]="selectedMethod() !== 'credit_card'"
+      [class.border-border-default]="selectedMethod() !== 'credit_card'"
+      [class.hover:border-border-subtle]="selectedMethod() !== 'credit_card'"
       (click)="selectMethod('credit_card')"
     >
       <div class="flex items-start">
@@ -34,9 +34,9 @@
         />
         <div class="flex-1">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-medium text-gray-900">Tarjeta de Crédito/Débito</span>
+            <span class="font-medium text-text-primary">Tarjeta de Crédito/Débito</span>
             <svg
-              class="w-5 h-5 text-gray-600 dark:text-gray-300"
+              class="w-5 h-5 text-text-secondary dark:text-text-secondary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -49,10 +49,10 @@
               ></path>
             </svg>
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-300">Paga con Mercado Pago</p>
+          <p class="text-sm text-text-secondary dark:text-text-secondary">Paga con Mercado Pago</p>
           <div class="mt-2 flex items-center gap-2">
             <span class="text-xs px-2 py-1 bg-success-light/20 text-success-light rounded">Mercado Pago</span>
-            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded"
+            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded"
               >Todas las tarjetas</span
             >
           </div>
@@ -60,7 +60,7 @@
             *ngIf="selectedMethod() === 'credit_card'"
             class="mt-3 p-3 bg-surface-raised rounded border border-cta-default/40"
           >
-            <p class="text-sm font-medium text-gray-900">Total a pagar:</p>
+            <p class="text-sm font-medium text-text-primary">Total a pagar:</p>
             <p class="text-2xl font-bold text-cta-default">{{ formatCurrency(totalAmount) }}</p>
           </div>
         </div>
@@ -73,8 +73,8 @@
       class="payment-option border rounded-lg p-4 cursor-pointer transition-all"
       [class.border-success-light]="selectedMethod() === 'wallet'"
       [class.bg-success-light/10]="selectedMethod() === 'wallet'"
-      [class.border-gray-200]="selectedMethod() !== 'wallet'"
-      [class.hover:border-gray-300]="selectedMethod() !== 'wallet'"
+      [class.border-border-default]="selectedMethod() !== 'wallet'"
+      [class.hover:border-border-subtle]="selectedMethod() !== 'wallet'"
       (click)="selectMethod('wallet')"
     >
       <div class="flex items-start">
@@ -87,9 +87,9 @@
         />
         <div class="flex-1">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-medium text-gray-900">Pagar con Wallet</span>
+            <span class="font-medium text-text-primary">Pagar con Wallet</span>
             <svg
-              class="w-5 h-5 text-gray-600 dark:text-gray-300"
+              class="w-5 h-5 text-text-secondary dark:text-text-secondary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -102,7 +102,7 @@
               ></path>
             </svg>
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-300">Usa tu saldo disponible</p>
+          <p class="text-sm text-text-secondary dark:text-text-secondary">Usa tu saldo disponible</p>
           <div class="mt-2 flex items-center gap-2">
             <span
               class="text-xs px-2 py-1 bg-success-light/20 text-success-light rounded flex items-center gap-1"
@@ -122,20 +122,20 @@
           <div *ngIf="selectedMethod() === 'wallet'" class="mt-3 space-y-2">
             <div class="p-3 bg-surface-raised rounded border border-success-light/40">
               <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600 dark:text-gray-300">Balance disponible:</span>
-                <span class="text-sm font-medium text-gray-900">{{
+                <span class="text-sm text-text-secondary dark:text-text-secondary">Balance disponible:</span>
+                <span class="text-sm font-medium text-text-primary">{{
                   formatCurrency(availableBalance())
                 }}</span>
               </div>
-              <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
-                <span class="text-sm font-medium text-gray-900">Se usará del wallet:</span>
+              <div class="flex justify-between items-center mt-2 pt-2 border-t border-border-default">
+                <span class="text-sm font-medium text-text-primary">Se usará del wallet:</span>
                 <span class="text-2xl font-bold text-success-light">{{
                   formatCurrency(totalAmount)
                 }}</span>
               </div>
               <div class="flex justify-between items-center mt-1">
-                <span class="text-sm text-gray-600 dark:text-gray-300">Balance restante:</span>
-                <span class="text-sm font-medium text-gray-900">{{
+                <span class="text-sm text-text-secondary dark:text-text-secondary">Balance restante:</span>
+                <span class="text-sm font-medium text-text-primary">{{
                   formatCurrency(availableBalance() - totalAmount)
                 }}</span>
               </div>
@@ -151,8 +151,8 @@
       class="payment-option border rounded-lg p-4 cursor-pointer transition-all"
       [class.border-purple-600]="selectedMethod() === 'partial_wallet'"
       [class.bg-purple-50]="selectedMethod() === 'partial_wallet'"
-      [class.border-gray-200]="selectedMethod() !== 'partial_wallet'"
-      [class.hover:border-gray-300]="selectedMethod() !== 'partial_wallet'"
+      [class.border-border-default]="selectedMethod() !== 'partial_wallet'"
+      [class.hover:border-border-subtle]="selectedMethod() !== 'partial_wallet'"
       (click)="selectMethod('partial_wallet')"
     >
       <div class="flex items-start">
@@ -165,10 +165,10 @@
         />
         <div class="flex-1">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-medium text-gray-900">Pago Mixto</span>
+            <span class="font-medium text-text-primary">Pago Mixto</span>
             <div class="flex items-center gap-1">
               <svg
-                class="w-5 h-5 text-gray-600 dark:text-gray-300"
+                class="w-5 h-5 text-text-secondary dark:text-text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -180,9 +180,9 @@
                   d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
                 ></path>
               </svg>
-              <span class="text-gray-400 dark:text-gray-300">+</span>
+              <span class="text-text-muted dark:text-text-secondary">+</span>
               <svg
-                class="w-5 h-5 text-gray-600 dark:text-gray-300"
+                class="w-5 h-5 text-text-secondary dark:text-text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -196,7 +196,7 @@
               </svg>
             </div>
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-300">Combina wallet y tarjeta</p>
+          <p class="text-sm text-text-secondary dark:text-text-secondary">Combina wallet y tarjeta</p>
           <div class="mt-2">
             <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded"
               >Optimiza tu saldo</span
@@ -206,12 +206,12 @@
           <!-- Wallet Amount Adjuster (only when selected) -->
           <div *ngIf="selectedMethod() === 'partial_wallet'" class="mt-3 space-y-3">
             <div class="p-3 bg-surface-raised rounded border border-purple-200">
-              <label for="walletAmount" class="block text-sm font-medium text-gray-900 mb-2">
+              <label for="walletAmount" class="block text-sm font-medium text-text-primary mb-2">
                 Monto a usar del wallet:
               </label>
               <div class="flex items-center gap-2">
                 <div class="relative flex-1">
-                  <span class="absolute left-3 top-2.5 text-gray-500 dark:text-gray-300 font-medium"
+                  <span class="absolute left-3 top-2.5 text-text-secondary dark:text-text-secondary font-medium"
                     >$</span
                   >
                   <input
@@ -222,7 +222,7 @@
                     [min]="0"
                     [max]="Math.min(availableBalance(), totalAmount)"
                     step="10"
-                    class="pl-8 pr-3 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    class="pl-8 pr-3 py-2 w-full border border-border-subtle rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                 </div>
                 <button
@@ -234,17 +234,17 @@
                 </button>
               </div>
               <div class="mt-2 flex items-center">
-                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                <div class="flex-1 bg-surface-hover rounded-full h-2">
                   <div
                     class="bg-purple-600 h-2 rounded-full transition-all"
                     [style.width.%]="walletPercentage()"
                   ></div>
                 </div>
-                <span class="ml-2 text-xs text-gray-600 dark:text-gray-300"
+                <span class="ml-2 text-xs text-text-secondary dark:text-text-secondary"
                   >{{ walletPercentage() }}%</span
                 >
               </div>
-              <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
+              <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
                 Disponible: {{ formatCurrency(availableBalance()) }}
               </p>
             </div>
@@ -252,20 +252,20 @@
             <!-- Payment Breakdown -->
             <div class="p-3 bg-surface-raised rounded border border-purple-200 space-y-2">
               <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600 dark:text-gray-300">Del wallet:</span>
+                <span class="text-sm text-text-secondary dark:text-text-secondary">Del wallet:</span>
                 <span class="text-sm font-medium text-purple-700">{{
                   formatCurrency(walletAmountToUse())
                 }}</span>
               </div>
               <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600 dark:text-gray-300">Con tarjeta:</span>
+                <span class="text-sm text-text-secondary dark:text-text-secondary">Con tarjeta:</span>
                 <span class="text-sm font-medium text-cta-default">{{
                   formatCurrency(cardAmount())
                 }}</span>
               </div>
-              <div class="flex justify-between items-center pt-2 border-t border-gray-200">
-                <span class="text-sm font-medium text-gray-900">Total:</span>
-                <span class="text-lg font-bold text-gray-900">{{
+              <div class="flex justify-between items-center pt-2 border-t border-border-default">
+                <span class="text-sm font-medium text-text-primary">Total:</span>
+                <span class="text-lg font-bold text-text-primary">{{
                   formatCurrency(totalAmount)
                 }}</span>
               </div>

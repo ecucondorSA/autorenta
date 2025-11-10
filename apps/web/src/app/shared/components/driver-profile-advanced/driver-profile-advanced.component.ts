@@ -10,24 +10,24 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
   template: `
     <div class="space-y-6">
       <!-- Progreso hacia siguiente clase -->
-      <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
-        <h3 class="mb-4 text-lg font-semibold text-gray-900">Progreso de Clase</h3>
+      <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
+        <h3 class="mb-4 text-lg font-semibold text-text-primary">Progreso de Clase</h3>
         @if (progress(); as p) {
           <div class="space-y-4">
             <div>
               <div class="mb-2 flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-700">Clase Actual</span>
-                <span class="text-lg font-bold text-gray-900">Clase {{ p.currentClass }}</span>
+                <span class="text-sm font-medium text-text-primary">Clase Actual</span>
+                <span class="text-lg font-bold text-text-primary">Clase {{ p.currentClass }}</span>
               </div>
               @if (p.canImprove) {
                 <div class="mb-2 flex items-center justify-between">
-                  <span class="text-sm text-gray-600">Próxima Clase</span>
+                  <span class="text-sm text-text-secondary">Próxima Clase</span>
                   <span class="text-sm font-medium text-cta-default">Clase {{ p.nextClass }}</span>
                 </div>
-                <div class="h-2 w-full rounded-full bg-gray-200">
+                <div class="h-2 w-full rounded-full bg-surface-hover">
                   <div class="h-2 rounded-full bg-cta-default" [style.width.%]="50"></div>
                 </div>
-                <p class="mt-2 text-xs text-gray-500">
+                <p class="mt-2 text-xs text-text-secondary">
                   Necesitas {{ p.yearsNeeded }} año(s) sin siniestros para mejorar
                 </p>
               } @else {
@@ -39,8 +39,8 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
       </div>
 
       <!-- Beneficios de todas las clases -->
-      <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
-        <h3 class="mb-4 text-lg font-semibold text-gray-900">Beneficios por Clase</h3>
+      <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
+        <h3 class="mb-4 text-lg font-semibold text-text-primary">Beneficios por Clase</h3>
         @if (loadingBenefits()) {
           <div class="flex items-center justify-center py-8">
             <div
@@ -53,13 +53,13 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
               <div
                 class="rounded-lg border p-4"
                 [class.bg-success-light/10]="benefit.is_discount"
-                [class.bg-red-50]="!benefit.is_discount && benefit.fee_multiplier > 1"
-                [class.bg-gray-50]="benefit.fee_multiplier === 1"
+                [class.bg-error-50]="!benefit.is_discount && benefit.fee_multiplier > 1"
+                [class.bg-surface-base]="benefit.fee_multiplier === 1"
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <h4 class="font-semibold text-gray-900">Clase {{ benefit.class }}</h4>
-                    <p class="text-sm text-gray-600">{{ benefit.description }}</p>
+                    <h4 class="font-semibold text-text-primary">Clase {{ benefit.class }}</h4>
+                    <p class="text-sm text-text-secondary">{{ benefit.description }}</p>
                   </div>
                   <div class="text-right">
                     @if (benefit.is_discount) {
@@ -70,14 +70,14 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
                         -{{ benefit.guarantee_discount_pct }}% garantía
                       </p>
                     } @else if (benefit.fee_multiplier > 1) {
-                      <p class="text-sm font-medium text-red-600">
+                      <p class="text-sm font-medium text-error-600">
                         +{{ roundPercent((benefit.fee_multiplier - 1) * 100) }}% fee
                       </p>
-                      <p class="text-xs text-red-600">
+                      <p class="text-xs text-error-600">
                         +{{ roundPercent((benefit.guarantee_multiplier - 1) * 100) }}% garantía
                       </p>
                     } @else {
-                      <p class="text-sm font-medium text-gray-600">Sin ajustes</p>
+                      <p class="text-sm font-medium text-text-secondary">Sin ajustes</p>
                     }
                   </div>
                 </div>
@@ -88,15 +88,15 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
       </div>
 
       <!-- Impacto de siniestro -->
-      <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
-        <h3 class="mb-4 text-lg font-semibold text-gray-900">Simulador de Impacto</h3>
+      <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
+        <h3 class="mb-4 text-lg font-semibold text-text-primary">Simulador de Impacto</h3>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700">Severidad del Siniestro</label>
+            <label class="block text-sm font-medium text-text-primary">Severidad del Siniestro</label>
             <select
               [(ngModel)]="claimSeverity"
               (change)="calculateImpact()"
-              class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
             >
               <option [value]="1">Leve</option>
               <option [value]="2">Moderado</option>
@@ -104,7 +104,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700">
+            <label class="block text-sm font-medium text-text-primary">
               <input
                 type="checkbox"
                 [(ngModel)]="withFault"
@@ -115,13 +115,13 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
             </label>
           </div>
           @if (impact(); as i) {
-            <div class="rounded-lg bg-yellow-50 p-4">
-              <p class="text-sm font-medium text-yellow-800">Impacto Estimado:</p>
-              <p class="mt-1 text-sm text-yellow-700">
+            <div class="rounded-lg bg-warning-50 p-4">
+              <p class="text-sm font-medium text-warning-800">Impacto Estimado:</p>
+              <p class="mt-1 text-sm text-warning-700">
                 Clase actual: {{ i.currentClass }} → Nueva clase: {{ i.newClass }}
               </p>
               @if (i.classIncrease > 0) {
-                <p class="mt-1 text-sm text-red-600">Aumento de clase: +{{ i.classIncrease }}</p>
+                <p class="mt-1 text-sm text-error-600">Aumento de clase: +{{ i.classIncrease }}</p>
               } @else {
                 <p class="mt-1 text-sm text-success-light">Sin cambio de clase</p>
               }

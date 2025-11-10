@@ -236,10 +236,10 @@ export class WalletLedgerService {
       franchise_user: 'bg-warning-100 text-warning-900',
       franchise_fund: 'bg-warning-100 text-warning-900',
       withdrawal: 'bg-cta-default/20 text-cta-default',
-      adjustment: 'bg-gray-100 text-gray-900',
+      adjustment: 'bg-surface-raised text-text-primary',
       bonus: 'bg-success-100 text-success-900',
-      fee: 'bg-gray-100 text-gray-900',
+      fee: 'bg-surface-raised text-text-primary',
     };
-    return colors[kind] || 'bg-gray-100 text-gray-900';
+    return colors[kind] || 'bg-surface-raised text-text-primary';
   }
 }

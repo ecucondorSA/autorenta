@@ -54,13 +54,13 @@ import { AccountingService, BalanceSheet } from '../../../../core/services/accou
             <ion-item *ngFor="let item of assets()" lines="full">
               <ion-label>
                 <h4>{{ item.code }} - {{ item.name }}</h4>
-                <p class="text-sm text-gray-500">{{ item.sub_type }}</p>
+                <p class="text-sm text-text-secondary">{{ item.sub_type }}</p>
               </ion-label>
               <ion-note slot="end" class="text-lg font-semibold" color="success">
                 {{ formatCurrency(item.balance) }}
               </ion-note>
             </ion-item>
-            <ion-item class="bg-gray-100">
+            <ion-item class="bg-surface-raised">
               <ion-label><strong>Total Activos</strong></ion-label>
               <ion-note slot="end" class="text-xl font-bold" color="success">
                 {{ formatCurrency(totalAssets()) }}
@@ -79,13 +79,13 @@ import { AccountingService, BalanceSheet } from '../../../../core/services/accou
             <ion-item *ngFor="let item of liabilities()" lines="full">
               <ion-label>
                 <h4>{{ item.code }} - {{ item.name }}</h4>
-                <p class="text-sm text-gray-500">{{ item.sub_type }}</p>
+                <p class="text-sm text-text-secondary">{{ item.sub_type }}</p>
               </ion-label>
               <ion-note slot="end" class="text-lg font-semibold" color="danger">
                 {{ formatCurrency(item.balance) }}
               </ion-note>
             </ion-item>
-            <ion-item class="bg-gray-100">
+            <ion-item class="bg-surface-raised">
               <ion-label><strong>Total Pasivos</strong></ion-label>
               <ion-note slot="end" class="text-xl font-bold" color="danger">
                 {{ formatCurrency(totalLiabilities()) }}
@@ -104,13 +104,13 @@ import { AccountingService, BalanceSheet } from '../../../../core/services/accou
             <ion-item *ngFor="let item of equity()" lines="full">
               <ion-label>
                 <h4>{{ item.code }} - {{ item.name }}</h4>
-                <p class="text-sm text-gray-500">{{ item.sub_type }}</p>
+                <p class="text-sm text-text-secondary">{{ item.sub_type }}</p>
               </ion-label>
               <ion-note slot="end" class="text-lg font-semibold" color="primary">
                 {{ formatCurrency(item.balance) }}
               </ion-note>
             </ion-item>
-            <ion-item class="bg-gray-100">
+            <ion-item class="bg-surface-raised">
               <ion-label><strong>Total Patrimonio</strong></ion-label>
               <ion-note slot="end" class="text-xl font-bold" color="primary">
                 {{ formatCurrency(totalEquity()) }}
@@ -150,10 +150,10 @@ import { AccountingService, BalanceSheet } from '../../../../core/services/accou
       .text-sm {
         font-size: 0.875rem;
       }
-      .text-gray-500 {
+      .text-text-secondary {
         color: #6b7280;
       }
-      .bg-gray-100 {
+      .bg-surface-raised {
         background-color: #f3f4f6;
       }
       .mb-2 {
