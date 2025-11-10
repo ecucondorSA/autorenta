@@ -110,6 +110,11 @@ export class WalletPage implements AfterViewInit, OnInit {
    */
   readonly benefitsSectionExpanded = signal(false);
 
+  /**
+   * Flag to track if withdrawal data has been loaded (for lazy loading)
+   */
+  private withdrawalDataLoaded = false;
+
   private readonly walletService = inject(WalletService);
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
@@ -257,14 +262,22 @@ export class WalletPage implements AfterViewInit, OnInit {
       }
     });
 
-    // Cargar datos al iniciar
-    this.loadWithdrawalData();
-    this.loadWalletAccountNumber();
+    // Lazy load withdrawal data when switching to withdrawals tab
+    effect(() => {
+      if (this.activeTab() === 'withdrawals' && !this.withdrawalDataLoaded) {
+        this.withdrawalDataLoaded = true;
+        void this.loadWithdrawalData();
+      }
+    });
   }
 
   async ngOnInit(): Promise<void> {
+    // Load initial data in parallel for faster page load
     try {
-      await this.walletService.refreshPendingDepositsCount();
+      await Promise.all([
+        this.walletService.refreshPendingDepositsCount(),
+        this.loadWalletAccountNumber(),
+      ]);
     } catch {
       /* Silenced */
     }

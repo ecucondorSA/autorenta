@@ -66,7 +66,7 @@ import { firstValueFrom } from 'rxjs';
       <!-- Payouts List -->
       @if (!loading() && !error() && payouts().length > 0) {
         <div class="space-y-3">
-          @for (payout of payouts(); track payout.id) {
+          @for (payout of visiblePayouts(); track payout.id) {
             <div
               class="bg-surface-raised dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow"
             >
@@ -133,6 +133,18 @@ import { firstValueFrom } from 'rxjs';
           }
         </div>
 
+        <!-- Load More Button -->
+        @if (hasMore()) {
+          <div class="mt-4 text-center">
+            <button
+              (click)="loadMore()"
+              class="px-6 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default/90 transition-colors"
+            >
+              Cargar más ingresos ({{ visiblePayouts().length }} de {{ payouts().length }})
+            </button>
+          </div>
+        }
+
         <!-- Summary Stats -->
         <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="bg-cta-default/10 dark:bg-cta-default/20 rounded-lg p-4">
@@ -170,6 +182,12 @@ export class PayoutsHistoryComponent implements OnInit {
   readonly completedCount = signal(0);
   readonly pendingCount = signal(0);
 
+  // Pagination
+  private readonly PAGE_SIZE = 20;
+  readonly currentPage = signal(1);
+  readonly visiblePayouts = signal<Payout[]>([]);
+  readonly hasMore = signal(false);
+
   async ngOnInit(): Promise<void> {
     await this.loadPayouts();
   }
@@ -197,11 +215,36 @@ export class PayoutsHistoryComponent implements OnInit {
       this.totalAmount.set(total);
       this.completedCount.set(completed);
       this.pendingCount.set(pending);
+
+      // Initialize pagination
+      this.updateVisiblePayouts();
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error al cargar historial de ingresos');
     } finally {
       this.loading.set(false);
     }
+  }
+
+  /**
+   * Update visible payouts based on current page
+   * Implements pagination for better performance with large payout lists
+   */
+  private updateVisiblePayouts(): void {
+    const allPayouts = this.payouts();
+    const page = this.currentPage();
+    const endIndex = page * this.PAGE_SIZE;
+    const startIndex = 0; // Always show from the beginning
+
+    this.visiblePayouts.set(allPayouts.slice(startIndex, endIndex));
+    this.hasMore.set(endIndex < allPayouts.length);
+  }
+
+  /**
+   * Load more payouts (next page)
+   */
+  loadMore(): void {
+    this.currentPage.update((page) => page + 1);
+    this.updateVisiblePayouts();
   }
 
   getStatusLabel(status: Payout['status']): string {

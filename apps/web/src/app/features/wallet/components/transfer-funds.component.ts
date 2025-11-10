@@ -1,6 +1,7 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { WalletLedgerService, TransferResponse } from '@app/core/services/wallet-ledger.service';
 import { WalletService } from '@app/core/services/wallet.service';
 import { WalletBalance } from '@app/core/models/wallet.model';
@@ -37,17 +38,25 @@ export class TransferFundsComponent {
   lastTransferAmount = signal(0);
 
   currentBalance = computed(() => this.walletService.balance()?.available_balance ?? 0);
-  currentUserId = signal<string | null>(null);
+
+  // Use toSignal to convert Observable to Signal (no memory leak)
+  private readonly balanceSignal = toSignal(this.walletService.getBalance(), {
+    initialValue: null,
+  });
+
+  // Derive currentUserId from balance signal
+  currentUserId = computed(() => this.balanceSignal()?.user_id ?? null);
 
   recentTransfers = this.ledgerService.transfers;
 
   constructor() {
-    this.walletService.getBalance().subscribe((balance: WalletBalance) => {
-      if (balance) {
-        this.currentUserId.set(balance.user_id);
-      }
+    // Load balance and transfers in parallel
+    Promise.all([
+      this.walletService.getBalance(),
+      this.ledgerService.loadTransfers(5),
+    ]).catch(() => {
+      // Silently handle errors - individual services handle their own error states
     });
-    this.ledgerService.loadTransfers(5);
   }
 
   onSearchInput(): void {
