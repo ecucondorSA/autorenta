@@ -197,8 +197,8 @@ export class InboxPage implements OnInit, OnDestroy {
         table: 'messages',
         filter: `sender_id=eq.${userId}`,
       },
-      async (payload) => {
-        await this.handleMessageChange(payload.new as Message, userId);
+      (payload) => {
+        this.handleMessageChange(payload.new as Message, userId);
       },
       (status) => {
         this.connectionStatus.set(status);
@@ -214,8 +214,8 @@ export class InboxPage implements OnInit, OnDestroy {
         table: 'messages',
         filter: `recipient_id=eq.${userId}`,
       },
-      async (payload) => {
-        await this.handleMessageChange(payload.new as Message, userId);
+      (payload) => {
+        this.handleMessageChange(payload.new as Message, userId);
       },
       (status) => {
         this.connectionStatus.set(status);
@@ -228,40 +228,72 @@ export class InboxPage implements OnInit, OnDestroy {
 
   /**
    * Maneja cambios en mensajes recibidos via realtime
-   * Recalcula solo la conversación afectada
+   * Optimizado: actualiza solo los campos necesarios sin refetch completo
    */
-  private async handleMessageChange(message: Message, userId: string): Promise<void> {
+  private handleMessageChange(message: Message, userId: string): void {
     const conversationId = message.car_id || message.booking_id;
     if (!conversationId) return;
 
     const otherUserId = message.sender_id === userId ? message.recipient_id : message.sender_id;
     const conversationKey = `${conversationId}_${otherUserId}`;
 
-    // Obtener conversación actualizada desde el repository
-    const updatedConversation = await this.messagesService.listConversations(userId, {
-      limit: 1,
-      offset: 0,
-      carId: message.car_id || undefined,
-      bookingId: message.booking_id || undefined,
-    });
-
-    const conv = updatedConversation.conversations.find((c) => c.id === conversationKey);
-    if (!conv) return;
-
-    // Actualizar solo esta conversación en el array
+    // Actualizar solo los campos necesarios sin hacer refetch
     this.conversations.update((convs) => {
       const index = convs.findIndex((c) => c.id === conversationKey);
+
       if (index >= 0) {
-        // Reemplazar conversación existente
+        // Actualizar conversación existente
         const updated = [...convs];
-        updated[index] = conv;
+        const existingConv = updated[index];
+
+        // Update only changed fields
+        updated[index] = {
+          ...existingConv,
+          lastMessage: message.content,
+          lastMessageAt: new Date(message.created_at),
+          // Increment unread count if message is from other user and not read
+          unreadCount: message.sender_id !== userId ? existingConv.unreadCount + 1 : existingConv.unreadCount,
+        };
+
         // Reordenar por fecha de último mensaje
         return updated.sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime());
       } else {
-        // Nueva conversación, agregar al inicio
-        return [conv, ...convs];
+        // Nueva conversación - en este caso sí necesitamos hacer fetch
+        // pero lo hacemos en background sin bloquear
+        void this.fetchAndAddNewConversation(conversationKey, message, userId);
+        return convs;
       }
     });
+  }
+
+  /**
+   * Fetches and adds a new conversation (called only when a new conversation starts)
+   */
+  private async fetchAndAddNewConversation(
+    conversationKey: string,
+    message: Message,
+    userId: string
+  ): Promise<void> {
+    try {
+      const updatedConversation = await this.messagesService.listConversations(userId, {
+        limit: 1,
+        offset: 0,
+        carId: message.car_id || undefined,
+        bookingId: message.booking_id || undefined,
+      });
+
+      const conv = updatedConversation.conversations.find((c) => c.id === conversationKey);
+      if (!conv) return;
+
+      // Add new conversation to the list
+      this.conversations.update((convs) => {
+        // Check if it was already added (race condition)
+        if (convs.some((c) => c.id === conversationKey)) return convs;
+        return [conv, ...convs].sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime());
+      });
+    } catch (error) {
+      console.error('Error fetching new conversation:', error);
+    }
   }
 
   private async loadConversations(): Promise<void> {
