@@ -1,12 +1,12 @@
 <div class="review-form-container bg-surface-raised rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
   <!-- Header -->
   <div class="mb-6">
-    <h2 class="text-2xl font-bold text-gray-900 mb-2">Califica tu experiencia</h2>
-    <p class="text-gray-600 dark:text-gray-300">
+    <h2 class="text-2xl font-bold text-text-primary mb-2">Califica tu experiencia</h2>
+    <p class="text-text-secondary dark:text-text-secondary">
       {{ isRenterToOwner ? 'Califica al propietario' : 'Califica al arrendatario' }}:
       <span class="font-semibold">{{ revieweeName }}</span>
     </p>
-    <p class="text-sm text-gray-500 dark:text-gray-300">Vehículo: {{ carTitle }}</p>
+    <p class="text-sm text-text-secondary dark:text-text-secondary">Vehículo: {{ carTitle }}</p>
   </div>
 
   <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
@@ -17,8 +17,8 @@
           <div class="flex items-center space-x-2">
             <span class="text-2xl">{{ category.icon }}</span>
             <div>
-              <h3 class="font-semibold text-gray-900">{{ category.label }}</h3>
-              <p class="text-xs text-gray-500 dark:text-gray-300">{{ category.description }}</p>
+              <h3 class="font-semibold text-text-primary">{{ category.label }}</h3>
+              <p class="text-xs text-text-secondary dark:text-text-secondary">{{ category.description }}</p>
             </div>
           </div>
           <div class="flex space-x-1 star-rating-container" [attr.data-category]="category.key">
@@ -34,10 +34,10 @@
             >
               <svg
                 class="w-8 h-8 transition-all duration-200"
-                [class.text-yellow-400]="
+                [class.text-warning-400]="
                   getRating(category.key) >= star || getHoverRating(category.key) >= star
                 "
-                [class.text-yellow-300]="
+                [class.text-warning-300]="
                   getHoverRating(category.key) >= star && getRating(category.key) < star
                 "
                 [class.text-gray-300]="
@@ -59,10 +59,10 @@
     <!-- Overall Rating Display -->
     <div class="bg-cta-default/10 rounded-lg p-4 mb-6">
       <div class="flex items-center justify-between">
-        <span class="text-gray-700 font-medium">Calificación promedio:</span>
+        <span class="text-text-primary font-medium">Calificación promedio:</span>
         <div class="flex items-center space-x-2">
           <span class="text-3xl font-bold text-cta-default">{{ getAverageRating() }}</span>
-          <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-8 h-8 text-warning-400" fill="currentColor" viewBox="0 0 20 20">
             <path
               d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
             />
@@ -73,9 +73,9 @@
 
     <!-- Public Comment -->
     <div class="mb-6">
-      <label for="comment_public" class="block text-sm font-medium text-gray-700 mb-2">
+      <label for="comment_public" class="block text-sm font-medium text-text-primary mb-2">
         Comentario público
-        <span class="text-gray-500 dark:text-gray-300 font-normal"
+        <span class="text-text-secondary dark:text-text-secondary font-normal"
           >(opcional, visible para todos)</span
         >
       </label>
@@ -83,15 +83,15 @@
         id="comment_public"
         formControlName="comment_public"
         rows="4"
-        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none transition-all"
-        [class.border-red-300]="
+        class="w-full px-3 py-2 border border-border-subtle rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none transition-all"
+        [class.border-error-300]="
           reviewForm.get('comment_public')?.invalid && reviewForm.get('comment_public')?.touched
         "
         placeholder="Comparte tu experiencia con otros usuarios..."
         maxlength="1000"
       ></textarea>
-      <p class="text-xs text-gray-500 dark:text-gray-300 mt-1 text-right">
-        <span [class.text-red-600]="(reviewForm.get('comment_public')?.value?.length || 0) > 1000">
+      <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-right">
+        <span [class.text-error-600]="(reviewForm.get('comment_public')?.value?.length || 0) > 1000">
           {{ reviewForm.get('comment_public')?.value?.length || 0 }} / 1000 caracteres
         </span>
       </p>
@@ -99,9 +99,9 @@
 
     <!-- Private Comment -->
     <div class="mb-6">
-      <label for="comment_private" class="block text-sm font-medium text-gray-700 mb-2">
+      <label for="comment_private" class="block text-sm font-medium text-text-primary mb-2">
         Comentario privado
-        <span class="text-gray-500 dark:text-gray-300 font-normal"
+        <span class="text-text-secondary dark:text-text-secondary font-normal"
           >(opcional, solo visible para {{ revieweeName }})</span
         >
       </label>
@@ -109,20 +109,20 @@
         id="comment_private"
         formControlName="comment_private"
         rows="3"
-        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none"
+        class="w-full px-3 py-2 border border-border-subtle rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none"
         placeholder="Comentarios privados para {{ revieweeName }}..."
         maxlength="500"
       ></textarea>
-      <p class="text-xs text-gray-500 dark:text-gray-300 mt-1 text-right">
+      <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-right">
         {{ reviewForm.get('comment_private')?.value?.length || 0 }} / 500 caracteres
       </p>
     </div>
 
     <!-- Info Note -->
-    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+    <div class="bg-warning-50 border border-warning-200 rounded-lg p-4 mb-6">
       <div class="flex">
         <svg
-          class="w-5 h-5 text-yellow-600 mr-2 flex-shrink-0 mt-0.5"
+          class="w-5 h-5 text-warning-600 mr-2 flex-shrink-0 mt-0.5"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -132,7 +132,7 @@
             clip-rule="evenodd"
           />
         </svg>
-        <p class="text-sm text-yellow-800">
+        <p class="text-sm text-warning-800">
           Tu calificación será publicada cuando ambas partes hayan completado sus reviews, o después
           de 14 días. Esto evita represalias y garantiza opiniones honestas.
         </p>
@@ -144,7 +144,7 @@
       <button
         type="button"
         (click)="onCancel()"
-        class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+        class="px-6 py-2 border border-border-subtle rounded-lg text-text-primary hover:bg-surface-base transition-colors"
         [disabled]="isSubmitting"
       >
         Cancelar

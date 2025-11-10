@@ -35,21 +35,21 @@ interface WalletLedgerEntry {
     <div class="max-w-6xl mx-auto p-6">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse mb-2">
+        <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse mb-2">
           📊 Fondo de Cobertura
         </h1>
-        <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
+        <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
           Administración del fondo de franquicias para incidentes
         </p>
       </div>
 
       <!-- Loading State -->
       @if (loading()) {
-        <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-8 text-center">
+        <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-8 text-center">
           <div
             class="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default mx-auto mb-4"
           ></div>
-          <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
+          <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
             Cargando datos del fondo...
           </p>
         </div>
@@ -58,13 +58,13 @@ interface WalletLedgerEntry {
       <!-- Error State -->
       @else if (error()) {
         <div
-          class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6"
+          class="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg p-6"
         >
-          <h3 class="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">Error</h3>
-          <p class="text-red-700 dark:text-red-300">{{ error() }}</p>
+          <h3 class="text-lg font-semibold text-error-800 dark:text-error-200 mb-2">Error</h3>
+          <p class="text-error-700 dark:text-error-300">{{ error() }}</p>
           <button
             (click)="loadFundData()"
-            class="mt-4 px-4 py-2 bg-red-600 text-text-inverse rounded-md hover:bg-red-700"
+            class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-md hover:bg-error-700"
           >
             Reintentar
           </button>
@@ -107,65 +107,65 @@ interface WalletLedgerEntry {
           @if (stats()) {
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <!-- Total Collected -->
-              <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6">
+              <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                     Total Recaudado
                   </p>
                   <span class="text-2xl">📥</span>
                 </div>
-                <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
+                <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   {{ stats()!.total_franchises_collected }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
                   franquicias cobradas
                 </p>
               </div>
 
               <!-- Total Disbursed -->
-              <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6">
+              <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                     Total Desembolsado
                   </p>
                   <span class="text-2xl">📤</span>
                 </div>
-                <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
+                <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   {{ stats()!.total_franchises_disbursed }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
                   franquicias pagadas
                 </p>
               </div>
 
               <!-- Total Entries -->
-              <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6">
+              <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                     Entradas en Ledger
                   </p>
                   <span class="text-2xl">📝</span>
                 </div>
-                <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
+                <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   {{ stats()!.total_ledger_entries }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
                   movimientos totales
                 </p>
               </div>
 
               <!-- Average Amount -->
-              <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow p-6">
+              <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300">
+                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                     Promedio Franquicia
                   </p>
                   <span class="text-2xl">💰</span>
                 </div>
-                <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
+                <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   {{ formatAmount(stats()!.avg_franchise_amount) }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
                   por incidente
                 </p>
               </div>
@@ -174,14 +174,14 @@ interface WalletLedgerEntry {
 
           <!-- Fund Metadata -->
           @if (fund()!.meta && Object.keys(fund()!.meta).length > 0) {
-            <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow">
-              <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse">
+            <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow">
+              <div class="px-6 py-4 border-b border-border-default dark:border-border-subtle">
+                <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
                   Metadata del Fondo
                 </h2>
               </div>
               <div class="p-6">
-                <pre class="bg-gray-100 dark:bg-gray-900 rounded p-4 text-sm overflow-x-auto">{{
+                <pre class="bg-surface-raised dark:bg-surface-raised rounded p-4 text-sm overflow-x-auto">{{
                   JSON.stringify(fund()!.meta, null, 2)
                 }}</pre>
               </div>
@@ -189,11 +189,11 @@ interface WalletLedgerEntry {
           }
 
           <!-- Recent Activity -->
-          <div class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow">
+          <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow">
             <div
-              class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between"
+              class="px-6 py-4 border-b border-border-default dark:border-border-subtle flex items-center justify-between"
             >
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-text-inverse">
+              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
                 Actividad Reciente
               </h2>
               <button
@@ -213,32 +213,32 @@ interface WalletLedgerEntry {
               </div>
             } @else if (recentActivity().length === 0) {
               <div class="p-8 text-center">
-                <p class="text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                   No hay actividad reciente
                 </p>
               </div>
             } @else {
               <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 @for (entry of recentActivity(); track entry.id) {
-                  <div class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <div class="p-6 hover:bg-surface-base dark:hover:bg-gray-700/50 transition-colors">
                     <div class="flex items-start justify-between">
                       <div class="flex items-start space-x-3">
                         <span class="text-2xl">
                           {{ entry.kind === 'franchise_fund' ? '📥' : '📤' }}
                         </span>
                         <div>
-                          <p class="font-medium text-gray-900 dark:text-text-inverse">
+                          <p class="font-medium text-text-primary dark:text-text-inverse">
                             {{ getKindLabel(entry.kind) }}
                           </p>
                           @if (entry.meta && entry.meta['description']) {
                             <p
-                              class="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-300 mt-1"
+                              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
                             >
                               {{ entry.meta!['description'] }}
                             </p>
                           }
                           <div
-                            class="flex items-center space-x-4 mt-2 text-xs text-gray-500 dark:text-gray-300"
+                            class="flex items-center space-x-4 mt-2 text-xs text-text-secondary dark:text-text-secondary"
                           >
                             <span>Ref: {{ entry.ref }}</span>
                             @if (entry.booking_id) {
@@ -252,7 +252,7 @@ interface WalletLedgerEntry {
                         <p
                           class="text-lg font-bold"
                           [class.text-success-light]="entry.kind === 'franchise_fund'"
-                          [class.text-red-600]="entry.kind === 'franchise_user'"
+                          [class.text-error-600]="entry.kind === 'franchise_user'"
                         >
                           {{ entry.kind === 'franchise_fund' ? '+' : '-'
                           }}{{ formatAmount(entry.amount_cents) }}
@@ -267,9 +267,9 @@ interface WalletLedgerEntry {
 
           <!-- Action Buttons (Admin Only) -->
           <div
-            class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6"
+            class="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-lg p-6"
           >
-            <h3 class="text-lg font-semibold text-yellow-900 dark:text-yellow-100 mb-4">
+            <h3 class="text-lg font-semibold text-warning-900 dark:text-warning-100 mb-4">
               ⚠️ Acciones Administrativas
             </h3>
             <div class="flex flex-wrap gap-3">

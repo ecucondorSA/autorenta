@@ -147,7 +147,7 @@
           <!-- Pending: Needs Payment -->
           <div *ngIf="booking.status === 'pending'" class="space-y-3">
             <div
-              class="flex items-center gap-2 text-amber-600 dark:text-amber-400 text-sm font-medium"
+              class="flex items-center gap-2 text-warning-600 dark:text-warning-400 text-sm font-medium"
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path
@@ -191,7 +191,7 @@
               <!-- Cancelar (siempre visible) -->
               <button
                 (click)="$event.preventDefault(); cancelBooking(booking.id)"
-                class="px-4 py-3 border-2 border-border-default dark:border-gray-600/60 dark:border-neutral-700 text-text-secondary dark:text-text-secondary rounded-xl font-semibold hover:bg-border-default/20 dark:hover:bg-neutral-800 transition-base order-3 sm:flex-none sm:w-auto"
+                class="px-4 py-3 border-2 border-border-default dark:border-border-default/60 dark:border-neutral-700 text-text-secondary dark:text-text-secondary rounded-xl font-semibold hover:bg-border-default/20 dark:hover:bg-neutral-800 transition-base order-3 sm:flex-none sm:w-auto"
               >
                 🗑️ Cancelar
               </button>
@@ -221,7 +221,7 @@
               <button
                 (click)="$event.preventDefault(); showInstructions(booking)"
                 data-tour-step="view-instructions-btn"
-                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-gray-600/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"
+                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"
               >
                 <span class="text-2xl">📋</span>
                 <span class="text-xs font-medium text-text-secondary dark:text-text-secondary"
@@ -231,7 +231,7 @@
               <button
                 (click)="$event.preventDefault(); openChat(booking)"
                 data-tour-step="chat-btn"
-                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-gray-600/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"
+                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"
               >
                 <span class="text-2xl">💬</span>
                 <span class="text-xs font-medium text-text-secondary dark:text-text-secondary"
@@ -241,7 +241,7 @@
               <button
                 (click)="$event.preventDefault(); showMap(booking)"
                 data-tour-step="map-btn"
-                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-gray-600/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"
+                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"
               >
                 <span class="text-2xl">🗺️</span>
                 <span class="text-xs font-medium text-text-secondary dark:text-text-secondary"
@@ -254,7 +254,7 @@
 
         <!-- Card Footer with Price and Action -->
         <div
-          class="p-4 sm:p-5 bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary/90 border-t border-border-default dark:border-gray-600/40 dark:border-slate-deep/60 transition-base"
+          class="p-4 sm:p-5 bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary/90 border-t border-border-default dark:border-border-default/40 dark:border-slate-deep/60 transition-base"
         >
           <div class="flex items-center justify-between">
             <div>
@@ -264,7 +264,7 @@
               </p>
             </div>
             <div
-              class="flex items-center gap-2 text-cta-default dark:text-text-primary font-semibold text-sm hover:text-warning-light dark:hover:text-amber-200 transition-base"
+              class="flex items-center gap-2 text-cta-default dark:text-text-primary font-semibold text-sm hover:text-warning-light dark:hover:text-warning-200 transition-base"
             >
               Ver detalle
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

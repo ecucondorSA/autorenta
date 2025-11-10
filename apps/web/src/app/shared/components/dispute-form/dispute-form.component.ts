@@ -11,7 +11,7 @@ import { ToastService } from '../../../core/services/toast.service';
   template: `
     <div
       *ngIf="isOpen()"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
       (click)="onBackdropClick($event)"
     >
       <div
@@ -56,7 +56,7 @@ import { ToastService } from '../../../core/services/toast.service';
             </label>
             <select
               [(ngModel)]="selectedKind"
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
+              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
             >
               <option value="">-- Seleccionar tipo --</option>
               <option value="damage">Daños al vehículo</option>
@@ -77,7 +77,7 @@ import { ToastService } from '../../../core/services/toast.service';
               [(ngModel)]="description"
               rows="6"
               placeholder="Describe el problema en detalle..."
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
+              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
               required
             ></textarea>
             <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
@@ -89,7 +89,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <!-- Error Message -->
           <div
             *ngIf="error()"
-            class="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-700 dark:text-red-400"
+            class="p-3 bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-xl text-sm text-error-700 dark:text-error-400"
           >
             {{ error() }}
           </div>
@@ -100,7 +100,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <button
             type="button"
             (click)="close()"
-            class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-gray-600 text-text-secondary hover:bg-gray-100 dark:hover:bg-slate-deep transition-all font-medium"
+            class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-secondary hover:bg-surface-raised dark:hover:bg-slate-deep transition-all font-medium"
           >
             Cancelar
           </button>

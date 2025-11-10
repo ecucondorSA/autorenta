@@ -11,7 +11,7 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
     <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-gray-500">Cargando...</p>
+    <p class="mt-4 text-text-secondary">Cargando...</p>
   </div>
 
   <!-- Error Message -->
@@ -75,7 +75,7 @@
         <div class="space-y-4">
           <div
             *ngFor="let line of entryLines(); let i = index"
-            class="border rounded-lg p-4 bg-gray-50"
+            class="border rounded-lg p-4 bg-surface-base"
           >
             <div class="flex justify-between items-center mb-3">
               <h3 class="font-semibold">Línea {{ i + 1 }}</h3>

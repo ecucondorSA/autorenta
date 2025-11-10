@@ -8,8 +8,8 @@ import { ReviewsService } from '../../../core/services/reviews.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
-      <h3 class="mb-4 text-lg font-semibold text-gray-900">Reviews Pendientes</h3>
+    <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
+      <h3 class="mb-4 text-lg font-semibold text-text-primary">Reviews Pendientes</h3>
 
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
@@ -18,32 +18,32 @@ import { ReviewsService } from '../../../core/services/reviews.service';
           ></div>
         </div>
       } @else if (pendingReviews().length === 0) {
-        <div class="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-600">
+        <div class="rounded-lg bg-surface-base p-4 text-center text-sm text-text-secondary">
           No tienes reviews pendientes.
         </div>
       } @else {
         <div class="space-y-3">
           @for (review of pendingReviews(); track review.booking_id) {
-            <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
+            <div class="rounded-lg border border-border-default bg-surface-base p-4">
               <div class="flex items-start justify-between">
                 <div class="flex-1">
-                  <h4 class="font-medium text-gray-900">{{ review.car_title }}</h4>
-                  <p class="text-sm text-gray-600">Para: {{ review.reviewee_name }}</p>
-                  <p class="mt-1 text-xs text-gray-500">
+                  <h4 class="font-medium text-text-primary">{{ review.car_title }}</h4>
+                  <p class="text-sm text-text-secondary">Para: {{ review.reviewee_name }}</p>
+                  <p class="mt-1 text-xs text-text-secondary">
                     Checkout: {{ review.checkout_date | date: 'short' }}
                   </p>
                 </div>
                 <div class="ml-4 text-right">
                   <div
                     class="rounded-full px-3 py-1 text-xs font-medium"
-                    [class.bg-yellow-100]="review.days_remaining > 7"
-                    [class.text-yellow-800]="review.days_remaining > 7"
+                    [class.bg-warning-100]="review.days_remaining > 7"
+                    [class.text-warning-800]="review.days_remaining > 7"
                     [class.bg-warning-light/20]="review.days_remaining <= 7 && review.days_remaining > 3"
                     [class.text-warning-light]="
                       review.days_remaining <= 7 && review.days_remaining > 3
                     "
-                    [class.bg-red-100]="review.days_remaining <= 3"
-                    [class.text-red-800]="review.days_remaining <= 3"
+                    [class.bg-error-100]="review.days_remaining <= 3"
+                    [class.text-error-800]="review.days_remaining <= 3"
                   >
                     {{ review.days_remaining }} días restantes
                   </div>

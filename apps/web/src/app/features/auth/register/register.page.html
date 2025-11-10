@@ -86,10 +86,10 @@
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2"
             [class.border-border-default
-            dark:border-gray-600]="
+            dark:border-border-default]="
               !form.controls.fullName.touched || !form.controls.fullName.invalid
             "
-            [class.border-red-500]="
+            [class.border-error-500]="
               form.controls.fullName.touched && form.controls.fullName.invalid
             "
             [class.focus:ring-cta-default]="
@@ -102,7 +102,7 @@
           <p
             *ngIf="form.controls.fullName.touched && form.controls.fullName.errors?.['required']"
             id="register-fullname-error"
-            class="mt-2 text-xs text-red-600"
+            class="mt-2 text-xs text-error-600"
             role="alert"
           >
             El nombre completo es obligatorio
@@ -110,7 +110,7 @@
           <p
             *ngIf="form.controls.fullName.touched && form.controls.fullName.errors?.['minlength']"
             id="register-fullname-error"
-            class="mt-2 text-xs text-red-600"
+            class="mt-2 text-xs text-error-600"
             role="alert"
           >
             El nombre debe tener al menos 3 caracteres
@@ -143,8 +143,8 @@
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2"
             [class.border-border-default
-            dark:border-gray-600]="!form.controls.email.touched || !form.controls.email.invalid"
-            [class.border-red-500]="form.controls.email.touched && form.controls.email.invalid"
+            dark:border-border-default]="!form.controls.email.touched || !form.controls.email.invalid"
+            [class.border-error-500]="form.controls.email.touched && form.controls.email.invalid"
             [class.focus:ring-cta-default]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
@@ -155,7 +155,7 @@
           <p
             *ngIf="form.controls.email.touched && form.controls.email.errors?.['required']"
             id="register-email-error"
-            class="mt-2 text-xs text-red-600"
+            class="mt-2 text-xs text-error-600"
             role="alert"
           >
             El email es obligatorio
@@ -163,7 +163,7 @@
           <p
             *ngIf="form.controls.email.touched && form.controls.email.errors?.['email']"
             id="register-email-error"
-            class="mt-2 text-xs text-red-600"
+            class="mt-2 text-xs text-error-600"
             role="alert"
           >
             Formato de email inválido
@@ -196,10 +196,10 @@
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2"
             [class.border-border-default
-            dark:border-gray-600]="
+            dark:border-border-default]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
-            [class.border-red-500]="
+            [class.border-error-500]="
               form.controls.password.touched && form.controls.password.invalid
             "
             [class.focus:ring-cta-default]="
@@ -212,7 +212,7 @@
           <p
             *ngIf="form.controls.password.touched && form.controls.password.errors?.['required']"
             id="register-password-error"
-            class="mt-2 text-xs text-red-600"
+            class="mt-2 text-xs text-error-600"
             role="alert"
           >
             La contraseña es obligatoria
@@ -220,7 +220,7 @@
           <p
             *ngIf="form.controls.password.touched && form.controls.password.errors?.['minlength']"
             id="register-password-error"
-            class="mt-2 text-xs text-red-600"
+            class="mt-2 text-xs text-error-600"
             role="alert"
           >
             La contraseña debe tener al menos 8 caracteres
@@ -255,11 +255,11 @@
         <!-- Error Message -->
         <div
           *ngIf="error()"
-          class="bg-red-50 border border-red-200 rounded-lg p-3"
+          class="bg-error-50 border border-error-200 rounded-lg p-3"
           role="alert"
           aria-live="polite"
         >
-          <p class="text-sm text-red-700">{{ error() }}</p>
+          <p class="text-sm text-error-700">{{ error() }}</p>
         </div>
 
         <!-- Submit Button -->

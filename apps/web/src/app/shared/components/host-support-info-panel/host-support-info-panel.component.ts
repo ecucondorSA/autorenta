@@ -118,21 +118,21 @@ import { TranslateModule } from '@ngx-translate/core';
           <!-- Tips Tab -->
           <div *ngIf="activeTab() === 'tips'" class="space-y-3">
             <!-- Accordion Items -->
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-subtle overflow-hidden">
               <button
                 type="button"
                 (click)="toggleAccordion('obligations')"
-                class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                class="w-full flex items-center justify-between p-4 text-left hover:bg-surface-base dark:hover:bg-surface-base/50 transition-colors"
               >
                 <div class="flex items-center gap-3">
                   <span class="text-xl">📋</span>
-                  <span class="font-semibold text-gray-900 dark:text-text-primary">Obligaciones del Anfitrión</span>
+                  <span class="font-semibold text-text-primary dark:text-text-primary">Obligaciones del Anfitrión</span>
                 </div>
                 <svg class="w-5 h-5 transition-transform" [class.rotate-180]="openAccordion() === 'obligations'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
               </button>
-              <div *ngIf="openAccordion() === 'obligations'" class="p-4 pt-0 text-sm text-gray-600 dark:text-text-secondary space-y-2">
+              <div *ngIf="openAccordion() === 'obligations'" class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2">
                 <ul class="list-disc list-inside space-y-1">
                   <li>Mantener el auto en excelentes condiciones de funcionamiento</li>
                   <li>Contar con seguro vigente que cubra alquiler a terceros</li>
@@ -144,21 +144,21 @@ import { TranslateModule } from '@ngx-translate/core';
               </div>
             </div>
 
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-subtle overflow-hidden">
               <button
                 type="button"
                 (click)="toggleAccordion('maintenance')"
-                class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                class="w-full flex items-center justify-between p-4 text-left hover:bg-surface-base dark:hover:bg-surface-base/50 transition-colors"
               >
                 <div class="flex items-center gap-3">
                   <span class="text-xl">🔧</span>
-                  <span class="font-semibold text-gray-900 dark:text-text-primary">Mantenimiento Requerido</span>
+                  <span class="font-semibold text-text-primary dark:text-text-primary">Mantenimiento Requerido</span>
                 </div>
                 <svg class="w-5 h-5 transition-transform" [class.rotate-180]="openAccordion() === 'maintenance'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
               </button>
-              <div *ngIf="openAccordion() === 'maintenance'" class="p-4 pt-0 text-sm text-gray-600 dark:text-text-secondary space-y-2">
+              <div *ngIf="openAccordion() === 'maintenance'" class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2">
                 <ul class="list-disc list-inside space-y-1">
                   <li><strong>Antes de cada alquiler:</strong> Limpieza completa interior y exterior</li>
                   <li><strong>Cada 5,000 km:</strong> Cambio de aceite y filtros</li>
@@ -170,15 +170,15 @@ import { TranslateModule } from '@ngx-translate/core';
               </div>
             </div>
 
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-subtle overflow-hidden">
               <button
                 type="button"
                 (click)="toggleAccordion('insurance')"
-                class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                class="w-full flex items-center justify-between p-4 text-left hover:bg-surface-base dark:hover:bg-surface-base/50 transition-colors"
               >
                 <div class="flex items-center gap-3">
                   <span class="text-xl">🛡️</span>
-                  <span class="font-semibold text-gray-900 dark:text-text-primary">Seguros Necesarios</span>
+                  <span class="font-semibold text-text-primary dark:text-text-primary">Seguros Necesarios</span>
                 </div>
                 <svg class="w-5 h-5 transition-transform" [class.rotate-180]="openAccordion() === 'insurance'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -199,21 +199,21 @@ import { TranslateModule } from '@ngx-translate/core';
               </div>
             </div>
 
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-subtle overflow-hidden">
               <button
                 type="button"
                 (click)="toggleAccordion('legal')"
-                class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                class="w-full flex items-center justify-between p-4 text-left hover:bg-surface-base dark:hover:bg-surface-base/50 transition-colors"
               >
                 <div class="flex items-center gap-3">
                   <span class="text-xl">⚖️</span>
-                  <span class="font-semibold text-gray-900 dark:text-text-primary">Documentación Legal</span>
+                  <span class="font-semibold text-text-primary dark:text-text-primary">Documentación Legal</span>
                 </div>
                 <svg class="w-5 h-5 transition-transform" [class.rotate-180]="openAccordion() === 'legal'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
               </button>
-              <div *ngIf="openAccordion() === 'legal'" class="p-4 pt-0 text-sm text-gray-600 dark:text-text-secondary space-y-2">
+              <div *ngIf="openAccordion() === 'legal'" class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2">
                 <ul class="list-disc list-inside space-y-1">
                   <li><strong>Cédula verde/azul:</strong> Debe estar a tu nombre o tener autorización notarial</li>
                   <li><strong>Póliza de seguro:</strong> Con cláusula de alquiler a terceros</li>
@@ -226,12 +226,12 @@ import { TranslateModule } from '@ngx-translate/core';
           </div>
 
           <!-- Calculator Tab -->
-          <div *ngIf="activeTab() === 'calculator'" class="bg-surface-raised dark:bg-surface-raised rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-            <h4 class="text-lg font-semibold text-gray-900 dark:text-text-primary mb-4">Calculadora de Ganancias</h4>
+          <div *ngIf="activeTab() === 'calculator'" class="bg-surface-raised dark:bg-surface-raised rounded-lg p-6 border border-border-default dark:border-border-subtle">
+            <h4 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">Calculadora de Ganancias</h4>
 
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-text-secondary mb-2">
+                <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
                   Precio por día (USD)
                 </label>
                 <input
@@ -239,13 +239,13 @@ import { TranslateModule } from '@ngx-translate/core';
                   [(ngModel)]="calcPricePerDay"
                   (ngModelChange)="updateCalculations()"
                   min="1"
-                  class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-text-inverse px-4 py-2"
+                  class="w-full rounded-lg border border-border-subtle dark:border-border-default dark:bg-surface-base dark:text-text-inverse px-4 py-2"
                   placeholder="50"
                 />
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-text-secondary mb-2">
+                <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
                   Días alquilados por mes (promedio)
                 </label>
                 <input
@@ -254,13 +254,13 @@ import { TranslateModule } from '@ngx-translate/core';
                   (ngModelChange)="updateCalculations()"
                   min="1"
                   max="30"
-                  class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-text-inverse px-4 py-2"
+                  class="w-full rounded-lg border border-border-subtle dark:border-border-default dark:bg-surface-base dark:text-text-inverse px-4 py-2"
                   placeholder="15"
                 />
                 <div class="mt-2 flex gap-2">
-                  <button type="button" (click)="setDaysPerMonth(10)" class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600">10 días</button>
-                  <button type="button" (click)="setDaysPerMonth(15)" class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600">15 días</button>
-                  <button type="button" (click)="setDaysPerMonth(20)" class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600">20 días</button>
+                  <button type="button" (click)="setDaysPerMonth(10)" class="px-3 py-1 text-xs bg-surface-raised dark:bg-surface-base rounded hover:bg-surface-hover dark:hover:bg-gray-600">10 días</button>
+                  <button type="button" (click)="setDaysPerMonth(15)" class="px-3 py-1 text-xs bg-surface-raised dark:bg-surface-base rounded hover:bg-surface-hover dark:hover:bg-gray-600">15 días</button>
+                  <button type="button" (click)="setDaysPerMonth(20)" class="px-3 py-1 text-xs bg-surface-raised dark:bg-surface-base rounded hover:bg-surface-hover dark:hover:bg-gray-600">20 días</button>
                 </div>
               </div>
 

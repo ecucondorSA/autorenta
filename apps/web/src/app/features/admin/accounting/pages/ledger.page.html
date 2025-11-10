@@ -81,7 +81,7 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
     <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-gray-500">Cargando libro mayor...</p>
+    <p class="mt-4 text-text-secondary">Cargando libro mayor...</p>
   </div>
 
   <!-- Ledger Table -->
@@ -89,7 +89,7 @@
     <ion-card-header>
       <ion-card-title>
         Entradas del Libro Mayor
-        <span class="text-sm font-normal text-gray-500"> ({{ ledgerData().total }} total) </span>
+        <span class="text-sm font-normal text-text-secondary"> ({{ ledgerData().total }} total) </span>
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
@@ -106,11 +106,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let entry of ledgerData().data" class="border-b hover:bg-gray-50">
+            <tr *ngFor="let entry of ledgerData().data" class="border-b hover:bg-surface-base">
               <td class="py-2 px-3 text-sm">{{ entry.entry_date | date: 'short' }}</td>
               <td class="py-2 px-3 text-sm">
                 {{ entry.account_code }}
-                <span *ngIf="entry.accounting_chart_of_accounts" class="text-gray-500">
+                <span *ngIf="entry.accounting_chart_of_accounts" class="text-text-secondary">
                   - {{ entry.accounting_chart_of_accounts.name }}
                 </span>
               </td>
@@ -122,7 +122,7 @@
               </td>
               <td class="py-2 px-3 text-sm">{{ entry.description }}</td>
               <td class="py-2 px-3 text-sm">
-                <span *ngIf="entry.reference_type" class="text-xs bg-gray-100 px-2 py-1 rounded">
+                <span *ngIf="entry.reference_type" class="text-xs bg-surface-raised px-2 py-1 rounded">
                   {{ entry.reference_type }}
                 </span>
               </td>
@@ -133,7 +133,7 @@
 
       <!-- Pagination -->
       <div *ngIf="ledgerData().totalPages > 1" class="flex items-center justify-between mt-4">
-        <p class="text-sm text-gray-500">
+        <p class="text-sm text-text-secondary">
           Página {{ ledgerData().page }} de {{ ledgerData().totalPages }}
         </p>
         <div class="flex gap-2">

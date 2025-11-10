@@ -14,7 +14,7 @@
         <div class="flex gap-2">
           <button
             (click)="clearAll()"
-            class="px-4 py-2 text-sm rounded-lg border border-red-300 text-red-700 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-950 transition"
+            class="px-4 py-2 text-sm rounded-lg border border-error-300 text-error-700 hover:bg-error-50 dark:border-error-700 dark:text-error-400 dark:hover:bg-red-950 transition"
           >
             Limpiar todo
           </button>
@@ -91,7 +91,7 @@
               </button>
               <button
                 (click)="removeCar(car.id)"
-                class="px-3 py-1.5 text-xs rounded-lg border border-red-300 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-950 transition"
+                class="px-3 py-1.5 text-xs rounded-lg border border-error-300 text-error-600 hover:bg-error-50 dark:border-error-700 dark:text-error-400 dark:hover:bg-red-950 transition"
                 title="Quitar de comparaci\u00f3n"
               >
                 \u00d7
@@ -104,7 +104,7 @@
       <!-- Informaci\u00f3n B\u00e1sica -->
       <div
         *ngIf="basicRows().length > 0"
-        class="border-t border-border-default dark:border-gray-600/30"
+        class="border-t border-border-default dark:border-border-default/30"
       >
         <div class="bg-surface-secondary dark:bg-surface-secondary px-4 py-2">
           <h3
@@ -115,7 +115,7 @@
         </div>
         <div
           *ngFor="let row of basicRows()"
-          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-gray-600/30"
+          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-border-default/30"
         >
           <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3">
             <span class="text-sm font-medium text-text-secondary dark:text-text-secondary">{{
@@ -143,7 +143,7 @@
       <!-- Especificaciones -->
       <div
         *ngIf="specsRows().length > 0"
-        class="border-t border-border-default dark:border-gray-600/30"
+        class="border-t border-border-default dark:border-border-default/30"
       >
         <div class="bg-surface-secondary dark:bg-surface-secondary px-4 py-2">
           <h3
@@ -154,7 +154,7 @@
         </div>
         <div
           *ngFor="let row of specsRows()"
-          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-gray-600/30"
+          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-border-default/30"
         >
           <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3">
             <span class="text-sm font-medium text-text-secondary dark:text-text-secondary">{{
@@ -182,7 +182,7 @@
       <!-- Precios y Rating -->
       <div
         *ngIf="pricingRows().length > 0"
-        class="border-t border-border-default dark:border-gray-600/30"
+        class="border-t border-border-default dark:border-border-default/30"
       >
         <div class="bg-surface-secondary dark:bg-surface-secondary px-4 py-2">
           <h3
@@ -193,7 +193,7 @@
         </div>
         <div
           *ngFor="let row of pricingRows()"
-          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-gray-600/30"
+          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-border-default/30"
         >
           <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3">
             <span class="text-sm font-medium text-text-secondary dark:text-text-secondary">{{
@@ -221,7 +221,7 @@
       <!-- Ubicaci\u00f3n -->
       <div
         *ngIf="locationRows().length > 0"
-        class="border-t border-border-default dark:border-gray-600/30"
+        class="border-t border-border-default dark:border-border-default/30"
       >
         <div class="bg-surface-secondary dark:bg-surface-secondary px-4 py-2">
           <h3
@@ -232,7 +232,7 @@
         </div>
         <div
           *ngFor="let row of locationRows()"
-          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-gray-600/30"
+          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-border-default/30"
         >
           <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3">
             <span class="text-sm font-medium text-text-secondary dark:text-text-secondary">{{
@@ -251,7 +251,7 @@
       <!-- Propietario -->
       <div
         *ngIf="ownerRows().length > 0"
-        class="border-t border-border-default dark:border-gray-600/30"
+        class="border-t border-border-default dark:border-border-default/30"
       >
         <div class="bg-surface-secondary dark:bg-surface-secondary px-4 py-2">
           <h3
@@ -262,7 +262,7 @@
         </div>
         <div
           *ngFor="let row of ownerRows()"
-          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-gray-600/30"
+          class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-border-default/30"
         >
           <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3">
             <span class="text-sm font-medium text-text-secondary dark:text-text-secondary">{{

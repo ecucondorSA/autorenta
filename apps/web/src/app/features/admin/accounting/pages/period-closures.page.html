@@ -74,7 +74,7 @@
   <!-- Loading State -->
   <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
     <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-gray-500">Cargando cierres...</p>
+    <p class="mt-4 text-text-secondary">Cargando cierres...</p>
   </div>
 
   <!-- Closures List -->
@@ -83,7 +83,7 @@
       <ion-card-title> Cierres de Período ({{ closures().length }}) </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <div *ngIf="closures().length === 0" class="text-center py-8 text-gray-500">
+      <div *ngIf="closures().length === 0" class="text-center py-8 text-text-secondary">
         <p>No hay cierres que coincidan con los filtros</p>
       </div>
 
@@ -96,11 +96,11 @@
             </p>
             <div class="mt-2 grid grid-cols-2 gap-2 text-xs">
               <div>
-                <p class="text-gray-500">Débitos</p>
+                <p class="text-text-secondary">Débitos</p>
                 <p class="font-semibold">${{ closure.total_debits.toFixed(2) }}</p>
               </div>
               <div>
-                <p class="text-gray-500">Créditos</p>
+                <p class="text-text-secondary">Créditos</p>
                 <p class="font-semibold">${{ closure.total_credits.toFixed(2) }}</p>
               </div>
             </div>
@@ -121,7 +121,7 @@
   <!-- Create Closure Modal -->
   <div
     *ngIf="showCreateModal()"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
     (click)="closeCreateModal()"
   >
     <ion-card class="max-w-md w-full" (click)="$event.stopPropagation()">

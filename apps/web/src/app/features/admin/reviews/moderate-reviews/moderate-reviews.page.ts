@@ -11,8 +11,8 @@ import type { Review } from '../../../../core/models';
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Moderación de Reviews</h1>
-        <p class="mt-2 text-sm text-gray-600">
+        <h1 class="text-2xl font-bold text-text-primary">Moderación de Reviews</h1>
+        <p class="mt-2 text-sm text-text-secondary">
           Gestiona las reviews reportadas y pendientes de moderación.
         </p>
       </div>
@@ -23,8 +23,8 @@ import type { Review } from '../../../../core/models';
           class="rounded-lg px-4 py-2 text-sm font-medium"
           [class.bg-cta-default]="filterStatus() === 'pending'"
           [class.text-text-inverse]="filterStatus() === 'pending'"
-          [class.bg-gray-200]="filterStatus() !== 'pending'"
-          [class.text-gray-700]="filterStatus() !== 'pending'"
+          [class.bg-surface-hover]="filterStatus() !== 'pending'"
+          [class.text-text-primary]="filterStatus() !== 'pending'"
         >
           Pendientes
         </button>
@@ -33,8 +33,8 @@ import type { Review } from '../../../../core/models';
           class="rounded-lg px-4 py-2 text-sm font-medium"
           [class.bg-cta-default]="filterStatus() === 'approved'"
           [class.text-text-inverse]="filterStatus() === 'approved'"
-          [class.bg-gray-200]="filterStatus() !== 'approved'"
-          [class.text-gray-700]="filterStatus() !== 'approved'"
+          [class.bg-surface-hover]="filterStatus() !== 'approved'"
+          [class.text-text-primary]="filterStatus() !== 'approved'"
         >
           Aprobadas
         </button>
@@ -43,8 +43,8 @@ import type { Review } from '../../../../core/models';
           class="rounded-lg px-4 py-2 text-sm font-medium"
           [class.bg-cta-default]="filterStatus() === 'rejected'"
           [class.text-text-inverse]="filterStatus() === 'rejected'"
-          [class.bg-gray-200]="filterStatus() !== 'rejected'"
-          [class.text-gray-700]="filterStatus() !== 'rejected'"
+          [class.bg-surface-hover]="filterStatus() !== 'rejected'"
+          [class.text-text-primary]="filterStatus() !== 'rejected'"
         >
           Rechazadas
         </button>
@@ -53,8 +53,8 @@ import type { Review } from '../../../../core/models';
           class="rounded-lg px-4 py-2 text-sm font-medium"
           [class.bg-cta-default]="filterStatus() === null"
           [class.text-text-inverse]="filterStatus() === null"
-          [class.bg-gray-200]="filterStatus() !== null"
-          [class.text-gray-700]="filterStatus() !== null"
+          [class.bg-surface-hover]="filterStatus() !== null"
+          [class.text-text-primary]="filterStatus() !== null"
         >
           Todas
         </button>
@@ -67,44 +67,44 @@ import type { Review } from '../../../../core/models';
           ></div>
         </div>
       } @else if (flaggedReviews().length === 0) {
-        <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-          <p class="text-gray-600">No hay reviews para moderar.</p>
+        <div class="rounded-lg border border-border-default bg-surface-base p-8 text-center">
+          <p class="text-text-secondary">No hay reviews para moderar.</p>
         </div>
       } @else {
         <div class="space-y-4">
           @for (review of flaggedReviews(); track review.id) {
-            <div class="rounded-lg border border-gray-200 bg-surface-raised p-6 shadow-sm">
+            <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
               <div class="mb-4 flex items-start justify-between">
                 <div>
-                  <h3 class="font-semibold text-gray-900">Review #{{ review.id }}</h3>
-                  <p class="text-sm text-gray-600">
+                  <h3 class="font-semibold text-text-primary">Review #{{ review.id }}</h3>
+                  <p class="text-sm text-text-secondary">
                     Por: {{ review.reviewer_name || 'Usuario' }} | Auto:
                     {{ review.car_title || 'N/A' }}
                   </p>
                 </div>
                 <span
                   class="rounded-full px-3 py-1 text-xs font-medium"
-                  [class.bg-yellow-100]="review.moderation_status === 'pending'"
-                  [class.text-yellow-800]="review.moderation_status === 'pending'"
+                  [class.bg-warning-100]="review.moderation_status === 'pending'"
+                  [class.text-warning-800]="review.moderation_status === 'pending'"
                   [class.bg-success-light/20]="review.moderation_status === 'approved'"
                   [class.text-success-light]="review.moderation_status === 'approved'"
-                  [class.bg-red-100]="review.moderation_status === 'rejected'"
-                  [class.text-red-800]="review.moderation_status === 'rejected'"
+                  [class.bg-error-100]="review.moderation_status === 'rejected'"
+                  [class.text-error-800]="review.moderation_status === 'rejected'"
                 >
                   {{ review.moderation_status || 'pending' }}
                 </span>
               </div>
 
-              <div class="mb-4 rounded-lg bg-gray-50 p-4">
-                <p class="text-sm text-gray-700">
+              <div class="mb-4 rounded-lg bg-surface-base p-4">
+                <p class="text-sm text-text-primary">
                   {{ review.comment_public || 'Sin comentario público' }}
                 </p>
               </div>
 
               @if (review.flag_reason) {
-                <div class="mb-4 rounded-lg bg-yellow-50 p-3">
-                  <p class="text-xs font-medium text-yellow-800">Razón del reporte:</p>
-                  <p class="text-sm text-yellow-700">{{ review.flag_reason }}</p>
+                <div class="mb-4 rounded-lg bg-warning-50 p-3">
+                  <p class="text-xs font-medium text-warning-800">Razón del reporte:</p>
+                  <p class="text-sm text-warning-700">{{ review.flag_reason }}</p>
                 </div>
               }
 
@@ -120,7 +120,7 @@ import type { Review } from '../../../../core/models';
                   <button
                     (click)="moderateReview(review.id, 'rejected')"
                     [disabled]="moderating()"
-                    class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-text-inverse hover:bg-red-700 disabled:opacity-50"
+                    class="rounded-lg bg-error-600 px-4 py-2 text-sm font-medium text-text-inverse hover:bg-error-700 disabled:opacity-50"
                   >
                     Rechazar
                   </button>

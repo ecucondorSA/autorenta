@@ -337,10 +337,10 @@ export class ProfileExpandedPage {
   // Helper methods
   getKycStatusClass(status: KycStatus): string {
     const map: Record<KycStatus, string> = {
-      not_started: 'bg-gray-100 text-gray-800',
-      pending: 'bg-yellow-100 text-yellow-800',
+      not_started: 'bg-surface-raised text-text-primary',
+      pending: 'bg-warning-100 text-warning-800',
       verified: 'bg-success-light/20 text-success-light',
-      rejected: 'bg-red-100 text-red-800',
+      rejected: 'bg-error-100 text-error-800',
     };
     return map[status] || map['not_started'];
   }
@@ -358,8 +358,8 @@ export class ProfileExpandedPage {
   getVerificationStatusClass(status: VerificationStatus): string {
     const map: Record<VerificationStatus, string> = {
       VERIFICADO: 'bg-success-light/20 text-success-light',
-      PENDIENTE: 'bg-yellow-100 text-yellow-800',
-      RECHAZADO: 'bg-red-100 text-red-800',
+      PENDIENTE: 'bg-warning-100 text-warning-800',
+      RECHAZADO: 'bg-error-100 text-error-800',
     };
     return map[status];
   }
@@ -382,7 +382,7 @@ export class ProfileExpandedPage {
   }
 
   getStepStatusClass(step: { completed: boolean }): string {
-    return step.completed ? 'text-success-light' : 'text-gray-400 dark:text-gray-300';
+    return step.completed ? 'text-success-light' : 'text-text-muted dark:text-text-secondary';
   }
 
   getStepStatusLabel(step: { completed: boolean }): string {

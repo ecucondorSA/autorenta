@@ -17,19 +17,19 @@ import { ToastService } from '../../../core/services/toast.service';
             type="text"
             [(ngModel)]="brand"
             placeholder="Marca (ej: Toyota)"
-            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="flex-1 px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="text"
             [(ngModel)]="model"
             placeholder="Modelo (ej: Corolla)"
-            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="flex-1 px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="number"
             [(ngModel)]="year"
             placeholder="Año"
-            class="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="w-24 px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
         </div>
         <button
@@ -70,7 +70,7 @@ import { ToastService } from '../../../core/services/toast.service';
             <div
               class="relative group cursor-pointer rounded-lg overflow-hidden border-2 transition-all"
               [class.border-cta-default]="selectedPhotos().has(photo.id)"
-              [class.border-gray-200]="!selectedPhotos().has(photo.id)"
+              [class.border-border-default]="!selectedPhotos().has(photo.id)"
               (click)="togglePhoto(photo)"
             >
               <img
@@ -91,7 +91,7 @@ import { ToastService } from '../../../core/services/toast.service';
                 </div>
               }
               <div
-                class="absolute bottom-0 left-0 right-0 bg-black/50 text-text-inverse text-xs p-1 truncate"
+                class="absolute bottom-0 left-0 right-0 bg-surface-overlay/50 text-text-inverse text-xs p-1 truncate"
               >
                 {{ photo.photographer }}
               </div>
@@ -112,7 +112,7 @@ import { ToastService } from '../../../core/services/toast.service';
           }
         </button>
       } @else if (searched() && !searching()) {
-        <div class="text-center py-8 text-gray-500">
+        <div class="text-center py-8 text-text-secondary">
           <p>No se encontraron fotos para esta búsqueda.</p>
           <p class="text-sm mt-2">Intenta con otros términos o sube fotos manualmente.</p>
         </div>

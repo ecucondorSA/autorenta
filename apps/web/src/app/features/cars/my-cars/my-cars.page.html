@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-surface-base pb-20">
   <!-- Header Premium -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-gray-600/30 mb-8"
+    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-border-default/30 mb-8"
   >
     <div class="mx-auto max-w-7xl px-6 py-8">
       <div class="flex items-center justify-between flex-wrap gap-4">
@@ -96,13 +96,13 @@
         <!-- Comparison: Auto Parado vs Auto en Autorentar -->
         <div class="grid md:grid-cols-2 gap-6 mb-8">
           <!-- Auto Parado -->
-          <div class="border-2 border-red-200 rounded-xl p-6 bg-red-50/50">
+          <div class="border-2 border-error-200 rounded-xl p-6 bg-error-50/50">
             <div class="text-center mb-4">
               <div
-                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-3"
+                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-error-100 mb-3"
               >
                 <svg
-                  class="w-8 h-8 text-red-600"
+                  class="w-8 h-8 text-error-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -116,12 +116,12 @@
                 </svg>
               </div>
               <h3 class="text-lg font-bold text-text-primary mb-1">Auto Parado</h3>
-              <p class="text-sm text-red-700 font-semibold">Pierde valor cada mes</p>
+              <p class="text-sm text-error-700 font-semibold">Pierde valor cada mes</p>
             </div>
             <ul class="space-y-3 text-sm">
               <li class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-error-600 flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -139,7 +139,7 @@
               </li>
               <li class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-error-600 flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -152,13 +152,13 @@
                   />
                 </svg>
                 <span class="text-text-secondary dark:text-text-secondary"
-                  >Depreciación <strong class="text-red-700">100% pérdida</strong> (10-15%
+                  >Depreciación <strong class="text-error-700">100% pérdida</strong> (10-15%
                   anual)</span
                 >
               </li>
               <li class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-error-600 flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -176,7 +176,7 @@
               </li>
               <li class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-error-600 flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -194,7 +194,7 @@
               </li>
               <li class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-error-600 flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -552,16 +552,16 @@
       <!-- Banner MP para autos draft -->
       <div
         *ngIf="countDraft() > 0"
-        class="mb-6 rounded-xl bg-amber-50 border border-amber-200 p-5 shadow-sm dark:bg-amber-500/10 dark:border-amber-400/40"
+        class="mb-6 rounded-xl bg-warning-50 border border-warning-200 p-5 shadow-sm dark:bg-warning-500/10 dark:border-warning-400/40"
       >
         <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div class="flex items-start gap-3">
             <span class="text-2xl leading-none">⚠️</span>
             <div class="flex-1">
-              <p class="font-semibold text-amber-900 dark:text-amber-100 mb-1">
+              <p class="font-semibold text-warning-900 dark:text-warning-100 mb-1">
                 Tenés {{ countDraft() }} auto(s) pendiente(s) de activación
               </p>
-              <p class="text-sm text-amber-700 dark:text-amber-200">
+              <p class="text-sm text-warning-700 dark:text-warning-200">
                 Conectá Mercado Pago para activarlos y empezar a recibir reservas automáticamente.
               </p>
             </div>
@@ -569,7 +569,7 @@
           <button
             type="button"
             (click)="openOnboardingModal()"
-            class="flex-shrink-0 rounded-lg bg-amber-600 px-5 py-2.5 text-sm font-semibold text-text-inverse shadow-sm hover:bg-amber-600/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 transition-all"
+            class="flex-shrink-0 rounded-lg bg-warning-600 px-5 py-2.5 text-sm font-semibold text-text-inverse shadow-sm hover:bg-warning-600/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 transition-all"
           >
             Conectar Mercado Pago
           </button>

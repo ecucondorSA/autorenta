@@ -122,7 +122,7 @@
 
           <!-- Price Display (Prominent) -->
           <div
-            class="mt-4 p-4 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-gray-600"
+            class="mt-4 p-4 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-border-default"
           >
             <div class="flex items-baseline justify-between">
               <span class="text-3xl font-bold text-cta-default">
@@ -147,7 +147,7 @@
       </div> -->
 
       <!-- Chat Toggle (Collapsible) -->
-      <div class="mb-4 border-t border-border-default dark:border-gray-600 pt-4">
+      <div class="mb-4 border-t border-border-default dark:border-border-default pt-4">
         <button
           (click)="toggleChat()"
           type="button"
@@ -175,14 +175,14 @@
         <!-- Chat Content (Collapsed) -->
         <div
           *ngIf="showChat()"
-          class="mt-3 p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-gray-600 space-y-2 animate-slideDown"
+          class="mt-3 p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-border-default space-y-2 animate-slideDown"
         >
           <p class="text-xs text-text-secondary dark:text-text-secondary">
             Escribe una pregunta antes de reservar. El anfitrión responde en ~1 hora.
           </p>
           <textarea
             placeholder="¿Puedo recoger el auto a las 5 PM? ¿Hay conductor disponible?"
-            class="w-full px-3 py-2 text-sm rounded border border-border-default dark:border-gray-600 dark:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="w-full px-3 py-2 text-sm rounded border border-border-default dark:border-border-default dark:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
             rows="3"
           ></textarea>
           <button
@@ -197,7 +197,7 @@
       <!-- Quick Info Cards -->
       <div class="mb-4 grid grid-cols-2 gap-2">
         <div
-          class="p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-gray-600"
+          class="p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-border-default"
         >
           <p class="text-xs text-text-secondary dark:text-text-secondary mb-1">Disponibilidad</p>
           <p class="text-sm font-semibold text-text-primary dark:text-text-inverse-pure">
@@ -205,7 +205,7 @@
           </p>
         </div>
         <div
-          class="p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-gray-600"
+          class="p-3 bg-surface-secondary dark:bg-surface-secondary-dark rounded-lg border border-border-default dark:border-border-default"
         >
           <p class="text-xs text-text-secondary dark:text-text-secondary mb-1">Modelo</p>
           <p class="text-sm font-semibold text-text-primary dark:text-text-inverse-pure">

@@ -21,8 +21,8 @@
           <span class="text-2xl">🚗</span>
         </div>
         <div>
-          <h1 class="text-xl font-bold text-gray-900 drop-shadow-sm">AutoRenta</h1>
-          <p class="text-xs text-gray-800 drop-shadow-sm">Tu auto ideal te espera</p>
+          <h1 class="text-xl font-bold text-text-primary drop-shadow-sm">AutoRenta</h1>
+          <p class="text-xs text-text-primary drop-shadow-sm">Tu auto ideal te espera</p>
         </div>
       </div>
 
@@ -30,13 +30,13 @@
         <!-- Quick stats -->
         <div class="hidden md:flex items-center gap-4 text-sm">
           <div
-            class="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-gray-900 shadow-md"
+            class="flex items-center gap-2 bg-surface-base/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-text-primary shadow-md"
           >
             <span class="text-lg">⚡</span>
             <span class="font-medium">{{ carsWithDistance().length }} autos disponibles</span>
           </div>
           <div
-            class="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-gray-900 shadow-md"
+            class="flex items-center gap-2 bg-surface-base/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-text-primary shadow-md"
           >
             <span class="text-lg">✓</span>
             <span class="font-medium">Reserva en 2 minutos</span>
@@ -63,7 +63,7 @@
 
           <!-- Date Range -->
           <div class="relative">
-            <label class="block text-xs font-medium text-gray-700 mb-2">📅 Fechas</label>
+            <label class="block text-xs font-medium text-text-primary mb-2">📅 Fechas</label>
             <input
               type="text"
               placeholder="Selecciona fechas"
@@ -90,11 +90,11 @@
 
         <!-- Quick Filters Pills -->
         <div class="flex items-center gap-2 mt-4 overflow-x-auto pb-2">
-          <span class="text-xs text-gray-700 font-medium flex-shrink-0">Filtros rápidos:</span>
+          <span class="text-xs text-text-primary font-medium flex-shrink-0">Filtros rápidos:</span>
           <button
             *ngFor="let filter of quickFilters"
             (click)="onQuickFilterClick(filter.id)"
-            class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 rounded-full text-xs font-medium text-gray-800 hover:bg-cta-default hover:text-cta-text hover:border-cta-default transition-all duration-200 flex-shrink-0 shadow-sm"
+            class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-base border border-border-subtle rounded-full text-xs font-medium text-text-primary hover:bg-cta-default hover:text-cta-text hover:border-cta-default transition-all duration-200 flex-shrink-0 shadow-sm"
           >
             <span>{{ filter.icon }}</span>
             <span>{{ filter.label }}</span>
@@ -226,7 +226,7 @@
 
         <!-- Sort dropdown -->
         <select
-          class="bg-surface-raised dark:bg-surface-raised border border-border-default dark:border-gray-600 rounded-lg px-4 py-2 text-sm text-text-primary dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
+          class="bg-surface-raised dark:bg-surface-raised border border-border-default dark:border-border-default rounded-lg px-4 py-2 text-sm text-text-primary dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
         >
           <option>Más cercanos</option>
           <option>Precio: menor a mayor</option>
@@ -300,7 +300,7 @@
             <!-- Photo counter -->
             <div class="absolute bottom-3 right-3">
               <span
-                class="bg-black/70 backdrop-blur-sm text-text-inverse text-xs px-2 py-1 rounded-full flex items-center gap-1"
+                class="bg-surface-overlay/70 backdrop-blur-sm text-text-inverse text-xs px-2 py-1 rounded-full flex items-center gap-1"
               >
                 <span>📷</span>
                 <span>{{ extractPhotoGallery(car).length }}</span>
@@ -317,7 +317,7 @@
               </h3>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-1 text-xs text-text-secondary">
-                  <span class="text-yellow-500">⭐</span>
+                  <span class="text-warning-500">⭐</span>
                   <span class="font-semibold">4.8</span>
                   <span>(124 viajes)</span>
                 </div>
@@ -343,7 +343,7 @@
 
             <!-- Price and CTA -->
             <div
-              class="flex items-center justify-between pt-3 border-t border-border-default dark:border-gray-700"
+              class="flex items-center justify-between pt-3 border-t border-border-default dark:border-border-subtle"
             >
               <div>
                 <p class="text-xs text-text-secondary">Desde</p>
@@ -382,7 +382,7 @@
       <div *ngIf="!loading() && carsWithDistance().length === 0" class="col-span-full">
         <div class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-12 text-center">
           <div
-            class="w-24 h-24 bg-surface-secondary dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4"
+            class="w-24 h-24 bg-surface-secondary dark:bg-surface-base rounded-full flex items-center justify-center mx-auto mb-4"
           >
             <span class="text-5xl">🔍</span>
           </div>
@@ -429,7 +429,7 @@
                   </h3>
                   <div class="flex items-center gap-3 text-sm text-text-secondary">
                     <span class="flex items-center gap-1">
-                      <span class="text-yellow-500">⭐</span>
+                      <span class="text-warning-500">⭐</span>
                       <span class="font-semibold">4.8</span>
                     </span>
                     <span>•</span>
@@ -469,7 +469,7 @@
             <div class="flex items-center gap-3">
               <button
                 (click)="onCarSelected(car.id); $event.stopPropagation()"
-                class="flex-1 px-6 py-3 bg-surface-secondary dark:bg-gray-700 hover:bg-border-default text-text-primary dark:text-text-primary font-semibold rounded-lg transition-colors"
+                class="flex-1 px-6 py-3 bg-surface-secondary dark:bg-surface-base hover:bg-border-default text-text-primary dark:text-text-primary font-semibold rounded-lg transition-colors"
               >
                 Ver detalles
               </button>

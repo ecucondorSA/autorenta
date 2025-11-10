@@ -59,7 +59,7 @@
             <!-- Upload spinner overlay -->
             <div
               *ngIf="uploadingAvatar()"
-              class="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50"
+              class="absolute inset-0 flex items-center justify-center rounded-full bg-surface-overlay bg-opacity-50"
             >
               <svg
               class="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-text-inverse"
@@ -377,7 +377,7 @@
                 class="relative flex cursor-pointer rounded-xl border p-4 transition-base hover:bg-surface-secondary dark:hover:bg-slate-deep/60"
                 [class.border-cta-default]="form.value.role === roleOption.value"
                 [class.bg-cta-default/5]="form.value.role === roleOption.value"
-                [class.border-border-default dark:border-gray-600]="form.value.role !== roleOption.value"
+                [class.border-border-default dark:border-border-default]="form.value.role !== roleOption.value"
                 [class.dark:bg-surface-secondary/80]="form.value.role === roleOption.value"
                 [class.dark:border-slate-deep/70]="form.value.role !== roleOption.value"
               >
@@ -385,7 +385,7 @@
                   type="radio"
                   [value]="roleOption.value"
                   formControlName="role"
-                  class="mt-1 h-4 w-4 border-border-default dark:border-gray-600 text-cta-default focus:ring-cta-default"
+                  class="mt-1 h-4 w-4 border-border-default dark:border-border-default text-cta-default focus:ring-cta-default"
                 />
                 <label class="ml-3 flex flex-1 cursor-pointer flex-col">
                   <span class="block text-sm font-medium text-text-primary dark:text-text-primary">

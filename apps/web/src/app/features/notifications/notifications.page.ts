@@ -36,19 +36,19 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
     `,
   ],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
       <!-- Header -->
-      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-gray-800">
+      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base">
         <div class="mx-auto max-w-6xl px-4 py-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
               <button
                 (click)="goBack()"
-                class="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                class="rounded-lg p-2 hover:bg-surface-raised dark:hover:bg-gray-700"
                 type="button"
               >
                 <svg
-                  class="h-6 w-6 text-gray-600 dark:text-gray-300"
+                  class="h-6 w-6 text-text-secondary dark:text-text-secondary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -62,7 +62,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                 </svg>
               </button>
               <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
+                <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   Notificaciones
                   @if (unreadCount() > 0) {
                     <span class="ml-2 text-lg text-cta-default dark:text-cta-default"
@@ -70,14 +70,14 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                     >
                   }
                 </h1>
-                <p class="text-sm text-gray-500 dark:text-gray-400">
+                <p class="text-sm text-text-secondary dark:text-text-muted">
                   Todas tus notificaciones en un solo lugar
                 </p>
               </div>
             </div>
             <a
               routerLink="/notifications/preferences"
-              class="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+              class="flex items-center gap-2 rounded-lg bg-surface-raised px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-hover dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-600"
             >
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -101,14 +101,14 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <!-- Type filter -->
             <div class="flex items-center gap-2">
-              <label for="typeFilter" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label for="typeFilter" class="text-sm font-medium text-text-primary dark:text-text-secondary">
                 Tipo:
               </label>
               <select
                 id="typeFilter"
                 [(ngModel)]="selectedType"
                 (ngModelChange)="onFilterChange()"
-                class="rounded-lg border border-gray-300 bg-surface-raised px-3 py-2 text-sm focus:border-cta-default focus:outline-none focus:ring-2 focus:ring-cta-default dark:border-gray-600 dark:bg-gray-700 dark:text-text-inverse"
+                class="rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm focus:border-cta-default focus:outline-none focus:ring-2 focus:ring-cta-default dark:border-border-default dark:bg-surface-base dark:text-text-inverse"
               >
                 <option value="all">Todas</option>
                 <option value="new_booking_for_owner">Nuevas reservas</option>
@@ -128,9 +128,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                 type="checkbox"
                 [(ngModel)]="showOnlyUnread"
                 (ngModelChange)="toggleUnreadFilter()"
-                class="h-4 w-4 rounded border-gray-300 text-cta-default focus:ring-2 focus:ring-cta-default dark:border-gray-600 dark:bg-gray-700"
+                class="h-4 w-4 rounded border-border-subtle text-cta-default focus:ring-2 focus:ring-cta-default dark:border-border-default dark:bg-surface-base"
               />
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <span class="text-sm font-medium text-text-primary dark:text-text-secondary">
                 Solo no leídas
               </span>
             </label>
@@ -149,7 +149,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
               @if (hasReadNotifications()) {
                 <button
                   (click)="deleteAllRead()"
-                  class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                  class="rounded-lg border border-border-subtle px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:text-text-secondary dark:hover:bg-gray-700"
                   type="button"
                 >
                   Eliminar leídas
@@ -167,19 +167,19 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
           <div class="flex h-96 items-center justify-center">
             <div class="text-center">
               <div
-                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"
+                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-subtle border-t-blue-500"
               ></div>
-              <p class="text-gray-600 dark:text-gray-400">Cargando notificaciones...</p>
+              <p class="text-text-secondary dark:text-text-muted">Cargando notificaciones...</p>
             </div>
           </div>
         } @else if (filteredNotifications().length === 0) {
           <!-- Empty state -->
           <div class="flex h-96 flex-col items-center justify-center">
             <div
-              class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+              class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-surface-raised dark:bg-surface-base"
             >
               <svg
-                class="h-10 w-10 text-gray-400"
+                class="h-10 w-10 text-text-muted"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -192,10 +192,10 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                 />
               </svg>
             </div>
-            <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-text-inverse">
+            <h3 class="mb-2 text-lg font-semibold text-text-primary dark:text-text-inverse">
               No hay notificaciones
             </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
+            <p class="text-sm text-text-secondary dark:text-text-muted">
               @if (showOnlyUnread()) {
                 No tienes notificaciones sin leer
               } @else {
@@ -211,7 +211,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
               @if (unreadNotifications().length > 0) {
                 <div>
                   <h2
-                    class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                    class="mb-3 text-sm font-semibold uppercase tracking-wide text-text-secondary dark:text-text-muted"
                   >
                     No leídas ({{ unreadNotifications().length }})
                   </h2>
@@ -228,9 +228,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               [ngClass]="{
                                 'bg-success-light/20 dark:bg-success-light/30':
                                   notification.type === 'success',
-                                'bg-yellow-100 dark:bg-yellow-900/30':
+                                'bg-warning-100 dark:bg-warning-900/30':
                                   notification.type === 'warning',
-                                'bg-red-100 dark:bg-red-900/30': notification.type === 'error',
+                                'bg-error-100 dark:bg-error-900/30': notification.type === 'error',
                                 'bg-cta-default/20 dark:bg-cta-default/30':
                                   notification.type === 'info',
                               }"
@@ -243,22 +243,22 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           <div class="flex-1 min-w-0">
                             <div class="flex items-start justify-between gap-2">
                               <div class="flex-1">
-                                <h3 class="font-semibold text-gray-900 dark:text-text-inverse">
+                                <h3 class="font-semibold text-text-primary dark:text-text-inverse">
                                   {{ notification.title }}
                                 </h3>
-                                <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                                <p class="mt-1 text-sm text-text-primary dark:text-text-secondary">
                                   {{ notification.message }}
                                 </p>
 
                                 <!-- Metadata -->
                                 @if (notification.metadata) {
-                                  <div class="mt-2 text-xs text-gray-600 dark:text-gray-400">
+                                  <div class="mt-2 text-xs text-text-secondary dark:text-text-muted">
                                     {{ renderMetadata(notification) }}
                                   </div>
                                 }
 
                                 <!-- Timestamp -->
-                                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                <p class="mt-2 text-xs text-text-secondary dark:text-text-muted">
                                   {{ getTimeAgo(notification.createdAt) }}
                                 </p>
                               </div>
@@ -277,7 +277,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               }
                               <button
                                 (click)="markAsRead(notification.id)"
-                                class="rounded-lg border border-gray-300 bg-surface-raised px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                                class="rounded-lg border border-border-subtle bg-surface-raised px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-700"
                                 type="button"
                               >
                                 Marcar como leída
@@ -288,7 +288,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           <!-- Delete button (hidden, shows on hover) -->
                           <button
                             (click)="deleteNotification(notification.id)"
-                            class="absolute right-2 top-2 rounded-lg p-1.5 text-gray-400 opacity-0 transition-opacity hover:bg-gray-200 hover:text-gray-600 group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                            class="absolute right-2 top-2 rounded-lg p-1.5 text-text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-text-secondary group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
                             type="button"
                             title="Eliminar"
                           >
@@ -317,14 +317,14 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
               @if (readNotifications().length > 0) {
                 <div>
                   <h2
-                    class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                    class="mb-3 text-sm font-semibold uppercase tracking-wide text-text-secondary dark:text-text-muted"
                   >
                     Leídas ({{ readNotifications().length }})
                   </h2>
                   <div class="space-y-3">
                     @for (notification of readNotifications(); track notification.id) {
                       <div
-                        class="notification-card group relative rounded-lg border border-gray-200 bg-surface-raised p-4 shadow transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                        class="notification-card group relative rounded-lg border border-border-default bg-surface-raised p-4 shadow transition-all hover:shadow-md dark:border-border-subtle dark:bg-surface-base"
                       >
                         <div class="flex gap-4">
                           <!-- Icon -->
@@ -334,9 +334,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               [ngClass]="{
                                 'bg-success-light/20 dark:bg-success-light/30':
                                   notification.type === 'success',
-                                'bg-yellow-100 dark:bg-yellow-900/30':
+                                'bg-warning-100 dark:bg-warning-900/30':
                                   notification.type === 'warning',
-                                'bg-red-100 dark:bg-red-900/30': notification.type === 'error',
+                                'bg-error-100 dark:bg-error-900/30': notification.type === 'error',
                                 'bg-cta-default/20 dark:bg-cta-default/30':
                                   notification.type === 'info',
                               }"
@@ -349,22 +349,22 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           <div class="flex-1 min-w-0">
                             <div class="flex items-start justify-between gap-2">
                               <div class="flex-1">
-                                <h3 class="font-semibold text-gray-900 dark:text-text-inverse">
+                                <h3 class="font-semibold text-text-primary dark:text-text-inverse">
                                   {{ notification.title }}
                                 </h3>
-                                <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                                <p class="mt-1 text-sm text-text-primary dark:text-text-secondary">
                                   {{ notification.message }}
                                 </p>
 
                                 <!-- Metadata -->
                                 @if (notification.metadata) {
-                                  <div class="mt-2 text-xs text-gray-600 dark:text-gray-400">
+                                  <div class="mt-2 text-xs text-text-secondary dark:text-text-muted">
                                     {{ renderMetadata(notification) }}
                                   </div>
                                 }
 
                                 <!-- Timestamp -->
-                                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                <p class="mt-2 text-xs text-text-secondary dark:text-text-muted">
                                   {{ getTimeAgo(notification.createdAt) }}
                                 </p>
                               </div>
@@ -375,7 +375,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               <div class="mt-3 flex flex-wrap gap-2">
                                 <button
                                   (click)="handleNotificationClick(notification)"
-                                  class="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                                  class="rounded-lg bg-surface-raised px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-hover dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-600"
                                   type="button"
                                 >
                                   Ver detalles
@@ -387,7 +387,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           <!-- Delete button (hidden, shows on hover) -->
                           <button
                             (click)="deleteNotification(notification.id)"
-                            class="absolute right-2 top-2 rounded-lg p-1.5 text-gray-400 opacity-0 transition-opacity hover:bg-gray-200 hover:text-gray-600 group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                            class="absolute right-2 top-2 rounded-lg p-1.5 text-text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-text-secondary group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
                             type="button"
                             title="Eliminar"
                           >
@@ -426,8 +426,8 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           [ngClass]="{
                             'bg-success-light/20 dark:bg-success-light/30':
                               notification.type === 'success',
-                            'bg-yellow-100 dark:bg-yellow-900/30': notification.type === 'warning',
-                            'bg-red-100 dark:bg-red-900/30': notification.type === 'error',
+                            'bg-warning-100 dark:bg-warning-900/30': notification.type === 'warning',
+                            'bg-error-100 dark:bg-error-900/30': notification.type === 'error',
                             'bg-cta-default/20 dark:bg-cta-default/30':
                               notification.type === 'info',
                           }"
@@ -440,22 +440,22 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                       <div class="flex-1 min-w-0">
                         <div class="flex items-start justify-between gap-2">
                           <div class="flex-1">
-                            <h3 class="font-semibold text-gray-900 dark:text-text-inverse">
+                            <h3 class="font-semibold text-text-primary dark:text-text-inverse">
                               {{ notification.title }}
                             </h3>
-                            <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                            <p class="mt-1 text-sm text-text-primary dark:text-text-secondary">
                               {{ notification.message }}
                             </p>
 
                             <!-- Metadata -->
                             @if (notification.metadata) {
-                              <div class="mt-2 text-xs text-gray-600 dark:text-gray-400">
+                              <div class="mt-2 text-xs text-text-secondary dark:text-text-muted">
                                 {{ renderMetadata(notification) }}
                               </div>
                             }
 
                             <!-- Timestamp -->
-                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                            <p class="mt-2 text-xs text-text-secondary dark:text-text-muted">
                               {{ getTimeAgo(notification.createdAt) }}
                             </p>
                           </div>
@@ -474,7 +474,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           }
                           <button
                             (click)="markAsRead(notification.id)"
-                            class="rounded-lg border border-gray-300 bg-surface-raised px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                            class="rounded-lg border border-border-subtle bg-surface-raised px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-700"
                             type="button"
                           >
                             Marcar como leída
@@ -485,7 +485,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                       <!-- Delete button (hidden, shows on hover) -->
                       <button
                         (click)="deleteNotification(notification.id)"
-                        class="absolute right-2 top-2 rounded-lg p-1.5 text-gray-400 opacity-0 transition-opacity hover:bg-gray-200 hover:text-gray-600 group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                        class="absolute right-2 top-2 rounded-lg p-1.5 text-text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-text-secondary group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
                         type="button"
                         title="Eliminar"
                       >

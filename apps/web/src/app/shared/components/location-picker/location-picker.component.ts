@@ -33,7 +33,7 @@ export interface LocationSelection {
     <div class="location-picker">
       <div class="location-picker-header">
         <h3 class="text-lg font-semibold mb-2">¿Desde dónde querés buscar autos?</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+        <p class="text-sm text-text-secondary dark:text-text-secondary mb-4">
           Mostramos autos cercanos a tu ubicación con mejores precios
         </p>
       </div>
@@ -76,7 +76,7 @@ export interface LocationSelection {
         </button>
 
         @if (!isGeolocationAvailable()) {
-          <p class="text-xs text-red-600 ml-10">Geolocalización no disponible en tu navegador</p>
+          <p class="text-xs text-error-600 ml-10">Geolocalización no disponible en tu navegador</p>
         }
 
         <!-- Address Search -->
@@ -94,7 +94,7 @@ export interface LocationSelection {
             />
           </div>
           @if (addressSearching()) {
-            <p class="text-xs text-gray-500 dark:text-gray-300 mt-1 ml-10">Buscando...</p>
+            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 ml-10">Buscando...</p>
           }
         </div>
       </div>
@@ -124,15 +124,15 @@ export interface LocationSelection {
 
       <!-- Error Message -->
       @if (errorMessage()) {
-        <div class="error-message mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p class="text-sm text-red-800">{{ errorMessage() }}</p>
+        <div class="error-message mt-3 p-3 bg-error-50 border border-error-200 rounded-lg">
+          <p class="text-sm text-error-800">{{ errorMessage() }}</p>
         </div>
       }
 
       <!-- Loading Indicator -->
       @if (loading()) {
         <div class="loading-indicator mt-3 text-center">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Obteniendo ubicación...</p>
+          <p class="text-sm text-text-secondary dark:text-text-secondary">Obteniendo ubicación...</p>
         </div>
       }
     </div>

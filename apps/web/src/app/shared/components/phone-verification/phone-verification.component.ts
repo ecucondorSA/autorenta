@@ -17,7 +17,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
   selector: 'app-phone-verification',
   imports: [CommonModule, FormsModule, TranslateModule],
   template: `
-    <div class="bg-surface-raised rounded-lg border border-gray-200 p-6">
+    <div class="bg-surface-raised rounded-lg border border-border-default p-6">
       <!-- Header -->
       <div class="flex items-start justify-between mb-4">
         <div class="flex items-center gap-3">
@@ -28,8 +28,8 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
             {{ getStatusIcon() }}
           </div>
           <div>
-            <h4 class="font-semibold text-gray-900">Verificación de Teléfono</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-300">
+            <h4 class="font-semibold text-text-primary">Verificación de Teléfono</h4>
+            <p class="text-sm text-text-secondary dark:text-text-secondary">
               {{ status().value || 'No configurado' }}
             </p>
           </div>
@@ -62,7 +62,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
       <!-- Pending State -->
       <div *ngIf="!status().isVerified" class="space-y-4">
         <!-- Debug Panel (temporal) -->
-        <div class="p-3 bg-yellow-100 border-2 border-yellow-500 rounded text-xs">
+        <div class="p-3 bg-warning-100 border-2 border-warning-500 rounded text-xs">
           <p class="font-bold mb-2">🐛 DEBUG - Estado del componente:</p>
           <p>
             isVerified: <strong>{{ status().isVerified }}</strong>
@@ -93,13 +93,13 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
           </div>
 
           <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="phone" class="block text-sm font-medium text-text-primary mb-2">
               Número de teléfono
             </label>
             <div class="flex gap-2">
               <select
                 [(ngModel)]="countryCode"
-                class="block w-24 rounded-lg border-gray-300 shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
+                class="block w-24 rounded-lg border-border-subtle shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
               >
                 <option value="+54">🇦🇷 +54</option>
                 <option value="+1">🇺🇸 +1</option>
@@ -113,11 +113,11 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
                 [(ngModel)]="phoneNumber"
                 placeholder="11 2345 6789"
                 maxlength="15"
-                class="flex-grow block rounded-lg border-gray-300 shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
+                class="flex-grow block rounded-lg border-border-subtle shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
                 [disabled]="loading()"
               />
             </div>
-            <p class="text-xs text-gray-500 dark:text-gray-300 mt-1">
+            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
               Formato: sin el 0 inicial. Ej: 11 2345 6789
             </p>
           </div>
@@ -130,7 +130,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
             [class]="
               canSendOTP()
                 ? 'bg-cta-default text-cta-text hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2'
-                : 'bg-gray-200 text-gray-500 dark:text-gray-300 cursor-not-allowed'
+                : 'bg-surface-hover text-text-secondary dark:text-text-secondary cursor-not-allowed'
             "
           >
             <span *ngIf="!loading()" class="flex items-center justify-center gap-2">
@@ -173,7 +173,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
           </div>
 
           <div>
-            <label for="otp" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="otp" class="block text-sm font-medium text-text-primary mb-2">
               Código de verificación
             </label>
             <input
@@ -184,11 +184,11 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
               maxlength="6"
               inputmode="numeric"
               pattern="[0-9]*"
-              class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-cta-default focus:border-cta-default text-center text-2xl tracking-widest font-mono"
+              class="block w-full rounded-lg border-border-subtle shadow-sm focus:ring-cta-default focus:border-cta-default text-center text-2xl tracking-widest font-mono"
               [disabled]="loading()"
               (input)="onOTPInput($event)"
             />
-            <p class="text-xs text-gray-500 dark:text-gray-300 mt-1 text-center">
+            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-center">
               Solo números, 6 dígitos
             </p>
           </div>
@@ -202,7 +202,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
               [class]="
                 canVerifyOTP()
                   ? 'bg-success-light text-text-primary hover:bg-success-light focus:ring-2 focus:ring-success-light focus:ring-offset-2'
-                  : 'bg-gray-200 text-gray-500 dark:text-gray-300 cursor-not-allowed'
+                  : 'bg-surface-hover text-text-secondary dark:text-text-secondary cursor-not-allowed'
               "
             >
               <span *ngIf="!loading()" class="flex items-center justify-center gap-2">
@@ -226,7 +226,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
               type="button"
               (click)="cancelOTP()"
               [disabled]="loading()"
-              class="px-4 py-3 text-sm font-medium text-gray-700 bg-surface-raised border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:opacity-50"
+              class="px-4 py-3 text-sm font-medium text-text-primary bg-surface-raised border border-border-subtle rounded-lg hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:opacity-50"
             >
               Cambiar número
             </button>
@@ -236,7 +236,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
             type="button"
             (click)="resendOTP()"
             [disabled]="!canResend() || loading()"
-            class="w-full px-4 py-2 text-sm text-cta-default hover:text-cta-default disabled:text-gray-400 dark:text-gray-300"
+            class="w-full px-4 py-2 text-sm text-cta-default hover:text-cta-default disabled:text-text-muted dark:text-text-secondary"
           >
             {{
               cooldownRemaining() > 0
@@ -257,13 +257,13 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
         <!-- Error Message -->
         <div
           *ngIf="error()"
-          class="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800"
+          class="p-3 bg-error-50 border border-error-200 rounded-lg text-sm text-error-800"
         >
           {{ error() }}
         </div>
 
         <!-- Help Text -->
-        <div class="text-xs text-gray-500 dark:text-gray-300 space-y-1">
+        <div class="text-xs text-text-secondary dark:text-text-secondary space-y-1">
           <p>• El código expira en 10 minutos</p>
           <p>• Máximo 3 intentos por hora</p>
           <p>• Revisa que tu teléfono pueda recibir SMS</p>
@@ -410,7 +410,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
   getStatusBadgeClass(): string {
     return this.status().isVerified
       ? 'bg-success-light/20 text-success-light'
-      : 'bg-yellow-100 text-yellow-600';
+      : 'bg-warning-100 text-warning-600';
   }
 
   getStatusLabel(): string {
@@ -420,7 +420,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
   getStatusLabelClass(): string {
     return this.status().isVerified
       ? 'bg-success-light/20 text-success-light'
-      : 'bg-yellow-100 text-yellow-800';
+      : 'bg-warning-100 text-warning-800';
   }
 
   formatDate(dateStr: string | null | undefined): string {

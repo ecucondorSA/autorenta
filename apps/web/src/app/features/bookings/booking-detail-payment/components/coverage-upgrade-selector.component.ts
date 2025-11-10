@@ -17,7 +17,7 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
       <div class="space-y-3">
         <!-- Standard -->
         <label
-          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-surface-raised dark:bg-surface-secondary/60 border-border-default/70 dark:border-neutral-700 hover:border-cta-default/60 dark:hover:border-cta-default/60 hover:bg-gray-50 dark:hover:bg-slate-deep/50 transition-colors"
+          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-surface-raised dark:bg-surface-secondary/60 border-border-default/70 dark:border-neutral-700 hover:border-cta-default/60 dark:hover:border-cta-default/60 hover:bg-surface-base dark:hover:bg-slate-deep/50 transition-colors"
           [ngClass]="
             selectedUpgrade === 'standard'
               ? 'ring-2 ring-cta-default/60 bg-primary-50 dark:bg-cta-default/10 border-cta-default/60 shadow-card-hover'
@@ -62,7 +62,7 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
 
         <!-- Premium 50 -->
         <label
-          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-surface-raised dark:bg-surface-secondary/60 border-border-default/70 dark:border-neutral-700 hover:border-cta-default/60 dark:hover:border-cta-default/60 hover:bg-gray-50 dark:hover:bg-slate-deep/50 transition-colors"
+          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-surface-raised dark:bg-surface-secondary/60 border-border-default/70 dark:border-neutral-700 hover:border-cta-default/60 dark:hover:border-cta-default/60 hover:bg-surface-base dark:hover:bg-slate-deep/50 transition-colors"
           [ngClass]="
             selectedUpgrade === 'premium50'
               ? 'ring-2 ring-cta-default/60 bg-primary-50 dark:bg-cta-default/10 border-cta-default/60 shadow-card-hover'
@@ -105,7 +105,7 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
 
         <!-- Zero -->
         <label
-          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-surface-raised dark:bg-surface-secondary/60 border-border-default/70 dark:border-neutral-700 hover:border-cta-default/60 dark:hover:border-cta-default/60 hover:bg-gray-50 dark:hover:bg-slate-deep/50 transition-colors"
+          class="relative flex items-start p-4 border rounded-lg cursor-pointer bg-surface-raised dark:bg-surface-secondary/60 border-border-default/70 dark:border-neutral-700 hover:border-cta-default/60 dark:hover:border-cta-default/60 hover:bg-surface-base dark:hover:bg-slate-deep/50 transition-colors"
           [ngClass]="
             selectedUpgrade === 'zero'
               ? 'ring-2 ring-cta-default/60 bg-primary-50 dark:bg-cta-default/10 border-cta-default/60 shadow-card-hover'

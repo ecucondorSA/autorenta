@@ -269,7 +269,7 @@
             (click)="onToggleAvailability($event)"
             [attr.aria-label]="car.status === 'active' ? 'Desactivar auto' : 'Activar auto'"
             [class]="car.status === 'active' 
-              ? 'flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-amber-500 text-amber-600 hover:bg-amber-50 transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]'
+              ? 'flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-warning-500 text-warning-600 hover:bg-warning-50 transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]'
               : 'flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-success-light text-success-light hover:bg-success-light/10 transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]'"
             [title]="car.status === 'active' ? 'Desactivar auto' : 'Activar auto'"
           >

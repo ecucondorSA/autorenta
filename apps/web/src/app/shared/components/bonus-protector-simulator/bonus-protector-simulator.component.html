@@ -10,13 +10,13 @@
         <h3 class="text-lg font-semibold mb-3">Estado Actual</h3>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <p class="text-sm text-gray-500">Clase Actual</p>
+            <p class="text-sm text-text-secondary">Clase Actual</p>
             <ion-badge [color]="getClassColor(currentClass())" class="text-xl">
               Clase {{ currentClass() }}
             </ion-badge>
           </div>
           <div>
-            <p class="text-sm text-gray-500">Nivel Recomendado</p>
+            <p class="text-sm text-text-secondary">Nivel Recomendado</p>
             <ion-badge color="primary" class="text-xl"> Nivel {{ recommendedLevel() }} </ion-badge>
           </div>
         </div>
@@ -178,7 +178,7 @@
               <p
                 class="text-sm"
                 [class.text-success-light]="potentialSavings()!.isWorthIt"
-                [class.text-yellow-600]="!potentialSavings()!.isWorthIt"
+                [class.text-warning-600]="!potentialSavings()!.isWorthIt"
               >
                 {{
                   potentialSavings()!.isWorthIt

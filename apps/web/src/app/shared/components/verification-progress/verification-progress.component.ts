@@ -15,24 +15,24 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
   selector: 'app-verification-progress',
   imports: [CommonModule, TranslateModule],
   template: `
-    <div class="bg-surface-raised rounded-lg shadow-sm border border-gray-200 p-6">
+    <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6">
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
         <div>
-          <h3 class="text-lg font-semibold text-gray-900">Estado de Verificación</h3>
-          <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+          <h3 class="text-lg font-semibold text-text-primary">Estado de Verificación</h3>
+          <p class="text-sm text-text-secondary dark:text-text-secondary mt-1">
             Completa los niveles para desbloquear todas las funcionalidades
           </p>
         </div>
         <div class="text-right">
           <div class="text-3xl font-bold text-cta-default">{{ progressPercentage() }}%</div>
-          <div class="text-xs text-gray-500 dark:text-gray-300">Completado</div>
+          <div class="text-xs text-text-secondary dark:text-text-secondary">Completado</div>
         </div>
       </div>
 
       <!-- Progress Bar -->
       <div class="mb-6">
-        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div class="w-full bg-surface-hover rounded-full h-3 overflow-hidden">
           <div
             class="h-full transition-all duration-500 ease-out rounded-full"
             [class]="getProgressBarClass()"
@@ -53,7 +53,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           </div>
           <div class="flex-grow">
             <div class="flex items-center justify-between">
-              <h4 class="font-semibold text-gray-900">Level 1: Explorador</h4>
+              <h4 class="font-semibold text-text-primary">Level 1: Explorador</h4>
               <span
                 class="text-xs font-medium px-2 py-1 rounded-full"
                 [class]="getLevelStatusClass(1)"
@@ -61,7 +61,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 {{ getLevelStatusLabel(1) }}
               </span>
             </div>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+            <p class="text-sm text-text-secondary dark:text-text-secondary mt-1">
               Verifica tu email o teléfono
             </p>
             <div class="mt-2 space-y-1">
@@ -69,20 +69,20 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 <span [class]="getCheckmarkClass(requirements()?.level_1?.email_verified)">
                   {{ requirements()?.level_1?.email_verified ? '✓' : '○' }}
                 </span>
-                <span class="text-gray-700">Email verificado</span>
+                <span class="text-text-primary">Email verificado</span>
               </div>
               <div class="flex items-center gap-2 text-sm">
                 <span [class]="getCheckmarkClass(requirements()?.level_1?.phone_verified)">
                   {{ requirements()?.level_1?.phone_verified ? '✓' : '○' }}
                 </span>
-                <span class="text-gray-700">Teléfono verificado</span>
+                <span class="text-text-primary">Teléfono verificado</span>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Divider -->
-        <div class="ml-6 border-l-2 border-gray-200 h-4"></div>
+        <div class="ml-6 border-l-2 border-border-default h-4"></div>
 
         <!-- Level 2 -->
         <div class="flex items-start gap-4">
@@ -94,7 +94,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           </div>
           <div class="flex-grow">
             <div class="flex items-center justify-between">
-              <h4 class="font-semibold text-gray-900">Level 2: Participante</h4>
+              <h4 class="font-semibold text-text-primary">Level 2: Participante</h4>
               <span
                 class="text-xs font-medium px-2 py-1 rounded-full"
                 [class]="getLevelStatusClass(2)"
@@ -102,7 +102,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 {{ getLevelStatusLabel(2) }}
               </span>
             </div>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+            <p class="text-sm text-text-secondary dark:text-text-secondary mt-1">
               Sube tus documentos de identidad
               <span *ngIf="!canAccessLevel2()" class="text-warning-light font-medium">
                 (Requiere Level 1)
@@ -113,10 +113,10 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 <span [class]="getCheckmarkClass(requirements()?.level_2?.document_verified)">
                   {{ requirements()?.level_2?.document_verified ? '✓' : '○' }}
                 </span>
-                <span class="text-gray-700">DNI verificado</span>
+                <span class="text-text-primary">DNI verificado</span>
                 <span
                   *ngIf="requirements()?.level_2?.ai_score"
-                  class="text-xs text-gray-500 dark:text-gray-300 ml-auto"
+                  class="text-xs text-text-secondary dark:text-text-secondary ml-auto"
                 >
                   ({{ requirements()?.level_2?.ai_score }}% confianza)
                 </span>
@@ -125,10 +125,10 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 <span [class]="getCheckmarkClass(requirements()?.level_2?.driver_license_verified)">
                   {{ requirements()?.level_2?.driver_license_verified ? '✓' : '○' }}
                 </span>
-                <span class="text-gray-700">Licencia de conducir</span>
+                <span class="text-text-primary">Licencia de conducir</span>
                 <span
                   *ngIf="requirements()?.level_2?.driver_license_score"
-                  class="text-xs text-gray-500 dark:text-gray-300 ml-auto"
+                  class="text-xs text-text-secondary dark:text-text-secondary ml-auto"
                 >
                   ({{ requirements()?.level_2?.driver_license_score }}% confianza)
                 </span>
@@ -138,7 +138,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         </div>
 
         <!-- Divider -->
-        <div class="ml-6 border-l-2 border-gray-200 h-4"></div>
+        <div class="ml-6 border-l-2 border-border-default h-4"></div>
 
         <!-- Level 3 -->
         <div class="flex items-start gap-4">
@@ -150,7 +150,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           </div>
           <div class="flex-grow">
             <div class="flex items-center justify-between">
-              <h4 class="font-semibold text-gray-900">Level 3: Verificado Total</h4>
+              <h4 class="font-semibold text-text-primary">Level 3: Verificado Total</h4>
               <span
                 class="text-xs font-medium px-2 py-1 rounded-full"
                 [class]="getLevelStatusClass(3)"
@@ -158,7 +158,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 {{ getLevelStatusLabel(3) }}
               </span>
             </div>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+            <p class="text-sm text-text-secondary dark:text-text-secondary mt-1">
               Verifica tu identidad con selfie video
               <span *ngIf="!canAccessLevel3()" class="text-warning-light font-medium">
                 (Requiere Level 2)
@@ -169,10 +169,10 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
                 <span [class]="getCheckmarkClass(requirements()?.level_3?.selfie_verified)">
                   {{ requirements()?.level_3?.selfie_verified ? '✓' : '○' }}
                 </span>
-                <span class="text-gray-700">Selfie verificado</span>
+                <span class="text-text-primary">Selfie verificado</span>
                 <span
                   *ngIf="requirements()?.level_3?.face_match_score"
-                  class="text-xs text-gray-500 dark:text-gray-300 ml-auto"
+                  class="text-xs text-text-secondary dark:text-text-secondary ml-auto"
                 >
                   ({{ requirements()?.level_3?.face_match_score }}% match)
                 </span>
@@ -203,7 +203,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       <!-- Error State -->
       <div
         *ngIf="error()"
-        class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800"
+        class="mt-4 p-4 bg-error-50 border border-error-200 rounded-lg text-sm text-error-800"
       >
         {{ error() }}
       </div>
@@ -249,7 +249,7 @@ export class VerificationProgressComponent implements OnInit {
     if (isCurrent) {
       return 'bg-cta-default text-cta-text shadow-md animate-pulse';
     }
-    return 'bg-gray-200 text-gray-500 dark:text-gray-300';
+    return 'bg-surface-hover text-text-secondary dark:text-text-secondary';
   }
 
   getLevelStatusClass(level: number): string {
@@ -261,7 +261,7 @@ export class VerificationProgressComponent implements OnInit {
     if (this.currentLevel() === level - 1) {
       return 'bg-cta-default/20 text-cta-default';
     }
-    return 'bg-gray-100 text-gray-600 dark:text-gray-300';
+    return 'bg-surface-raised text-text-secondary dark:text-text-secondary';
   }
 
   getLevelStatusLabel(level: number): string {
@@ -277,7 +277,7 @@ export class VerificationProgressComponent implements OnInit {
   }
 
   getCheckmarkClass(isComplete: boolean | undefined): string {
-    return isComplete ? 'text-success-light font-bold' : 'text-gray-400 dark:text-gray-300';
+    return isComplete ? 'text-success-light font-bold' : 'text-text-muted dark:text-text-secondary';
   }
 
   getProgressBarClass(): string {

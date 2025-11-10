@@ -12,20 +12,20 @@ import { environment } from '../../../../../environments/environment';
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Logs de Auditoría</h1>
-        <p class="mt-2 text-sm text-gray-600">
+        <h1 class="text-2xl font-bold text-text-primary">Logs de Auditoría</h1>
+        <p class="mt-2 text-sm text-text-secondary">
           Revisa los logs de auditoría del sistema contable.
         </p>
       </div>
 
-      <div class="mb-4 rounded-lg border border-gray-200 bg-surface-raised p-4">
+      <div class="mb-4 rounded-lg border border-border-default bg-surface-raised p-4">
         <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700">Severidad</label>
+            <label class="block text-sm font-medium text-text-primary">Severidad</label>
             <select
               [(ngModel)]="filters.severity"
               (change)="loadLogs()"
-              class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
             >
               <option value="">Todas</option>
               <option value="low">Baja</option>
@@ -35,11 +35,11 @@ import { environment } from '../../../../../environments/environment';
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700">Tipo</label>
+            <label class="block text-sm font-medium text-text-primary">Tipo</label>
             <select
               [(ngModel)]="filters.auditType"
               (change)="loadLogs()"
-              class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
             >
               <option value="">Todos</option>
               <option value="balance_check">Verificación de Balance</option>
@@ -48,11 +48,11 @@ import { environment } from '../../../../../environments/environment';
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700">Estado</label>
+            <label class="block text-sm font-medium text-text-primary">Estado</label>
             <select
               [(ngModel)]="filters.resolutionStatus"
               (change)="loadLogs()"
-              class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
             >
               <option value="">Todos</option>
               <option value="open">Abierto</option>
@@ -75,17 +75,17 @@ import { environment } from '../../../../../environments/environment';
           <div class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"></div>
         </div>
       } @else if (logs().data.length === 0) {
-        <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-          <p class="text-gray-600">No hay logs de auditoría disponibles.</p>
+        <div class="rounded-lg border border-border-default bg-surface-base p-8 text-center">
+          <p class="text-text-secondary">No hay logs de auditoría disponibles.</p>
         </div>
       } @else {
         <div class="space-y-4">
           @for (log of logs().data; track log.id) {
             <div
               class="rounded-lg border p-4"
-              [class.bg-red-50]="log.severity === 'critical'"
+              [class.bg-error-50]="log.severity === 'critical'"
               [class.bg-warning-light/10]="log.severity === 'high'"
-              [class.bg-yellow-50]="log.severity === 'medium'"
+              [class.bg-warning-50]="log.severity === 'medium'"
               [class.bg-cta-default/10]="log.severity === 'low'"
             >
               <div class="flex items-start justify-between">
@@ -93,26 +93,26 @@ import { environment } from '../../../../../environments/environment';
                   <div class="mb-2 flex items-center gap-2">
                     <span
                       class="rounded-full px-2 py-1 text-xs font-medium"
-                      [class.bg-red-100]="log.severity === 'critical'"
-                      [class.text-red-800]="log.severity === 'critical'"
+                      [class.bg-error-100]="log.severity === 'critical'"
+                      [class.text-error-800]="log.severity === 'critical'"
                       [class.bg-warning-light/20]="log.severity === 'high'"
                       [class.text-warning-light]="log.severity === 'high'"
-                      [class.bg-yellow-100]="log.severity === 'medium'"
-                      [class.text-yellow-800]="log.severity === 'medium'"
+                      [class.bg-warning-100]="log.severity === 'medium'"
+                      [class.text-warning-800]="log.severity === 'medium'"
                       [class.bg-cta-default/20]="log.severity === 'low'"
                       [class.text-cta-default]="log.severity === 'low'"
                     >
                       {{ log.severity }}
                     </span>
-                    <span class="text-xs text-gray-500">{{ log.audit_type }}</span>
+                    <span class="text-xs text-text-secondary">{{ log.audit_type }}</span>
                   </div>
-                  <p class="text-sm font-medium text-gray-900">{{ log.description }}</p>
+                  <p class="text-sm font-medium text-text-primary">{{ log.description }}</p>
                   @if (log.variance !== null && log.variance !== undefined) {
-                    <p class="mt-1 text-xs text-gray-600">
+                    <p class="mt-1 text-xs text-text-secondary">
                       Diferencia: \${{ log.variance | number: '1.2-2' }}
                     </p>
                   }
-                  <p class="mt-1 text-xs text-gray-500">
+                  <p class="mt-1 text-xs text-text-secondary">
                     {{ log.created_at | date: 'short' }}
                   </p>
                 </div>
@@ -120,8 +120,8 @@ import { environment } from '../../../../../environments/environment';
                   class="rounded-full px-2 py-1 text-xs font-medium"
                   [class.bg-success-light/20]="log.resolution_status === 'resolved'"
                   [class.text-success-light]="log.resolution_status === 'resolved'"
-                  [class.bg-gray-100]="log.resolution_status === 'open'"
-                  [class.text-gray-800]="log.resolution_status === 'open'"
+                  [class.bg-surface-raised]="log.resolution_status === 'open'"
+                  [class.text-text-primary]="log.resolution_status === 'open'"
                 >
                   {{ log.resolution_status }}
                 </span>
@@ -131,21 +131,21 @@ import { environment } from '../../../../../environments/environment';
 
           <!-- Paginación -->
           @if (logs().totalPages > 1) {
-            <div class="flex items-center justify-between rounded-lg border border-gray-200 bg-surface-raised p-4">
+            <div class="flex items-center justify-between rounded-lg border border-border-default bg-surface-raised p-4">
               <button
                 (click)="previousPage()"
                 [disabled]="currentPage() === 1"
-                class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                class="rounded-lg border border-border-subtle px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base disabled:opacity-50"
               >
                 Anterior
               </button>
-              <span class="text-sm text-gray-600">
+              <span class="text-sm text-text-secondary">
                 Página {{ currentPage() }} de {{ logs().totalPages }}
               </span>
               <button
                 (click)="nextPage()"
                 [disabled]="currentPage() === logs().totalPages"
-                class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                class="rounded-lg border border-border-subtle px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base disabled:opacity-50"
               >
                 Siguiente
               </button>

@@ -21,14 +21,14 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
   standalone: true,
   imports: [CommonModule, OfflineMessagesIndicatorComponent],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
       <!-- Header -->
-      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-gray-800">
+      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <div class="flex items-center justify-between">
             <div>
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-text-inverse">Mensajes</h1>
-              <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
+              <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse">Mensajes</h1>
+              <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                 {{ conversations().length }} conversaciones
               </p>
             </div>
@@ -43,22 +43,22 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
           <div class="flex h-96 items-center justify-center">
             <div class="text-center">
               <div
-                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"
+                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-subtle border-t-blue-500"
               ></div>
-              <p class="text-gray-600 dark:text-gray-300 dark:text-gray-300">
+              <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                 Cargando conversaciones...
               </p>
             </div>
           </div>
         } @else if (error()) {
-          <div class="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-            <p class="text-sm text-red-800 dark:text-red-200">{{ error() }}</p>
+          <div class="rounded-lg bg-error-50 p-4 dark:bg-error-900/20">
+            <p class="text-sm text-error-800 dark:text-error-200">{{ error() }}</p>
           </div>
         } @else if (conversations().length === 0) {
           <!-- Empty state -->
           <div class="py-16 text-center">
             <svg
-              class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-300"
+              class="mx-auto h-16 w-16 text-text-muted dark:text-text-secondary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -70,10 +70,10 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
                 d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
               />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-text-inverse">
+            <h3 class="mt-4 text-lg font-medium text-text-primary dark:text-text-inverse">
               No hay mensajes
             </h3>
-            <p class="mt-2 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
+            <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
               Cuando alguien te escriba, aparecerá aquí
             </p>
           </div>
@@ -83,7 +83,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
             @for (conv of conversations(); track conv.id) {
               <button
                 (click)="openConversation(conv)"
-                class="group w-full rounded-lg border border-gray-200 bg-surface-raised p-4 text-left transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                class="group w-full rounded-lg border border-border-default bg-surface-raised p-4 text-left transition-all hover:shadow-md dark:border-border-subtle dark:bg-surface-base"
                 type="button"
               >
                 <div class="flex items-start gap-4">
@@ -108,11 +108,11 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
                   <div class="min-w-0 flex-1">
                     <div class="mb-1 flex items-start justify-between gap-2">
                       <div>
-                        <p class="font-semibold text-gray-900 dark:text-text-inverse">
+                        <p class="font-semibold text-text-primary dark:text-text-inverse">
                           {{ conv.otherUserName }}
                         </p>
                         @if (conv.carBrand) {
-                          <p class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                          <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                             {{ conv.carBrand }} {{ conv.carModel }} {{ conv.carYear }}
                           </p>
                         }
@@ -128,16 +128,16 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
                     <p
                       class="truncate text-sm"
                       [class.font-semibold]="conv.unreadCount > 0"
-                      [class.text-gray-900]="conv.unreadCount > 0"
+                      [class.text-text-primary]="conv.unreadCount > 0"
                       [class.dark:text-text-inverse]="conv.unreadCount > 0"
-                      [class.text-gray-600
-                      dark:text-gray-300]="conv.unreadCount === 0"
-                      [class.dark:text-gray-400
-                      dark:text-gray-300]="conv.unreadCount === 0"
+                      [class.text-text-secondary
+                      dark:text-text-secondary]="conv.unreadCount === 0"
+                      [class.dark:text-text-muted
+                      dark:text-text-secondary]="conv.unreadCount === 0"
                     >
                       {{ conv.lastMessage }}
                     </p>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                    <p class="mt-1 text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                       {{ formatDate(conv.lastMessageAt) }}
                     </p>
                   </div>

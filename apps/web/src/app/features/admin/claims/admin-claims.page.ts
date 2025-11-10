@@ -41,16 +41,16 @@ import {
 
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-text-inverse">
+            <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">
               Gestión de Siniestros
             </h1>
-            <p class="text-gray-600 dark:text-gray-300 mt-1">
+            <p class="text-text-secondary dark:text-text-secondary mt-1">
               Administra y resuelve los siniestros reportados
             </p>
           </div>
           <div class="text-right">
-            <p class="text-sm text-gray-500 dark:text-gray-400">Total de siniestros</p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-text-inverse">
+            <p class="text-sm text-text-secondary dark:text-text-muted">Total de siniestros</p>
+            <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
               {{ filteredClaims().length }}
             </p>
           </div>
@@ -59,19 +59,19 @@ import {
 
       <!-- Filters -->
       <div
-        class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm"
+        class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-4 mb-6 shadow-sm"
       >
-        <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Filtros</h3>
+        <h3 class="text-sm font-semibold text-text-primary dark:text-text-secondary mb-3">Filtros</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Status Filter -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1">
               Estado
             </label>
             <select
               [(ngModel)]="filterStatus"
               (ngModelChange)="onFilterChange()"
-              class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-surface-raised dark:bg-gray-800 px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-subtle dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
             >
               <option value="">Todos los estados</option>
               <option *ngFor="let status of claimStatuses" [value]="status.value">
@@ -82,13 +82,13 @@ import {
 
           <!-- Type Filter -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1">
               Tipo
             </label>
             <select
               [(ngModel)]="filterType"
               (ngModelChange)="onFilterChange()"
-              class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-surface-raised dark:bg-gray-800 px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-subtle dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
             >
               <option value="">Todos los tipos</option>
               <option *ngFor="let type of claimTypes" [value]="type.value">
@@ -99,7 +99,7 @@ import {
 
           <!-- Search -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1">
               Buscar
             </label>
             <input
@@ -107,7 +107,7 @@ import {
               [(ngModel)]="searchQuery"
               (ngModelChange)="onFilterChange()"
               placeholder="ID o descripción..."
-              class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-surface-raised dark:bg-gray-800 px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-subtle dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
             />
           </div>
         </div>
@@ -115,12 +115,12 @@ import {
 
       <!-- Loading State -->
       <div *ngIf="loading()" class="text-center py-12">
-        <p class="text-gray-600 dark:text-gray-300">Cargando siniestros...</p>
+        <p class="text-text-secondary dark:text-text-secondary">Cargando siniestros...</p>
       </div>
 
       <!-- Error State -->
-      <div *ngIf="error() && !loading()" class="bg-red-50 border border-red-200 rounded-xl p-6">
-        <p class="text-red-800">{{ error() }}</p>
+      <div *ngIf="error() && !loading()" class="bg-error-50 border border-error-200 rounded-xl p-6">
+        <p class="text-error-800">{{ error() }}</p>
       </div>
 
       <!-- Claims List -->
@@ -128,10 +128,10 @@ import {
         <!-- Empty State -->
         <div
           *ngIf="filteredClaims().length === 0"
-          class="bg-gray-50 dark:bg-gray-800 rounded-xl p-12 text-center"
+          class="bg-surface-base dark:bg-surface-base rounded-xl p-12 text-center"
         >
           <svg
-            class="w-16 h-16 mx-auto text-gray-400 mb-4"
+            class="w-16 h-16 mx-auto text-text-muted mb-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -143,10 +143,10 @@ import {
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <p class="text-gray-600 dark:text-gray-300 text-lg font-medium">
+          <p class="text-text-secondary dark:text-text-secondary text-lg font-medium">
             No se encontraron siniestros
           </p>
-          <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+          <p class="text-text-secondary dark:text-text-muted text-sm mt-1">
             Intenta cambiar los filtros o buscar otro término
           </p>
         </div>
@@ -154,7 +154,7 @@ import {
         <!-- Claims Cards -->
         <div
           *ngFor="let claim of filteredClaims()"
-          class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-gray-200 dark:border-gray-700 p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+          class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
           [routerLink]="['/admin/claims', claim.id]"
         >
           <div class="flex items-start justify-between gap-4">
@@ -170,24 +170,24 @@ import {
 
                 <!-- Type Badge -->
                 <span
-                  class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-surface-raised text-text-primary dark:bg-surface-base dark:text-text-secondary"
                 >
                   {{ CLAIM_TYPE_LABELS[claim.claim_type] }}
                 </span>
 
                 <!-- ID -->
-                <span class="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                <span class="text-xs text-text-secondary dark:text-text-muted font-mono">
                   #{{ claim.id | slice: 0 : 8 }}
                 </span>
               </div>
 
               <h3
-                class="text-sm font-semibold text-gray-900 dark:text-text-inverse mb-1 line-clamp-2"
+                class="text-sm font-semibold text-text-primary dark:text-text-inverse mb-1 line-clamp-2"
               >
                 {{ claim.description }}
               </h3>
 
-              <div class="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-300 mt-2">
+              <div class="flex items-center gap-4 text-xs text-text-secondary dark:text-text-secondary mt-2">
                 <span>📅 {{ formatDate(claim.created_at) }}</span>
                 <span *ngIf="claim.location">📍 {{ claim.location }}</span>
                 <span *ngIf="claim.photos && claim.photos.length > 0">
@@ -198,7 +198,7 @@ import {
 
             <div class="flex-shrink-0">
               <svg
-                class="w-5 h-5 text-gray-400"
+                class="w-5 h-5 text-text-muted"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -316,15 +316,15 @@ export class AdminClaimsPage implements OnInit {
     const classes: Record<ClaimStatus, string> = {
       reported:
         'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
-      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200',
+      pending: 'bg-warning-100 text-warning-800 dark:bg-warning-900/40 dark:text-warning-200',
       investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
       under_review:
         'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
       approved:
         'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
-      rejected: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200',
+      rejected: 'bg-error-100 text-error-800 dark:bg-error-900/40 dark:text-error-200',
       paid: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
-      closed: 'bg-gray-100 text-gray-800 dark:bg-gray-900/40 dark:text-gray-200',
+      closed: 'bg-surface-raised text-text-primary dark:bg-surface-raised/40 dark:text-text-primary',
     };
     return classes[status] || classes.closed;
   }

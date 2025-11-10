@@ -1,20 +1,20 @@
 <div
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  class="fixed inset-0 bg-surface-overlay bg-opacity-50 flex items-center justify-center z-50"
   (click)="onOverlayClick($event)"
 >
   <div
-    class="bg-surface-raised dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md m-4"
+    class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-xl w-full max-w-md m-4"
     appFocusTrap
     (escape)="onClose()"
     data-testid="deposit-modal"
   >
     <div
-      class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center"
+      class="p-6 border-b border-border-default dark:border-border-subtle flex justify-between items-center"
     >
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-text-inverse">Depositar Fondos</h2>
+      <h2 class="text-xl font-semibold text-text-primary dark:text-text-inverse">Depositar Fondos</h2>
       <button
         (click)="onClose()"
-        class="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+        class="text-text-muted dark:text-text-secondary hover:text-text-secondary dark:hover:text-gray-300"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -30,7 +30,7 @@
     <div class="p-6 space-y-6">
       <!-- Deposit Type Selector -->
       <div class="space-y-3">
-        <label class="block text-sm font-semibold text-gray-900 dark:text-text-inverse">
+        <label class="block text-sm font-semibold text-text-primary dark:text-text-inverse">
           ¿Qué tipo de depósito deseas realizar?
         </label>
 
@@ -40,19 +40,19 @@
           class="p-4 rounded-xl border-2 cursor-pointer transition-all"
           [class.border-cta-default]="depositType() === 'protected_credit'"
           [class.bg-cta-default/5]="depositType() === 'protected_credit'"
-          [class.border-gray-200]="depositType() !== 'protected_credit'"
+          [class.border-border-default]="depositType() !== 'protected_credit'"
           [class.bg-surface-raised]="depositType() !== 'protected_credit'"
           [class.dark:border-cta-default/50]="depositType() === 'protected_credit'"
           [class.dark:bg-cta-default/10]="depositType() === 'protected_credit'"
-          [class.dark:border-gray-600]="depositType() !== 'protected_credit'"
-          [class.dark:bg-gray-700]="depositType() !== 'protected_credit'"
+          [class.dark:border-border-default]="depositType() !== 'protected_credit'"
+          [class.dark:bg-surface-base]="depositType() !== 'protected_credit'"
         >
           <div class="flex items-start gap-3">
             <div
               class="flex-shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all"
               [class.border-cta-default]="depositType() === 'protected_credit'"
               [class.bg-cta-default]="depositType() === 'protected_credit'"
-              [class.border-gray-300]="depositType() !== 'protected_credit'"
+              [class.border-border-subtle]="depositType() !== 'protected_credit'"
               [class.dark:border-gray-500]="depositType() !== 'protected_credit'"
             >
               <div
@@ -65,7 +65,7 @@
                 <p
                   class="text-base font-bold"
                   [class.text-cta-default]="depositType() === 'protected_credit'"
-                  [class.text-gray-900]="depositType() !== 'protected_credit'"
+                  [class.text-text-primary]="depositType() !== 'protected_credit'"
                   [class.dark:text-cta-default]="depositType() === 'protected_credit'"
                   [class.dark:text-text-inverse]="depositType() !== 'protected_credit'"
                 >
@@ -78,18 +78,18 @@
                   Seleccionado
                 </span>
               </div>
-              <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+              <p class="text-sm text-text-secondary dark:text-text-secondary mt-1">
                 Para reservar sin tarjeta. Este monto queda protegido y se reutiliza automáticamente
                 en cada reserva.
               </p>
               <ul class="mt-2 space-y-1">
-                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                <li class="flex items-center gap-2 text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                   <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                   Se usa automáticamente para garantías de reservas
                 </li>
-                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                <li class="flex items-center gap-2 text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                   <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
@@ -112,19 +112,19 @@
           class="p-4 rounded-xl border-2 cursor-pointer transition-all"
           [class.border-primary-500]="depositType() === 'withdrawable'"
           [class.bg-primary-50]="depositType() === 'withdrawable'"
-          [class.border-gray-200]="depositType() !== 'withdrawable'"
+          [class.border-border-default]="depositType() !== 'withdrawable'"
           [class.bg-surface-raised]="depositType() !== 'withdrawable'"
           [class.dark:border-primary-400]="depositType() === 'withdrawable'"
           [class.dark:bg-primary-500/10]="depositType() === 'withdrawable'"
-          [class.dark:border-gray-600]="depositType() !== 'withdrawable'"
-          [class.dark:bg-gray-700]="depositType() !== 'withdrawable'"
+          [class.dark:border-border-default]="depositType() !== 'withdrawable'"
+          [class.dark:bg-surface-base]="depositType() !== 'withdrawable'"
         >
           <div class="flex items-start gap-3">
             <div
               class="flex-shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all"
               [class.border-primary-500]="depositType() === 'withdrawable'"
               [class.bg-primary-500]="depositType() === 'withdrawable'"
-              [class.border-gray-300]="depositType() !== 'withdrawable'"
+              [class.border-border-subtle]="depositType() !== 'withdrawable'"
               [class.dark:border-gray-500]="depositType() !== 'withdrawable'"
             >
               <div
@@ -137,7 +137,7 @@
                 <p
                   class="text-base font-bold"
                   [class.text-primary-700]="depositType() === 'withdrawable'"
-                  [class.text-gray-900]="depositType() !== 'withdrawable'"
+                  [class.text-text-primary]="depositType() !== 'withdrawable'"
                   [class.dark:text-primary-400]="depositType() === 'withdrawable'"
                   [class.dark:text-text-inverse]="depositType() !== 'withdrawable'"
                 >
@@ -150,23 +150,23 @@
                   Seleccionado
                 </span>
               </div>
-              <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+              <p class="text-sm text-text-secondary dark:text-text-secondary mt-1">
                 Para pagar alquileres o retirar a tu cuenta bancaria. Máxima flexibilidad.
               </p>
               <ul class="mt-2 space-y-1">
-                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                <li class="flex items-center gap-2 text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                   <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                   Puedes usarlo para pagar alquileres
                 </li>
-                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                <li class="flex items-center gap-2 text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                   <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                   Se puede retirar a tu cuenta bancaria en cualquier momento
                 </li>
-                <li class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-300">
+                <li class="flex items-center gap-2 text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                   <svg class="w-4 h-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
@@ -179,7 +179,7 @@
       </div>
 
       <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        <label class="block text-sm font-medium text-text-primary dark:text-text-secondary"
           >Monto en ARS</label
         >
         <input
@@ -191,12 +191,12 @@
           placeholder="0.00"
           data-testid="deposit-amount-input"
         />
-        <div *ngIf="loadingRate()" class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1">
+        <div *ngIf="loadingRate()" class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
           Cargando cotización...
         </div>
         <div
           *ngIf="!loadingRate() && platformRate()"
-          class="text-sm text-gray-500 dark:text-gray-300 dark:text-gray-300 mt-1"
+          class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
         >
           Recibirás aprox.
           <span class="font-semibold">{{ formatCurrency(usdAmount()) }}</span> (Tasa: 1 USD ≈
@@ -205,7 +205,7 @@
       </div>
 
       <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        <label class="block text-sm font-medium text-text-primary dark:text-text-secondary"
           >Proveedor de Pago</label
         >
         <select
@@ -218,7 +218,7 @@
       </div>
 
       <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        <label class="block text-sm font-medium text-text-primary dark:text-text-secondary"
           >Descripción (opcional)</label
         >
         <input
@@ -231,7 +231,7 @@
 
       <div
         *ngIf="formError()"
-        class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+        class="bg-error-100 border border-error-400 text-error-700 px-4 py-3 rounded relative mb-4"
         role="alert"
       >
         <strong class="font-bold">Error:</strong>
@@ -240,7 +240,7 @@
 
       <div
         *ngIf="fallbackSuggestion() === 'bank_transfer'"
-        class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4"
+        class="bg-warning-100 border border-warning-400 text-warning-700 px-4 py-3 rounded relative mb-4"
         role="alert"
       >
         <strong class="font-bold">Sugerencia:</strong>
@@ -252,12 +252,12 @@
 
       <div
         *ngIf="provider() === 'bank_transfer'"
-        class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
+        class="p-4 bg-surface-base dark:bg-surface-base rounded-lg"
       >
-        <h3 class="font-semibold text-gray-900 dark:text-text-inverse mb-2">
+        <h3 class="font-semibold text-text-primary dark:text-text-inverse mb-2">
           Datos para la Transferencia
         </h3>
-        <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-1">
+        <ul class="text-sm text-text-primary dark:text-text-secondary space-y-1">
           <li><span class="font-medium">Titular:</span> {{ bankTransferDetails.accountName }}</li>
           <li><span class="font-medium">Banco:</span> {{ bankTransferDetails.bank }}</li>
           <li><span class="font-medium">Alias:</span> {{ bankTransferDetails.alias }}</li>
@@ -271,7 +271,7 @@
     </div>
 
     <div
-      class="p-6 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 flex justify-end"
+      class="p-6 bg-surface-base dark:bg-surface-base border-t border-border-default dark:border-border-default flex justify-end"
     >
       <button (click)="onClose()" class="btn-secondary mr-2">Cancelar</button>
       <button (click)="onSubmit()" [disabled]="isProcessing()" class="btn-primary">

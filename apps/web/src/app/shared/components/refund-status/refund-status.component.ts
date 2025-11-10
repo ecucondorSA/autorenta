@@ -15,50 +15,50 @@ import { RefundService } from '../../../core/services/refund.service';
       </div>
     } @else if (refundStatus(); as status) {
       @if (status.has_refund) {
-        <div class="rounded-lg border border-gray-200 bg-surface-raised p-4 shadow-sm">
+        <div class="rounded-lg border border-border-default bg-surface-raised p-4 shadow-sm">
           <div class="mb-3 flex items-center justify-between">
-            <h4 class="text-sm font-semibold text-gray-900">Estado del Reembolso</h4>
+            <h4 class="text-sm font-semibold text-text-primary">Estado del Reembolso</h4>
             <span
               class="rounded-full px-2 py-1 text-xs font-medium"
               [class.bg-success-light/20]="status.refund_status === 'approved'"
               [class.text-success-light]="status.refund_status === 'approved'"
-              [class.bg-yellow-100]="status.refund_status === 'pending'"
-              [class.text-yellow-800]="status.refund_status === 'pending'"
-              [class.bg-red-100]="status.refund_status === 'rejected'"
-              [class.text-red-800]="status.refund_status === 'rejected'"
+              [class.bg-warning-100]="status.refund_status === 'pending'"
+              [class.text-warning-800]="status.refund_status === 'pending'"
+              [class.bg-error-100]="status.refund_status === 'rejected'"
+              [class.text-error-800]="status.refund_status === 'rejected'"
             >
               {{ getStatusLabel(status.refund_status || 'pending') }}
             </span>
           </div>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-600">ID de Reembolso:</span>
-              <span class="font-mono text-gray-900">{{ status.refund_id }}</span>
+              <span class="text-text-secondary">ID de Reembolso:</span>
+              <span class="font-mono text-text-primary">{{ status.refund_id }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-600">Monto:</span>
-              <span class="font-semibold text-gray-900">{{
+              <span class="text-text-secondary">Monto:</span>
+              <span class="font-semibold text-text-primary">{{
                 formatCurrency(status.refund_amount || 0)
               }}</span>
             </div>
             @if (status.refund_date) {
               <div class="flex justify-between">
-                <span class="text-gray-600">Fecha:</span>
-                <span class="text-gray-900">{{ formatDate(status.refund_date) }}</span>
+                <span class="text-text-secondary">Fecha:</span>
+                <span class="text-text-primary">{{ formatDate(status.refund_date) }}</span>
               </div>
             }
           </div>
         </div>
       } @else {
         <div
-          class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center text-sm text-gray-600"
+          class="rounded-lg border border-border-default bg-surface-base p-4 text-center text-sm text-text-secondary"
         >
           No hay reembolso registrado para esta reserva.
         </div>
       }
     }
     @if (error()) {
-      <div class="rounded-lg bg-red-50 p-4 text-sm text-red-800">
+      <div class="rounded-lg bg-error-50 p-4 text-sm text-error-800">
         {{ error() }}
       </div>
     }

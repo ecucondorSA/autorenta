@@ -1,5 +1,5 @@
 .badge-warning {
-  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300;
+  @apply bg-warning-100 text-warning-800 dark:bg-warning-900/30 dark:text-warning-300;
 }
 
 .badge-success {
@@ -11,9 +11,9 @@
 }
 
 .badge-neutral {
-  @apply bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300;
+  @apply bg-surface-raised text-text-primary dark:bg-surface-base dark:text-text-secondary;
 }
 
 .badge-danger {
-  @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300;
+  @apply bg-error-100 text-error-800 dark:bg-error-900/30 dark:text-error-300;
 }

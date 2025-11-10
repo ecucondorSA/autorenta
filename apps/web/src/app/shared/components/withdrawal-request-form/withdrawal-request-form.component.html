@@ -1,5 +1,5 @@
 <div
-  class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border border-border-default dark:border-gray-600/70 dark:border-slate-deep rounded-2xl shadow-soft dark:shadow-card p-6 max-w-2xl mx-auto transition-colors duration-300"
+  class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border border-border-default dark:border-border-default/70 dark:border-slate-deep rounded-2xl shadow-soft dark:shadow-card p-6 max-w-2xl mx-auto transition-colors duration-300"
 >
   <h2 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-6">Solicitar Retiro</h2>
 
@@ -71,8 +71,8 @@
         <select
           id="bank_account_id"
           formControlName="bank_account_id"
-          class="w-full px-4 py-3 border border-border-default dark:border-gray-600/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent transition-colors"
-          [class.border-red-500]="
+          class="w-full px-4 py-3 border border-border-default dark:border-border-default/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent transition-colors"
+          [class.border-error-500]="
             form.get('bank_account_id')?.invalid && form.get('bank_account_id')?.touched
           "
         >
@@ -87,7 +87,7 @@
           }
         </select>
         @if (getErrorMessage('bank_account_id')) {
-          <p class="mt-1 text-sm text-red-600 dark:text-red-300">
+          <p class="mt-1 text-sm text-error-600 dark:text-error-300">
             {{ getErrorMessage('bank_account_id') }}
           </p>
         }
@@ -120,8 +120,8 @@
             type="number"
             formControlName="amount"
             placeholder="0.00"
-            class="w-full pl-8 pr-4 py-3 border border-border-default dark:border-gray-600/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent transition-colors"
-            [class.border-red-500]="form.get('amount')?.invalid && form.get('amount')?.touched"
+            class="w-full pl-8 pr-4 py-3 border border-border-default dark:border-border-default/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent transition-colors"
+            [class.border-error-500]="form.get('amount')?.invalid && form.get('amount')?.touched"
             min="{{ MIN_AMOUNT }}"
             step="0.01"
           />
@@ -130,14 +130,14 @@
           Mínimo: ${{ MIN_AMOUNT }}
         </p>
         @if (getErrorMessage('amount')) {
-          <p class="mt-1 text-sm text-red-600 dark:text-red-300">{{ getErrorMessage('amount') }}</p>
+          <p class="mt-1 text-sm text-error-600 dark:text-error-300">{{ getErrorMessage('amount') }}</p>
         }
       </div>
 
       <!-- Desglose de costos -->
       @if (amount() > 0) {
         <div
-          class="bg-surface-secondary/70 dark:bg-surface-secondary/60 rounded-xl p-4 space-y-2 border border-border-default dark:border-gray-600/70 dark:border-slate-deep transition-colors"
+          class="bg-surface-secondary/70 dark:bg-surface-secondary/60 rounded-xl p-4 space-y-2 border border-border-default dark:border-border-default/70 dark:border-slate-deep transition-colors"
         >
           <h4 class="text-sm font-semibold text-text-secondary dark:text-text-secondary/80 mb-3">
             Desglose del retiro
@@ -152,13 +152,13 @@
 
           <div class="flex items-center justify-between text-sm">
             <span class="text-text-secondary dark:text-text-secondary/70">Comisión (1.5%)</span>
-            <span class="font-semibold text-red-600 dark:text-red-300">
+            <span class="font-semibold text-error-600 dark:text-error-300">
               -${{ feeAmount() | number: '1.2-2' }}
             </span>
           </div>
 
           <div
-            class="border-t border-gray-300 dark:border-gray-600 pt-2 flex items-center justify-between"
+            class="border-t border-border-subtle dark:border-border-default pt-2 flex items-center justify-between"
           >
             <span class="text-sm font-bold text-text-primary dark:text-text-primary"
               >Recibirás en tu cuenta</span
@@ -169,7 +169,7 @@
           </div>
 
           <div
-            class="border-t border-gray-300 dark:border-slate-deep pt-2 flex items-center justify-between text-sm"
+            class="border-t border-border-subtle dark:border-slate-deep pt-2 flex items-center justify-between text-sm"
           >
             <span class="text-text-secondary dark:text-text-secondary/70"
               >Se debitará de tu wallet</span
@@ -211,7 +211,7 @@
           formControlName="user_notes"
           rows="3"
           placeholder="Agrega cualquier comentario sobre este retiro..."
-          class="w-full px-4 py-3 border border-border-default dark:border-gray-600/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none transition-colors"
+          class="w-full px-4 py-3 border border-border-default dark:border-border-default/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none transition-colors"
         ></textarea>
       </div>
 
@@ -246,7 +246,7 @@
           type="button"
           (click)="onCancel()"
           [disabled]="submitting()"
-          class="px-6 py-3 border-2 border-border-default dark:border-gray-600/70 dark:border-slate-deep text-text-secondary dark:text-text-secondary font-semibold rounded-xl hover:bg-surface-secondary dark:hover:bg-slate-deep/70 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          class="px-6 py-3 border-2 border-border-default dark:border-border-default/70 dark:border-slate-deep text-text-secondary dark:text-text-secondary font-semibold rounded-xl hover:bg-surface-secondary dark:hover:bg-slate-deep/70 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           Cancelar
         </button>

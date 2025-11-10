@@ -3,10 +3,10 @@
   <div class="timeline-header">
     <div class="flex items-center justify-between flex-wrap gap-2">
       <div>
-        <h3 class="text-lg font-bold text-gray-900 dark:text-text-inverse">
+        <h3 class="text-lg font-bold text-text-primary dark:text-text-inverse">
           {{ 'timeline.title' | translate: 'Progreso de Confirmación' }}
         </h3>
-        <p class="text-sm text-gray-600 dark:text-gray-300">
+        <p class="text-sm text-text-secondary dark:text-text-secondary">
           {{ 'timeline.subtitle' | translate: 'Seguimiento bilateral del proceso de devolución' }}
         </p>
       </div>
@@ -118,10 +118,10 @@
             <div class="timeline-step-header">
               <h4
                 class="timeline-step-title"
-                [class.text-gray-900]="step.completed || isStepCurrent(i)"
+                [class.text-text-primary]="step.completed || isStepCurrent(i)"
                 [class.dark:text-text-inverse]="step.completed || isStepCurrent(i)"
-                [class.text-gray-500]="isStepUpcoming(i)"
-                [class.dark:text-gray-400]="isStepUpcoming(i)"
+                [class.text-text-secondary]="isStepUpcoming(i)"
+                [class.dark:text-text-muted]="isStepUpcoming(i)"
               >
                 {{ step.label }}
               </h4>
@@ -168,7 +168,7 @@
             <div class="timeline-step-metadata">
               <div *ngIf="step.timestamp" class="timeline-metadata-item">
                 <svg
-                  class="w-4 h-4 text-gray-400"
+                  class="w-4 h-4 text-text-muted"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -184,7 +184,7 @@
               </div>
               <div *ngIf="step.actor" class="timeline-metadata-item">
                 <svg
-                  class="w-4 h-4 text-gray-400"
+                  class="w-4 h-4 text-text-muted"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -203,11 +203,11 @@
             <!-- Damage Report Details -->
             <div
               *ngIf="step.key === 'damage_report' && step.metadata"
-              class="mt-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+              class="mt-3 p-3 rounded-lg bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800"
             >
               <div class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0"
+                  class="w-5 h-5 text-error-600 dark:text-error-400 flex-shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -220,12 +220,12 @@
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-semibold text-red-900 dark:text-red-100">
+                  <p class="text-sm font-semibold text-error-900 dark:text-error-100">
                     Monto de daños: ${{ step.metadata.damageAmount }} USD
                   </p>
                   <p
                     *ngIf="step.metadata.damageDescription"
-                    class="text-sm text-red-800 dark:text-red-200 mt-1"
+                    class="text-sm text-error-800 dark:text-error-200 mt-1"
                   >
                     {{ step.metadata.damageDescription }}
                   </p>
@@ -246,7 +246,7 @@
                 </svg>
                 <span>{{ step.actionLabel }}</span>
               </button>
-              <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              <p class="mt-2 text-xs text-text-secondary dark:text-text-muted">
                 {{ step.actionDescription }}
               </p>
             </div>

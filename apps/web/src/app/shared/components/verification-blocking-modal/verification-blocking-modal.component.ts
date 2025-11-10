@@ -61,15 +61,15 @@ export interface VerificationBlockingModalConfig {
           <!-- Missing Documents Info -->
           @if (config.requiredDocs && config.requiredDocs.length > 0) {
             <div
-              class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 rounded-lg p-3 mb-6"
+              class="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800/40 rounded-lg p-3 mb-6"
             >
-              <p class="text-xs font-semibold text-amber-900 dark:text-amber-200 mb-2">
+              <p class="text-xs font-semibold text-warning-900 dark:text-warning-200 mb-2">
                 Documentos requeridos:
               </p>
               <div class="flex flex-wrap gap-2">
                 @for (doc of config.requiredDocs; track doc) {
                   <span
-                    class="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 dark:bg-amber-800/40 text-amber-900 dark:text-amber-200 rounded text-xs font-medium"
+                    class="inline-flex items-center gap-1 px-2 py-1 bg-warning-100 dark:bg-warning-800/40 text-warning-900 dark:text-warning-200 rounded text-xs font-medium"
                   >
                     <span>{{ getDocumentEmoji(doc) }}</span>
                     <span>{{ getDocumentLabel(doc) }}</span>
