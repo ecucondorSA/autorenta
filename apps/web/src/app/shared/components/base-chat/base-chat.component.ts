@@ -145,19 +145,8 @@ export interface ChatContext {
 
         <!-- Messages -->
         <div *ngIf="!loading() && messages().length > 0" class="space-y-2 px-4 py-4">
-          <!-- Load more button -->
-          <div *ngIf="hasMoreMessages()" class="mb-4 flex justify-center">
-            <button
-              type="button"
-              (click)="loadMoreMessages()"
-              class="rounded-full bg-surface-raised px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-            >
-              Cargar mensajes anteriores ({{ messages().length - messagesLimit() }} más)
-            </button>
-          </div>
-
           <div
-            *ngFor="let message of visibleMessages()"
+            *ngFor="let message of messages()"
             [class.justify-end]="isOwnMessage(message)"
             [class.justify-start]="!isOwnMessage(message)"
             class="flex"
@@ -354,16 +343,6 @@ export class BaseChatComponent implements OnInit, OnDestroy {
 
   // Computed
   readonly currentUserId = signal<string | null>(null);
-  readonly messagesLimit = signal<number>(50);
-  readonly visibleMessages = computed(() => {
-    const allMessages = this.messages();
-    const limit = this.messagesLimit();
-    // Show last N messages (most recent)
-    return allMessages.slice(-limit);
-  });
-  readonly hasMoreMessages = computed(() => {
-    return this.messages().length > this.messagesLimit();
-  });
 
   protected notificationTimeout: ReturnType<typeof setTimeout> | null = null;
   protected typingTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -423,15 +402,36 @@ export class BaseChatComponent implements OnInit, OnDestroy {
 
   /**
    * Suscribe a mensajes en tiempo real
+   * Con deduplicación para optimistic updates
    */
   protected subscribeToMessages(): void {
     const ctx = this.context();
     const handler = async (message: Message) => {
       this.messages.update((prev) => {
+        // Check if message already exists by ID
         const existing = prev.find((m) => m.id === message.id);
         if (existing) {
           return prev.map((m) => (m.id === message.id ? message : m));
         }
+
+        // Deduplicación: reemplazar mensaje optimistic si coincide
+        // Buscar mensaje temporal con mismo contenido y timestamp cercano
+        const optimisticIndex = prev.findIndex(
+          (m) =>
+            m.id.startsWith('temp-') &&
+            m.body === message.body &&
+            m.sender_id === message.sender_id &&
+            Math.abs(new Date(m.created_at).getTime() - new Date(message.created_at).getTime()) < 5000
+        );
+
+        if (optimisticIndex >= 0) {
+          // Reemplazar mensaje optimistic con el real
+          const updated = [...prev];
+          updated[optimisticIndex] = message;
+          return updated;
+        }
+
+        // Nuevo mensaje, agregarlo
         return [...prev, message];
       });
 
@@ -477,6 +477,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
 
   /**
    * Envía un mensaje con optimistic update
+   * El mensaje aparece inmediatamente mientras se envía al servidor
    */
   async sendMessage(): Promise<void> {
     const text = this.newMessage().trim();
@@ -488,59 +489,39 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     // Stop typing
     this.stopTyping();
 
-    // Create optimistic message
+    // Optimistic update: agregar mensaje inmediatamente con ID temporal
     const optimisticId = `temp-${Date.now()}`;
     const ctx = this.context();
     const optimisticMessage: Message = {
       id: optimisticId,
-      sender_id: this.currentUserId()!,
+      sender_id: this.currentUserId() || '',
       recipient_id: ctx.recipientId,
       body: text,
       created_at: new Date().toISOString(),
-      read_at: null,
       delivered_at: null,
+      read_at: null,
       booking_id: ctx.type === 'booking' ? ctx.contextId : null,
       car_id: ctx.type === 'car' ? ctx.contextId : null,
     };
 
-    // Optimistic update: add message immediately to UI
     this.messages.update((prev) => [...prev, optimisticMessage]);
     this.newMessage.set('');
 
     try {
-      const sentMessage = await this.messagesService.sendMessage({
+      await this.messagesService.sendMessage({
         recipientId: ctx.recipientId,
         body: text,
         bookingId: ctx.type === 'booking' ? ctx.contextId : undefined,
         carId: ctx.type === 'car' ? ctx.contextId : undefined,
       });
 
-      // Replace optimistic message with real message from server
-      // Preserve the optimistic created_at if server doesn't provide one
-      const realMessage: Message = {
-        ...sentMessage,
-        created_at: sentMessage.created_at || optimisticMessage.created_at,
-      };
-
-      this.messages.update((prev) => {
-        const index = prev.findIndex((msg) => msg.id === optimisticId);
-        if (index === -1) {
-          // Optimistic message not found (shouldn't happen), just append
-          return [...prev, realMessage];
-        }
-        // Replace optimistic message at the same position
-        const updated = [...prev];
-        updated[index] = realMessage;
-        return updated;
-      });
-
-      this.messageSent.emit({ messageId: sentMessage.id, context: ctx });
-    } catch (err) {
-      // Remove optimistic message on error
-      this.messages.update((prev) => prev.filter((msg) => msg.id !== optimisticId));
+      // El mensaje real llegará via realtime subscription y reemplazará al optimistic
+      // Ver subscribeToMessages() para la lógica de deduplicación
+      this.messageSent.emit({ messageId: optimisticId, context: ctx });
+    } catch (_err) {
+      // Remover mensaje optimistic en caso de error
+      this.messages.update((prev) => prev.filter((m) => m.id !== optimisticId));
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
-      // Restore the message text so user can retry
-      this.newMessage.set(text);
     } finally {
       this.sending.set(false);
     }
@@ -591,13 +572,6 @@ export class BaseChatComponent implements OnInit, OnDestroy {
           // Ignore errors
         });
     }
-  }
-
-  /**
-   * Carga más mensajes (incrementa el límite de visualización)
-   */
-  loadMoreMessages(): void {
-    this.messagesLimit.update((limit) => limit + 50);
   }
 
   /**

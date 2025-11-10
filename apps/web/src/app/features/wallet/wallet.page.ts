@@ -106,11 +106,6 @@ export class WalletPage implements AfterViewInit, OnInit {
   private bannerViewTracked = false;
 
   /**
-   * Controla si ya se cargaron los datos de retiros (lazy loading)
-   */
-  private withdrawalDataLoaded = false;
-
-  /**
    * Control de expansión de la sección de beneficios
    */
   readonly benefitsSectionExpanded = signal(false);
@@ -262,21 +257,19 @@ export class WalletPage implements AfterViewInit, OnInit {
       }
     });
 
-    // Lazy load withdrawal data when switching to withdrawals tab
-    effect(() => {
-      if (this.activeTab() === 'withdrawals' && !this.withdrawalDataLoaded) {
-        this.withdrawalDataLoaded = true;
-        void this.loadWithdrawalData();
-      }
-    });
-
-    // Load initial data in parallel for better performance
-    void this.loadInitialData();
+    // Cargar datos al iniciar (en paralelo para mejor performance)
+    void Promise.all([
+      this.loadWithdrawalData(),
+      this.loadWalletAccountNumber()
+    ]);
   }
 
   async ngOnInit(): Promise<void> {
-    // Additional async initialization if needed
-    // Initial data is already loaded in parallel via constructor
+    try {
+      await this.walletService.refreshPendingDepositsCount();
+    } catch {
+      /* Silenced */
+    }
   }
 
   /**
@@ -375,21 +368,6 @@ export class WalletPage implements AfterViewInit, OnInit {
     try {
       const balanceRefresh = this.balanceCard ? this.balanceCard.loadBalance() : Promise.resolve();
       await Promise.all([balanceRefresh, this.walletService.refreshPendingDepositsCount()]);
-    } catch {
-      /* Silenced */
-    }
-  }
-
-  /**
-   * Carga todos los datos iniciales en paralelo para mejor performance
-   */
-  private async loadInitialData(): Promise<void> {
-    try {
-      // Load all initial data in parallel (except withdrawal data which is lazy-loaded)
-      await Promise.all([
-        this.walletService.refreshPendingDepositsCount(),
-        this.loadWalletAccountNumber(),
-      ]);
     } catch {
       /* Silenced */
     }
