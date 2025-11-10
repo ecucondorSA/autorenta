@@ -10,6 +10,10 @@ node_modules
 /apps/web/out-tsc
 /out-tsc
 
+# Cloudflare Workers build artifacts (may contain secrets)
+functions/workers/*/dist
+functions/workers/*/.wrangler
+
 # Env
 .env
 .env.*
