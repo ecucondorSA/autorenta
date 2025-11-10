@@ -402,15 +402,36 @@ export class BaseChatComponent implements OnInit, OnDestroy {
 
   /**
    * Suscribe a mensajes en tiempo real
+   * Con deduplicación para optimistic updates
    */
   protected subscribeToMessages(): void {
     const ctx = this.context();
     const handler = async (message: Message) => {
       this.messages.update((prev) => {
+        // Check if message already exists by ID
         const existing = prev.find((m) => m.id === message.id);
         if (existing) {
           return prev.map((m) => (m.id === message.id ? message : m));
         }
+
+        // Deduplicación: reemplazar mensaje optimistic si coincide
+        // Buscar mensaje temporal con mismo contenido y timestamp cercano
+        const optimisticIndex = prev.findIndex(
+          (m) =>
+            m.id.startsWith('temp-') &&
+            m.body === message.body &&
+            m.sender_id === message.sender_id &&
+            Math.abs(new Date(m.created_at).getTime() - new Date(message.created_at).getTime()) < 5000
+        );
+
+        if (optimisticIndex >= 0) {
+          // Reemplazar mensaje optimistic con el real
+          const updated = [...prev];
+          updated[optimisticIndex] = message;
+          return updated;
+        }
+
+        // Nuevo mensaje, agregarlo
         return [...prev, message];
       });
 
@@ -455,7 +476,8 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Envía un mensaje
+   * Envía un mensaje con optimistic update
+   * El mensaje aparece inmediatamente mientras se envía al servidor
    */
   async sendMessage(): Promise<void> {
     const text = this.newMessage().trim();
@@ -467,8 +489,25 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     // Stop typing
     this.stopTyping();
 
+    // Optimistic update: agregar mensaje inmediatamente con ID temporal
+    const optimisticId = `temp-${Date.now()}`;
+    const ctx = this.context();
+    const optimisticMessage: Message = {
+      id: optimisticId,
+      sender_id: this.currentUserId() || '',
+      recipient_id: ctx.recipientId,
+      body: text,
+      created_at: new Date().toISOString(),
+      delivered_at: null,
+      read_at: null,
+      booking_id: ctx.type === 'booking' ? ctx.contextId : null,
+      car_id: ctx.type === 'car' ? ctx.contextId : null,
+    };
+
+    this.messages.update((prev) => [...prev, optimisticMessage]);
+    this.newMessage.set('');
+
     try {
-      const ctx = this.context();
       await this.messagesService.sendMessage({
         recipientId: ctx.recipientId,
         body: text,
@@ -476,9 +515,12 @@ export class BaseChatComponent implements OnInit, OnDestroy {
         carId: ctx.type === 'car' ? ctx.contextId : undefined,
       });
 
-      this.newMessage.set('');
-      this.messageSent.emit({ messageId: '', context: ctx }); // TODO: obtener ID real
+      // El mensaje real llegará via realtime subscription y reemplazará al optimistic
+      // Ver subscribeToMessages() para la lógica de deduplicación
+      this.messageSent.emit({ messageId: optimisticId, context: ctx });
     } catch (_err) {
+      // Remover mensaje optimistic en caso de error
+      this.messages.update((prev) => prev.filter((m) => m.id !== optimisticId));
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
     } finally {
       this.sending.set(false);
