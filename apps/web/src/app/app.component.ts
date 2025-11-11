@@ -216,8 +216,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     const stored = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const useDark = stored ? stored === 'dark' : prefersDark;
+    const useDark = stored ? stored === 'dark' : false;
+
+    if (!stored) {
+      localStorage.setItem('theme', 'light');
+    }
+
     this.darkMode.set(useDark);
     document.documentElement.classList.toggle('dark', useDark);
     window.dispatchEvent(new CustomEvent('autorenta:theme-change', { detail: { dark: useDark } }));

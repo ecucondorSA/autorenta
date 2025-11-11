@@ -588,7 +588,7 @@
           <!-- Image Container with Badge -->
           <div class="relative aspect-[4/3] overflow-hidden">
             <img
-              [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.jpg'"
+              [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
               [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               loading="lazy"
@@ -753,7 +753,7 @@
           <!-- Image -->
           <div class="relative md:w-80 aspect-[16/9] md:aspect-auto overflow-hidden flex-shrink-0">
             <img
-              [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.jpg'"
+              [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
               [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
               class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
               loading="lazy"

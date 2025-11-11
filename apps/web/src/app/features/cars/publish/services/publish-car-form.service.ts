@@ -1,7 +1,8 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed, type Signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CarsService } from '../../../../core/services/cars.service';
-import { CarBrand, CarModel } from '../../../../core/models';
+import { CarBrand, CarModel, VehicleCategory } from '../../../../core/models';
+import { injectSupabase } from '../../../../core/services/supabase-client.service';
 
 /**
  * Service for managing the publish car form
@@ -16,6 +17,7 @@ import { CarBrand, CarModel } from '../../../../core/models';
 export class PublishCarFormService {
   private readonly fb = inject(FormBuilder);
   private readonly carsService = inject(CarsService);
+  private readonly supabase = injectSupabase();
 
   private readonly minYear = 1980;
   private readonly maxYear = new Date().getFullYear() + 1;
@@ -25,6 +27,8 @@ export class PublishCarFormService {
   readonly models = signal<CarModel[]>([]);
   readonly filteredModels = signal<CarModel[]>([]);
   readonly autofilledFromLast = signal(false);
+  private readonly pricingStrategySignal = signal<'dynamic' | 'custom'>('dynamic');
+  readonly categories = signal<VehicleCategory[]>([]);
 
   // Form instance
   private formInstance: FormGroup | null = null;
@@ -51,6 +55,7 @@ export class PublishCarFormService {
       price_per_day: [null, [Validators.required, Validators.min(1)]],
       currency: ['USD', Validators.required],
       value_usd: [null, [Validators.required, Validators.min(5000), Validators.max(500000)]],
+      category_id: [null, Validators.required], // NEW: Vehicle category
       min_rental_days: [1, [Validators.required, Validators.min(1)]],
       max_rental_days: [30],
       deposit_required: [true],
@@ -148,6 +153,9 @@ export class PublishCarFormService {
           location_country: lastCar.location_country,
         });
 
+        // Update signal for reactive UI
+        this.pricingStrategySignal.set(pricing_strategy);
+
         this.autofilledFromLast.set(true);
       }
     } catch {
@@ -197,6 +205,9 @@ export class PublishCarFormService {
         location_country: car.location_country,
       });
 
+      // Update signal for reactive UI
+      this.pricingStrategySignal.set(pricing_strategy);
+
       // Trigger brand change to load models
       if (car.brand_id) {
         this.filterModelsByBrand(car.brand_id);
@@ -209,11 +220,19 @@ export class PublishCarFormService {
   }
 
   /**
-   * Check if dynamic pricing is enabled
+   * Check if dynamic pricing is enabled (legacy method for compatibility)
    */
   isDynamicPricing(): boolean {
     if (!this.formInstance) return false;
-    return this.formInstance.get('pricing_strategy')?.value === 'dynamic';
+    const value = this.formInstance.get('pricing_strategy')?.value;
+    return value === 'dynamic';
+  }
+
+  /**
+   * Get dynamic pricing state as signal (reactive)
+   */
+  isDynamicPricingSignal(): Signal<boolean> {
+    return computed(() => this.pricingStrategySignal() === 'dynamic');
   }
 
   /**
@@ -222,6 +241,7 @@ export class PublishCarFormService {
   setPricingStrategy(mode: 'dynamic' | 'custom'): void {
     if (!this.formInstance) return;
     this.formInstance.get('pricing_strategy')?.setValue(mode);
+    this.pricingStrategySignal.set(mode); // Update signal for reactive UI
   }
 
   /**

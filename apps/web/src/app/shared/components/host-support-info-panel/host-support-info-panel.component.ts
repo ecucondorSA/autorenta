@@ -74,12 +74,7 @@ import { TranslateModule } from '@ngx-translate/core';
             <button
               type="button"
               (click)="activeTab.set('tips')"
-              [class.border-cta-default]="activeTab() === 'tips'"
-              [class.text-cta-default]="activeTab() === 'tips'"
-              [class.dark:border-cta-default/70]="activeTab() === 'tips'"
-              [class.dark:text-cta-default/70]="activeTab() === 'tips'"
-              [class.border-transparent]="activeTab() !== 'tips'"
-              [class.text-text-muted dark:text-text-secondary/70]="activeTab() !== 'tips'"
+              [ngClass]="getTabClasses('tips')"
               class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
             >
               📚 Tips y Obligaciones
@@ -87,12 +82,7 @@ import { TranslateModule } from '@ngx-translate/core';
             <button
               type="button"
               (click)="activeTab.set('calculator')"
-              [class.border-cta-default]="activeTab() === 'calculator'"
-              [class.text-cta-default]="activeTab() === 'calculator'"
-              [class.dark:border-cta-default/70]="activeTab() === 'calculator'"
-              [class.dark:text-cta-default/70]="activeTab() === 'calculator'"
-              [class.border-transparent]="activeTab() !== 'calculator'"
-              [class.text-text-muted dark:text-text-secondary/70]="activeTab() !== 'calculator'"
+              [ngClass]="getTabClasses('calculator')"
               class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
             >
               💰 Calculadora
@@ -100,12 +90,7 @@ import { TranslateModule } from '@ngx-translate/core';
             <button
               type="button"
               (click)="activeTab.set('pricing')"
-              [class.border-cta-default]="activeTab() === 'pricing'"
-              [class.text-cta-default]="activeTab() === 'pricing'"
-              [class.dark:border-cta-default/70]="activeTab() === 'pricing'"
-              [class.dark:text-cta-default/70]="activeTab() === 'pricing'"
-              [class.border-transparent]="activeTab() !== 'pricing'"
-              [class.text-text-muted dark:text-text-secondary/70]="activeTab() !== 'pricing'"
+              [ngClass]="getTabClasses('pricing')"
               class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
             >
               💵 Precios Sugeridos
@@ -356,6 +341,14 @@ export class HostSupportInfoPanelComponent {
   readonly isExpanded = signal(true);
   readonly activeTab = signal<'tips' | 'calculator' | 'pricing'>('tips');
   readonly openAccordion = signal<string | null>(null);
+
+  getTabClasses(tab: 'tips' | 'calculator' | 'pricing'): Record<string, boolean> {
+    const isActive = this.activeTab() === tab;
+    return {
+      'border-cta-default text-cta-default dark:border-cta-default/70 dark:text-cta-default/70': isActive,
+      'border-transparent text-text-muted dark:text-text-secondary/70': !isActive,
+    };
+  }
 
   // Calculator signals
   calcPricePerDay = 50;

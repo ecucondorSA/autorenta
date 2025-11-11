@@ -99,6 +99,9 @@ export class PublishCarV2Page implements OnInit {
     return this.formService.getSelectedModelInfo(modelId);
   });
 
+  // Expose dynamic pricing signal from service
+  readonly isDynamicPricingSignal = this.formService.isDynamicPricingSignal();
+
   async ngOnInit(): Promise<void> {
     // Initialize form
     this.publishForm = this.formService.initForm();
@@ -152,7 +155,7 @@ export class PublishCarV2Page implements OnInit {
   }
 
   /**
-   * Check if dynamic pricing is enabled
+   * Check if dynamic pricing is enabled (legacy method)
    */
   isDynamicPricing(): boolean {
     return this.formService.isDynamicPricing();

@@ -383,10 +383,10 @@
                   <button
                     type="button"
                     class="w-full rounded-xl border px-4 py-3 text-left transition"
-                    [class.border-primary-600]="isDynamicPricing()"
-                    [class.bg-primary-50]="isDynamicPricing()"
-                    [class.text-primary-700]="isDynamicPricing()"
-                    [class.border-border-muted]="!isDynamicPricing()"
+                    [class.border-primary-600]="isDynamicPricingSignal()"
+                    [class.bg-primary-50]="isDynamicPricingSignal()"
+                    [class.text-primary-700]="isDynamicPricingSignal()"
+                    [class.border-border-muted]="!isDynamicPricingSignal()"
                     (click)="setPricingStrategy('dynamic')"
                   >
                     <p class="text-sm font-semibold flex items-center gap-2">
@@ -403,10 +403,10 @@
                   <button
                     type="button"
                     class="w-full rounded-xl border px-4 py-3 text-left transition"
-                    [class.border-primary-600]="!isDynamicPricing()"
-                    [class.bg-primary-50]="!isDynamicPricing()"
-                    [class.text-primary-700]="!isDynamicPricing()"
-                    [class.border-border-muted]="isDynamicPricing()"
+                    [class.border-primary-600]="!isDynamicPricingSignal()"
+                    [class.bg-primary-50]="!isDynamicPricingSignal()"
+                    [class.text-primary-700]="!isDynamicPricingSignal()"
+                    [class.border-border-muted]="isDynamicPricingSignal()"
                     (click)="setPricingStrategy('custom')"
                   >
                     <p class="text-sm font-semibold">Precio personalizado</p>

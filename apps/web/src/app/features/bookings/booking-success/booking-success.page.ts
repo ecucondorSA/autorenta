@@ -238,7 +238,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   getCarImage(): string {
     const booking = this.booking();
     if (!booking) {
-      return '/assets/images/car-placeholder.png';
+      return '/assets/images/car-placeholder.svg';
     }
 
     // Prioridad 1: Usar car.images
@@ -262,6 +262,6 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
       return booking.main_photo_url;
     }
 
-    return '/assets/images/car-placeholder.png';
+    return '/assets/images/car-placeholder.svg';
   }
 }

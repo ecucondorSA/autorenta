@@ -228,7 +228,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     return [
       { label: 'Autos disponibles', value: totalCars, icon: '🚗' },
       { label: 'Cerca de ti', value: availableNow, icon: '📍' },
-      { label: 'Precio promedio', value: `$${avgPrice}`, icon: '💰' },
+      { label: 'Desde', value: `$${avgPrice}/día`, icon: '💰' },
     ];
   });
 

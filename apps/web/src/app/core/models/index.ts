@@ -329,6 +329,21 @@ export interface CarPhoto {
   created_at: string;
 }
 
+export interface VehicleCategory {
+  id: string;
+  code: string; // 'economy' | 'standard' | 'premium' | 'luxury'
+  name: string;
+  name_es: string;
+  base_daily_rate_pct: number; // 0.0030 = 0.30%
+  depreciation_rate_annual: number; // 0.050 = 5% per year
+  surge_sensitivity: number; // 1.00 = standard
+  description: string;
+  display_order: number;
+  active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface CarFilters {
   city?: string;
   from?: string;

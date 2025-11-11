@@ -123,19 +123,28 @@ export class DynamicPricingService {
 
   /**
    * Calculate price using RPC function (fallback if Edge Function unavailable)
+   * NEW: Optionally accepts carId for vehicle-aware pricing
    */
   async calculatePriceRPC(
     regionId: string,
     userId: string,
     rentalStart: string,
     rentalHours: number,
+    carId?: string,
   ): Promise<DynamicPricingResponse> {
-    const { data, error } = await this.supabase.rpc('calculate_dynamic_price', {
+    const params: Record<string, unknown> = {
       p_region_id: regionId,
       p_user_id: userId,
       p_rental_start: rentalStart,
       p_rental_hours: rentalHours,
-    });
+    };
+
+    // NEW: Pass car_id for vehicle-aware pricing if provided
+    if (carId) {
+      params['p_car_id'] = carId;
+    }
+
+    const { data, error} = await this.supabase.rpc('calculate_dynamic_price', params);
 
     if (error) {
       throw new Error(`Failed to calculate price via RPC: ${error.message}`);
