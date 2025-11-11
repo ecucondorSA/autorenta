@@ -29,58 +29,65 @@ import { CommonModule } from '@angular/common';
       </div>
     </div>
   `,
-  styles: [`
-    .dynamic-pricing-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
+  styles: [
+    `
+      .dynamic-pricing-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
 
-    .badge-content {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: help;
-      transition: all 0.2s ease;
-    }
+      .badge-content {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: help;
+        transition: all 0.2s ease;
+      }
 
-    .badge-content:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
+      .badge-content:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
 
-    .badge-icon {
-      font-size: 13px;
-      animation: pulse 2s ease-in-out infinite;
-    }
+      .badge-icon {
+        font-size: 13px;
+        animation: pulse 2s ease-in-out infinite;
+      }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
 
-    .with-surge .badge-content {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    }
+      .with-surge .badge-content {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
 
-    .surge-indicator {
-      background: rgba(255, 255, 255, 0.3);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 10px;
-      font-weight: 700;
-    }
+      .surge-indicator {
+        background: rgba(255, 255, 255, 0.3);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 700;
+      }
 
-    .badge-text {
-      white-space: nowrap;
-    }
-  `],
+      .badge-text {
+        white-space: nowrap;
+      }
+    `,
+  ],
 })
 export class DynamicPricingBadgeComponent {
   @Input() surgeActive = false;

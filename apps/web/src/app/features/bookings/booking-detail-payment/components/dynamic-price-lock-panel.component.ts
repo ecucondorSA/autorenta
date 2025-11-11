@@ -60,18 +60,15 @@ import type { PriceLock } from '../../../../core/models/dynamic-pricing.model';
       @if (isExpiringSoon()) {
         <div class="expiration-warning">
           <span class="warning-icon">⚠️</span>
-          <span class="warning-text">El precio se va a actualizar pronto. Completa tu reserva ahora.</span>
+          <span class="warning-text"
+            >El precio se va a actualizar pronto. Completa tu reserva ahora.</span
+          >
         </div>
       }
 
       <!-- Actions -->
       <div class="panel-actions">
-        <button
-          type="button"
-          class="btn-refresh"
-          [disabled]="refreshing()"
-          (click)="onRefresh()"
-        >
+        <button type="button" class="btn-refresh" [disabled]="refreshing()" (click)="onRefresh()">
           @if (refreshing()) {
             <span class="spinner"></span>
             <span>Actualizando...</span>
@@ -82,11 +79,7 @@ import type { PriceLock } from '../../../../core/models/dynamic-pricing.model';
         </button>
 
         @if (priceLock) {
-          <button
-            type="button"
-            class="btn-details"
-            (click)="onViewBreakdown()"
-          >
+          <button type="button" class="btn-details" (click)="onViewBreakdown()">
             <span>📊</span>
             <span>Ver desglose</span>
           </button>
@@ -94,236 +87,255 @@ import type { PriceLock } from '../../../../core/models/dynamic-pricing.model';
       </div>
     </div>
   `,
-  styles: [`
-    .price-lock-panel {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 12px;
-      padding: 20px;
-      color: white;
-      margin-bottom: 24px;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
+  styles: [
+    `
+      .price-lock-panel {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 20px;
+        color: white;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
 
-    .price-lock-panel.expiring-soon {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      animation: pulse 2s ease-in-out infinite;
-    }
+      .price-lock-panel.expiring-soon {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        animation: pulse 2s ease-in-out infinite;
+      }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-    }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+      }
 
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
 
-    .icon {
-      font-size: 24px;
-      animation: flash 1.5s ease-in-out infinite;
-    }
+      .icon {
+        font-size: 24px;
+        animation: flash 1.5s ease-in-out infinite;
+      }
 
-    @keyframes flash {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
+      @keyframes flash {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
 
-    .title {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 600;
-    }
+      .title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+      }
 
-    .countdown {
-      font-family: var(--font-mono);
-      font-size: 24px;
-      font-weight: bold;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 8px 16px;
-      border-radius: 8px;
-      backdrop-filter: blur(10px);
-    }
+      .countdown {
+        font-family: var(--font-mono);
+        font-size: 24px;
+        font-weight: bold;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+      }
 
-    .countdown.warning {
-      background: rgba(255, 0, 0, 0.3);
-      animation: blink 1s ease-in-out infinite;
-    }
+      .countdown.warning {
+        background: rgba(255, 0, 0, 0.3);
+        animation: blink 1s ease-in-out infinite;
+      }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
 
-    .price-comparison {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 12px;
-      backdrop-filter: blur(10px);
-    }
+      .price-comparison {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
+        backdrop-filter: blur(10px);
+      }
 
-    .comparison-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-    }
+      .comparison-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+      }
 
-    .comparison-row.highlight {
-      font-size: 18px;
-      font-weight: bold;
-      border-top: 1px solid rgba(255, 255, 255, 0.3);
-      margin-top: 8px;
-      padding-top: 12px;
-    }
+      .comparison-row.highlight {
+        font-size: 18px;
+        font-weight: bold;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+        margin-top: 8px;
+        padding-top: 12px;
+      }
 
-    .label {
-      font-size: 14px;
-      opacity: 0.9;
-    }
+      .label {
+        font-size: 14px;
+        opacity: 0.9;
+      }
 
-    .value {
-      font-weight: 600;
-    }
+      .value {
+        font-weight: 600;
+      }
 
-    .value.strike {
-      text-decoration: line-through;
-      opacity: 0.6;
-    }
+      .value.strike {
+        text-decoration: line-through;
+        opacity: 0.6;
+      }
 
-    .savings {
-      text-align: center;
-      margin-top: 12px;
-      padding: 8px;
-      background: rgba(34, 197, 94, 0.3);
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 14px;
-    }
+      .savings {
+        text-align: center;
+        margin-top: 12px;
+        padding: 8px;
+        background: rgba(34, 197, 94, 0.3);
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 14px;
+      }
 
-    .savings.surcharge {
-      background: rgba(239, 68, 68, 0.3);
-    }
+      .savings.surcharge {
+        background: rgba(239, 68, 68, 0.3);
+      }
 
-    .surge-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      font-weight: 600;
-      font-size: 14px;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-    }
+      .surge-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        font-weight: 600;
+        font-size: 14px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+      }
 
-    .surge-badge[data-tier="high"],
-    .surge-badge[data-tier="extreme"] {
-      background: rgba(239, 68, 68, 0.3);
-    }
+      .surge-badge[data-tier='high'],
+      .surge-badge[data-tier='extreme'] {
+        background: rgba(239, 68, 68, 0.3);
+      }
 
-    .surge-badge[data-tier="medium"] {
-      background: rgba(251, 146, 60, 0.3);
-    }
+      .surge-badge[data-tier='medium'] {
+        background: rgba(251, 146, 60, 0.3);
+      }
 
-    .surge-icon {
-      font-size: 18px;
-    }
+      .surge-icon {
+        font-size: 18px;
+      }
 
-    .expiration-warning {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      margin-bottom: 12px;
-      border-left: 4px solid #fbbf24;
-    }
+      .expiration-warning {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border-left: 4px solid #fbbf24;
+      }
 
-    .warning-icon {
-      font-size: 20px;
-    }
+      .warning-icon {
+        font-size: 20px;
+      }
 
-    .warning-text {
-      font-size: 14px;
-      font-weight: 500;
-    }
+      .warning-text {
+        font-size: 14px;
+        font-weight: 500;
+      }
 
-    .panel-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-    }
+      .panel-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+      }
 
-    .btn-refresh,
-    .btn-details {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 16px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(10px);
-    }
+      .btn-refresh,
+      .btn-details {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(10px);
+      }
 
-    .btn-refresh {
-      background: rgba(255, 255, 255, 0.25);
-      color: white;
-    }
+      .btn-refresh {
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+      }
 
-    .btn-refresh:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.35);
-      transform: translateY(-2px);
-    }
+      .btn-refresh:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.35);
+        transform: translateY(-2px);
+      }
 
-    .btn-refresh:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+      .btn-refresh:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
 
-    .btn-details {
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-    }
+      .btn-details {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+      }
 
-    .btn-details:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: translateY(-2px);
-    }
+      .btn-details:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+      }
 
-    .spinner {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+      .spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  `],
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    `,
+  ],
 })
 export class DynamicPriceLockPanelComponent {
   @Input() priceLock: PriceLock | null = null;

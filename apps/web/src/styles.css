@@ -429,10 +429,10 @@
       sans-serif;
     /* Ligatures y features avanzadas para texto editorial */
     font-feature-settings:
-      'liga' 1,  /* Standard ligatures (fi, fl) */
-      'kern' 1,  /* Kerning pairs */
-      'calt' 1,  /* Contextual alternates */
-      'cv11' 1;  /* Inter stylistic set */
+      'liga' 1,
+      /* Standard ligatures (fi, fl) */ 'kern' 1,
+      /* Kerning pairs */ 'calt' 1,
+      /* Contextual alternates */ 'cv11' 1; /* Inter stylistic set */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
@@ -540,13 +540,26 @@
      ───────────────────────────────────────────────────────────── */
 
   /* Balance de líneas en headings - evita líneas sueltas */
-  h1, h2, h3, h4, h5, h6,
-  .h1, .h2, .h3, .h4, .h5, .h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6 {
     text-wrap: balance;
   }
 
   /* Pretty text wrapping en párrafos - evita orphans/widows */
-  p, li, blockquote, figcaption {
+  p,
+  li,
+  blockquote,
+  figcaption {
     text-wrap: pretty;
     hyphens: auto; /* Guiones inteligentes en español */
     hyphenate-limit-chars: 6 3 2; /* min-word-length min-before min-after */
@@ -556,21 +569,25 @@
 
   /* Hanging punctuation - comillas fuera del bloque */
   @supports (hanging-punctuation: first) {
-    p, blockquote {
+    p,
+    blockquote {
       hanging-punctuation: first last;
     }
   }
 
   /* Quotes profesionales */
   blockquote {
-    quotes: '"' '"' ''' ''';
+    quotes: '"' '"' '' ' ' '';
   }
 
   /* Code blocks - sin wrapping ni ligatures */
-  code, pre {
+  code,
+  pre {
     text-wrap: nowrap;
     hyphens: none;
-    font-feature-settings: 'liga' 0, 'calt' 0; /* Sin ligatures en código */
+    font-feature-settings:
+      'liga' 0,
+      'calt' 0; /* Sin ligatures en código */
     font-variant-ligatures: none;
   }
 }
@@ -712,7 +729,9 @@
   /* ─── Typography Utilities - Números Tabulares ─── */
   /* Números con ancho fijo para alineación perfecta en tablas/precios */
   .tabular-nums {
-    font-feature-settings: 'tnum' 1, 'lnum' 1;
+    font-feature-settings:
+      'tnum' 1,
+      'lnum' 1;
     font-variant-numeric: tabular-nums lining-nums;
   }
 
@@ -759,19 +778,26 @@
 
   /* Sin ligatures - Para código, IDs, números de serie */
   .no-ligatures {
-    font-feature-settings: 'liga' 0, 'calt' 0;
+    font-feature-settings:
+      'liga' 0,
+      'calt' 0;
     font-variant-ligatures: none;
   }
 
   /* Ligatures completas - Texto editorial */
   .ligatures-full {
-    font-feature-settings: 'liga' 1, 'calt' 1, 'dlig' 1;
+    font-feature-settings:
+      'liga' 1,
+      'calt' 1,
+      'dlig' 1;
     font-variant-ligatures: common-ligatures discretionary-ligatures;
   }
 
   /* Solo ligatures comunes - Default balanceado */
   .ligatures-common {
-    font-feature-settings: 'liga' 1, 'calt' 1;
+    font-feature-settings:
+      'liga' 1,
+      'calt' 1;
     font-variant-ligatures: common-ligatures;
   }
 

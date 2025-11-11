@@ -26,9 +26,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
               <span class="title-icon">📊</span>
               Desglose de Precio Dinámico
             </h2>
-            <button class="btn-close" (click)="onClose()" aria-label="Cerrar">
-              ✕
-            </button>
+            <button class="btn-close" (click)="onClose()" aria-label="Cerrar">✕</button>
           </div>
 
           <!-- Content -->
@@ -91,7 +89,12 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
                     </span>
                   </div>
                   <div class="factor-detail">
-                    {{ getUserDescription(snapshot.details.userRentals, snapshot.breakdown.userFactor) }}
+                    {{
+                      getUserDescription(
+                        snapshot.details.userRentals,
+                        snapshot.breakdown.userFactor
+                      )
+                    }}
                   </div>
                 </div>
 
@@ -102,7 +105,10 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
                       <span class="factor-icon">📈</span>
                       Demanda actual
                     </span>
-                    <span class="factor-value" [class.increase]="snapshot.breakdown.demandFactor > 0">
+                    <span
+                      class="factor-value"
+                      [class.increase]="snapshot.breakdown.demandFactor > 0"
+                    >
                       {{ formatFactor(snapshot.breakdown.demandFactor) }}
                     </span>
                   </div>
@@ -125,9 +131,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
                         {{ formatFactor(snapshot.breakdown.eventFactor) }}
                       </span>
                     </div>
-                    <div class="factor-detail">
-                      Evento activo en la región
-                    </div>
+                    <div class="factor-detail">Evento activo en la región</div>
                   </div>
                 }
               </div>
@@ -155,10 +159,12 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
               <!-- Info Footer -->
               <div class="info-footer">
                 <p class="info-text">
-                  💡 <strong>Precio bloqueado hasta:</strong> {{ formatLockExpiry(snapshot.locked_until) }}
+                  💡 <strong>Precio bloqueado hasta:</strong>
+                  {{ formatLockExpiry(snapshot.locked_until) }}
                 </p>
                 <p class="info-text small">
-                  Este precio está garantizado durante 15 minutos. Si el tiempo expira, se recalculará con los factores actuales.
+                  Este precio está garantizado durante 15 minutos. Si el tiempo expira, se
+                  recalculará con los factores actuales.
                 </p>
               </div>
             </div>
@@ -166,305 +172,311 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
 
           <!-- Footer -->
           <div class="modal-footer">
-            <button class="btn-primary" (click)="onClose()">
-              Entendido
-            </button>
+            <button class="btn-primary" (click)="onClose()">Entendido</button>
           </div>
         </div>
       </div>
     }
   `,
-  styles: [`
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 20px;
-      animation: fadeIn 0.2s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .modal-container {
-      background: white;
-      border-radius: 16px;
-      max-width: 600px;
-      width: 100%;
-      max-height: 90vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      animation: slideUp 0.3s ease;
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
+  styles: [
+    `
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 20px;
+        animation: fadeIn 0.2s ease;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
-    }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 24px;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .modal-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 0;
-      font-size: 24px;
-      font-weight: 700;
-      color: #111827;
-    }
-
-    .title-icon {
-      font-size: 28px;
-    }
-
-    .btn-close {
-      background: none;
-      border: none;
-      font-size: 24px;
-      color: #6b7280;
-      cursor: pointer;
-      padding: 4px 8px;
-      line-height: 1;
-      border-radius: 6px;
-      transition: all 0.2s;
-    }
-
-    .btn-close:hover {
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .modal-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px;
-    }
-
-    .section {
-      margin-bottom: 24px;
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: #374151;
-      margin: 0 0 12px 0;
-    }
-
-    .price-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      background: #f9fafb;
-      border-radius: 8px;
-    }
-
-    .price-row.base {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      font-weight: 600;
-    }
-
-    .price-row.total {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      color: white;
-      font-weight: 700;
-      font-size: 18px;
-      margin-top: 8px;
-    }
-
-    .label {
-      font-size: 14px;
-      color: inherit;
-    }
-
-    .value {
-      font-size: 16px;
-      font-weight: 600;
-      color: inherit;
-    }
-
-    .value.highlight {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .factor-row {
-      padding: 16px;
-      background: #f9fafb;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      border-left: 4px solid #d1d5db;
-      transition: all 0.2s;
-    }
-
-    .factor-row.positive {
-      border-left-color: #10b981;
-    }
-
-    .factor-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .factor-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      color: #374151;
-    }
-
-    .factor-icon {
-      font-size: 18px;
-    }
-
-    .factor-value {
-      font-family: var(--font-mono);
-      font-size: 16px;
-      font-weight: 700;
-      color: #6b7280;
-      padding: 4px 12px;
-      background: white;
-      border-radius: 6px;
-    }
-
-    .factor-value.increase {
-      color: #dc2626;
-    }
-
-    .factor-detail {
-      font-size: 13px;
-      color: #6b7280;
-      padding-left: 26px;
-    }
-
-    .factor-detail.surge {
-      color: #dc2626;
-      font-weight: 600;
-    }
-
-    .multiplier-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px;
-      background: #fef3c7;
-      border-radius: 8px;
-      border: 2px solid #fbbf24;
-    }
-
-    .multiplier-row .label {
-      font-weight: 600;
-      color: #92400e;
-    }
-
-    .multiplier-row .value {
-      font-family: var(--font-mono);
-      font-size: 20px;
-      font-weight: 700;
-      color: #92400e;
-    }
-
-    .final-price {
-      background: linear-gradient(135deg, #667eea15, #764ba215);
-      padding: 16px;
-      border-radius: 12px;
-      border: 2px solid #667eea;
-    }
-
-    .info-footer {
-      margin-top: 24px;
-      padding: 16px;
-      background: #eff6ff;
-      border-radius: 8px;
-      border-left: 4px solid #3b82f6;
-    }
-
-    .info-text {
-      margin: 0 0 8px 0;
-      font-size: 14px;
-      color: #1e40af;
-      line-height: 1.5;
-    }
-
-    .info-text:last-child {
-      margin-bottom: 0;
-    }
-
-    .info-text.small {
-      font-size: 12px;
-      color: #60a5fa;
-    }
-
-    .modal-footer {
-      padding: 20px 24px;
-      border-top: 1px solid #e5e7eb;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .btn-primary {
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (max-width: 640px) {
       .modal-container {
-        max-height: 95vh;
+        background: white;
+        border-radius: 16px;
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        animation: slideUp 0.3s ease;
       }
 
-      .modal-header,
-      .modal-content,
-      .modal-footer {
-        padding: 16px;
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px;
+        border-bottom: 1px solid #e5e7eb;
       }
 
       .modal-title {
-        font-size: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        color: #111827;
       }
-    }
-  `],
+
+      .title-icon {
+        font-size: 28px;
+      }
+
+      .btn-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 4px 8px;
+        line-height: 1;
+        border-radius: 6px;
+        transition: all 0.2s;
+      }
+
+      .btn-close:hover {
+        background: #f3f4f6;
+        color: #111827;
+      }
+
+      .modal-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px;
+      }
+
+      .section {
+        margin-bottom: 24px;
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #374151;
+        margin: 0 0 12px 0;
+      }
+
+      .price-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        background: #f9fafb;
+        border-radius: 8px;
+      }
+
+      .price-row.base {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+      }
+
+      .price-row.total {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        font-weight: 700;
+        font-size: 18px;
+        margin-top: 8px;
+      }
+
+      .label {
+        font-size: 14px;
+        color: inherit;
+      }
+
+      .value {
+        font-size: 16px;
+        font-weight: 600;
+        color: inherit;
+      }
+
+      .value.highlight {
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .factor-row {
+        padding: 16px;
+        background: #f9fafb;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border-left: 4px solid #d1d5db;
+        transition: all 0.2s;
+      }
+
+      .factor-row.positive {
+        border-left-color: #10b981;
+      }
+
+      .factor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .factor-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #374151;
+      }
+
+      .factor-icon {
+        font-size: 18px;
+      }
+
+      .factor-value {
+        font-family: var(--font-mono);
+        font-size: 16px;
+        font-weight: 700;
+        color: #6b7280;
+        padding: 4px 12px;
+        background: white;
+        border-radius: 6px;
+      }
+
+      .factor-value.increase {
+        color: #dc2626;
+      }
+
+      .factor-detail {
+        font-size: 13px;
+        color: #6b7280;
+        padding-left: 26px;
+      }
+
+      .factor-detail.surge {
+        color: #dc2626;
+        font-weight: 600;
+      }
+
+      .multiplier-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        background: #fef3c7;
+        border-radius: 8px;
+        border: 2px solid #fbbf24;
+      }
+
+      .multiplier-row .label {
+        font-weight: 600;
+        color: #92400e;
+      }
+
+      .multiplier-row .value {
+        font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 700;
+        color: #92400e;
+      }
+
+      .final-price {
+        background: linear-gradient(135deg, #667eea15, #764ba215);
+        padding: 16px;
+        border-radius: 12px;
+        border: 2px solid #667eea;
+      }
+
+      .info-footer {
+        margin-top: 24px;
+        padding: 16px;
+        background: #eff6ff;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+      }
+
+      .info-text {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        color: #1e40af;
+        line-height: 1.5;
+      }
+
+      .info-text:last-child {
+        margin-bottom: 0;
+      }
+
+      .info-text.small {
+        font-size: 12px;
+        color: #60a5fa;
+      }
+
+      .modal-footer {
+        padding: 20px 24px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .btn-primary {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      @media (max-width: 640px) {
+        .modal-container {
+          max-height: 95vh;
+        }
+
+        .modal-header,
+        .modal-content,
+        .modal-footer {
+          padding: 16px;
+        }
+
+        .modal-title {
+          font-size: 20px;
+        }
+      }
+    `,
+  ],
 })
 export class DynamicPriceBreakdownModalComponent {
   @Input() isOpen = false;

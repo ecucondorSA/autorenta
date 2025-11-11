@@ -1179,3 +1179,266 @@ img.car-popup-image {
 .dark .search-radius-value {
   color: #94a3b8;
 }
+
+/* MAP INFO LAYER */
+.map-info-layer {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 320px;
+  pointer-events: auto;
+}
+
+.info-card {
+  background: var(--surface-primary, #fff);
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);
+  backdrop-filter: blur(8px);
+  transition: all .3s ease;
+}
+
+.dark .info-card {
+  background: rgba(30,41,59,.95);
+  border-color: #334155;
+}
+
+.info-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05);
+  transform: translateY(-2px);
+}
+
+.info-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.dark .info-card-header {
+  border-bottom-color: #334155;
+}
+
+.info-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--cta-default, #0284c7);
+  flex-shrink: 0;
+}
+
+.info-title {
+  font-size: 0.875rem;
+  font-weight: 650;
+  color: var(--text-primary, #0f172a);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.dark .info-title {
+  color: var(--text-primary, #f1f5f9);
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  padding: 4px 0;
+}
+
+.info-row-highlight {
+  background: var(--surface-hover, #f8fafc);
+  border-radius: 6px;
+  padding: 8px;
+  margin: -4px -8px 4px;
+}
+
+.dark .info-row-highlight {
+  background: rgba(71,85,105,0.3);
+}
+
+.info-label {
+  color: var(--text-secondary, #64748b);
+  font-weight: 450;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dark .info-label {
+  color: var(--text-secondary, #94a3b8);
+}
+
+.info-value {
+  color: var(--text-primary, #0f172a);
+  font-weight: 550;
+}
+
+.dark .info-value {
+  color: var(--text-primary, #f1f5f9);
+}
+
+.info-badge {
+  background: var(--cta-default, #0284c7);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 550;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.01em;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-available {
+  background: var(--map-marker-available-color, #10b981);
+  box-shadow: 0 0 4px rgba(16,185,129,0.4);
+}
+
+.status-in-use {
+  background: var(--map-marker-in-use-color, #6366f1);
+  box-shadow: 0 0 4px rgba(99,102,241,0.4);
+}
+
+.status-soon {
+  background: var(--map-marker-soon-available-color, #f59e0b);
+  box-shadow: 0 0 4px rgba(245,158,11,0.4);
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.legend-marker {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+}
+
+.legend-marker.user-marker {
+  background: var(--cta-default, #0284c7);
+  border-color: #fff;
+  box-shadow: 0 0 0 2px var(--cta-default, #0284c7), 0 0 8px rgba(2,132,199,0.4);
+}
+
+.dark .legend-marker.user-marker {
+  border-color: var(--surface-primary, #1e293b);
+}
+
+.legend-marker.car-available {
+  background: var(--map-marker-available-color, #10b981);
+  border-color: #fff;
+  box-shadow: 0 0 0 1px var(--map-marker-available-color, #10b981);
+}
+
+.dark .legend-marker.car-available {
+  border-color: var(--surface-primary, #1e293b);
+}
+
+.legend-marker.car-soon {
+  background: var(--map-marker-soon-available-color, #f59e0b);
+  border-color: #fff;
+  box-shadow: 0 0 0 1px var(--map-marker-soon-available-color, #f59e0b);
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+.dark .legend-marker.car-soon {
+  border-color: var(--surface-primary, #1e293b);
+}
+
+.legend-marker.car-in-use {
+  background: var(--map-marker-in-use-color, #6366f1);
+  border-color: #fff;
+  box-shadow: 0 0 0 1px var(--map-marker-in-use-color, #6366f1);
+  opacity: 0.7;
+}
+
+.dark .legend-marker.car-in-use {
+  border-color: var(--surface-primary, #1e293b);
+}
+
+.legend-marker.search-radius {
+  background: rgba(167,216,244,0.3);
+  border: 2px dashed rgba(167,216,244,0.6);
+  border-radius: 4px;
+}
+
+.legend-label {
+  font-size: 0.8125rem;
+  color: var(--text-secondary, #64748b);
+  font-weight: 450;
+}
+
+.dark .legend-label {
+  color: var(--text-secondary, #94a3b8);
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+}
+
+@media (max-width: 768px) {
+  .map-info-layer {
+    top: 8px;
+    right: 8px;
+    max-width: 280px;
+  }
+  .info-card {
+    padding: 12px;
+  }
+  .info-card-header {
+    margin-bottom: 8px;
+  }
+  .info-title {
+    font-size: 0.8125rem;
+  }
+  .info-row {
+    font-size: 0.75rem;
+  }
+  .info-icon {
+    width: 18px;
+    height: 18px;
+  }
+  .legend-card {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .map-info-layer {
+    max-width: 300px;
+  }
+}

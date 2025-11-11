@@ -126,12 +126,15 @@ export class PublishCarFormService {
       const lastCar = await this.carsService.getUserLastCar();
 
       if (lastCar) {
+        // Convert uses_dynamic_pricing (DB field) to pricing_strategy (UI field)
+        const pricing_strategy = lastCar.uses_dynamic_pricing ? 'dynamic' : 'custom';
+
         this.formInstance.patchValue({
           transmission: lastCar.transmission,
           fuel: lastCar.fuel,
           color: lastCar.color,
           currency: lastCar.currency,
-          pricing_strategy: 'custom',
+          pricing_strategy,
           min_rental_days: lastCar.min_rental_days,
           max_rental_days: lastCar.max_rental_days,
           deposit_required: lastCar.deposit_required,
@@ -166,10 +169,13 @@ export class PublishCarFormService {
         return false;
       }
 
+      // Convert uses_dynamic_pricing (DB field) to pricing_strategy (UI field)
+      const pricing_strategy = car.uses_dynamic_pricing ? 'dynamic' : 'custom';
+
       this.formInstance.patchValue({
         brand_id: car.brand_id,
         model_id: car.model_id,
-        pricing_strategy: 'custom',
+        pricing_strategy,
         year: car.year,
         color: car.color,
         mileage: car.mileage,

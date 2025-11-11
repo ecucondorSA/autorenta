@@ -12,10 +12,14 @@
   </div>
 
   <!-- Gradient overlay for better text contrast -->
-  <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/10 dark:from-black/40 dark:via-black/10 dark:to-black/30"></div>
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/10 dark:from-black/40 dark:via-black/10 dark:to-black/30"
+  ></div>
 
   <!-- Subtle accent gradient for dark mode depth -->
-  <div class="absolute inset-0 bg-gradient-to-tr from-cyan-900/20 via-transparent to-blue-900/20 opacity-0 dark:opacity-100"></div>
+  <div
+    class="absolute inset-0 bg-gradient-to-tr from-cyan-900/20 via-transparent to-blue-900/20 opacity-0 dark:opacity-100"
+  ></div>
 
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 w-full">
     <!-- Hero Title Section -->
@@ -178,13 +182,15 @@
                 (keydown.escape)="closeLocationSuggestions()"
                 class="w-full px-5 py-4 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 transition-all duration-200 hover:border-cyan-300 dark:hover:border-cyan-400"
               />
-              
+
               <!-- Loading indicator -->
               <div
                 *ngIf="locationSearchLoading()"
                 class="absolute right-4 top-1/2 -translate-y-1/2"
               >
-                <div class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-500 border-t-transparent"></div>
+                <div
+                  class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-500 border-t-transparent"
+                ></div>
               </div>
 
               <!-- Dropdown de sugerencias -->
@@ -218,7 +224,9 @@
                       />
                     </svg>
                     <div class="flex-1 min-w-0">
-                      <p class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
+                      <p
+                        class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400"
+                      >
                         {{ suggestion.placeName }}
                       </p>
                       <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
@@ -231,7 +239,12 @@
 
               <!-- Mensaje cuando no hay resultados -->
               <div
-                *ngIf="showLocationSuggestions() && !locationSearchLoading() && locationSuggestions().length === 0 && (selectedLocation() || searchValue()).length >= 2"
+                *ngIf="
+                  showLocationSuggestions() &&
+                  !locationSearchLoading() &&
+                  locationSuggestions().length === 0 &&
+                  (selectedLocation() || searchValue()).length >= 2
+                "
                 class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-700 p-4"
               >
                 <p class="text-sm text-gray-500 dark:text-gray-400 text-center">
@@ -265,15 +278,9 @@
               type="text"
               placeholder="Selecciona tus fechas"
               [value]="
-                dateRange().from && dateRange().to
-                  ? dateRange().from + ' - ' + dateRange().to
-                  : ''
+                dateRange().from && dateRange().to ? dateRange().from + ' - ' + dateRange().to : ''
               "
-              [placeholder]="
-                dateRange().from && dateRange().to
-                  ? ''
-                  : '¿Cuándo lo necesitas?'
-              "
+              [placeholder]="dateRange().from && dateRange().to ? '' : '¿Cuándo lo necesitas?'"
               (click)="openDatePicker()"
               readonly
               class="w-full px-5 py-4 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 cursor-pointer transition-all duration-200 hover:border-cyan-300 dark:hover:border-cyan-400"
@@ -890,8 +897,18 @@
         (click)="closeDatePicker()"
         class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
       >
-        <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <svg
+          class="w-6 h-6 text-gray-600 dark:text-gray-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </div>
@@ -931,8 +948,18 @@
         (click)="closeLocationPicker()"
         class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
       >
-        <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <svg
+          class="w-6 h-6 text-gray-600 dark:text-gray-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </div>

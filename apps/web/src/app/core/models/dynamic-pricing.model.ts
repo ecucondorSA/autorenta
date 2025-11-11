@@ -394,7 +394,10 @@ export function generateSurgeInfo(snapshot: DynamicPriceSnapshot): SurgePricingI
 /**
  * Calcula comparación entre precio fijo y dinámico
  */
-export function calculatePriceComparison(fixedPrice: number, dynamicPrice: number): PriceComparison {
+export function calculatePriceComparison(
+  fixedPrice: number,
+  dynamicPrice: number,
+): PriceComparison {
   const difference = dynamicPrice - fixedPrice;
   const percentageDiff = (difference / fixedPrice) * 100;
 

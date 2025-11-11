@@ -678,7 +678,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         input.carId,
         userId,
         input.startDate, // Pass Date object, not string
-        Math.round(dates.totalHours)
+        Math.round(dates.totalHours),
       );
 
       if (result.ok && result.priceLock) {

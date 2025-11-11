@@ -34,7 +34,13 @@ export interface BookingFormData {
 @Component({
   selector: 'app-map-booking-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule, MoneyPipe, BirthDateModalComponent, DynamicPricingBadgeComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MoneyPipe,
+    BirthDateModalComponent,
+    DynamicPricingBadgeComponent,
+  ],
   template: `
     <div
       class="map-booking-panel fixed inset-y-0 right-0 w-full max-w-md bg-surface-raised shadow-2xl z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto"

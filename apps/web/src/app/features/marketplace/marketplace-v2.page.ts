@@ -39,7 +39,10 @@ import {
   StatsStripComponent,
   Stat,
 } from '../../shared/components/stats-strip/stats-strip.component';
-import { DateRange, DateRangePickerComponent } from '../../shared/components/date-range-picker/date-range-picker.component';
+import {
+  DateRange,
+  DateRangePickerComponent,
+} from '../../shared/components/date-range-picker/date-range-picker.component';
 import {
   QuickBookingModalComponent,
   QuickBookingData,
@@ -366,7 +369,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   async onLogoClick(): Promise<void> {
     // Cambiar al modo mapa
     this.viewMode.set('map');
-    
+
     // Solicitar ubicación actual del navegador
     try {
       const currentPosition = await this.locationService.getCurrentPosition();
@@ -379,13 +382,16 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         await this.loadCars();
         this.showToast('Ubicación actualizada', 'success');
       } else {
-        this.showToast('No se pudo obtener tu ubicación. Verifica los permisos del navegador.', 'warning');
+        this.showToast(
+          'No se pudo obtener tu ubicación. Verifica los permisos del navegador.',
+          'warning',
+        );
       }
     } catch (error) {
       console.warn('Error obteniendo ubicación:', error);
       this.showToast('Error al obtener tu ubicación', 'error');
     }
-    
+
     // Scroll suave al mapa después de cambiar el modo
     if (this.isBrowser) {
       setTimeout(() => {
@@ -660,7 +666,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.locationSearchTimeout = setTimeout(async () => {
       try {
         // Buscar en Argentina, Uruguay y Brasil
-        const suggestions = await this.geocodingService.getLocationSuggestions(query, 'AR,UY,BR', 8);
+        const suggestions = await this.geocodingService.getLocationSuggestions(
+          query,
+          'AR,UY,BR',
+          8,
+        );
         this.locationSuggestions.set(suggestions);
       } catch (error) {
         console.warn('Error buscando sugerencias:', error);
