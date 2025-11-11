@@ -6,7 +6,9 @@
         <div
           class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted dark:border-border-default border-t-blue-600"
         ></div>
-        <p class="mt-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary">Cargando reserva...</p>
+        <p class="mt-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+          Cargando reserva...
+        </p>
       </div>
     }
 
@@ -71,13 +73,19 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1">Vehículo</p>
+            <p
+              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+            >
+              Vehículo
+            </p>
             <p class="font-medium text-text-primary dark:text-text-inverse">
               {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
             </p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1">
+            <p
+              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+            >
               Inicio del alquiler
             </p>
             <p class="font-medium text-text-primary dark:text-text-inverse">
@@ -85,7 +93,9 @@
             </p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1">
+            <p
+              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+            >
               Fin del alquiler
             </p>
             <p class="font-medium text-text-primary dark:text-text-inverse">
@@ -93,13 +103,18 @@
             </p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1">Estado</p>
+            <p
+              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+            >
+              Estado
+            </p>
             <span
               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-              [class.bg-cta-default/20]="booking()?.status === 'confirmed'"
-              [class.text-cta-default]="booking()?.status === 'confirmed'"
-              [class.bg-success-light/20]="booking()?.status === 'in_progress'"
-              [class.text-success-light]="booking()?.status === 'in_progress'">
+              [ngClass]="{
+                'bg-cta-default/20 text-cta-default': booking()?.status === 'confirmed',
+                'bg-success-light/20 text-success-light': booking()?.status === 'in_progress',
+              }"
+            >
               {{ booking()?.status === 'confirmed' ? 'Confirmada' : 'En progreso' }}
             </span>
           </div>
@@ -152,7 +167,9 @@
           class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6"
         >
           <div class="mb-6">
-            <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2">Instrucciones</h2>
+            <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2">
+              Instrucciones
+            </h2>
             <ul
               class="list-disc list-inside space-y-2 text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
             >
@@ -199,6 +216,3 @@
     }
   </div>
 </div>
-
-
-

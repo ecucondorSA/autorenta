@@ -16,7 +16,8 @@
       (click)="setStatusFilter(filter)"
       [class.bg-cta-default]="statusFilter() === filter"
       [class.text-text-inverse]="statusFilter() === filter"
-      [class.bg-surface-raised dark:bg-surface-secondary]="statusFilter() !== filter"
+      [class.bg-surface-raised
+      dark:bg-surface-secondary]="statusFilter() !== filter"
       [class.text-cta-default]="statusFilter() !== filter"
       [class.dark:bg-surface-secondary]="statusFilter() !== filter"
       [class.dark:text-warning-light]="statusFilter() !== filter"
@@ -26,8 +27,11 @@
       <span
         *ngIf="statusCounts()[filter] > 0"
         class="ml-2 px-2 py-0.5 rounded-full text-xs"
-        [class.bg-surface-raised dark:bg-surface-secondary/20]="statusFilter() === filter"
-        [class.bg-cta-default/10]="statusFilter() !== filter">
+        [ngClass]="{
+          'bg-surface-raised dark:bg-surface-secondary/20': statusFilter() === filter,
+          'bg-cta-default/10': statusFilter() !== filter,
+        }"
+      >
         {{ statusCounts()[filter] }}
       </span>
     </button>

@@ -40,7 +40,10 @@
     </div>
 
     <!-- Check-In Comparison Card -->
-    <div *ngIf="checkInData()" class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-4 mb-6">
+    <div
+      *ngIf="checkInData()"
+      class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-4 mb-6"
+    >
       <h3 class="font-semibold text-cta-default mb-3">📋 Estado al Check-In</h3>
       <div class="space-y-2 text-sm">
         <div class="flex justify-between">
@@ -104,14 +107,19 @@
         <div
           *ngIf="fuelDifference() !== null"
           class="mt-3 p-3 rounded-lg"
-          [class.bg-success-light/10]="fuelDifference()! >= 0"
-          [class.bg-error-bg]="fuelDifference()! < 0">
+          [ngClass]="{
+            'bg-success-light/10': fuelDifference()! >= 0,
+            'bg-error-bg': fuelDifference()! < 0,
+          }"
+        >
           <div class="flex justify-between items-center">
             <span class="text-sm">Diferencia de combustible:</span>
             <span
               class="font-bold"
-              [class.text-success-light]="fuelDifference()! >= 0"
-              [class.text-error-strong]="fuelDifference()! < 0"
+              [ngClass]="{
+                'text-success-light': fuelDifference()! >= 0,
+                'text-error-strong': fuelDifference()! < 0,
+              }"
             >
               {{ fuelDifference()! > 0 ? '+' : '' }}{{ fuelDifference() }}%
             </span>
@@ -197,10 +205,15 @@
         </div>
 
         <!-- No Damages (if !hasDamages) -->
-        <div *ngIf="!hasDamages()" class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mt-4">
+        <div
+          *ngIf="!hasDamages()"
+          class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mt-4"
+        >
           <div class="flex items-center gap-2">
             <ion-icon name="checkmark-circle" class="text-success-light text-2xl"></ion-icon>
-            <span class="text-sm text-success-light">El auto fue devuelto en buenas condiciones</span>
+            <span class="text-sm text-success-light"
+              >El auto fue devuelto en buenas condiciones</span
+            >
           </div>
         </div>
       </div>
