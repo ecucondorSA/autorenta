@@ -114,8 +114,8 @@ class Logger {
     // so we check multiple possible indicators
     this.isProduction =
       options?.isProduction ??
-      (typeof ENVIRONMENT !== 'undefined' && ENVIRONMENT === 'production') ||
-      false;
+      ((typeof ENVIRONMENT !== 'undefined' && ENVIRONMENT === 'production') ||
+      false);
 
     // Production: Only WARN and ERROR
     // Development: All levels
