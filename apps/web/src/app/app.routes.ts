@@ -25,6 +25,22 @@ export const routes: Routes = [
       import('./features/onboarding/onboarding.page').then((m) => m.OnboardingPage),
   },
   {
+    path: 'become-renter',
+    loadComponent: () =>
+      import('./features/become-renter/become-renter.page').then((m) => m.BecomeRenterPage),
+  },
+  {
+    path: 'referrals',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./features/referrals/referrals.page').then((m) => m.ReferralsPage),
+  },
+  {
+    path: 'ref/:code',
+    loadComponent: () =>
+      import('./features/referrals/referral-landing.page').then((m) => m.ReferralLandingPage),
+  },
+  {
     path: 'cars',
     children: [
       {

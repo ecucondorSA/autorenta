@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { GuidedTourService } from '../../../core/guided-tour/guided-tour.service';
 import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.interface';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-help-button',
@@ -42,17 +43,55 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
 
         <!-- Menu dropdown -->
         <div
-          class="absolute right-0 mt-2 w-72 card-premium shadow-elevated p-4 z-50 animate-fade-in"
+          class="absolute right-0 mt-2 w-80 card-premium shadow-elevated p-4 z-50 animate-fade-in"
           role="menu"
           aria-labelledby="help-center"
         >
           <h3 class="text-sm font-semibold mb-3 text-text-primary dark:text-text-primary">
-            ¿Necesitás ayuda?
+            Centro de ayuda
           </h3>
+
+          <!-- Convertite en Renter (destacado) -->
+          <button
+            (click)="navigateToBecomeRenter()"
+            class="w-full text-left px-4 py-3 rounded-lg bg-gradient-to-r from-cta-default/10 to-cta-hover/10 hover:from-cta-default/20 hover:to-cta-hover/20 dark:from-cyan-500/10 dark:to-cyan-600/10 dark:hover:from-cyan-500/20 dark:hover:to-cyan-600/20 mb-3 transition-base border border-cta-default/20 dark:border-cyan-500/20"
+            role="menuitem"
+          >
+            <div class="flex items-start gap-3">
+              <div class="text-2xl">🏠</div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-cta-default dark:text-cyan-400 mb-1">
+                  Convertite en Renter
+                </div>
+                <div class="text-xs text-text-muted dark:text-gray-400">
+                  Publicá tu auto y generá ingresos extras
+                </div>
+              </div>
+            </div>
+          </button>
+
+          <!-- Invitar amigo -->
+          @if (isAuthenticated()) {
+            <button
+              (click)="navigateToReferrals()"
+              class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-2 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+              role="menuitem"
+            >
+              <span class="text-lg">🎁</span>
+              <span>Invitá a un amigo Renter</span>
+            </button>
+          }
+
+          <hr class="my-2 border-border-default/40 dark:border-white/10" />
+
+          <!-- Tours guiados -->
+          <div class="text-xs font-medium text-text-muted dark:text-gray-400 px-3 mb-2">
+            Tours guiados
+          </div>
 
           <button
             (click)="showTour('welcome')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-2 transition-base text-text-secondary dark:text-text-secondary"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary"
             role="menuitem"
           >
             🎯 Ver tour de bienvenida
@@ -60,7 +99,7 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
 
           <button
             (click)="showTour('renter')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-2 transition-base text-text-secondary dark:text-text-secondary"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary"
             role="menuitem"
           >
             🔍 Cómo buscar autos
@@ -76,9 +115,10 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
 
           <hr class="my-2 border-border-default/40 dark:border-white/10" />
 
+          <!-- Soporte -->
           <a
             href="mailto:soporte@autorentar.com"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm flex items-center gap-2 transition-base text-text-secondary dark:text-text-secondary"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm flex items-center gap-2 transition-base text-text-secondary dark:text-text-secondary mb-2"
             role="menuitem"
           >
             <svg
@@ -97,6 +137,17 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
             </svg>
             Contactar soporte
           </a>
+
+          <!-- Login si no está autenticado -->
+          @if (!isAuthenticated()) {
+            <button
+              (click)="navigateToLogin()"
+              class="w-full text-left px-3 py-2 rounded-lg bg-cta-default hover:bg-cta-hover dark:bg-cyan-600 dark:hover:bg-cyan-500 text-white text-sm font-medium transition-base flex items-center justify-center gap-2"
+              role="menuitem"
+            >
+              Iniciá sesión o registrate
+            </button>
+          }
         </div>
       }
     </div>
@@ -112,8 +163,10 @@ import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.int
 export class HelpButtonComponent {
   private readonly guidedTour = inject(GuidedTourService);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   readonly showMenu = signal(false);
+  readonly isAuthenticated = this.authService.isAuthenticated;
 
   toggleMenu(): void {
     this.showMenu.update((v) => !v);
@@ -166,5 +219,29 @@ export class HelpButtonComponent {
         force: true,
       });
     }
+  }
+
+  /**
+   * Navegar a la página "Convertite en Renter"
+   */
+  navigateToBecomeRenter(): void {
+    this.closeMenu();
+    this.router.navigate(['/become-renter']);
+  }
+
+  /**
+   * Navegar a la página de login/registro
+   */
+  navigateToLogin(): void {
+    this.closeMenu();
+    this.router.navigate(['/login']);
+  }
+
+  /**
+   * Navegar a la página de referidos
+   */
+  navigateToReferrals(): void {
+    this.closeMenu();
+    this.router.navigate(['/referrals']);
   }
 }

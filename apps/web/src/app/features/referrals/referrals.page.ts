@@ -1,0 +1,137 @@
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { ReferralsService } from '../../core/services/referrals.service';
+
+@Component({
+  selector: 'app-referrals',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  template: `
+    <div class="container-page px-container py-8">
+      <h1 class="text-3xl font-bold mb-6">Programa de Referidos</h1>
+
+      @if (loading()) {
+        <div class="text-center py-12">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default"></div>
+        </div>
+      } @else {
+        <!-- Código de referido -->
+        <div class="card-premium p-6 mb-6">
+          <h2 class="text-xl font-semibold mb-4">Tu código de referido</h2>
+          @if (referralCode()) {
+            <div class="flex items-center gap-4">
+              <div class="flex-1 bg-surface-secondary dark:bg-slate-800 rounded-lg p-4 font-mono text-2xl font-bold text-center">
+                {{ referralCode()?.code }}
+              </div>
+              <button
+                (click)="copyCode()"
+                class="btn-secondary"
+              >
+                {{ copied() ? 'Copiado!' : 'Copiar código' }}
+              </button>
+            </div>
+
+            <div class="mt-4">
+              <label class="block text-sm font-medium mb-2">Link para compartir:</label>
+              <div class="flex items-center gap-2">
+                <input
+                  type="text"
+                  [value]="shareableLink() || ''"
+                  readonly
+                  class="flex-1 px-4 py-2 rounded-lg bg-surface-secondary dark:bg-slate-800 text-sm"
+                />
+                <button
+                  (click)="copyLink()"
+                  class="btn-secondary"
+                >
+                  {{ copiedLink() ? 'Copiado!' : 'Copiar link' }}
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="grid md:grid-cols-4 gap-4 mb-6">
+          <div class="card-premium p-4">
+            <div class="text-sm text-text-muted dark:text-gray-400 mb-1">Total invitados</div>
+            <div class="text-3xl font-bold text-cta-default dark:text-cyan-400">
+              {{ stats()?.total_referrals || 0 }}
+            </div>
+          </div>
+
+          <div class="card-premium p-4">
+            <div class="text-sm text-text-muted dark:text-gray-400 mb-1">Autos publicados</div>
+            <div class="text-3xl font-bold text-green-600 dark:text-green-400">
+              {{ stats()?.first_car_count || 0 }}
+            </div>
+          </div>
+
+          <div class="card-premium p-4">
+            <div class="text-sm text-text-muted dark:text-gray-400 mb-1">Ganado</div>
+            <div class="text-3xl font-bold text-green-600 dark:text-green-400">
+              ${{ (stats()?.total_earned_cents || 0) / 100 | number:'1.0-0' }}
+            </div>
+          </div>
+
+          <div class="card-premium p-4">
+            <div class="text-sm text-text-muted dark:text-gray-400 mb-1">Pendiente</div>
+            <div class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
+              ${{ (stats()?.pending_cents || 0) / 100 | number:'1.0-0' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Cómo funciona -->
+        <div class="card-premium p-6">
+          <h2 class="text-xl font-semibold mb-4">¿Cómo funciona?</h2>
+          <ol class="list-decimal list-inside space-y-2 text-text-secondary dark:text-gray-300">
+            <li>Compartí tu código o link con amigos propietarios</li>
+            <li>Cuando se registren usando tu código, reciben $500 ARS de bienvenida</li>
+            <li>Cuando publiquen su primer auto, vos ganás $1,500 ARS</li>
+            <li>¡Sin límites! Invitá a todos tus amigos</li>
+          </ol>
+        </div>
+      }
+    </div>
+  `,
+})
+export class ReferralsPage implements OnInit {
+  private readonly router = inject(Router);
+  private readonly referralsService = inject(ReferralsService);
+
+  readonly loading = signal(false);
+  readonly copied = signal(false);
+  readonly copiedLink = signal(false);
+  readonly referralCode = this.referralsService.myReferralCode;
+  readonly stats = this.referralsService.myStats;
+  readonly shareableLink = this.referralsService.shareableLink;
+
+  async ngOnInit(): Promise<void> {
+    this.loading.set(true);
+    try {
+      await this.referralsService.loadAllData();
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async copyCode(): Promise<void> {
+    const code = this.referralCode()?.code;
+    if (code) {
+      await navigator.clipboard.writeText(code);
+      this.copied.set(true);
+      setTimeout(() => this.copied.set(false), 2000);
+    }
+  }
+
+  async copyLink(): Promise<void> {
+    const link = this.shareableLink();
+    if (link) {
+      await navigator.clipboard.writeText(link);
+      this.copiedLink.set(true);
+      setTimeout(() => this.copiedLink.set(false), 2000);
+    }
+  }
+}

@@ -12,17 +12,23 @@ const FIPE_API_BASE = 'https://fipe.parallelum.com.br/api/v2';
 const FIPE_TOKEN = Deno.env.get('FIPE_API_TOKEN') || '';
 
 interface FipeVehicleResponse {
-  marca: string;
-  modelo: string;
-  anoModelo: number;
-  combustivel: string;
-  codigoFipe: string;
-  precoAtual: string; // "R$ 125.000,00"
-  mesReferencia: string;
-  historicoPrecos?: Array<{
-    mesReferencia: string;
-    preco: string;
-  }>;
+  // API v2 fields
+  brand?: string;
+  model?: string;
+  modelYear?: number;
+  fuel?: string;
+  fuelAcronym?: string;
+  codeFipe?: string;
+  price?: string; // "R$ 125.000,00"
+  referenceMonth?: string;
+  // Legacy API v1 fields (fallback)
+  marca?: string;
+  modelo?: string;
+  anoModelo?: number;
+  combustivel?: string;
+  codigoFipe?: string;
+  precoAtual?: string;
+  mesReferencia?: string;
 }
 
 interface SyncResult {
@@ -90,7 +96,7 @@ async function searchFipeVehicle(
 
     const brands = await brandsResponse.json();
     const matchedBrand = brands.find(
-      (b: any) => b.nome.toLowerCase().includes(brand.toLowerCase()),
+      (b: any) => (b.name || b.nome || '').toLowerCase().includes(brand.toLowerCase()),
     );
 
     if (!matchedBrand) {
@@ -98,9 +104,12 @@ async function searchFipeVehicle(
       return null;
     }
 
+    const brandCode = matchedBrand.code || matchedBrand.codigo;
+    console.log(`✓ Found brand: ${matchedBrand.name || matchedBrand.nome} (${brandCode})`);
+
     // Step 2: Search for model
     const modelsResponse = await fetch(
-      `${FIPE_API_BASE}/cars/brands/${matchedBrand.codigo}/models`,
+      `${FIPE_API_BASE}/cars/brands/${brandCode}/models`,
       {
         headers: {
           'X-Subscription-Token': FIPE_TOKEN,
@@ -114,18 +123,24 @@ async function searchFipeVehicle(
     }
 
     const modelsData = await modelsResponse.json();
-    const matchedModel = modelsData.modelos?.find(
-      (m: any) => m.nome.toLowerCase().includes(model.toLowerCase()),
+    // API v2 returns array directly, not nested in 'modelos'
+    const modelsList = Array.isArray(modelsData) ? modelsData : (modelsData.modelos || []);
+    const matchedModel = modelsList.find(
+      (m: any) => (m.name || m.nome || '').toLowerCase().includes(model.toLowerCase()),
     );
 
     if (!matchedModel) {
       console.log(`Model not found in FIPE: ${model} for brand ${brand}`);
+      console.log(`Available models: ${modelsList.slice(0, 5).map((m: any) => m.name || m.nome).join(', ')}...`);
       return null;
     }
 
+    const modelCode = matchedModel.code || matchedModel.codigo;
+    console.log(`✓ Found model: ${matchedModel.name || matchedModel.nome} (${modelCode})`);
+
     // Step 3: Get years available
     const yearsResponse = await fetch(
-      `${FIPE_API_BASE}/cars/brands/${matchedBrand.codigo}/models/${matchedModel.codigo}/years`,
+      `${FIPE_API_BASE}/cars/brands/${brandCode}/models/${modelCode}/years`,
       {
         headers: {
           'X-Subscription-Token': FIPE_TOKEN,
@@ -140,18 +155,25 @@ async function searchFipeVehicle(
 
     const years = await yearsResponse.json();
     const matchedYear = years.find(
-      (y: any) =>
-        y.nome.includes(year.toString()) || y.codigo.includes(year.toString()),
+      (y: any) => {
+        const yearName = y.name || y.nome || '';
+        const yearCode = y.code || y.codigo || '';
+        return yearName.includes(year.toString()) || yearCode.includes(year.toString());
+      }
     );
 
     if (!matchedYear) {
       console.log(`Year not found in FIPE: ${year}`);
+      console.log(`Available years: ${years.slice(0, 5).map((y: any) => y.name || y.nome).join(', ')}...`);
       return null;
     }
 
+    const yearCode = matchedYear.code || matchedYear.codigo;
+    console.log(`✓ Found year: ${matchedYear.name || matchedYear.nome} (${yearCode})`);
+
     // Step 4: Get vehicle pricing
     const pricingResponse = await fetch(
-      `${FIPE_API_BASE}/cars/brands/${matchedBrand.codigo}/models/${matchedModel.codigo}/years/${matchedYear.codigo}`,
+      `${FIPE_API_BASE}/cars/brands/${brandCode}/models/${modelCode}/years/${yearCode}`,
       {
         headers: {
           'X-Subscription-Token': FIPE_TOKEN,
@@ -226,16 +248,24 @@ async function syncFipeValues(
         continue;
       }
 
-      // Parse price
-      const brlPrice = parseBRLPrice(fipeData.precoAtual);
+      // Parse price (support both API v1 and v2 formats)
+      const priceString = fipeData.price || fipeData.precoAtual;
+      if (!priceString) {
+        console.log(`No price found for ${car.brand_text_backup} ${car.model_text_backup} ${car.year}`);
+        result.skipped++;
+        continue;
+      }
+
+      const brlPrice = parseBRLPrice(priceString);
       const usdPrice = await convertBRLtoUSD(brlPrice, supabase);
 
       // Update car
+      const fipeCode = fipeData.codeFipe || fipeData.codigoFipe;
       const { error: updateError } = await supabase
         .from('cars')
         .update({
           value_usd: usdPrice,
-          fipe_code: fipeData.codigoFipe,
+          fipe_code: fipeCode,
           value_usd_source: 'fipe',
           fipe_last_sync: new Date().toISOString(),
           estimated_value_usd: null, // Clear estimate since we have real data

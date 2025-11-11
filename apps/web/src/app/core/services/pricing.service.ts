@@ -18,6 +18,23 @@ export interface LocationCoords {
   lng: number;
 }
 
+export interface VehicleCategory {
+  id: string;
+  name: string;
+  description: string;
+  base_rate_multiplier: number;
+  depreciation_rate_annual: number;
+}
+
+export interface VehicleValueEstimation {
+  estimated_value_usd: number;
+  confidence: 'high' | 'medium' | 'low' | 'none';
+  source: 'pricing_model' | 'category_fallback';
+  category_id?: string;
+  category_name?: string;
+  suggested_daily_rate_usd?: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -116,5 +133,102 @@ export class PricingService {
       throw new Error('No se pudo cancelar la reserva');
     }
     return Number(data[0].cancel_fee ?? 0);
+  }
+
+  /**
+   * Get all vehicle categories from database
+   */
+  async getVehicleCategories(): Promise<VehicleCategory[]> {
+    const { data, error } = await this.supabase
+      .from('vehicle_categories')
+      .select('id, name, description, base_rate_multiplier, depreciation_rate_annual')
+      .eq('is_active', true)
+      .order('name');
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  /**
+   * Estimate vehicle value using SQL function
+   * Calls estimate_vehicle_value_usd(brand, model, year, country)
+   */
+  async estimateVehicleValue(params: {
+    brand: string;
+    model: string;
+    year: number;
+    country?: string;
+  }): Promise<VehicleValueEstimation | null> {
+    const { data, error } = await this.supabase.rpc('estimate_vehicle_value_usd', {
+      p_brand: params.brand,
+      p_model: params.model,
+      p_year: params.year,
+      p_country: params.country || 'AR',
+    });
+
+    if (error) {
+      console.error('Error estimating vehicle value:', error);
+      return null;
+    }
+
+    if (!data || data.length === 0) {
+      return null;
+    }
+
+    const result = data[0];
+
+    // Calculate suggested daily rate (0.25-0.35% of vehicle value per day)
+    const suggestedRate =
+      result.estimated_value_usd > 0 ? result.estimated_value_usd * 0.003 : undefined;
+
+    return {
+      estimated_value_usd: result.estimated_value_usd,
+      confidence: result.confidence,
+      source: result.source,
+      category_id: result.category_id,
+      category_name: result.category_name,
+      suggested_daily_rate_usd: suggestedRate,
+    };
+  }
+
+  /**
+   * Calculate suggested daily rate for a category
+   * Uses base_rate_multiplier from category
+   */
+  async calculateSuggestedRate(params: {
+    categoryId: string;
+    estimatedValueUsd?: number;
+  }): Promise<number | null> {
+    const { data, error } = await this.supabase
+      .from('vehicle_categories')
+      .select('base_rate_multiplier')
+      .eq('id', params.categoryId)
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+
+    // If we have estimated value, use it
+    if (params.estimatedValueUsd) {
+      return params.estimatedValueUsd * 0.003; // 0.3% of value per day
+    }
+
+    // Otherwise use category default (e.g., 0.35% for Economy)
+    // Assume average vehicle value by category:
+    // Economy: $8k, Standard: $15k, Premium: $35k, Luxury: $80k
+    const averageValues: Record<string, number> = {
+      economy: 8000,
+      standard: 15000,
+      premium: 35000,
+      luxury: 80000,
+    };
+
+    const categoryName = Object.keys(averageValues).find((name) =>
+      params.categoryId.toLowerCase().includes(name),
+    );
+    const avgValue = categoryName ? averageValues[categoryName] : 15000;
+
+    return avgValue * (data.base_rate_multiplier / 100);
   }
 }

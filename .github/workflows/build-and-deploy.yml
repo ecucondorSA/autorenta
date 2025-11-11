@@ -36,6 +36,8 @@ jobs:
         run: pnpm run build:web
         env:
           NODE_ENV: production
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
 
       - name: Upload source maps to Sentry
         working-directory: apps/web
