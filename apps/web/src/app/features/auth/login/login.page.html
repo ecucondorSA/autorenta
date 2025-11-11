@@ -96,7 +96,7 @@
             [class.dark:border-charcoal-medium]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
-            [class.border-error-500]="form.controls.email.touched && form.controls.email.invalid"
+            [class.border-error-border]="form.controls.email.touched && form.controls.email.invalid"
             [class.focus:ring-cta-default]="
               !form.controls.email.touched || !form.controls.email.invalid
             "
@@ -107,7 +107,7 @@
           <p
             *ngIf="form.controls.email.touched && form.controls.email.errors?.['required']"
             id="login-email-error"
-            class="mt-2 text-xs text-error-600"
+            class="mt-2 text-xs text-error-text"
             role="alert"
           >
             El email es obligatorio
@@ -115,7 +115,7 @@
           <p
             *ngIf="form.controls.email.touched && form.controls.email.errors?.['email']"
             id="login-email-error"
-            class="mt-2 text-xs text-error-600"
+            class="mt-2 text-xs text-error-text"
             role="alert"
           >
             Formato de email inválido
@@ -157,7 +157,7 @@
             [class.dark:border-charcoal-medium]="
               !form.controls.password.touched || !form.controls.password.invalid
             "
-            [class.border-error-500]="
+            [class.border-error-border]="
               form.controls.password.touched && form.controls.password.invalid
             "
             [class.focus:ring-cta-default]="
@@ -170,7 +170,7 @@
           <p
             *ngIf="form.controls.password.touched && form.controls.password.errors?.['required']"
             id="login-password-error"
-            class="mt-2 text-xs text-error-600"
+            class="mt-2 text-xs text-error-text"
             role="alert"
           >
             La contraseña es obligatoria
@@ -178,7 +178,7 @@
           <p
             *ngIf="form.controls.password.touched && form.controls.password.errors?.['minlength']"
             id="login-password-error"
-            class="mt-2 text-xs text-error-600"
+            class="mt-2 text-xs text-error-text"
             role="alert"
           >
             La contraseña debe tener al menos 6 caracteres
@@ -188,11 +188,11 @@
         <!-- Error Message -->
         <div
           *ngIf="error()"
-          class="bg-error-50 border border-error-200 rounded-lg p-3"
+          class="bg-error-bg border border-error-border rounded-lg p-3"
           role="alert"
           aria-live="polite"
         >
-          <p class="text-sm text-error-700">{{ error() }}</p>
+          <p class="text-sm text-error-strong">{{ error() }}</p>
         </div>
 
         <!-- Submit Button -->

@@ -82,7 +82,7 @@ interface CardToken {
             id="form-checkout__cardholderName"
             name="cardholderName"
             type="text"
-            class="w-full px-3 py-2 border border-border-subtle rounded-md"
+            class="w-full px-3 py-2 border border-border-muted rounded-md"
             placeholder="NOMBRE APELLIDO"
           />
         </div>
@@ -93,7 +93,7 @@ interface CardToken {
             <select
               id="form-checkout__identificationType"
               name="identificationType"
-              class="w-full px-3 py-2 border border-border-subtle rounded-md"
+              class="w-full px-3 py-2 border border-border-muted rounded-md"
             >
               <option value="">Seleccionar...</option>
             </select>
@@ -104,7 +104,7 @@ interface CardToken {
               id="form-checkout__identificationNumber"
               name="identificationNumber"
               type="text"
-              class="w-full px-3 py-2 border border-border-subtle rounded-md"
+              class="w-full px-3 py-2 border border-border-muted rounded-md"
               placeholder="12345678"
             />
           </div>
@@ -146,8 +146,8 @@ interface CardToken {
       </form>
 
       @if (errorMessage()) {
-        <div class="mt-4 p-3 bg-error-50 border border-error-200 rounded-md">
-          <p class="text-sm text-error-700">{{ errorMessage() }}</p>
+        <div class="mt-4 p-3 bg-error-bg border border-error-border rounded-md">
+          <p class="text-sm text-error-strong">{{ errorMessage() }}</p>
         </div>
       }
 

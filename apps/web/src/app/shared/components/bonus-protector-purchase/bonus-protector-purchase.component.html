@@ -134,7 +134,7 @@
 
     <!-- Balance Info -->
     <div
-      class="bg-surface-base dark:bg-surface-base border border-border-default dark:border-border-subtle rounded-lg p-4 mb-4"
+      class="bg-surface-base dark:bg-surface-base border border-border-default dark:border-border-muted rounded-lg p-4 mb-4"
     >
       <div class="flex items-center justify-between">
         <div>
@@ -147,7 +147,7 @@
           *ngIf="getSelectedLevel() && !canAfford(getSelectedLevel()!.priceCents)"
           class="text-right"
         >
-          <p class="text-sm font-medium text-error-600">Saldo insuficiente</p>
+          <p class="text-sm font-medium text-error-text">Saldo insuficiente</p>
           <a href="/wallet" class="text-xs text-cta-default hover:text-cta-default underline">
             Depositar fondos
           </a>
@@ -197,19 +197,19 @@
       class="mt-4 p-4 rounded-lg"
       [class.bg-success-light/10]="purchaseMessage.includes('exitosamente')"
       [class.border-success-light/40]="purchaseMessage.includes('exitosamente')"
-      [class.bg-error-50]="!purchaseMessage.includes('exitosamente')"
-      [class.border-error-200]="!purchaseMessage.includes('exitosamente')">
+      [class.bg-error-bg]="!purchaseMessage.includes('exitosamente')"
+      [class.border-error-border]="!purchaseMessage.includes('exitosamente')">
       <p
         class="text-sm"
         [class.text-success-light]="purchaseMessage.includes('exitosamente')"
-        [class.text-error-800]="!purchaseMessage.includes('exitosamente')"
+        [class.text-error-strong]="!purchaseMessage.includes('exitosamente')"
       >
         {{ purchaseMessage }}
       </p>
     </div>
 
     <!-- How It Works -->
-    <div class="mt-6 pt-6 border-t border-border-default dark:border-border-subtle">
+    <div class="mt-6 pt-6 border-t border-border-default dark:border-border-muted">
       <h4 class="text-sm font-semibold text-text-primary mb-3">¿Cómo funciona?</h4>
       <ul class="space-y-2">
         <li class="flex items-start text-sm text-text-primary">

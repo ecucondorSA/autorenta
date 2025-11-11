@@ -27,7 +27,7 @@ import { MetaService } from '../../../../core/services/meta.service';
     <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
       <!-- Header -->
       <div
-        class="bg-surface-raised dark:bg-surface-base shadow-sm border-b border-border-default dark:border-border-subtle"
+        class="bg-surface-raised dark:bg-surface-base shadow-sm border-b border-border-default dark:border-border-muted"
       >
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div class="flex items-center gap-3">
@@ -68,7 +68,7 @@ import { MetaService } from '../../../../core/services/meta.service';
               <!-- Email Verification -->
               <div
                 *ngIf="showEmailVerification()"
-                class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-subtle p-6"
+                class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-muted p-6"
               >
                 <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                   Verificar Email
@@ -79,7 +79,7 @@ import { MetaService } from '../../../../core/services/meta.service';
               <!-- Phone Verification -->
               <div
                 *ngIf="showPhoneVerification()"
-                class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-subtle p-6"
+                class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-muted p-6"
               >
                 <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                   Verificar Teléfono
@@ -90,7 +90,7 @@ import { MetaService } from '../../../../core/services/meta.service';
               <!-- Selfie Capture -->
               <div
                 *ngIf="showSelfieCapture()"
-                class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-subtle p-6"
+                class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-muted p-6"
               >
                 <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                   Verificación con Selfie
@@ -104,7 +104,7 @@ import { MetaService } from '../../../../core/services/meta.service';
           <div class="lg:col-span-1">
             <!-- Current Level Badge -->
             <div
-              class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-subtle p-6 mb-6"
+              class="bg-surface-raised dark:bg-surface-base rounded-lg shadow-sm border border-border-default dark:border-border-muted p-6 mb-6"
             >
               <h3
                 class="text-sm font-semibold text-text-primary dark:text-text-secondary uppercase tracking-wide mb-4"

@@ -65,13 +65,13 @@
 
         <div
           *ngIf="selectedRecipient()"
-          class="mt-3 p-4 bg-success-50 dark:bg-success-900/20 border-2 border-success-500 dark:border-success-700 rounded-xl"
+          class="mt-3 p-4 bg-success-bg dark:bg-success-900/20 border-2 border-success-border dark:border-success-700 rounded-xl"
         >
           <div class="flex items-center justify-between">
             <div class="flex-1">
               <div class="flex items-center space-x-2 mb-2">
                 <svg
-                  class="w-6 h-6 text-success-600 dark:text-success-400"
+                  class="w-6 h-6 text-success-text dark:text-success-400"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -184,11 +184,11 @@
 
       <div
         *ngIf="success()"
-        class="mb-4 p-4 bg-success-50 dark:bg-success-900/20 border-2 border-success-500 dark:border-success-700 rounded-xl"
+        class="mb-4 p-4 bg-success-bg dark:bg-success-900/20 border-2 border-success-border dark:border-success-700 rounded-xl"
       >
         <div class="flex items-start gap-2">
           <svg
-            class="w-5 h-5 text-success-600 dark:text-success-400 mt-0.5 flex-shrink-0"
+            class="w-5 h-5 text-success-text dark:text-success-400 mt-0.5 flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -198,7 +198,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <p class="text-sm text-success-700 dark:text-success-200 font-semibold">
+          <p class="text-sm text-success-strong dark:text-success-200 font-semibold">
             Transferencia exitosa: {{ formatAmount(lastTransferAmount()) }}
           </p>
         </div>

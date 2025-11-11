@@ -1,19 +1,46 @@
 .badge-warning {
-  @apply bg-warning-100 text-warning-800 dark:bg-warning-900/30 dark:text-warning-300;
+  @apply bg-warning-100 text-warning-800;
+}
+
+.dark .badge-warning {
+  background-color: rgba(84, 71, 54, 0.2); /* warning-900/20 */
+  @apply text-warning-200;
 }
 
 .badge-success {
-  @apply bg-success-light/20 text-success-light dark:bg-success-light/30 dark:text-success-light;
+  background-color: rgba(157, 179, 139, 0.2); /* success-light/20 */
+  color: var(--success-light);
+}
+
+.dark .badge-success {
+  background-color: rgba(157, 179, 139, 0.3); /* success-light/30 */
+  color: var(--success-light);
 }
 
 .badge-info {
-  @apply bg-cta-default/20 text-cta-default dark:bg-cta-default/30 dark:text-cta-default;
+  background-color: rgba(167, 216, 244, 0.2); /* cta-default/20 */
+  color: var(--cta-default);
+}
+
+.dark .badge-info {
+  background-color: rgba(167, 216, 244, 0.3); /* cta-default/30 */
+  color: var(--cta-default);
 }
 
 .badge-neutral {
-  @apply bg-surface-raised text-text-primary dark:bg-surface-base dark:text-text-secondary;
+  @apply bg-surface-raised text-text-primary;
+}
+
+.dark .badge-neutral {
+  @apply bg-surface-base;
+  color: var(--text-secondary);
 }
 
 .badge-danger {
-  @apply bg-error-100 text-error-800 dark:bg-error-900/30 dark:text-error-300;
+  @apply bg-error-100 text-error-800;
+}
+
+.dark .badge-danger {
+  background-color: rgba(77, 38, 38, 0.3); /* error-900/30 */
+  @apply text-error-300;
 }

@@ -90,6 +90,9 @@ export interface UserProfile {
   driver_license_country?: string | null;
   driver_license_expiry?: string | null;
 
+  // Fecha de nacimiento (para cálculo de edad en seguros)
+  date_of_birth?: string | null; // ISO date string YYYY-MM-DD
+
   // Dirección
   address_line1?: string | null;
   address_line2?: string | null;

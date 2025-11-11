@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
+import { kycGuard, onboardingGuard } from './core/guards/onboarding.guard';
 
 export const routes: Routes = [
   {
@@ -58,11 +59,27 @@ export const routes: Routes = [
           import('./features/cars/my-cars/my-cars.page').then((m) => m.MyCarsPage),
       },
       {
+        path: 'bulk-blocking',
+        canMatch: [AuthGuard],
+        loadComponent: () =>
+          import('./features/cars/bulk-blocking/bulk-blocking.page').then(
+            (m) => m.BulkBlockingPage,
+          ),
+      },
+      {
         path: ':id/availability',
         canMatch: [AuthGuard],
         loadComponent: () =>
           import('./features/cars/availability-calendar/availability-calendar.page').then(
             (m) => m.AvailabilityCalendarPage,
+          ),
+      },
+      {
+        path: ':id/documents',
+        canMatch: [AuthGuard],
+        loadComponent: () =>
+          import('./features/cars/vehicle-documents/vehicle-documents.page').then(
+            (m) => m.VehicleDocumentsPage,
           ),
       },
       {
@@ -151,6 +168,51 @@ export const routes: Routes = [
             (m) => m.AdminVerificationsPage,
           ),
       },
+      {
+        path: 'settlements',
+        loadComponent: () =>
+          import('./features/admin/settlements/admin-settlements.page').then(
+            (m) => m.AdminSettlementsPage,
+          ),
+      },
+      {
+        path: 'disputes',
+        loadComponent: () =>
+          import('./features/admin/disputes/admin-disputes.page').then((m) => m.AdminDisputesPage),
+      },
+      {
+        path: 'deposits',
+        loadComponent: () =>
+          import('./features/admin/deposits-monitoring/deposits-monitoring.page').then(
+            (m) => m.DepositsMonitoringPage,
+          ),
+      },
+      {
+        path: 'database-export',
+        loadComponent: () =>
+          import('./features/admin/database-export/database-export.page').then(
+            (m) => m.DatabaseExportPage,
+          ),
+      },
+      {
+        path: 'reviews/moderate',
+        loadComponent: () =>
+          import('./features/admin/reviews/moderate-reviews/moderate-reviews.page').then(
+            (m) => m.ModerateReviewsPage,
+          ),
+      },
+      {
+        path: 'analytics',
+        loadComponent: () =>
+          import('./features/admin/analytics/admin-analytics.page').then(
+            (m) => m.AdminAnalyticsPage,
+          ),
+      },
+      {
+        path: 'pricing',
+        loadComponent: () =>
+          import('./features/admin/pricing/admin-pricing.page').then((m) => m.AdminPricingPage),
+      },
     ],
   },
   {
@@ -178,6 +240,25 @@ export const routes: Routes = [
           import('./features/profile/mercadopago-connect.component').then(
             (m) => m.MercadoPagoConnectComponent,
           ),
+      },
+      {
+        path: 'notifications-settings',
+        loadComponent: () =>
+          import('./features/profile/notifications-settings/notifications-settings.page').then(
+            (m) => m.NotificationsSettingsPage,
+          ),
+      },
+      {
+        path: 'driving-stats',
+        loadComponent: () =>
+          import('./features/profile/driving-stats/driving-stats.page').then(
+            (m) => m.DrivingStatsPage,
+          ),
+      },
+      {
+        path: 'location-settings',
+        loadComponent: () =>
+          import('./features/profile/location-settings.page').then((m) => m.LocationSettingsPage),
       },
     ],
   },
@@ -220,6 +301,17 @@ export const routes: Routes = [
           ),
       },
     ],
+  },
+  {
+    path: 'dashboard',
+    canMatch: [AuthGuard, onboardingGuard],
+    loadComponent: () =>
+      import('./features/dashboard/owner-dashboard.page').then((m) => m.OwnerDashboardPage),
+  },
+  {
+    path: 'payouts',
+    canMatch: [AuthGuard, kycGuard],
+    loadComponent: () => import('./features/payouts/payouts.page').then((m) => m.PayoutsPage),
   },
   {
     path: 'terminos',

@@ -1,5 +1,5 @@
 <div
-  class="review-card bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
+  class="review-card bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
 >
   <!-- Header with user info and rating -->
   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
@@ -234,7 +234,7 @@
   <div *ngIf="canFlag" class="border-t border-gray-100 pt-3">
     <button
       (click)="onFlagReview()"
-      class="text-sm text-text-secondary dark:text-text-secondary hover:text-error-600 transition-colors flex items-center space-x-1"
+      class="text-sm text-text-secondary dark:text-text-secondary hover:text-error-text transition-colors flex items-center space-x-1"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path

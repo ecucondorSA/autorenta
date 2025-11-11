@@ -118,7 +118,7 @@ export interface BlockDateRequest {
           <!-- Apply to All Cars (only show if has multiple cars) -->
           <div
             *ngIf="hasMultipleCars()"
-            class="flex items-start gap-3 p-4 bg-warning-50 dark:bg-warning-900/20 rounded-xl"
+            class="flex items-start gap-3 p-4 bg-warning-bg dark:bg-warning-900/20 rounded-xl"
           >
             <input
               type="checkbox"
@@ -140,7 +140,7 @@ export interface BlockDateRequest {
           <!-- Error Message -->
           <div
             *ngIf="errorMessage()"
-            class="p-3 bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-xl text-sm text-error-700 dark:text-error-400"
+            class="p-3 bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-xl text-sm text-error-strong"
           >
             {{ errorMessage() }}
           </div>

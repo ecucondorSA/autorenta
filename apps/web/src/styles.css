@@ -125,6 +125,39 @@
     --border-success: var(--success-500);
     --border-warning: var(--warning-500);
 
+    /* ─── Semantic Error/Warning/Success Tokens (Phase 3 Addition) ─── */
+    /* Error states - Consistent usage across components */
+    --error-text: var(--error-600);           /* Text on light backgrounds */
+    --error-text-strong: var(--error-700);    /* Strong emphasis text */
+    --error-bg: var(--error-50);              /* Background for error panels */
+    --error-bg-hover: var(--error-100);       /* Hover state for error elements */
+    --error-border: var(--error-500);         /* Borders for error elements */
+    --error-icon: var(--error-600);           /* Icon color */
+
+    /* Warning states - Consistent usage across components */
+    --warning-text: var(--warning-600);       /* Text on light backgrounds */
+    --warning-text-strong: var(--warning-700); /* Strong emphasis text */
+    --warning-bg: var(--warning-50);          /* Background for warning panels */
+    --warning-bg-hover: var(--warning-100);   /* Hover state for warning elements */
+    --warning-border: var(--warning-500);     /* Borders for warning elements */
+    --warning-icon: var(--warning-600);       /* Icon color */
+
+    /* Success states - Consistent usage across components */
+    --success-text: var(--success-600);       /* Text on light backgrounds */
+    --success-text-strong: var(--success-700); /* Strong emphasis text */
+    --success-bg: var(--success-50);          /* Background for success panels */
+    --success-bg-hover: var(--success-100);   /* Hover state for success elements */
+    --success-border: var(--success-500);     /* Borders for success elements */
+    --success-icon: var(--success-600);       /* Icon color */
+
+    /* Info states - Consistent usage across components */
+    --info-text: var(--info-600);             /* Text on light backgrounds */
+    --info-text-strong: var(--info-700);      /* Strong emphasis text */
+    --info-bg: var(--info-50);                /* Background for info panels */
+    --info-bg-hover: var(--info-100);         /* Hover state for info elements */
+    --info-border: var(--info-500);           /* Borders for info elements */
+    --info-icon: var(--info-600);             /* Icon color */
+
     /* ─── Overlays ─── */
     --overlay-dark: rgba(43, 29, 20, 0.75); /* Overlay oscuro tonal */
     --overlay-light: rgba(252, 247, 240, 0.92); /* Overlay claro */
@@ -302,6 +335,39 @@
     /* ─── Focus Rings en dark mode ─── */
     --ring-focus: 0 0 0 3px rgba(167, 216, 244, 0.4);
     --ring-error: 0 0 0 3px rgba(234, 157, 157, 0.4);
+
+    /* ─── Semantic Error/Warning/Success Tokens - Dark Mode ─── */
+    /* Error states in dark mode */
+    --error-text: var(--error-500);           /* Lighter text for dark backgrounds */
+    --error-text-strong: var(--error-400);    /* Strong emphasis */
+    --error-bg: rgba(178, 94, 94, 0.15);      /* Subtle background */
+    --error-bg-hover: rgba(178, 94, 94, 0.25); /* Hover state */
+    --error-border: var(--error-500);         /* Border color */
+    --error-icon: var(--error-500);           /* Icon color */
+
+    /* Warning states in dark mode */
+    --warning-text: var(--warning-500);       /* Lighter text for dark backgrounds */
+    --warning-text-strong: var(--warning-400); /* Strong emphasis */
+    --warning-bg: rgba(196, 168, 130, 0.15);  /* Subtle background */
+    --warning-bg-hover: rgba(196, 168, 130, 0.25); /* Hover state */
+    --warning-border: var(--warning-500);     /* Border color */
+    --warning-icon: var(--warning-500);       /* Icon color */
+
+    /* Success states in dark mode */
+    --success-text: var(--success-500);       /* Lighter text for dark backgrounds */
+    --success-text-strong: var(--success-400); /* Strong emphasis */
+    --success-bg: rgba(157, 179, 139, 0.15);  /* Subtle background */
+    --success-bg-hover: rgba(157, 179, 139, 0.25); /* Hover state */
+    --success-border: var(--success-500);     /* Border color */
+    --success-icon: var(--success-500);       /* Icon color */
+
+    /* Info states in dark mode */
+    --info-text: var(--info-500);             /* Lighter text for dark backgrounds */
+    --info-text-strong: var(--info-400);      /* Strong emphasis */
+    --info-bg: rgba(167, 216, 244, 0.15);     /* Subtle background */
+    --info-bg-hover: rgba(167, 216, 244, 0.25); /* Hover state */
+    --info-border: var(--info-500);           /* Border color */
+    --info-icon: var(--info-500);             /* Icon color */
 
     /* ─── Legacy Compatibility ─── */
     --info-light: var(--info-500);
@@ -525,6 +591,75 @@
 
   .border-border-focus {
     border-color: var(--border-focus);
+  }
+
+  /* ─── Semantic State Utilities (Phase 3) ─── */
+  /* Error utilities */
+  .text-error-text {
+    color: var(--error-text);
+  }
+  .text-error-strong {
+    color: var(--error-text-strong);
+  }
+  .bg-error-bg {
+    background-color: var(--error-bg);
+  }
+  .bg-error-hover {
+    background-color: var(--error-bg-hover);
+  }
+  .border-error-border {
+    border-color: var(--error-border);
+  }
+
+  /* Warning utilities */
+  .text-warning-text {
+    color: var(--warning-text);
+  }
+  .text-warning-strong {
+    color: var(--warning-text-strong);
+  }
+  .bg-warning-bg {
+    background-color: var(--warning-bg);
+  }
+  .bg-warning-hover {
+    background-color: var(--warning-bg-hover);
+  }
+  .border-warning-border {
+    border-color: var(--warning-border);
+  }
+
+  /* Success utilities */
+  .text-success-text {
+    color: var(--success-text);
+  }
+  .text-success-strong {
+    color: var(--success-text-strong);
+  }
+  .bg-success-bg {
+    background-color: var(--success-bg);
+  }
+  .bg-success-hover {
+    background-color: var(--success-bg-hover);
+  }
+  .border-success-border {
+    border-color: var(--success-border);
+  }
+
+  /* Info utilities */
+  .text-info-text {
+    color: var(--info-text);
+  }
+  .text-info-strong {
+    color: var(--info-text-strong);
+  }
+  .bg-info-bg {
+    background-color: var(--info-bg);
+  }
+  .bg-info-hover {
+    background-color: var(--info-bg-hover);
+  }
+  .border-info-border {
+    border-color: var(--info-border);
   }
 }
 
@@ -1103,6 +1238,179 @@
 
 .animate-slide-down {
   animation: slide-down 0.3s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🎨 SISTEMA DE TOKENS CSS - VARIABLES CENTRALIZADAS
+   ═══════════════════════════════════════════════════════════════
+   Define todas las variables CSS para el sistema de diseño
+   Ver: src/config/theme/colors.ts para valores fuente
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── Superficies (Surfaces) ─── */
+  --surface-base: #F8F4EC; /* Ivory */
+  --surface-raised: #FFFFFF; /* White */
+  --surface-secondary: #DFD2BF; /* Beige */
+  --surface-elevated: #F5F5F5; /* Gray G05 */
+  --surface-hover: #F0F0F0;
+  --surface-pressed: #E8E8E8;
+
+  /* ─── Textos ─── */
+  --text-primary: #050505; /* Black */
+  --text-secondary: #4E4E4E; /* Gray G60 */
+  --text-muted: #7B7B7B; /* Gray G40 */
+  --text-inverse: #F8F4EC; /* Ivory */
+  --text-link: #A7D8F4; /* Blue primary */
+  --text-link-hover: #8EC9EC; /* Blue hover */
+  --text-placeholder: #7B7B7B; /* Gray G40 */
+
+  /* ─── Bordes ─── */
+  --border-default: #BCBCBC; /* Gray G20 */
+  --border-muted: #E3E3E3; /* Gray G10 */
+  --border-focus: #3B6E8F; /* Blue focus */
+  --border-hover: #A7D8F4; /* Blue primary */
+  --border-error: #B25E5E; /* Rust */
+  --border-success: #9DB38B; /* Olive */
+
+  /* ─── CTAs y Acciones ─── */
+  --cta-default: #A7D8F4; /* Blue primary */
+  --cta-hover: #8EC9EC; /* Blue hover */
+  --cta-pressed: #A7D8F4; /* Blue primary */
+  --cta-text: #050505; /* Black */
+  --cta-secondary: #DFD2BF; /* Beige */
+  --cta-secondary-hover: #C9BEA8; /* Beige hover */
+  --cta-secondary-text: #050505; /* Black */
+
+  /* ─── Estados y Feedback ─── */
+  --info-50: #EFF6FF;
+  --info-100: #DBEAFE;
+  --info-200: #BFDBFE;
+  --info-300: #93C5FD;
+  --info-400: #60A5FA;
+  --info-500: #A7D8F4; /* Blue primary */
+  --info-600: #6BA8D4;
+  --info-700: #4F46E5;
+  --info-800: #3730A3;
+  --info-900: #1E1B4B;
+
+  --success-50: #F0FDF4;
+  --success-100: #DCFCE7;
+  --success-200: #BBF7D0;
+  --success-300: #86EFAC;
+  --success-400: #4ADE80;
+  --success-500: #9DB38B; /* Olive */
+  --success-600: #16A34A;
+  --success-700: #15803D;
+  --success-800: #166534;
+  --success-900: #14532D;
+
+  --warning-50: #FEFCE8;
+  --warning-100: #FEF9C3;
+  --warning-200: #FEF08A;
+  --warning-300: #FDE047;
+  --warning-400: #FACC15;
+  --warning-500: #C4A882; /* Beige cálido */
+  --warning-600: #CA8A04;
+  --warning-700: #A16207;
+  --warning-800: #854D0E;
+  --warning-900: #713F12;
+
+  --error-50: #FEF2F2;
+  --error-100: #FEE2E2;
+  --error-200: #FECACA;
+  --error-300: #FCA5A5;
+  --error-400: #F87171;
+  --error-500: #B25E5E; /* Rust */
+  --error-600: #DC2626;
+  --error-700: #B91C1C;
+  --error-800: #991B1B;
+  --error-900: #7F1D1D;
+
+  /* ─── Sombras (Elevation) ─── */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --elevation-3: 0 4px 8px rgba(0, 0, 0, 0.08);
+  --elevation-4: 0 8px 16px rgba(0, 0, 0, 0.10);
+  --elevation-5: 0 16px 32px rgba(0, 0, 0, 0.12);
+
+  /* ─── Focus Rings ─── */
+  --ring-focus: 0 0 0 2px rgba(167, 216, 244, 0.3);
+  --ring-error: 0 0 0 2px rgba(178, 94, 94, 0.3);
+
+  /* ─── Border Radius ─── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* ─── Transiciones ─── */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Dark Mode Overrides */
+.dark {
+  /* ─── Superficies ─── */
+  --surface-base: #0F0F0F;
+  --surface-raised: #111111;
+  --surface-secondary: #2B2B2B;
+  --surface-elevated: #2B2B2B;
+  --surface-hover: #1A1A1A;
+  --surface-pressed: #252525;
+
+  /* ─── Textos ─── */
+  --text-primary: #F8F4EC; /* Ivory */
+  --text-secondary: #BCBCBC; /* Gray G20 */
+  --text-muted: #7B7B7B; /* Gray G40 */
+  --text-inverse: #050505; /* Black */
+  --text-link: #A7D8F4; /* Blue primary */
+  --text-link-hover: #C1E3F7; /* Blue hover */
+  --text-placeholder: #8C7765; /* Placeholders */
+
+  /* ─── Bordes ─── */
+  --border-default: #4E4E4E; /* Gray G60 */
+  --border-muted: #7B7B7B; /* Gray G40 */
+  --border-focus: #A7D8F4; /* Blue focus */
+  --border-hover: #6E5845; /* Hover sobre elementos con borde */
+  --border-error: #EA9D9D; /* Error en dark mode */
+  --border-success: #9DB38B; /* Success en dark mode */
+  --border-warning: #F0CA8D; /* Warning en dark mode */
+
+  /* ─── Estados ─── */
+  --cta-default: #A7D8F4; /* Blue primary */
+  --cta-hover: #8EC9EC; /* Blue hover */
+  --cta-pressed: #75BAE4; /* Blue pressed */
+  --cta-text: #050505; /* Black para contraste */
+  --cta-secondary: #5C4736; /* CTA secundario en dark */
+  --cta-secondary-hover: #6E5845; /* CTA secundario hover */
+  --cta-secondary-text: #F8F4EC; /* Texto sobre CTA secundario */
+
+  /* ─── Colores del Sistema ─── */
+  --success-light: #9DB38B; /* Success */
+  --warning-light: #F0CA8D; /* Warning */
+  --error-light: #EA9D9D; /* Error */
+  --info-light: #A7D8F4; /* Info */
+
+  /* ─── Overlays ─── */
+  --overlay-dark: rgba(5, 5, 5, 0.85);
+  --overlay-light: rgba(15, 15, 15, 0.9);
+  --surface-overlay: rgba(252, 247, 240, 0.1);
+
+  /* ─── Elevations ─── */
+  --elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --elevation-2: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+  --elevation-3: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+  --elevation-4: 0 8px 16px 0 rgba(0, 0, 0, 0.6);
+  --elevation-5: 0 16px 32px 0 rgba(0, 0, 0, 0.7);
+
+  /* ─── Rings ─── */
+  --ring-focus: 0 0 0 3px rgba(167, 216, 244, 0.4);
+  --ring-error: 0 0 0 3px rgba(234, 157, 157, 0.4);
 }
 
 /* Scroll suave para el área de mensajes */

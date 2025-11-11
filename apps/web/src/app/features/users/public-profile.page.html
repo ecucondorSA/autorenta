@@ -22,8 +22,8 @@
 
   <!-- Error State -->
   <div *ngIf="error() && !loading()" class="mx-auto max-w-5xl px-6 py-12">
-    <div class="rounded-xl bg-error-50 dark:bg-error-500/15 border border-error-200 dark:border-error-400/40 p-6 text-center">
-      <p class="text-error-800 dark:text-error-200 font-medium">{{ error() }}</p>
+    <div class="rounded-xl bg-error-bg dark:bg-error-bg0/15 border border-error-border dark:border-error-400/40 p-6 text-center">
+      <p class="text-error-strong font-medium">{{ error() }}</p>
       <button
         (click)="goBack()"
         class="mt-4 btn-secondary px-6 py-2"
@@ -121,12 +121,12 @@
           </div>
 
           <!-- Average Price -->
-          <div class="rounded-xl bg-gradient-to-br from-success-50 to-success-100/50 dark:from-success-500/15 dark:to-transparent border border-success-200 dark:border-success-400/30 p-4 transition-colors">
+          <div class="rounded-xl bg-gradient-to-br from-success-50 to-success-100/50 dark:from-success-500/15 dark:to-transparent border border-success-border dark:border-success-400/30 p-4 transition-colors">
             <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/70 mb-1">{{ 'publicProfile.avgPrice' | translate }}</p>
             <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
               ${{ averageCarPrice() | number:'1.0-0' }}
             </p>
-            <p class="text-xs text-success-700 dark:text-success-300/80 mt-1">{{ 'publicProfile.perDay' | translate }}</p>
+            <p class="text-xs text-success-strong dark:text-success-300/80 mt-1">{{ 'publicProfile.perDay' | translate }}</p>
           </div>
         </div>
       </div>

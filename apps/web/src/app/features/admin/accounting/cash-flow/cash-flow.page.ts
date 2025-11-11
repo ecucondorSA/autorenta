@@ -83,7 +83,7 @@ import { environment } from '../../../../../environments/environment';
                     }
                   </td>
                   <td
-                    class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-error-600"
+                    class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-error-text"
                   >
                     @if (entry.outflow || entry.credit) {
                       \${{ entry.outflow || entry.credit | number: '1.2-2' }}

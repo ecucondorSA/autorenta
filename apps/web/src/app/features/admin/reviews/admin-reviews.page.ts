@@ -58,7 +58,7 @@ interface ModerationStatusOption {
 
       <!-- Filters -->
       <div
-        class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-4 mb-6 shadow-sm"
+        class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-4 mb-6 shadow-sm"
       >
         <h3 class="text-sm font-semibold text-text-primary dark:text-text-secondary mb-3">Filtros</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -70,7 +70,7 @@ interface ModerationStatusOption {
             <select
               [(ngModel)]="filterStatus"
               (ngModelChange)="onFilterChange()"
-              class="w-full rounded-lg border border-border-subtle dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
             >
               <option value="">Todos los estados</option>
               <option *ngFor="let status of statusOptions" [value]="status.value">
@@ -108,9 +108,9 @@ interface ModerationStatusOption {
       <!-- Error State -->
       <div
         *ngIf="error() && !loading()"
-        class="bg-error-50 dark:bg-error-500/15 border border-error-200 dark:border-error-400/40 rounded-lg p-6 text-center"
+        class="bg-error-bg dark:bg-error-bg0/15 border border-error-border dark:border-error-400/40 rounded-lg p-6 text-center"
       >
-        <p class="text-error-800 dark:text-error-200">{{ error() }}</p>
+        <p class="text-error-strong">{{ error() }}</p>
         <button
           (click)="loadReviews()"
           class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors"
@@ -124,7 +124,7 @@ interface ModerationStatusOption {
         <!-- Empty State -->
         <div
           *ngIf="filteredReviews().length === 0"
-          class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-12 text-center"
+          class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-12 text-center"
         >
           <svg
             class="mx-auto h-12 w-12 text-text-muted"
@@ -150,7 +150,7 @@ interface ModerationStatusOption {
         <!-- Review Cards -->
         <div
           *ngFor="let review of filteredReviews()"
-          class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm hover:shadow-md transition-shadow"
+          class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm hover:shadow-md transition-shadow"
         >
           <!-- Header with Checkbox -->
           <div class="flex items-start gap-4">
@@ -158,7 +158,7 @@ interface ModerationStatusOption {
               type="checkbox"
               [checked]="isSelected(review.id)"
               (change)="toggleSelection(review.id)"
-              class="mt-1 h-4 w-4 rounded border-border-subtle"
+              class="mt-1 h-4 w-4 rounded border-border-muted"
             />
 
             <div class="flex-1">
@@ -235,12 +235,12 @@ interface ModerationStatusOption {
               </div>
 
               <!-- Flag Reason -->
-              <div class="bg-error-50 dark:bg-error-500/10 rounded-lg p-3 mb-4">
-                <p class="text-sm font-medium text-error-700 dark:text-error-300 mb-1">
+              <div class="bg-error-bg dark:bg-error-bg0/10 rounded-lg p-3 mb-4">
+                <p class="text-sm font-medium text-error-strong mb-1">
                   Motivo del Reporte:
                 </p>
-                <p class="text-sm text-error-900 dark:text-error-200">{{ review.flag_reason }}</p>
-                <p class="text-xs text-error-600 dark:text-error-400 mt-1">
+                <p class="text-sm text-error-strong">{{ review.flag_reason }}</p>
+                <p class="text-xs text-error-text mt-1">
                   Reportado por: {{ review.flagged_by_name || 'Usuario' }} el
                   {{ review.flagged_at | date: 'short' }}
                 </p>
@@ -316,7 +316,7 @@ interface ModerationStatusOption {
           <textarea
             [(ngModel)]="moderationNotes"
             rows="3"
-            class="w-full rounded-lg border border-border-subtle dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+            class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
             placeholder="Agrega notas sobre esta decisión..."
           ></textarea>
         </div>
@@ -526,10 +526,10 @@ export class AdminReviewsPage implements OnInit {
 
   getModerationBadgeClass(status: string): string {
     const classes: Record<string, string> = {
-      pending: 'bg-warning-100 text-warning-800 dark:bg-warning-500/20 dark:text-warning-300',
+      pending: 'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-300',
       approved:
         'bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-light',
-      rejected: 'bg-error-100 text-error-800 dark:bg-error-500/20 dark:text-error-300',
+      rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-300',
     };
     return classes[status] || 'bg-surface-raised text-text-primary';
   }

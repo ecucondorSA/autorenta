@@ -13,7 +13,7 @@
                                                               class="relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all"
                                                               [class.border-cta-default]="selectedType() === type.value"
                                                               [class.bg-cta-default/5]="selectedType() === type.value"
-                                                              [class.border-border-subtle]="selectedType() !== type.value">
+                                                              [class.border-border-muted]="selectedType() !== type.value">
             <input
               type="radio"
               formControlName="account_type"
@@ -42,14 +42,14 @@
         type="text"
         formControlName="account_number"
         [placeholder]="selectedAccountTypeInfo()?.placeholder || ''"
-        class="w-full px-4 py-3 border border-border-subtle rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
-        [class.border-error-500]="form.get('account_number')?.invalid && form.get('account_number')?.touched"
+        class="w-full px-4 py-3 border border-border-muted rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
+        [class.border-error-border]="form.get('account_number')?.invalid && form.get('account_number')?.touched"
       />
       <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">
         {{ selectedAccountTypeInfo()?.hint }}
       </p>
       @if (getErrorMessage('account_number')) {
-        <p class="mt-1 text-sm text-error-600">{{ getErrorMessage('account_number') }}</p>
+        <p class="mt-1 text-sm text-error-text">{{ getErrorMessage('account_number') }}</p>
       }
     </div>
 
@@ -63,11 +63,11 @@
         type="text"
         formControlName="account_holder_name"
         placeholder="Juan Pérez"
-        class="w-full px-4 py-3 border border-border-subtle rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
-        [class.border-error-500]="form.get('account_holder_name')?.invalid && form.get('account_holder_name')?.touched"
+        class="w-full px-4 py-3 border border-border-muted rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
+        [class.border-error-border]="form.get('account_holder_name')?.invalid && form.get('account_holder_name')?.touched"
       />
       @if (getErrorMessage('account_holder_name')) {
-        <p class="mt-1 text-sm text-error-600">{{ getErrorMessage('account_holder_name') }}</p>
+        <p class="mt-1 text-sm text-error-text">{{ getErrorMessage('account_holder_name') }}</p>
       }
     </div>
 
@@ -81,14 +81,14 @@
         type="text"
         formControlName="account_holder_document"
         placeholder="20123456789"
-        class="w-full px-4 py-3 border border-border-subtle rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
-        [class.border-error-500]="form.get('account_holder_document')?.invalid && form.get('account_holder_document')?.touched"
+        class="w-full px-4 py-3 border border-border-muted rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
+        [class.border-error-border]="form.get('account_holder_document')?.invalid && form.get('account_holder_document')?.touched"
       />
       <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">
         Sin puntos ni guiones
       </p>
       @if (getErrorMessage('account_holder_document')) {
-        <p class="mt-1 text-sm text-error-600">{{ getErrorMessage('account_holder_document') }}</p>
+        <p class="mt-1 text-sm text-error-text">{{ getErrorMessage('account_holder_document') }}</p>
       }
     </div>
 
@@ -102,7 +102,7 @@
         type="text"
         formControlName="bank_name"
         placeholder="Ej: Banco Galicia, Mercado Pago"
-        class="w-full px-4 py-3 border border-border-subtle rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
+        class="w-full px-4 py-3 border border-border-muted rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
       />
     </div>
 
@@ -119,7 +119,7 @@
         type="button"
         (click)="onCancel()"
         [disabled]="submitting()"
-        class="px-6 py-3 border-2 border-border-subtle text-text-primary font-semibold rounded-xl hover:bg-surface-base disabled:opacity-50 disabled:cursor-not-allowed transition"
+        class="px-6 py-3 border-2 border-border-muted text-text-primary font-semibold rounded-xl hover:bg-surface-base disabled:opacity-50 disabled:cursor-not-allowed transition"
       >
         Cancelar
       </button>

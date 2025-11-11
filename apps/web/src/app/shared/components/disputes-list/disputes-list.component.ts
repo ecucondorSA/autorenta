@@ -41,21 +41,21 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
         <div class="space-y-3">
           @for (dispute of disputes(); track dispute.id) {
             <div
-              class="bg-surface-raised dark:bg-surface-base rounded-lg border border-border-default dark:border-border-subtle p-4"
+              class="bg-surface-raised dark:bg-surface-base rounded-lg border border-border-default dark:border-border-muted p-4"
             >
               <div class="flex items-start justify-between mb-3">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-2">
                     <span
                       class="px-2 py-1 rounded-full text-xs font-medium"
-                      [class.bg-warning-100]="dispute.status === 'open'"
-                      [class.text-warning-800]="dispute.status === 'open'"
+                      [class.bg-warning-bg-hover]="dispute.status === 'open'"
+                      [class.text-warning-strong]="dispute.status === 'open'"
                       [class.bg-cta-default/20]="dispute.status === 'in_review'"
                       [class.text-cta-default]="dispute.status === 'in_review'"
                       [class.bg-success-light/20]="dispute.status === 'resolved'"
                       [class.text-success-light]="dispute.status === 'resolved'"
-                      [class.bg-error-100]="dispute.status === 'rejected'"
-                      [class.text-error-800]="dispute.status === 'rejected'"
+                      [class.bg-error-bg-hover]="dispute.status === 'rejected'"
+                      [class.text-error-strong]="dispute.status === 'rejected'"
                     >
                       {{ getStatusLabel(dispute.status) }}
                     </span>
@@ -74,7 +74,7 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
 
               <!-- Evidence Section -->
               @if (disputeEvidenceMap().has(dispute.id)) {
-                <div class="mt-3 pt-3 border-t border-border-default dark:border-border-subtle">
+                <div class="mt-3 pt-3 border-t border-border-default dark:border-border-muted">
                   <p class="text-xs font-medium text-text-secondary dark:text-text-muted mb-2">
                     Evidencia ({{ disputeEvidenceMap().get(dispute.id)!.length }})
                   </p>
@@ -90,7 +90,7 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
 
               <!-- Resolution Info -->
               @if (dispute.resolved_at) {
-                <div class="mt-3 pt-3 border-t border-border-default dark:border-border-subtle">
+                <div class="mt-3 pt-3 border-t border-border-default dark:border-border-muted">
                   <p class="text-xs text-text-secondary dark:text-text-muted">
                     Resuelto el {{ formatDate(dispute.resolved_at) }}
                   </p>

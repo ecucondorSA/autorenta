@@ -27,7 +27,7 @@ import { ToastService } from '../../../core/services/toast.service';
             [(ngModel)]="limit"
             min="1"
             max="100"
-            class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 shadow-sm focus:border-cta-default focus:outline-none focus:ring-cta-default"
+            class="mt-1 block w-full rounded-md border border-border-muted px-3 py-2 shadow-sm focus:border-cta-default focus:outline-none focus:ring-cta-default"
           />
           <p class="mt-1 text-xs text-text-secondary">
             Número de registros de muestra a incluir por tabla (1-100)
@@ -62,7 +62,7 @@ import { ToastService } from '../../../core/services/toast.service';
         </button>
 
         @if (error()) {
-          <div class="mt-4 rounded-lg bg-error-50 p-4 text-error-800">
+          <div class="mt-4 rounded-lg bg-error-bg p-4 text-error-strong">
             <p class="font-medium">Error al exportar</p>
             <p class="text-sm">{{ error() }}</p>
           </div>

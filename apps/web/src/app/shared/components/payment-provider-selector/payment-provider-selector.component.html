@@ -24,7 +24,7 @@
       [class.ring-2]="selectedProvider() === 'mercadopago'"
       [class.ring-blue-600]="selectedProvider() === 'mercadopago'"
       [class.border-border-default]="selectedProvider() !== 'mercadopago'"
-      [class.hover:border-border-subtle]="selectedProvider() !== 'mercadopago'"
+      [class.hover:border-border-muted]="selectedProvider() !== 'mercadopago'"
       (click)="selectProvider('mercadopago')"
     >
       <div class="flex items-start">
@@ -82,7 +82,7 @@
       [class.ring-2]="selectedProvider() === 'paypal'"
       [class.ring-blue-600]="selectedProvider() === 'paypal'"
       [class.border-border-default]="selectedProvider() !== 'paypal'"
-      [class.hover:border-border-subtle]="selectedProvider() !== 'paypal'"
+      [class.hover:border-border-muted]="selectedProvider() !== 'paypal'"
       (click)="selectProvider('paypal')"
     >
       <div class="flex items-start">

@@ -203,7 +203,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       <!-- Error State -->
       <div
         *ngIf="error()"
-        class="mt-4 p-4 bg-error-50 border border-error-200 rounded-lg text-sm text-error-800"
+        class="mt-4 p-4 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
       >
         {{ error() }}
       </div>

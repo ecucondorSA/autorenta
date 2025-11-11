@@ -16,6 +16,8 @@ import { PaymentsService } from '../../../core/services/payments.service';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { LocationService } from '../../../core/services/location.service';
 import { RiskCalculatorService } from '../../../core/services/risk-calculator.service';
+import { ProfileService } from '../../../core/services/profile.service';
+import { getAgeFromProfile } from '../../../shared/utils/age-calculator';
 import {
   MercadoPagoBookingGateway,
   type MercadoPagoPreferenceResponse,
@@ -101,6 +103,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private paymentAuthService = inject(PaymentAuthorizationService);
   private walletService = inject(WalletService);
   private bookingsService = inject(BookingsService);
+  private profileService = inject(ProfileService);
   private supabaseClient = inject(SupabaseClientService).getClient();
 
   // ✅ NUEVO: Servicios para procesamiento de pago final
@@ -1009,7 +1012,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         dailyPriceUsd: pricing.totalUsd / (calculateTotalDays(input.startDate, input.endDate) || 1),
         securityDepositUsd: risk.creditSecurityUsd,
         vehicleValueUsd: risk.vehicleValueUsd,
-        driverAge: 30, // TODO: Obtener edad real del usuario
+        // ✅ IMPLEMENTADO: Cálculo real de edad desde profile
+        // Fallback a 30 si date_of_birth no está configurado
+        driverAge: await this.getDriverAge(),
         coverageType: risk.coverageUpgrade || 'standard',
         paymentMode: this.paymentMode(),
         totalUsd: pricing.totalUsd,
@@ -1369,4 +1374,18 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       return '🔒 Reserva protegida con franquicia';
     }
   });
+
+  /**
+   * ✅ DRIVER AGE: Obtiene edad real del conductor desde su perfil
+   * Usa fecha de nacimiento si está configurada, caso contrario fallback a 30
+   */
+  private async getDriverAge(): Promise<number> {
+    try {
+      const profile = await this.profileService.getCurrentProfile();
+      return getAgeFromProfile(profile, 30);
+    } catch (error) {
+      console.warn('[BookingDetailPayment] Error getting driver age, using fallback:', error);
+      return 30;
+    }
+  }
 }

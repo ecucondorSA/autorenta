@@ -86,7 +86,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <!-- Error Message -->
           <div
             *ngIf="error()"
-            class="p-3 bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-xl text-sm text-error-700 dark:text-error-400"
+            class="p-3 bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-xl text-sm text-error-strong"
           >
             {{ error() }}
           </div>

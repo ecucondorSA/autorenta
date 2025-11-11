@@ -15,10 +15,10 @@ import { Booking } from '../../../core/models';
   template: `
     <div
       *ngIf="booking"
-      class="rounded-lg border border-border-default dark:border-border-subtle bg-surface-raised dark:bg-surface-secondary shadow-sm"
+      class="rounded-lg border border-border-default dark:border-border-muted bg-surface-raised dark:bg-surface-secondary shadow-sm"
     >
       <!-- Header -->
-      <div class="p-4 border-b border-border-default dark:border-border-subtle">
+      <div class="p-4 border-b border-border-default dark:border-border-muted">
         <h3
           class="text-lg font-semibold text-text-primary dark:text-text-inverse flex items-center gap-2"
         >
@@ -114,7 +114,7 @@ import { Booking } from '../../../core/models';
         <!-- Divider -->
         <div class="relative">
           <div class="absolute inset-0 flex items-center" aria-hidden="true">
-            <div class="w-full border-t border-border-subtle dark:border-border-default"></div>
+            <div class="w-full border-t border-border-muted dark:border-border-default"></div>
           </div>
           <div class="relative flex justify-center">
             <span
@@ -205,7 +205,7 @@ import { Booking } from '../../../core/models';
         </div>
 
         <!-- Divider -->
-        <div class="border-t border-border-subtle dark:border-border-default"></div>
+        <div class="border-t border-border-muted dark:border-border-default"></div>
 
         <!-- Total Amount -->
         <div class="flex items-center justify-between pt-2">
@@ -226,11 +226,11 @@ import { Booking } from '../../../core/models';
 
         <!-- Important note -->
         <div
-          class="mt-4 p-3 bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800/40 rounded-lg"
+          class="mt-4 p-3 bg-warning-bg dark:bg-warning-900/20 border border-warning-border dark:border-warning-800/40 rounded-lg"
         >
           <div class="flex items-start gap-2">
             <svg
-              class="w-5 h-5 text-warning-600 dark:text-warning-400 flex-shrink-0 mt-0.5"
+              class="w-5 h-5 text-warning-text dark:text-warning-400 flex-shrink-0 mt-0.5"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -241,8 +241,8 @@ import { Booking } from '../../../core/models';
               />
             </svg>
             <div class="flex-1">
-              <p class="text-xs font-medium text-warning-900 dark:text-warning-200">Importante</p>
-              <p class="text-xs text-warning-800 dark:text-warning-300 mt-1">
+              <p class="text-xs font-medium text-warning-strong dark:text-warning-200">Importante</p>
+              <p class="text-xs text-warning-strong dark:text-warning-300 mt-1">
                 El depósito de garantía se devuelve automáticamente al finalizar el alquiler si no
                 hay daños reportados. El monto del alquiler se cobra inmediatamente.
               </p>

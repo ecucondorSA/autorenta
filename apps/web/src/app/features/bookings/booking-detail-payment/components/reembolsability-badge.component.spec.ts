@@ -27,8 +27,8 @@ describe('ReembolsabilityBadgeComponent', () => {
       expect(badge).toBeTruthy();
       expect(badge.textContent).toContain('🔄');
       expect(badge.textContent).toContain('Reembolsable');
-      expect(badge.className).toContain('bg-success-50');
-      expect(badge.className).toContain('text-success-700');
+      expect(badge.className).toContain('bg-success-bg');
+      expect(badge.className).toContain('text-success-strong');
     });
 
     it('debería mostrar tooltip "Se libera automáticamente..." para reembolsable', () => {
@@ -60,8 +60,8 @@ describe('ReembolsabilityBadgeComponent', () => {
       expect(badge).toBeTruthy();
       expect(badge.textContent).toContain('⚠️');
       expect(badge.textContent).toContain('No reembolsable');
-      expect(badge.className).toContain('bg-warning-50');
-      expect(badge.className).toContain('text-warning-700');
+      expect(badge.className).toContain('bg-warning-bg');
+      expect(badge.className).toContain('text-warning-strong');
     });
 
     it('debería mostrar tooltip "Queda como saldo no retirable..." para no-reembolsable', () => {

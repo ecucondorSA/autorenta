@@ -38,7 +38,7 @@ export interface ChatContext {
   template: `
     <!-- WhatsApp-style Chat Container -->
     <div
-      class="whatsapp-chat-container flex h-[600px] flex-col overflow-hidden rounded-lg border border-border-default bg-surface-raised shadow-lg dark:border-border-subtle dark:bg-surface-raised"
+      class="whatsapp-chat-container flex h-[600px] flex-col overflow-hidden rounded-lg border border-border-default bg-surface-raised shadow-lg dark:border-border-muted dark:bg-surface-raised"
     >
       <!-- Header estilo WhatsApp -->
       <div
@@ -97,7 +97,7 @@ export interface ChatContext {
         <div *ngIf="loading()" class="flex h-full items-center justify-center">
           <div class="text-center">
             <div
-              class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-subtle border-t-[#075E54]"
+              class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-muted border-t-[#075E54]"
             ></div>
             <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
               Cargando mensajes...
@@ -108,7 +108,7 @@ export interface ChatContext {
         <!-- Error -->
         <div
           *ngIf="error()"
-          class="mx-4 mt-4 rounded-lg bg-error-100 p-3 text-sm text-error-800 dark:bg-error-900/30 dark:text-error-200"
+          class="mx-4 mt-4 rounded-lg bg-error-bg-hover p-3 text-sm text-error-strong dark:bg-error-900/30 dark:text-error-200"
         >
           ⚠️ {{ error() }}
         </div>

@@ -65,7 +65,7 @@
     </div>
 
     <!-- Campos de daños (si has_damages = true) -->
-    <div *ngIf="form.controls.has_damages.value" class="ml-7 mb-4 space-y-4 p-4 bg-warning-50 dark:bg-warning-900/20 rounded-lg border border-warning-200 dark:border-warning-800">
+    <div *ngIf="form.controls.has_damages.value" class="ml-7 mb-4 space-y-4 p-4 bg-warning-bg dark:bg-warning-900/20 rounded-lg border border-warning-border dark:border-warning-800">
       <!-- Monto de daños -->
       <div>
         <label for="damage_amount" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -80,20 +80,20 @@
           step="0.01"
           placeholder="Ej: 100"
           class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cta-default dark:bg-slate-700 dark:text-text-inverse"
-          [class.border-error-500]="form.controls.damage_amount.touched && form.controls.damage_amount.invalid"
+          [class.border-error-border]="form.controls.damage_amount.touched && form.controls.damage_amount.invalid"
         />
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
           Máximo: $250 USD (monto de la garantía)
         </p>
         <p
           *ngIf="form.controls.damage_amount?.touched && form.controls.damage_amount?.hasError('required')"
-          class="mt-1 text-xs text-error-600 dark:text-error-400"
+          class="mt-1 text-xs text-error-text"
         >
           El monto de daños es requerido
         </p>
         <p
           *ngIf="form.controls.damage_amount?.touched && form.controls.damage_amount?.hasError('max')"
-          class="mt-1 text-xs text-error-600 dark:text-error-400"
+          class="mt-1 text-xs text-error-text"
         >
           El monto no puede exceder $250 USD
         </p>
@@ -110,20 +110,20 @@
           rows="4"
           placeholder="Describe los daños encontrados (rayones, abolladuras, faltantes, etc.)"
           class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cta-default dark:bg-slate-700 dark:text-text-inverse resize-none"
-          [class.border-error-500]="form.controls.damage_description.touched && form.controls.damage_description.invalid"
+          [class.border-error-border]="form.controls.damage_description.touched && form.controls.damage_description.invalid"
         ></textarea>
         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
           Mínimo 10 caracteres. Sé específico con los daños encontrados.
         </p>
         <p
           *ngIf="form.controls.damage_description?.touched && form.controls.damage_description?.hasError('required')"
-          class="mt-1 text-xs text-error-600 dark:text-error-400"
+          class="mt-1 text-xs text-error-text"
         >
           La descripción es requerida cuando hay daños
         </p>
         <p
           *ngIf="form.controls.damage_description?.touched && form.controls.damage_description?.hasError('minlength')"
-          class="mt-1 text-xs text-error-600 dark:text-error-400"
+          class="mt-1 text-xs text-error-text"
         >
           La descripción debe tener al menos 10 caracteres
         </p>
@@ -186,14 +186,14 @@
   </div>
 
   <!-- Mensaje de resultado -->
-  <div *ngIf="message()" class="mt-4 p-4 rounded-lg" [class.bg-success-light/10]="confirmationResult()?.success" [class.dark:bg-success-light/20]="confirmationResult()?.success" [class.bg-error-50]="!confirmationResult()?.success" [class.dark:bg-error-900/20]="!confirmationResult()?.success">
+  <div *ngIf="message()" class="mt-4 p-4 rounded-lg" [class.bg-success-light/10]="confirmationResult()?.success" [class.dark:bg-success-light/20]="confirmationResult()?.success" [class.bg-error-bg]="!confirmationResult()?.success" [class.dark:bg-error-900/20]="!confirmationResult()?.success">
 
 
 
 
 
 
-    <p class="text-sm" [class.text-success-light]="confirmationResult()?.success" [class.dark:text-success-light]="confirmationResult()?.success" [class.text-error-800]="!confirmationResult()?.success" [class.dark:text-error-300]="!confirmationResult()?.success">
+    <p class="text-sm" [class.text-success-light]="confirmationResult()?.success" [class.dark:text-success-light]="confirmationResult()?.success" [class.text-error-strong]="!confirmationResult()?.success" [class.dark:text-error-300]="!confirmationResult()?.success">
       {{ message() }}
     </p>
 

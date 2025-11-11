@@ -34,11 +34,11 @@
   <!-- Pending Deposits Toast Notification -->
   <div
     *ngIf="showPendingDepositsNotification() && hasPendingDeposits()"
-    class="mb-4 bg-warning-50 dark:bg-warning-500/15 border-l-4 border-warning-500 dark:border-warning-500/60 p-4 rounded-r-lg shadow-lg animate-slide-in-right"
+    class="mb-4 bg-warning-bg dark:bg-warning-bg0/15 border-l-4 border-warning-border dark:border-warning-border/60 p-4 rounded-r-lg shadow-lg animate-slide-in-right"
   >
     <div class="flex items-start">
       <svg
-        class="w-6 h-6 text-warning-600 dark:text-warning-100 mt-0.5 flex-shrink-0 animate-pulse"
+        class="w-6 h-6 text-warning-text dark:text-warning-100 mt-0.5 flex-shrink-0 animate-pulse"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -51,14 +51,14 @@
         ></path>
       </svg>
       <div class="ml-3 flex-1">
-        <h3 class="text-sm font-medium text-warning-900 dark:text-warning-100">
+        <h3 class="text-sm font-medium text-warning-strong dark:text-warning-100">
           {{
             pendingDeposits() === 1
               ? 'Tienes 1 depósito pendiente'
               : 'Tienes ' + pendingDeposits() + ' depósitos pendientes'
           }}
         </h3>
-        <p class="text-sm text-warning-700 dark:text-warning-100 mt-1">
+        <p class="text-sm text-warning-strong dark:text-warning-100 mt-1">
           {{
             pendingDeposits() === 1
               ? 'Tu depósito está siendo procesado'
@@ -69,7 +69,7 @@
         <button
           type="button"
           (click)="retry()"
-          class="mt-2 text-xs font-medium text-warning-900 dark:text-warning-100 hover:text-warning-700 dark:hover:text-ivory-luminous underline"
+          class="mt-2 text-xs font-medium text-warning-strong dark:text-warning-100 hover:text-warning-strong dark:hover:text-ivory-luminous underline"
         >
           Actualizar ahora
         </button>
@@ -78,7 +78,7 @@
       <button
         type="button"
         (click)="dismissPendingNotification()"
-        class="ml-2 text-warning-600 dark:text-warning-100 hover:text-warning-900 dark:hover:text-ivory-luminous transition-colors"
+        class="ml-2 text-warning-text dark:text-warning-100 hover:text-warning-strong dark:hover:text-ivory-luminous transition-colors"
         aria-label="Cerrar notificación"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,11 +104,11 @@
   <!-- Error State -->
   <div *ngIf="error() && !isLoadingBalance()" class="text-center py-8">
     <div
-      class="bg-error-50 dark:bg-error-500/10 border border-error-500 dark:border-error-500/40 rounded-lg p-4 mb-4"
+      class="bg-error-bg dark:bg-error-bg0/10 border border-error-border dark:border-error-border/40 rounded-lg p-4 mb-4"
     >
       <div class="flex items-start">
         <svg
-          class="w-6 h-6 text-error-600 dark:text-error-100 mt-0.5"
+          class="w-6 h-6 text-error-text mt-0.5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -121,10 +121,10 @@
           ></path>
         </svg>
         <div class="ml-3 flex-1">
-          <h3 class="text-sm font-medium text-error-900 dark:text-error-100">
+          <h3 class="text-sm font-medium text-error-strong">
             Error al cargar el balance
           </h3>
-          <p class="text-xs text-error-700 dark:text-error-100 mt-1">{{ error() }}</p>
+          <p class="text-xs text-error-strong mt-1">{{ error() }}</p>
         </div>
       </div>
     </div>
@@ -153,12 +153,12 @@
     <div class="grid grid-cols-2 gap-4">
       <!-- Available Balance -->
       <div
-        class="bg-success-50 dark:bg-success-500/15 rounded-xl p-4 border border-success-500 dark:border-success-500/40"
+        class="bg-success-bg dark:bg-success-bg0/15 rounded-xl p-4 border border-success-border dark:border-success-border/40"
       >
         <div class="flex items-center justify-between mb-2">
-          <p class="text-xs text-success-700 dark:text-success-100 font-medium">Disponible</p>
+          <p class="text-xs text-success-strong dark:text-success-100 font-medium">Disponible</p>
           <svg
-            class="w-5 h-5 text-success-600 dark:text-success-100"
+            class="w-5 h-5 text-success-text dark:text-success-100"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -172,21 +172,21 @@
           </svg>
         </div>
         <p
-          class="text-2xl font-bold text-success-900 dark:text-success-100"
+          class="text-2xl font-bold text-success-strong dark:text-success-100"
           data-testid="available-balance"
         >
           {{ formatCurrency(availableBalance()) }}
         </p>
-        <p class="text-xs text-success-700 dark:text-success-100/80 mt-1">
+        <p class="text-xs text-success-strong dark:text-success-100/80 mt-1">
           Fondos totales listos para usar
         </p>
 
         <div class="mt-3 space-y-2">
           <div
-            class="flex items-center justify-between text-xs text-success-700 dark:text-success-100"
+            class="flex items-center justify-between text-xs text-success-strong dark:text-success-100"
           >
             <span>Retirable</span>
-            <span class="font-semibold text-success-900 dark:text-success-100">{{
+            <span class="font-semibold text-success-strong dark:text-success-100">{{
               formatCurrency(withdrawableBalance())
             }}</span>
           </div>
@@ -215,13 +215,13 @@
 
       <!-- Locked Balance -->
       <div
-        class="bg-warning-50 dark:bg-warning-500/15 rounded-xl p-4 border border-warning-500 dark:border-warning-500/40"
+        class="bg-warning-bg dark:bg-warning-bg0/15 rounded-xl p-4 border border-warning-border dark:border-warning-border/40"
         data-testid="locked-balance-card"
       >
         <div class="flex items-center justify-between mb-2">
-          <p class="text-xs text-warning-700 dark:text-warning-100 font-medium">Bloqueado</p>
+          <p class="text-xs text-warning-strong dark:text-warning-100 font-medium">Bloqueado</p>
           <svg
-            class="w-5 h-5 text-warning-600 dark:text-warning-100"
+            class="w-5 h-5 text-warning-text dark:text-warning-100"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -235,12 +235,12 @@
           </svg>
         </div>
         <p
-          class="text-2xl font-bold text-warning-900 dark:text-warning-100"
+          class="text-2xl font-bold text-warning-strong dark:text-warning-100"
           data-testid="locked-balance"
         >
           {{ formatCurrency(lockedBalance()) }}
         </p>
-        <p class="text-xs text-warning-700 dark:text-warning-100/80 mt-1">En reservas</p>
+        <p class="text-xs text-warning-strong dark:text-warning-100/80 mt-1">En reservas</p>
       </div>
     </div>
 
@@ -353,14 +353,14 @@
           </div>
         </div>
         <div
-          class="text-xs text-warning-900 dark:text-warning-100 mt-4 p-3 bg-warning-50 dark:bg-warning-500/15 rounded-lg border border-warning-500 dark:border-warning-500/40"
+          class="text-xs text-warning-strong dark:text-warning-100 mt-4 p-3 bg-warning-bg dark:bg-warning-bg0/15 rounded-lg border border-warning-border dark:border-warning-border/40"
         >
           <p class="font-semibold mb-1">Importante:</p>
           <p>
             Enviá el comprobante a
             <a
               href="mailto:{{ bankDetails.email }}"
-              class="underline font-semibold hover:text-warning-700 dark:hover:text-ivory-luminous"
+              class="underline font-semibold hover:text-warning-strong dark:hover:text-ivory-luminous"
               >{{ bankDetails.email }}</a
             >
             indicando tu email de cuenta. La acreditación se realiza en horario hábil (Lun-Vie

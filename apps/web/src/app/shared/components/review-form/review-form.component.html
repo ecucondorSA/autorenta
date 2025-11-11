@@ -83,7 +83,7 @@
         id="comment_public"
         formControlName="comment_public"
         rows="4"
-        class="w-full px-3 py-2 border border-border-subtle rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none transition-all"
+        class="w-full px-3 py-2 border border-border-muted rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none transition-all"
         [class.border-error-300]="
           reviewForm.get('comment_public')?.invalid && reviewForm.get('comment_public')?.touched
         "
@@ -91,7 +91,7 @@
         maxlength="1000"
       ></textarea>
       <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-right">
-        <span [class.text-error-600]="(reviewForm.get('comment_public')?.value?.length || 0) > 1000">
+        <span [class.text-error-text]="(reviewForm.get('comment_public')?.value?.length || 0) > 1000">
           {{ reviewForm.get('comment_public')?.value?.length || 0 }} / 1000 caracteres
         </span>
       </p>
@@ -109,7 +109,7 @@
         id="comment_private"
         formControlName="comment_private"
         rows="3"
-        class="w-full px-3 py-2 border border-border-subtle rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none"
+        class="w-full px-3 py-2 border border-border-muted rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none"
         placeholder="Comentarios privados para {{ revieweeName }}..."
         maxlength="500"
       ></textarea>
@@ -119,10 +119,10 @@
     </div>
 
     <!-- Info Note -->
-    <div class="bg-warning-50 border border-warning-200 rounded-lg p-4 mb-6">
+    <div class="bg-warning-bg border border-warning-border rounded-lg p-4 mb-6">
       <div class="flex">
         <svg
-          class="w-5 h-5 text-warning-600 mr-2 flex-shrink-0 mt-0.5"
+          class="w-5 h-5 text-warning-text mr-2 flex-shrink-0 mt-0.5"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -132,7 +132,7 @@
             clip-rule="evenodd"
           />
         </svg>
-        <p class="text-sm text-warning-800">
+        <p class="text-sm text-warning-strong">
           Tu calificación será publicada cuando ambas partes hayan completado sus reviews, o después
           de 14 días. Esto evita represalias y garantiza opiniones honestas.
         </p>
@@ -144,7 +144,7 @@
       <button
         type="button"
         (click)="onCancel()"
-        class="px-6 py-2 border border-border-subtle rounded-lg text-text-primary hover:bg-surface-base transition-colors"
+        class="px-6 py-2 border border-border-muted rounded-lg text-text-primary hover:bg-surface-base transition-colors"
         [disabled]="isSubmitting"
       >
         Cancelar

@@ -38,12 +38,23 @@
         <div class="mb-6">
           @if (paymentStatus() === 'pending') {
             <ion-card color="warning">
-              <ion-card-content class="flex items-center">
-                <ion-spinner name="crescent" class="mr-3"></ion-spinner>
-                <div>
-                  <h3 class="font-semibold">Verificando pago...</h3>
-                  <p class="text-sm">Esperando confirmación de MercadoPago</p>
+              <ion-card-content>
+                <div class="flex items-center mb-2">
+                  <ion-spinner name="crescent" class="mr-3"></ion-spinner>
+                  <div class="flex-1">
+                    <h3 class="font-semibold">Verificando pago...</h3>
+                    <p class="text-sm">Esperando confirmación de MercadoPago</p>
+                  </div>
                 </div>
+                @if (pollProgress() > 0) {
+                  <div class="mt-2">
+                    <div class="flex justify-between text-xs text-text-secondary mb-1">
+                      <span>Intento {{ pollAttempts }} de {{ MAX_POLL_ATTEMPTS }}</span>
+                      <span>{{ pollProgress() }}%</span>
+                    </div>
+                    <ion-progress-bar [value]="pollProgress() / 100" color="warning"></ion-progress-bar>
+                  </div>
+                }
               </ion-card-content>
             </ion-card>
           } @else if (paymentStatus() === 'completed') {
@@ -70,15 +81,21 @@
             </ion-card>
           } @else if (paymentStatus() === 'timeout') {
             <ion-card color="warning">
-              <ion-card-content class="flex items-center">
-                <ion-icon name="time-outline" class="text-3xl mr-3"></ion-icon>
-                <div>
-                  <h3 class="font-semibold">Verificación en proceso</h3>
-                  <p class="text-sm">
-                    El pago puede tardar unos minutos en confirmarse. Revisa tu email o consulta el
-                    detalle de la reserva más tarde.
-                  </p>
+              <ion-card-content>
+                <div class="flex items-center mb-3">
+                  <ion-icon name="time-outline" class="text-3xl mr-3"></ion-icon>
+                  <div>
+                    <h3 class="font-semibold">Verificación en proceso</h3>
+                    <p class="text-sm">
+                      El pago puede tardar unos minutos en confirmarse. Revisa tu email o consulta el
+                      detalle de la reserva más tarde.
+                    </p>
+                  </div>
                 </div>
+                <ion-button size="small" fill="clear" (click)="retryPolling()">
+                  <ion-icon name="refresh-outline" slot="start"></ion-icon>
+                  Reintentar verificación
+                </ion-button>
               </ion-card-content>
             </ion-card>
           }
@@ -117,7 +134,7 @@
           <div class="space-y-4">
             <!-- Car Info -->
             <div
-              class="flex items-center space-x-4 pb-4 border-b border-border-default dark:border-border-subtle"
+              class="flex items-center space-x-4 pb-4 border-b border-border-default dark:border-border-muted"
             >
               <div
                 class="w-24 h-24 bg-surface-hover dark:bg-surface-base rounded-lg flex items-center justify-center"
@@ -154,7 +171,7 @@
             </div>
 
             <!-- Total -->
-            <div class="detail-row pt-4 border-t border-border-default dark:border-border-subtle">
+            <div class="detail-row pt-4 border-t border-border-default dark:border-border-muted">
               <span class="label font-semibold">
                 <ion-icon name="cash-outline"></ion-icon>
                 Total Pagado:

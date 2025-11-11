@@ -23,7 +23,7 @@
 
   <!-- Empty State -->
   @if (!loading && accounts.length === 0) {
-    <div class="text-center py-12 bg-surface-base rounded-2xl border-2 border-dashed border-border-subtle">
+    <div class="text-center py-12 bg-surface-base rounded-2xl border-2 border-dashed border-border-muted">
       <svg
         class="mx-auto h-12 w-12 text-text-muted dark:text-text-secondary"
         fill="none"
@@ -110,7 +110,7 @@
 
               @if (confirmingDelete() === account.id) {
                 <div class="flex flex-col gap-1">
-                  <p class="text-xs text-error-600 font-semibold">¿Confirmar?</p>
+                  <p class="text-xs text-error-text font-semibold">¿Confirmar?</p>
                   <div class="flex gap-1">
                     <button
                       (click)="onConfirmDelete(account.id)"
@@ -120,7 +120,7 @@
                     </button>
                     <button
                       (click)="onCancelDelete()"
-                      class="px-2 py-1 text-xs border border-border-subtle text-text-primary rounded hover:bg-surface-base transition"
+                      class="px-2 py-1 text-xs border border-border-muted text-text-primary rounded hover:bg-surface-base transition"
                     >
                       Cancelar
                     </button>
@@ -129,7 +129,7 @@
               } @else {
                 <button
                   (click)="onDeleteClick(account.id)"
-                  class="px-3 py-1 text-xs border border-error-300 text-error-600 rounded-lg hover:bg-error-50 transition"
+                  class="px-3 py-1 text-xs border border-error-300 text-error-text rounded-lg hover:bg-error-bg transition"
                 >
                   Eliminar
                 </button>

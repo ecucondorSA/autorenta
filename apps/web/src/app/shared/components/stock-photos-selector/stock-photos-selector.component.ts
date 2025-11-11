@@ -17,19 +17,19 @@ import { ToastService } from '../../../core/services/toast.service';
             type="text"
             [(ngModel)]="brand"
             placeholder="Marca (ej: Toyota)"
-            class="flex-1 px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="flex-1 px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="text"
             [(ngModel)]="model"
             placeholder="Modelo (ej: Corolla)"
-            class="flex-1 px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="flex-1 px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="number"
             [(ngModel)]="year"
             placeholder="Año"
-            class="w-24 px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="w-24 px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
         </div>
         <button

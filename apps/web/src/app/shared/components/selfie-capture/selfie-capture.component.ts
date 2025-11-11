@@ -187,7 +187,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             *ngIf="hasVideo() && !processing()"
             type="button"
             (click)="retake()"
-            class="px-6 py-3 bg-surface-raised border border-border-subtle text-text-primary rounded-lg font-medium hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 transition-all"
+            class="px-6 py-3 bg-surface-raised border border-border-muted text-text-primary rounded-lg font-medium hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 transition-all"
           >
             Volver a Grabar
           </button>
@@ -218,7 +218,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         <!-- Error Message -->
         <div
           *ngIf="error()"
-          class="p-4 bg-error-50 border border-error-200 rounded-lg text-sm text-error-800"
+          class="p-4 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
         >
           {{ error() }}
           <button

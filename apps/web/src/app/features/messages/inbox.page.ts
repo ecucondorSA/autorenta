@@ -43,7 +43,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
           <div class="flex h-96 items-center justify-center">
             <div class="text-center">
               <div
-                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-subtle border-t-blue-500"
+                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500"
               ></div>
               <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
                 Cargando conversaciones...
@@ -51,8 +51,8 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
             </div>
           </div>
         } @else if (error()) {
-          <div class="rounded-lg bg-error-50 p-4 dark:bg-error-900/20">
-            <p class="text-sm text-error-800 dark:text-error-200">{{ error() }}</p>
+          <div class="rounded-lg bg-error-bg p-4 dark:bg-error-900/20">
+            <p class="text-sm text-error-strong">{{ error() }}</p>
           </div>
         } @else if (conversations().length === 0) {
           <!-- Empty state -->
@@ -83,7 +83,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
             @for (conv of conversations(); track conv.id) {
               <button
                 (click)="openConversation(conv)"
-                class="group w-full rounded-lg border border-border-default bg-surface-raised p-4 text-left transition-all hover:shadow-md dark:border-border-subtle dark:bg-surface-base"
+                class="group w-full rounded-lg border border-border-default bg-surface-raised p-4 text-left transition-all hover:shadow-md dark:border-border-muted dark:bg-surface-base"
                 type="button"
               >
                 <div class="flex items-start gap-4">

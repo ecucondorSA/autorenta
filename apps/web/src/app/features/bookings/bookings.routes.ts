@@ -33,6 +33,11 @@ export const BOOKINGS_ROUTES: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'urgent/:carId',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./urgent-booking/urgent-booking.page').then((m) => m.UrgentBookingPage),
+  },
+  {
     path: ':id/check-in',
     canActivate: [AuthGuard],
     loadComponent: () => import('./check-in/check-in.page').then((m) => m.CheckInPage),

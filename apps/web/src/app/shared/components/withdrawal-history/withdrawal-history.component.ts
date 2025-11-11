@@ -35,12 +35,12 @@ export class WithdrawalHistoryComponent {
 
   getStatusClass(status: WithdrawalStatus): string {
     const classes: Record<WithdrawalStatus, string> = {
-      pending: 'bg-warning-100 text-warning-900',
+      pending: 'bg-warning-bg-hover text-warning-strong',
       approved: 'bg-cta-default/20 text-cta-default',
       processing: 'bg-cta-default/20 text-cta-default',
-      completed: 'bg-success-100 text-success-900',
-      failed: 'bg-error-100 text-error-900',
-      rejected: 'bg-error-100 text-error-900',
+      completed: 'bg-success-bg-hover text-success-strong',
+      failed: 'bg-error-bg-hover text-error-strong',
+      rejected: 'bg-error-bg-hover text-error-strong',
       cancelled: 'bg-neutral-100 text-neutral-900',
     };
     return classes[status] || 'bg-neutral-100 text-neutral-900';

@@ -22,10 +22,10 @@ import { RefundService } from '../../../core/services/refund.service';
               class="rounded-full px-2 py-1 text-xs font-medium"
               [class.bg-success-light/20]="status.refund_status === 'approved'"
               [class.text-success-light]="status.refund_status === 'approved'"
-              [class.bg-warning-100]="status.refund_status === 'pending'"
-              [class.text-warning-800]="status.refund_status === 'pending'"
-              [class.bg-error-100]="status.refund_status === 'rejected'"
-              [class.text-error-800]="status.refund_status === 'rejected'"
+              [class.bg-warning-bg-hover]="status.refund_status === 'pending'"
+              [class.text-warning-strong]="status.refund_status === 'pending'"
+              [class.bg-error-bg-hover]="status.refund_status === 'rejected'"
+              [class.text-error-strong]="status.refund_status === 'rejected'"
             >
               {{ getStatusLabel(status.refund_status || 'pending') }}
             </span>
@@ -58,7 +58,7 @@ import { RefundService } from '../../../core/services/refund.service';
       }
     }
     @if (error()) {
-      <div class="rounded-lg bg-error-50 p-4 text-sm text-error-800">
+      <div class="rounded-lg bg-error-bg p-4 text-sm text-error-strong">
         {{ error() }}
       </div>
     }

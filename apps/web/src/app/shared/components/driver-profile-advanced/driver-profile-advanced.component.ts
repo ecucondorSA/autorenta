@@ -53,7 +53,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
               <div
                 class="rounded-lg border p-4"
                 [class.bg-success-light/10]="benefit.is_discount"
-                [class.bg-error-50]="!benefit.is_discount && benefit.fee_multiplier > 1"
+                [class.bg-error-bg]="!benefit.is_discount && benefit.fee_multiplier > 1"
                 [class.bg-surface-base]="benefit.fee_multiplier === 1"
               >
                 <div class="flex items-center justify-between">
@@ -70,10 +70,10 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
                         -{{ benefit.guarantee_discount_pct }}% garantía
                       </p>
                     } @else if (benefit.fee_multiplier > 1) {
-                      <p class="text-sm font-medium text-error-600">
+                      <p class="text-sm font-medium text-error-text">
                         +{{ roundPercent((benefit.fee_multiplier - 1) * 100) }}% fee
                       </p>
-                      <p class="text-xs text-error-600">
+                      <p class="text-xs text-error-text">
                         +{{ roundPercent((benefit.guarantee_multiplier - 1) * 100) }}% garantía
                       </p>
                     } @else {
@@ -96,7 +96,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
             <select
               [(ngModel)]="claimSeverity"
               (change)="calculateImpact()"
-              class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
+              class="mt-1 block w-full rounded-md border border-border-muted px-3 py-2 text-sm"
             >
               <option [value]="1">Leve</option>
               <option [value]="2">Moderado</option>
@@ -115,13 +115,13 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
             </label>
           </div>
           @if (impact(); as i) {
-            <div class="rounded-lg bg-warning-50 p-4">
-              <p class="text-sm font-medium text-warning-800">Impacto Estimado:</p>
-              <p class="mt-1 text-sm text-warning-700">
+            <div class="rounded-lg bg-warning-bg p-4">
+              <p class="text-sm font-medium text-warning-strong">Impacto Estimado:</p>
+              <p class="mt-1 text-sm text-warning-strong">
                 Clase actual: {{ i.currentClass }} → Nueva clase: {{ i.newClass }}
               </p>
               @if (i.classIncrease > 0) {
-                <p class="mt-1 text-sm text-error-600">Aumento de clase: +{{ i.classIncrease }}</p>
+                <p class="mt-1 text-sm text-error-text">Aumento de clase: +{{ i.classIncrease }}</p>
               } @else {
                 <p class="mt-1 text-sm text-success-light">Sin cambio de clase</p>
               }

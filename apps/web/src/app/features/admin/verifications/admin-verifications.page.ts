@@ -14,6 +14,7 @@ import {
   VerificationQueueItem,
   VerificationStats,
 } from '@core/services/admin.service';
+import { ToastService } from '@core/services/toast.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 type VerificationFilterType = 'all' | 'level_2' | 'level_3';
@@ -29,6 +30,7 @@ type VerificationFilterStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'all';
 })
 export class AdminVerificationsPage implements OnInit {
   private readonly adminService = inject(AdminService);
+  private readonly toastService = inject(ToastService);
 
   // State signals
   private readonly verificationsSignal = signal<VerificationQueueItem[]>([]);
@@ -90,7 +92,7 @@ export class AdminVerificationsPage implements OnInit {
       if (!append) {
         this.verificationsSignal.set([]);
       }
-      alert('Error al cargar verificaciones. Por favor, intenta nuevamente.');
+      this.toastService.error('Error al cargar', 'No se pudieron cargar las verificaciones', 4000);
     } finally {
       this.loadingSignal.set(false);
     }
@@ -155,7 +157,7 @@ export class AdminVerificationsPage implements OnInit {
       const notes = this.actionNotesSignal();
       await this.adminService.approveVerification(verification.user_id, level, notes || undefined);
 
-      alert('✅ Verificación aprobada exitosamente. El usuario ha sido notificado por email.');
+      this.toastService.success('Verificación aprobada', 'El usuario ha sido notificado por email', 4000);
 
       this.closeModal();
       await Promise.all([this.loadVerifications(), this.loadStats()]);
@@ -182,9 +184,7 @@ export class AdminVerificationsPage implements OnInit {
     try {
       await this.adminService.rejectVerification(verification.user_id, level, reason);
 
-      alert(
-        '⚠️ Verificación rechazada. El usuario ha sido notificado por email con las instrucciones.',
-      );
+      this.toastService.warning('Verificación rechazada', 'El usuario ha sido notificado por email', 4000);
 
       this.closeModal();
       await Promise.all([this.loadVerifications(), this.loadStats()]);
@@ -272,8 +272,8 @@ export class AdminVerificationsPage implements OnInit {
   getScoreColor(score: number | undefined): string {
     if (!score) return 'text-text-secondary';
     if (score >= 80) return 'text-success-light';
-    if (score >= 60) return 'text-warning-600';
-    return 'text-error-600';
+    if (score >= 60) return 'text-warning-text';
+    return 'text-error-text';
   }
 
   getScoreBadge(score: number | undefined): string {

@@ -25,7 +25,7 @@ import { environment } from '../../../../../environments/environment';
             <select
               [(ngModel)]="filters.severity"
               (change)="loadLogs()"
-              class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
+              class="mt-1 block w-full rounded-md border border-border-muted px-3 py-2 text-sm"
             >
               <option value="">Todas</option>
               <option value="low">Baja</option>
@@ -39,7 +39,7 @@ import { environment } from '../../../../../environments/environment';
             <select
               [(ngModel)]="filters.auditType"
               (change)="loadLogs()"
-              class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
+              class="mt-1 block w-full rounded-md border border-border-muted px-3 py-2 text-sm"
             >
               <option value="">Todos</option>
               <option value="balance_check">Verificación de Balance</option>
@@ -52,7 +52,7 @@ import { environment } from '../../../../../environments/environment';
             <select
               [(ngModel)]="filters.resolutionStatus"
               (change)="loadLogs()"
-              class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
+              class="mt-1 block w-full rounded-md border border-border-muted px-3 py-2 text-sm"
             >
               <option value="">Todos</option>
               <option value="open">Abierto</option>
@@ -83,9 +83,9 @@ import { environment } from '../../../../../environments/environment';
           @for (log of logs().data; track log.id) {
             <div
               class="rounded-lg border p-4"
-              [class.bg-error-50]="log.severity === 'critical'"
+              [class.bg-error-bg]="log.severity === 'critical'"
               [class.bg-warning-light/10]="log.severity === 'high'"
-              [class.bg-warning-50]="log.severity === 'medium'"
+              [class.bg-warning-bg]="log.severity === 'medium'"
               [class.bg-cta-default/10]="log.severity === 'low'"
             >
               <div class="flex items-start justify-between">
@@ -93,12 +93,12 @@ import { environment } from '../../../../../environments/environment';
                   <div class="mb-2 flex items-center gap-2">
                     <span
                       class="rounded-full px-2 py-1 text-xs font-medium"
-                      [class.bg-error-100]="log.severity === 'critical'"
-                      [class.text-error-800]="log.severity === 'critical'"
+                      [class.bg-error-bg-hover]="log.severity === 'critical'"
+                      [class.text-error-strong]="log.severity === 'critical'"
                       [class.bg-warning-light/20]="log.severity === 'high'"
                       [class.text-warning-light]="log.severity === 'high'"
-                      [class.bg-warning-100]="log.severity === 'medium'"
-                      [class.text-warning-800]="log.severity === 'medium'"
+                      [class.bg-warning-bg-hover]="log.severity === 'medium'"
+                      [class.text-warning-strong]="log.severity === 'medium'"
                       [class.bg-cta-default/20]="log.severity === 'low'"
                       [class.text-cta-default]="log.severity === 'low'"
                     >
@@ -135,7 +135,7 @@ import { environment } from '../../../../../environments/environment';
               <button
                 (click)="previousPage()"
                 [disabled]="currentPage() === 1"
-                class="rounded-lg border border-border-subtle px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base disabled:opacity-50"
+                class="rounded-lg border border-border-muted px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base disabled:opacity-50"
               >
                 Anterior
               </button>
@@ -145,7 +145,7 @@ import { environment } from '../../../../../environments/environment';
               <button
                 (click)="nextPage()"
                 [disabled]="currentPage() === logs().totalPages"
-                class="rounded-lg border border-border-subtle px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base disabled:opacity-50"
+                class="rounded-lg border border-border-muted px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base disabled:opacity-50"
               >
                 Siguiente
               </button>

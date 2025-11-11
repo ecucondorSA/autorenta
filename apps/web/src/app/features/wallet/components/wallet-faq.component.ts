@@ -13,7 +13,7 @@ interface FaqItem {
   imports: [CommonModule],
   template: `
     <div
-      class="bg-surface-raised dark:bg-surface-raised rounded-xl shadow-sm border border-border-default dark:border-border-subtle p-6"
+      class="bg-surface-raised dark:bg-surface-raised rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6"
     >
       <!-- Header -->
       <div class="mb-6">
@@ -29,7 +29,7 @@ interface FaqItem {
       <div class="space-y-3">
         <div
           *ngFor="let item of faqItems(); let i = index"
-          class="border border-border-default dark:border-border-subtle rounded-lg overflow-hidden transition-all duration-200"
+          class="border border-border-default dark:border-border-muted rounded-lg overflow-hidden transition-all duration-200"
           [class.ring-2]="item.expanded"
           [class.ring-cta-default]="item.expanded"
         >
@@ -61,7 +61,7 @@ interface FaqItem {
           <!-- Answer -->
           <div
             *ngIf="item.expanded"
-            class="px-4 pb-4 pt-2 bg-border-default/10 dark:bg-surface-base/50 border-t border-border-default dark:border-border-subtle"
+            class="px-4 pb-4 pt-2 bg-border-default/10 dark:bg-surface-base/50 border-t border-border-default dark:border-border-muted"
           >
             <p
               class="text-sm text-text-secondary dark:text-text-secondary leading-relaxed"
@@ -124,7 +124,7 @@ export class WalletFaqComponent {
           <li><strong>Transferencia bancaria</strong>: Desde tu cuenta bancaria (demora 24-48hs)</li>
           <li><strong>Efectivo</strong>: En puntos de pago habilitados (PagoFácil, RapiPago, etc.)</li>
         </ul>
-        <p class="mt-2 text-xs text-warning-700 dark:text-warning-500">⚠️ Los fondos cargados en efectivo <strong>no son retirables</strong>, pero sí reutilizables para reservas.</p>`,
+        <p class="mt-2 text-xs text-warning-strong dark:text-warning-500">⚠️ Los fondos cargados en efectivo <strong>no son retirables</strong>, pero sí reutilizables para reservas.</p>`,
       expanded: false,
     },
     {
@@ -189,31 +189,31 @@ export class WalletFaqComponent {
         <table class="w-full text-xs mt-2 border-collapse">
           <thead>
             <tr class="bg-border-default/30 dark:bg-surface-base">
-              <th class="border border-border-default dark:border-border-subtle px-2 py-1 text-left">Característica</th>
-              <th class="border border-border-default dark:border-border-subtle px-2 py-1">Wallet</th>
-              <th class="border border-border-default dark:border-border-subtle px-2 py-1">Tarjeta</th>
+              <th class="border border-border-default dark:border-border-muted px-2 py-1 text-left">Característica</th>
+              <th class="border border-border-default dark:border-border-muted px-2 py-1">Wallet</th>
+              <th class="border border-border-default dark:border-border-muted px-2 py-1">Tarjeta</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1"><strong>Confirmación</strong></td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">⚡ Instantánea</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">⏱️ 1-2 min</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1"><strong>Confirmación</strong></td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">⚡ Instantánea</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">⏱️ 1-2 min</td>
             </tr>
             <tr class="bg-border-default/10 dark:bg-surface-base/30">
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1"><strong>Comisiones</strong></td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">✅ Sin comisiones</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">➖ Según tu banco</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1"><strong>Comisiones</strong></td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">✅ Sin comisiones</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">➖ Según tu banco</td>
             </tr>
             <tr>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1"><strong>Garantía</strong></td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">♻️ Reutilizable</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">🔒 Se libera post-alquiler</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1"><strong>Garantía</strong></td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">♻️ Reutilizable</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">🔒 Se libera post-alquiler</td>
             </tr>
             <tr class="bg-border-default/10 dark:bg-surface-base/30">
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1"><strong>Requisito</strong></td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">💰 Saldo previo</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">💳 Tarjeta válida</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1"><strong>Requisito</strong></td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">💰 Saldo previo</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">💳 Tarjeta válida</td>
             </tr>
           </tbody>
         </table>
@@ -241,7 +241,7 @@ export class WalletFaqComponent {
           <li><strong>Garantía reutilizable ($600):</strong> Es parte de tus fondos regulares, NO vence</li>
         </ul>
         <p class="mt-2 text-xs text-cta-default dark:text-cta-default">💡 <strong>Tip:</strong> Mantener buen historial de conducción renueva automáticamente tu Crédito AutoRenta.</p>
-        <p class="mt-2 text-xs text-warning-700 dark:text-warning-500">⚠️ <strong>Importante:</strong> Solo el Crédito AutoRenta (bonificación) vence. Tus depósitos regulares permanecen indefinidamente.</p>`,
+        <p class="mt-2 text-xs text-warning-strong dark:text-warning-500">⚠️ <strong>Importante:</strong> Solo el Crédito AutoRenta (bonificación) vence. Tus depósitos regulares permanecen indefinidamente.</p>`,
       expanded: false,
     },
     {
@@ -308,30 +308,30 @@ export class WalletFaqComponent {
         <table class="w-full text-xs mt-2 border-collapse">
           <thead>
             <tr class="bg-border-default/30 dark:bg-surface-base">
-              <th class="border border-border-default dark:border-border-subtle px-2 py-1">Daño</th>
-              <th class="border border-border-default dark:border-border-subtle px-2 py-1">CP Usado</th>
-              <th class="border border-border-default dark:border-border-subtle px-2 py-1">CP Restante</th>
-              <th class="border border-border-default dark:border-border-subtle px-2 py-1">Pagás de tu bolsillo</th>
+              <th class="border border-border-default dark:border-border-muted px-2 py-1">Daño</th>
+              <th class="border border-border-default dark:border-border-muted px-2 py-1">CP Usado</th>
+              <th class="border border-border-default dark:border-border-muted px-2 py-1">CP Restante</th>
+              <th class="border border-border-default dark:border-border-muted px-2 py-1">Pagás de tu bolsillo</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">$100</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">$100</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center text-success-light">✅ $200</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center text-success-light">$0</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">$100</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">$100</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center text-success-light">✅ $200</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center text-success-light">$0</td>
             </tr>
             <tr class="bg-border-default/10 dark:bg-surface-base/30">
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">$250</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">$250</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center text-warning-700">⚠️ $50</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center text-success-light">$0</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">$250</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">$250</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center text-warning-strong">⚠️ $50</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center text-success-light">$0</td>
             </tr>
             <tr>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">$400</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center">$300</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center text-error-700">❌ $0</td>
-              <td class="border border-border-default dark:border-border-subtle px-2 py-1 text-center text-error-700">$100</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">$400</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">$300</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center text-error-strong">❌ $0</td>
+              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center text-error-strong">$100</td>
             </tr>
           </tbody>
         </table>

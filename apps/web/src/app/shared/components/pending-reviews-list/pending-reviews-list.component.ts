@@ -36,14 +36,14 @@ import { ReviewsService } from '../../../core/services/reviews.service';
                 <div class="ml-4 text-right">
                   <div
                     class="rounded-full px-3 py-1 text-xs font-medium"
-                    [class.bg-warning-100]="review.days_remaining > 7"
-                    [class.text-warning-800]="review.days_remaining > 7"
+                    [class.bg-warning-bg-hover]="review.days_remaining > 7"
+                    [class.text-warning-strong]="review.days_remaining > 7"
                     [class.bg-warning-light/20]="review.days_remaining <= 7 && review.days_remaining > 3"
                     [class.text-warning-light]="
                       review.days_remaining <= 7 && review.days_remaining > 3
                     "
-                    [class.bg-error-100]="review.days_remaining <= 3"
-                    [class.text-error-800]="review.days_remaining <= 3"
+                    [class.bg-error-bg-hover]="review.days_remaining <= 3"
+                    [class.text-error-strong]="review.days_remaining <= 3"
                   >
                     {{ review.days_remaining }} días restantes
                   </div>

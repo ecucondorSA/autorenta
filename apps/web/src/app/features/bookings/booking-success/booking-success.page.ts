@@ -28,9 +28,10 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
 
   // ✅ Payment polling state
   readonly paymentStatus = signal<PaymentStatus>('pending');
+  readonly pollProgress = signal<number>(0); // Progreso del polling (0-100)
   private pollingInterval: number | null = null;
   pollAttempts = 0; // public para template
-  private readonly MAX_POLL_ATTEMPTS = 40; // 2 minutos (3 segundos × 40)
+  readonly MAX_POLL_ATTEMPTS = 40; // 2 minutos (3 segundos × 40) - public para template
   private readonly POLL_INTERVAL_MS = 3000; // 3 segundos
 
   ngOnInit(): void {
@@ -84,15 +85,24 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   private startPolling(): void {
     this.pollAttempts = 0;
     this.paymentStatus.set('pending');
+    this.pollProgress.set(0);
 
     this.pollingInterval = window.setInterval(async () => {
       this.pollAttempts++;
+
+      // Actualizar progreso (0-100%)
+      const progress = Math.min(
+        Math.round((this.pollAttempts / this.MAX_POLL_ATTEMPTS) * 100),
+        100
+      );
+      this.pollProgress.set(progress);
 
       try {
         // Obtener booking actualizado
         const booking = await this.bookingsService.getBookingById(this.bookingId());
 
         if (!booking) {
+          console.warn('[BookingSuccess] Booking not found during polling');
           return;
         }
 
@@ -102,13 +112,16 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
         // Verificar estado del booking
         if (booking.status === 'confirmed') {
           this.paymentStatus.set('completed');
+          this.pollProgress.set(100);
           this.stopPolling();
+          console.log(`✅ Payment confirmed after ${this.pollAttempts} attempts`);
           return;
         }
 
         if (booking.status === 'cancelled') {
           this.paymentStatus.set('failed');
           this.stopPolling();
+          console.log(`❌ Payment failed after ${this.pollAttempts} attempts`);
           return;
         }
 
@@ -116,9 +129,20 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
         if (this.pollAttempts >= this.MAX_POLL_ATTEMPTS) {
           this.paymentStatus.set('timeout');
           this.stopPolling();
+          console.warn(
+            `⏰ Payment polling timeout after ${this.pollAttempts} attempts (${(this.pollAttempts * this.POLL_INTERVAL_MS) / 1000}s)`
+          );
         }
       } catch (err: unknown) {
         // No detener polling por errores de red transitorios
+        console.warn(`[BookingSuccess] Polling error (attempt ${this.pollAttempts}):`, err);
+
+        // Si falla después de varios intentos consecutivos, considerar timeout
+        if (this.pollAttempts > 10 && this.pollAttempts % 5 === 0) {
+          console.error(
+            `⚠️ Multiple polling failures detected (${this.pollAttempts} attempts). Network issue?`
+          );
+        }
       }
     }, this.POLL_INTERVAL_MS);
   }
@@ -130,6 +154,17 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Retry manual del polling (para caso de timeout)
+   */
+  retryPolling(): void {
+    console.log('🔄 Retrying payment polling...');
+    this.startPolling();
+  }
+
+  /**
+   * Obtener nombre del vehículo con fallbacks robustos
+   */
   getCarName(): string {
     const booking = this.booking();
     if (!booking) {
@@ -137,12 +172,27 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
       return 'Vehículo';
     }
 
-    // Car is now loaded with booking
+    // Prioridad 1: Usar car.brand, car.model, car.year
     if (booking.car && booking.car.brand && booking.car.model && booking.car.year) {
       return `${booking.car.brand} ${booking.car.model} ${booking.car.year}`;
     }
 
-    // Fallback: mostrar car_id si existe
+    // Prioridad 2: Usar car.title (si está disponible)
+    if (booking.car && booking.car.title) {
+      return booking.car.title;
+    }
+
+    // Prioridad 3: Usar campos de booking view (car_brand, car_model, car_year)
+    if (booking.car_brand && booking.car_model && booking.car_year) {
+      return `${booking.car_brand} ${booking.car_model} ${booking.car_year}`;
+    }
+
+    // Prioridad 4: Usar solo car_title del booking view
+    if (booking.car_title) {
+      return booking.car_title;
+    }
+
+    // Fallback final: mostrar car_id si existe
     if (booking.car_id) {
       console.warn(
         '[BookingSuccess] Car data not loaded for booking:',
@@ -156,15 +206,34 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     return 'Vehículo';
   }
 
+  /**
+   * Obtener imagen del vehículo con fallbacks robustos
+   */
   getCarImage(): string {
     const booking = this.booking();
-    if (!booking || !booking.car) {
+    if (!booking) {
       return '/assets/images/car-placeholder.png';
     }
 
-    // Return first image if available
-    if (booking.car.images && booking.car.images.length > 0) {
+    // Prioridad 1: Usar car.images
+    if (booking.car && booking.car.images && booking.car.images.length > 0) {
       return booking.car.images[0];
+    }
+
+    // Prioridad 2: Usar car.photos
+    if (booking.car && booking.car.photos && booking.car.photos.length > 0) {
+      const firstPhoto = booking.car.photos[0];
+      if (typeof firstPhoto === 'string') {
+        return firstPhoto;
+      }
+      if (firstPhoto && typeof firstPhoto === 'object' && 'url' in firstPhoto) {
+        return (firstPhoto as { url: string }).url;
+      }
+    }
+
+    // Prioridad 3: Usar main_photo_url del booking view
+    if (booking.main_photo_url) {
+      return booking.main_photo_url;
     }
 
     return '/assets/images/car-placeholder.png';

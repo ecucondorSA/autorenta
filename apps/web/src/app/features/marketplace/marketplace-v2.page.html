@@ -2,7 +2,7 @@
 
 <!-- Hero Header with Search -->
 <div
-  class="hero-header relative bg-gradient-to-br from-cta-default via-cta-default to-success-light text-text-primary overflow-hidden"
+  class="hero-header relative bg-gradient-to-br from-cta-default via-cta-default/90 to-success-light/80 dark:from-cta-default dark:via-cta-default/95 dark:to-success-light/85 text-text-primary overflow-hidden"
 >
   <!-- Animated background pattern -->
   <div class="absolute inset-0 opacity-10">
@@ -11,7 +11,7 @@
     ></div>
   </div>
 
-  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
     <!-- Top bar with logo and user -->
     <div class="flex items-center justify-between mb-8">
       <div class="flex items-center gap-3">
@@ -21,8 +21,8 @@
           <span class="text-2xl">🚗</span>
         </div>
         <div>
-          <h1 class="text-xl font-bold text-text-primary drop-shadow-sm">AutoRenta</h1>
-          <p class="text-xs text-text-primary drop-shadow-sm">Tu auto ideal te espera</p>
+          <h1 class="text-xl font-bold text-text-primary dark:text-text-primary drop-shadow-sm">AutoRenta</h1>
+          <p class="text-xs text-text-primary dark:text-text-primary drop-shadow-sm">Tu auto ideal te espera</p>
         </div>
       </div>
 
@@ -79,26 +79,34 @@
 
           <!-- Search Button -->
           <div class="flex items-end">
-            <button
-              (click)="onSearchSubmit(searchValue())"
-              class="w-full px-6 py-3 bg-gradient-to-r from-cta-default to-cta-default hover:from-cta-hover hover:to-cta-hover text-cta-text font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200"
+            <app-button
+              variant="primary"
+              size="lg"
+              [fullWidth]="true"
+              (clicked)="onSearchSubmit(searchValue())"
+              class="shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200"
             >
               🔍 Buscar autos
-            </button>
+            </app-button>
           </div>
         </div>
 
         <!-- Quick Filters Pills -->
         <div class="flex items-center gap-2 mt-4 overflow-x-auto pb-2">
           <span class="text-xs text-text-primary font-medium flex-shrink-0">Filtros rápidos:</span>
-          <button
+          <app-tooltip
             *ngFor="let filter of quickFilters"
-            (click)="onQuickFilterClick(filter.id)"
-            class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-base border border-border-subtle rounded-full text-xs font-medium text-text-primary hover:bg-cta-default hover:text-cta-text hover:border-cta-default transition-all duration-200 flex-shrink-0 shadow-sm"
+            [text]="filter.tooltip || 'Filtrar autos por ' + filter.label.toLowerCase()"
+            position="top"
           >
-            <span>{{ filter.icon }}</span>
-            <span>{{ filter.label }}</span>
-          </button>
+            <button
+              (click)="onQuickFilterClick(filter.id)"
+              class="group flex items-center gap-1.5 px-3 py-1.5 bg-surface-base border border-border-muted rounded-full text-xs font-medium text-text-primary hover:bg-cta-default hover:text-cta-text hover:border-cta-default hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 flex-shrink-0 shadow-sm"
+            >
+              <span class="transition-transform duration-200 group-hover:scale-110">{{ filter.icon }}</span>
+              <span>{{ filter.label }}</span>
+            </button>
+          </app-tooltip>
         </div>
       </div>
     </div>
@@ -110,7 +118,7 @@
       <path
         d="M0 48H1440V0C1440 0 1080 48 720 48C360 48 0 0 0 0V48Z"
         fill="currentColor"
-        class="text-text-primary dark:text-slate-deep"
+        class="text-text-primary dark:text-text-primary"
       />
     </svg>
   </div>
@@ -118,73 +126,73 @@
 
 <!-- Main Content Area -->
 <div class="marketplace-content bg-surface-secondary/30 dark:bg-surface-secondary min-h-screen">
-  <div class="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
     <!-- Stats Strip -->
     <div class="mb-6">
       <app-stats-strip [stats]="statsStripData()" />
     </div>
 
     <!-- Trust Badges -->
-    <div class="mb-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3"
-      >
-        <div
-          class="w-10 h-10 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center"
-        >
-          <span class="text-xl">✓</span>
-        </div>
-        <div>
-          <p class="text-xs text-text-secondary dark:text-text-secondary">Verificación</p>
-          <p class="text-sm font-semibold text-text-primary dark:text-text-primary">100% Segura</p>
-        </div>
-      </div>
+    <div class="mb-12 grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+      <app-tooltip text="Todos nuestros locadores pasan por un proceso de verificación exhaustivo con DNI, licencia de conducir y antecedentes" position="top">
+        <app-card variant="elevated" padding="lg" [hoverable]="true" class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center"
+          >
+            <span class="text-xl">✓</span>
+          </div>
+          <div>
+            <p class="text-xs text-text-secondary dark:text-text-secondary">Verificación</p>
+            <p class="text-sm font-semibold text-text-primary dark:text-text-primary">100% Segura</p>
+          </div>
+        </app-card>
+      </app-tooltip>
 
-      <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3"
-      >
-        <div
-          class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
-        >
-          <span class="text-xl">🛡️</span>
-        </div>
-        <div>
-          <p class="text-xs text-text-secondary dark:text-text-secondary">Seguro</p>
-          <p class="text-sm font-semibold text-text-primary dark:text-text-primary">Incluido</p>
-        </div>
-      </div>
+      <app-tooltip text="Cobertura completa de seguro para daños al vehículo, robo y responsabilidad civil incluida en todas las reservas" position="top">
+        <app-card variant="elevated" padding="lg" [hoverable]="true" class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
+          >
+            <span class="text-xl">🛡️</span>
+          </div>
+          <div>
+            <p class="text-xs text-text-secondary dark:text-text-secondary">Seguro</p>
+            <p class="text-sm font-semibold text-text-primary dark:text-text-primary">Incluido</p>
+          </div>
+        </app-card>
+      </app-tooltip>
 
-      <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3"
-      >
-        <div
-          class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
-        >
-          <span class="text-xl">💳</span>
-        </div>
-        <div>
-          <p class="text-xs text-text-secondary dark:text-text-secondary">Sin tarjeta</p>
-          <p class="text-sm font-semibold text-text-primary dark:text-text-primary">Requerida</p>
-        </div>
-      </div>
+      <app-tooltip text="Reserva sin necesidad de tarjeta de crédito. Paga en efectivo al recoger el auto o usa otros métodos de pago" position="top">
+        <app-card variant="elevated" padding="lg" [hoverable]="true" class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
+          >
+            <span class="text-xl">💳</span>
+          </div>
+          <div>
+            <p class="text-xs text-text-secondary dark:text-text-secondary">Sin tarjeta</p>
+            <p class="text-sm font-semibold text-text-primary dark:text-text-primary">Requerida</p>
+          </div>
+        </app-card>
+      </app-tooltip>
 
-      <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-sm flex items-center gap-3"
-      >
-        <div
-          class="w-10 h-10 bg-warning-light/20 dark:bg-warning-light/30 rounded-full flex items-center justify-center"
-        >
-          <span class="text-xl">⚡</span>
-        </div>
-        <div>
-          <p class="text-xs text-text-secondary dark:text-text-secondary">Entrega</p>
-          <p class="text-sm font-semibold text-text-primary dark:text-text-primary">Inmediata</p>
-        </div>
-      </div>
+      <app-tooltip text="Entrega inmediata en la mayoría de las ubicaciones. Recoge tu auto en minutos sin esperas innecesarias" position="top">
+        <app-card variant="elevated" padding="lg" [hoverable]="true" class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 bg-warning-light/20 dark:bg-warning-light/30 rounded-full flex items-center justify-center"
+          >
+            <span class="text-xl">⚡</span>
+          </div>
+          <div>
+            <p class="text-xs text-text-secondary dark:text-text-secondary">Entrega</p>
+            <p class="text-sm font-semibold text-text-primary dark:text-text-primary">Inmediata</p>
+          </div>
+        </app-card>
+      </app-tooltip>
     </div>
 
     <!-- View Toggle -->
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center justify-between mb-8 lg:mb-10">
       <h2 class="text-2xl font-bold text-text-primary dark:text-text-primary">
         Autos cerca de ti
         <span class="text-base font-normal text-text-secondary ml-2"
@@ -239,7 +247,7 @@
     <!-- Grid View -->
     <div
       *ngIf="viewMode() === 'grid'"
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-10"
     >
       <div
         *ngFor="let car of carsWithDistance(); trackBy: trackByCarId"
@@ -343,7 +351,7 @@
 
             <!-- Price and CTA -->
             <div
-              class="flex items-center justify-between pt-3 border-t border-border-default dark:border-border-subtle"
+              class="flex items-center justify-between pt-3 border-t border-border-default dark:border-border-muted"
             >
               <div>
                 <p class="text-xs text-text-secondary">Desde</p>
@@ -402,7 +410,7 @@
     </div>
 
     <!-- List View -->
-    <div *ngIf="viewMode() === 'list'" class="space-y-4">
+    <div *ngIf="viewMode() === 'list'" class="space-y-6 lg:space-y-8">
       <div
         *ngFor="let car of carsWithDistance(); trackBy: trackByCarId"
         (click)="onCarSelected(car.id)"

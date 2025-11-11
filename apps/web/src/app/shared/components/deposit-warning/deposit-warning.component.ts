@@ -16,7 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [CommonModule, TranslateModule],
   template: `
     <div
-      class="bg-warning-50 dark:bg-warning-900/20 border-l-4 border-warning-500 p-6 mb-6 rounded-r-lg"
+      class="bg-warning-bg dark:bg-warning-900/20 border-l-4 border-warning-border p-6 mb-6 rounded-r-lg"
     >
       <div class="flex items-start">
         <!-- Icono de advertencia -->
@@ -35,11 +35,11 @@ import { TranslateModule } from '@ngx-translate/core';
 
         <!-- Contenido -->
         <div class="flex-1">
-          <h3 class="text-lg font-semibold text-warning-800 dark:text-warning-300 mb-3">
+          <h3 class="text-lg font-semibold text-warning-strong dark:text-warning-300 mb-3">
             ⚠️ Importante: Sistema de Garantía No Reembolsable
           </h3>
 
-          <div class="space-y-3 text-sm text-warning-700 dark:text-warning-400">
+          <div class="space-y-3 text-sm text-warning-strong dark:text-warning-400">
             <!-- Cómo funciona -->
             <div>
               <p class="font-semibold mb-2">🔍 ¿Cómo funciona?</p>
@@ -96,19 +96,19 @@ import { TranslateModule } from '@ngx-translate/core';
 
             <!-- Qué NO puedes hacer -->
             <div>
-              <p class="font-semibold mb-2 text-error-700 dark:text-error-400">
+              <p class="font-semibold mb-2 text-error-strong">
                 ❌ ¿Qué NO puedes hacer?
               </p>
               <ul class="space-y-2 ml-4">
                 <li class="flex items-start">
                   <span class="mr-2">✘</span>
-                  <span class="text-error-700 dark:text-error-400"
+                  <span class="text-error-strong"
                     ><strong>NO puedes retirar los fondos</strong> a tu cuenta bancaria</span
                   >
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">✘</span>
-                  <span class="text-error-700 dark:text-error-400"
+                  <span class="text-error-strong"
                     >NO se realizan devoluciones en efectivo</span
                   >
                 </li>
@@ -147,7 +147,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
           <!-- Callout de beneficio -->
           <div
-            class="mt-4 p-4 bg-surface-raised dark:bg-surface-raised rounded-lg border border-warning-200 dark:border-warning-700"
+            class="mt-4 p-4 bg-surface-raised dark:bg-surface-raised rounded-lg border border-warning-border dark:border-warning-700"
           >
             <p class="text-sm font-medium text-slate-700 dark:text-slate-300">
               💡 <strong>Beneficio principal:</strong> Este sistema está diseñado para usuarios

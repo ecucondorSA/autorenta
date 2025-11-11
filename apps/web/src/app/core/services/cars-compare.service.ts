@@ -1,6 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { Car, CarComparison, ComparisonRow } from '../models';
 import { CarsService } from './cars.service';
+import { ToastService } from './toast.service';
 
 const STORAGE_KEY = 'autorenta_comparison';
 const MAX_COMPARE = 3;
@@ -12,6 +13,7 @@ export class CarsCompareService {
   private readonly comparedCarIds = signal<string[]>([]);
   readonly comparedCars = signal<Car[]>([]);
   readonly count = signal<number>(0);
+  private readonly toastService = inject(ToastService);
 
   constructor(private readonly carsService: CarsService) {
     this.loadFromStorage();
@@ -19,17 +21,24 @@ export class CarsCompareService {
 
   /**
    * Agregar auto a la comparación
+   * @returns true si se agregó exitosamente, false si no se pudo agregar
    */
   addCar(carId: string): boolean {
     const current = this.comparedCarIds();
 
     // Validar si ya existe
     if (current.includes(carId)) {
+      this.toastService.info('Auto ya agregado', 'Este vehículo ya está en tu comparación', 3000);
       return false;
     }
 
     // Validar máximo
     if (current.length >= MAX_COMPARE) {
+      this.toastService.warning(
+        'Límite alcanzado',
+        `Solo puedes comparar hasta ${MAX_COMPARE} vehículos a la vez. Elimina uno para agregar otro.`,
+        4000,
+      );
       return false;
     }
 
@@ -39,6 +48,13 @@ export class CarsCompareService {
     this.count.set(updated.length);
     this.saveToStorage(updated);
     void this.loadCars();
+
+    // Mostrar feedback de éxito
+    this.toastService.success(
+      'Auto agregado',
+      `Vehículo agregado a la comparación (${updated.length}/${MAX_COMPARE})`,
+      3000,
+    );
 
     return true;
   }

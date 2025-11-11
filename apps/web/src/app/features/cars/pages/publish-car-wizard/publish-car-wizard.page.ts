@@ -7,8 +7,11 @@ import { PublishPhotosDescriptionStepComponent, PublishPhotosDescription } from 
 import { PublishPriceAvailabilityStepComponent, PublishPriceAvailability } from '../../components/publish-price-availability-step/publish-price-availability-step.component';
 import { PublishReviewStepComponent } from '../../components/publish-review-step/publish-review-step.component';
 import { CarsService } from '../../../../core/services/cars.service';
+import { GeocodingService } from '../../../../core/services/geocoding.service';
+import { ToastService } from '../../../../core/services/toast.service';
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
 import { ErrorStateComponent } from '../../../../shared/components/error-state/error-state.component';
+import { Car } from '../../../../core/models';
 
 /**
  * PublishCarWizardPage - 4-step car publishing wizard
@@ -79,6 +82,8 @@ import { ErrorStateComponent } from '../../../../shared/components/error-state/e
 export class PublishCarWizardPage implements OnInit {
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
+  private readonly geocodingService = inject(GeocodingService);
+  private readonly toastService = inject(ToastService);
 
   currentStep = signal<number>(0);
   isLoading = signal<boolean>(false);
@@ -117,22 +122,177 @@ export class PublishCarWizardPage implements OnInit {
     this.error.set('');
 
     try {
-      const carData = {
-        ...this.basicInfoData(),
-        ...this.photosData(),
-        ...this.priceAvailData()
+      const basicInfo = this.basicInfoData();
+      const photosInfo = this.photosData();
+      const priceInfo = this.priceAvailData();
+
+      // ============================================
+      // STEP 1: Lookup Brand/Model IDs
+      // ============================================
+      let brandId: string | undefined;
+      let modelId: string | undefined;
+
+      try {
+        // Get all brands
+        const brands = await this.carsService.getCarBrands();
+        const matchedBrand = brands.find(b => b.name.toLowerCase() === basicInfo.brand.toLowerCase());
+
+        if (matchedBrand) {
+          brandId = matchedBrand.id;
+
+          // Get models for this brand
+          const models = await this.carsService.getCarModels(brandId);
+          const matchedModel = models.find(m => m.name.toLowerCase() === basicInfo.model.toLowerCase());
+
+          if (matchedModel) {
+            modelId = matchedModel.id;
+          }
+        }
+
+        // If no match found, we'll use text fallback (brand_text_backup, model_text_backup)
+        if (!brandId || !modelId) {
+          console.warn('⚠️ Brand/Model no encontrados en BD, usando texto directo');
+        }
+      } catch (err) {
+        console.error('Error lookup brand/model:', err);
+        // Continue anyway, will use text fallback
+      }
+
+      // ============================================
+      // STEP 2: Geocode Address
+      // ============================================
+      let latitude: number | undefined;
+      let longitude: number | undefined;
+      let formattedAddress: string | undefined;
+
+      try {
+        const fullAddress = `${priceInfo.address}, ${priceInfo.city}, ${priceInfo.province}`;
+        const geocodingResult = await this.geocodingService.geocodeAddress(fullAddress, 'AR');
+
+        latitude = geocodingResult.latitude;
+        longitude = geocodingResult.longitude;
+        formattedAddress = geocodingResult.fullAddress;
+
+        console.log('✅ Geocoded:', { latitude, longitude, formattedAddress });
+      } catch (err) {
+        console.error('⚠️ Geocoding failed, trying city fallback:', err);
+
+        // Fallback: try to geocode just the city
+        try {
+          const cityResult = await this.geocodingService.getCityCoordinates(priceInfo.city, 'AR');
+          latitude = cityResult.latitude;
+          longitude = cityResult.longitude;
+          formattedAddress = cityResult.fullAddress;
+          console.log('✅ City geocoded:', { latitude, longitude });
+        } catch (fallbackErr) {
+          console.error('❌ City geocoding also failed:', fallbackErr);
+          // Continue without coordinates (CarsService will warn)
+        }
+      }
+
+      // ============================================
+      // STEP 3: Create Car (without photos first)
+      // ============================================
+      const carPayload: Partial<Car> = {
+        // Brand/Model (use IDs if found, otherwise fallback to text)
+        brand_id: brandId || 'unknown',
+        model_id: modelId || 'unknown',
+        brand_text_backup: basicInfo.brand,
+        model_text_backup: basicInfo.model,
+        brand: basicInfo.brand, // For backward compatibility
+        model: basicInfo.model,
+
+        // Basic info
+        title: `${basicInfo.brand} ${basicInfo.model} ${basicInfo.year}`,
+        description: photosInfo.description,
+        year: basicInfo.year,
+        plate: basicInfo.licensePlate,
+        transmission: basicInfo.transmission as any,
+        fuel: basicInfo.fuelType as any,
+        fuel_type: basicInfo.fuelType as any,
+        seats: basicInfo.seats,
+        doors: basicInfo.doors,
+        color: basicInfo.color,
+
+        // Features
+        features: photosInfo.features.reduce((acc, feature) => {
+          acc[feature.toLowerCase().replace(/\s+/g, '_')] = true;
+          return acc;
+        }, {} as Record<string, boolean>),
+
+        // Pricing
+        price_per_day: priceInfo.dailyRate,
+        currency: 'ARS',
+        min_rental_days: priceInfo.minimumDays,
+        max_rental_days: priceInfo.maximumDays,
+
+        // Location
+        location_city: priceInfo.city,
+        location_state: priceInfo.province,
+        location_province: priceInfo.province,
+        location_country: 'Argentina',
+        location_street: priceInfo.address,
+        location_formatted_address: formattedAddress,
+        location_lat: latitude,
+        location_lng: longitude,
+
+        // Status
+        status: 'draft', // Start as draft until admin approval
+
+        // Default values
+        rating_avg: 0,
+        rating_count: 0,
+        mileage: 0,
+        cancel_policy: 'flex',
       };
 
-      // TODO: Implement actual car creation via CarsService
-      console.log('Creating car:', carData);
+      console.log('🚗 Creating car with payload:', carPayload);
+      const createdCar = await this.carsService.createCar(carPayload);
+      console.log('✅ Car created:', createdCar.id);
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // ============================================
+      // STEP 4: Upload Photos
+      // ============================================
+      if (photosInfo.photos.length > 0) {
+        console.log(`📸 Uploading ${photosInfo.photos.length} photos...`);
 
-      // Navigate to success page
-      this.router.navigate(['/cars/my-cars']);
+        const uploadPromises = photosInfo.photos.map((photo, index) =>
+          this.carsService.uploadPhoto(photo, createdCar.id, index)
+        );
+
+        try {
+          await Promise.all(uploadPromises);
+          console.log('✅ All photos uploaded');
+        } catch (photoErr) {
+          console.error('⚠️ Some photos failed to upload:', photoErr);
+          // Continue anyway, car is created
+        }
+      }
+
+      // ============================================
+      // STEP 5: Show Success & Navigate
+      // ============================================
+      this.toastService.success(
+        '¡Auto publicado!',
+        'Tu vehículo ha sido agregado exitosamente',
+        4000
+      );
+
+      this.router.navigate(['/cars/my-cars'], {
+        queryParams: { newCar: createdCar.id }
+      });
+
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Error publicando vehículo');
+      console.error('❌ Error creating car:', err);
+      const errorMsg = err instanceof Error ? err.message : 'Error publicando vehículo';
+
+      this.toastService.error(
+        'Error al publicar',
+        errorMsg,
+        6000
+      );
+
+      this.error.set(errorMsg);
       this.isProcessing.set(false);
     }
   }

@@ -17,7 +17,9 @@ import type { CarMapLocation } from '../../../core/services/car-locations.servic
 import { CarAvailabilityService } from '../../../core/services/car-availability.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PricingService } from '../../../core/services/pricing.service';
+import { ProfileService } from '../../../core/services/profile.service';
 import { Router } from '@angular/router';
+import { getAgeFromProfile } from '../../utils/age-calculator';
 
 export interface BookingFormData {
   startDate: string;
@@ -287,6 +289,7 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
   private readonly availabilityService = inject(CarAvailabilityService);
   private readonly bookingsService = inject(BookingsService);
   private readonly pricingService = inject(PricingService);
+  private readonly profileService = inject(ProfileService);
   private readonly router = inject(Router);
 
   readonly startDate = signal<string>('');
@@ -446,7 +449,9 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
           dailyPriceUsd: this.car.pricePerDay / 1000, // Approximate USD conversion
           securityDepositUsd: 0,
           vehicleValueUsd: 0,
-          driverAge: 30,
+          // ✅ IMPLEMENTADO: Cálculo real de edad desde profile
+          // Fallback a 30 si date_of_birth no está configurado
+          driverAge: await this.getDriverAge(),
           coverageType: 'standard',
           paymentMode: this.paymentMethod(),
           totalUsd: this.priceBreakdown()!.total / 1000,
@@ -482,6 +487,21 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
     this.isOpen.set(false);
     this.closePanel.emit();
   }
+
+  /**
+   * ✅ DRIVER AGE: Obtiene edad real del conductor desde su perfil
+   * Usa fecha de nacimiento si está configurada, caso contrario fallback a 30
+   */
+  private async getDriverAge(): Promise<number> {
+    try {
+      const profile = await this.profileService.getCurrentProfile();
+      return getAgeFromProfile(profile, 30);
+    } catch (error) {
+      console.warn('[MapBookingPanel] Error getting driver age, using fallback:', error);
+      return 30;
+    }
+  }
 }
+
 
 

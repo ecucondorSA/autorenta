@@ -172,7 +172,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 [ngClass]="
                   creditDifference() >= 0
                     ? 'text-success-light dark:text-success-200'
-                    : 'text-error-600 dark:text-error-200'
+                    : 'text-error-text'
                 "
               >
                 {{ formatUsd(Math.abs(creditDifference())) }}
@@ -230,10 +230,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           @case ('insufficient') {
             <div class="space-y-3">
               <div
-                class="flex items-start space-x-2 p-3 bg-error-50 border border-error-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300"
+                class="flex items-start space-x-2 p-3 bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300"
               >
                 <svg
-                  class="w-5 h-5 text-error-600 dark:text-error-300 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-error-text flex-shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -244,10 +244,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-error-900 dark:text-error-100">
+                  <p class="text-sm font-medium text-error-strong">
                     Crédito insuficiente
                   </p>
-                  <p class="text-xs text-error-700 dark:text-error-200 mt-1">
+                  <p class="text-xs text-error-strong mt-1">
                     Necesitas cargar {{ formatUsd(Math.abs(creditDifference())) }} adicionales.
                   </p>
                 </div>
@@ -318,10 +318,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           @case ('error') {
             <div class="space-y-3">
               <div
-                class="flex items-start space-x-2 p-3 bg-error-50 border border-error-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300"
+                class="flex items-start space-x-2 p-3 bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg transition-colors duration-300"
               >
                 <svg
-                  class="w-5 h-5 text-error-600 dark:text-error-300 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-error-text flex-shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -332,8 +332,8 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-error-900 dark:text-error-100">Error</p>
-                  <p class="text-xs text-error-700 dark:text-error-200 mt-1">
+                  <p class="text-sm font-medium text-error-strong">Error</p>
+                  <p class="text-xs text-error-strong mt-1">
                     {{ errorMessage() || 'Ocurrió un error. Intenta nuevamente.' }}
                   </p>
                 </div>
@@ -341,7 +341,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
               <button
                 type="button"
                 (click)="onRetry()"
-                class="w-full px-4 py-2 border border-border-subtle dark:border-neutral-700 text-sm font-medium rounded-md text-text-primary dark:text-text-secondary bg-surface-raised dark:bg-surface-secondary/60 hover:bg-surface-base dark:hover:bg-slate-deep/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
+                class="w-full px-4 py-2 border border-border-muted dark:border-neutral-700 text-sm font-medium rounded-md text-text-primary dark:text-text-secondary bg-surface-raised dark:bg-surface-secondary/60 hover:bg-surface-base dark:hover:bg-slate-deep/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
               >
                 Reintentar
               </button>

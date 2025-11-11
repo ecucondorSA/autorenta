@@ -4,7 +4,7 @@
     @if (loading()) {
       <div class="text-center py-12">
         <div
-          class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-subtle dark:border-border-default border-t-blue-600"
+          class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted dark:border-border-default border-t-blue-600"
         ></div>
         <p class="mt-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary">Cargando reserva...</p>
       </div>
@@ -13,13 +13,13 @@
     <!-- Error State -->
     @else if (error()) {
       <div
-        class="bg-error-50 border border-error-200 rounded-xl p-6 dark:bg-error-900/20 dark:border-error-800"
+        class="bg-error-bg border border-error-border rounded-xl p-6 dark:bg-error-900/20 dark:border-error-800"
       >
         <div class="flex items-start gap-3">
           <div class="flex-shrink-0 text-2xl">⚠️</div>
           <div class="flex-1">
-            <h3 class="text-lg font-semibold text-error-800 dark:text-error-200 mb-2">Error</h3>
-            <p class="text-error-700 dark:text-error-300">{{ error() }}</p>
+            <h3 class="text-lg font-semibold text-error-strong mb-2">Error</h3>
+            <p class="text-error-strong">{{ error() }}</p>
             <button
               routerLink="/bookings"
               class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors"
@@ -51,7 +51,7 @@
         </button>
 
         <div
-          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-subtle p-6"
+          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6"
         >
           <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse mb-2">
             🔄 Check-out del Vehículo
@@ -64,7 +64,7 @@
 
       <!-- Booking Info Card -->
       <div
-        class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-subtle p-6 mb-6"
+        class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6 mb-6"
       >
         <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
           Información de la Reserva
@@ -201,7 +201,7 @@
       <!-- Check-out Form -->
       @else if (canPerformCheckOut()) {
         <div
-          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-subtle p-6"
+          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6"
         >
           <div class="mb-6">
             <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2">
@@ -229,15 +229,15 @@
       <!-- Cannot Perform Check-out -->
       @else {
         <div
-          class="bg-warning-50 border border-warning-200 rounded-xl p-6 dark:bg-warning-900/20 dark:border-warning-800"
+          class="bg-warning-bg border border-warning-border rounded-xl p-6 dark:bg-warning-900/20 dark:border-warning-800"
         >
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0 text-2xl">⚠️</div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-warning-800 dark:text-warning-200 mb-2">
+              <h3 class="text-lg font-semibold text-warning-strong dark:text-warning-200 mb-2">
                 No se puede realizar el check-out
               </h3>
-              <p class="text-warning-700 dark:text-warning-300 mb-4">
+              <p class="text-warning-strong dark:text-warning-300 mb-4">
                 @if (!checkInInspection()) {
                   El check-out no está disponible porque no se completó el check-in.
                 } @else {

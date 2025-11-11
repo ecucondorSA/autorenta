@@ -59,7 +59,7 @@ import {
 
       <!-- Filters -->
       <div
-        class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-4 mb-6 shadow-sm"
+        class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-4 mb-6 shadow-sm"
       >
         <h3 class="text-sm font-semibold text-text-primary dark:text-text-secondary mb-3">Filtros</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -71,7 +71,7 @@ import {
             <select
               [(ngModel)]="filterStatus"
               (ngModelChange)="onFilterChange()"
-              class="w-full rounded-lg border border-border-subtle dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
             >
               <option value="">Todos los estados</option>
               <option *ngFor="let status of claimStatuses" [value]="status.value">
@@ -88,7 +88,7 @@ import {
             <select
               [(ngModel)]="filterType"
               (ngModelChange)="onFilterChange()"
-              class="w-full rounded-lg border border-border-subtle dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
             >
               <option value="">Todos los tipos</option>
               <option *ngFor="let type of claimTypes" [value]="type.value">
@@ -107,7 +107,7 @@ import {
               [(ngModel)]="searchQuery"
               (ngModelChange)="onFilterChange()"
               placeholder="ID o descripción..."
-              class="w-full rounded-lg border border-border-subtle dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
             />
           </div>
         </div>
@@ -119,8 +119,8 @@ import {
       </div>
 
       <!-- Error State -->
-      <div *ngIf="error() && !loading()" class="bg-error-50 border border-error-200 rounded-xl p-6">
-        <p class="text-error-800">{{ error() }}</p>
+      <div *ngIf="error() && !loading()" class="bg-error-bg border border-error-border rounded-xl p-6">
+        <p class="text-error-strong">{{ error() }}</p>
       </div>
 
       <!-- Claims List -->
@@ -154,7 +154,7 @@ import {
         <!-- Claims Cards -->
         <div
           *ngFor="let claim of filteredClaims()"
-          class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+          class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
           [routerLink]="['/admin/claims', claim.id]"
         >
           <div class="flex items-start justify-between gap-4">
@@ -316,13 +316,13 @@ export class AdminClaimsPage implements OnInit {
     const classes: Record<ClaimStatus, string> = {
       reported:
         'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
-      pending: 'bg-warning-100 text-warning-800 dark:bg-warning-900/40 dark:text-warning-200',
+      pending: 'bg-warning-bg-hover text-warning-strong dark:bg-warning-900/40 dark:text-warning-200',
       investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
       under_review:
         'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
       approved:
         'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
-      rejected: 'bg-error-100 text-error-800 dark:bg-error-900/40 dark:text-error-200',
+      rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-900/40 dark:text-error-200',
       paid: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
       closed: 'bg-surface-raised text-text-primary dark:bg-surface-raised/40 dark:text-text-primary',
     };

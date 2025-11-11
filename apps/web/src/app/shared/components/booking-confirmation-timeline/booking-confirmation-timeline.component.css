@@ -97,7 +97,7 @@
 
 .timeline-marker--pending {
   @apply bg-surface-raised dark:bg-surface-secondary;
-  @apply border-border-subtle dark:border-border-default;
+  @apply border-border-muted dark:border-border-default;
   @apply text-text-secondary dark:text-text-muted;
 }
 

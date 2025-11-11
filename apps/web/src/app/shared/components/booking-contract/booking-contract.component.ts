@@ -16,8 +16,8 @@ import { ToastService } from '../../../core/services/toast.service';
             class="rounded-full px-3 py-1 text-sm font-medium"
             [class.bg-success-light/20]="c.accepted_by_renter"
             [class.text-success-light]="c.accepted_by_renter"
-            [class.bg-warning-100]="!c.accepted_by_renter"
-            [class.text-warning-800]="!c.accepted_by_renter"
+            [class.bg-warning-bg-hover]="!c.accepted_by_renter"
+            [class.text-warning-strong]="!c.accepted_by_renter"
           >
             {{ c.accepted_by_renter ? 'Aceptado' : 'Pendiente' }}
           </span>
@@ -31,7 +31,7 @@ import { ToastService } from '../../../core/services/toast.service';
           ></div>
         </div>
       } @else if (error()) {
-        <div class="rounded-lg bg-error-50 p-4 text-error-800">
+        <div class="rounded-lg bg-error-bg p-4 text-error-strong">
           <p class="font-medium">Error al cargar el contrato</p>
           <p class="text-sm">{{ error() }}</p>
         </div>
@@ -76,8 +76,8 @@ import { ToastService } from '../../../core/services/toast.service';
           }
 
           @if (!c.accepted_by_renter) {
-            <div class="rounded-lg bg-warning-50 p-4">
-              <p class="mb-3 text-sm text-warning-800">
+            <div class="rounded-lg bg-warning-bg p-4">
+              <p class="mb-3 text-sm text-warning-strong">
                 Por favor, lee y acepta el contrato para continuar con la reserva.
               </p>
               <button

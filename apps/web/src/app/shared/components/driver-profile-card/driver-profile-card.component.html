@@ -5,9 +5,9 @@
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error() && !loading()" class="bg-error-50 border border-error-200 rounded-lg p-4">
-    <p class="text-error-600 text-sm">{{ error()?.message }}</p>
-    <button (click)="refresh()" class="mt-2 text-error-600 hover:text-error-700 text-sm font-medium">
+  <div *ngIf="error() && !loading()" class="bg-error-bg border border-error-border rounded-lg p-4">
+    <p class="text-error-text text-sm">{{ error()?.message }}</p>
+    <button (click)="refresh()" class="mt-2 text-error-text hover:text-error-strong text-sm font-medium">
       Reintentar
     </button>
   </div>
@@ -91,7 +91,7 @@
               feeMultiplier() < 1
                 ? 'text-success-light'
                 : feeMultiplier() > 1
-                  ? 'text-error-600'
+                  ? 'text-error-text'
                   : 'text-text-secondary dark:text-text-secondary'
             "
             class="text-sm font-semibold"
@@ -113,7 +113,7 @@
               guaranteeMultiplier() < 1
                 ? 'text-success-light'
                 : guaranteeMultiplier() > 1
-                  ? 'text-error-600'
+                  ? 'text-error-text'
                   : 'text-text-secondary dark:text-text-secondary'
             "
             class="text-sm font-semibold"

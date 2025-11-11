@@ -1,6 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WizardComponent, WizardStep } from '../../../../shared/components/wizard/wizard.component';
 import { BookingDatesLocationStepComponent, BookingDatesLocation } from '../../components/booking-dates-location-step/booking-dates-location-step.component';
 import { BookingPaymentCoverageStepComponent, BookingPaymentCoverage } from '../../components/booking-payment-coverage-step/booking-payment-coverage-step.component';
@@ -32,7 +32,6 @@ import { ErrorStateComponent } from '../../../../shared/components/error-state/e
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     WizardComponent,
     BookingDatesLocationStepComponent,
     BookingPaymentCoverageStepComponent,

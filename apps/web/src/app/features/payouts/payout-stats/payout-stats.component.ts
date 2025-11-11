@@ -29,10 +29,10 @@ import { AuthService } from '../../../core/services/auth.service';
               {{ formatCurrency(s.totalAmount) }}
             </p>
           </div>
-          <div class="rounded-lg bg-warning-50 p-4">
-            <p class="text-sm font-medium text-warning-600">Pendientes</p>
-            <p class="text-2xl font-bold text-warning-900">{{ s.pendingPayouts }}</p>
-            <p class="text-xs text-warning-700">
+          <div class="rounded-lg bg-warning-bg p-4">
+            <p class="text-sm font-medium text-warning-text">Pendientes</p>
+            <p class="text-2xl font-bold text-warning-strong">{{ s.pendingPayouts }}</p>
+            <p class="text-xs text-warning-strong">
               {{ formatCurrency(s.pendingAmount) }}
             </p>
           </div>

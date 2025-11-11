@@ -138,7 +138,7 @@ export class BonusMalusService {
       type = 'MALUS';
       message = `Tienes un ${percentage.toFixed(0)}% de recargo`;
       icon = '⛔';
-      color = 'text-error-600';
+      color = 'text-error-text';
       tips.push('Tu historial necesita mejorar para reducir el recargo.');
       tips.push('Completa reservas sin incidentes y obtén mejores calificaciones.');
       tips.push('Verifica tu identidad para reducir el recargo.');

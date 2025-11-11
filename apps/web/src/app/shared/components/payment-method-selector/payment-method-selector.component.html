@@ -21,7 +21,7 @@
       [class.border-cta-default]="selectedMethod() === 'credit_card'"
       [class.bg-cta-default/10]="selectedMethod() === 'credit_card'"
       [class.border-border-default]="selectedMethod() !== 'credit_card'"
-      [class.hover:border-border-subtle]="selectedMethod() !== 'credit_card'"
+      [class.hover:border-border-muted]="selectedMethod() !== 'credit_card'"
       (click)="selectMethod('credit_card')"
     >
       <div class="flex items-start">
@@ -74,7 +74,7 @@
       [class.border-success-light]="selectedMethod() === 'wallet'"
       [class.bg-success-light/10]="selectedMethod() === 'wallet'"
       [class.border-border-default]="selectedMethod() !== 'wallet'"
-      [class.hover:border-border-subtle]="selectedMethod() !== 'wallet'"
+      [class.hover:border-border-muted]="selectedMethod() !== 'wallet'"
       (click)="selectMethod('wallet')"
     >
       <div class="flex items-start">
@@ -152,7 +152,7 @@
       [class.border-purple-600]="selectedMethod() === 'partial_wallet'"
       [class.bg-purple-50]="selectedMethod() === 'partial_wallet'"
       [class.border-border-default]="selectedMethod() !== 'partial_wallet'"
-      [class.hover:border-border-subtle]="selectedMethod() !== 'partial_wallet'"
+      [class.hover:border-border-muted]="selectedMethod() !== 'partial_wallet'"
       (click)="selectMethod('partial_wallet')"
     >
       <div class="flex items-start">
@@ -222,7 +222,7 @@
                     [min]="0"
                     [max]="Math.min(availableBalance(), totalAmount)"
                     step="10"
-                    class="pl-8 pr-3 py-2 w-full border border-border-subtle rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    class="pl-8 pr-3 py-2 w-full border border-border-muted rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                 </div>
                 <button

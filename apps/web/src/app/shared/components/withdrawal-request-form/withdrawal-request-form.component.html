@@ -17,22 +17,22 @@
     </div>
 
     <div
-      class="p-4 bg-success-50 dark:bg-success-500/15 rounded-xl border border-success-500 dark:border-success-500/40 transition-colors"
+      class="p-4 bg-success-bg rounded-xl border border-success-border transition-colors"
     >
-      <p class="text-sm text-success-900 dark:text-success-100 mb-1">Disponible para retirar</p>
-      <p class="text-2xl font-bold text-success-900 dark:text-success-100">
+      <p class="text-sm text-success-text mb-1">Disponible para retirar</p>
+      <p class="text-2xl font-bold text-success-strong">
         ${{ withdrawableBalance | number: '1.2-2' }}
       </p>
     </div>
 
     @if (nonWithdrawableBalance > 0) {
       <div
-        class="md:col-span-2 p-4 bg-warning-50 dark:bg-warning-500/15 border border-warning-500 dark:border-warning-500/40 rounded-xl transition-colors"
+        class="md:col-span-2 p-4 bg-warning-bg border border-warning-border rounded-xl transition-colors"
       >
-        <p class="text-sm font-semibold text-warning-900 dark:text-warning-100">
+        <p class="text-sm font-semibold text-warning-strong">
           Crédito Autorentar protegido
         </p>
-        <p class="text-xs text-warning-900 dark:text-warning-100/80 mt-1 leading-relaxed">
+        <p class="text-xs text-warning-text mt-1 leading-relaxed">
           ${{ nonWithdrawableBalance | number: '1.2-2' }} deben permanecer en tu wallet para
           garantizar reservas y futuras locaciones. Este saldo no es reembolsable, pero puedes
           usarlo para alquilar vehículos o cubrir garantías.
@@ -43,12 +43,12 @@
 
   @if (accounts.length === 0) {
     <div
-      class="text-center py-8 bg-warning-50 dark:bg-warning-500/15 rounded-xl border border-warning-500 dark:border-warning-500/40"
+      class="text-center py-8 bg-warning-bg rounded-xl border border-warning-border"
     >
-      <p class="text-warning-900 dark:text-warning-100 font-semibold">
+      <p class="text-warning-strong font-semibold">
         ⚠️ No tienes cuentas bancarias agregadas
       </p>
-      <p class="text-sm text-warning-900 dark:text-warning-100 mt-1">
+      <p class="text-sm text-warning-text mt-1">
         Primero debes agregar una cuenta bancaria
       </p>
       <button
@@ -72,7 +72,7 @@
           id="bank_account_id"
           formControlName="bank_account_id"
           class="w-full px-4 py-3 border border-border-default dark:border-border-default/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent transition-colors"
-          [class.border-error-500]="
+          [class.border-error-border]="
             form.get('bank_account_id')?.invalid && form.get('bank_account_id')?.touched
           "
         >
@@ -87,7 +87,7 @@
           }
         </select>
         @if (getErrorMessage('bank_account_id')) {
-          <p class="mt-1 text-sm text-error-600 dark:text-error-300">
+          <p class="mt-1 text-sm text-error-text">
             {{ getErrorMessage('bank_account_id') }}
           </p>
         }
@@ -121,7 +121,7 @@
             formControlName="amount"
             placeholder="0.00"
             class="w-full pl-8 pr-4 py-3 border border-border-default dark:border-border-default/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent transition-colors"
-            [class.border-error-500]="form.get('amount')?.invalid && form.get('amount')?.touched"
+            [class.border-error-border]="form.get('amount')?.invalid && form.get('amount')?.touched"
             min="{{ MIN_AMOUNT }}"
             step="0.01"
           />
@@ -130,7 +130,7 @@
           Mínimo: ${{ MIN_AMOUNT }}
         </p>
         @if (getErrorMessage('amount')) {
-          <p class="mt-1 text-sm text-error-600 dark:text-error-300">{{ getErrorMessage('amount') }}</p>
+          <p class="mt-1 text-sm text-error-text">{{ getErrorMessage('amount') }}</p>
         }
       </div>
 
@@ -152,24 +152,24 @@
 
           <div class="flex items-center justify-between text-sm">
             <span class="text-text-secondary dark:text-text-secondary/70">Comisión (1.5%)</span>
-            <span class="font-semibold text-error-600 dark:text-error-300">
+            <span class="font-semibold text-error-text">
               -${{ feeAmount() | number: '1.2-2' }}
             </span>
           </div>
 
           <div
-            class="border-t border-border-subtle dark:border-border-default pt-2 flex items-center justify-between"
+            class="border-t border-border-muted dark:border-border-default pt-2 flex items-center justify-between"
           >
             <span class="text-sm font-bold text-text-primary dark:text-text-primary"
               >Recibirás en tu cuenta</span
             >
-            <span class="text-lg font-bold text-success-700 dark:text-success-200">
+            <span class="text-lg font-bold text-success-strong">
               ${{ netAmount() | number: '1.2-2' }}
             </span>
           </div>
 
           <div
-            class="border-t border-border-subtle dark:border-slate-deep pt-2 flex items-center justify-between text-sm"
+            class="border-t border-border-muted dark:border-slate-deep pt-2 flex items-center justify-between text-sm"
           >
             <span class="text-text-secondary dark:text-text-secondary/70"
               >Se debitará de tu wallet</span
@@ -182,12 +182,12 @@
           <!-- Advertencia de saldo insuficiente -->
           @if (!hasEnoughBalance()) {
             <div
-              class="mt-3 p-3 bg-error-50 dark:bg-error-500/15 border border-error-500 dark:border-error-500/40 rounded-lg transition-colors"
+              class="mt-3 p-3 bg-error-bg border border-error-border rounded-lg transition-colors"
             >
-              <p class="text-sm text-error-900 dark:text-error-100">
+              <p class="text-sm text-error-strong">
                 ⚠️ <strong>Saldo insuficiente</strong>
               </p>
-              <p class="text-xs text-error-900 dark:text-error-100 mt-1">
+              <p class="text-xs text-error-text mt-1">
                 Necesitas ${{ totalDebit() | number: '1.2-2' }} pero solo tienes ${{
                   withdrawableBalance | number: '1.2-2'
                 }}

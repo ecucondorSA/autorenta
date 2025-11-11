@@ -284,14 +284,14 @@ export class DynamicPricingService {
       return {
         show: true,
         text: response.surge_message || 'Tarifa ajustada',
-        color: 'bg-warning-500 text-text-inverse',
+        color: 'bg-warning-bg0 text-text-inverse',
         icon: '⚡',
       };
     } else if (multiplier < 0.95) {
       return {
         show: true,
         text: response.surge_message || 'Descuento disponible',
-        color: 'bg-success-500 text-text-inverse',
+        color: 'bg-success-bg0 text-text-inverse',
         icon: '💰',
       };
     }

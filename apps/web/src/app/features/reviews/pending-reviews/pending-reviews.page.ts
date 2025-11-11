@@ -39,9 +39,9 @@ interface PendingReview {
         <!-- Error State -->
         @if (error() && !loading()) {
           <div
-            class="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg p-4 mb-6"
+            class="bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-lg p-4 mb-6"
           >
-            <p class="text-error-800 dark:text-error-200">{{ error() }}</p>
+            <p class="text-error-strong">{{ error() }}</p>
           </div>
         }
 
@@ -97,16 +97,16 @@ interface PendingReview {
                       <span> Finalizó: {{ formatDate(review.checkout_date) }} </span>
                       <span
                         class="px-2 py-1 rounded-full text-xs font-medium"
-                        [class.bg-warning-100]="review.days_remaining > 7"
-                        [class.text-warning-800]="review.days_remaining > 7"
+                        [class.bg-warning-bg-hover]="review.days_remaining > 7"
+                        [class.text-warning-strong]="review.days_remaining > 7"
                         [class.bg-warning-light/20]="
                           review.days_remaining <= 7 && review.days_remaining > 3
                         "
                         [class.text-warning-light]="
                           review.days_remaining <= 7 && review.days_remaining > 3
                         "
-                        [class.bg-error-100]="review.days_remaining <= 3"
-                        [class.text-error-800]="review.days_remaining <= 3"
+                        [class.bg-error-bg-hover]="review.days_remaining <= 3"
+                        [class.text-error-strong]="review.days_remaining <= 3"
                       >
                         {{ review.days_remaining }}
                         {{ review.days_remaining === 1 ? 'día restante' : 'días restantes' }}

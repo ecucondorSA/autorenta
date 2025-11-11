@@ -59,13 +59,13 @@ import { ToastService } from '../../../core/services/toast.service';
             type="text"
             [(ngModel)]="brand"
             placeholder="Marca"
-            class="px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="text"
             [(ngModel)]="model"
             placeholder="Modelo"
-            class="px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
         </div>
         <div class="grid grid-cols-2 gap-2">
@@ -73,13 +73,13 @@ import { ToastService } from '../../../core/services/toast.service';
             type="number"
             [(ngModel)]="year"
             placeholder="Año (opcional)"
-            class="px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
           <input
             type="text"
             [(ngModel)]="color"
             placeholder="Color (opcional)"
-            class="px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+            class="px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
         </div>
         <input
@@ -88,7 +88,7 @@ import { ToastService } from '../../../core/services/toast.service';
           placeholder="Cantidad de fotos (1-5)"
           min="1"
           max="5"
-          class="w-full px-3 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
+          class="w-full px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
         />
       </div>
 

@@ -58,10 +58,10 @@ interface WalletLedgerEntry {
       <!-- Error State -->
       @else if (error()) {
         <div
-          class="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg p-6"
+          class="bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-lg p-6"
         >
-          <h3 class="text-lg font-semibold text-error-800 dark:text-error-200 mb-2">Error</h3>
-          <p class="text-error-700 dark:text-error-300">{{ error() }}</p>
+          <h3 class="text-lg font-semibold text-error-strong mb-2">Error</h3>
+          <p class="text-error-strong">{{ error() }}</p>
           <button
             (click)="loadFundData()"
             class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-md hover:bg-error-700"
@@ -175,7 +175,7 @@ interface WalletLedgerEntry {
           <!-- Fund Metadata -->
           @if (fund()!.meta && Object.keys(fund()!.meta).length > 0) {
             <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow">
-              <div class="px-6 py-4 border-b border-border-default dark:border-border-subtle">
+              <div class="px-6 py-4 border-b border-border-default dark:border-border-muted">
                 <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
                   Metadata del Fondo
                 </h2>
@@ -191,7 +191,7 @@ interface WalletLedgerEntry {
           <!-- Recent Activity -->
           <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow">
             <div
-              class="px-6 py-4 border-b border-border-default dark:border-border-subtle flex items-center justify-between"
+              class="px-6 py-4 border-b border-border-default dark:border-border-muted flex items-center justify-between"
             >
               <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
                 Actividad Reciente
@@ -252,7 +252,7 @@ interface WalletLedgerEntry {
                         <p
                           class="text-lg font-bold"
                           [class.text-success-light]="entry.kind === 'franchise_fund'"
-                          [class.text-error-600]="entry.kind === 'franchise_user'"
+                          [class.text-error-text]="entry.kind === 'franchise_user'"
                         >
                           {{ entry.kind === 'franchise_fund' ? '+' : '-'
                           }}{{ formatAmount(entry.amount_cents) }}
@@ -267,9 +267,9 @@ interface WalletLedgerEntry {
 
           <!-- Action Buttons (Admin Only) -->
           <div
-            class="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-lg p-6"
+            class="bg-warning-bg dark:bg-warning-900/20 border border-warning-border dark:border-warning-800 rounded-lg p-6"
           >
-            <h3 class="text-lg font-semibold text-warning-900 dark:text-warning-100 mb-4">
+            <h3 class="text-lg font-semibold text-warning-strong dark:text-warning-100 mb-4">
               ⚠️ Acciones Administrativas
             </h3>
             <div class="flex flex-wrap gap-3">

@@ -54,17 +54,17 @@ export class ReembolsabilityBadgeComponent {
     reembolsable: {
       icon: '🔄',
       label: 'Reembolsable',
-      bgColor: 'bg-success-50 dark:bg-success-900/20',
-      textColor: 'text-success-700 dark:text-success-300',
-      borderColor: 'border-success-200 dark:border-success-700',
+      bgColor: 'bg-success-bg dark:bg-success-900/20',
+      textColor: 'text-success-strong dark:text-success-300',
+      borderColor: 'border-success-border dark:border-success-700',
       tooltip: 'Se libera automáticamente al devolver el auto sin daños',
     },
     'no-reembolsable': {
       icon: '⚠️',
       label: 'No reembolsable',
-      bgColor: 'bg-warning-50 dark:bg-warning-900/20',
-      textColor: 'text-warning-700 dark:text-warning-300',
-      borderColor: 'border-warning-200 dark:border-warning-700',
+      bgColor: 'bg-warning-bg dark:bg-warning-900/20',
+      textColor: 'text-warning-strong dark:text-warning-300',
+      borderColor: 'border-warning-border dark:border-warning-700',
       tooltip: 'Queda como saldo no retirable en tu wallet',
     },
     reutilizable: {

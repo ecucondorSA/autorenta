@@ -80,7 +80,7 @@ export interface BookingDatesLocation {
                 id="endDate"
                 class="field-input"
                 [(ngModel)]="localData.endDate"
-                [min]="minEndDate"
+                [min]="minEndDate()"
                 (change)="handleDateChange()"
                 required
               />

@@ -5,11 +5,11 @@
     <!-- ✅ FIX: Error Alert - Show wallet service errors -->
     @if (walletError(); as error) {
       <div
-        class="bg-error-50 border border-error-200 dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4 transition-colors duration-300"
+        class="bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4 transition-colors duration-300"
       >
         <div class="flex items-start space-x-3">
           <svg
-            class="w-6 h-6 text-error-600 dark:text-error-300 flex-shrink-0"
+            class="w-6 h-6 text-error-text flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -20,14 +20,14 @@
             />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-medium text-error-900 dark:text-error-100">
+            <p class="text-sm font-medium text-error-strong">
               Error al cargar el wallet
             </p>
-            <p class="mt-1 text-sm text-error-700 dark:text-error-200">{{ error.message }}</p>
+            <p class="mt-1 text-sm text-error-strong">{{ error.message }}</p>
             <button
               type="button"
               (click)="refreshWalletData()"
-              class="mt-2 text-sm font-medium text-error-800 dark:text-error-100 hover:text-error-900 dark:hover:text-error-50 underline"
+              class="mt-2 text-sm font-medium text-error-strong hover:text-error-strong dark:hover:text-error-50 underline"
             >
               Reintentar
             </button>
@@ -67,8 +67,8 @@
                 class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
                 [class.bg-success-light/10]="protectedCreditStatus() === 'active'"
                 [class.text-success-light]="protectedCreditStatus() === 'active'"
-                [class.bg-warning-50]="protectedCreditStatus() !== 'active'"
-                [class.text-warning-700]="protectedCreditStatus() !== 'active'">
+                [class.bg-warning-bg]="protectedCreditStatus() !== 'active'"
+                [class.text-warning-strong]="protectedCreditStatus() !== 'active'">
                 {{
                   protectedCreditStatus() === 'active'
                     ? 'Crédito protegido listo'
@@ -77,7 +77,7 @@
               </span>
               @if (pendingDepositsCount() > 0) {
                 <span
-                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-warning-100 text-warning-800 dark:bg-warning-500/20 dark:text-warning-200"
+                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-200"
                 >
                   {{ pendingDepositsCount() }} depósito(s) pendiente(s)
                 </span>
@@ -214,7 +214,7 @@
             <div class="grid gap-3 sm:grid-cols-3">
               <div class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -238,7 +238,7 @@
 
               <div class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -262,7 +262,7 @@
 
               <div class="flex items-start gap-2">
                 <svg
-                  class="w-5 h-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -373,10 +373,10 @@
               </h4>
               <div class="grid gap-3 sm:grid-cols-2">
                 <div
-                  class="flex items-start gap-3 p-3 rounded-lg bg-success-50 dark:bg-success-500/10"
+                  class="flex items-start gap-3 p-3 rounded-lg bg-success-bg dark:bg-success-bg0/10"
                 >
                   <svg
-                    class="w-5 h-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5"
+                    class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -389,10 +389,10 @@
                     />
                   </svg>
                   <div>
-                    <p class="text-sm font-semibold text-success-800 dark:text-success-200">
+                    <p class="text-sm font-semibold text-success-strong dark:text-success-200">
                       No necesitas tarjeta internacional
                     </p>
-                    <p class="text-xs text-success-700 dark:text-success-300 mt-1">
+                    <p class="text-xs text-success-strong dark:text-success-300 mt-1">
                       Ideal para usuarios sin tarjeta habilitada para compras internacionales
                     </p>
                   </div>
@@ -451,10 +451,10 @@
                 </div>
 
                 <div
-                  class="flex items-start gap-3 p-3 rounded-lg bg-warning-50 dark:bg-warning-500/10"
+                  class="flex items-start gap-3 p-3 rounded-lg bg-warning-bg dark:bg-warning-bg0/10"
                 >
                   <svg
-                    class="w-5 h-5 text-warning-600 dark:text-warning-400 flex-shrink-0 mt-0.5"
+                    class="w-5 h-5 text-warning-text dark:text-warning-400 flex-shrink-0 mt-0.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -467,10 +467,10 @@
                     />
                   </svg>
                   <div>
-                    <p class="text-sm font-semibold text-warning-800 dark:text-warning-200">
+                    <p class="text-sm font-semibold text-warning-strong dark:text-warning-200">
                       Reservas más rápidas
                     </p>
-                    <p class="text-xs text-warning-700 dark:text-warning-300 mt-1">
+                    <p class="text-xs text-warning-strong dark:text-warning-300 mt-1">
                       Evitas el proceso de verificación de tarjeta en cada reserva
                     </p>
                   </div>
@@ -613,32 +613,32 @@
 
             <div class="grid gap-3 sm:grid-cols-3">
               <div
-                class="rounded-xl border border-warning-200 bg-warning-50/70 dark:bg-warning-500/10 px-3 py-3"
+                class="rounded-xl border border-warning-border bg-warning-bg/70 dark:bg-warning-bg0/10 px-3 py-3"
               >
                 <p
-                  class="text-xs uppercase tracking-wide text-warning-800/90 dark:text-warning-200"
+                  class="text-xs uppercase tracking-wide text-warning-strong/90 dark:text-warning-200"
                 >
                   Crédito protegido
                 </p>
                 <p class="text-lg font-semibold text-text-primary dark:text-warning-50">
                   USD {{ protectedCreditBalance() / 100 | number: '1.2-2' }}
                 </p>
-                <p class="text-xs text-warning-700/80 dark:text-warning-200/80 mt-1">
+                <p class="text-xs text-warning-strong/80 dark:text-warning-200/80 mt-1">
                   Meta inicial: USD 300
                 </p>
               </div>
               <div
-                class="rounded-xl border border-success-200 bg-success-50/70 dark:bg-success-500/10 px-3 py-3"
+                class="rounded-xl border border-success-border bg-success-bg/70 dark:bg-success-bg0/10 px-3 py-3"
               >
                 <p
-                  class="text-xs uppercase tracking-wide text-success-700/90 dark:text-success-200"
+                  class="text-xs uppercase tracking-wide text-success-strong/90 dark:text-success-200"
                 >
                   Transferible (in-app)
                 </p>
                 <p class="text-lg font-semibold text-text-primary dark:text-success-50">
                   USD {{ transferableBalance() / 100 | number: '1.2-2' }}
                 </p>
-                <p class="text-xs text-success-700/80 dark:text-success-100/70 mt-1">
+                <p class="text-xs text-success-strong/80 dark:text-success-100/70 mt-1">
                   Envíalo a otros usuarios
                 </p>
               </div>

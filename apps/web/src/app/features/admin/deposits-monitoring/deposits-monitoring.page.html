@@ -90,27 +90,27 @@
         </p>
       </div>
 
-      <div class="bg-warning-50 dark:bg-warning-900/20 rounded-lg shadow p-6">
+      <div class="bg-warning-bg dark:bg-warning-900/20 rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-sm font-medium text-warning-700 dark:text-warning-400">Pendientes</p>
+          <p class="text-sm font-medium text-warning-strong dark:text-warning-400">Pendientes</p>
           <span class="text-2xl">⏳</span>
         </div>
-        <p class="text-3xl font-bold text-warning-900 dark:text-warning-100">{{ stats().pending }}</p>
+        <p class="text-3xl font-bold text-warning-strong dark:text-warning-100">{{ stats().pending }}</p>
       </div>
 
-      <div class="bg-error-50 dark:bg-error-900/20 rounded-lg shadow p-6">
+      <div class="bg-error-bg dark:bg-error-900/20 rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-sm font-medium text-error-700 dark:text-error-400">Fallidos</p>
+          <p class="text-sm font-medium text-error-strong">Fallidos</p>
           <span class="text-2xl">❌</span>
         </div>
-        <p class="text-3xl font-bold text-error-900 dark:text-error-100">{{ stats().failed }}</p>
-        <p class="text-sm text-error-600 dark:text-error-400 mt-1">{{ failureRate() }}% tasa error</p>
+        <p class="text-3xl font-bold text-error-strong">{{ stats().failed }}</p>
+        <p class="text-sm text-error-text mt-1">{{ failureRate() }}% tasa error</p>
       </div>
     </div>
 
     <!-- Tabs -->
     <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow">
-      <div class="border-b border-border-default dark:border-border-subtle">
+      <div class="border-b border-border-default dark:border-border-muted">
         <nav class="flex gap-4 px-6" aria-label="Tabs">
           <button
             (click)="selectedTab.set('pending')"
@@ -153,7 +153,7 @@
         <div *ngIf="pendingDeposits().length > 0" class="space-y-4">
           <div
             *ngFor="let deposit of pendingDeposits()"
-            class="border border-warning-200 dark:border-warning-800 rounded-lg p-4 bg-warning-50 dark:bg-warning-900/10"
+            class="border border-warning-border dark:border-warning-800 rounded-lg p-4 bg-warning-bg dark:bg-warning-900/10"
           >
             <div class="flex justify-between items-start">
               <div>
@@ -168,7 +168,7 @@
                 </p>
               </div>
               <span
-                class="px-3 py-1 bg-warning-100 dark:bg-warning-800 text-warning-800 dark:text-warning-100 text-xs font-medium rounded-full"
+                class="px-3 py-1 bg-warning-bg-hover dark:bg-warning-800 text-warning-strong dark:text-warning-100 text-xs font-medium rounded-full"
               >
                 Pendiente
               </span>
@@ -226,7 +226,7 @@
         <div *ngIf="failedDeposits().length > 0" class="space-y-4">
           <div
             *ngFor="let deposit of failedDeposits()"
-            class="border border-error-200 dark:border-error-800 rounded-lg p-4 bg-error-50 dark:bg-error-900/10"
+            class="border border-error-border dark:border-error-800 rounded-lg p-4 bg-error-bg dark:bg-error-900/10"
           >
             <div class="flex justify-between items-start">
               <div>
@@ -241,7 +241,7 @@
                 </p>
               </div>
               <span
-                class="px-3 py-1 bg-error-100 dark:bg-error-800 text-error-800 dark:text-error-100 text-xs font-medium rounded-full"
+                class="px-3 py-1 bg-error-bg-hover dark:bg-error-800 text-error-strong text-xs font-medium rounded-full"
               >
                 Fallido
               </span>

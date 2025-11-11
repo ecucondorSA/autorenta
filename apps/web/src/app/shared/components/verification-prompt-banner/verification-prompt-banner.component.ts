@@ -302,10 +302,10 @@ import { UserProfile } from '../../../core/models';
 
           <div class="flex items-start gap-3">
             <div
-              class="flex-shrink-0 w-10 h-10 bg-warning-100 dark:bg-warning-900/30 rounded-full flex items-center justify-center"
+              class="flex-shrink-0 w-10 h-10 bg-warning-bg-hover dark:bg-warning-900/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-warning-600 dark:text-warning-400"
+                class="w-5 h-5 text-warning-text dark:text-warning-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

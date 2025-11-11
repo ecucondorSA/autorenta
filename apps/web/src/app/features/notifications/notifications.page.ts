@@ -108,7 +108,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                 id="typeFilter"
                 [(ngModel)]="selectedType"
                 (ngModelChange)="onFilterChange()"
-                class="rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm focus:border-cta-default focus:outline-none focus:ring-2 focus:ring-cta-default dark:border-border-default dark:bg-surface-base dark:text-text-inverse"
+                class="rounded-lg border border-border-muted bg-surface-raised px-3 py-2 text-sm focus:border-cta-default focus:outline-none focus:ring-2 focus:ring-cta-default dark:border-border-default dark:bg-surface-base dark:text-text-inverse"
               >
                 <option value="all">Todas</option>
                 <option value="new_booking_for_owner">Nuevas reservas</option>
@@ -128,7 +128,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                 type="checkbox"
                 [(ngModel)]="showOnlyUnread"
                 (ngModelChange)="toggleUnreadFilter()"
-                class="h-4 w-4 rounded border-border-subtle text-cta-default focus:ring-2 focus:ring-cta-default dark:border-border-default dark:bg-surface-base"
+                class="h-4 w-4 rounded border-border-muted text-cta-default focus:ring-2 focus:ring-cta-default dark:border-border-default dark:bg-surface-base"
               />
               <span class="text-sm font-medium text-text-primary dark:text-text-secondary">
                 Solo no leídas
@@ -149,7 +149,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
               @if (hasReadNotifications()) {
                 <button
                   (click)="deleteAllRead()"
-                  class="rounded-lg border border-border-subtle px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:text-text-secondary dark:hover:bg-gray-700"
+                  class="rounded-lg border border-border-muted px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:text-text-secondary dark:hover:bg-gray-700"
                   type="button"
                 >
                   Eliminar leídas
@@ -167,7 +167,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
           <div class="flex h-96 items-center justify-center">
             <div class="text-center">
               <div
-                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-subtle border-t-blue-500"
+                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500"
               ></div>
               <p class="text-text-secondary dark:text-text-muted">Cargando notificaciones...</p>
             </div>
@@ -228,9 +228,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               [ngClass]="{
                                 'bg-success-light/20 dark:bg-success-light/30':
                                   notification.type === 'success',
-                                'bg-warning-100 dark:bg-warning-900/30':
+                                'bg-warning-bg-hover dark:bg-warning-900/30':
                                   notification.type === 'warning',
-                                'bg-error-100 dark:bg-error-900/30': notification.type === 'error',
+                                'bg-error-bg-hover dark:bg-error-900/30': notification.type === 'error',
                                 'bg-cta-default/20 dark:bg-cta-default/30':
                                   notification.type === 'info',
                               }"
@@ -277,7 +277,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               }
                               <button
                                 (click)="markAsRead(notification.id)"
-                                class="rounded-lg border border-border-subtle bg-surface-raised px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-700"
+                                class="rounded-lg border border-border-muted bg-surface-raised px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-700"
                                 type="button"
                               >
                                 Marcar como leída
@@ -324,7 +324,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                   <div class="space-y-3">
                     @for (notification of readNotifications(); track notification.id) {
                       <div
-                        class="notification-card group relative rounded-lg border border-border-default bg-surface-raised p-4 shadow transition-all hover:shadow-md dark:border-border-subtle dark:bg-surface-base"
+                        class="notification-card group relative rounded-lg border border-border-default bg-surface-raised p-4 shadow transition-all hover:shadow-md dark:border-border-muted dark:bg-surface-base"
                       >
                         <div class="flex gap-4">
                           <!-- Icon -->
@@ -334,9 +334,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               [ngClass]="{
                                 'bg-success-light/20 dark:bg-success-light/30':
                                   notification.type === 'success',
-                                'bg-warning-100 dark:bg-warning-900/30':
+                                'bg-warning-bg-hover dark:bg-warning-900/30':
                                   notification.type === 'warning',
-                                'bg-error-100 dark:bg-error-900/30': notification.type === 'error',
+                                'bg-error-bg-hover dark:bg-error-900/30': notification.type === 'error',
                                 'bg-cta-default/20 dark:bg-cta-default/30':
                                   notification.type === 'info',
                               }"
@@ -426,8 +426,8 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           [ngClass]="{
                             'bg-success-light/20 dark:bg-success-light/30':
                               notification.type === 'success',
-                            'bg-warning-100 dark:bg-warning-900/30': notification.type === 'warning',
-                            'bg-error-100 dark:bg-error-900/30': notification.type === 'error',
+                            'bg-warning-bg-hover dark:bg-warning-900/30': notification.type === 'warning',
+                            'bg-error-bg-hover dark:bg-error-900/30': notification.type === 'error',
                             'bg-cta-default/20 dark:bg-cta-default/30':
                               notification.type === 'info',
                           }"
@@ -474,7 +474,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           }
                           <button
                             (click)="markAsRead(notification.id)"
-                            class="rounded-lg border border-border-subtle bg-surface-raised px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-700"
+                            class="rounded-lg border border-border-muted bg-surface-raised px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-700"
                             type="button"
                           >
                             Marcar como leída

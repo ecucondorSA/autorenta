@@ -118,7 +118,7 @@ import { TranslateModule } from '@ngx-translate/core';
           <!-- Tips Tab -->
           <div *ngIf="activeTab() === 'tips'" class="space-y-3">
             <!-- Accordion Items -->
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-subtle overflow-hidden">
+            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden">
               <button
                 type="button"
                 (click)="toggleAccordion('obligations')"
@@ -144,7 +144,7 @@ import { TranslateModule } from '@ngx-translate/core';
               </div>
             </div>
 
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-subtle overflow-hidden">
+            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden">
               <button
                 type="button"
                 (click)="toggleAccordion('maintenance')"
@@ -170,7 +170,7 @@ import { TranslateModule } from '@ngx-translate/core';
               </div>
             </div>
 
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-subtle overflow-hidden">
+            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden">
               <button
                 type="button"
                 (click)="toggleAccordion('insurance')"
@@ -199,7 +199,7 @@ import { TranslateModule } from '@ngx-translate/core';
               </div>
             </div>
 
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-subtle overflow-hidden">
+            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden">
               <button
                 type="button"
                 (click)="toggleAccordion('legal')"
@@ -226,7 +226,7 @@ import { TranslateModule } from '@ngx-translate/core';
           </div>
 
           <!-- Calculator Tab -->
-          <div *ngIf="activeTab() === 'calculator'" class="bg-surface-raised dark:bg-surface-raised rounded-lg p-6 border border-border-default dark:border-border-subtle">
+          <div *ngIf="activeTab() === 'calculator'" class="bg-surface-raised dark:bg-surface-raised rounded-lg p-6 border border-border-default dark:border-border-muted">
             <h4 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">Calculadora de Ganancias</h4>
 
             <div class="space-y-4">
@@ -239,7 +239,7 @@ import { TranslateModule } from '@ngx-translate/core';
                   [(ngModel)]="calcPricePerDay"
                   (ngModelChange)="updateCalculations()"
                   min="1"
-                  class="w-full rounded-lg border border-border-subtle dark:border-border-default dark:bg-surface-base dark:text-text-inverse px-4 py-2"
+                  class="w-full rounded-lg border border-border-muted dark:border-border-default dark:bg-surface-base dark:text-text-inverse px-4 py-2"
                   placeholder="50"
                 />
               </div>
@@ -254,7 +254,7 @@ import { TranslateModule } from '@ngx-translate/core';
                   (ngModelChange)="updateCalculations()"
                   min="1"
                   max="30"
-                  class="w-full rounded-lg border border-border-subtle dark:border-border-default dark:bg-surface-base dark:text-text-inverse px-4 py-2"
+                  class="w-full rounded-lg border border-border-muted dark:border-border-default dark:bg-surface-base dark:text-text-inverse px-4 py-2"
                   placeholder="15"
                 />
                 <div class="mt-2 flex gap-2">

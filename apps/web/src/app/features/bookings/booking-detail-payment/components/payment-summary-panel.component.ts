@@ -108,12 +108,12 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         <!-- ✅ NEW: Delivery Fee line item (if applicable) -->
         @if (priceBreakdown.deliveryFeeUsd && priceBreakdown.deliveryFeeUsd > 0) {
           <div
-            class="mb-3 p-3 bg-warning-50 dark:bg-warning-900/20 rounded-lg border border-warning-200 dark:border-warning-800/40"
+            class="mb-3 p-3 bg-warning-bg dark:bg-warning-900/20 rounded-lg border border-warning-border dark:border-warning-800/40"
           >
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <svg
-                  class="w-4 h-4 text-warning-600 dark:text-warning-400"
+                  class="w-4 h-4 text-warning-text dark:text-warning-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -125,15 +125,15 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                     d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
                   />
                 </svg>
-                <span class="text-xs font-medium text-warning-900 dark:text-warning-200">
+                <span class="text-xs font-medium text-warning-strong dark:text-warning-200">
                   Envío ({{ formatDistance(priceBreakdown.distanceKm || 0) }})
                 </span>
               </div>
               <div class="text-right">
-                <p class="text-sm font-semibold text-warning-900 dark:text-warning-200">
+                <p class="text-sm font-semibold text-warning-strong dark:text-warning-200">
                   {{ formatArs(deliveryFeeArs()) }}
                 </p>
-                <p class="text-xs text-warning-700 dark:text-warning-400">
+                <p class="text-xs text-warning-strong dark:text-warning-400">
                   {{ formatUsd(priceBreakdown.deliveryFeeUsd) }}
                 </p>
               </div>
@@ -344,7 +344,7 @@ export class PaymentSummaryPanelComponent {
     const classes = {
       local:
         'bg-success-light/20 text-success-light dark:bg-success-light/30 dark:text-success-light',
-      regional: 'bg-warning-100 text-warning-800 dark:bg-warning-900/30 dark:text-warning-300',
+      regional: 'bg-warning-bg-hover text-warning-strong dark:bg-warning-900/30 dark:text-warning-300',
       long_distance:
         'bg-warning-light/20 text-warning-light dark:bg-warning-light/30 dark:text-warning-light',
     };

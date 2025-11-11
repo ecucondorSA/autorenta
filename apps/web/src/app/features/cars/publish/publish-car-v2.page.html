@@ -71,12 +71,12 @@
 
         <div
           *ngIf="editMode()"
-          class="mt-4 bg-warning-50/90 dark:bg-warning-500/15 border border-warning-200 dark:border-warning-400/50 rounded-lg p-3 flex items-start gap-2"
+          class="mt-4 bg-warning-bg/90 dark:bg-warning-bg0/15 border border-warning-border dark:border-warning-400/50 rounded-lg p-3 flex items-start gap-2"
         >
-          <span class="text-warning-600 dark:text-warning-200 text-lg">✏️</span>
+          <span class="text-warning-text dark:text-warning-200 text-lg">✏️</span>
           <div class="flex-1">
-            <p class="text-sm text-warning-800 dark:text-warning-100 font-medium">Modo edición</p>
-            <p class="text-xs text-warning-600 dark:text-warning-100/80 mt-1">
+            <p class="text-sm text-warning-strong dark:text-warning-100 font-medium">Modo edición</p>
+            <p class="text-xs text-warning-text dark:text-warning-100/80 mt-1">
               Estás editando un auto existente. Los cambios se guardan al enviar el formulario.
             </p>
           </div>
@@ -107,7 +107,7 @@
 
         <div
           *ngIf="mpStatusError()"
-          class="mt-4 rounded-xl border border-error-200 bg-error-50/90 p-4 text-sm text-error-800 dark:border-error-500/60 dark:bg-error-500/10 dark:text-error-200"
+          class="mt-4 rounded-xl border border-error-border bg-error-bg/90 p-4 text-sm text-error-strong dark:border-error-border/60 dark:bg-error-bg0/10 dark:text-error-200"
         >
           <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <div class="flex items-start gap-2">
@@ -122,7 +122,7 @@
             </div>
             <button
               type="button"
-              class="rounded-lg border border-error-300/80 px-4 py-2 text-xs font-semibold text-error-800 transition hover:bg-error-100/80 dark:border-error-400/50 dark:bg-transparent dark:text-error-100 dark:hover:bg-error-500/20"
+              class="rounded-lg border border-error-300/80 px-4 py-2 text-xs font-semibold text-error-strong transition hover:bg-error-bg-hover/80 dark:border-error-400/50 dark:bg-transparent dark:text-error-100 dark:hover:bg-error-bg0/20"
               (click)="openOnboardingModal()"
             >
               Reintentar vinculación
@@ -263,7 +263,7 @@
                 <select
                   formControlName="brand_id"
                   (change)="onBrandChange()"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 >
                   <option value="">Selecciona una marca</option>
                   <option *ngFor="let brand of brands()" [value]="brand.id">
@@ -279,7 +279,7 @@
                   formControlName="model_id"
                   (change)="onModelChange()"
                   [disabled]="!publishForm.get('brand_id')?.value"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent disabled:bg-surface-raised"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent disabled:bg-surface-raised"
                 >
                   <option value="">Selecciona un modelo</option>
                   <option *ngFor="let model of filteredModels()" [value]="model.id">
@@ -301,7 +301,7 @@
                   [min]="minYear"
                   [max]="maxYear"
                   placeholder="2024"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
               </div>
 
@@ -313,7 +313,7 @@
                   formControlName="mileage"
                   min="0"
                   placeholder="50000"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
               </div>
 
@@ -324,7 +324,7 @@
                   type="text"
                   formControlName="color"
                   placeholder="Ej: Blanco, Negro"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
               </div>
 
@@ -333,7 +333,7 @@
                 <label class="block text-sm font-medium text-text-primary mb-2">Transmisión *</label>
                 <select
                   formControlName="transmission"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
                 >
                   <option value="">Selecciona</option>
                   <option value="manual">Manual</option>
@@ -346,7 +346,7 @@
                 <label class="block text-sm font-medium text-text-primary mb-2">Combustible *</label>
                 <select
                   formControlName="fuel"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
                 >
                   <option value="">Selecciona</option>
                   <option value="nafta">Nafta</option>
@@ -378,7 +378,7 @@
                     [class.border-primary-600]="isDynamicPricing()"
                     [class.bg-primary-50]="isDynamicPricing()"
                     [class.text-primary-700]="isDynamicPricing()"
-                    [class.border-border-subtle]="!isDynamicPricing()"
+                    [class.border-border-muted]="!isDynamicPricing()"
                     (click)="setPricingStrategy('dynamic')"
                   >
                     <p class="text-sm font-semibold flex items-center gap-2">
@@ -398,7 +398,7 @@
                     [class.border-primary-600]="!isDynamicPricing()"
                     [class.bg-primary-50]="!isDynamicPricing()"
                     [class.text-primary-700]="!isDynamicPricing()"
-                    [class.border-border-subtle]="isDynamicPricing()"
+                    [class.border-border-muted]="isDynamicPricing()"
                     (click)="setPricingStrategy('custom')"
                   >
                     <p class="text-sm font-semibold">Precio personalizado</p>
@@ -420,7 +420,7 @@
                   min="1"
                   placeholder="50"
                   [readonly]="isDynamicPricing()"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent disabled:bg-surface-raised"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent disabled:bg-surface-raised"
                 />
                 <p class="mt-1 text-xs text-text-secondary" *ngIf="!isDynamicPricing()">
                   Puedes actualizar este valor cuando quieras desde tu panel.
@@ -432,7 +432,7 @@
                 <label class="block text-sm font-medium text-text-primary mb-2">Moneda *</label>
                 <select
                   formControlName="currency"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
                 >
                   <option value="USD">USD - Dólar</option>
                   <option value="ARS">ARS - Peso Argentino</option>
@@ -456,7 +456,7 @@
                   min="5000"
                   max="500000"
                   placeholder="15000"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
                 <p class="mt-1 text-xs text-text-secondary">
                   Ingresa el valor aproximado de mercado de tu vehículo. Este valor se usa para
@@ -472,7 +472,7 @@
                   formControlName="min_rental_days"
                   min="1"
                   placeholder="1"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
               </div>
 
@@ -484,7 +484,7 @@
                   formControlName="max_rental_days"
                   min="1"
                   placeholder="30"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
                 <p class="mt-1 text-xs text-text-secondary">Dejar vacío = sin límite</p>
               </div>
@@ -511,7 +511,7 @@
                     formControlName="deposit_amount"
                     min="0"
                     placeholder="200"
-                    class="w-full md:w-1/2 rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                    class="w-full md:w-1/2 rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                   />
                   <p class="mt-1 text-xs text-text-secondary">Monto del depósito</p>
                 </div>
@@ -578,7 +578,7 @@
                   type="text"
                   formControlName="location_street"
                   placeholder="Ej: Av. Corrientes"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
               </div>
 
@@ -589,7 +589,7 @@
                   type="text"
                   formControlName="location_street_number"
                   placeholder="1234"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
               </div>
 
@@ -600,7 +600,7 @@
                   type="text"
                   formControlName="location_city"
                   placeholder="Ej: Buenos Aires"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
               </div>
 
@@ -611,7 +611,7 @@
                   type="text"
                   formControlName="location_state"
                   placeholder="Ej: Buenos Aires"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
               </div>
 
@@ -620,7 +620,7 @@
                 <label class="block text-sm font-medium text-text-primary mb-2">País *</label>
                 <select
                   formControlName="location_country"
-                  class="w-full rounded-lg border border-border-subtle px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
+                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
                 >
                   <option value="AR">Argentina</option>
                   <option value="UY">Uruguay</option>
@@ -749,7 +749,7 @@
                   [alt]="'Foto ' + (i + 1)"
                   class="w-full h-32 object-cover rounded-lg border-2"
                   [class.border-cta-default]="i === 0"
-                  [class.border-border-subtle]="i !== 0"
+                  [class.border-border-muted]="i !== 0"
                 />
                 <div
                   *ngIf="i === 0"
@@ -776,9 +776,9 @@
 
             <div
               *ngIf="uploadedPhotos().length < 3"
-              class="mt-4 bg-warning-50 border border-warning-200 rounded-lg p-3"
+              class="mt-4 bg-warning-bg border border-warning-border rounded-lg p-3"
             >
-              <p class="text-sm text-warning-800">
+              <p class="text-sm text-warning-strong">
                 ⚠️ Necesitas al menos 3 fotos para publicar. Actualmente tienes
                 {{ uploadedPhotos().length }}.
               </p>

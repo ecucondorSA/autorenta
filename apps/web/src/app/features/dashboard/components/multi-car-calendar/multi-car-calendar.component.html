@@ -27,25 +27,25 @@
     <!-- Stats -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-subtle"
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-muted"
       >
         <p class="text-sm text-text-secondary dark:text-text-secondary">Total Autos</p>
         <p class="text-2xl font-bold text-cta-default mt-1">{{ stats().total }}</p>
       </div>
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-subtle"
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-muted"
       >
         <p class="text-sm text-text-secondary dark:text-text-secondary">Con Reservas</p>
         <p class="text-2xl font-bold text-success-light mt-1">{{ stats().withBookings }}</p>
       </div>
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-subtle"
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-muted"
       >
         <p class="text-sm text-text-secondary dark:text-text-secondary">Con Bloqueos</p>
-        <p class="text-2xl font-bold text-error-600 mt-1">{{ stats().withBlocks }}</p>
+        <p class="text-2xl font-bold text-error-text mt-1">{{ stats().withBlocks }}</p>
       </div>
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-subtle"
+        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-muted"
       >
         <p class="text-sm text-text-secondary dark:text-text-secondary">Totalmente Disponibles</p>
         <p class="text-2xl font-bold text-cta-default mt-1">{{ stats().fullyAvailable }}</p>
@@ -54,7 +54,7 @@
 
     <!-- Selection Controls -->
     <div
-      class="flex items-center justify-between p-4 bg-surface-raised dark:bg-surface-raised rounded-xl border border-border-default dark:border-border-subtle"
+      class="flex items-center justify-between p-4 bg-surface-raised dark:bg-surface-raised rounded-xl border border-border-default dark:border-border-muted"
     >
       <div class="flex items-center gap-4">
         <span class="text-sm text-text-secondary dark:text-text-secondary">
@@ -147,10 +147,10 @@
       class="bg-surface-raised dark:bg-surface-raised rounded-2xl border-2 transition-all"
       [class.border-cta-default]="car.selected"
       [class.border-border-default]="!car.selected"
-      [class.dark:border-border-subtle]="!car.selected"
+      [class.dark:border-border-muted]="!car.selected"
     >
       <!-- Car Header -->
-      <div class="p-4 border-b border-border-default dark:border-border-subtle">
+      <div class="p-4 border-b border-border-default dark:border-border-muted">
         <div class="flex items-start gap-3">
           <input
             type="checkbox"
@@ -170,7 +170,7 @@
                 {{ getBookingsCount(car) }} reservas
               </span>
               <span class="flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-error-500"></span>
+                <span class="w-2 h-2 rounded-full bg-error-bg0"></span>
                 {{ getManualBlocksCount(car) }} bloqueos
               </span>
             </div>
@@ -215,7 +215,7 @@
             class="aspect-square flex items-center justify-center text-xs rounded-lg transition-all"
             [ngClass]="{
               'bg-success-light text-text-primary font-medium': getDayStatus(car, day) === 'booked',
-              'bg-error-500 text-text-inverse font-medium': getDayStatus(car, day) === 'blocked',
+              'bg-error-bg0 text-text-inverse font-medium': getDayStatus(car, day) === 'blocked',
               'bg-surface-hover dark:bg-surface-base text-text-muted': getDayStatus(car, day) === 'past',
               'hover:bg-surface-secondary dark:hover:bg-slate-deep':
                 getDayStatus(car, day) === 'available',

@@ -58,7 +58,7 @@ import {
                     }
                     @case ('PENDIENTE') {
                       <span
-                        class="inline-flex items-center gap-2 px-3 py-1 bg-warning-100 dark:bg-warning-900/40 text-warning-900 dark:text-warning-200 rounded-full font-medium text-sm"
+                        class="inline-flex items-center gap-2 px-3 py-1 bg-warning-bg-hover dark:bg-warning-900/40 text-warning-strong dark:text-warning-200 rounded-full font-medium text-sm"
                       >
                         <span>⏳</span>
                         <span>Pendiente</span>
@@ -66,7 +66,7 @@ import {
                     }
                     @case ('RECHAZADO') {
                       <span
-                        class="inline-flex items-center gap-2 px-3 py-1 bg-error-100 dark:bg-error-900/40 text-error-900 dark:text-error-200 rounded-full font-medium text-sm"
+                        class="inline-flex items-center gap-2 px-3 py-1 bg-error-bg-hover dark:bg-error-900/40 text-error-strong rounded-full font-medium text-sm"
                       >
                         <span>❌</span>
                         <span>Rechazado</span>
@@ -88,7 +88,7 @@ import {
 
             @if (status.notes) {
               <div
-                class="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800/40 rounded p-3 text-sm text-error-800 dark:text-error-300"
+                class="bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800/40 rounded p-3 text-sm text-error-strong"
               >
                 {{ status.notes }}
               </div>
@@ -108,15 +108,15 @@ import {
                 @for (docId of missingDocs(); track docId) {
                   @if (getDocConfig(docId); as docConfig) {
                     <div
-                      class="border border-warning-200 dark:border-warning-800/40 rounded-lg p-4 bg-warning-50 dark:bg-warning-900/20 hover:shadow-md transition-shadow"
+                      class="border border-warning-border dark:border-warning-800/40 rounded-lg p-4 bg-warning-bg dark:bg-warning-900/20 hover:shadow-md transition-shadow"
                     >
                       <div class="flex items-start gap-4">
                         <span class="text-3xl flex-shrink-0">{{ docConfig.emoji }}</span>
                         <div class="flex-1 min-w-0">
-                          <h3 class="font-semibold text-warning-900 dark:text-warning-200 mb-1">
+                          <h3 class="font-semibold text-warning-strong dark:text-warning-200 mb-1">
                             {{ docConfig.label }}
                           </h3>
-                          <p class="text-sm text-warning-800 dark:text-warning-300 mb-3">
+                          <p class="text-sm text-warning-strong dark:text-warning-300 mb-3">
                             {{ docConfig.description }}
                           </p>
                           <a

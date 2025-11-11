@@ -281,7 +281,7 @@ interface DurationOption {
           <!-- Error Message -->
           <div
             *ngIf="errorMessage()"
-            class="p-3 bg-error-50 border border-error-200 rounded-lg text-sm text-error-800"
+            class="p-3 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
           >
             {{ errorMessage() }}
           </div>
@@ -292,7 +292,7 @@ interface DurationOption {
           <button
             type="button"
             (click)="handleCancel()"
-            class="flex-1 py-3 px-4 rounded-lg border border-border-subtle text-text-primary font-semibold hover:bg-surface-base transition-colors"
+            class="flex-1 py-3 px-4 rounded-lg border border-border-muted text-text-primary font-semibold hover:bg-surface-base transition-colors"
           >
             Cancelar
           </button>

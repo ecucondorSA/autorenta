@@ -41,7 +41,7 @@ export class DashboardService {
     const cachedData = this.cache();
     const now = Date.now();
 
-    if (!forceRefresh && cachedData && (now - cachedData.timestamp) < this.CACHE_TTL_MS) {
+    if (!forceRefresh && cachedData && now - cachedData.timestamp < this.CACHE_TTL_MS) {
       this.logger.info('Dashboard stats: Using cached data');
       return of(cachedData.data);
     }
@@ -67,7 +67,7 @@ export class DashboardService {
       map((stats) => {
         this.loading.set(false);
         return stats;
-      })
+      }),
     );
   }
 

@@ -43,12 +43,12 @@ export class BookingStatusComponent {
   statusClass = computed(() => {
     const status = this.booking?.status;
     if (status === 'pending' && this.isExpired()) {
-      return 'bg-error-100 text-error-800';
+      return 'bg-error-bg-hover text-error-strong';
     }
     switch (status) {
       case 'pending':
       case 'pending_payment':
-        return 'bg-warning-100 text-warning-800';
+        return 'bg-warning-bg-hover text-warning-strong';
       case 'confirmed':
         return 'bg-success-light/20 text-success-light';
       case 'in_progress':
@@ -57,7 +57,7 @@ export class BookingStatusComponent {
         return 'bg-surface-raised text-text-primary';
       case 'cancelled':
       case 'expired':
-        return 'bg-error-100 text-error-800';
+        return 'bg-error-bg-hover text-error-strong';
       default:
         return 'bg-surface-raised text-text-primary';
     }

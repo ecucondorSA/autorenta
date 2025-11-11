@@ -2,9 +2,9 @@
   <!-- Current Viewers Indicator -->
   <div
     *ngIf="showViewers && socialProof().currentViewers > 0"
-    class="flex items-center gap-2 px-3 py-2 rounded-lg bg-warning-50 border border-warning-200 text-sm"
+    class="flex items-center gap-2 px-3 py-2 rounded-lg bg-warning-bg border border-warning-border text-sm"
   >
-    <svg class="h-4 w-4 text-warning-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+    <svg class="h-4 w-4 text-warning-text flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
       <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
       <path
         fill-rule="evenodd"
@@ -12,7 +12,7 @@
         clip-rule="evenodd"
       />
     </svg>
-    <span class="text-warning-800 font-medium">
+    <span class="text-warning-strong font-medium">
       <ng-container *ngIf="isHighDemand">🔥 </ng-container>
       <span class="font-bold">{{ socialProof().currentViewers }}</span>
       {{ socialProof().currentViewers === 1 ? 'persona viendo' : 'personas viendo' }} este auto
@@ -48,10 +48,10 @@
   <!-- Limited Availability Indicator -->
   <div
     *ngIf="showAvailability && showLimitedAvailability"
-    class="flex items-center gap-2 px-3 py-2 rounded-lg bg-error-50 border border-error-200 text-sm"
+    class="flex items-center gap-2 px-3 py-2 rounded-lg bg-error-bg border border-error-border text-sm"
   >
     <svg
-      class="h-4 w-4 text-error-600 flex-shrink-0"
+      class="h-4 w-4 text-error-text flex-shrink-0"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -63,7 +63,7 @@
         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
       />
     </svg>
-    <span class="text-error-800 font-medium">
+    <span class="text-error-strong font-medium">
       📅 Solo disponible <span class="font-bold">{{ socialProof().availableDays }}</span>
       {{ socialProof().availableDays === 1 ? 'día' : 'días' }} este mes
     </span>

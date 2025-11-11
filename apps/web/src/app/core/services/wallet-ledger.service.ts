@@ -227,17 +227,17 @@ export class WalletLedgerService {
 
   getKindColor(kind: LedgerKind): string {
     const colors: Record<LedgerKind, string> = {
-      deposit: 'bg-success-100 text-success-900',
-      transfer_out: 'bg-error-100 text-error-900',
-      transfer_in: 'bg-success-100 text-success-900',
-      rental_charge: 'bg-error-100 text-error-900',
-      rental_payment: 'bg-success-100 text-success-900',
+      deposit: 'bg-success-bg-hover text-success-strong',
+      transfer_out: 'bg-error-bg-hover text-error-strong',
+      transfer_in: 'bg-success-bg-hover text-success-strong',
+      rental_charge: 'bg-error-bg-hover text-error-strong',
+      rental_payment: 'bg-success-bg-hover text-success-strong',
       refund: 'bg-cta-default/20 text-cta-default',
-      franchise_user: 'bg-warning-100 text-warning-900',
-      franchise_fund: 'bg-warning-100 text-warning-900',
+      franchise_user: 'bg-warning-bg-hover text-warning-strong',
+      franchise_fund: 'bg-warning-bg-hover text-warning-strong',
       withdrawal: 'bg-cta-default/20 text-cta-default',
       adjustment: 'bg-surface-raised text-text-primary',
-      bonus: 'bg-success-100 text-success-900',
+      bonus: 'bg-success-bg-hover text-success-strong',
       fee: 'bg-surface-raised text-text-primary',
     };
     return colors[kind] || 'bg-surface-raised text-text-primary';

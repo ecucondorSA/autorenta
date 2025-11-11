@@ -27,8 +27,8 @@ import {
       </div>
 
       <!-- Error State -->
-      <div *ngIf="error() && !loading()" class="bg-error-50 border border-error-200 rounded-xl p-6">
-        <p class="text-error-800">{{ error() }}</p>
+      <div *ngIf="error() && !loading()" class="bg-error-bg border border-error-border rounded-xl p-6">
+        <p class="text-error-strong">{{ error() }}</p>
         <button
           routerLink="/admin/claims"
           class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-xl hover:bg-error-700"
@@ -81,7 +81,7 @@ import {
           <div class="lg:col-span-2 space-y-6">
             <!-- Claim Info Card -->
             <div
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm"
+              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
             >
               <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                 Información del Siniestro
@@ -150,7 +150,7 @@ import {
             <!-- Evidence Gallery -->
             <div
               *ngIf="claim()!.photos && claim()!.photos!.length > 0"
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm"
+              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
             >
               <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                 📸 Evidencia Fotográfica ({{ claim()!.photos!.length }})
@@ -180,7 +180,7 @@ import {
             <!-- Resolution Notes -->
             <div
               *ngIf="claim()!.resolution_notes"
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm"
+              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
             >
               <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                 Notas de Resolución
@@ -196,7 +196,7 @@ import {
             <!-- Actions Card -->
             <div
               *ngIf="canResolve()"
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm"
+              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
             >
               <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                 Acciones de Admin
@@ -212,7 +212,7 @@ import {
                     [(ngModel)]="resolutionNotes"
                     rows="4"
                     placeholder="Escribe notas sobre la resolución..."
-                    class="w-full rounded-lg border border-border-subtle dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+                    class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
                   ></textarea>
                 </div>
 
@@ -273,7 +273,7 @@ import {
 
             <!-- Status Info -->
             <div
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-subtle p-6 shadow-sm"
+              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
             >
               <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
                 Estado Actual
@@ -461,13 +461,13 @@ export class AdminClaimDetailPage implements OnInit {
     const classes: Record<ClaimStatus, string> = {
       reported:
         'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
-      pending: 'bg-warning-100 text-warning-800 dark:bg-warning-900/40 dark:text-warning-200',
+      pending: 'bg-warning-bg-hover text-warning-strong dark:bg-warning-900/40 dark:text-warning-200',
       investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
       under_review:
         'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
       approved:
         'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
-      rejected: 'bg-error-100 text-error-800 dark:bg-error-900/40 dark:text-error-200',
+      rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-900/40 dark:text-error-200',
       paid: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
       closed: 'bg-surface-raised text-text-primary dark:bg-surface-raised/40 dark:text-text-primary',
     };

@@ -76,7 +76,7 @@ export interface LocationSelection {
         </button>
 
         @if (!isGeolocationAvailable()) {
-          <p class="text-xs text-error-600 ml-10">Geolocalización no disponible en tu navegador</p>
+          <p class="text-xs text-error-text ml-10">Geolocalización no disponible en tu navegador</p>
         }
 
         <!-- Address Search -->
@@ -124,8 +124,8 @@ export interface LocationSelection {
 
       <!-- Error Message -->
       @if (errorMessage()) {
-        <div class="error-message mt-3 p-3 bg-error-50 border border-error-200 rounded-lg">
-          <p class="text-sm text-error-800">{{ errorMessage() }}</p>
+        <div class="error-message mt-3 p-3 bg-error-bg border border-error-border rounded-lg">
+          <p class="text-sm text-error-strong">{{ errorMessage() }}</p>
         </div>
       }
 

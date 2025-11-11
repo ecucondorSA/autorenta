@@ -73,7 +73,7 @@ describe('AdminService', () => {
     });
 
     it('should handle RPC errors gracefully', async () => {
-      mockSupabase.rpc.and.callFake(() => 
+      mockSupabase.rpc.and.callFake(() =>
         Promise.resolve({ data: null, error: { message: 'Database error' } }),
       );
 
@@ -87,7 +87,7 @@ describe('AdminService', () => {
   describe('hasRole', () => {
     beforeEach(() => {
       // Mock getAdminRoles
-      mockSupabase.rpc.and.callFake(() => 
+      mockSupabase.rpc.and.callFake(() =>
         Promise.resolve({
           data: ['super_admin', 'operations'] as AdminRole[],
           error: null,
@@ -106,7 +106,7 @@ describe('AdminService', () => {
     });
 
     it('should handle errors gracefully', async () => {
-      mockSupabase.rpc.and.callFake(() => 
+      mockSupabase.rpc.and.callFake(() =>
         Promise.resolve({ data: null, error: { message: 'Database error' } }),
       );
 
@@ -120,7 +120,7 @@ describe('AdminService', () => {
   describe('hasPermission', () => {
     beforeEach(() => {
       // Mock getAdminRoles to return 'support' role
-      mockSupabase.rpc.and.callFake(() => 
+      mockSupabase.rpc.and.callFake(() =>
         Promise.resolve({
           data: ['support'] as AdminRole[],
           error: null,
@@ -140,7 +140,7 @@ describe('AdminService', () => {
 
     it('should check all user roles for permission', async () => {
       // Mock user with multiple roles
-      mockSupabase.rpc.and.callFake(() => 
+      mockSupabase.rpc.and.callFake(() =>
         Promise.resolve({
           data: ['support', 'finance'] as AdminRole[],
           error: null,
@@ -210,7 +210,7 @@ describe('AdminService', () => {
     });
 
     it('should return empty array on error', async () => {
-      mockSupabase.rpc.and.callFake(() => 
+      mockSupabase.rpc.and.callFake(() =>
         Promise.resolve({ data: null, error: { message: 'Database error' } }),
       );
 
@@ -296,7 +296,7 @@ describe('AdminService', () => {
     });
 
     it('should handle RPC errors gracefully', async () => {
-      mockSupabase.rpc.and.callFake(() => 
+      mockSupabase.rpc.and.callFake(() =>
         Promise.resolve({ data: null, error: { message: 'Database error' } }),
       );
 

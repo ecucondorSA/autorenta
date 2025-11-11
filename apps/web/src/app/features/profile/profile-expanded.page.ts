@@ -338,9 +338,9 @@ export class ProfileExpandedPage {
   getKycStatusClass(status: KycStatus): string {
     const map: Record<KycStatus, string> = {
       not_started: 'bg-surface-raised text-text-primary',
-      pending: 'bg-warning-100 text-warning-800',
+      pending: 'bg-warning-bg-hover text-warning-strong',
       verified: 'bg-success-light/20 text-success-light',
-      rejected: 'bg-error-100 text-error-800',
+      rejected: 'bg-error-bg-hover text-error-strong',
     };
     return map[status] || map['not_started'];
   }
@@ -358,8 +358,8 @@ export class ProfileExpandedPage {
   getVerificationStatusClass(status: VerificationStatus): string {
     const map: Record<VerificationStatus, string> = {
       VERIFICADO: 'bg-success-light/20 text-success-light',
-      PENDIENTE: 'bg-warning-100 text-warning-800',
-      RECHAZADO: 'bg-error-100 text-error-800',
+      PENDIENTE: 'bg-warning-bg-hover text-warning-strong',
+      RECHAZADO: 'bg-error-bg-hover text-error-strong',
     };
     return map[status];
   }

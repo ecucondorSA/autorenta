@@ -1,18 +1,18 @@
 <div
   *ngIf="count > 0 && count <= 3"
-  class="availability-alert bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-lg p-3 mb-4"
+  class="availability-alert bg-warning-bg dark:bg-warning-900/20 border border-warning-border dark:border-warning-800 rounded-lg p-3 mb-4"
 >
   <div class="flex items-center justify-between">
     <div class="flex items-center gap-2">
-      <span class="text-warning-600 dark:text-warning-400 text-lg">⚠️</span>
-      <p class="text-sm font-medium text-warning-900 dark:text-warning-200">
+      <span class="text-warning-text dark:text-warning-400 text-lg">⚠️</span>
+      <p class="text-sm font-medium text-warning-strong dark:text-warning-200">
         Solo quedan <strong>{{ count }}</strong> {{ count === 1 ? 'auto' : 'autos' }} en {{ zone }}
       </p>
     </div>
     <button
       type="button"
       (click)="expandRadius.emit()"
-      class="text-xs font-semibold text-warning-700 dark:text-warning-300 hover:text-warning-900 dark:hover:text-warning-100 transition-colors"
+      class="text-xs font-semibold text-warning-strong dark:text-warning-300 hover:text-warning-strong dark:hover:text-warning-100 transition-colors"
     >
       Ampliar radio →
     </button>

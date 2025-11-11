@@ -64,7 +64,7 @@ interface NotificationPreference {
           <div class="flex h-96 items-center justify-center">
             <div class="text-center">
               <div
-                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-subtle border-t-blue-500"
+                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500"
               ></div>
               <p class="text-text-secondary dark:text-text-muted">Cargando preferencias...</p>
             </div>
@@ -104,8 +104,8 @@ interface NotificationPreference {
               </button>
             </div>
             @if (browserNotificationsPermission() === 'denied') {
-              <div class="mt-3 rounded-lg bg-warning-50 p-3 dark:bg-warning-900/20">
-                <p class="text-sm text-warning-800 dark:text-warning-200">
+              <div class="mt-3 rounded-lg bg-warning-bg p-3 dark:bg-warning-900/20">
+                <p class="text-sm text-warning-strong dark:text-warning-200">
                   ⚠️ Has bloqueado las notificaciones del navegador. Para habilitarlas, ve a la
                   configuración de tu navegador.
                 </p>
@@ -159,7 +159,7 @@ interface NotificationPreference {
             <div class="space-y-4">
               @for (pref of preferences(); track pref.type) {
                 <div
-                  class="flex items-center justify-between rounded-lg border border-border-default p-4 transition-colors hover:bg-surface-base dark:border-border-subtle dark:hover:bg-gray-700/50"
+                  class="flex items-center justify-between rounded-lg border border-border-default p-4 transition-colors hover:bg-surface-base dark:border-border-muted dark:hover:bg-gray-700/50"
                 >
                   <div class="flex items-center gap-4">
                     <div
@@ -198,7 +198,7 @@ interface NotificationPreference {
           <div class="mt-6 flex justify-end gap-3">
             <button
               (click)="goBack()"
-              class="rounded-lg border border-border-subtle px-6 py-3 font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:text-text-secondary dark:hover:bg-gray-700"
+              class="rounded-lg border border-border-muted px-6 py-3 font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:text-text-secondary dark:hover:bg-gray-700"
               type="button"
             >
               Cancelar

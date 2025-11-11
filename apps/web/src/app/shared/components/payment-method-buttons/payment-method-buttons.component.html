@@ -142,12 +142,12 @@
           <div
             class="flex items-center gap-2 px-3 py-2 rounded-lg"
             [class.bg-success-light/10]="hasSufficientFunds()"
-            [class.bg-error-50]="!hasSufficientFunds()"
+            [class.bg-error-bg]="!hasSufficientFunds()"
           >
             <svg
               class="w-4 h-4"
               [class.text-success-light]="hasSufficientFunds()"
-              [class.text-error-600]="!hasSufficientFunds()"
+              [class.text-error-text]="!hasSufficientFunds()"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -170,7 +170,7 @@
             <span
               class="text-xs font-medium"
               [class.text-success-light]="hasSufficientFunds()"
-              [class.text-error-700]="!hasSufficientFunds()"
+              [class.text-error-strong]="!hasSufficientFunds()"
             >
               Balance disponible: <strong>{{ walletBalance() | money }}</strong>
             </span>
@@ -195,9 +195,9 @@
           <!-- Insufficient Funds Warning -->
           <div
             *ngIf="!hasSufficientFunds()"
-            class="px-3 py-2 bg-error-50 border border-error-200 rounded-lg"
+            class="px-3 py-2 bg-error-bg border border-error-border rounded-lg"
           >
-            <p class="text-xs text-error-700">
+            <p class="text-xs text-error-strong">
               <svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"

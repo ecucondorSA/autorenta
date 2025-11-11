@@ -84,12 +84,12 @@ import type { Review } from '../../../../core/models';
                 </div>
                 <span
                   class="rounded-full px-3 py-1 text-xs font-medium"
-                  [class.bg-warning-100]="review.moderation_status === 'pending'"
-                  [class.text-warning-800]="review.moderation_status === 'pending'"
+                  [class.bg-warning-bg-hover]="review.moderation_status === 'pending'"
+                  [class.text-warning-strong]="review.moderation_status === 'pending'"
                   [class.bg-success-light/20]="review.moderation_status === 'approved'"
                   [class.text-success-light]="review.moderation_status === 'approved'"
-                  [class.bg-error-100]="review.moderation_status === 'rejected'"
-                  [class.text-error-800]="review.moderation_status === 'rejected'"
+                  [class.bg-error-bg-hover]="review.moderation_status === 'rejected'"
+                  [class.text-error-strong]="review.moderation_status === 'rejected'"
                 >
                   {{ review.moderation_status || 'pending' }}
                 </span>
@@ -102,9 +102,9 @@ import type { Review } from '../../../../core/models';
               </div>
 
               @if (review.flag_reason) {
-                <div class="mb-4 rounded-lg bg-warning-50 p-3">
-                  <p class="text-xs font-medium text-warning-800">Razón del reporte:</p>
-                  <p class="text-sm text-warning-700">{{ review.flag_reason }}</p>
+                <div class="mb-4 rounded-lg bg-warning-bg p-3">
+                  <p class="text-xs font-medium text-warning-strong">Razón del reporte:</p>
+                  <p class="text-sm text-warning-strong">{{ review.flag_reason }}</p>
                 </div>
               }
 

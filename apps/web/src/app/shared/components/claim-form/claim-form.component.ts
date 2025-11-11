@@ -6,6 +6,9 @@ import {
   DamageItem,
   DamageType,
 } from '../../../core/services/settlement.service';
+import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { ToastService } from '../../../core/services/toast.service';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Componente para reportar daños y crear claims
@@ -35,10 +38,13 @@ export class ClaimFormComponent implements OnInit {
   @Input() bookingId!: string;
 
   private readonly settlementService = inject(SettlementService);
+  private readonly supabase = injectSupabase();
+  private readonly toastService = inject(ToastService);
 
   // Estado del componente
   readonly damages = signal<DamageItem[]>([]);
   readonly creating = signal(false);
+  readonly uploading = signal(false); // Estado de upload de fotos
   readonly error = signal<string | null>(null);
   notes = '';
 
@@ -162,6 +168,7 @@ export class ClaimFormComponent implements OnInit {
 
   /**
    * Maneja la selección de fotos para un daño
+   * ✅ Implementación completa con upload a Supabase Storage
    */
   async onPhotosSelected(event: Event, index: number): Promise<void> {
     const input = event.target as HTMLInputElement;
@@ -176,21 +183,102 @@ export class ClaimFormComponent implements OnInit {
       return;
     }
 
-    // TODO: Subir fotos a Supabase Storage
-    // Por ahora, crear URLs temporales
-    const photoUrls = files.map((f) => URL.createObjectURL(f));
+    // Validar tamaño (máximo 5MB por imagen)
+    const maxSizeBytes = 5 * 1024 * 1024; // 5MB
+    const oversizedFiles = files.filter((f) => f.size > maxSizeBytes);
+    if (oversizedFiles.length > 0) {
+      this.error.set('Las imágenes no deben superar 5MB cada una');
+      return;
+    }
 
-    this.damages.update((damages) => {
-      const updated = [...damages];
-      updated[index] = {
-        ...updated[index],
-        photos: [...updated[index].photos, ...photoUrls],
-      };
-      return updated;
-    });
+    this.uploading.set(true);
+    this.error.set(null);
 
-    // Limpiar input
-    input.value = '';
+    try {
+      // Obtener user ID del usuario autenticado
+      const { data: { user } } = await this.supabase.auth.getUser();
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      const uploadedUrls: string[] = [];
+
+      // Subir cada foto a Supabase Storage
+      for (const file of files) {
+        try {
+          // Generar nombre único para el archivo
+          const fileExtension = file.name.split('.').pop() || 'jpg';
+          const fileName = `${uuidv4()}.${fileExtension}`;
+
+          // Path: documents/claims/{booking_id}/{damage_index}/{filename}
+          const filePath = `claims/${this.bookingId}/${index}/${fileName}`;
+
+          // Upload to Supabase Storage bucket 'documents'
+          const { error: uploadError } = await this.supabase.storage
+            .from('documents')
+            .upload(filePath, file, {
+              cacheControl: '3600',
+              upsert: false,
+            });
+
+          if (uploadError) {
+            throw uploadError;
+          }
+
+          // Obtener URL pública de la foto
+          const { data } = this.supabase.storage
+            .from('documents')
+            .getPublicUrl(filePath);
+
+          uploadedUrls.push(data.publicUrl);
+
+          console.log(`✅ Photo uploaded: ${filePath}`);
+        } catch (fileError) {
+          console.error('❌ Error uploading photo:', fileError);
+          // Continuar con las otras fotos
+        }
+      }
+
+      if (uploadedUrls.length === 0) {
+        throw new Error('No se pudo subir ninguna foto. Intente nuevamente.');
+      }
+
+      // Actualizar array de fotos en el daño
+      this.damages.update((damages) => {
+        const updated = [...damages];
+        updated[index] = {
+          ...updated[index],
+          photos: [...updated[index].photos, ...uploadedUrls],
+        };
+        return updated;
+      });
+
+      console.log(`✅ ${uploadedUrls.length} fotos subidas exitosamente`);
+
+      // Mostrar toast de éxito
+      this.toastService.success(
+        'Fotos subidas',
+        `${uploadedUrls.length} foto${uploadedUrls.length > 1 ? 's' : ''} agregada${uploadedUrls.length > 1 ? 's' : ''} exitosamente`,
+        3000
+      );
+
+    } catch (err) {
+      console.error('❌ Error uploading photos:', err);
+      const errorMsg = err instanceof Error ? err.message : 'Error al subir fotos. Intente nuevamente.';
+
+      this.error.set(errorMsg);
+
+      // Mostrar toast de error
+      this.toastService.error(
+        'Error al subir fotos',
+        errorMsg,
+        5000
+      );
+    } finally {
+      this.uploading.set(false);
+      // Limpiar input
+      input.value = '';
+    }
   }
 
   /**

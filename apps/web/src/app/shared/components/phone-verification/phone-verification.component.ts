@@ -62,7 +62,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
       <!-- Pending State -->
       <div *ngIf="!status().isVerified" class="space-y-4">
         <!-- Debug Panel (temporal) -->
-        <div class="p-3 bg-warning-100 border-2 border-warning-500 rounded text-xs">
+        <div class="p-3 bg-warning-bg-hover border-2 border-warning-border rounded text-xs">
           <p class="font-bold mb-2">🐛 DEBUG - Estado del componente:</p>
           <p>
             isVerified: <strong>{{ status().isVerified }}</strong>
@@ -99,7 +99,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
             <div class="flex gap-2">
               <select
                 [(ngModel)]="countryCode"
-                class="block w-24 rounded-lg border-border-subtle shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
+                class="block w-24 rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
               >
                 <option value="+54">🇦🇷 +54</option>
                 <option value="+1">🇺🇸 +1</option>
@@ -113,7 +113,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
                 [(ngModel)]="phoneNumber"
                 placeholder="11 2345 6789"
                 maxlength="15"
-                class="flex-grow block rounded-lg border-border-subtle shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
+                class="flex-grow block rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
                 [disabled]="loading()"
               />
             </div>
@@ -184,7 +184,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
               maxlength="6"
               inputmode="numeric"
               pattern="[0-9]*"
-              class="block w-full rounded-lg border-border-subtle shadow-sm focus:ring-cta-default focus:border-cta-default text-center text-2xl tracking-widest font-mono"
+              class="block w-full rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-center text-2xl tracking-widest font-mono"
               [disabled]="loading()"
               (input)="onOTPInput($event)"
             />
@@ -226,7 +226,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
               type="button"
               (click)="cancelOTP()"
               [disabled]="loading()"
-              class="px-4 py-3 text-sm font-medium text-text-primary bg-surface-raised border border-border-subtle rounded-lg hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:opacity-50"
+              class="px-4 py-3 text-sm font-medium text-text-primary bg-surface-raised border border-border-muted rounded-lg hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:opacity-50"
             >
               Cambiar número
             </button>
@@ -257,7 +257,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
         <!-- Error Message -->
         <div
           *ngIf="error()"
-          class="p-3 bg-error-50 border border-error-200 rounded-lg text-sm text-error-800"
+          class="p-3 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
         >
           {{ error() }}
         </div>
@@ -410,7 +410,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
   getStatusBadgeClass(): string {
     return this.status().isVerified
       ? 'bg-success-light/20 text-success-light'
-      : 'bg-warning-100 text-warning-600';
+      : 'bg-warning-bg-hover text-warning-text';
   }
 
   getStatusLabel(): string {
@@ -420,7 +420,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
   getStatusLabelClass(): string {
     return this.status().isVerified
       ? 'bg-success-light/20 text-success-light'
-      : 'bg-warning-100 text-warning-800';
+      : 'bg-warning-bg-hover text-warning-strong';
   }
 
   formatDate(dateStr: string | null | undefined): string {

@@ -17,6 +17,7 @@ export interface QuickFilter {
   id: string;
   label: string;
   icon?: string;
+  tooltip?: string;
 }
 
 @Component({

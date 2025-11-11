@@ -25,10 +25,7 @@ import { SocialProofIndicatorsComponent } from '../../shared/components/social-p
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
 import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { MobileBottomNavComponent } from '../../shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
-import {
-  UtilityBarComponent,
-  QuickFilter,
-} from '../../shared/components/utility-bar/utility-bar.component';
+import { QuickFilter } from '../../shared/components/utility-bar/utility-bar.component';
 import {
   FloatingActionFabComponent,
   FabAction,
@@ -46,6 +43,9 @@ import {
   QuickBookingModalComponent,
   QuickBookingData,
 } from '../../shared/components/quick-booking-modal/quick-booking-modal.component';
+import { ButtonComponent } from '../../shared/components/button/button.component';
+import { CardComponent } from '../../shared/components/card/card.component';
+import { TooltipComponent } from '../../shared/components/tooltip/tooltip.component';
 import { BookingsService } from '../../core/services/bookings.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 
@@ -69,6 +69,9 @@ export type ViewMode = 'grid' | 'list' | 'map';
     FloatingActionFabComponent,
     NotificationToastComponent,
     StatsStripComponent,
+    ButtonComponent,
+    CardComponent,
+    TooltipComponent,
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],

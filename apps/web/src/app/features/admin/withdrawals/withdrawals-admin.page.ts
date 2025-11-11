@@ -73,12 +73,12 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
                 </div>
                 <span
                   class="rounded-full px-3 py-1 text-xs font-medium"
-                  [class.bg-warning-100]="withdrawal.status === 'pending'"
-                  [class.text-warning-800]="withdrawal.status === 'pending'"
+                  [class.bg-warning-bg-hover]="withdrawal.status === 'pending'"
+                  [class.text-warning-strong]="withdrawal.status === 'pending'"
                   [class.bg-success-light/20]="withdrawal.status === 'completed'"
                   [class.text-success-light]="withdrawal.status === 'completed'"
-                  [class.bg-error-100]="withdrawal.status === 'rejected'"
-                  [class.text-error-800]="withdrawal.status === 'rejected'"
+                  [class.bg-error-bg-hover]="withdrawal.status === 'rejected'"
+                  [class.text-error-strong]="withdrawal.status === 'rejected'"
                 >
                   {{ withdrawal.status }}
                 </span>
@@ -98,7 +98,7 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
                     <textarea
                       [(ngModel)]="adminNotes[withdrawal.id]"
                       rows="3"
-                      class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
+                      class="mt-1 block w-full rounded-md border border-border-muted px-3 py-2 text-sm"
                       placeholder="Opcional: Agrega notas sobre esta decisión"
                     ></textarea>
                   </div>
@@ -122,9 +122,9 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
               }
 
               @if (withdrawal.rejection_reason) {
-                <div class="mt-3 rounded-lg bg-error-50 p-3">
-                  <p class="text-xs font-medium text-error-800">Razón de rechazo:</p>
-                  <p class="text-sm text-error-700">{{ withdrawal.rejection_reason }}</p>
+                <div class="mt-3 rounded-lg bg-error-bg p-3">
+                  <p class="text-xs font-medium text-error-strong">Razón de rechazo:</p>
+                  <p class="text-sm text-error-strong">{{ withdrawal.rejection_reason }}</p>
                 </div>
               }
             </div>
@@ -150,14 +150,14 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
               <textarea
                 [(ngModel)]="rejectionReason"
                 rows="4"
-                class="mt-1 block w-full rounded-md border border-border-subtle px-3 py-2 text-sm"
+                class="mt-1 block w-full rounded-md border border-border-muted px-3 py-2 text-sm"
                 placeholder="Explica por qué se rechaza esta solicitud"
               ></textarea>
             </div>
             <div class="flex gap-2">
               <button
                 (click)="cancelReject()"
-                class="flex-1 rounded-lg border border-border-subtle px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base"
+                class="flex-1 rounded-lg border border-border-muted px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-base"
               >
                 Cancelar
               </button>

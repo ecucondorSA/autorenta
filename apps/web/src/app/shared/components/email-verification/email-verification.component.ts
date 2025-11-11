@@ -60,8 +60,8 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
 
       <!-- Pending State -->
       <div *ngIf="!status().isVerified" class="space-y-4">
-        <div class="p-4 bg-warning-50 border border-warning-200 rounded-lg">
-          <p class="text-sm text-warning-800">
+        <div class="p-4 bg-warning-bg border border-warning-border rounded-lg">
+          <p class="text-sm text-warning-strong">
             Te enviamos un email de verificación a
             <strong>{{ status().value }}</strong
             >. Por favor revisa tu bandeja de entrada y haz click en el link de confirmación.
@@ -112,7 +112,7 @@ import { EmailVerificationService } from '../../../core/services/email-verificat
         <!-- Error Message -->
         <div
           *ngIf="error()"
-          class="p-3 bg-error-50 border border-error-200 rounded-lg text-sm text-error-800"
+          class="p-3 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
         >
           {{ error() }}
         </div>
@@ -201,7 +201,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
   getStatusBadgeClass(): string {
     return this.status().isVerified
       ? 'bg-success-light/20 text-success-light'
-      : 'bg-warning-100 text-warning-600';
+      : 'bg-warning-bg-hover text-warning-text';
   }
 
   getStatusLabel(): string {
@@ -211,7 +211,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
   getStatusLabelClass(): string {
     return this.status().isVerified
       ? 'bg-success-light/20 text-success-light'
-      : 'bg-warning-100 text-warning-800';
+      : 'bg-warning-bg-hover text-warning-strong';
   }
 
   formatDate(dateStr: string | null | undefined): string {

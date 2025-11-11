@@ -15,17 +15,17 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
         @if (missingDocsCount() > 0) {
           <!-- Missing Documents Alert -->
           <div
-            class="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800/40 rounded-lg p-4 mb-6"
+            class="bg-warning-bg dark:bg-warning-900/20 border border-warning-border dark:border-warning-800/40 rounded-lg p-4 mb-6"
           >
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0">
                 <span class="text-2xl">⚠️</span>
               </div>
               <div class="flex-1">
-                <h3 class="font-semibold text-warning-900 dark:text-warning-200 mb-2">
+                <h3 class="font-semibold text-warning-strong dark:text-warning-200 mb-2">
                   Documentos Faltantes
                 </h3>
-                <p class="text-sm text-warning-800 dark:text-warning-300 mb-3">
+                <p class="text-sm text-warning-strong dark:text-warning-300 mb-3">
                   Necesitas completar tu verificación para publicar autos y recibir reservas.
                 </p>
 
@@ -33,7 +33,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
                 <div class="flex flex-wrap gap-2 mb-4">
                   @for (doc of missingDocs(); track doc) {
                     <span
-                      class="inline-flex items-center gap-1 px-3 py-1 bg-warning-100 dark:bg-warning-800/40 text-warning-900 dark:text-warning-200 rounded-full text-sm font-medium"
+                      class="inline-flex items-center gap-1 px-3 py-1 bg-warning-bg-hover dark:bg-warning-800/40 text-warning-strong dark:text-warning-200 rounded-full text-sm font-medium"
                     >
                       <span>{{ getDocumentEmoji(doc) }}</span>
                       <span>{{ getDocumentLabel(doc) }}</span>
@@ -51,7 +51,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
               </div>
               <button
                 (click)="dismissAlert()"
-                class="flex-shrink-0 text-warning-600 dark:text-warning-400 hover:text-warning-700 dark:hover:text-warning-300"
+                class="flex-shrink-0 text-warning-text dark:text-warning-400 hover:text-warning-strong dark:hover:text-warning-300"
                 aria-label="Cerrar alerta"
               >
                 ✕
@@ -78,15 +78,15 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
         } @else if (currentStatus()?.status === 'RECHAZADO') {
           <!-- Rejected Status -->
           <div
-            class="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800/40 rounded-lg p-4 mb-6"
+            class="bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800/40 rounded-lg p-4 mb-6"
           >
             <div class="flex items-start gap-4">
               <span class="text-2xl flex-shrink-0">❌</span>
               <div class="flex-1">
-                <p class="font-semibold text-error-900 dark:text-error-200 mb-2">
+                <p class="font-semibold text-error-strong mb-2">
                   Verificación Rechazada
                 </p>
-                <p class="text-sm text-error-800 dark:text-error-300 mb-3">
+                <p class="text-sm text-error-strong mb-3">
                   {{
                     currentStatus()?.notes ||
                       'Tu verificación fue rechazada. Contacta con soporte para más información.'

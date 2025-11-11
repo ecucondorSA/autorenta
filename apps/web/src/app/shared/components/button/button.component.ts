@@ -80,7 +80,7 @@ export class ButtonComponent {
     const variants = {
       primary: 'bg-cta-default hover:bg-cta-hover active:bg-cta-pressed text-cta-text focus-visible:ring-border-focus',
       secondary: 'bg-cta-secondary hover:bg-cta-secondary-hover text-cta-secondary-text focus-visible:ring-border-focus',
-      danger: 'bg-error-600 hover:bg-error-700 active:bg-error-800 text-white dark:bg-error-500 dark:hover:bg-error-600 focus-visible:ring-error-500',
+      danger: 'bg-error-text hover:bg-error-strong text-white focus-visible:ring-error-border',
       ghost: 'bg-transparent hover:bg-surface-hover text-text-primary focus-visible:ring-border-focus',
       outline: 'border-2 border-border-default hover:bg-surface-hover text-text-primary focus-visible:ring-border-focus'
     };

@@ -100,7 +100,7 @@ import {
             </p>
             <div class="mt-2 flex flex-wrap gap-2">
               <span
-                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-warning-100 text-warning-800 dark:bg-warning-900/40 dark:text-warning-200"
+                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-warning-bg-hover text-warning-strong dark:bg-warning-900/40 dark:text-warning-200"
               >
                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path

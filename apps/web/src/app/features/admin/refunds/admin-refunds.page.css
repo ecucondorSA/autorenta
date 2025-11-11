@@ -14,7 +14,7 @@
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-surface-base0 dark:bg-surface-base0;
+  @apply bg-surface-base dark:bg-surface-base;
 }
 
 /* Animation for modal entrance */

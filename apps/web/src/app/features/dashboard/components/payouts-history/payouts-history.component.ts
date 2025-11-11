@@ -32,9 +32,9 @@ import { AuthService } from '../../../../core/services/auth.service';
       <!-- Error State -->
       @if (error() && !loading()) {
         <div
-          class="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg p-4"
+          class="bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-lg p-4"
         >
-          <p class="text-error-800 dark:text-error-200">{{ error() }}</p>
+          <p class="text-error-strong">{{ error() }}</p>
         </div>
       }
 
@@ -68,21 +68,21 @@ import { AuthService } from '../../../../core/services/auth.service';
         <div class="space-y-3">
           @for (payout of payouts(); track payout.id) {
             <div
-              class="bg-surface-raised dark:bg-surface-base rounded-lg border border-border-default dark:border-border-subtle p-4 hover:shadow-md transition-shadow"
+              class="bg-surface-raised dark:bg-surface-base rounded-lg border border-border-default dark:border-border-muted p-4 hover:shadow-md transition-shadow"
             >
               <div class="flex items-start justify-between">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-2">
                     <span
                       class="px-2 py-1 rounded-full text-xs font-medium"
-                      [class.bg-warning-100]="payout.status === 'pending'"
-                      [class.text-warning-800]="payout.status === 'pending'"
+                      [class.bg-warning-bg-hover]="payout.status === 'pending'"
+                      [class.text-warning-strong]="payout.status === 'pending'"
                       [class.bg-cta-default/20]="payout.status === 'processing'"
                       [class.text-cta-default]="payout.status === 'processing'"
                       [class.bg-success-light/20]="payout.status === 'completed'"
                       [class.text-success-light]="payout.status === 'completed'"
-                      [class.bg-error-100]="payout.status === 'failed'"
-                      [class.text-error-800]="payout.status === 'failed'"
+                      [class.bg-error-bg-hover]="payout.status === 'failed'"
+                      [class.text-error-strong]="payout.status === 'failed'"
                       [class.bg-surface-raised]="payout.status === 'cancelled'"
                       [class.text-text-primary]="payout.status === 'cancelled'"
                     >
@@ -108,7 +108,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                     </p>
                   }
                   @if (payout.failureReason) {
-                    <p class="text-xs text-error-600 dark:text-error-400 mt-2">
+                    <p class="text-xs text-error-text mt-2">
                       Razón: {{ payout.failureReason }}
                     </p>
                   }
@@ -165,9 +165,9 @@ import { AuthService } from '../../../../core/services/auth.service';
               {{ completedCount() }}
             </p>
           </div>
-          <div class="bg-warning-50 dark:bg-warning-900/20 rounded-lg p-4">
-            <p class="text-sm text-warning-600 dark:text-warning-400 mb-1">Pendientes</p>
-            <p class="text-2xl font-bold text-warning-900 dark:text-warning-200">
+          <div class="bg-warning-bg dark:bg-warning-900/20 rounded-lg p-4">
+            <p class="text-sm text-warning-text dark:text-warning-400 mb-1">Pendientes</p>
+            <p class="text-2xl font-bold text-warning-strong dark:text-warning-200">
               {{ pendingCount() }}
             </p>
           </div>

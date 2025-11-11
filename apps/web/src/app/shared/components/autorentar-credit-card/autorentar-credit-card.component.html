@@ -8,9 +8,9 @@
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error() && !loading()" class="bg-error-50 border border-error-200 rounded-lg p-4">
-    <p class="text-error-600 text-sm">{{ error()?.message }}</p>
-    <button (click)="refresh()" class="mt-2 text-error-600 hover:text-error-700 text-sm font-medium">
+  <div *ngIf="error() && !loading()" class="bg-error-bg border border-error-border rounded-lg p-4">
+    <p class="text-error-text text-sm">{{ error()?.message }}</p>
+    <button (click)="refresh()" class="mt-2 text-error-text hover:text-error-strong text-sm font-medium">
       Reintentar
     </button>
   </div>
@@ -174,10 +174,10 @@
       </div>
 
       <!-- Expired State -->
-      <div *ngIf="isExpired()" class="bg-error-50 border border-error-200 rounded-lg p-3">
+      <div *ngIf="isExpired()" class="bg-error-bg border border-error-border rounded-lg p-3">
         <div class="flex items-start">
           <svg
-            class="w-5 h-5 mr-2 text-error-600 flex-shrink-0 mt-0.5"
+            class="w-5 h-5 mr-2 text-error-text flex-shrink-0 mt-0.5"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -188,8 +188,8 @@
             ></path>
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-medium text-error-800">Crédito expirado</p>
-            <p class="text-xs text-error-700 mt-1">
+            <p class="text-sm font-medium text-error-strong">Crédito expirado</p>
+            <p class="text-xs text-error-strong mt-1">
               Tu crédito ha expirado. El saldo no utilizado ha sido reconocido como ingreso.
             </p>
           </div>

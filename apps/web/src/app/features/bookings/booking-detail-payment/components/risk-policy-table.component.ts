@@ -161,7 +161,7 @@ import {
                   <div>
                     <p class="font-medium text-text-primary dark:text-text-primary">
                       Cobertura por vuelco
-                      <span class="text-error-600 dark:text-error-300">(límite mayor)</span>
+                      <span class="text-error-text">(límite mayor)</span>
                     </p>
                     <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
                       Límite más alto si el auto se da vuelta (situaciones más graves)
@@ -170,12 +170,12 @@ import {
                 </div>
               </td>
               <td
-                class="px-4 py-4 text-sm text-right font-semibold text-error-600 dark:text-error-300"
+                class="px-4 py-4 text-sm text-right font-semibold text-error-text"
               >
                 {{ formatUsd(riskSnapshot.rolloverDeductibleUsd) }}
               </td>
               <td
-                class="px-4 py-4 text-sm text-right font-semibold text-error-600 dark:text-error-300"
+                class="px-4 py-4 text-sm text-right font-semibold text-error-text"
               >
                 {{ formatArs(riskSnapshot.rolloverDeductibleUsd * fxSnapshot.rate) }}
               </td>

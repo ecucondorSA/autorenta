@@ -44,10 +44,10 @@
     </div>
 
     <!-- Important Notice -->
-    <div class="bg-warning-50 border border-warning-200 rounded-xl p-4 mb-6">
+    <div class="bg-warning-bg border border-warning-border rounded-xl p-4 mb-6">
       <div class="flex items-start gap-3">
         <svg
-          class="w-6 h-6 text-warning-600 flex-shrink-0 mt-0.5"
+          class="w-6 h-6 text-warning-text flex-shrink-0 mt-0.5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -60,8 +60,8 @@
           />
         </svg>
         <div>
-          <h3 class="font-semibold text-warning-900 mb-1">Importante</h3>
-          <p class="text-sm text-warning-800">
+          <h3 class="font-semibold text-warning-strong mb-1">Importante</h3>
+          <p class="text-sm text-warning-strong">
             El monto reportado será deducido del depósito de garantía del locatario (máximo
             {{ maxFormattedAmount }}). Asegurate de incluir fotos claras del daño y una descripción
             detallada. Una vez enviado, no podrás modificar este reporte.
@@ -90,9 +90,9 @@
         </ion-item>
         <div
           *ngIf="descriptionCharCount() > 0 && descriptionCharCount() < 20"
-          class="mt-2 p-3 bg-error-50 rounded-lg"
+          class="mt-2 p-3 bg-error-bg rounded-lg"
         >
-          <p class="text-sm text-error-800">
+          <p class="text-sm text-error-strong">
             ⚠️ La descripción debe tener al menos 20 caracteres para ser válida
           </p>
         </div>
@@ -120,8 +120,8 @@
             <span class="font-bold text-cta-default">{{ formattedAmount }}</span>
           </div>
         </div>
-        <div *ngIf="damageAmount() > maxDepositAmount()" class="mt-2 p-3 bg-error-50 rounded-lg">
-          <p class="text-sm text-error-800">
+        <div *ngIf="damageAmount() > maxDepositAmount()" class="mt-2 p-3 bg-error-bg rounded-lg">
+          <p class="text-sm text-error-strong">
             ⚠️ El monto no puede exceder el depósito de garantía ({{ maxFormattedAmount }})
           </p>
         </div>
@@ -183,8 +183,8 @@
           </p>
         </div>
 
-        <div *ngIf="uploadedFiles().length === 0" class="mt-4 p-3 bg-warning-50 rounded-lg">
-          <p class="text-sm text-warning-800">
+        <div *ngIf="uploadedFiles().length === 0" class="mt-4 p-3 bg-warning-bg rounded-lg">
+          <p class="text-sm text-warning-strong">
             ⚠️ Debes subir al menos 1 foto para enviar el reporte
           </p>
         </div>
@@ -198,7 +198,7 @@
             <span class="text-text-secondary">Descripción:</span>
             <span
               class="font-semibold"
-              [class.text-error-600]="descriptionCharCount() < 20"
+              [class.text-error-text]="descriptionCharCount() < 20"
               [class.text-success-light]="descriptionCharCount() >= 20"
             >
               {{ descriptionCharCount() >= 20 ? '✓ Completa' : '✗ Incompleta' }}
@@ -208,7 +208,7 @@
             <span class="text-text-secondary">Monto del daño:</span>
             <span
               class="font-semibold"
-              [class.text-error-600]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()"
+              [class.text-error-text]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()"
               [class.text-success-light]="damageAmount() > 0 && damageAmount() <= maxDepositAmount()"
             >
               {{ formattedAmount }}
@@ -218,7 +218,7 @@
             <span class="text-text-secondary">Fotos de evidencia:</span>
             <span
               class="font-semibold"
-              [class.text-error-600]="uploadedFiles().length === 0"
+              [class.text-error-text]="uploadedFiles().length === 0"
               [class.text-success-light]="uploadedFiles().length > 0"
             >
               {{ uploadedFiles().length }} foto(s)
