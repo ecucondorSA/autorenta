@@ -21,7 +21,7 @@ import { CommonModule } from '@angular/common';
         </div>
       }
     </div>
-  `
+  `,
 })
 export class CardComponent {
   variant = input<'flat' | 'elevated' | 'outlined'>('elevated');
@@ -32,7 +32,8 @@ export class CardComponent {
   cardClasses = computed(() => {
     const base = 'bg-surface-raised dark:bg-surface-raised rounded-lg transition-shadow';
     const v = this.variant();
-    const vClass = v === 'flat' ? '' : v === 'elevated' ? 'shadow-elevation-2' : 'border border-border-default';
+    const vClass =
+      v === 'flat' ? '' : v === 'elevated' ? 'shadow-elevation-2' : 'border border-border-default';
     const p = this.padding();
     const pClass = p === 'none' ? '' : p === 'sm' ? 'p-4' : p === 'md' ? 'p-6' : 'p-8';
     const hClass = this.hoverable() ? 'hover:shadow-elevation-3 cursor-pointer' : '';

@@ -101,7 +101,10 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <!-- Type filter -->
             <div class="flex items-center gap-2">
-              <label for="typeFilter" class="text-sm font-medium text-text-primary dark:text-text-secondary">
+              <label
+                for="typeFilter"
+                class="text-sm font-medium text-text-primary dark:text-text-secondary"
+              >
                 Tipo:
               </label>
               <select
@@ -230,7 +233,8 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                                   notification.type === 'success',
                                 'bg-warning-bg-hover dark:bg-warning-900/30':
                                   notification.type === 'warning',
-                                'bg-error-bg-hover dark:bg-error-900/30': notification.type === 'error',
+                                'bg-error-bg-hover dark:bg-error-900/30':
+                                  notification.type === 'error',
                                 'bg-cta-default/20 dark:bg-cta-default/30':
                                   notification.type === 'info',
                               }"
@@ -252,7 +256,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 
                                 <!-- Metadata -->
                                 @if (notification.metadata) {
-                                  <div class="mt-2 text-xs text-text-secondary dark:text-text-muted">
+                                  <div
+                                    class="mt-2 text-xs text-text-secondary dark:text-text-muted"
+                                  >
                                     {{ renderMetadata(notification) }}
                                   </div>
                                 }
@@ -336,7 +342,8 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                                   notification.type === 'success',
                                 'bg-warning-bg-hover dark:bg-warning-900/30':
                                   notification.type === 'warning',
-                                'bg-error-bg-hover dark:bg-error-900/30': notification.type === 'error',
+                                'bg-error-bg-hover dark:bg-error-900/30':
+                                  notification.type === 'error',
                                 'bg-cta-default/20 dark:bg-cta-default/30':
                                   notification.type === 'info',
                               }"
@@ -358,7 +365,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 
                                 <!-- Metadata -->
                                 @if (notification.metadata) {
-                                  <div class="mt-2 text-xs text-text-secondary dark:text-text-muted">
+                                  <div
+                                    class="mt-2 text-xs text-text-secondary dark:text-text-muted"
+                                  >
                                     {{ renderMetadata(notification) }}
                                   </div>
                                 }
@@ -426,7 +435,8 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           [ngClass]="{
                             'bg-success-light/20 dark:bg-success-light/30':
                               notification.type === 'success',
-                            'bg-warning-bg-hover dark:bg-warning-900/30': notification.type === 'warning',
+                            'bg-warning-bg-hover dark:bg-warning-900/30':
+                              notification.type === 'warning',
                             'bg-error-bg-hover dark:bg-error-900/30': notification.type === 'error',
                             'bg-cta-default/20 dark:bg-cta-default/30':
                               notification.type === 'info',

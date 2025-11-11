@@ -157,7 +157,11 @@ export class AdminVerificationsPage implements OnInit {
       const notes = this.actionNotesSignal();
       await this.adminService.approveVerification(verification.user_id, level, notes || undefined);
 
-      this.toastService.success('Verificación aprobada', 'El usuario ha sido notificado por email', 4000);
+      this.toastService.success(
+        'Verificación aprobada',
+        'El usuario ha sido notificado por email',
+        4000,
+      );
 
       this.closeModal();
       await Promise.all([this.loadVerifications(), this.loadStats()]);
@@ -184,7 +188,11 @@ export class AdminVerificationsPage implements OnInit {
     try {
       await this.adminService.rejectVerification(verification.user_id, level, reason);
 
-      this.toastService.warning('Verificación rechazada', 'El usuario ha sido notificado por email', 4000);
+      this.toastService.warning(
+        'Verificación rechazada',
+        'El usuario ha sido notificado por email',
+        4000,
+      );
 
       this.closeModal();
       await Promise.all([this.loadVerifications(), this.loadStats()]);

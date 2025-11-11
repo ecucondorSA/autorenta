@@ -20,11 +20,6 @@ import { TranslateModule } from '@ngx-translate/core';
         .video-bg {
           display: none !important;
         }
-        .splash-container {
-          background-image: url('/assets/images/splash-background-poster.jpg');
-          background-size: cover;
-          background-position: center;
-        }
       }
 
       /* Custom keyframes for subtle bobbing of the logo */
@@ -112,7 +107,6 @@ import { TranslateModule } from '@ngx-translate/core';
         [muted]="true"
         disablePictureInPicture
         controlsList="nodownload nofullscreen noremoteplayback"
-        poster="/assets/images/splash-background-poster.jpg"
       >
         <source
           src="/assets/videos/volvo-c-recharge-splash.mp4"

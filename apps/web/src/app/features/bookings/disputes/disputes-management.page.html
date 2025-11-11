@@ -70,7 +70,9 @@
         </div>
 
         <div *ngIf="dispute.resolved_at" class="mt-4 pt-4 border-t">
-          <p class="text-xs text-text-secondary">Resuelto el {{ formatDate(dispute.resolved_at) }}</p>
+          <p class="text-xs text-text-secondary">
+            Resuelto el {{ formatDate(dispute.resolved_at) }}
+          </p>
         </div>
       </ion-card-content>
     </ion-card>

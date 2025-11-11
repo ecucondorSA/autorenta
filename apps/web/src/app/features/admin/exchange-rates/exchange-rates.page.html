@@ -240,7 +240,12 @@
     @if (error()) {
       <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-6">
         <div class="flex items-center gap-3">
-          <svg class="w-5 h-5 text-error-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="w-5 h-5 text-error-text"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -254,7 +259,9 @@
     }
 
     <!-- Exchange Rates Table -->
-    <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default overflow-hidden">
+    <div
+      class="bg-surface-raised rounded-lg shadow-sm border border-border-default overflow-hidden"
+    >
       <div class="px-6 py-4 border-b border-border-default">
         <h2 class="text-lg font-semibold text-text-primary">Tipos de Cambio Activos</h2>
         <p class="text-sm text-text-secondary mt-1">
@@ -483,7 +490,9 @@
 
 <!-- Rate History Modal -->
 @if (selectedPair()) {
-  <div class="fixed inset-0 bg-surface-overlay bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div
+    class="fixed inset-0 bg-surface-overlay bg-opacity-50 flex items-center justify-center z-50 p-4"
+  >
     <div class="bg-surface-raised rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
       <div class="px-6 py-4 border-b border-border-default flex items-center justify-between">
         <div>

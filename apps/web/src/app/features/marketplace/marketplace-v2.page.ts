@@ -38,12 +38,11 @@ import {
   StatsStripComponent,
   Stat,
 } from '../../shared/components/stats-strip/stats-strip.component';
-import { DateRange } from '../../shared/components/date-range-picker/date-range-picker.component';
+import { DateRange, DateRangePickerComponent } from '../../shared/components/date-range-picker/date-range-picker.component';
 import {
   QuickBookingModalComponent,
   QuickBookingData,
 } from '../../shared/components/quick-booking-modal/quick-booking-modal.component';
-import { ButtonComponent } from '../../shared/components/button/button.component';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { TooltipComponent } from '../../shared/components/tooltip/tooltip.component';
 import { BookingsService } from '../../core/services/bookings.service';
@@ -69,9 +68,9 @@ export type ViewMode = 'grid' | 'list' | 'map';
     FloatingActionFabComponent,
     NotificationToastComponent,
     StatsStripComponent,
-    ButtonComponent,
     CardComponent,
     TooltipComponent,
+    DateRangePickerComponent,
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -122,6 +121,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly toastType = signal<ToastType>('info');
   readonly toastVisible = signal(false);
   readonly radiusKm = signal(5); // Search radius in kilometers
+  readonly showDatePicker = signal(false); // Modal de selector de fechas
+  readonly showLocationPicker = signal(false); // Modal de selector de ubicación
+  readonly selectedLocation = signal<string>(''); // Ubicación seleccionada
 
   // Computed
   readonly isMobile = computed(() => {
@@ -530,6 +532,56 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     console.log('Quick filter clicked:', filterId);
     this.showToast(`Filtro "${filterId}" aplicado`, 'info');
     // TODO: Apply quick filter
+  }
+
+  /**
+   * Abre el selector de fechas
+   */
+  openDatePicker(): void {
+    this.showDatePicker.set(true);
+  }
+
+  /**
+   * Cierra el selector de fechas
+   */
+  closeDatePicker(): void {
+    this.showDatePicker.set(false);
+  }
+
+  /**
+   * Maneja el cambio de rango de fechas
+   */
+  onDateRangeChange(range: DateRange): void {
+    this.dateRange.set(range);
+    if (range.from && range.to) {
+      this.showToast(`Fechas: ${range.from} - ${range.to}`, 'success');
+      void this.loadCars();
+    }
+  }
+
+  /**
+   * Abre el selector de ubicación
+   */
+  openLocationPicker(): void {
+    this.showLocationPicker.set(true);
+  }
+
+  /**
+   * Cierra el selector de ubicación
+   */
+  closeLocationPicker(): void {
+    this.showLocationPicker.set(false);
+  }
+
+  /**
+   * Maneja la selección de ubicación
+   */
+  onLocationSelect(location: string): void {
+    this.selectedLocation.set(location);
+    this.searchValue.set(location);
+    this.closeLocationPicker();
+    this.showToast(`Ubicación: ${location}`, 'success');
+    void this.loadCars();
   }
 
   onFabActionClick(actionId: string): void {

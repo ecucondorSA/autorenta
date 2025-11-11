@@ -75,7 +75,9 @@
         >
           <span class="text-warning-text dark:text-warning-200 text-lg">✏️</span>
           <div class="flex-1">
-            <p class="text-sm text-warning-strong dark:text-warning-100 font-medium">Modo edición</p>
+            <p class="text-sm text-warning-strong dark:text-warning-100 font-medium">
+              Modo edición
+            </p>
             <p class="text-xs text-warning-text dark:text-warning-100/80 mt-1">
               Estás editando un auto existente. Los cambios se guardan al enviar el formulario.
             </p>
@@ -307,7 +309,9 @@
 
               <!-- Mileage -->
               <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Kilometraje *</label>
+                <label class="block text-sm font-medium text-text-primary mb-2"
+                  >Kilometraje *</label
+                >
                 <input
                   type="number"
                   formControlName="mileage"
@@ -330,7 +334,9 @@
 
               <!-- Transmission -->
               <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Transmisión *</label>
+                <label class="block text-sm font-medium text-text-primary mb-2"
+                  >Transmisión *</label
+                >
                 <select
                   formControlName="transmission"
                   class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
@@ -343,7 +349,9 @@
 
               <!-- Fuel -->
               <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Combustible *</label>
+                <label class="block text-sm font-medium text-text-primary mb-2"
+                  >Combustible *</label
+                >
                 <select
                   formControlName="fuel"
                   class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
@@ -402,13 +410,17 @@
                     (click)="setPricingStrategy('custom')"
                   >
                     <p class="text-sm font-semibold">Precio personalizado</p>
-                    <p class="text-xs text-text-secondary mt-1">Definí manualmente el valor diario.</p>
+                    <p class="text-xs text-text-secondary mt-1">
+                      Definí manualmente el valor diario.
+                    </p>
                   </button>
                 </div>
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-primary mb-2 flex items-center gap-2">
+                <label
+                  class="block text-sm font-medium text-text-primary mb-2 flex items-center gap-2"
+                >
                   Precio por día *
                   <span class="text-xs text-text-secondary" *ngIf="isDynamicPricing()"
                     >(AutoRenta lo ajustará automáticamente)</span
@@ -442,7 +454,9 @@
 
               <!-- ✅ NUEVO: Valor del Vehículo (USD) -->
               <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-text-primary mb-2 flex items-center gap-2">
+                <label
+                  class="block text-sm font-medium text-text-primary mb-2 flex items-center gap-2"
+                >
                   Valor Estimado del Vehículo (USD) *
                   <span
                     class="text-xs text-text-secondary font-normal"
@@ -466,7 +480,9 @@
 
               <!-- Min rental days -->
               <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Días mínimos *</label>
+                <label class="block text-sm font-medium text-text-primary mb-2"
+                  >Días mínimos *</label
+                >
                 <input
                   type="number"
                   formControlName="min_rental_days"

@@ -16,9 +16,7 @@
       </p>
     </div>
 
-    <div
-      class="p-4 bg-success-bg rounded-xl border border-success-border transition-colors"
-    >
+    <div class="p-4 bg-success-bg rounded-xl border border-success-border transition-colors">
       <p class="text-sm text-success-text mb-1">Disponible para retirar</p>
       <p class="text-2xl font-bold text-success-strong">
         ${{ withdrawableBalance | number: '1.2-2' }}
@@ -29,9 +27,7 @@
       <div
         class="md:col-span-2 p-4 bg-warning-bg border border-warning-border rounded-xl transition-colors"
       >
-        <p class="text-sm font-semibold text-warning-strong">
-          Crédito Autorentar protegido
-        </p>
+        <p class="text-sm font-semibold text-warning-strong">Crédito Autorentar protegido</p>
         <p class="text-xs text-warning-text mt-1 leading-relaxed">
           ${{ nonWithdrawableBalance | number: '1.2-2' }} deben permanecer en tu wallet para
           garantizar reservas y futuras locaciones. Este saldo no es reembolsable, pero puedes
@@ -42,15 +38,9 @@
   </div>
 
   @if (accounts.length === 0) {
-    <div
-      class="text-center py-8 bg-warning-bg rounded-xl border border-warning-border"
-    >
-      <p class="text-warning-strong font-semibold">
-        ⚠️ No tienes cuentas bancarias agregadas
-      </p>
-      <p class="text-sm text-warning-text mt-1">
-        Primero debes agregar una cuenta bancaria
-      </p>
+    <div class="text-center py-8 bg-warning-bg rounded-xl border border-warning-border">
+      <p class="text-warning-strong font-semibold">⚠️ No tienes cuentas bancarias agregadas</p>
+      <p class="text-sm text-warning-text mt-1">Primero debes agregar una cuenta bancaria</p>
       <button
         (click)="onCancel()"
         class="mt-4 px-4 py-2 bg-cta-default text-cta-text font-semibold rounded-xl hover:bg-cta-default/90 transition"
@@ -184,9 +174,7 @@
             <div
               class="mt-3 p-3 bg-error-bg border border-error-border rounded-lg transition-colors"
             >
-              <p class="text-sm text-error-strong">
-                ⚠️ <strong>Saldo insuficiente</strong>
-              </p>
+              <p class="text-sm text-error-strong">⚠️ <strong>Saldo insuficiente</strong></p>
               <p class="text-xs text-error-text mt-1">
                 Necesitas ${{ totalDebit() | number: '1.2-2' }} pero solo tienes ${{
                   withdrawableBalance | number: '1.2-2'
@@ -248,8 +236,19 @@
             fill="none"
             viewBox="0 0 24 24"
           >
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
           </svg>
           <!-- Icono cuando no está procesando -->
           <svg
@@ -260,7 +259,12 @@
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           {{ submitting() ? 'Procesando...' : 'Solicitar Retiro' }}
         </button>

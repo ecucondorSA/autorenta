@@ -20,6 +20,7 @@ import { PricingService } from '../../../core/services/pricing.service';
 import { ProfileService } from '../../../core/services/profile.service';
 import { Router } from '@angular/router';
 import { getAgeFromProfile } from '../../utils/age-calculator';
+import { BirthDateModalComponent } from '../birth-date-modal/birth-date-modal.component';
 
 export interface BookingFormData {
   startDate: string;
@@ -32,7 +33,7 @@ export interface BookingFormData {
 @Component({
   selector: 'app-map-booking-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule, MoneyPipe],
+  imports: [CommonModule, FormsModule, MoneyPipe, BirthDateModalComponent],
   template: `
     <div
       class="map-booking-panel fixed inset-y-0 right-0 w-full max-w-md bg-surface-raised shadow-2xl z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto"
@@ -248,6 +249,14 @@ export interface BookingFormData {
       </div>
     </div>
 
+    <!-- ✅ NUEVO: Modal para solicitar fecha de nacimiento -->
+    @if (showBirthDateModal()) {
+      <app-birth-date-modal
+        (completed)="onBirthDateCompleted($event)"
+        (cancelled)="onBirthDateCancelled()"
+      />
+    }
+
     <!-- Backdrop -->
     <div
       *ngIf="isOpen()"
@@ -306,6 +315,7 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
   readonly error = signal<string | null>(null);
   readonly isProcessing = signal(false);
   readonly paymentMethod = signal<'wallet' | 'card'>('wallet');
+  readonly showBirthDateModal = signal(false);
 
   readonly minDate = new Date().toISOString().split('T')[0];
   readonly maxDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -433,6 +443,13 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // ✅ NUEVO: Verificar si el usuario tiene date_of_birth antes de continuar
+    const needsBirthDate = await this.checkAndRequestBirthDate();
+    if (needsBirthDate) {
+      // Modal se mostrará, esperamos que el usuario complete
+      return;
+    }
+
     this.isProcessing.set(true);
     this.error.set(null);
 
@@ -489,6 +506,55 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * ✅ NUEVO: Verifica si el usuario tiene date_of_birth y muestra modal si no la tiene
+   * Retorna true si se necesita mostrar el modal (bloqueando el flujo)
+   * Retorna false si el usuario ya tiene date_of_birth (continuar con booking)
+   */
+  private async checkAndRequestBirthDate(): Promise<boolean> {
+    try {
+      const profile = await this.profileService.getCurrentProfile();
+
+      // Si ya tiene date_of_birth, no mostrar modal
+      if (profile?.date_of_birth) {
+        return false;
+      }
+
+      // No tiene date_of_birth, mostrar modal
+      this.showBirthDateModal.set(true);
+      return true;
+    } catch (error) {
+      console.error('[MapBookingPanel] Error checking date_of_birth:', error);
+      // En caso de error, asumir que no tiene y mostrar modal
+      this.showBirthDateModal.set(true);
+      return true;
+    }
+  }
+
+  /**
+   * ✅ NUEVO: Handler cuando el usuario completa el modal de fecha de nacimiento
+   * Cierra el modal y reintenta la confirmación del booking
+   */
+  onBirthDateCompleted(birthDate: string): void {
+    console.log('[MapBookingPanel] Birth date completed:', birthDate);
+    this.showBirthDateModal.set(false);
+
+    // Reintentar confirmación automáticamente
+    setTimeout(() => {
+      this.onConfirmBooking();
+    }, 100);
+  }
+
+  /**
+   * ✅ NUEVO: Handler cuando el usuario cancela el modal de fecha de nacimiento
+   * Solo cierra el modal, no procede con el booking
+   */
+  onBirthDateCancelled(): void {
+    console.log('[MapBookingPanel] Birth date cancelled');
+    this.showBirthDateModal.set(false);
+    // No hacer nada más, el usuario puede decidir si quiere intentar nuevamente
+  }
+
+  /**
    * ✅ DRIVER AGE: Obtiene edad real del conductor desde su perfil
    * Usa fecha de nacimiento si está configurada, caso contrario fallback a 30
    */
@@ -502,6 +568,3 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
     }
   }
 }
-
-
-

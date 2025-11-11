@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import type { UserProfile } from '../../../../core/models';
 
@@ -45,11 +38,9 @@ export class ProfileHeaderComponent {
   readonly verificationStatus = computed(() => {
     const p = this.profile();
     if (!p) return { verified: false, level: 'none' };
-    const checks = [
-      p.is_email_verified,
-      p.is_phone_verified,
-      p.is_driver_verified,
-    ].filter(Boolean).length;
+    const checks = [p.is_email_verified, p.is_phone_verified, p.is_driver_verified].filter(
+      Boolean,
+    ).length;
     return {
       verified: checks >= 2,
       level: checks === 3 ? 'full' : checks === 2 ? 'partial' : 'none',

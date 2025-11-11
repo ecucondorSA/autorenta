@@ -22,6 +22,7 @@ export interface UpdateProfileData {
   driver_license_number?: string;
   driver_license_country?: string;
   driver_license_expiry?: string;
+  date_of_birth?: string | null; // ISO date string YYYY-MM-DD
   address_line1?: string;
   address_line2?: string;
   city?: string;

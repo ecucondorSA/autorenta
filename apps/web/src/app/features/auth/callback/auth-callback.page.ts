@@ -76,9 +76,7 @@ import { ProfileService } from '../../../core/services/profile.service';
           <div
             class="bg-error-bg dark:bg-error-900/20 border-2 border-error-border dark:border-error-800 rounded-lg p-6"
           >
-            <h2 class="text-xl font-bold text-error-strong mb-2">
-              Error de autenticación
-            </h2>
+            <h2 class="text-xl font-bold text-error-strong mb-2">Error de autenticación</h2>
             <p class="text-error-text mb-4">
               {{ error() }}
             </p>

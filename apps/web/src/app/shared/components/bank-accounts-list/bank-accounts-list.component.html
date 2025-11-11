@@ -23,7 +23,9 @@
 
   <!-- Empty State -->
   @if (!loading && accounts.length === 0) {
-    <div class="text-center py-12 bg-surface-base rounded-2xl border-2 border-dashed border-border-muted">
+    <div
+      class="text-center py-12 bg-surface-base rounded-2xl border-2 border-dashed border-border-muted"
+    >
       <svg
         class="mx-auto h-12 w-12 text-text-muted dark:text-text-secondary"
         fill="none"
@@ -63,7 +65,9 @@
             <!-- Account Info -->
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-2">
-                <span class="px-2 py-1 bg-surface-raised text-text-primary text-xs font-semibold rounded-lg">
+                <span
+                  class="px-2 py-1 bg-surface-raised text-text-primary text-xs font-semibold rounded-lg"
+                >
                   {{ getAccountTypeLabel(account.account_type) }}
                 </span>
                 @if (account.is_default) {

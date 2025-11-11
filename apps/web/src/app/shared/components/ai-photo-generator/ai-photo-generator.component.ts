@@ -16,7 +16,9 @@ import { ToastService } from '../../../core/services/toast.service';
     <div class="ai-photo-generator">
       <!-- Method Selector -->
       <div class="mb-4">
-        <label class="block text-sm font-medium text-text-primary mb-2">Método de generación:</label>
+        <label class="block text-sm font-medium text-text-primary mb-2"
+          >Método de generación:</label
+        >
         <div class="flex gap-2">
           <button
             type="button"

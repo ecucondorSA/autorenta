@@ -109,7 +109,9 @@ interface WalletLedgerEntry {
               <!-- Total Collected -->
               <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                  <p
+                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                  >
                     Total Recaudado
                   </p>
                   <span class="text-2xl">📥</span>
@@ -117,7 +119,9 @@ interface WalletLedgerEntry {
                 <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   {{ stats()!.total_franchises_collected }}
                 </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
+                <p
+                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                >
                   franquicias cobradas
                 </p>
               </div>
@@ -125,7 +129,9 @@ interface WalletLedgerEntry {
               <!-- Total Disbursed -->
               <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                  <p
+                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                  >
                     Total Desembolsado
                   </p>
                   <span class="text-2xl">📤</span>
@@ -133,7 +139,9 @@ interface WalletLedgerEntry {
                 <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   {{ stats()!.total_franchises_disbursed }}
                 </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
+                <p
+                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                >
                   franquicias pagadas
                 </p>
               </div>
@@ -141,7 +149,9 @@ interface WalletLedgerEntry {
               <!-- Total Entries -->
               <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                  <p
+                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                  >
                     Entradas en Ledger
                   </p>
                   <span class="text-2xl">📝</span>
@@ -149,7 +159,9 @@ interface WalletLedgerEntry {
                 <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   {{ stats()!.total_ledger_entries }}
                 </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
+                <p
+                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                >
                   movimientos totales
                 </p>
               </div>
@@ -157,7 +169,9 @@ interface WalletLedgerEntry {
               <!-- Average Amount -->
               <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                  <p
+                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                  >
                     Promedio Franquicia
                   </p>
                   <span class="text-2xl">💰</span>
@@ -165,7 +179,9 @@ interface WalletLedgerEntry {
                 <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   {{ formatAmount(stats()!.avg_franchise_amount) }}
                 </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
+                <p
+                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                >
                   por incidente
                 </p>
               </div>
@@ -181,9 +197,10 @@ interface WalletLedgerEntry {
                 </h2>
               </div>
               <div class="p-6">
-                <pre class="bg-surface-raised dark:bg-surface-raised rounded p-4 text-sm overflow-x-auto">{{
-                  JSON.stringify(fund()!.meta, null, 2)
-                }}</pre>
+                <pre
+                  class="bg-surface-raised dark:bg-surface-raised rounded p-4 text-sm overflow-x-auto"
+                  >{{ JSON.stringify(fund()!.meta, null, 2) }}</pre
+                >
               </div>
             </div>
           }
@@ -220,7 +237,9 @@ interface WalletLedgerEntry {
             } @else {
               <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 @for (entry of recentActivity(); track entry.id) {
-                  <div class="p-6 hover:bg-surface-base dark:hover:bg-gray-700/50 transition-colors">
+                  <div
+                    class="p-6 hover:bg-surface-base dark:hover:bg-gray-700/50 transition-colors"
+                  >
                     <div class="flex items-start justify-between">
                       <div class="flex items-start space-x-3">
                         <span class="text-2xl">

@@ -137,7 +137,9 @@
                   <h1 class="text-lg font-bold text-text-primary dark:text-text-inverse truncate">
                     {{ booking()?.car_title }}
                   </h1>
-                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                  <p
+                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                  >
                     {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{
                       booking()?.car_year
                     }})
@@ -216,7 +218,9 @@
                     class="mb-4 p-3 bg-cta-default/10 dark:bg-cta-default/30 rounded-lg border border-cta-default/40 dark:border-cta-default"
                   >
                     <div class="flex items-center justify-between">
-                      <span class="text-sm text-text-primary dark:text-text-secondary">Distancia</span>
+                      <span class="text-sm text-text-primary dark:text-text-secondary"
+                        >Distancia</span
+                      >
                       <span class="font-semibold text-text-primary dark:text-text-inverse">
                         {{ booking()!.delivery_distance_km | number: '1.0-2' }} km
                       </span>
@@ -250,7 +254,9 @@
                 <div class="space-y-3">
                   <!-- Pickup Location -->
                   <div>
-                    <p class="text-xs font-medium text-text-secondary dark:text-text-muted mb-1">Retiro</p>
+                    <p class="text-xs font-medium text-text-secondary dark:text-text-muted mb-1">
+                      Retiro
+                    </p>
                     <p class="text-sm text-text-primary dark:text-text-inverse">
                       {{ booking()!.pickup_location_lat | number: '1.0-4' }},
                       {{ booking()!.pickup_location_lng | number: '1.0-4' }}
@@ -518,7 +524,9 @@
                     <h4 class="font-semibold text-text-primary dark:text-text-inverse mb-1">
                       Check-in del Vehículo
                     </h4>
-                    <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-3">
+                    <p
+                      class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-3"
+                    >
                       Realizá la inspección inicial del vehículo antes de iniciar el alquiler.
                       Necesitarás tomar fotos, registrar el odómetro y el nivel de combustible.
                     </p>
@@ -569,7 +577,9 @@
                     <h4 class="font-semibold text-text-primary dark:text-text-inverse mb-1">
                       Check-out del Vehículo
                     </h4>
-                    <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-3">
+                    <p
+                      class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-3"
+                    >
                       Realizá la inspección final del vehículo al devolver el auto. Compará el
                       estado con el check-in y reportá cualquier daño.
                     </p>
@@ -942,7 +952,9 @@
               </h3>
               <div class="space-y-2">
                 <div class="flex justify-between items-center">
-                  <span class="text-sm text-warning-strong dark:text-warning-300">Monto del daño:</span>
+                  <span class="text-sm text-warning-strong dark:text-warning-300"
+                    >Monto del daño:</span
+                  >
                   <span class="font-semibold text-warning-strong dark:text-warning-100">
                     ${{ (booking()?.owner_damage_amount ?? 0) / 100 }} USD
                   </span>

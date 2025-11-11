@@ -216,7 +216,8 @@
             [ngClass]="{
               'bg-success-light text-text-primary font-medium': getDayStatus(car, day) === 'booked',
               'bg-error-bg0 text-text-inverse font-medium': getDayStatus(car, day) === 'blocked',
-              'bg-surface-hover dark:bg-surface-base text-text-muted': getDayStatus(car, day) === 'past',
+              'bg-surface-hover dark:bg-surface-base text-text-muted':
+                getDayStatus(car, day) === 'past',
               'hover:bg-surface-secondary dark:hover:bg-slate-deep':
                 getDayStatus(car, day) === 'available',
             }"

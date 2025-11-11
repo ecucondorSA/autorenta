@@ -58,7 +58,9 @@
     <div
       class="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default mx-auto mb-4"
     ></div>
-    <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">Cargando historial...</p>
+    <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+      Cargando historial...
+    </p>
   </div>
 
   <div
@@ -99,7 +101,9 @@
               >
                 {{ entry.meta['description'] }}
               </p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary font-mono">
+              <p
+                class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary font-mono"
+              >
                 Ref: {{ entry.ref }}
               </p>
               <p
@@ -114,7 +118,9 @@
                   {{ entry.booking_status }}
                 </span>
               </p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
+              <p
+                class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+              >
                 {{ formatDate(entry.ts) }}
               </p>
             </div>
@@ -123,7 +129,9 @@
             <p class="text-lg font-bold" [ngClass]="ledgerService.getKindColor(entry.kind)">
               {{ formatBalanceChange(entry.balance_change_cents) }}
             </p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+            <p
+              class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+            >
               {{ ledgerService.formatAmount(entry.amount_cents) }}
             </p>
           </div>

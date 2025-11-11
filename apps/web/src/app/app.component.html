@@ -20,7 +20,7 @@
   <!-- Header (oculto en móvil, visible en desktop) -->
   <header
     id="main-header"
-    class="hidden md:block sticky top-0 z-sticky border-b border-border-default dark:border-border-default/30 backdrop-blur-md bg-surface-raised dark:bg-surface-raised/95"
+    class="hidden md:block sticky top-0 z-sticky border-b border-border-default dark:border-slate-700/50 backdrop-blur-md bg-surface-raised dark:bg-slate-900/95 shadow-sm dark:shadow-slate-950/50"
   >
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 px-3 py-2 rounded-lg bg-surface-secondary dark:bg-surface-secondary"
@@ -67,16 +67,16 @@
           width="500"
           height="500"
           priority
-          class="h-12 md:h-14 w-auto object-contain drop-shadow-lg transition-transform duration-200 group-hover:scale-[1.04]"
+          class="h-12 md:h-14 w-auto object-contain drop-shadow-lg transition-transform duration-200 group-hover:scale-[1.04] dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] dark:brightness-0 dark:invert"
         />
         <span class="flex flex-col leading-tight">
           <span
-            class="text-[1.05rem] font-semibold text-text-primary dark:text-text-secondary group-hover:text-cta-default"
+            class="text-[1.05rem] font-semibold text-text-primary dark:text-white group-hover:text-cta-default dark:group-hover:text-cyan-400 transition-colors"
           >
-            AutoRentar
+            Autorentar
           </span>
           <span
-            class="text-[0.68rem] uppercase tracking-[0.22em] text-text-muted dark:text-text-secondary/65"
+            class="text-[0.68rem] uppercase tracking-[0.22em] text-text-muted dark:text-gray-300"
           >
             Car Sharing
           </span>
@@ -400,168 +400,6 @@
     <span class="font-semibold text-sm">Comparando ({{ compareCountSig() }})</span>
   </a>
 
-  <!-- Footer (oculto en móvil, visible en desktop) -->
-  <footer
-    class="hidden md:block border-t border-border-default dark:border-border-default/40 dark:border-white/10 bg-gradient-to-b from-[#e9ddc9] via-[#d9c4a9] to-[#c9ad8a] text-[#2b1d14] dark:from-[#12171a] dark:via-[#141b1f] dark:to-[#161d22] dark:text-text-secondary"
-  >
-    <div class="mx-auto max-w-7xl px-container py-section-sm">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
-        <!-- Brand -->
-        <div>
-          <div class="h-12 mb-4 flex items-center">
-            <img
-              ngSrc="/assets/images/autorentar-logo.png"
-              alt="Autorentar"
-              width="500"
-              height="500"
-              priority
-              class="h-full w-auto object-contain drop-shadow-lg"
-            />
-          </div>
-          <p class="text-sm text-[#3a2719] dark:text-text-secondary/80 leading-relaxed max-w-xs">
-            Alquiler de autos premium en Uruguay. Conectamos personas y experiencias con vehículos
-            de anfitriones verificados.
-          </p>
-        </div>
-
-        <!-- Links -->
-        <div>
-          <h4 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-4">
-            Explorar
-          </h4>
-          <ul class="space-y-3 text-sm text-[#3a2719] dark:text-text-secondary/80">
-            <li>
-              <a routerLink="/cars" class="hover:text-cta-default transition-base">Buscar autos</a>
-            </li>
-            <li>
-              <a routerLink="/cars/publish" class="hover:text-cta-default transition-base"
-                >Publicar auto</a
-              >
-            </li>
-            <li>
-              <a routerLink="/wallet" class="hover:text-cta-default transition-base">Wallet</a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-4">Legal</h4>
-          <ul class="space-y-3 text-sm text-[#3a2719] dark:text-text-secondary/80">
-            <li>
-              <a href="#" class="hover:text-cta-default transition-base">Términos y condiciones</a>
-            </li>
-            <li>
-              <a href="#" class="hover:text-cta-default transition-base">Política de privacidad</a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-4">
-            Contacto
-          </h4>
-          <ul class="space-y-3 text-sm text-[#3a2719] dark:text-text-secondary/80">
-            <li>
-              <a
-                href="mailto:autorentardev&#64;gmail.com"
-                class="inline-flex items-center gap-2 hover:text-cta-default transition-base"
-              >
-                <svg
-                  class="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 5h18M5 7h14v12H5z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 9l7 5 7-5" />
-                </svg>
-                autorentardev&#64;gmail.com
-              </a>
-            </li>
-            <li>
-              <a
-                href="tel:+59899123456"
-                class="inline-flex items-center gap-2 hover:text-cta-default transition-base"
-              >
-                <svg
-                  class="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M3 5.75C3 4.782 3.782 4 4.75 4h2.083a1.5 1.5 0 0 1 1.457 1.125l.7 2.804a1.5 1.5 0 0 1-.387 1.47l-1.13 1.13a11.94 11.94 0 0 0 4.326 4.326l1.13-1.13a1.5 1.5 0 0 1 1.47-.387l2.804.7A1.5 1.5 0 0 1 19.25 18H20.5c.966 0 1.75.784 1.75 1.75v2.083A1.5 1.5 0 0 1 20.75 23 16.75 16.75 0 0 1 3 5.75Z"
-                  />
-                </svg>
-                +598 99 123 456
-              </a>
-            </li>
-          </ul>
-
-          <div class="mt-5">
-            <h5
-              class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted dark:text-text-secondary/60 mb-3"
-            >
-              Síguenos
-            </h5>
-            <div class="flex items-center gap-3">
-              <a
-                href="#"
-                aria-label="Instagram"
-                class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-default dark:border-border-default/50 bg-surface-raised dark:bg-surface-secondary/80 text-cta-default shadow-sm transition transform hover:scale-105 dark:border-white/15 dark:bg-surface-raised dark:bg-surface-secondary/5 dark:text-text-secondary"
-              >
-                <svg
-                  class="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  aria-hidden="true"
-                >
-                  <rect x="3" y="3" width="18" height="18" rx="4" />
-                  <circle cx="12" cy="12" r="3.5" />
-                  <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none" />
-                </svg>
-              </a>
-              <a
-                href="#"
-                aria-label="WhatsApp"
-                class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-default dark:border-border-default/50 bg-surface-raised dark:bg-surface-secondary/80 text-cta-default shadow-sm transition transform hover:scale-105 dark:border-white/15 dark:bg-surface-raised dark:bg-surface-secondary/5 dark:text-text-secondary"
-              >
-                <svg
-                  class="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  aria-hidden="true"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M5.5 20 4 21.5l1.5-5.5a7.5 7.5 0 1 1 2.7 2.7L5.5 20Zm5.8-6.4c1.1 1.9 2.7 3 3.6 3.3.6.2 1.1.2 1.4-.1.2-.2.5-.6.6-.9.1-.3.1-.5 0-.7-.1-.2-.5-.4-.9-.6s-.7-.3-.9-.1-.5.8-.7.9c-.2.1-.4.1-.7 0-.3-.2-1-.5-1.5-1-1-.8-1.7-1.9-1.9-2.3-.2-.3-.1-.5 0-.7.1-.2.3-.3.5-.5.2-.2.3-.3.4-.5.1-.2.1-.4 0-.6-.1-.2-.7-1.7-.9-2.2-.2-.6-.4-.6-.6-.6h-.6c-.2 0-.5.1-.7.3a2.4 2.4 0 0 0-.8 1.8c0 .6.1 1.2.4 1.8a9 9 0 0 0 1.6 2.4Z"
-                  />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Copyright -->
-      <div
-        class="pt-6 border-t border-border-default dark:border-border-default/30 dark:border-white/10"
-      >
-        <p class="text-xs text-[#3a2719]/80 dark:text-text-secondary/70 text-center">
-          © {{ year }} Autorentar. Todos los derechos reservados.
-        </p>
-      </div>
-    </div>
-  </footer>
+  <!-- Footer Profesional (oculto en móvil, visible en desktop) -->
+  <app-footer class="hidden md:block"></app-footer>
 </div>

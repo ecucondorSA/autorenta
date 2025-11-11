@@ -67,7 +67,9 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
       <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-sm font-medium text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+          <p
+            class="text-sm font-medium text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+          >
             Total Depósitos
           </p>
           <span class="text-2xl">📊</span>
@@ -95,7 +97,9 @@
           <p class="text-sm font-medium text-warning-strong dark:text-warning-400">Pendientes</p>
           <span class="text-2xl">⏳</span>
         </div>
-        <p class="text-3xl font-bold text-warning-strong dark:text-warning-100">{{ stats().pending }}</p>
+        <p class="text-3xl font-bold text-warning-strong dark:text-warning-100">
+          {{ stats().pending }}
+        </p>
       </div>
 
       <div class="bg-error-bg dark:bg-error-900/20 rounded-lg shadow p-6">
@@ -160,10 +164,14 @@
                 <p class="font-medium text-text-primary dark:text-text-inverse">
                   {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
                 </p>
-                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                <p
+                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                >
                   {{ formatCurrency(deposit.amount, deposit.currency) }}
                 </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
+                <p
+                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                >
                   {{ formatRelativeTime(deposit.created_at) }}
                 </p>
               </div>
@@ -195,10 +203,14 @@
                 <p class="font-medium text-text-primary dark:text-text-inverse">
                   {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
                 </p>
-                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                <p
+                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                >
                   {{ formatCurrency(deposit.amount, deposit.currency) }}
                 </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
+                <p
+                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                >
                   {{ formatRelativeTime(deposit.completed_at || deposit.created_at) }}
                   <span *ngIf="deposit.time_to_complete_minutes" class="ml-2">
                     (Confirmado en {{ formatDuration(deposit.time_to_complete_minutes) }})
@@ -233,10 +245,14 @@
                 <p class="font-medium text-text-primary dark:text-text-inverse">
                   {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
                 </p>
-                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                <p
+                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                >
                   {{ formatCurrency(deposit.amount, deposit.currency) }}
                 </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1">
+                <p
+                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                >
                   {{ formatRelativeTime(deposit.updated_at) }}
                 </p>
               </div>

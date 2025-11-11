@@ -16,7 +16,9 @@
   <!-- Last Checked -->
   <ion-card *ngIf="lastChecked()" class="mb-4">
     <ion-card-content>
-      <p class="text-sm text-text-secondary">Última verificación: {{ lastChecked()! | date: 'short' }}</p>
+      <p class="text-sm text-text-secondary">
+        Última verificación: {{ lastChecked()! | date: 'short' }}
+      </p>
     </ion-card-content>
   </ion-card>
 

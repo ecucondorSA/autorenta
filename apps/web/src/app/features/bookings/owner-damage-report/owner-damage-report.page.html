@@ -209,7 +209,9 @@
             <span
               class="font-semibold"
               [class.text-error-text]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()"
-              [class.text-success-light]="damageAmount() > 0 && damageAmount() <= maxDepositAmount()"
+              [class.text-success-light]="
+                damageAmount() > 0 && damageAmount() <= maxDepositAmount()
+              "
             >
               {{ formattedAmount }}
             </span>
@@ -229,7 +231,8 @@
         <div
           class="mt-4 p-3 rounded-lg"
           [class.bg-success-light-10]="canSubmit()"
-          [class.bg-surface-base]="!canSubmit()">
+          [class.bg-surface-base]="!canSubmit()"
+        >
           <div class="flex items-center gap-2">
             <ion-icon
               [name]="canSubmit() ? 'checkmark-circle' : 'alert-circle'"

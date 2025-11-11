@@ -28,7 +28,9 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
           <div class="flex items-center justify-between">
             <div>
               <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse">Mensajes</h1>
-              <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+              <p
+                class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+              >
                 {{ conversations().length }} conversaciones
               </p>
             </div>
@@ -73,7 +75,9 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
             <h3 class="mt-4 text-lg font-medium text-text-primary dark:text-text-inverse">
               No hay mensajes
             </h3>
-            <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+            <p
+              class="mt-2 text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+            >
               Cuando alguien te escriba, aparecerá aquí
             </p>
           </div>
@@ -112,7 +116,9 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
                           {{ conv.otherUserName }}
                         </p>
                         @if (conv.carBrand) {
-                          <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                          <p
+                            class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                          >
                             {{ conv.carBrand }} {{ conv.carModel }} {{ conv.carYear }}
                           </p>
                         }
@@ -137,7 +143,9 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
                     >
                       {{ conv.lastMessage }}
                     </p>
-                    <p class="mt-1 text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                    <p
+                      class="mt-1 text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                    >
                       {{ formatDate(conv.lastMessageAt) }}
                     </p>
                   </div>
@@ -252,7 +260,8 @@ export class InboxPage implements OnInit, OnDestroy {
           lastMessage: message.body,
           lastMessageAt: new Date(message.created_at),
           // Increment unread count if message is from other user and not read
-          unreadCount: message.sender_id !== userId ? existingConv.unreadCount + 1 : existingConv.unreadCount,
+          unreadCount:
+            message.sender_id !== userId ? existingConv.unreadCount + 1 : existingConv.unreadCount,
         };
 
         // Reordenar por fecha de último mensaje
@@ -272,7 +281,7 @@ export class InboxPage implements OnInit, OnDestroy {
   private async fetchAndAddNewConversation(
     conversationKey: string,
     message: Message,
-    userId: string
+    userId: string,
   ): Promise<void> {
     try {
       const updatedConversation = await this.messagesService.listConversations(userId, {
@@ -289,7 +298,9 @@ export class InboxPage implements OnInit, OnDestroy {
       this.conversations.update((convs) => {
         // Check if it was already added (race condition)
         if (convs.some((c) => c.id === conversationKey)) return convs;
-        return [conv, ...convs].sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime());
+        return [conv, ...convs].sort(
+          (a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime(),
+        );
       });
     } catch (error) {
       console.error('Error fetching new conversation:', error);

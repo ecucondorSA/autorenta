@@ -99,7 +99,9 @@ export interface ChatContext {
             <div
               class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-muted border-t-[#075E54]"
             ></div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+            <p
+              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+            >
               Cargando mensajes...
             </p>
           </div>
@@ -160,9 +162,10 @@ export interface ChatContext {
                 {{ message.body }}
               </p>
               <div class="mt-1 flex items-center justify-end gap-1">
-                <span class="text-[10px] text-text-secondary dark:text-text-secondary dark:text-text-secondary">{{
-                  formatTime(message.created_at)
-                }}</span>
+                <span
+                  class="text-[10px] text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                  >{{ formatTime(message.created_at) }}</span
+                >
               </div>
               <!-- Tail izquierdo -->
               <div
@@ -421,7 +424,8 @@ export class BaseChatComponent implements OnInit, OnDestroy {
             m.id.startsWith('temp-') &&
             m.body === message.body &&
             m.sender_id === message.sender_id &&
-            Math.abs(new Date(m.created_at).getTime() - new Date(message.created_at).getTime()) < 5000
+            Math.abs(new Date(m.created_at).getTime() - new Date(message.created_at).getTime()) <
+              5000,
         );
 
         if (optimisticIndex >= 0) {

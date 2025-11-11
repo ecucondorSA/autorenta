@@ -105,7 +105,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 >
                   Pago inmediato
                 </p>
-                <p class="text-sm text-text-primary dark:text-text-secondary/80">Total del alquiler</p>
+                <p class="text-sm text-text-primary dark:text-text-secondary/80">
+                  Total del alquiler
+                </p>
                 <p class="text-lg font-bold text-cta-default dark:text-cta-default">
                   {{ formatArs(priceBreakdown.totalArs) }}
                 </p>

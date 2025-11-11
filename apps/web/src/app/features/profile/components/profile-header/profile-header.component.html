@@ -25,10 +25,7 @@
                 {{ profile()?.full_name?.charAt(0) || 'A' }}
               </div>
             </ng-template>
-            <div
-              *ngIf="uploadingAvatar()"
-              class="avatar-overlay"
-            >
+            <div *ngIf="uploadingAvatar()" class="avatar-overlay">
               <svg
                 class="spinner"
                 xmlns="http://www.w3.org/2000/svg"
@@ -76,11 +73,19 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              {{ verificationStatus().verified ? 'Verificado' : verificationStatus().level === 'partial' ? 'Parcial' : 'Sin verificar' }}
+              {{
+                verificationStatus().verified
+                  ? 'Verificado'
+                  : verificationStatus().level === 'partial'
+                    ? 'Parcial'
+                    : 'Sin verificar'
+              }}
             </span>
             <span *ngIf="averageRating() > 0" class="badge-rating">
               <svg class="badge-icon" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                />
               </svg>
               {{ averageRating() }}
             </span>
@@ -89,12 +94,16 @@
           <div class="hero-mini-stats">
             <div class="mini-card">
               <p>Balance disponible</p>
-              <h3>${{ availableBalance() | number:'1.2-2' }}</h3>
+              <h3>${{ availableBalance() | number: '1.2-2' }}</h3>
               <span>Wallet lista para retirar</span>
             </div>
             <div class="mini-card">
               <p>Reviews</p>
-              <h3>{{ (userStats()?.owner_reviews_count || 0) + (userStats()?.renter_reviews_count || 0) }}</h3>
+              <h3>
+                {{
+                  (userStats()?.owner_reviews_count || 0) + (userStats()?.renter_reviews_count || 0)
+                }}
+              </h3>
               <span>Feedback combinado</span>
             </div>
             <div class="mini-card">
@@ -121,26 +130,34 @@
             <span class="card-title">Ganancias proyectadas</span>
             <span class="card-chip chip-positive">+18%</span>
           </div>
-          <h3 class="card-value">${{ (availableBalance() * 1.18) | number:'1.2-2' }}</h3>
+          <h3 class="card-value">${{ availableBalance() * 1.18 | number: '1.2-2' }}</h3>
           <p class="card-hint">Basado en tus últimas reservas</p>
         </article>
         <article class="performance-card">
           <div class="card-top">
             <span class="card-title">Tasa de cancelación</span>
             <span class="card-chip chip-warning">
-              {{ (userStats()?.cancellation_rate || 0) | percent:'1.0-1' }}
+              {{ userStats()?.cancellation_rate || 0 | percent: '1.0-1' }}
             </span>
           </div>
-          <h3 class="card-value">
-            {{ userStats()?.cancellation_count || 0 }} cancelaciones
-          </h3>
+          <h3 class="card-value">{{ userStats()?.cancellation_count || 0 }} cancelaciones</h3>
           <p class="card-hint">Mantén la tasa por debajo del 5%.</p>
         </article>
         <article class="performance-card">
           <div class="card-top">
             <span class="card-title">Nivel de verificación</span>
-            <span class="card-chip" [class.chip-positive]="verificationStatus().level === 'full'" [class.chip-warning]="verificationStatus().level !== 'full'">
-              {{ verificationStatus().level === 'full' ? 'Completo' : verificationStatus().level === 'partial' ? 'Parcial' : 'Pendiente' }}
+            <span
+              class="card-chip"
+              [class.chip-positive]="verificationStatus().level === 'full'"
+              [class.chip-warning]="verificationStatus().level !== 'full'"
+            >
+              {{
+                verificationStatus().level === 'full'
+                  ? 'Completo'
+                  : verificationStatus().level === 'partial'
+                    ? 'Parcial'
+                    : 'Pendiente'
+              }}
             </span>
           </div>
           <h3 class="card-value">
@@ -154,10 +171,7 @@
     <!-- Actions column -->
     <section class="hero-actions-panel">
       <div class="actions-grid">
-        <label
-          class="btn-hero btn-hero-primary"
-          [class.pointer-events-none]="uploadingAvatar()"
-        >
+        <label class="btn-hero btn-hero-primary" [class.pointer-events-none]="uploadingAvatar()">
           <input
             type="file"
             accept="image/*"
@@ -166,18 +180,24 @@
             [disabled]="uploadingAvatar()"
           />
           <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
           </svg>
           Cambiar foto
         </label>
 
-        <button
-          type="button"
-          (click)="onEditProfile.emit()"
-          class="btn-hero btn-hero-primary"
-        >
+        <button type="button" (click)="onEditProfile.emit()" class="btn-hero btn-hero-primary">
           <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
           </svg>
           Editar perfil
         </button>
@@ -188,24 +208,31 @@
           class="btn-hero btn-hero-secondary"
         >
           <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+            />
           </svg>
           Subir documentos
         </button>
 
-        <button
-          type="button"
-          (click)="onSignOut.emit()"
-          class="btn-hero btn-hero-danger"
-        >
+        <button type="button" (click)="onSignOut.emit()" class="btn-hero btn-hero-danger">
           <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            />
           </svg>
           Cerrar sesión
         </button>
       </div>
       <p class="actions-hint">
-        Mantener tus datos al día mejora el posicionamiento de tus autos y habilita beneficios similares a Uber Pro.
+        Mantener tus datos al día mejora el posicionamiento de tus autos y habilita beneficios
+        similares a Uber Pro.
       </p>
     </section>
   </div>
@@ -223,7 +250,13 @@
     </div>
     <div class="footer-card">
       <p>Última review</p>
-      <h4>{{ userStats()?.last_review_received_at ? (userStats()?.last_review_received_at | date:'dd MMM') : '—' }}</h4>
+      <h4>
+        {{
+          userStats()?.last_review_received_at
+            ? (userStats()?.last_review_received_at | date: 'dd MMM')
+            : '—'
+        }}
+      </h4>
       <span>Actividad reciente</span>
     </div>
   </div>

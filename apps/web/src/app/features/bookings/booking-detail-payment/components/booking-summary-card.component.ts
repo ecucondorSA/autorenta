@@ -150,7 +150,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             class="flex justify-between text-sm"
             *ngIf="priceBreakdown.distanceKm !== undefined && priceBreakdown.distanceKm > 0"
           >
-            <span class="text-text-secondary dark:text-text-secondary/70"> Distancia de entrega </span>
+            <span class="text-text-secondary dark:text-text-secondary/70">
+              Distancia de entrega
+            </span>
             <span class="font-medium text-text-primary dark:text-text-primary">
               {{ priceBreakdown.distanceKm.toFixed(1) }} km
             </span>

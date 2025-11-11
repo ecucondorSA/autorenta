@@ -89,7 +89,10 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         </div>
 
         <!-- Camera Preview / Video Preview -->
-        <div class="relative rounded-lg overflow-hidden bg-surface-raised" style="aspect-ratio: 4/3;">
+        <div
+          class="relative rounded-lg overflow-hidden bg-surface-raised"
+          style="aspect-ratio: 4/3;"
+        >
           <video
             #videoPreview
             [hidden]="!isRecording() && !hasVideo()"

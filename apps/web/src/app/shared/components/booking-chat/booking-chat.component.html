@@ -114,11 +114,14 @@
           *ngIf="!isOwnMessage(message)"
           class="message-received relative max-w-[75%] rounded-lg rounded-tl-none bg-surface-raised px-3 py-2 shadow-sm dark:bg-whatsapp-bg-message-dark"
         >
-          <p class="break-words text-sm text-text-primary dark:text-text-primary">{{ message.body }}</p>
+          <p class="break-words text-sm text-text-primary dark:text-text-primary">
+            {{ message.body }}
+          </p>
           <div class="mt-1 flex items-center justify-end gap-1">
-            <span class="text-[10px] text-text-secondary dark:text-text-secondary dark:text-text-secondary">{{
-              formatTime(message.created_at)
-            }}</span>
+            <span
+              class="text-[10px] text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+              >{{ formatTime(message.created_at) }}</span
+            >
           </div>
           <!-- Tail izquierdo -->
           <div
@@ -131,7 +134,9 @@
           *ngIf="isOwnMessage(message)"
           class="message-sent relative max-w-[75%] rounded-lg rounded-tr-none bg-whatsapp-green-sent px-3 py-2 shadow-sm dark:bg-whatsapp-teal-darker"
         >
-          <p class="break-words text-sm text-text-primary dark:text-text-primary">{{ message.body }}</p>
+          <p class="break-words text-sm text-text-primary dark:text-text-primary">
+            {{ message.body }}
+          </p>
           <div class="mt-1 flex items-center justify-end gap-1">
             <span class="text-[10px] text-text-secondary dark:text-text-secondary">{{
               formatTime(message.created_at)

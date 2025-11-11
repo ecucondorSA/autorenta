@@ -223,10 +223,7 @@
                   <p class="text-sm font-semibold text-error-strong">
                     Monto de daños: ${{ step.metadata.damageAmount }} USD
                   </p>
-                  <p
-                    *ngIf="step.metadata.damageDescription"
-                    class="text-sm text-error-strong mt-1"
-                  >
+                  <p *ngIf="step.metadata.damageDescription" class="text-sm text-error-strong mt-1">
                     {{ step.metadata.damageDescription }}
                   </p>
                 </div>

@@ -132,7 +132,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       if (!cleanedPhone || cleanedPhone.length < 7) {
         const formatHint = this.getPhoneFormatHint(countryCode);
         throw new Error(
-          `Por favor ingresa un número de teléfono válido. Formato esperado: ${formatHint}`
+          `Por favor ingresa un número de teléfono válido. Formato esperado: ${formatHint}`,
         );
       }
 
@@ -159,9 +159,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       // Check if formatted phone is empty or invalid
       if (!formattedPhone || formattedPhone.length < 8) {
         const formatHint = this.getPhoneFormatHint(countryCode);
-        throw new Error(
-          `Número de teléfono inválido. Formato esperado: ${formatHint}`
-        );
+        throw new Error(`Número de teléfono inválido. Formato esperado: ${formatHint}`);
       }
 
       // Validate phone number format
@@ -172,9 +170,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
           countryCode,
           formatHint,
         });
-        throw new Error(
-          `Número de teléfono inválido. Formato esperado: ${formatHint}`
-        );
+        throw new Error(`Número de teléfono inválido. Formato esperado: ${formatHint}`);
       }
 
       // Send OTP via Supabase Auth
@@ -201,15 +197,15 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
           errorMessage?.includes('SMS provider')
         ) {
           throw new Error(
-            'El servicio de SMS no está configurado para este país. Por favor contacta al soporte o intenta con otro número.'
+            'El servicio de SMS no está configurado para este país. Por favor contacta al soporte o intenta con otro número.',
           );
         }
-        
+
         // Handle other Supabase errors
         if (errorCode === 'phone_exists' || errorMessage?.includes('phone_exists')) {
           throw new Error('Este número de teléfono ya está registrado.');
         }
-        
+
         if (
           errorCode === 'over_sms_send_rate_limit' ||
           errorMessage?.includes('over_sms_send_rate_limit') ||
@@ -226,7 +222,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
         ) {
           const formatHint = this.getPhoneFormatHint(countryCode);
           throw new Error(
-            `Número de teléfono inválido según el proveedor. Formato esperado: ${formatHint}`
+            `Número de teléfono inválido según el proveedor. Formato esperado: ${formatHint}`,
           );
         }
 
@@ -400,7 +396,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
 
     // Remove the + and validate
     const withoutPlus = phone.substring(1);
-    
+
     // Must contain only digits after the +
     if (!/^\d+$/.test(withoutPlus)) {
       return false;

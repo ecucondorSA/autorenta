@@ -61,9 +61,7 @@
   >
     <div class="flex items-center justify-between">
       <div>
-        <h3 class="text-error-strong font-semibold">
-          Error al cargar transacciones
-        </h3>
+        <h3 class="text-error-strong font-semibold">Error al cargar transacciones</h3>
         <p class="text-error-strong text-sm mt-1">{{ error()?.message }}</p>
       </div>
       <button
@@ -138,9 +136,7 @@
                 'text-success-text dark:text-success-400': !isOutgoingTransaction(
                   getTransactionType(transaction)
                 ),
-                'text-error-text': isOutgoingTransaction(
-                  getTransactionType(transaction)
-                ),
+                'text-error-text': isOutgoingTransaction(getTransactionType(transaction)),
               }"
             >
               {{ isOutgoingTransaction(getTransactionType(transaction)) ? '-' : '+' }}

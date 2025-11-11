@@ -94,7 +94,9 @@ export interface LocationSelection {
             />
           </div>
           @if (addressSearching()) {
-            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 ml-10">Buscando...</p>
+            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 ml-10">
+              Buscando...
+            </p>
           }
         </div>
       </div>
@@ -132,7 +134,9 @@ export interface LocationSelection {
       <!-- Loading Indicator -->
       @if (loading()) {
         <div class="loading-indicator mt-3 text-center">
-          <p class="text-sm text-text-secondary dark:text-text-secondary">Obteniendo ubicación...</p>
+          <p class="text-sm text-text-secondary dark:text-text-secondary">
+            Obteniendo ubicación...
+          </p>
         </div>
       }
     </div>

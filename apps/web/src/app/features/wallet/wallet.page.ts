@@ -258,10 +258,7 @@ export class WalletPage implements AfterViewInit, OnInit {
     });
 
     // Cargar datos al iniciar (en paralelo para mejor performance)
-    void Promise.all([
-      this.loadWithdrawalData(),
-      this.loadWalletAccountNumber()
-    ]);
+    void Promise.all([this.loadWithdrawalData(), this.loadWalletAccountNumber()]);
   }
 
   async ngOnInit(): Promise<void> {

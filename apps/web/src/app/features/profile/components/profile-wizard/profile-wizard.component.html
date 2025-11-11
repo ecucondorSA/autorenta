@@ -2,7 +2,9 @@
   <!-- Progress Bar -->
   <div class="wizard-progress">
     <div class="progress-bar-wrapper">
-      <div class="progress-bar bg-surface-secondary dark:bg-surface-secondary/60 rounded-full h-2 overflow-hidden">
+      <div
+        class="progress-bar bg-surface-secondary dark:bg-surface-secondary/60 rounded-full h-2 overflow-hidden"
+      >
         <div
           class="progress-bar-fill bg-cta-default h-full transition-all duration-300 ease-out"
           [style.width.%]="progressPercentage()"
@@ -15,7 +17,9 @@
             (click)="goToStep(step.id)"
             [disabled]="saving()"
             class="flex flex-col items-center gap-1 transition-base disabled:opacity-50 disabled:cursor-not-allowed"
-            [class.cursor-pointer]="!saving() && (isStepCompleted(step.id) || i < currentStepIndex())"
+            [class.cursor-pointer]="
+              !saving() && (isStepCompleted(step.id) || i < currentStepIndex())
+            "
             [class.opacity-50]="i > currentStepIndex() && !isStepCompleted(step.id)"
           >
             <div
@@ -27,8 +31,18 @@
               [class.border-border-default]="currentStep() !== step.id && !isStepCompleted(step.id)"
             >
               @if (isStepCompleted(step.id) && currentStep() !== step.id) {
-                <svg class="h-4 w-4 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                <svg
+                  class="h-4 w-4 text-text-primary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
                 </svg>
               } @else {
                 <span class="text-xs font-semibold">{{ i + 1 }}</span>
@@ -60,36 +74,52 @@
         <form [formGroup]="generalForm" class="space-y-4">
           <!-- Full Name -->
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+            >
               Nombre completo *
             </label>
             <input
               type="text"
               formControlName="full_name"
               class="input-premium w-full"
-              [class.border-warning-light]="generalForm.controls.full_name.touched && generalForm.controls.full_name.invalid"
+              [class.border-warning-light]="
+                generalForm.controls.full_name.touched && generalForm.controls.full_name.invalid
+              "
               placeholder="Juan Pérez"
             />
-            @if (generalForm.controls.full_name.touched && generalForm.controls.full_name.errors?.['required']) {
+            @if (
+              generalForm.controls.full_name.touched &&
+              generalForm.controls.full_name.errors?.['required']
+            ) {
               <p class="mt-1 text-xs text-warning-light">El nombre es obligatorio</p>
             }
-            @if (generalForm.controls.full_name.touched && generalForm.controls.full_name.errors?.['minlength']) {
-              <p class="mt-1 text-xs text-warning-light">El nombre debe tener al menos 3 caracteres</p>
+            @if (
+              generalForm.controls.full_name.touched &&
+              generalForm.controls.full_name.errors?.['minlength']
+            ) {
+              <p class="mt-1 text-xs text-warning-light">
+                El nombre debe tener al menos 3 caracteres
+              </p>
             }
           </div>
 
           <!-- Role Selection -->
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-2">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-2"
+            >
               Rol *
             </label>
             <div class="space-y-3">
               @for (roleOption of roles; track roleOption.value) {
                 <div
+                  [ngClass]="{
+                    'border-cta-default': generalForm.value.role === roleOption.value,
+                    'bg-cta-default/5': generalForm.value.role === roleOption.value,
+                    'border-border-default': generalForm.value.role !== roleOption.value,
+                  }"
                   class="relative flex cursor-pointer rounded-xl border p-4 transition-base hover:bg-surface-secondary dark:hover:bg-slate-deep/60"
-                  [class.border-cta-default]="generalForm.value.role === roleOption.value"
-                  [class.bg-cta-default/5]="generalForm.value.role === roleOption.value"
-                  [class.border-border-default]="generalForm.value.role !== roleOption.value"
                 >
                   <input
                     type="radio"
@@ -98,7 +128,9 @@
                     class="mt-1 h-4 w-4 border-border-default text-cta-default focus:ring-cta-default"
                   />
                   <label class="ml-3 flex flex-1 cursor-pointer flex-col">
-                    <span class="block text-sm font-medium text-text-primary dark:text-text-primary">
+                    <span
+                      class="block text-sm font-medium text-text-primary dark:text-text-primary"
+                    >
                       {{ roleOption.label }}
                     </span>
                     <span class="block text-xs text-text-secondary dark:text-text-secondary/70">
@@ -117,11 +149,15 @@
     @if (currentStep() === 'contact') {
       <div class="step-content">
         <h3 class="step-title">Información de Contacto</h3>
-        <p class="step-description">Agrega tu teléfono y WhatsApp para que otros usuarios puedan contactarte</p>
+        <p class="step-description">
+          Agrega tu teléfono y WhatsApp para que otros usuarios puedan contactarte
+        </p>
 
         <form [formGroup]="contactForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+            >
               Teléfono
             </label>
             <input
@@ -130,15 +166,21 @@
               class="input-premium w-full"
               placeholder="+598 99 123 456"
             />
-            @if (contactForm.controls.phone.touched && contactForm.controls.phone.errors?.['pattern']) {
+            @if (
+              contactForm.controls.phone.touched && contactForm.controls.phone.errors?.['pattern']
+            ) {
               <p class="mt-1 text-xs text-warning-light">Formato de teléfono inválido</p>
             }
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+            >
               WhatsApp
-              <span class="text-xs text-text-muted dark:text-text-secondary/60 ml-1">(se guarda automáticamente)</span>
+              <span class="text-xs text-text-muted dark:text-text-secondary/60 ml-1"
+                >(se guarda automáticamente)</span
+              >
             </label>
             <input
               type="tel"
@@ -146,7 +188,10 @@
               class="input-premium w-full"
               placeholder="+598 99 123 456"
             />
-            @if (contactForm.controls.whatsapp.touched && contactForm.controls.whatsapp.errors?.['pattern']) {
+            @if (
+              contactForm.controls.whatsapp.touched &&
+              contactForm.controls.whatsapp.errors?.['pattern']
+            ) {
               <p class="mt-1 text-xs text-warning-light">Formato de WhatsApp inválido</p>
             }
           </div>
@@ -158,11 +203,15 @@
     @if (currentStep() === 'address') {
       <div class="step-content">
         <h3 class="step-title">Dirección</h3>
-        <p class="step-description">Completa tu dirección para mejorar las búsquedas de autos cercanos</p>
+        <p class="step-description">
+          Completa tu dirección para mejorar las búsquedas de autos cercanos
+        </p>
 
         <form [formGroup]="addressForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+            >
               Calle y Número
             </label>
             <input
@@ -174,7 +223,9 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+            >
               Apartamento, Suite, etc. (opcional)
             </label>
             <input
@@ -187,12 +238,19 @@
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+              <label
+                class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+              >
                 Ciudad
                 <span class="text-xs text-text-muted dark:text-text-secondary/60 ml-1">
                   <span class="inline-flex items-center gap-1">
                     <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      ></path>
                     </svg>
                     Se guarda automáticamente
                   </span>
@@ -206,7 +264,9 @@
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+              <label
+                class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+              >
                 Departamento
               </label>
               <input
@@ -217,7 +277,9 @@
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+              <label
+                class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+              >
                 Código Postal
               </label>
               <input
@@ -230,7 +292,9 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+            >
               País
             </label>
             <input
@@ -252,7 +316,9 @@
 
         <form [formGroup]="licenseForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+            <label
+              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+            >
               Número de Licencia
             </label>
             <input
@@ -265,7 +331,9 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1">
+              <label
+                class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"
+              >
                 País de Emisión
               </label>
               <input
@@ -276,7 +344,9 @@
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-text-secondary dark:text-secondary/80 mb-1">
+              <label
+                class="block text-sm font-medium text-text-secondary dark:text-secondary/80 mb-1"
+              >
                 Fecha de Vencimiento
               </label>
               <input
@@ -336,4 +406,3 @@
     </div>
   </div>
 </div>
-

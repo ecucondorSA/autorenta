@@ -129,10 +129,7 @@ export class TransferFundsComponent {
         this.description.set('');
 
         // Parallel loading for better performance
-        await Promise.all([
-          this.walletService.getBalance(),
-          this.ledgerService.loadTransfers(5)
-        ]);
+        await Promise.all([this.walletService.getBalance(), this.ledgerService.loadTransfers(5)]);
       } else {
         this.error.set(result.error || 'Error al transferir fondos');
       }

@@ -1,0 +1,42 @@
+/* Analytics Dashboard Styles */
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: var(--color-bg-secondary);
+}
+
+.container {
+  max-width: 1280px;
+}
+
+/* Stat Cards */
+.bg-white {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.bg-white:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Tables */
+table {
+  font-size: 0.875rem;
+}
+
+table tbody tr:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .overflow-x-auto {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

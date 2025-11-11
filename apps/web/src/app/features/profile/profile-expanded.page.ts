@@ -31,6 +31,12 @@ import { EmailVerificationComponent } from '../../shared/components/email-verifi
 import { PhoneVerificationComponent } from '../../shared/components/phone-verification/phone-verification.component';
 import { SelfieCaptureComponent } from '../../shared/components/selfie-capture/selfie-capture.component';
 import { NotificationToastComponent } from '../../shared/components/notification-toast/notification-toast.component';
+import {
+  calculateAge,
+  validateBirthDate,
+  getMin18BirthDate,
+  formatBirthDate,
+} from '../../shared/utils/age-calculator';
 
 type TabId =
   | 'general'
@@ -329,9 +335,10 @@ export class ProfileExpandedPage {
     { value: 'both' as Role, label: 'Ambos', description: 'Quiero alquilar y publicar' },
   ];
 
-  readonly generalForm = this.fb.nonNullable.group({
+  readonly generalForm = this.fb.group({
     full_name: ['', [Validators.required, Validators.minLength(3)]],
     role: ['renter' as Role, Validators.required],
+    date_of_birth: [null as string | null], // ISO date string YYYY-MM-DD
   });
 
   // Helper methods
@@ -495,6 +502,7 @@ export class ProfileExpandedPage {
     this.generalForm.patchValue({
       full_name: profile.full_name || '',
       role: profile.role || 'renter',
+      date_of_birth: profile.date_of_birth || null,
     });
 
     // Populate contact form
@@ -617,6 +625,47 @@ export class ProfileExpandedPage {
       this.message.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
     }
   }
+
+  // ============================================================================
+  // Date of Birth Helper Methods
+  // ============================================================================
+
+  /**
+   * Get the maximum date for date_of_birth input (18 years ago)
+   * Format: YYYY-MM-DD for HTML date input
+   */
+  getMaxBirthDate(): string {
+    const maxDate = getMin18BirthDate();
+    return maxDate.toISOString().split('T')[0];
+  }
+
+  /**
+   * Get calculated age from current date_of_birth value
+   */
+  readonly calculatedAge = computed(() => {
+    const birthDate = this.generalForm.get('date_of_birth')?.value;
+    if (!birthDate) return null;
+    return calculateAge(birthDate);
+  });
+
+  /**
+   * Get validation error for date_of_birth
+   */
+  readonly dateOfBirthError = computed(() => {
+    const birthDate = this.generalForm.get('date_of_birth')?.value;
+    if (!birthDate) return null;
+
+    const validation = validateBirthDate(birthDate);
+    return validation.valid ? null : validation.error;
+  });
+
+  /**
+   * Check if date_of_birth field has been touched
+   */
+  readonly dateOfBirthTouched = computed(() => {
+    const control = this.generalForm.get('date_of_birth');
+    return control?.touched ?? false;
+  });
 
   async signOut(): Promise<void> {
     try {

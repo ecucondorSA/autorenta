@@ -83,9 +83,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
             <div class="flex items-start gap-4">
               <span class="text-2xl flex-shrink-0">❌</span>
               <div class="flex-1">
-                <p class="font-semibold text-error-strong mb-2">
-                  Verificación Rechazada
-                </p>
+                <p class="font-semibold text-error-strong mb-2">Verificación Rechazada</p>
                 <p class="text-sm text-error-strong mb-3">
                   {{
                     currentStatus()?.notes ||

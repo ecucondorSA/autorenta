@@ -2,8 +2,14 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WizardComponent, WizardStep } from '../../../../shared/components/wizard/wizard.component';
-import { BookingDatesLocationStepComponent, BookingDatesLocation } from '../../components/booking-dates-location-step/booking-dates-location-step.component';
-import { BookingPaymentCoverageStepComponent, BookingPaymentCoverage } from '../../components/booking-payment-coverage-step/booking-payment-coverage-step.component';
+import {
+  BookingDatesLocationStepComponent,
+  BookingDatesLocation,
+} from '../../components/booking-dates-location-step/booking-dates-location-step.component';
+import {
+  BookingPaymentCoverageStepComponent,
+  BookingPaymentCoverage,
+} from '../../components/booking-payment-coverage-step/booking-payment-coverage-step.component';
 import { BookingConfirmationStepComponent } from '../../components/booking-confirmation-step/booking-confirmation-step.component';
 import { BookingsService } from '../../../../core/services/bookings.service';
 import { PaymentGatewayFactory } from '../../../../core/services/payment-gateway.factory';
@@ -37,16 +43,14 @@ import { ErrorStateComponent } from '../../../../shared/components/error-state/e
     BookingPaymentCoverageStepComponent,
     BookingConfirmationStepComponent,
     LoadingStateComponent,
-    ErrorStateComponent
+    ErrorStateComponent,
   ],
   template: `
     <div class="checkout-wizard-container">
       <!-- Header -->
       <div class="page-header">
         <h1 class="page-title">Completar Reserva</h1>
-        <p class="page-subtitle">
-          Sigue los pasos para confirmar tu reserva de forma segura
-        </p>
+        <p class="page-subtitle">Sigue los pasos para confirmar tu reserva de forma segura</p>
       </div>
 
       <!-- Loading State -->
@@ -62,7 +66,8 @@ import { ErrorStateComponent } from '../../../../shared/components/error-state/e
           variant="banner"
           [retryable]="true"
           [dismissible]="false"
-          (retry)="loadBooking()">
+          (retry)="loadBooking()"
+        >
           {{ error() }}
         </app-error-state>
       }
@@ -78,8 +83,8 @@ import { ErrorStateComponent } from '../../../../shared/components/error-state/e
           completeLabel="Confirmar y Pagar"
           (stepChange)="handleStepChange($event)"
           (cancel)="handleCancel()"
-          (complete)="handleComplete()">
-
+          (complete)="handleComplete()"
+        >
           <!-- Step 1: Dates & Location -->
           @if (currentStep() === 0) {
             <app-booking-dates-location-step
@@ -110,47 +115,49 @@ import { ErrorStateComponent } from '../../../../shared/components/error-state/e
       }
     </div>
   `,
-  styles: [`
-    .checkout-wizard-container {
-      min-height: 100vh;
-      background: var(--surface-base);
-      padding: 2rem;
-    }
-
-    .page-header {
-      max-width: 1200px;
-      margin: 0 auto 2rem;
-      text-align: center;
-    }
-
-    .page-title {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin: 0 0 0.5rem 0;
-    }
-
-    .page-subtitle {
-      font-size: 1.125rem;
-      color: var(--text-secondary);
-      margin: 0;
-    }
-
-    /* Mobile */
-    @media (max-width: 768px) {
+  styles: [
+    `
       .checkout-wizard-container {
-        padding: 1rem;
+        min-height: 100vh;
+        background: var(--surface-base);
+        padding: 2rem;
+      }
+
+      .page-header {
+        max-width: 1200px;
+        margin: 0 auto 2rem;
+        text-align: center;
       }
 
       .page-title {
-        font-size: 1.5rem;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 0.5rem 0;
       }
 
       .page-subtitle {
-        font-size: 1rem;
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        margin: 0;
       }
-    }
-  `]
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .checkout-wizard-container {
+          padding: 1rem;
+        }
+
+        .page-title {
+          font-size: 1.5rem;
+        }
+
+        .page-subtitle {
+          font-size: 1rem;
+        }
+      }
+    `,
+  ],
 })
 export class BookingCheckoutWizardPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -199,7 +206,7 @@ export class BookingCheckoutWizardPage implements OnInit {
     pickupLocation: '',
     dropoffLocation: '',
     pickupTime: '10:00',
-    dropoffTime: '10:00'
+    dropoffTime: '10:00',
   });
 
   /**
@@ -209,7 +216,7 @@ export class BookingCheckoutWizardPage implements OnInit {
     paymentProvider: 'mercadopago',
     coverageLevel: 'standard',
     addDriverProtection: false,
-    acceptTerms: false
+    acceptTerms: false,
   });
 
   /**
@@ -232,20 +239,20 @@ export class BookingCheckoutWizardPage implements OnInit {
       id: 'dates-location',
       label: 'Fechas y Ubicación',
       description: 'Confirma las fechas y lugares',
-      isValid: () => this.step1Valid()
+      isValid: () => this.step1Valid(),
     },
     {
       id: 'payment-coverage',
       label: 'Pago y Cobertura',
       description: 'Elige tu método de pago y cobertura',
-      isValid: () => this.step2Valid()
+      isValid: () => this.step2Valid(),
     },
     {
       id: 'confirmation',
       label: 'Confirmación',
       description: 'Revisa y confirma',
-      isValid: () => true
-    }
+      isValid: () => true,
+    },
   ];
 
   // ==================== LIFECYCLE ====================
@@ -291,7 +298,7 @@ export class BookingCheckoutWizardPage implements OnInit {
         pickupLocation: bookingData.pickup_location_lat?.toString() || '',
         dropoffLocation: bookingData.dropoff_location_lat?.toString() || '',
         pickupTime: '10:00',
-        dropoffTime: '10:00'
+        dropoffTime: '10:00',
       });
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error cargando el booking');
@@ -327,7 +334,9 @@ export class BookingCheckoutWizardPage implements OnInit {
 
       if (provider === 'mercadopago') {
         // Create preference and redirect to MercadoPago
-        const preference = await gateway.createBookingPreference(this.bookingId(), true).toPromise();
+        const preference = await gateway
+          .createBookingPreference(this.bookingId(), true)
+          .toPromise();
 
         if (!preference || !preference.success || !preference.init_point) {
           throw new Error('Error creando preferencia de pago');

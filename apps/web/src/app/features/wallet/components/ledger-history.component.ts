@@ -39,7 +39,7 @@ export class LedgerHistoryComponent {
     return {
       label: 'Reintentar',
       handler: () => this.refreshHistory(),
-      variant: 'primary' as const
+      variant: 'primary' as const,
     };
   }
 

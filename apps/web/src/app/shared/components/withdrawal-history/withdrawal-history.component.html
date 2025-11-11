@@ -130,7 +130,9 @@
               }
 
               <!-- Dates -->
-              <div class="mt-2 flex flex-wrap gap-4 text-xs text-text-secondary dark:text-text-secondary">
+              <div
+                class="mt-2 flex flex-wrap gap-4 text-xs text-text-secondary dark:text-text-secondary"
+              >
                 @if (request.approved_at) {
                   <span>✓ Aprobado: {{ formatDate(request.approved_at) }}</span>
                 }

@@ -75,7 +75,7 @@ export class OwnerDashboardPage implements OnInit {
     return {
       label: 'Reintentar',
       handler: () => this.loadDashboardData(),
-      variant: 'primary' as const
+      variant: 'primary' as const,
     };
   }
 

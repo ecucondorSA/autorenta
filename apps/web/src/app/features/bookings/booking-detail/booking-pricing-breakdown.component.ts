@@ -241,7 +241,9 @@ import { Booking } from '../../../core/models';
               />
             </svg>
             <div class="flex-1">
-              <p class="text-xs font-medium text-warning-strong dark:text-warning-200">Importante</p>
+              <p class="text-xs font-medium text-warning-strong dark:text-warning-200">
+                Importante
+              </p>
               <p class="text-xs text-warning-strong dark:text-warning-300 mt-1">
                 El depósito de garantía se devuelve automáticamente al finalizar el alquiler si no
                 hay daños reportados. El monto del alquiler se cobra inmediatamente.

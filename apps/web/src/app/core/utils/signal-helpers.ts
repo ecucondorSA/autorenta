@@ -11,7 +11,10 @@ import { Observable } from 'rxjs';
 
 type SafeSignalOptions<T> = ToSignalOptions<T>;
 
-export function toSignalSafe<T>(source$: Observable<T>, options?: SafeSignalOptions<T>): Signal<T | undefined> {
+export function toSignalSafe<T>(
+  source$: Observable<T>,
+  options?: SafeSignalOptions<T>,
+): Signal<T | undefined> {
   try {
     // Use @ts-expect-error because Angular's toSignal has strict overloads
     // that don't work well with our wrapper. The function signature provides
@@ -21,7 +24,7 @@ export function toSignalSafe<T>(source$: Observable<T>, options?: SafeSignalOpti
   } catch (error) {
     console.error('[toSignalSafe] Error converting observable to signal:', error);
     throw new Error(
-      `Failed to convert observable to signal: ${error instanceof Error ? error.message : 'Unknown error'}`
+      `Failed to convert observable to signal: ${error instanceof Error ? error.message : 'Unknown error'}`,
     );
   }
 }
@@ -62,7 +65,9 @@ export function toSignalWithDefault<T>(source$: Observable<T>, initialValue: T):
  * ```
  */
 export function toSignalOrNull<T>(source$: Observable<T>): Signal<T | null> {
-  return toSignalSafe<T | null>(source$, { initialValue: null } as SafeSignalOptions<T | null>) as Signal<T | null>;
+  return toSignalSafe<T | null>(source$, {
+    initialValue: null,
+  } as SafeSignalOptions<T | null>) as Signal<T | null>;
 }
 
 /**

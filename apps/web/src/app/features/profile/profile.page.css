@@ -24,9 +24,9 @@
   .profile-grid {
     grid-template-columns: 320px 1fr 280px;
     grid-template-areas:
-      "sidebar main activity"
-      "sidebar main activity"
-      "sidebar main activity";
+      'sidebar main activity'
+      'sidebar main activity'
+      'sidebar main activity';
     gap: 2rem;
   }
 }
@@ -165,9 +165,9 @@
 
   .profile-grid {
     grid-template-areas:
-      "sidebar"
-      "main"
-      "activity";
+      'sidebar'
+      'main'
+      'activity';
   }
 }
 

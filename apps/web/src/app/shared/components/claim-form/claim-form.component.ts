@@ -196,7 +196,9 @@ export class ClaimFormComponent implements OnInit {
 
     try {
       // Obtener user ID del usuario autenticado
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) {
         throw new Error('Usuario no autenticado');
       }
@@ -226,9 +228,7 @@ export class ClaimFormComponent implements OnInit {
           }
 
           // Obtener URL pública de la foto
-          const { data } = this.supabase.storage
-            .from('documents')
-            .getPublicUrl(filePath);
+          const { data } = this.supabase.storage.from('documents').getPublicUrl(filePath);
 
           uploadedUrls.push(data.publicUrl);
 
@@ -259,21 +259,17 @@ export class ClaimFormComponent implements OnInit {
       this.toastService.success(
         'Fotos subidas',
         `${uploadedUrls.length} foto${uploadedUrls.length > 1 ? 's' : ''} agregada${uploadedUrls.length > 1 ? 's' : ''} exitosamente`,
-        3000
+        3000,
       );
-
     } catch (err) {
       console.error('❌ Error uploading photos:', err);
-      const errorMsg = err instanceof Error ? err.message : 'Error al subir fotos. Intente nuevamente.';
+      const errorMsg =
+        err instanceof Error ? err.message : 'Error al subir fotos. Intente nuevamente.';
 
       this.error.set(errorMsg);
 
       // Mostrar toast de error
-      this.toastService.error(
-        'Error al subir fotos',
-        errorMsg,
-        5000
-      );
+      this.toastService.error('Error al subir fotos', errorMsg, 5000);
     } finally {
       this.uploading.set(false);
       // Limpiar input

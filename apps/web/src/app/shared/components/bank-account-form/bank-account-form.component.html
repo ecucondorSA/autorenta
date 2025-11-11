@@ -4,16 +4,17 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
     <!-- Tipo de cuenta -->
     <div>
-      <label class="block text-sm font-semibold text-text-primary mb-2">
-        Tipo de cuenta *
-      </label>
+      <label class="block text-sm font-semibold text-text-primary mb-2"> Tipo de cuenta * </label>
       <div class="grid grid-cols-3 gap-3">
         @for (type of accountTypes; track type.value) {
-                                                            <label
-                                                              class="relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all"
-                                                              [class.border-cta-default]="selectedType() === type.value"
-                                                              [class.bg-cta-default/5]="selectedType() === type.value"
-                                                              [class.border-border-muted]="selectedType() !== type.value">
+          <label
+            [ngClass]="{
+              'border-cta-default': selectedType() === type.value,
+              'bg-cta-default/5': selectedType() === type.value,
+              'border-border-muted': selectedType() !== type.value,
+            }"
+            class="relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all"
+          >
             <input
               type="radio"
               formControlName="account_type"
@@ -35,7 +36,7 @@
     <!-- Número de cuenta -->
     <div>
       <label for="account_number" class="block text-sm font-semibold text-text-primary mb-2">
-        {{ selectedType() === 'alias' ? 'Alias' : (selectedType() === 'cbu' ? 'CBU' : 'CVU') }} *
+        {{ selectedType() === 'alias' ? 'Alias' : selectedType() === 'cbu' ? 'CBU' : 'CVU' }} *
       </label>
       <input
         id="account_number"
@@ -43,7 +44,9 @@
         formControlName="account_number"
         [placeholder]="selectedAccountTypeInfo()?.placeholder || ''"
         class="w-full px-4 py-3 border border-border-muted rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
-        [class.border-error-border]="form.get('account_number')?.invalid && form.get('account_number')?.touched"
+        [class.border-error-border]="
+          form.get('account_number')?.invalid && form.get('account_number')?.touched
+        "
       />
       <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">
         {{ selectedAccountTypeInfo()?.hint }}
@@ -64,7 +67,9 @@
         formControlName="account_holder_name"
         placeholder="Juan Pérez"
         class="w-full px-4 py-3 border border-border-muted rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
-        [class.border-error-border]="form.get('account_holder_name')?.invalid && form.get('account_holder_name')?.touched"
+        [class.border-error-border]="
+          form.get('account_holder_name')?.invalid && form.get('account_holder_name')?.touched
+        "
       />
       @if (getErrorMessage('account_holder_name')) {
         <p class="mt-1 text-sm text-error-text">{{ getErrorMessage('account_holder_name') }}</p>
@@ -73,7 +78,10 @@
 
     <!-- DNI/CUIT -->
     <div>
-      <label for="account_holder_document" class="block text-sm font-semibold text-text-primary mb-2">
+      <label
+        for="account_holder_document"
+        class="block text-sm font-semibold text-text-primary mb-2"
+      >
         DNI o CUIT *
       </label>
       <input
@@ -82,11 +90,12 @@
         formControlName="account_holder_document"
         placeholder="20123456789"
         class="w-full px-4 py-3 border border-border-muted rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent"
-        [class.border-error-border]="form.get('account_holder_document')?.invalid && form.get('account_holder_document')?.touched"
+        [class.border-error-border]="
+          form.get('account_holder_document')?.invalid &&
+          form.get('account_holder_document')?.touched
+        "
       />
-      <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">
-        Sin puntos ni guiones
-      </p>
+      <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">Sin puntos ni guiones</p>
       @if (getErrorMessage('account_holder_document')) {
         <p class="mt-1 text-sm text-error-text">{{ getErrorMessage('account_holder_document') }}</p>
       }

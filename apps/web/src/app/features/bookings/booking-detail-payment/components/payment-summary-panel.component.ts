@@ -233,7 +233,9 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
           <div class="flex-1">
             <span class="text-sm font-medium text-text-primary dark:text-text-secondary/80">
               Total bloqueado
-              <span class="text-xs text-text-secondary dark:text-text-secondary/50">(informativo)</span>
+              <span class="text-xs text-text-secondary dark:text-text-secondary/50"
+                >(informativo)</span
+              >
             </span>
           </div>
           <svg
@@ -344,7 +346,8 @@ export class PaymentSummaryPanelComponent {
     const classes = {
       local:
         'bg-success-light/20 text-success-light dark:bg-success-light/30 dark:text-success-light',
-      regional: 'bg-warning-bg-hover text-warning-strong dark:bg-warning-900/30 dark:text-warning-300',
+      regional:
+        'bg-warning-bg-hover text-warning-strong dark:bg-warning-900/30 dark:text-warning-300',
       long_distance:
         'bg-warning-light/20 text-warning-light dark:bg-warning-light/30 dark:text-warning-light',
     };

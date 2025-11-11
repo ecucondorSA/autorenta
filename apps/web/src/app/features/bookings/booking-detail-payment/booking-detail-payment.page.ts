@@ -60,6 +60,7 @@ import { CoverageUpgradeSelectorComponent } from './components/coverage-upgrade-
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
 import { CreditSecurityPanelComponent } from './components/credit-security-panel.component';
 import { TermsAndConsentsComponent } from './components/terms-and-consents.component';
+import { BirthDateModalComponent } from '../../../shared/components/birth-date-modal/birth-date-modal.component';
 
 /**
  * Página principal: Detalle & Pago (AR)
@@ -87,6 +88,7 @@ import { TermsAndConsentsComponent } from './components/terms-and-consents.compo
     CardHoldPanelComponent,
     CreditSecurityPanelComponent,
     TermsAndConsentsComponent,
+    BirthDateModalComponent,
   ],
   templateUrl: './booking-detail-payment.page.html',
   styleUrls: ['./booking-detail-payment.page.css'],
@@ -188,6 +190,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
   // ✅ NUEVO: Modal de comparación de métodos
   readonly showComparisonModal = signal(false);
+
+  // ✅ NUEVO: Modal para solicitar fecha de nacimiento
+  readonly showBirthDateModal = signal(false);
 
   // ✅ NUEVO: Signals para procesamiento de pago final
   readonly processingFinalPayment = signal(false);
@@ -917,6 +922,13 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       return;
     }
 
+    // ✅ NUEVO: Verificar si el usuario tiene date_of_birth antes de continuar
+    const needsBirthDate = await this.checkAndRequestBirthDate();
+    if (needsBirthDate) {
+      // Modal se mostrará, esperamos que el usuario complete
+      return;
+    }
+
     this.loading.set(true);
     this.error.set(null);
     this.validationErrors.set([]);
@@ -1374,6 +1386,56 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       return '🔒 Reserva protegida con franquicia';
     }
   });
+
+  /**
+   * ✅ NUEVO: Verifica si el usuario tiene date_of_birth y muestra modal si no la tiene
+   * Retorna true si se necesita mostrar el modal (bloqueando el flujo)
+   * Retorna false si el usuario ya tiene date_of_birth (continuar con booking)
+   */
+  private async checkAndRequestBirthDate(): Promise<boolean> {
+    try {
+      const profile = await this.profileService.getCurrentProfile();
+
+      // Si ya tiene date_of_birth, no mostrar modal
+      if (profile?.date_of_birth) {
+        return false;
+      }
+
+      // No tiene date_of_birth, mostrar modal
+      this.showBirthDateModal.set(true);
+      return true;
+    } catch (error) {
+      console.error('[BookingDetailPayment] Error checking date_of_birth:', error);
+      // En caso de error, asumir que no tiene y mostrar modal
+      this.showBirthDateModal.set(true);
+      return true;
+    }
+  }
+
+  /**
+   * ✅ NUEVO: Handler cuando el usuario completa el modal de fecha de nacimiento
+   * Cierra el modal y reintenta la confirmación del booking
+   */
+  onBirthDateCompleted(birthDate: string): void {
+    console.log('[BookingDetailPayment] Birth date completed:', birthDate);
+    this.showBirthDateModal.set(false);
+
+    // Reintentar confirmación automáticamente
+    // El usuario ya hizo clic en "Confirmar Reserva", ahora tiene date_of_birth
+    setTimeout(() => {
+      this.onConfirm();
+    }, 100);
+  }
+
+  /**
+   * ✅ NUEVO: Handler cuando el usuario cancela el modal de fecha de nacimiento
+   * Solo cierra el modal, no procede con el booking
+   */
+  onBirthDateCancelled(): void {
+    console.log('[BookingDetailPayment] Birth date cancelled');
+    this.showBirthDateModal.set(false);
+    // No hacer nada más, el usuario puede decidir si quiere intentar nuevamente
+  }
 
   /**
    * ✅ DRIVER AGE: Obtiene edad real del conductor desde su perfil

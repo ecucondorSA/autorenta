@@ -159,12 +159,14 @@
                                                                                                   type="button"
                                                                                                   (click)="copyWalletAccountNumber()"
                                                                                                   [disabled]="copiedWAN()"
-                                                                                                  class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-base"
-                                                                                                  [class.bg-success-bg-hover]="copiedWAN()"
-                                                                                                  [class.text-success-strong]="copiedWAN()"
-                                                                                                  [class.bg-cta-default]="!copiedWAN()"
-                                                                                                  [class.text-text-inverse]="!copiedWAN()"
-                  [class.hover\:bg-cta-default\/90]="!copiedWAN()">
+                                                                                                  [ngClass]="{
+                                                                                                    'bg-success-bg-hover': copiedWAN(),
+                                                                                                    'text-success-strong': copiedWAN(),
+                                                                                                    'bg-cta-default': !copiedWAN(),
+                                                                                                    'text-text-inverse': !copiedWAN(),
+                                                                                                    'hover:bg-cta-default/90': !copiedWAN()
+                                                                                                  }"
+                                                                                                  class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-base">
                   @if (copiedWAN()) {
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>

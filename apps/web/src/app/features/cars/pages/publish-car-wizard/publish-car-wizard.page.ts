@@ -2,9 +2,18 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { WizardComponent, WizardStep } from '../../../../shared/components/wizard/wizard.component';
-import { PublishBasicInfoStepComponent, PublishBasicInfo } from '../../components/publish-basic-info-step/publish-basic-info-step.component';
-import { PublishPhotosDescriptionStepComponent, PublishPhotosDescription } from '../../components/publish-photos-description-step/publish-photos-description-step.component';
-import { PublishPriceAvailabilityStepComponent, PublishPriceAvailability } from '../../components/publish-price-availability-step/publish-price-availability-step.component';
+import {
+  PublishBasicInfoStepComponent,
+  PublishBasicInfo,
+} from '../../components/publish-basic-info-step/publish-basic-info-step.component';
+import {
+  PublishPhotosDescriptionStepComponent,
+  PublishPhotosDescription,
+} from '../../components/publish-photos-description-step/publish-photos-description-step.component';
+import {
+  PublishPriceAvailabilityStepComponent,
+  PublishPriceAvailability,
+} from '../../components/publish-price-availability-step/publish-price-availability-step.component';
 import { PublishReviewStepComponent } from '../../components/publish-review-step/publish-review-step.component';
 import { CarsService } from '../../../../core/services/cars.service';
 import { GeocodingService } from '../../../../core/services/geocoding.service';
@@ -24,7 +33,16 @@ import { Car } from '../../../../core/models';
 @Component({
   selector: 'app-publish-car-wizard',
   standalone: true,
-  imports: [CommonModule, WizardComponent, PublishBasicInfoStepComponent, PublishPhotosDescriptionStepComponent, PublishPriceAvailabilityStepComponent, PublishReviewStepComponent, LoadingStateComponent, ErrorStateComponent],
+  imports: [
+    CommonModule,
+    WizardComponent,
+    PublishBasicInfoStepComponent,
+    PublishPhotosDescriptionStepComponent,
+    PublishPriceAvailabilityStepComponent,
+    PublishReviewStepComponent,
+    LoadingStateComponent,
+    ErrorStateComponent,
+  ],
   template: `
     <div class="publish-wizard-container">
       <div class="page-header">
@@ -37,7 +55,9 @@ import { Car } from '../../../../core/models';
       }
 
       @if (error() && !isLoading()) {
-        <app-error-state variant="banner" [retryable]="true" (retry)="error.set('')">{{ error() }}</app-error-state>
+        <app-error-state variant="banner" [retryable]="true" (retry)="error.set('')">{{
+          error()
+        }}</app-error-state>
       }
 
       @if (!isLoading() && !error()) {
@@ -50,34 +70,79 @@ import { Car } from '../../../../core/models';
           completeLabel="Publicar Vehículo"
           (stepChange)="handleStepChange($event)"
           (cancel)="handleCancel()"
-          (complete)="handleComplete()">
-
+          (complete)="handleComplete()"
+        >
           @if (currentStep() === 0) {
-            <app-publish-basic-info-step [data]="basicInfoData()" (dataChange)="handleBasicInfoChange($event)" (validChange)="step1Valid.set($event)" />
+            <app-publish-basic-info-step
+              [data]="basicInfoData()"
+              (dataChange)="handleBasicInfoChange($event)"
+              (validChange)="step1Valid.set($event)"
+            />
           }
 
           @if (currentStep() === 1) {
-            <app-publish-photos-description-step [data]="photosData()" (dataChange)="handlePhotosChange($event)" (validChange)="step2Valid.set($event)" />
+            <app-publish-photos-description-step
+              [data]="photosData()"
+              (dataChange)="handlePhotosChange($event)"
+              (validChange)="step2Valid.set($event)"
+            />
           }
 
           @if (currentStep() === 2) {
-            <app-publish-price-availability-step [data]="priceAvailData()" (dataChange)="handlePriceAvailChange($event)" (validChange)="step3Valid.set($event)" />
+            <app-publish-price-availability-step
+              [data]="priceAvailData()"
+              (dataChange)="handlePriceAvailChange($event)"
+              (validChange)="step3Valid.set($event)"
+            />
           }
 
           @if (currentStep() === 3) {
-            <app-publish-review-step [basicInfo]="basicInfoData()" [photos]="photosData()" [priceAvail]="priceAvailData()" />
+            <app-publish-review-step
+              [basicInfo]="basicInfoData()"
+              [photos]="photosData()"
+              [priceAvail]="priceAvailData()"
+            />
           }
         </app-wizard>
       }
     </div>
   `,
-  styles: [`
-    .publish-wizard-container { min-height: 100vh; background: var(--surface-base); padding: 2rem; }
-    .page-header { max-width: 1200px; margin: 0 auto 2rem; text-align: center; }
-    .page-title { font-size: 2rem; font-weight: 700; color: var(--text-primary); margin: 0 0 0.5rem 0; }
-    .page-subtitle { font-size: 1.125rem; color: var(--text-secondary); margin: 0; }
-    @media (max-width: 768px) { .publish-wizard-container { padding: 1rem; } .page-title { font-size: 1.5rem; } .page-subtitle { font-size: 1rem; } }
-  `]
+  styles: [
+    `
+      .publish-wizard-container {
+        min-height: 100vh;
+        background: var(--surface-base);
+        padding: 2rem;
+      }
+      .page-header {
+        max-width: 1200px;
+        margin: 0 auto 2rem;
+        text-align: center;
+      }
+      .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 0.5rem 0;
+      }
+      .page-subtitle {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+      @media (max-width: 768px) {
+        .publish-wizard-container {
+          padding: 1rem;
+        }
+        .page-title {
+          font-size: 1.5rem;
+        }
+        .page-subtitle {
+          font-size: 1rem;
+        }
+      }
+    `,
+  ],
 })
 export class PublishCarWizardPage implements OnInit {
   private readonly router = inject(Router);
@@ -90,19 +155,56 @@ export class PublishCarWizardPage implements OnInit {
   error = signal<string>('');
   isProcessing = signal<boolean>(false);
 
-  basicInfoData = signal<PublishBasicInfo>({ brand: '', model: '', year: new Date().getFullYear(), category: '', transmission: '', fuelType: '', doors: 4, seats: 5, color: '', licensePlate: '' });
+  basicInfoData = signal<PublishBasicInfo>({
+    brand: '',
+    model: '',
+    year: new Date().getFullYear(),
+    category: '',
+    transmission: '',
+    fuelType: '',
+    doors: 4,
+    seats: 5,
+    color: '',
+    licensePlate: '',
+  });
   photosData = signal<PublishPhotosDescription>({ photos: [], description: '', features: [] });
-  priceAvailData = signal<PublishPriceAvailability>({ dailyRate: 5000, weeklyDiscount: 10, monthlyDiscount: 20, minimumDays: 1, maximumDays: 30, address: '', city: '', province: '', availableFrom: new Date().toISOString().split('T')[0], availableUntil: '' });
+  priceAvailData = signal<PublishPriceAvailability>({
+    dailyRate: 5000,
+    weeklyDiscount: 10,
+    monthlyDiscount: 20,
+    minimumDays: 1,
+    maximumDays: 30,
+    address: '',
+    city: '',
+    province: '',
+    availableFrom: new Date().toISOString().split('T')[0],
+    availableUntil: '',
+  });
 
   step1Valid = signal<boolean>(false);
   step2Valid = signal<boolean>(false);
   step3Valid = signal<boolean>(false);
 
   wizardSteps: WizardStep[] = [
-    { id: 'basic-info', label: 'Información Básica', description: 'Datos del vehículo', isValid: () => this.step1Valid() },
-    { id: 'photos-description', label: 'Fotos y Descripción', description: 'Imágenes y detalles', isValid: () => this.step2Valid() },
-    { id: 'price-availability', label: 'Precio y Disponibilidad', description: 'Configuración de renta', isValid: () => this.step3Valid() },
-    { id: 'review', label: 'Revisión', description: 'Confirmar y publicar', isValid: () => true }
+    {
+      id: 'basic-info',
+      label: 'Información Básica',
+      description: 'Datos del vehículo',
+      isValid: () => this.step1Valid(),
+    },
+    {
+      id: 'photos-description',
+      label: 'Fotos y Descripción',
+      description: 'Imágenes y detalles',
+      isValid: () => this.step2Valid(),
+    },
+    {
+      id: 'price-availability',
+      label: 'Precio y Disponibilidad',
+      description: 'Configuración de renta',
+      isValid: () => this.step3Valid(),
+    },
+    { id: 'review', label: 'Revisión', description: 'Confirmar y publicar', isValid: () => true },
   ];
 
   ngOnInit(): void {
@@ -135,14 +237,18 @@ export class PublishCarWizardPage implements OnInit {
       try {
         // Get all brands
         const brands = await this.carsService.getCarBrands();
-        const matchedBrand = brands.find(b => b.name.toLowerCase() === basicInfo.brand.toLowerCase());
+        const matchedBrand = brands.find(
+          (b) => b.name.toLowerCase() === basicInfo.brand.toLowerCase(),
+        );
 
         if (matchedBrand) {
           brandId = matchedBrand.id;
 
           // Get models for this brand
           const models = await this.carsService.getCarModels(brandId);
-          const matchedModel = models.find(m => m.name.toLowerCase() === basicInfo.model.toLowerCase());
+          const matchedModel = models.find(
+            (m) => m.name.toLowerCase() === basicInfo.model.toLowerCase(),
+          );
 
           if (matchedModel) {
             modelId = matchedModel.id;
@@ -215,10 +321,13 @@ export class PublishCarWizardPage implements OnInit {
         color: basicInfo.color,
 
         // Features
-        features: photosInfo.features.reduce((acc, feature) => {
-          acc[feature.toLowerCase().replace(/\s+/g, '_')] = true;
-          return acc;
-        }, {} as Record<string, boolean>),
+        features: photosInfo.features.reduce(
+          (acc, feature) => {
+            acc[feature.toLowerCase().replace(/\s+/g, '_')] = true;
+            return acc;
+          },
+          {} as Record<string, boolean>,
+        ),
 
         // Pricing
         price_per_day: priceInfo.dailyRate,
@@ -257,7 +366,7 @@ export class PublishCarWizardPage implements OnInit {
         console.log(`📸 Uploading ${photosInfo.photos.length} photos...`);
 
         const uploadPromises = photosInfo.photos.map((photo, index) =>
-          this.carsService.uploadPhoto(photo, createdCar.id, index)
+          this.carsService.uploadPhoto(photo, createdCar.id, index),
         );
 
         try {
@@ -275,22 +384,17 @@ export class PublishCarWizardPage implements OnInit {
       this.toastService.success(
         '¡Auto publicado!',
         'Tu vehículo ha sido agregado exitosamente',
-        4000
+        4000,
       );
 
       this.router.navigate(['/cars/my-cars'], {
-        queryParams: { newCar: createdCar.id }
+        queryParams: { newCar: createdCar.id },
       });
-
     } catch (err) {
       console.error('❌ Error creating car:', err);
       const errorMsg = err instanceof Error ? err.message : 'Error publicando vehículo';
 
-      this.toastService.error(
-        'Error al publicar',
-        errorMsg,
-        6000
-      );
+      this.toastService.error('Error al publicar', errorMsg, 6000);
 
       this.error.set(errorMsg);
       this.isProcessing.set(false);

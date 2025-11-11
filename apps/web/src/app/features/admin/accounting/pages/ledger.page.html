@@ -89,7 +89,9 @@
     <ion-card-header>
       <ion-card-title>
         Entradas del Libro Mayor
-        <span class="text-sm font-normal text-text-secondary"> ({{ ledgerData().total }} total) </span>
+        <span class="text-sm font-normal text-text-secondary">
+          ({{ ledgerData().total }} total)
+        </span>
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
@@ -122,7 +124,10 @@
               </td>
               <td class="py-2 px-3 text-sm">{{ entry.description }}</td>
               <td class="py-2 px-3 text-sm">
-                <span *ngIf="entry.reference_type" class="text-xs bg-surface-raised px-2 py-1 rounded">
+                <span
+                  *ngIf="entry.reference_type"
+                  class="text-xs bg-surface-raised px-2 py-1 rounded"
+                >
                   {{ entry.reference_type }}
                 </span>
               </td>

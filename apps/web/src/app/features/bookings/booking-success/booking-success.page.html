@@ -57,7 +57,10 @@
                       <span>Verificación {{ pollAttempts }} de {{ MAX_POLL_ATTEMPTS }}</span>
                       <span>{{ pollProgress() }}%</span>
                     </div>
-                    <ion-progress-bar [value]="pollProgress() / 100" color="warning"></ion-progress-bar>
+                    <ion-progress-bar
+                      [value]="pollProgress() / 100"
+                      color="warning"
+                    ></ion-progress-bar>
                   </div>
                 }
               </ion-card-content>
@@ -80,13 +83,19 @@
                   <div>
                     <h3 class="font-semibold">Pago rechazado</h3>
                     <p class="text-sm">
-                      MercadoPago no pudo procesar tu pago. Esto puede deberse a fondos insuficientes,
-                      tarjeta vencida o problemas de seguridad.
+                      MercadoPago no pudo procesar tu pago. Esto puede deberse a fondos
+                      insuficientes, tarjeta vencida o problemas de seguridad.
                     </p>
                   </div>
                 </div>
                 <div class="flex gap-2 mt-4">
-                  <ion-button size="small" expand="block" fill="solid" color="danger" (click)="retryPayment()">
+                  <ion-button
+                    size="small"
+                    expand="block"
+                    fill="solid"
+                    color="danger"
+                    (click)="retryPayment()"
+                  >
                     <ion-icon name="card-outline" slot="start"></ion-icon>
                     Reintentar con otro método
                   </ion-button>
@@ -110,8 +119,8 @@
                   <div>
                     <h3 class="font-semibold">Verificación en proceso</h3>
                     <p class="text-sm">
-                      El pago puede tardar unos minutos en confirmarse. Revisa tu email o consulta el
-                      detalle de la reserva más tarde.
+                      El pago puede tardar unos minutos en confirmarse. Revisa tu email o consulta
+                      el detalle de la reserva más tarde.
                     </p>
                   </div>
                 </div>
@@ -141,7 +150,9 @@
         ¡Tu reserva está confirmada!
       </h1>
 
-      <p class="text-center text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-8">
+      <p
+        class="text-center text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-8"
+      >
         Hemos enviado los detalles a tu email
       </p>
 
@@ -169,7 +180,9 @@
               </div>
               <div>
                 <h3 class="font-semibold text-lg">{{ getCarName() }}</h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                <p
+                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                >
                   <ion-icon name="location-outline"></ion-icon>
                   Reserva confirmada
                 </p>
@@ -206,7 +219,9 @@
 
             <!-- Booking ID -->
             <div class="detail-row text-xs">
-              <span class="label text-text-secondary dark:text-text-secondary">Número de Reserva:</span>
+              <span class="label text-text-secondary dark:text-text-secondary"
+                >Número de Reserva:</span
+              >
               <span class="value font-mono text-text-primary dark:text-text-secondary">
                 {{ bookingId() | slice: 0 : 8 }}...
               </span>
@@ -229,7 +244,9 @@
               <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
                 <h3 class="font-semibold">Revisa tu email</h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                <p
+                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                >
                   Te enviamos todos los detalles y el contrato de alquiler
                 </p>
               </ion-label>
@@ -239,7 +256,9 @@
               <ion-icon name="chatbubble-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
                 <h3 class="font-semibold">Contacta al propietario</h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                <p
+                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                >
                   Coordina la entrega del vehículo con 24hs de anticipación
                 </p>
               </ion-label>
@@ -249,7 +268,9 @@
               <ion-icon name="document-text-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
                 <h3 class="font-semibold">Prepara tu documentación</h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                <p
+                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                >
                   DNI, licencia de conducir vigente y tarjeta de crédito a tu nombre
                 </p>
               </ion-label>
@@ -259,7 +280,9 @@
               <ion-icon name="car-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
                 <h3 class="font-semibold">¡Disfruta tu viaje!</h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                <p
+                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                >
                   Recuerda devolver el vehículo en las mismas condiciones
                 </p>
               </ion-label>

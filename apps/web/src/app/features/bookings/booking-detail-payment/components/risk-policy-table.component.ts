@@ -169,14 +169,10 @@ import {
                   </div>
                 </div>
               </td>
-              <td
-                class="px-4 py-4 text-sm text-right font-semibold text-error-text"
-              >
+              <td class="px-4 py-4 text-sm text-right font-semibold text-error-text">
                 {{ formatUsd(riskSnapshot.rolloverDeductibleUsd) }}
               </td>
-              <td
-                class="px-4 py-4 text-sm text-right font-semibold text-error-text"
-              >
+              <td class="px-4 py-4 text-sm text-right font-semibold text-error-text">
                 {{ formatArs(riskSnapshot.rolloverDeductibleUsd * fxSnapshot.rate) }}
               </td>
             </tr>

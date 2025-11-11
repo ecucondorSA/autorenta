@@ -859,10 +859,14 @@
                   <h4 class="font-medium text-text-primary dark:text-text-inverse">
                     {{ car()?.title }}
                   </h4>
-                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                  <p
+                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                  >
                     {{ car()?.location_city }}, {{ car()?.location_state }}
                   </p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                  <p
+                    class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                  >
                     {{ trustMessage() }}
                   </p>
                 </div>
@@ -893,7 +897,9 @@
                   </div>
                 </div>
                 <div class="mt-2 pt-2 border-t border-border-default dark:border-border-default">
-                  <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                  <p
+                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                  >
                     Duración: {{ bookingDates()?.totalDays }}
                     {{ bookingDates()?.totalDays === 1 ? 'día' : 'días' }}
                   </p>
@@ -976,7 +982,9 @@
                         <p class="font-medium text-text-primary dark:text-text-inverse">
                           Wallet AutoRenta
                         </p>
-                        <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                        <p
+                          class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                        >
                           Pago instantáneo sin comisiones
                         </p>
                       </div>
@@ -1015,7 +1023,9 @@
                         <p class="font-medium text-text-primary dark:text-text-inverse">
                           Tarjeta de crédito/débito
                         </p>
-                        <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                        <p
+                          class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                        >
                           A través de MercadoPago
                         </p>
                       </div>
@@ -1134,7 +1144,9 @@
               <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-1">
                 ¡Listo para confirmar tu reserva!
               </h3>
-              <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+              <p
+                class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+              >
                 Revisa que todo esté correcto antes de continuar
               </p>
             </div>
@@ -1217,6 +1229,14 @@
       [riskSnapshot]="riskSnapshot()!"
       [fxSnapshot]="fxSnapshot()!"
       (close)="onCloseComparisonModal()"
+    />
+  }
+
+  <!-- ✅ NUEVO: Modal para solicitar fecha de nacimiento -->
+  @if (showBirthDateModal()) {
+    <app-birth-date-modal
+      (completed)="onBirthDateCompleted($event)"
+      (cancelled)="onBirthDateCancelled()"
     />
   }
 </div>

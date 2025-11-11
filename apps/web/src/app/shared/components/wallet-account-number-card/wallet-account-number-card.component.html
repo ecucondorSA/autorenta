@@ -42,15 +42,10 @@
       [class.bg-cta-default]="!copied"
       [class.border-cta-default]="!copied"
       [class.text-text-inverse]="!copied"
-      [class.hover:bg-cta-default/90]="!copied"
+      [ngClass]="{ 'hover:bg-cta-default/90': !copied }"
     >
       <ng-container *ngIf="copied; else notCopied">
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -61,12 +56,7 @@
         <span>Copiado!</span>
       </ng-container>
       <ng-template #notCopied>
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"

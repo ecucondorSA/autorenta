@@ -35,7 +35,8 @@ export const BOOKINGS_ROUTES: Routes = [
   {
     path: 'urgent/:carId',
     canActivate: [AuthGuard],
-    loadComponent: () => import('./urgent-booking/urgent-booking.page').then((m) => m.UrgentBookingPage),
+    loadComponent: () =>
+      import('./urgent-booking/urgent-booking.page').then((m) => m.UrgentBookingPage),
   },
   {
     path: ':id/check-in',

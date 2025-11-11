@@ -61,11 +61,15 @@ import {
       <div
         class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-4 mb-6 shadow-sm"
       >
-        <h3 class="text-sm font-semibold text-text-primary dark:text-text-secondary mb-3">Filtros</h3>
+        <h3 class="text-sm font-semibold text-text-primary dark:text-text-secondary mb-3">
+          Filtros
+        </h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Status Filter -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1"
+            >
               Estado
             </label>
             <select
@@ -82,7 +86,9 @@ import {
 
           <!-- Type Filter -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1"
+            >
               Tipo
             </label>
             <select
@@ -99,7 +105,9 @@ import {
 
           <!-- Search -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1"
+            >
               Buscar
             </label>
             <input
@@ -119,7 +127,10 @@ import {
       </div>
 
       <!-- Error State -->
-      <div *ngIf="error() && !loading()" class="bg-error-bg border border-error-border rounded-xl p-6">
+      <div
+        *ngIf="error() && !loading()"
+        class="bg-error-bg border border-error-border rounded-xl p-6"
+      >
         <p class="text-error-strong">{{ error() }}</p>
       </div>
 
@@ -187,7 +198,9 @@ import {
                 {{ claim.description }}
               </h3>
 
-              <div class="flex items-center gap-4 text-xs text-text-secondary dark:text-text-secondary mt-2">
+              <div
+                class="flex items-center gap-4 text-xs text-text-secondary dark:text-text-secondary mt-2"
+              >
                 <span>📅 {{ formatDate(claim.created_at) }}</span>
                 <span *ngIf="claim.location">📍 {{ claim.location }}</span>
                 <span *ngIf="claim.photos && claim.photos.length > 0">
@@ -316,7 +329,8 @@ export class AdminClaimsPage implements OnInit {
     const classes: Record<ClaimStatus, string> = {
       reported:
         'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
-      pending: 'bg-warning-bg-hover text-warning-strong dark:bg-warning-900/40 dark:text-warning-200',
+      pending:
+        'bg-warning-bg-hover text-warning-strong dark:bg-warning-900/40 dark:text-warning-200',
       investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
       under_review:
         'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
@@ -324,7 +338,8 @@ export class AdminClaimsPage implements OnInit {
         'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
       rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-900/40 dark:text-error-200',
       paid: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
-      closed: 'bg-surface-raised text-text-primary dark:bg-surface-raised/40 dark:text-text-primary',
+      closed:
+        'bg-surface-raised text-text-primary dark:bg-surface-raised/40 dark:text-text-primary',
     };
     return classes[status] || classes.closed;
   }

@@ -151,13 +151,17 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         >
           <div class="space-y-2">
             <div class="flex justify-between text-sm">
-              <span class="text-text-secondary dark:text-text-secondary/70">Crédito disponible:</span>
+              <span class="text-text-secondary dark:text-text-secondary/70"
+                >Crédito disponible:</span
+              >
               <span class="font-semibold text-text-primary dark:text-text-primary">
                 {{ formatUsd(currentProtectedCredit()) }}
               </span>
             </div>
             <div class="flex justify-between text-sm">
-              <span class="text-text-secondary dark:text-text-secondary/70">Crédito requerido:</span>
+              <span class="text-text-secondary dark:text-text-secondary/70"
+                >Crédito requerido:</span
+              >
               <span class="font-semibold text-text-primary dark:text-text-primary">
                 {{ formatUsd(riskSnapshot.creditSecurityUsd) }}
               </span>
@@ -244,9 +248,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-error-strong">
-                    Crédito insuficiente
-                  </p>
+                  <p class="text-sm font-medium text-error-strong">Crédito insuficiente</p>
                   <p class="text-xs text-error-strong mt-1">
                     Necesitas cargar {{ formatUsd(Math.abs(creditDifference())) }} adicionales.
                   </p>

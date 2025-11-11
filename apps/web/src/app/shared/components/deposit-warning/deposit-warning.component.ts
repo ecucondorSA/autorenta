@@ -96,9 +96,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
             <!-- Qué NO puedes hacer -->
             <div>
-              <p class="font-semibold mb-2 text-error-strong">
-                ❌ ¿Qué NO puedes hacer?
-              </p>
+              <p class="font-semibold mb-2 text-error-strong">❌ ¿Qué NO puedes hacer?</p>
               <ul class="space-y-2 ml-4">
                 <li class="flex items-start">
                   <span class="mr-2">✘</span>
@@ -108,9 +106,7 @@ import { TranslateModule } from '@ngx-translate/core';
                 </li>
                 <li class="flex items-start">
                   <span class="mr-2">✘</span>
-                  <span class="text-error-strong"
-                    >NO se realizan devoluciones en efectivo</span
-                  >
+                  <span class="text-error-strong">NO se realizan devoluciones en efectivo</span>
                 </li>
               </ul>
             </div>

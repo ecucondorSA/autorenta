@@ -7,7 +7,10 @@
   <!-- Error State -->
   <div *ngIf="error() && !loading()" class="bg-error-bg border border-error-border rounded-lg p-4">
     <p class="text-error-text text-sm">{{ error()?.message }}</p>
-    <button (click)="refresh()" class="mt-2 text-error-text hover:text-error-strong text-sm font-medium">
+    <button
+      (click)="refresh()"
+      class="mt-2 text-error-text hover:text-error-strong text-sm font-medium"
+    >
       Reintentar
     </button>
   </div>
@@ -27,7 +30,9 @@
           <h3 class="text-lg font-semibold text-text-primary" [class.text-base]="compact">
             Clase {{ driverClass() }}
           </h3>
-          <p class="text-sm text-text-secondary dark:text-text-secondary">{{ classDescription() }}</p>
+          <p class="text-sm text-text-secondary dark:text-text-secondary">
+            {{ classDescription() }}
+          </p>
         </div>
       </div>
 
@@ -61,7 +66,9 @@
       <!-- Driver Score -->
       <div class="bg-surface-base rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-text-secondary dark:text-text-secondary">Score de Conducción</span>
+          <span class="text-xs text-text-secondary dark:text-text-secondary"
+            >Score de Conducción</span
+          >
           <span [class]="getScoreColor(driverScore())" class="text-sm font-semibold">
             {{ driverScore() }}/100
           </span>
@@ -74,7 +81,9 @@
       <!-- Clean Bookings Percentage -->
       <div class="bg-surface-base rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-text-secondary dark:text-text-secondary">Reservas Sin Daños</span>
+          <span class="text-xs text-text-secondary dark:text-text-secondary"
+            >Reservas Sin Daños</span
+          >
           <span class="text-sm font-semibold text-success-light"> {{ cleanPercentage() }}% </span>
         </div>
         <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
@@ -85,7 +94,9 @@
       <!-- Fee Multiplier -->
       <div class="bg-surface-base rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-text-secondary dark:text-text-secondary">Ajuste en Tarifas</span>
+          <span class="text-xs text-text-secondary dark:text-text-secondary"
+            >Ajuste en Tarifas</span
+          >
           <span
             [class]="
               feeMultiplier() < 1
@@ -107,7 +118,9 @@
       <!-- Guarantee Multiplier -->
       <div class="bg-surface-base rounded-lg p-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs text-text-secondary dark:text-text-secondary">Ajuste en Garantía</span>
+          <span class="text-xs text-text-secondary dark:text-text-secondary"
+            >Ajuste en Garantía</span
+          >
           <span
             [class]="
               guaranteeMultiplier() < 1

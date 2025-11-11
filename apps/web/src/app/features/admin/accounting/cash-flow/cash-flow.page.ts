@@ -11,7 +11,9 @@ import { environment } from '../../../../../environments/environment';
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">
         <h1 class="text-2xl font-bold text-text-primary">Flujo de Caja</h1>
-        <p class="mt-2 text-sm text-text-secondary">Visualiza el flujo de efectivo de la plataforma.</p>
+        <p class="mt-2 text-sm text-text-secondary">
+          Visualiza el flujo de efectivo de la plataforma.
+        </p>
       </div>
 
       @if (loading()) {
@@ -25,7 +27,9 @@ import { environment } from '../../../../../environments/environment';
           <p class="text-text-secondary">No hay datos de flujo de caja disponibles.</p>
         </div>
       } @else {
-        <div class="overflow-x-auto rounded-lg border border-border-default bg-surface-raised shadow-sm">
+        <div
+          class="overflow-x-auto rounded-lg border border-border-default bg-surface-raised shadow-sm"
+        >
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-surface-base">
               <tr>

@@ -91,8 +91,12 @@
                 : null
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-primary"
-            [class.border-border-default]="!form.controls.email.touched || !form.controls.email.invalid"
-            [class.dark:border-border-default]="!form.controls.email.touched || !form.controls.email.invalid"
+            [class.border-border-default]="
+              !form.controls.email.touched || !form.controls.email.invalid
+            "
+            [class.dark:border-border-default]="
+              !form.controls.email.touched || !form.controls.email.invalid
+            "
             [class.dark:border-charcoal-medium]="
               !form.controls.email.touched || !form.controls.email.invalid
             "

@@ -45,52 +45,54 @@ import { CommonModule } from '@angular/common';
       }
     </div>
   `,
-  styles: [`
-    .wizard-step {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
+  styles: [
+    `
+      .wizard-step {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
 
-    .step-header {
-      border-bottom: 1px solid var(--border-default);
-      padding-bottom: 1rem;
-    }
+      .step-header {
+        border-bottom: 1px solid var(--border-default);
+        padding-bottom: 1rem;
+      }
 
-    .step-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin: 0;
-      margin-bottom: 0.5rem;
-    }
-
-    .step-subtitle {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      margin: 0;
-    }
-
-    .step-body {
-      flex: 1;
-    }
-
-    .step-footer {
-      border-top: 1px solid var(--border-default);
-      padding-top: 1rem;
-    }
-
-    /* Mobile */
-    @media (max-width: 768px) {
       .step-title {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        margin-bottom: 0.5rem;
       }
 
       .step-subtitle {
-        font-size: 0.8125rem;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
       }
-    }
-  `]
+
+      .step-body {
+        flex: 1;
+      }
+
+      .step-footer {
+        border-top: 1px solid var(--border-default);
+        padding-top: 1rem;
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .step-title {
+          font-size: 1.25rem;
+        }
+
+        .step-subtitle {
+          font-size: 0.8125rem;
+        }
+      }
+    `,
+  ],
 })
 export class WizardStepComponent {
   /**

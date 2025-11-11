@@ -22,9 +22,10 @@
 }
 
 .hero-gradient {
-  background: radial-gradient(circle at 20% 20%, rgba(45, 212, 191, 0.4), transparent 45%),
-              radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.4), transparent 55%),
-              linear-gradient(135deg, #05050b 0%, #0f172a 45%, #020617 100%);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(45, 212, 191, 0.4), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.4), transparent 55%),
+    linear-gradient(135deg, #05050b 0%, #0f172a 45%, #020617 100%);
 }
 
 .hero-pattern {
@@ -359,7 +360,9 @@
   font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .btn-hero-primary {

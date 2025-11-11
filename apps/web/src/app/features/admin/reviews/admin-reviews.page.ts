@@ -60,11 +60,15 @@ interface ModerationStatusOption {
       <div
         class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-4 mb-6 shadow-sm"
       >
-        <h3 class="text-sm font-semibold text-text-primary dark:text-text-secondary mb-3">Filtros</h3>
+        <h3 class="text-sm font-semibold text-text-primary dark:text-text-secondary mb-3">
+          Filtros
+        </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Status Filter -->
           <div>
-            <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1">
+            <label
+              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1"
+            >
               Estado de Moderación
             </label>
             <select
@@ -217,7 +221,9 @@ interface ModerationStatusOption {
                   *ngFor="let category of getCategoryRatings(review)"
                   class="flex items-center justify-between text-xs"
                 >
-                  <span class="text-text-secondary dark:text-text-muted">{{ category.label }}:</span>
+                  <span class="text-text-secondary dark:text-text-muted"
+                    >{{ category.label }}:</span
+                  >
                   <span class="font-semibold text-text-primary dark:text-text-inverse">
                     {{ category.value.toFixed(1) }}
                   </span>
@@ -236,9 +242,7 @@ interface ModerationStatusOption {
 
               <!-- Flag Reason -->
               <div class="bg-error-bg dark:bg-error-bg0/10 rounded-lg p-3 mb-4">
-                <p class="text-sm font-medium text-error-strong mb-1">
-                  Motivo del Reporte:
-                </p>
+                <p class="text-sm font-medium text-error-strong mb-1">Motivo del Reporte:</p>
                 <p class="text-sm text-error-strong">{{ review.flag_reason }}</p>
                 <p class="text-xs text-error-text mt-1">
                   Reportado por: {{ review.flagged_by_name || 'Usuario' }} el
@@ -526,7 +530,8 @@ export class AdminReviewsPage implements OnInit {
 
   getModerationBadgeClass(status: string): string {
     const classes: Record<string, string> = {
-      pending: 'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-300',
+      pending:
+        'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-300',
       approved:
         'bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-light',
       rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-300',

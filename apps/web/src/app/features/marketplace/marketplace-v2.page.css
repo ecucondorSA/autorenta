@@ -406,3 +406,388 @@ html {
   background-color: rgba(167, 216, 244, 0.3); /* cta-default con opacidad */
   color: inherit;
 }
+
+/* ============================================
+   NEW PREMIUM STYLES - Airbnb Inspired
+   ============================================ */
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Hero Section Enhancements */
+.hero-header {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Gradient overlay animation */
+.hero-header .absolute.inset-0 {
+  animation: gradientShift 10s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+
+/* Search Card Shadow Evolution */
+.bg-white.dark\:bg-gray-800 {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.bg-white.dark\:bg-gray-800:hover {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Input Focus Glow Effect */
+input:focus {
+  box-shadow:
+    0 0 0 3px rgba(6, 182, 212, 0.1),
+    0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Button Gradient Animation */
+.bg-gradient-to-r {
+  background-size: 200% 200%;
+  animation: gradientFlow 3s ease infinite;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Filter Pills Hover Effect */
+button.group:hover svg {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+}
+
+/* Stats Badge Animations */
+.bg-white\/10 {
+  animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* CTA Buttons Pulse Effect */
+button.px-6.py-3 {
+  animation: subtlePulse 2s ease-in-out infinite;
+}
+
+@keyframes subtlePulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+button.px-6.py-3:hover {
+  animation: none;
+}
+
+/* Dark Mode Specific Improvements */
+@media (prefers-color-scheme: dark) {
+  .bg-gray-100 {
+    background-color: rgb(55, 65, 81); /* gray-700 */
+  }
+
+  .text-gray-700 {
+    color: rgb(229, 231, 235); /* gray-200 */
+  }
+
+  .border-gray-200 {
+    border-color: rgb(75, 85, 99); /* gray-600 */
+  }
+
+  /* Ensure text contrast in dark mode */
+  .bg-gradient-to-br.dark\:from-gray-900 {
+    color: white;
+  }
+
+  /* Search card in dark mode */
+  .dark\:bg-gray-800 {
+    background-color: rgb(31, 41, 55);
+    border-color: rgb(55, 65, 81);
+  }
+
+  /* Input fields dark mode */
+  .dark\:bg-gray-700 {
+    background-color: rgb(55, 65, 81);
+  }
+
+  .dark\:text-white {
+    color: rgb(255, 255, 255);
+  }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .hero-header {
+    min-height: 500px !important;
+  }
+
+  h1.text-5xl {
+    font-size: 2.5rem !important;
+  }
+
+  h2.text-3xl {
+    font-size: 1.875rem !important;
+  }
+
+  .bg-white.dark\:bg-gray-800 {
+    padding: 1.5rem !important;
+  }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .max-w-5xl {
+    max-width: 90%;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  button,
+  input {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* Loading state shimmer */
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Tooltip improvements */
+.tooltip {
+  animation: tooltipFadeIn 0.2s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN IMPROVEMENTS
+   ============================================== */
+
+/* Mobile First (< 640px) */
+@media (max-width: 639px) {
+  /* Hero Section */
+  .hero-header {
+    min-height: 500px !important;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  /* Hero Title */
+  .hero-header h1 {
+    font-size: 2.5rem !important; /* text-5xl -> smaller */
+  }
+
+  .hero-header h2 {
+    font-size: 2rem !important; /* text-3xl */
+    line-height: 1.2;
+  }
+
+  .hero-header p {
+    font-size: 1rem !important;
+  }
+
+  /* Stats badges - stack vertically on very small screens */
+  .hero-header .flex-wrap > div {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* Search Card */
+  .hero-header .max-w-5xl {
+    padding: 1rem;
+  }
+
+  .hero-header .bg-white {
+    padding: 1.5rem !important;
+  }
+
+  /* Search inputs - full width on mobile */
+  .hero-header input {
+    font-size: 0.9375rem;
+  }
+
+  /* Quick actions buttons */
+  .hero-header button:not(.icon-button) {
+    font-size: 0.875rem;
+    padding: 0.625rem 1rem;
+  }
+
+  /* Modals */
+  .fixed.z-50 > div {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+}
+
+/* Tablet (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Hero Section */
+  .hero-header {
+    min-height: 550px;
+  }
+
+  .hero-header h1 {
+    font-size: 3rem !important;
+  }
+
+  .hero-header h2 {
+    font-size: 2.5rem !important;
+  }
+
+  /* Search Card */
+  .hero-header .grid-cols-1 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Search button spans full width */
+  .hero-header .grid-cols-1 > div:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  /* Hero Section */
+  .hero-header {
+    min-height: 600px;
+  }
+
+  /* Search Card hover effects */
+  .hero-header .bg-white:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Input hover effects */
+  .hero-header input:hover {
+    border-color: rgb(103 232 249); /* cyan-300 */
+  }
+}
+
+/* Dark Mode Specific Fixes */
+@media (prefers-color-scheme: dark) {
+  /* Ensure text is readable in dark mode hero */
+  .hero-header h1,
+  .hero-header h2,
+  .hero-header p {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Modal backgrounds */
+  .fixed.z-50 .bg-white {
+    background-color: rgb(30 41 59) !important; /* slate-800 */
+  }
+
+  /* Input backgrounds in modals */
+  .fixed.z-50 input {
+    background-color: rgb(51 65 85) !important; /* slate-700 */
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  button,
+  input,
+  a {
+    min-height: 44px;
+  }
+
+  /* Remove hover effects on touch devices */
+  .hover\:scale-105:hover {
+    transform: scale(1);
+  }
+
+  /* Click/tap effects instead */
+  button:active,
+  .hover\:scale-105:active {
+    transform: scale(0.98);
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Sharper text rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Print styles */
+@media print {
+  .hero-header,
+  .fixed,
+  app-mobile-bottom-nav,
+  app-whatsapp-fab {
+    display: none !important;
+  }
+}

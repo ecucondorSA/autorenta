@@ -1,4 +1,6 @@
-<div class="booking-location-form bg-surface-raised dark:bg-surface-raised rounded-lg shadow-lg p-6">
+<div
+  class="booking-location-form bg-surface-raised dark:bg-surface-raised rounded-lg shadow-lg p-6"
+>
   <!-- Header -->
   <div class="mb-6">
     <h2 class="text-2xl font-bold text-text-primary dark:text-text-inverse mb-2">
@@ -25,7 +27,9 @@
         [disabled]="loading()"
       />
       @if (pickupSuggestions().length > 0) {
-        <div class="mt-2 border border-border-default dark:border-border-muted rounded-lg overflow-hidden">
+        <div
+          class="mt-2 border border-border-default dark:border-border-muted rounded-lg overflow-hidden"
+        >
           @for (suggestion of pickupSuggestions(); track suggestion.address) {
             <button
               type="button"
@@ -65,7 +69,9 @@
         [disabled]="loading()"
       />
       @if (dropoffSuggestions().length > 0) {
-        <div class="mt-2 border border-border-default dark:border-border-muted rounded-lg overflow-hidden">
+        <div
+          class="mt-2 border border-border-default dark:border-border-muted rounded-lg overflow-hidden"
+        >
           @for (suggestion of dropoffSuggestions(); track suggestion.address) {
             <button
               type="button"

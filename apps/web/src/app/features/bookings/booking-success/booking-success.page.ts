@@ -93,7 +93,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
       // Actualizar progreso (0-100%)
       const progress = Math.min(
         Math.round((this.pollAttempts / this.MAX_POLL_ATTEMPTS) * 100),
-        100
+        100,
       );
       this.pollProgress.set(progress);
 
@@ -130,7 +130,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
           this.paymentStatus.set('timeout');
           this.stopPolling();
           console.warn(
-            `⏰ Payment polling timeout after ${this.pollAttempts} attempts (${(this.pollAttempts * this.POLL_INTERVAL_MS) / 1000}s)`
+            `⏰ Payment polling timeout after ${this.pollAttempts} attempts (${(this.pollAttempts * this.POLL_INTERVAL_MS) / 1000}s)`,
           );
         }
       } catch (err: unknown) {
@@ -140,7 +140,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
         // Si falla después de varios intentos consecutivos, considerar timeout
         if (this.pollAttempts > 10 && this.pollAttempts % 5 === 0) {
           console.error(
-            `⚠️ Multiple polling failures detected (${this.pollAttempts} attempts). Network issue?`
+            `⚠️ Multiple polling failures detected (${this.pollAttempts} attempts). Network issue?`,
           );
         }
       }
@@ -176,7 +176,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
 
     // Navegar al wizard de checkout con el booking ID
     this.router.navigate(['/bookings', 'checkout', booking.id], {
-      queryParams: { retry: 'true' }
+      queryParams: { retry: 'true' },
     });
   }
 

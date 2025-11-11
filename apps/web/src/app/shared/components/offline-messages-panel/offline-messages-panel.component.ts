@@ -17,7 +17,10 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
   imports: [CommonModule],
   template: `
     <!-- Backdrop -->
-    <div (click)="closePanel.emit()" class="fixed inset-0 z-50 bg-surface-overlay/50 backdrop-blur-sm"></div>
+    <div
+      (click)="closePanel.emit()"
+      class="fixed inset-0 z-50 bg-surface-overlay/50 backdrop-blur-sm"
+    ></div>
 
     <!-- Panel -->
     <div

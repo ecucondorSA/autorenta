@@ -43,6 +43,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
 import { MobileBottomNavComponent } from './shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
+import { FooterComponent } from './shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-root',
@@ -68,6 +69,7 @@ import { ShareButtonComponent } from './shared/components/share-button/share-but
     ToastComponent,
     MobileBottomNavComponent,
     ShareButtonComponent,
+    FooterComponent,
   ],
   templateUrl: './app.component.html',
   styles: [
