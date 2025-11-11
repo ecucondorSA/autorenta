@@ -18,6 +18,7 @@ import { CarsService } from '../../core/services/cars.service';
 import { LocationService } from '../../core/services/location.service';
 import { UrgentRentalService } from '../../core/services/urgent-rental.service';
 import { DistanceCalculatorService } from '../../core/services/distance-calculator.service';
+import { GeocodingService, GeocodingResult } from '../../core/services/geocoding.service';
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { Car } from '../../core/models';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
@@ -47,6 +48,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
 import { TooltipComponent } from '../../shared/components/tooltip/tooltip.component';
 import { BookingsService } from '../../core/services/bookings.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { DynamicPricingBadgeComponent } from '../../shared/components/dynamic-pricing-badge/dynamic-pricing-badge.component';
 
 export interface CarWithDistance extends Car {
   distance?: number;
@@ -71,6 +73,7 @@ export type ViewMode = 'grid' | 'list' | 'map';
     CardComponent,
     TooltipComponent,
     DateRangePickerComponent,
+    DynamicPricingBadgeComponent,
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -83,6 +86,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
   private readonly locationService = inject(LocationService);
+  private readonly geocodingService = inject(GeocodingService);
   private readonly urgentRentalService = inject(UrgentRentalService);
   private readonly distanceCalculator = inject(DistanceCalculatorService);
   private readonly bookingsService = inject(BookingsService);
@@ -90,6 +94,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private locationSearchTimeout?: ReturnType<typeof setTimeout>;
 
   // State
   readonly loading = signal(false);
@@ -124,6 +129,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly showDatePicker = signal(false); // Modal de selector de fechas
   readonly showLocationPicker = signal(false); // Modal de selector de ubicación
   readonly selectedLocation = signal<string>(''); // Ubicación seleccionada
+  readonly locationSuggestions = signal<GeocodingResult[]>([]); // Sugerencias de ubicación
+  readonly showLocationSuggestions = signal(false); // Mostrar dropdown de sugerencias
+  readonly locationSearchLoading = signal(false); // Cargando sugerencias
 
   // Computed
   readonly isMobile = computed(() => {
@@ -353,8 +361,42 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle car selection from map
+   * Handle logo click - switch to map view and request current location
    */
+  async onLogoClick(): Promise<void> {
+    // Cambiar al modo mapa
+    this.viewMode.set('map');
+    
+    // Solicitar ubicación actual del navegador
+    try {
+      const currentPosition = await this.locationService.getCurrentPosition();
+      if (currentPosition) {
+        this.userLocation.set({
+          lat: currentPosition.lat,
+          lng: currentPosition.lng,
+        });
+        // Recargar autos con la nueva ubicación
+        await this.loadCars();
+        this.showToast('Ubicación actualizada', 'success');
+      } else {
+        this.showToast('No se pudo obtener tu ubicación. Verifica los permisos del navegador.', 'warning');
+      }
+    } catch (error) {
+      console.warn('Error obteniendo ubicación:', error);
+      this.showToast('Error al obtener tu ubicación', 'error');
+    }
+    
+    // Scroll suave al mapa después de cambiar el modo
+    if (this.isBrowser) {
+      setTimeout(() => {
+        const mapElement = document.querySelector('app-cars-map');
+        if (mapElement) {
+          mapElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }
+
   onCarSelected(carId: string): void {
     this.selectedCarId.set(carId);
     this.drawerOpen.set(true);
@@ -518,6 +560,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     return car.id;
   }
 
+  trackBySuggestion(_index: number, suggestion: GeocodingResult): string {
+    return `${suggestion.latitude}-${suggestion.longitude}`;
+  }
+
   onSearchChange(value: string): void {
     this.searchValue.set(value);
   }
@@ -582,6 +628,83 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.closeLocationPicker();
     this.showToast(`Ubicación: ${location}`, 'success');
     void this.loadCars();
+  }
+
+  /**
+   * Maneja el cambio en el input de ubicación - busca sugerencias dinámicamente
+   */
+  onLocationInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const query = input.value.trim();
+
+    this.selectedLocation.set(query);
+    this.searchValue.set(query);
+
+    // Limpiar timeout anterior
+    if (this.locationSearchTimeout) {
+      clearTimeout(this.locationSearchTimeout);
+    }
+
+    // Si el query es muy corto, ocultar sugerencias
+    if (query.length < 2) {
+      this.locationSuggestions.set([]);
+      this.showLocationSuggestions.set(false);
+      return;
+    }
+
+    // Mostrar sugerencias
+    this.showLocationSuggestions.set(true);
+    this.locationSearchLoading.set(true);
+
+    // Debounce: esperar 300ms después de que el usuario deje de escribir
+    this.locationSearchTimeout = setTimeout(async () => {
+      try {
+        // Buscar en Argentina, Uruguay y Brasil
+        const suggestions = await this.geocodingService.getLocationSuggestions(query, 'AR,UY,BR', 8);
+        this.locationSuggestions.set(suggestions);
+      } catch (error) {
+        console.warn('Error buscando sugerencias:', error);
+        this.locationSuggestions.set([]);
+      } finally {
+        this.locationSearchLoading.set(false);
+      }
+    }, 300);
+  }
+
+  /**
+   * Selecciona una sugerencia de ubicación
+   */
+  onLocationSuggestionSelect(suggestion: GeocodingResult): void {
+    this.selectedLocation.set(suggestion.fullAddress);
+    this.searchValue.set(suggestion.fullAddress);
+    this.showLocationSuggestions.set(false);
+    this.locationSuggestions.set([]);
+
+    // Actualizar ubicación del usuario en el mapa
+    this.userLocation.set({
+      lat: suggestion.latitude,
+      lng: suggestion.longitude,
+    });
+
+    // Recargar autos con la nueva ubicación
+    void this.loadCars();
+    this.showToast(`Ubicación: ${suggestion.placeName}`, 'success');
+  }
+
+  /**
+   * Cierra el dropdown de sugerencias
+   */
+  closeLocationSuggestions(): void {
+    this.showLocationSuggestions.set(false);
+  }
+
+  /**
+   * Maneja el blur del input de ubicación con delay para permitir clicks en sugerencias
+   */
+  onLocationInputBlur(): void {
+    setTimeout(() => {
+      this.closeLocationSuggestions();
+    }, 200);
   }
 
   onFabActionClick(actionId: string): void {

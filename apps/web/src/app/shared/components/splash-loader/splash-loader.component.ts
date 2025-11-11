@@ -103,6 +103,7 @@ import { TranslateModule } from '@ngx-translate/core';
         playsinline
         webkit-playsinline
         preload="auto"
+        poster="/assets/images/volvo-c-recharge-splash-poster.webp"
         [defaultMuted]="true"
         [muted]="true"
         disablePictureInPicture

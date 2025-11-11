@@ -160,7 +160,7 @@ code.info-value {
   background: #e3f2fd;
   padding: 4px 12px;
   border-radius: 6px;
-  font-family: 'Monaco', 'Menlo', monospace;
+  font-family: var(--font-mono);
   font-size: 13px;
 }
 

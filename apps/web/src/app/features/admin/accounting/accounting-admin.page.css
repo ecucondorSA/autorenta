@@ -273,7 +273,7 @@
 }
 
 .amount {
-  font-family: 'Monaco', 'Courier New', monospace;
+  font-family: var(--font-mono);
   text-align: right;
   font-weight: 500;
 }

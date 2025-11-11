@@ -1,5 +1,18 @@
 import { Injectable, signal } from '@angular/core';
 import { injectSupabase } from './supabase-client.service';
+import {
+  PriceLockErrorCode,
+  rpcResponseToPriceLock,
+  isPriceLockExpired,
+  calculateLockExpiresIn,
+  validatePriceLock,
+} from '../models/dynamic-pricing.model';
+import type {
+  PriceLock,
+  LockPriceResult,
+  LockPriceRpcResponse,
+  LockPriceRpcParams,
+} from '../models/dynamic-pricing.model';
 
 export interface PricingRequest {
   region_id: string;
@@ -456,5 +469,205 @@ export class DynamicPricingService {
     if (currentMultiplier > 1.1) return '↑';
     if (currentMultiplier < 0.9) return '↓';
     return '→';
+  }
+
+  // ============================================================================
+  // PRICE LOCK METHODS (NEW - for dynamic pricing integration)
+  // ============================================================================
+
+  /**
+   * Lock a price for 15 minutes before booking
+   * Calls lock_price_for_booking RPC and returns PriceLock
+   */
+  async lockPrice(
+    carId: string,
+    userId: string,
+    rentalStart: Date,
+    rentalHours: number,
+  ): Promise<LockPriceResult> {
+    try {
+      const params: LockPriceRpcParams = {
+        p_car_id: carId,
+        p_user_id: userId,
+        p_rental_start: rentalStart.toISOString(),
+        p_rental_hours: rentalHours,
+      };
+
+      const { data, error } = await this.supabase.rpc('lock_price_for_booking', params);
+
+      if (error) {
+        console.error('[DynamicPricingService] Lock price RPC error:', error);
+        return {
+          ok: false,
+          error: error.message,
+          errorCode: PriceLockErrorCode.NETWORK_ERROR,
+        };
+      }
+
+      const response = data as LockPriceRpcResponse;
+
+      // Check if car uses fixed pricing (not an error, just different flow)
+      if (!response.uses_dynamic_pricing) {
+        return {
+          ok: true,
+          priceLock: undefined, // No lock needed for fixed pricing
+          error: response.message,
+        };
+      }
+
+      // Check for fallback error
+      if (response.fallback && response.error) {
+        return {
+          ok: false,
+          error: response.error,
+          errorCode: PriceLockErrorCode.CALCULATION_FAILED,
+        };
+      }
+
+      // Convert RPC response to PriceLock model
+      const priceLock = rpcResponseToPriceLock(response);
+
+      if (!priceLock) {
+        return {
+          ok: false,
+          error: 'Failed to parse price lock response',
+          errorCode: PriceLockErrorCode.CALCULATION_FAILED,
+        };
+      }
+
+      return {
+        ok: true,
+        priceLock,
+      };
+    } catch (err) {
+      console.error('[DynamicPricingService] Lock price error:', err);
+      return {
+        ok: false,
+        error: err instanceof Error ? err.message : 'Unknown error',
+        errorCode: PriceLockErrorCode.NETWORK_ERROR,
+      };
+    }
+  }
+
+  /**
+   * Check if a price lock is still valid
+   */
+  async isPriceLockValid(priceLock: PriceLock | null): Promise<boolean> {
+    if (!priceLock) {
+      return false;
+    }
+
+    const { isPriceLockExpired } = await import('../models/dynamic-pricing.model');
+    return !isPriceLockExpired(priceLock);
+  }
+
+  /**
+   * Get seconds remaining until price lock expires
+   * Returns 0 if already expired or null
+   */
+  async getLockExpiresIn(priceLock: PriceLock | null): Promise<number> {
+    if (!priceLock) {
+      return 0;
+    }
+
+    const { calculateLockExpiresIn } = await import('../models/dynamic-pricing.model');
+    return calculateLockExpiresIn(priceLock);
+  }
+
+  /**
+   * Refresh/renew a price lock by locking again
+   * Useful when user is about to complete checkout and lock is expiring
+   */
+  async refreshPriceLock(priceLock: PriceLock): Promise<LockPriceResult> {
+    return this.lockPrice(
+      priceLock.carId,
+      priceLock.userId,
+      priceLock.rentalStart,
+      priceLock.rentalHours,
+    );
+  }
+
+  /**
+   * Validate price lock for booking creation
+   * Returns null if valid, error message if invalid
+   */
+  async validatePriceLockForBooking(priceLock: PriceLock | null): Promise<string | null> {
+    const { validatePriceLock } = await import('../models/dynamic-pricing.model');
+    return validatePriceLock(priceLock);
+  }
+
+  /**
+   * Get formatted countdown string (MM:SS) for price lock
+   */
+  async formatLockCountdown(priceLock: PriceLock | null): Promise<string> {
+    if (!priceLock) {
+      return '00:00';
+    }
+
+    const { calculateLockExpiresIn, formatLockCountdown } = await import(
+      '../models/dynamic-pricing.model'
+    );
+    const seconds = calculateLockExpiresIn(priceLock);
+    return formatLockCountdown(seconds);
+  }
+
+  /**
+   * Check if price lock is expiring soon (< 2 minutes)
+   * Used to show warning to user
+   */
+  async isPriceLockExpiringSoon(priceLock: PriceLock | null): Promise<boolean> {
+    const seconds = await this.getLockExpiresIn(priceLock);
+    return seconds > 0 && seconds < 120; // Less than 2 minutes
+  }
+
+  /**
+   * Get price comparison between fixed and dynamic pricing
+   * Used to show savings/surcharge to user
+   */
+  async getPriceComparison(
+    fixedPrice: number,
+    priceLock: PriceLock | null,
+  ): Promise<{
+    fixedPrice: number;
+    dynamicPrice: number;
+    difference: number;
+    percentageDiff: number;
+    isCheaper: boolean;
+    message: string;
+  } | null> {
+    if (!priceLock) {
+      return null;
+    }
+
+    const { calculatePriceComparison, generatePriceComparisonMessage } = await import(
+      '../models/dynamic-pricing.model'
+    );
+
+    const comparison = calculatePriceComparison(fixedPrice, priceLock.totalPrice);
+    const message = generatePriceComparisonMessage(comparison);
+
+    return {
+      ...comparison,
+      message,
+    };
+  }
+
+  /**
+   * Get surge pricing info for display
+   */
+  async getSurgePricingInfo(priceLock: PriceLock | null): Promise<{
+    isActive: boolean;
+    tier: string;
+    factor: number;
+    message: string;
+    icon: string;
+    badgeColor: string;
+  } | null> {
+    if (!priceLock) {
+      return null;
+    }
+
+    const { generateSurgeInfo } = await import('../models/dynamic-pricing.model');
+    return generateSurgeInfo(priceLock.priceSnapshot);
   }
 }

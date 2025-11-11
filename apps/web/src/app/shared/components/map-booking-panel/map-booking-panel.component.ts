@@ -21,6 +21,7 @@ import { ProfileService } from '../../../core/services/profile.service';
 import { Router } from '@angular/router';
 import { getAgeFromProfile } from '../../utils/age-calculator';
 import { BirthDateModalComponent } from '../birth-date-modal/birth-date-modal.component';
+import { DynamicPricingBadgeComponent } from '../dynamic-pricing-badge/dynamic-pricing-badge.component';
 
 export interface BookingFormData {
   startDate: string;
@@ -33,7 +34,7 @@ export interface BookingFormData {
 @Component({
   selector: 'app-map-booking-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule, MoneyPipe, BirthDateModalComponent],
+  imports: [CommonModule, FormsModule, MoneyPipe, BirthDateModalComponent, DynamicPricingBadgeComponent],
   template: `
     <div
       class="map-booking-panel fixed inset-y-0 right-0 w-full max-w-md bg-surface-raised shadow-2xl z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto"
@@ -70,7 +71,13 @@ export interface BookingFormData {
             class="w-16 h-16 rounded-lg object-cover"
           />
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-semibold text-text-primary truncate">{{ car.title }}</h3>
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="text-base font-semibold text-text-primary truncate">{{ car.title }}</h3>
+              <!-- ✅ NEW: Dynamic pricing badge -->
+              @if (car.usesDynamicPricing) {
+                <app-dynamic-pricing-badge />
+              }
+            </div>
             <p class="text-sm text-text-secondary">{{ car.locationLabel }}</p>
             <div class="flex items-baseline gap-1 mt-1">
               <span class="text-lg font-bold text-cta-default">
@@ -568,3 +575,4 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
     }
   }
 }
+

@@ -13,7 +13,6 @@ export interface CarMapLocation {
   pricePerDay: number;
   pricePerHour?: number; // Dynamic pricing
   currency: string;
-  regionId?: string | null; // For dynamic pricing calculation
   surgeActive?: boolean; // Surge pricing indicator
   lat: number;
   lng: number;
@@ -40,6 +39,7 @@ export interface CarMapLocation {
   depositRequired?: boolean;
   depositAmount?: number;
   insuranceIncluded?: boolean;
+  usesDynamicPricing?: boolean; // Car opts into dynamic pricing
 }
 
 interface CacheEntry {
@@ -293,7 +293,7 @@ export class CarLocationsService {
     let query = this.supabase
       .from('v_cars_with_main_photo')
       .select(
-        'id, title, status, price_per_day, currency, region_id, location_city, location_state, location_country, location_lat, location_lng, main_photo_url, photo_gallery, description, updated_at, auto_approval, min_rental_days, max_rental_days, deposit_required, deposit_amount, insurance_included',
+        'id, title, status, price_per_day, currency, location_city, location_state, location_country, location_lat, location_lng, main_photo_url, photo_gallery, description, updated_at, auto_approval, min_rental_days, max_rental_days, deposit_required, deposit_amount, insurance_included, uses_dynamic_pricing',
       )
       .eq('status', 'active')
       .not('location_lat', 'is', null)
@@ -515,8 +515,6 @@ export class CarLocationsService {
     const currency = String(
       car.currency ?? record.currency ?? environment.defaultCurrency ?? 'USD',
     ).toUpperCase();
-    const regionIdRaw = car.region_id ?? record.region_id ?? null;
-    const regionId = typeof regionIdRaw === 'string' ? regionIdRaw : null;
 
     const cityRaw = car.location_city ?? record.city ?? record.location_city ?? null;
     const city = typeof cityRaw === 'string' ? cityRaw : null;
@@ -626,12 +624,18 @@ export class CarLocationsService {
         ? insuranceIncludedRaw
         : insuranceIncludedRaw === 'true' || insuranceIncludedRaw === true;
 
+    const usesDynamicPricingRaw =
+      car.uses_dynamic_pricing ?? record.uses_dynamic_pricing ?? meta.uses_dynamic_pricing ?? null;
+    const usesDynamicPricing =
+      typeof usesDynamicPricingRaw === 'boolean'
+        ? usesDynamicPricingRaw
+        : usesDynamicPricingRaw === 'true' || usesDynamicPricingRaw === true;
+
     return {
       carId,
       title,
       pricePerDay: Number.isFinite(pricePerDay) ? pricePerDay : 0,
       currency,
-      regionId,
       lat,
       lng,
       updatedAt,
@@ -649,6 +653,7 @@ export class CarLocationsService {
       depositRequired,
       depositAmount,
       insuranceIncluded,
+      usesDynamicPricing,
     };
   }
 

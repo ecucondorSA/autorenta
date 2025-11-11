@@ -268,7 +268,7 @@ import { take } from 'rxjs/operators';
         margin-top: 0.5rem;
         font-size: 0.75rem;
         color: #9ca3af;
-        font-family: monospace;
+        font-family: var(--font-mono);
       }
 
       .id-label {

@@ -739,6 +739,19 @@
               Tipo de cambio válido hasta {{ fxSnapshot()!.expiresAt | date: 'dd/MM/yyyy HH:mm' }}
             </p>
           </app-booking-summary-card>
+
+          <!-- ✅ NEW: Dynamic Price Lock Panel -->
+          @if (priceLock()) {
+            <div class="mt-6">
+              <app-dynamic-price-lock-panel
+                [priceLock]="priceLock()"
+                [comparison]="priceComparison()"
+                [surgeInfo]="surgeInfo()"
+                (refresh)="onRefreshPriceLock()"
+                (viewBreakdown)="onViewPriceBreakdown()"
+              />
+            </div>
+          }
         </div>
       </div>
 
@@ -1239,4 +1252,11 @@
       (cancelled)="onBirthDateCancelled()"
     />
   }
+
+  <!-- ✅ NEW: Dynamic Price Breakdown Modal -->
+  <app-dynamic-price-breakdown-modal
+    [isOpen]="showBreakdownModal()"
+    [snapshot]="priceLock()?.priceSnapshot ?? null"
+    (close)="showBreakdownModal.set(false)"
+  />
 </div>

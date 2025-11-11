@@ -44,6 +44,9 @@ export * from './insurance.model';
 // Export Dashboard models
 export * from './dashboard.model';
 
+// Export Dynamic Pricing models
+export * from './dynamic-pricing.model';
+
 // Export ProfileService types
 export type { UpdateProfileData } from '../services/profile.service';
 
@@ -276,6 +279,7 @@ export interface Car {
   price_per_day: number;
   currency: string;
   value_usd?: number; // ✅ NUEVO: Valor real del vehículo en USD (para cálculos de riesgo/seguro)
+  uses_dynamic_pricing?: boolean; // ✅ DYNAMIC PRICING: Si el auto usa pricing dinámico
   rating_avg: number;
   rating_count: number;
 
@@ -438,6 +442,12 @@ export interface Booking {
   delivery_distance_km?: number | null;
   delivery_fee_cents?: number | null;
   distance_risk_tier?: 'local' | 'regional' | 'long_distance' | null;
+
+  // ✅ DYNAMIC PRICING: Campos de pricing dinámico
+  has_dynamic_pricing?: boolean | null;
+  dynamic_price_snapshot?: Record<string, unknown> | null; // JSONB stored as object
+  price_locked_until?: string | null; // ISO timestamp
+  price_lock_token?: string | null; // UUID
 
   // Extended fields from views (my_bookings, owner_bookings)
   car_title?: string;

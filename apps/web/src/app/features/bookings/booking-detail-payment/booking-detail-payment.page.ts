@@ -23,6 +23,13 @@ import {
   type MercadoPagoPreferenceResponse,
 } from '../checkout/support/mercadopago-booking.gateway';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
+import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
+import type { PriceLock } from '../../../core/models/dynamic-pricing.model';
+import {
+  calculatePriceComparison,
+  generatePriceComparisonMessage,
+  generateSurgeInfo,
+} from '../../../core/models/dynamic-pricing.model';
 
 // Models
 import {
@@ -61,6 +68,8 @@ import { CardHoldPanelComponent } from './components/card-hold-panel.component';
 import { CreditSecurityPanelComponent } from './components/credit-security-panel.component';
 import { TermsAndConsentsComponent } from './components/terms-and-consents.component';
 import { BirthDateModalComponent } from '../../../shared/components/birth-date-modal/birth-date-modal.component';
+import { DynamicPriceLockPanelComponent } from './components/dynamic-price-lock-panel.component';
+import { DynamicPriceBreakdownModalComponent } from './components/dynamic-price-breakdown-modal.component';
 
 /**
  * Página principal: Detalle & Pago (AR)
@@ -89,6 +98,8 @@ import { BirthDateModalComponent } from '../../../shared/components/birth-date-m
     CreditSecurityPanelComponent,
     TermsAndConsentsComponent,
     BirthDateModalComponent,
+    DynamicPriceLockPanelComponent,
+    DynamicPriceBreakdownModalComponent,
   ],
   templateUrl: './booking-detail-payment.page.html',
   styleUrls: ['./booking-detail-payment.page.css'],
@@ -117,6 +128,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private distanceCalculator = inject(DistanceCalculatorService);
   private locationService = inject(LocationService);
   private riskCalculatorService = inject(RiskCalculatorService);
+
+  // ✅ NEW: Dynamic pricing service
+  private dynamicPricingService = inject(DynamicPricingService);
 
   // Booking ID for update operations
   private existingBookingId: string | null = null;
@@ -207,7 +221,38 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   readonly deliveryFeeCents = signal<number>(0);
   readonly distanceTier = signal<'local' | 'regional' | 'long_distance' | undefined>(undefined);
 
+  // ✅ NEW: Dynamic pricing signals
+  readonly priceLock = signal<PriceLock | null>(null);
+  readonly showBreakdownModal = signal(false);
+
   // ==================== COMPUTED SIGNALS ====================
+
+  /**
+   * ✅ NEW: Price comparison for dynamic pricing
+   */
+  readonly priceComparison = computed(() => {
+    const lock = this.priceLock();
+    const carData = this.car();
+    if (!lock || !carData) return null;
+
+    const comparison = calculatePriceComparison(carData.price_per_day ?? 0, lock.totalPrice);
+    const message = generatePriceComparisonMessage(comparison);
+
+    return {
+      ...comparison,
+      message,
+    };
+  });
+
+  /**
+   * ✅ NEW: Surge pricing info for dynamic pricing
+   */
+  readonly surgeInfo = computed(() => {
+    const lock = this.priceLock();
+    if (!lock) return null;
+
+    return generateSurgeInfo(lock.priceSnapshot);
+  });
 
   /**
    * Valida si puede proceder al CTA
@@ -304,7 +349,10 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     // 4. Cargar información del auto
     await this.loadCarInfo();
 
-    // 5. Inicializar snapshots (no espera distancia)
+    // 5. ✅ NEW: Lock price if car uses dynamic pricing
+    await this.lockDynamicPriceIfNeeded();
+
+    // 6. Inicializar snapshots (no espera distancia)
     await this.initializeSnapshots();
 
     // 6. ✅ OPTIMIZED: Initialize user location in background (non-blocking)
@@ -612,6 +660,41 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   }
 
   /**
+   * ✅ NEW: Lock price if car uses dynamic pricing
+   */
+  private async lockDynamicPriceIfNeeded(): Promise<void> {
+    const input = this.bookingInput();
+    const carData = this.car();
+    const userId = this.userId();
+
+    if (!input || !carData || !userId) return;
+    if (!carData.uses_dynamic_pricing) return;
+
+    try {
+      const dates = this.bookingDates();
+      if (!dates) return;
+
+      const result = await this.dynamicPricingService.lockPrice(
+        input.carId,
+        userId,
+        input.startDate, // Pass Date object, not string
+        Math.round(dates.totalHours)
+      );
+
+      if (result.ok && result.priceLock) {
+        this.priceLock.set(result.priceLock);
+        console.log('✅ [DynamicPricing] Price locked:', result.priceLock);
+      } else {
+        console.warn('⚠️ [DynamicPricing] Could not lock price:', result.error);
+        // Fallback to fixed price (no price lock)
+      }
+    } catch (error) {
+      console.error('❌ [DynamicPricing] Error locking price:', error);
+      // Fallback to fixed price (no price lock)
+    }
+  }
+
+  /**
    * Carga el FX snapshot actual
    * ✅ FIX: Agrega fallback cuando no se puede obtener de la DB
    */
@@ -870,6 +953,33 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   }
 
   /**
+   * ✅ NEW: Handler para refrescar price lock
+   */
+  protected async onRefreshPriceLock(): Promise<void> {
+    const lock = this.priceLock();
+    if (!lock) return;
+
+    try {
+      const result = await this.dynamicPricingService.refreshPriceLock(lock);
+      if (result.ok && result.priceLock) {
+        this.priceLock.set(result.priceLock);
+        console.log('✅ [DynamicPricing] Price lock refreshed');
+      } else {
+        console.warn('⚠️ [DynamicPricing] Could not refresh price lock:', result.error);
+      }
+    } catch (error) {
+      console.error('❌ [DynamicPricing] Error refreshing price lock:', error);
+    }
+  }
+
+  /**
+   * ✅ NEW: Handler para mostrar desglose de precio
+   */
+  protected onViewPriceBreakdown(): void {
+    this.showBreakdownModal.set(true);
+  }
+
+  /**
    * Handler: Cambio de autorización de pago (card)
    */
   protected onAuthorizationChange(auth: PaymentAuthorization | null): void {
@@ -1006,6 +1116,12 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       throw new Error('Faltan datos para crear reserva');
     }
 
+    // ✅ NEW: Get dynamic pricing parameters
+    const lock = this.priceLock();
+    const useDynamicPricing = lock !== null;
+    const priceLockToken = lock?.lockToken;
+    const dynamicPriceSnapshot = lock?.priceSnapshot as Record<string, unknown> | undefined;
+
     // Llamar a la función RPC atómica que hace todo en una transacción
     const result = await this.bookingsService.createBookingAtomic({
       carId: input.carId,
@@ -1020,6 +1136,10 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       distanceKm: this.distanceKm(),
       distanceTier: this.distanceTier(),
       deliveryFeeCents: this.deliveryFeeCents(),
+      // ✅ NEW: Dynamic pricing parameters
+      useDynamicPricing,
+      priceLockToken,
+      dynamicPriceSnapshot,
       riskSnapshot: {
         dailyPriceUsd: pricing.totalUsd / (calculateTotalDays(input.startDate, input.endDate) || 1),
         securityDepositUsd: risk.creditSecurityUsd,

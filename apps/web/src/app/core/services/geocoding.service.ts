@@ -145,6 +145,66 @@ export class GeocodingService {
    * @param longitude Longitude coordinate
    * @returns Promise with reverse geocoding result containing address components
    */
+  /**
+   * Get autocomplete suggestions for a location query
+   * Returns multiple results for autocomplete dropdowns
+   * @param query Search query (e.g., "Buenos Aires", "Córdoba")
+   * @param countryCode Optional ISO 3166-1 alpha-2 country code to bias results (e.g., 'AR', 'UY')
+   * @param limit Maximum number of results to return (default: 5)
+   * @returns Promise with array of geocoding results
+   */
+  async getLocationSuggestions(
+    query: string,
+    countryCode?: string,
+    limit: number = 5,
+  ): Promise<GeocodingResult[]> {
+    if (!query || query.trim().length < 2) {
+      return [];
+    }
+
+    const encodedQuery = encodeURIComponent(query.trim());
+
+    // Build URL with Mapbox autocomplete endpoint
+    let url = `${this.MAPBOX_BASE_URL}/${encodedQuery}.json?access_token=${environment.mapboxAccessToken}&limit=${limit}&language=es`;
+
+    // Add country parameter to limit results
+    if (countryCode) {
+      url += `&country=${countryCode.toUpperCase()}`;
+    }
+
+    // Filter to show mainly places (cities) and addresses
+    url += '&types=place,locality,neighborhood,address';
+
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        console.warn(`Mapbox API error: ${response.status}`);
+        return [];
+      }
+
+      const data = await response.json();
+
+      if (!data.features || data.features.length === 0) {
+        return [];
+      }
+
+      // Map features to GeocodingResult array
+      return data.features.map((feature: any) => {
+        const [longitude, latitude] = feature.center;
+        return {
+          latitude,
+          longitude,
+          fullAddress: feature.place_name,
+          placeName: feature.text,
+        };
+      });
+    } catch (error) {
+      console.warn('Error getting location suggestions:', error);
+      return [];
+    }
+  }
+
   async reverseGeocode(latitude: number, longitude: number): Promise<ReverseGeocodingResult> {
     // Mapbox reverse geocoding: {longitude},{latitude}.json
     const url = `${this.MAPBOX_BASE_URL}/${longitude},${latitude}.json?access_token=${environment.mapboxAccessToken}&language=es&types=address,place`;

@@ -237,7 +237,7 @@
 }
 
 .detail-value.code {
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 0.813rem;
   background-color: #f3f4f6;
   padding: 0.25rem 0.5rem;

@@ -23,9 +23,20 @@
       <!-- Logo y título -->
       <div class="flex items-center justify-center gap-4 mb-6">
         <div
-          class="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-2xl"
+          (click)="onLogoClick()"
+          class="w-24 h-24 md:w-28 md:h-28 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-2xl overflow-hidden cursor-pointer hover:bg-white/20 transition-all duration-200 hover:scale-105"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="onLogoClick()"
+          (keydown.space)="onLogoClick()"
+          aria-label="Ver mapa del marketplace"
         >
-          <span class="text-4xl">🚗</span>
+          <img
+            src="/assets/images/c40-logo.png"
+            alt="Autorentar Logo"
+            class="w-full h-full object-contain p-2 pointer-events-none"
+            onerror="this.style.display='none'"
+          />
         </div>
         <h1 class="text-5xl md:text-6xl font-bold text-white drop-shadow-2xl">Autorentar</h1>
       </div>
@@ -75,6 +86,7 @@
         ⚡ Reserva instantánea
       </button>
       <button
+        (click)="onLogoClick()"
         class="px-6 py-3 bg-white/10 backdrop-blur-md text-white border-2 border-white/30 font-semibold rounded-xl hover:bg-white/20 hover:scale-105 transform transition-all duration-200"
       >
         Explora el marketplace
@@ -155,14 +167,78 @@
               </svg>
               Ubicación
             </label>
-            <input
-              type="text"
-              placeholder="¿Dónde necesitas el auto?"
-              [value]="selectedLocation() || searchValue()"
-              (click)="openLocationPicker()"
-              readonly
-              class="w-full px-5 py-4 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 transition-all duration-200 hover:border-cyan-300 dark:hover:border-cyan-400 cursor-pointer"
-            />
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="¿Dónde necesitas el auto?"
+                [value]="selectedLocation() || searchValue()"
+                (input)="onLocationInputChange($event)"
+                (focus)="showLocationSuggestions.set(true)"
+                (blur)="onLocationInputBlur()"
+                (keydown.escape)="closeLocationSuggestions()"
+                class="w-full px-5 py-4 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 transition-all duration-200 hover:border-cyan-300 dark:hover:border-cyan-400"
+              />
+              
+              <!-- Loading indicator -->
+              <div
+                *ngIf="locationSearchLoading()"
+                class="absolute right-4 top-1/2 -translate-y-1/2"
+              >
+                <div class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-500 border-t-transparent"></div>
+              </div>
+
+              <!-- Dropdown de sugerencias -->
+              <div
+                *ngIf="showLocationSuggestions() && locationSuggestions().length > 0"
+                class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-700 max-h-80 overflow-y-auto"
+              >
+                <div class="py-2">
+                  <button
+                    *ngFor="let suggestion of locationSuggestions(); trackBy: trackBySuggestion"
+                    (click)="onLocationSuggestionSelect(suggestion)"
+                    class="w-full px-5 py-3 text-left hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-start gap-3 group"
+                  >
+                    <svg
+                      class="w-5 h-5 text-cyan-500 mt-0.5 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
+                        {{ suggestion.placeName }}
+                      </p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                        {{ suggestion.fullAddress }}
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mensaje cuando no hay resultados -->
+              <div
+                *ngIf="showLocationSuggestions() && !locationSearchLoading() && locationSuggestions().length === 0 && (selectedLocation() || searchValue()).length >= 2"
+                class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-700 p-4"
+              >
+                <p class="text-sm text-gray-500 dark:text-gray-400 text-center">
+                  No se encontraron ubicaciones
+                </p>
+              </div>
+            </div>
           </div>
 
           <!-- Date Range -->
@@ -564,9 +640,15 @@
           <div class="p-4 text-text-primary">
             <!-- Title and Rating -->
             <div class="mb-3">
-              <h3 class="text-lg font-bold text-text-primary dark:text-text-primary mb-1 truncate">
-                {{ car.brand_text_backup }} {{ car.model_text_backup }}
-              </h3>
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="text-lg font-bold text-text-primary dark:text-text-primary truncate">
+                  {{ car.brand_text_backup }} {{ car.model_text_backup }}
+                </h3>
+                <!-- ✅ NEW: Dynamic pricing badge -->
+                @if (car.uses_dynamic_pricing) {
+                  <app-dynamic-pricing-badge />
+                }
+              </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-1 text-xs text-text-secondary">
                   <span class="text-warning-500">⭐</span>
@@ -676,9 +758,15 @@
             <div>
               <div class="flex items-start justify-between mb-3">
                 <div>
-                  <h3 class="text-xl font-bold text-text-primary dark:text-text-primary mb-1">
-                    {{ car.brand_text_backup }} {{ car.model_text_backup }}
-                  </h3>
+                  <div class="flex items-center gap-2 mb-1">
+                    <h3 class="text-xl font-bold text-text-primary dark:text-text-primary">
+                      {{ car.brand_text_backup }} {{ car.model_text_backup }}
+                    </h3>
+                    <!-- ✅ NEW: Dynamic pricing badge -->
+                    @if (car.uses_dynamic_pricing) {
+                      <app-dynamic-pricing-badge />
+                    }
+                  </div>
                   <div class="flex items-center gap-3 text-sm text-text-secondary">
                     <span class="flex items-center gap-1">
                       <span class="text-warning-500">⭐</span>
@@ -897,17 +985,10 @@
 
       <!-- Use my location button -->
       <button
-        (click)="onLocationSelect('Mi ubicación actual')"
+        (click)="onLogoClick()"
         class="w-full mt-4 px-4 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-          />
-        </svg>
+        <span class="text-xl">📍</span>
         Usar mi ubicación
       </button>
     </div>

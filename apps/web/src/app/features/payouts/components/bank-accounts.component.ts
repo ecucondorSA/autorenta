@@ -241,7 +241,7 @@ import { take } from 'rxjs/operators';
       }
 
       .account-number {
-        font-family: monospace;
+        font-family: var(--font-mono);
         font-size: 0.875rem;
       }
 

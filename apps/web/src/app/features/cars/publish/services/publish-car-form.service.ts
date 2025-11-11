@@ -248,7 +248,7 @@ export class PublishCarFormService {
 
     const rawValue = this.formInstance.getRawValue();
 
-    // Extract only fields that exist in the database schema (exclude pricing_strategy)
+    // Extract fields from form (pricing_strategy is UI-only, converted to uses_dynamic_pricing)
     const {
       brand_id,
       model_id,
@@ -257,6 +257,7 @@ export class PublishCarFormService {
       mileage,
       transmission,
       fuel,
+      pricing_strategy,
       price_per_day,
       currency,
       value_usd,
@@ -277,6 +278,9 @@ export class PublishCarFormService {
     const brand = this.brands().find((b) => b.id === brand_id);
     const model = this.models().find((m) => m.id === model_id);
 
+    // Convert pricing_strategy (UI field) to uses_dynamic_pricing (DB field)
+    const uses_dynamic_pricing = pricing_strategy === 'dynamic';
+
     // Return clean data for database
     return {
       // Vehicle fields
@@ -292,6 +296,7 @@ export class PublishCarFormService {
       price_per_day,
       currency,
       value_usd,
+      uses_dynamic_pricing, // ✅ NEW: Dynamic pricing opt-in
       min_rental_days,
       max_rental_days,
       deposit_required,

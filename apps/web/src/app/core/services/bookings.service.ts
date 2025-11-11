@@ -40,12 +40,26 @@ export class BookingsService {
 
   /**
    * Request a new booking
+   * ✅ NEW: Supports dynamic pricing with price locks
    */
-  async requestBooking(carId: string, start: string, end: string): Promise<Booking> {
+  async requestBooking(
+    carId: string,
+    start: string,
+    end: string,
+    options?: {
+      useDynamicPricing?: boolean;
+      priceLockToken?: string;
+      dynamicPriceSnapshot?: Record<string, unknown>;
+    },
+  ): Promise<Booking> {
     const { data, error } = await this.supabase.rpc('request_booking', {
       p_car_id: carId,
       p_start: start,
       p_end: end,
+      // ✅ DYNAMIC PRICING: Pass optional parameters
+      p_use_dynamic_pricing: options?.useDynamicPricing || false,
+      p_price_lock_token: options?.priceLockToken || null,
+      p_dynamic_price_snapshot: options?.dynamicPriceSnapshot || null,
     });
 
     if (error) {
@@ -337,6 +351,7 @@ export class BookingsService {
   /**
    * Create booking atomically with risk snapshot
    * Prevents "phantom bookings" using a single transaction
+   * ✅ NEW: Supports dynamic pricing with price locks
    */
   async createBookingAtomic(params: {
     carId: string;
@@ -351,6 +366,10 @@ export class BookingsService {
     distanceKm?: number;
     distanceTier?: 'local' | 'regional' | 'long_distance';
     deliveryFeeCents?: number;
+    // ✅ DYNAMIC PRICING: New parameters
+    useDynamicPricing?: boolean;
+    priceLockToken?: string;
+    dynamicPriceSnapshot?: Record<string, unknown>;
     riskSnapshot: {
       dailyPriceUsd: number;
       securityDepositUsd: number;
@@ -400,6 +419,10 @@ export class BookingsService {
         p_distance_km: params.distanceKm || null,
         p_distance_risk_tier: params.distanceTier || null,
         p_delivery_fee_cents: params.deliveryFeeCents || 0,
+        // ✅ DYNAMIC PRICING: Pass new parameters
+        p_use_dynamic_pricing: params.useDynamicPricing || false,
+        p_price_lock_token: params.priceLockToken || null,
+        p_dynamic_price_snapshot: params.dynamicPriceSnapshot || null,
       });
 
       if (error) {
