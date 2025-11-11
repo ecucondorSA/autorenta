@@ -43,13 +43,18 @@
                   <ion-spinner name="crescent" class="mr-3"></ion-spinner>
                   <div class="flex-1">
                     <h3 class="font-semibold">Verificando pago...</h3>
-                    <p class="text-sm">Esperando confirmación de MercadoPago</p>
+                    <p class="text-sm">
+                      Esperando confirmación de MercadoPago
+                      @if (pollAttempts > 0) {
+                        <span class="text-xs">(~{{ getEstimatedTimeRemaining() }}s restantes)</span>
+                      }
+                    </p>
                   </div>
                 </div>
                 @if (pollProgress() > 0) {
                   <div class="mt-2">
                     <div class="flex justify-between text-xs text-text-secondary mb-1">
-                      <span>Intento {{ pollAttempts }} de {{ MAX_POLL_ATTEMPTS }}</span>
+                      <span>Verificación {{ pollAttempts }} de {{ MAX_POLL_ATTEMPTS }}</span>
                       <span>{{ pollProgress() }}%</span>
                     </div>
                     <ion-progress-bar [value]="pollProgress() / 100" color="warning"></ion-progress-bar>
@@ -69,13 +74,31 @@
             </ion-card>
           } @else if (paymentStatus() === 'failed') {
             <ion-card color="danger">
-              <ion-card-content class="flex items-center">
-                <ion-icon name="close-circle" class="text-3xl mr-3"></ion-icon>
-                <div>
-                  <h3 class="font-semibold">Pago rechazado</h3>
-                  <p class="text-sm">
-                    MercadoPago no pudo procesar tu pago. Por favor intenta nuevamente.
-                  </p>
+              <ion-card-content>
+                <div class="flex items-center mb-3">
+                  <ion-icon name="close-circle" class="text-3xl mr-3"></ion-icon>
+                  <div>
+                    <h3 class="font-semibold">Pago rechazado</h3>
+                    <p class="text-sm">
+                      MercadoPago no pudo procesar tu pago. Esto puede deberse a fondos insuficientes,
+                      tarjeta vencida o problemas de seguridad.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex gap-2 mt-4">
+                  <ion-button size="small" expand="block" fill="solid" color="danger" (click)="retryPayment()">
+                    <ion-icon name="card-outline" slot="start"></ion-icon>
+                    Reintentar con otro método
+                  </ion-button>
+                  <ion-button
+                    size="small"
+                    expand="block"
+                    fill="outline"
+                    color="medium"
+                    [routerLink]="['/bookings']"
+                  >
+                    Ver mis reservas
+                  </ion-button>
                 </div>
               </ion-card-content>
             </ion-card>

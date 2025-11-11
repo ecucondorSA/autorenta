@@ -163,6 +163,32 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   }
 
   /**
+   * Reintentar pago - navega de vuelta al checkout
+   */
+  retryPayment(): void {
+    const booking = this.booking();
+    if (!booking) {
+      console.error('[BookingSuccess] Cannot retry payment: booking not loaded');
+      return;
+    }
+
+    console.log('🔄 Retrying payment for booking:', booking.id);
+
+    // Navegar al wizard de checkout con el booking ID
+    this.router.navigate(['/bookings', 'checkout', booking.id], {
+      queryParams: { retry: 'true' }
+    });
+  }
+
+  /**
+   * Calcular tiempo estimado restante en segundos
+   */
+  getEstimatedTimeRemaining(): number {
+    const remainingAttempts = this.MAX_POLL_ATTEMPTS - this.pollAttempts;
+    return Math.max(0, Math.round((remainingAttempts * this.POLL_INTERVAL_MS) / 1000));
+  }
+
+  /**
    * Obtener nombre del vehículo con fallbacks robustos
    */
   getCarName(): string {
