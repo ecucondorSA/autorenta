@@ -63,6 +63,16 @@
       media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
     />
 
+    <!-- Preload critical fonts for instant text rendering -->
+    <link
+      rel="preload"
+      href="/assets/fonts/inter-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      fetchpriority="high"
+    />
+
     <!-- Preload splash video for instant playback (WebM is smallest) -->
     <link rel="preload" href="/assets/videos/splash-background.webm" as="video" type="video/webm" />
     <!-- Prefetch fallbacks -->

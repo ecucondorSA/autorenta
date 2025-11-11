@@ -21,8 +21,14 @@
 /* @import './styles/mobile-overflow-debug.css'; */
 
 /* 🎨 Fuente Inter - Premium UI Typography
-   Nota: durante builds offline omitimos la importación remota de Google Fonts.
-   Si se requiere nuevamente, restaura la línea con la URL oficial. */
+   Self-hosted variable font optimizado para performance */
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/inter-var.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
 
 @tailwind base;
 @tailwind components;
@@ -175,26 +181,12 @@
     --ring-error: 0 0 0 3px rgba(178, 94, 94, 0.3);
 
     /* ─── Typography Tokens ─── */
-    --text-xs: 0.75rem; /* 12px */
-    --text-sm: 0.875rem; /* 14px */
-    --text-base: 1rem; /* 16px */
-    --text-lg: 1.125rem; /* 18px */
-    --text-xl: 1.25rem; /* 20px */
-    --text-2xl: 1.5rem; /* 24px */
-    --text-3xl: 1.875rem; /* 30px */
-    --text-4xl: 2.25rem; /* 36px */
+    /* Font sizes, weights, and line-heights are defined in tailwind.config.js
+       as single source of truth to avoid duplication. Use Tailwind classes:
+       text-xs, text-sm, text-base, font-normal, font-medium, etc. */
 
-    --leading-tight: 1.25;
-    --leading-snug: 1.375;
-    --leading-normal: 1.5;
-    --leading-relaxed: 1.625;
-    --leading-loose: 2;
-
-    --font-normal: 400;
-    --font-medium: 500;
-    --font-semibold: 600;
-    --font-bold: 700;
-    --font-extrabold: 800;
+    /* Monospace font family for code, numbers, IDs */
+    --font-mono: 'Monaco', 'Courier New', 'Consolas', 'Menlo', monospace;
 
     /* ─── Border Radius Tokens ─── */
     --radius-sm: 0.25rem; /* 4px */
@@ -435,12 +427,21 @@
       'Helvetica Neue',
       Arial,
       sans-serif;
+    /* Ligatures y features avanzadas para texto editorial */
     font-feature-settings:
-      'liga' 1,
-      'kern' 1,
-      'cv11' 1;
+      'liga' 1,  /* Standard ligatures (fi, fl) */
+      'kern' 1,  /* Kerning pairs */
+      'calt' 1,  /* Contextual alternates */
+      'cv11' 1;  /* Inter stylistic set */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    /* Optical Sizing - Inter Variable Font ajusta automáticamente
+       grosor y espaciado según el tamaño para máxima legibilidad */
+    @supports (font-variation-settings: normal) {
+      font-optical-sizing: auto;
+      font-variation-settings: 'opsz' auto;
+    }
   }
 
   body {
@@ -448,6 +449,7 @@
     color: var(--text-primary);
     font-size: 16px;
     line-height: 1.6;
+    letter-spacing: 0.003em; /* Micro-ajuste para Inter - óptima legibilidad */
     padding-top: env(safe-area-inset-top, 0);
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
@@ -471,22 +473,25 @@
 
   h1,
   .h1 {
-    @apply text-4xl font-bold tracking-tight text-text-primary;
+    @apply text-4xl font-bold text-text-primary;
     line-height: 1.2;
+    letter-spacing: -0.02em; /* Tracking refinado para grandes títulos */
     margin: 0;
   }
 
   h2,
   .h2 {
-    @apply text-3xl font-bold tracking-tight text-text-primary;
+    @apply text-3xl font-bold text-text-primary;
     line-height: 1.25;
+    letter-spacing: -0.015em; /* Tracking progresivo */
     margin: 0;
   }
 
   h3,
   .h3 {
-    @apply text-2xl font-semibold tracking-tight text-text-primary;
+    @apply text-2xl font-semibold text-text-primary;
     line-height: 1.3;
+    letter-spacing: -0.01em; /* Tracking moderado */
     margin: 0;
   }
 
@@ -494,6 +499,7 @@
   .h4 {
     @apply text-xl font-semibold text-text-primary;
     line-height: 1.4;
+    letter-spacing: -0.005em; /* Tracking sutil */
     margin: 0;
   }
 
@@ -501,6 +507,7 @@
   .h5 {
     @apply text-lg font-semibold text-text-primary;
     line-height: 1.4;
+    letter-spacing: 0em; /* Neutral */
     margin: 0;
   }
 
@@ -508,6 +515,7 @@
   .h6 {
     @apply text-base font-semibold text-text-primary;
     line-height: 1.5;
+    letter-spacing: 0em; /* Neutral */
     margin: 0;
   }
 
@@ -525,6 +533,45 @@
   .dark h6,
   .dark .h6 {
     color: var(--text-primary);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Micro-tipografía CSS Moderna - Calidad Editorial
+     ───────────────────────────────────────────────────────────── */
+
+  /* Balance de líneas en headings - evita líneas sueltas */
+  h1, h2, h3, h4, h5, h6,
+  .h1, .h2, .h3, .h4, .h5, .h6 {
+    text-wrap: balance;
+  }
+
+  /* Pretty text wrapping en párrafos - evita orphans/widows */
+  p, li, blockquote, figcaption {
+    text-wrap: pretty;
+    hyphens: auto; /* Guiones inteligentes en español */
+    hyphenate-limit-chars: 6 3 2; /* min-word-length min-before min-after */
+    widows: 2; /* Mínimo 2 líneas al final de página */
+    orphans: 2; /* Mínimo 2 líneas al inicio de página */
+  }
+
+  /* Hanging punctuation - comillas fuera del bloque */
+  @supports (hanging-punctuation: first) {
+    p, blockquote {
+      hanging-punctuation: first last;
+    }
+  }
+
+  /* Quotes profesionales */
+  blockquote {
+    quotes: '"' '"' ''' ''';
+  }
+
+  /* Code blocks - sin wrapping ni ligatures */
+  code, pre {
+    text-wrap: nowrap;
+    hyphens: none;
+    font-feature-settings: 'liga' 0, 'calt' 0; /* Sin ligatures en código */
+    font-variant-ligatures: none;
   }
 }
 
@@ -660,6 +707,94 @@
   }
   .border-info-border {
     border-color: var(--info-border);
+  }
+
+  /* ─── Typography Utilities - Números Tabulares ─── */
+  /* Números con ancho fijo para alineación perfecta en tablas/precios */
+  .tabular-nums {
+    font-feature-settings: 'tnum' 1, 'lnum' 1;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Números proporcionales (default) */
+  .proportional-nums {
+    font-feature-settings: 'pnum' 1;
+    font-variant-numeric: proportional-nums;
+  }
+
+  /* Números con slash para fracciones */
+  .slashed-zero {
+    font-feature-settings: 'zero' 1;
+  }
+
+  /* Fracciones automáticas 1/2 → ½ */
+  .fractions {
+    font-feature-settings: 'frac' 1;
+  }
+
+  /* ─── Typography Utilities - Measure (Line Length) ─── */
+  /* Ancho óptimo para legibilidad - Estudios UX muestran 45-75ch es ideal */
+
+  /* Measure estrecho - Para sidebars, columnas laterales */
+  .measure-narrow {
+    max-width: 45ch;
+  }
+
+  /* Measure óptimo - Para body text, artículos, blog posts */
+  .measure {
+    max-width: 65ch;
+  }
+
+  /* Measure amplio - Para textos técnicos, tablas, código */
+  .measure-wide {
+    max-width: 85ch;
+  }
+
+  /* Measure responsive - Usa min() para adaptarse */
+  .measure-responsive {
+    max-width: min(65ch, 100%);
+  }
+
+  /* ─── Typography Utilities - Ligatures Contextuales ─── */
+
+  /* Sin ligatures - Para código, IDs, números de serie */
+  .no-ligatures {
+    font-feature-settings: 'liga' 0, 'calt' 0;
+    font-variant-ligatures: none;
+  }
+
+  /* Ligatures completas - Texto editorial */
+  .ligatures-full {
+    font-feature-settings: 'liga' 1, 'calt' 1, 'dlig' 1;
+    font-variant-ligatures: common-ligatures discretionary-ligatures;
+  }
+
+  /* Solo ligatures comunes - Default balanceado */
+  .ligatures-common {
+    font-feature-settings: 'liga' 1, 'calt' 1;
+    font-variant-ligatures: common-ligatures;
+  }
+
+  /* ─── Typography Utilities - Variable Font Control ─── */
+
+  /* Control fino de peso para hover/animaciones suaves */
+  .hover-weight-lift {
+    transition: font-variation-settings 250ms ease;
+  }
+
+  .hover-weight-lift:hover {
+    font-variation-settings: 'wght' calc(var(--font-weight) + 100);
+  }
+
+  /* Emphasis con peso intermedio (450) */
+  .font-emphasis {
+    font-weight: 450;
+  }
+
+  /* Hero titles con peso custom (750) */
+  .font-hero {
+    font-weight: 750;
+    letter-spacing: -0.025em;
   }
 }
 

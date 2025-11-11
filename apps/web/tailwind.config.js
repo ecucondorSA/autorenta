@@ -26,30 +26,50 @@ module.exports = {
           'Arial',
           'sans-serif',
         ],
+        mono: 'var(--font-mono)',
       },
 
-      /* Escala Tipográfica Modular 1.250 (Major Third) con Line Heights */
+      /* Escala Tipográfica Fluida - Responsive con clamp()
+         Adapta suavemente desde mobile (320px) hasta desktop (1920px) */
       fontSize: {
-        xs: ['0.75rem', { lineHeight: '1.4' }], // 12px
-        sm: ['0.875rem', { lineHeight: '1.5' }], // 14px
-        base: ['1rem', { lineHeight: '1.6' }], // 16px
-        lg: ['1.125rem', { lineHeight: '1.5' }], // 18px
-        xl: ['1.25rem', { lineHeight: '1.4' }], // 20px
-        '2xl': ['1.5rem', { lineHeight: '1.3' }], // 24px
-        '3xl': ['1.875rem', { lineHeight: '1.25' }], // 30px
-        '4xl': ['2.25rem', { lineHeight: '1.2' }], // 36px
-        '5xl': ['3rem', { lineHeight: '1.1' }], // 48px
-        '6xl': ['3.75rem', { lineHeight: '1' }], // 60px
-        '7xl': ['4.5rem', { lineHeight: '1' }], // 72px
+        // Small text - scaling conservador
+        xs: ['clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)', { lineHeight: '1.4' }], // 12px → 14px
+        sm: ['clamp(0.8125rem, 0.75rem + 0.3vw, 0.9375rem)', { lineHeight: '1.5' }], // 13px → 15px
+
+        // Body text - scaling moderado
+        base: ['clamp(0.9375rem, 0.875rem + 0.3vw, 1.0625rem)', { lineHeight: '1.6' }], // 15px → 17px
+        lg: ['clamp(1.0625rem, 0.95rem + 0.5vw, 1.25rem)', { lineHeight: '1.5' }], // 17px → 20px
+
+        // Subheadings - scaling significativo
+        xl: ['clamp(1.125rem, 0.95rem + 0.875vw, 1.5rem)', { lineHeight: '1.4' }], // 18px → 24px
+        '2xl': ['clamp(1.375rem, 1.1rem + 1.375vw, 1.875rem)', { lineHeight: '1.3' }], // 22px → 30px
+
+        // Headings - scaling agresivo
+        '3xl': ['clamp(1.75rem, 1.2rem + 2.75vw, 2.5rem)', { lineHeight: '1.25' }], // 28px → 40px
+        '4xl': ['clamp(2rem, 1.2rem + 4vw, 3.25rem)', { lineHeight: '1.2' }], // 32px → 52px
+
+        // Display headings - scaling muy agresivo
+        '5xl': ['clamp(2.5rem, 1.5rem + 5vw, 4rem)', { lineHeight: '1.1' }], // 40px → 64px
+        '6xl': ['clamp(3rem, 1.75rem + 6.25vw, 5rem)', { lineHeight: '1' }], // 48px → 80px
+        '7xl': ['clamp(3.5rem, 2rem + 7.5vw, 6rem)', { lineHeight: '1' }], // 56px → 96px
       },
 
-      /* Font Weights Consistentes */
+      /* Font Weights - Inter Variable permite cualquier valor 100-900
+         Pesos custom para control fino y transiciones suaves */
       fontWeight: {
+        thin: '100',
+        extralight: '200',
+        light: '300',
         normal: '400',
+        'medium-light': '450', /* Custom: Entre normal y medium */
         medium: '500',
+        'medium-bold': '550', /* Custom: Para emphasis sutil */
         semibold: '600',
+        'semi-heavy': '650', /* Custom: Para headings secundarios */
         bold: '700',
+        'extra-bold': '750', /* Custom: Para hero headings */
         extrabold: '800',
+        black: '900',
       },
 
       /* ─────────────────────────────────────────────────────────────
