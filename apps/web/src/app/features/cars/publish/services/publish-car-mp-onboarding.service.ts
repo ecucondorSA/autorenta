@@ -54,7 +54,7 @@ export class PublishCarMpOnboardingService {
       const status = await this.marketplaceService.getOnboardingStatus();
       this.mpStatus.set(status);
     } catch (error) {
-      console.error('Failed to load MP status:', error);
+      // console.error('Failed to load MP status:', error);
       this.mpStatusError.set(
         error instanceof Error ? error.message : 'Error al verificar Mercado Pago',
       );
@@ -114,7 +114,7 @@ export class PublishCarMpOnboardingService {
 
       return false;
     } catch (error) {
-      console.error('Failed to open onboarding modal:', error);
+      // console.error('Failed to open onboarding modal:', error);
       alert('Error al abrir el proceso de vinculación. Intenta nuevamente.');
       return false;
     }

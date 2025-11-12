@@ -7,6 +7,7 @@ import { CarsService } from '../../../core/services/cars.service';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
 import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
+import { FipeAutocompleteComponent } from '../../../shared/components/fipe-autocomplete/fipe-autocomplete.component';
 
 // ✅ NEW: Extracted services
 import { PublishCarFormService } from './services/publish-car-form.service';
@@ -39,6 +40,7 @@ import { PublishCarMpOnboardingService } from './services/publish-car-mp-onboard
     HostSupportInfoPanelComponent,
     StockPhotosSelectorComponent,
     AiPhotoGeneratorComponent,
+    FipeAutocompleteComponent,
   ],
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
@@ -102,6 +104,27 @@ export class PublishCarV2Page implements OnInit {
   // Expose dynamic pricing signal from service
   readonly isDynamicPricingSignal = this.formService.isDynamicPricingSignal();
 
+  // FIPE value signals (for UI state)
+  readonly valueAutoCalculated = signal(false);
+  readonly isFetchingFipeValue = signal(false);
+  readonly fipeError = signal<string | null>(null);
+  readonly allowManualValueEdit = signal(true);
+  readonly fipeMultiCurrencyValues = signal<any>(null);
+  readonly selectedFipeBrand = signal<any>(null);
+  readonly selectedFipeModel = signal<any>(null);
+  readonly suggestedPrice = signal<number | null>(null);
+  readonly selectedCategoryName = signal<string>('');
+  readonly isCalculatingSuggestedPrice = signal(false);
+
+  // FIPE autocomplete signals
+  readonly fipeBrands = signal<any[]>([]);
+  readonly fipeModels = signal<any[]>([]);
+  readonly isLoadingFipeBrands = signal(false);
+  readonly isLoadingFipeModels = signal(false);
+
+  // Year options (2013-2025)
+  readonly yearOptions = Array.from({ length: 13 }, (_, i) => 2025 - i);
+
   async ngOnInit(): Promise<void> {
     // Initialize form
     this.publishForm = this.formService.initForm();
@@ -159,6 +182,77 @@ export class PublishCarV2Page implements OnInit {
    */
   isDynamicPricing(): boolean {
     return this.formService.isDynamicPricing();
+  }
+
+  /**
+   * Enable manual editing of value_usd field
+   */
+  enableManualValueEdit(): void {
+    this.allowManualValueEdit.set(true);
+  }
+
+  /**
+   * Handle FIPE brand selection
+   */
+  onFipeBrandSelected(brand: any): void {
+    this.selectedFipeBrand.set(brand);
+    this.selectedFipeModel.set(null);
+    // TODO: Load models for selected brand
+    // this.isLoadingFipeModels.set(true);
+    // const models = await this.pricingService.getFipeModels(brand.code);
+    // this.fipeModels.set(models);
+    // this.isLoadingFipeModels.set(false);
+  }
+
+  /**
+   * Handle FIPE model selection
+   */
+  onFipeModelSelected(model: any): void {
+    this.selectedFipeModel.set(model);
+    // TODO: Fetch vehicle value from FIPE API
+    // this.isFetchingFipeValue.set(true);
+    // const result = await this.pricingService.getFipeValueRealtime({...});
+    // if (result.success) {
+    //   this.publishForm.patchValue({ value_usd: result.data.value_usd });
+    //   this.valueAutoCalculated.set(true);
+    // }
+    // this.isFetchingFipeValue.set(false);
+  }
+
+  /**
+   * Handle year change (trigger FIPE value fetch)
+   */
+  onYearChange(): void {
+    const year = this.publishForm?.get('year')?.value;
+    const brand = this.selectedFipeBrand();
+    const model = this.selectedFipeModel();
+
+    if (year && brand && model) {
+      // TODO: Re-fetch FIPE value with new year
+      // this.onFipeModelSelected(model);
+    }
+  }
+
+  /**
+   * Get placeholder text for model selection
+   */
+  getModelPlaceholder(): string {
+    const selectedBrand = this.selectedFipeBrand();
+    if (!selectedBrand) {
+      return 'Primero selecciona una marca';
+    }
+    return `Buscar modelo de ${selectedBrand.name}...`;
+  }
+
+  /**
+   * Get helper text for model selection
+   */
+  getModelHelperText(): string {
+    const selectedBrand = this.selectedFipeBrand();
+    if (!selectedBrand) {
+      return 'Primero selecciona una marca';
+    }
+    return `Selecciona el modelo de ${selectedBrand.name}`;
   }
 
   /**

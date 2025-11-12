@@ -13,6 +13,8 @@
 const ALLOWED_ORIGINS = [
   'https://autorenta.com',
   'https://www.autorenta.com',
+  'https://autorentar.com',
+  'https://www.autorentar.com',
   'https://autorenta-web.pages.dev',
   'http://localhost:4200',
   'http://localhost:8787', // Worker local

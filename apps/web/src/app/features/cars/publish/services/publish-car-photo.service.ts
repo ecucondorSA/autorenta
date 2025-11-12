@@ -152,7 +152,7 @@ export class PublishCarPhotoService {
 
       alert(`✨ Foto generada exitosamente con IA en ${result.metadata?.duration_ms}ms`);
     } catch (error) {
-      console.error('AI photo generation failed:', error);
+      // console.error('AI photo generation failed:', error);
       alert('No se pudo generar la foto. Intenta nuevamente o sube fotos manualmente.');
     } finally {
       this.isGeneratingAIPhotos.set(false);
@@ -370,11 +370,11 @@ export class PublishCarPhotoService {
       // );
 
       // this.uploadedPhotos.set(previews);
-      console.warn(
-        'loadExistingPhotos not implemented - getCarPhotos method missing in CarsService',
-      );
+      // console.warn(
+      //   'loadExistingPhotos not implemented - getCarPhotos method missing in CarsService',
+      // );
     } catch (error) {
-      console.error('Failed to load existing photos:', error);
+      // console.error('Failed to load existing photos:', error);
     }
   }
 }

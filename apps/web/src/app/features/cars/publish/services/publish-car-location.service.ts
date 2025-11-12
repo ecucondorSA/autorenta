@@ -52,7 +52,7 @@ export class PublishCarLocationService {
 
       return location;
     } catch (error) {
-      console.error('Error getting location:', error);
+      // console.error('Error getting location:', error);
       if (error instanceof Error) {
         alert(`Error al obtener ubicación: ${error.message}`);
       }
@@ -80,7 +80,7 @@ export class PublishCarLocationService {
    */
   async reverseGeocode(latitude: number, longitude: number): Promise<Address | null> {
     if (!this.MAPBOX_TOKEN) {
-      console.warn('Mapbox token not configured');
+      // console.warn('Mapbox token not configured');
       return null;
     }
 
@@ -112,7 +112,7 @@ export class PublishCarLocationService {
 
       return address;
     } catch (error) {
-      console.error('Reverse geocoding failed:', error);
+      // console.error('Reverse geocoding failed:', error);
       return null;
     }
   }
@@ -122,7 +122,7 @@ export class PublishCarLocationService {
    */
   async geocodeAddress(address: Address): Promise<GeoLocation | null> {
     if (!this.MAPBOX_TOKEN) {
-      console.warn('Mapbox token not configured');
+      // console.warn('Mapbox token not configured');
       return null;
     }
 
@@ -150,7 +150,7 @@ export class PublishCarLocationService {
 
       return location;
     } catch (error) {
-      console.error('Geocoding failed:', error);
+      // console.error('Geocoding failed:', error);
       return null;
     }
   }
