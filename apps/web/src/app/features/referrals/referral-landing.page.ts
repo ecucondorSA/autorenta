@@ -137,7 +137,7 @@ export class ReferralLandingPage implements OnInit {
       }
 
       // Si ya está autenticado, aplicar código inmediatamente
-      if (this.authService.isAuthenticated()()) {
+      if (this.authService.isAuthenticated()) {
         await this.applyCode();
       } else {
         // Guardar código en sessionStorage para aplicarlo después del registro
