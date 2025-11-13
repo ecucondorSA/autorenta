@@ -1,332 +1,120 @@
-# E2E Tests - AutorentA
+# AutoRenta - E2E Tests Suite
 
-**Generado desde PRDs con TestSprite MCP methodology**
-**Fecha**: 2025-11-04
-**Coverage**: Flujos críticos P0
+This directory contains end-to-end tests for the AutoRenta car rental platform, focusing on car publication workflows and validation scenarios.
 
----
+## 📋 Test Files
 
-## 📋 Test Suites
+### Main Publication Flow Tests
 
-### 1. Booking Flow - Wallet Payment
+1. **`complete-porsche-publication-flow.spec.ts`**
+   - Tests complete Porsche 911 publication workflow
+   - Validates luxury sports car category
+   - Tests high-end pricing tier (25,000 ARS/day)
+   - Validates automatic transmission and gasoline fuel
+   - **Tests**: 4 tests (happy path + 3 validation tests)
 
-**Archivo**: `booking-flow-wallet-payment.spec.ts`
-**PRD**: `docs/prd/booking-flow-locatario.md`
-**Priority**: P0 (Critical)
+2. **`complete-bmw-publication-flow.spec.ts`**
+   - Tests BMW X5 SUV publication workflow
+   - Validates SUV category with 7 seats
+   - Tests mid-range luxury pricing (18,000 ARS/day)
+   - **Tests**: 3 tests (happy path + 2 validation tests)
 
-**Test Coverage**:
-- ✅ T1: Happy path (complete booking with wallet)
-- ✅ E1: Insufficient wallet balance
-- ✅ E4: User tries to book own car
-- ✅ T3: View booking details
-- ✅ T4: Dynamic price calculation
+3. **`complete-mercedes-publication-flow.spec.ts`**
+   - Tests Mercedes-Benz C-Class sedan publication
+   - Validates diesel fuel option (common in European luxury)
+   - Tests executive sedan segment
+   - **Tests**: 3 tests (happy path + 2 validation tests)
 
-**Prerequisites**:
-- User authenticated with role "locatario" or "ambos"
-- User has wallet balance >$20,000
-- At least one active car published by different user
+4. **`complete-toyota-publication-flow.spec.ts`**
+   - Tests Toyota Corolla compact sedan publication
+   - Validates economy pricing tier (8,000 ARS/day)
+   - Tests hybrid fuel option
+   - Validates minimum price threshold (1,000 ARS)
+   - **Tests**: 5 tests (happy path + 4 validation tests)
 
-### 2. Wallet Deposit Flow
+### Error Scenario Tests
 
-**Archivo**: `wallet-deposit-flow.spec.ts`
-**PRD**: `docs/prd/wallet-deposit-flow.md`
-**Priority**: P0 (Critical)
+5. **`car-publication-error-scenarios.spec.ts`**
+   - Tests form validation for missing required fields
+   - Tests invalid data rejection (negative prices, invalid years, etc.)
+   - Tests XSS and SQL injection prevention
+   - Tests field-specific validations
+   - **Tests**: 14 comprehensive error scenario tests
 
-**Test Coverage**:
-- ✅ T1: Happy path (deposit with credit card)
-- ✅ T3: View transaction history
-- ✅ E2: Minimum amount validation ($500)
-- ✅ E3: Maximum amount validation ($100,000)
-- ✅ Balance display
-- ✅ Non-withdrawable funds
+### Photo Upload Tests
 
-**Prerequisites**:
-- User authenticated
-- Wallet exists for user
-- MercadoPago test credentials configured (for full test)
+6. **`car-publication-photo-validation.spec.ts`**
+   - Tests photo upload functionality
+   - Validates minimum requirement (3 photos)
+   - Validates maximum limit (10 photos)
+   - Tests file format validation (JPG, PNG, WEBP only)
+   - Tests photo preview and deletion
+   - **Tests**: 11 photo-related tests
 
----
+## 🎯 Test Coverage Summary
 
-## 🚀 Running Tests
+| Category | Test Files | Test Count | Focus Area |
+|----------|-----------|------------|------------|
+| Happy Path | 4 files | 4 tests | Complete publication flows |
+| Validations | 4 files | 12 tests | Field and business rules |
+| Error Scenarios | 1 file | 14 tests | Security and edge cases |
+| Photo Upload | 1 file | 11 tests | File upload and validation |
+| **TOTAL** | **6 files** | **41 tests** | **Comprehensive coverage** |
+
+## 🚀 Setup
+
+### 1. Install Dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure Environment Variables
+
+Edit `.env.test` and fill in your credentials:
+
+```env
+# Required
+NG_APP_SUPABASE_URL=https://obxvffplochgeiclibng.supabase.co
+NG_APP_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+
+# Optional (tests will skip features if not set)
+NG_APP_MAPBOX_ACCESS_TOKEN=your_mapbox_token_here
+NG_APP_MERCADOPAGO_PUBLIC_KEY=your_mp_public_key_here
+```
+
+**Where to get credentials:**
+- **Supabase Anon Key**: https://supabase.com/dashboard/project/obxvffplochgeiclibng/settings/api
+- **Mapbox Token**: https://account.mapbox.com/access-tokens/
+- **MercadoPago Public Key**: https://www.mercadopago.com.ar/developers/panel/app
+
+### 3. Start Development Server
+
+```bash
+npm run dev
+```
+
+## 🧪 Running Tests
 
 ### Run All E2E Tests
 
 ```bash
-# Run all E2E tests
-npx playwright test tests/e2e/ --project=chromium:visitor
-
-# Run with headed browser (see what's happening)
-npx playwright test tests/e2e/ --project=chromium:visitor --headed
-
-# Run specific suite
-npx playwright test tests/e2e/booking-flow-wallet-payment.spec.ts
-npx playwright test tests/e2e/wallet-deposit-flow.spec.ts
-```
-
-### Run Specific Tests
-
-```bash
-# Run only happy path tests
-npx playwright test tests/e2e/ -g "T1:"
-
-# Run only edge case tests
-npx playwright test tests/e2e/ -g "E[0-9]:"
-
-# Run specific test by name
-npx playwright test tests/e2e/ -g "should complete booking successfully"
-```
-
-### Run with Different Browsers
-
-```bash
-# Chrome
-npx playwright test tests/e2e/ --project=chromium:visitor
-
-# Mobile Chrome
-npx playwright test tests/e2e/ --project=mobile-chrome:owner
-
-# Mobile Safari
-npx playwright test tests/e2e/ --project=mobile-safari:renter
-```
-
-### Debug Tests
-
-```bash
-# Debug mode (opens DevTools)
-npx playwright test tests/e2e/ --debug
-
-# Show trace on failure
-npx playwright test tests/e2e/ --trace on
-
-# Generate HTML report
 npx playwright test tests/e2e/
-npx playwright show-report
 ```
 
----
-
-## 🔧 Test Configuration
-
-### Environment Variables
-
-Create `.env.test` with:
+### Run Specific Test File
 
 ```bash
-# Test Users
-TEST_LOCATARIO_EMAIL=test+locatario@autorentar.com
-TEST_LOCATARIO_PASSWORD=TestPassword123!
-
-TEST_LOCADOR_EMAIL=test+locador@autorentar.com
-TEST_LOCADOR_PASSWORD=TestPassword123!
-
-# Test Data
-TEST_CAR_OWNER_USER=true            # For E4: booking own car test
-TEST_LOW_BALANCE_USER=false         # For E1: insufficient balance test
-TEST_EXISTING_BOOKING_ID=uuid       # For T3: view booking details
-TEST_USER_WITH_CASH_DEPOSITS=false  # For non-withdrawable funds test
-
-# API URLs
-API_BASE_URL=http://localhost:4200
-SUPABASE_URL=https://obxvffplochgeiclibng.supabase.co
-SUPABASE_ANON_KEY=your-anon-key
-
-# MercadoPago (Optional for payment tests)
-MERCADOPAGO_TEST_PUBLIC_KEY=TEST-xxx
+npx playwright test tests/e2e/complete-porsche-publication-flow.spec.ts
 ```
 
-### Playwright Config
+### Run in Headed Mode
 
-Tests use existing `playwright.config.ts` with projects:
-- `chromium:visitor` - For booking tests
-- `chromium:renter` - For authenticated renter tests
-- `chromium:owner` - For owner tests
-
----
-
-## 📊 Expected Results
-
-### Success Metrics
-
-| Metric | Target | Status |
-|--------|--------|--------|
-| **Pass Rate** | >90% | 🟡 Pending |
-| **Test Duration** | <5 min | 🟡 Pending |
-| **Coverage** | 80%+ of P0 flows | ✅ Achieved |
-| **False Positives** | <5% | 🟡 Pending |
-
-### Known Limitations
-
-1. **MercadoPago Integration**: Tests skip actual payment submission (requires sandbox)
-2. **Webhook Processing**: Tests don't wait for real webhooks (mock/simulate instead)
-3. **Date Picker**: Depends on actual calendar implementation (may need adjustment)
-4. **Test Data**: Requires users, cars, and bookings in database
-
----
-
-## 🎯 Test Selectors (data-testid)
-
-### Wallet Balance Card
-```typescript
-// Total balance
-page.locator('[data-testid="wallet-balance"]')
-
-// Available balance
-page.locator('[data-testid="available-balance"]')
-
-// Locked balance (funds in active bookings)
-page.locator('[data-testid="locked-balance"]')
-page.locator('[data-testid="locked-balance-card"]')
-
-// Deposit button
-page.locator('[data-testid="deposit-button"]')
-```
-
-### Transaction History
-```typescript
-// History container
-page.locator('[data-testid="transaction-history"]')
-
-// Individual transaction items
-page.locator('[data-testid="transaction-item"]')
-
-// Empty state (no transactions)
-page.locator('[data-testid="empty-transactions"]')
-```
-
-### Deposit Modal
-```typescript
-// Modal container
-page.locator('[data-testid="deposit-modal"]')
-
-// Amount input field
-page.locator('[data-testid="deposit-amount-input"]')
-// Or by name attribute
-page.locator('input[name="amount"]')
-```
-
-### Alternative Selectors (Role-based)
-```typescript
-// Buttons by accessible role
-page.getByRole('button', { name: /depositar/i })
-page.getByRole('button', { name: /continuar/i })
-page.getByRole('button', { name: /reservar/i })
-
-// Form inputs
-page.locator('input[type="number"]').first()
-```
-
-**Best Practice**: Always prefer `data-testid` over CSS selectors for stability.
-
----
-
-## 🐛 Troubleshooting
-
-### Tests Fail Immediately
-
-**Problem**: Tests can't find elements
-
-**Solutions**:
-1. Verify server is running: `http://localhost:4200`
-2. Check authentication: User should be logged in
-3. Verify test data exists in database
-4. Check `data-testid` attributes in components
-
-### Splash Loader Issues
-
-**Problem**: Splash loader blocks clicks
-
-**Solution**: Tests already handle this with:
-```typescript
-await page.locator('app-splash-loader')
-  .waitFor({ state: 'detached', timeout: 10000 })
-  .catch(() => {});
-```
-
-### MercadoPago Redirect
-
-**Problem**: Tests fail at MercadoPago redirect
-
-**Solution**: Tests skip payment submission by default. To test payments:
-1. Configure MercadoPago sandbox credentials
-2. Set `MERCADOPAGO_TEST_PUBLIC_KEY` in `.env.test`
-3. Remove `test.skip()` in payment tests
-
-### Insufficient Balance
-
-**Problem**: E1 test (insufficient balance) always skips
-
-**Solution**: Create test user with low balance:
-```sql
-INSERT INTO user_wallets (user_id, balance) VALUES
-('test-low-balance-user-id', 5000);
-```
-
-Then set `TEST_LOW_BALANCE_USER=true` in `.env.test`
-
----
-
-## 📈 Adding New Tests
-
-### 1. Create Test File
-
-```typescript
-// tests/e2e/my-feature.spec.ts
-import { test, expect } from '@playwright/test';
-
-test.describe('My Feature', () => {
-  test('should do something', async ({ page }) => {
-    // Test implementation
-  });
-});
-```
-
-### 2. Follow PRD Structure
-
-- Read PRD: `docs/prd/my-feature.md`
-- Identify test scenarios (T1, T2, E1, E2...)
-- Implement happy path first
-- Add edge cases
-- Add assertions from PRD
-
-### 3. Use Consistent Naming
-
-- `T1:` - Happy path tests
-- `E1:` - Edge case tests
-- `should` - Test description
-
-### 4. Add to CI/CD
-
-Update `.github/workflows/testsprite-e2e.yml`:
-```yaml
-- name: Run E2E Tests
-  run: npx playwright test tests/e2e/
+```bash
+npx playwright test tests/e2e/complete-porsche-publication-flow.spec.ts --headed
 ```
 
 ---
 
-## 🔗 Related Documentation
-
-- **[TestSprite Integration Spec](../../docs/implementation/TESTSPRITE_MCP_INTEGRATION_SPEC.md)**
-- **[PRD: Booking Flow](../../docs/prd/booking-flow-locatario.md)**
-- **[PRD: Wallet Deposit](../../docs/prd/wallet-deposit-flow.md)**
-- **[Testing Commands](../../docs/TESTING_COMMANDS.md)**
-
----
-
-## ✅ Test Checklist
-
-Before committing tests:
-
-- [ ] Tests run locally and pass
-- [ ] Tests have descriptive names
-- [ ] Tests follow PRD scenarios
-- [ ] Assertions are clear and specific
-- [ ] Edge cases are covered
-- [ ] Tests are independent (no order dependency)
-- [ ] Tests clean up after themselves
-- [ ] Documentation updated
-
----
-
-**Generated by**: Claude Code + TestSprite MCP methodology
-**Last Updated**: 2025-11-06 (Added data-testid selectors)
+**Last Updated**: 2025-11-13
+**Test Count**: 41 tests across 6 files
