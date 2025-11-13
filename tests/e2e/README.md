@@ -114,7 +114,50 @@ npx playwright test tests/e2e/complete-porsche-publication-flow.spec.ts
 npx playwright test tests/e2e/complete-porsche-publication-flow.spec.ts --headed
 ```
 
+## ☁️ Cloud Testing with TestSprite (Recommended)
+
+**TestSprite** is an AI-powered cloud testing platform that runs these tests automatically in the cloud via GitHub Actions.
+
+### ✅ Benefits
+
+- No local browser setup required
+- Tests run on every push and PR
+- Parallel execution (6 test suites simultaneously)
+- Automatic PR comments with results
+- AI-powered failure analysis
+- Complete test reports as artifacts
+
+### 🚀 Quick Start (GitHub Actions)
+
+**Tests run automatically** when you:
+1. Push to `main` or `develop` branches
+2. Open a pull request
+3. Change files in `tests/e2e/**` or `apps/web/**`
+
+**Manual trigger:**
+1. Go to **Actions** tab in GitHub
+2. Select "TestSprite E2E Tests"
+3. Click "Run workflow"
+4. View results in real-time
+
+### 📖 Full Documentation
+
+For complete setup instructions, troubleshooting, and TestSprite features:
+- **[TestSprite Setup Guide](../../docs/testing/TESTSPRITE_SETUP.md)**
+
+### Required GitHub Secrets
+
+Configure these in your repository settings:
+
+```bash
+SUPABASE_URL=https://pisqjmoklivzpwufhscx.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+MAPBOX_ACCESS_TOKEN=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6...
+TESTSPRITE_API_KEY=your_api_key_here  # Optional, for enhanced features
+```
+
 ---
 
 **Last Updated**: 2025-11-13
 **Test Count**: 41 tests across 6 files
+**Cloud Platform**: TestSprite + GitHub Actions
