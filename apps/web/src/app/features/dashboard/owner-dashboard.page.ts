@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import type { DashboardStats } from '../../core/models/dashboard.model';
 import { DashboardService } from '../../core/services/dashboard.service';
+import { NotificationsService } from '../../core/services/user-notifications.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
 import { MissingDocumentsWidgetComponent } from '../../shared/components/missing-documents-widget/missing-documents-widget.component';
@@ -26,6 +27,7 @@ import { PayoutsHistoryComponent } from './components/payouts-history/payouts-hi
 })
 export class OwnerDashboardPage implements OnInit {
   private readonly dashboardService = inject(DashboardService);
+  private readonly notificationsService = inject(NotificationsService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -67,8 +69,16 @@ export class OwnerDashboardPage implements OnInit {
 
   readonly isGrowthPositive = computed(() => this.growthPercentage() >= 0);
 
+  // Notifications computed signals
+  readonly notifications = this.notificationsService.notifications;
+  readonly unreadCount = this.notificationsService.unreadCount;
+  readonly recentNotifications = computed(() => 
+    this.notifications().slice(0, 5) // Last 5 notifications
+  );
+
   async ngOnInit() {
     await this.loadDashboardData();
+    // Notifications are loaded automatically by the service
   }
 
   getRetryAction() {

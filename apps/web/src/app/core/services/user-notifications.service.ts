@@ -24,7 +24,7 @@ export class NotificationsService {
   readonly unreadCount = signal(0);
 
   constructor() {
-    this.loadNotifications();
+    this.loadNotificationsInternal();
     void this.subscribeToRealtime();
   }
 
@@ -35,7 +35,14 @@ export class NotificationsService {
     await this.loadNotifications();
   }
 
-  private async loadNotifications() {
+  /**
+   * Método público para cargar notificaciones
+   */
+  async loadNotifications(): Promise<void> {
+    await this.loadNotificationsInternal();
+  }
+
+  private async loadNotificationsInternal() {
     try {
       const {
         data: { user },

@@ -243,6 +243,59 @@
         </div>
       </div>
 
+      <!-- Recent Notifications -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary">
+            🔔 Notificaciones Recientes
+          </h2>
+          <a
+            routerLink="/notifications"
+            class="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
+          >
+            Ver todas →
+          </a>
+        </div>
+        @if (recentNotifications().length === 0) {
+          <div class="text-center py-8">
+            <p class="text-text-secondary dark:text-text-secondary/70">
+              No tienes notificaciones
+            </p>
+          </div>
+        } @else {
+          <div class="space-y-3">
+            @for (notification of recentNotifications(); track notification.id) {
+              <div
+                class="flex items-start gap-3 p-3 rounded-lg border border-border-default dark:border-neutral-700 hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors cursor-pointer"
+                [class.bg-primary-50]="!notification.read"
+                [class.dark:bg-primary-900/20]="!notification.read"
+                [routerLink]="notification.actionUrl || '/notifications'"
+              >
+                <div class="flex-1 min-w-0">
+                  <p
+                    class="text-sm font-medium text-text-primary dark:text-text-primary"
+                    [class.font-semibold]="!notification.read"
+                  >
+                    {{ notification.title }}
+                  </p>
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1 line-clamp-2">
+                    {{ notification.message }}
+                  </p>
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/50 mt-1">
+                    {{ notification.createdAt | date: 'short' }}
+                  </p>
+                </div>
+                @if (!notification.read) {
+                  <span class="w-2 h-2 bg-primary-600 rounded-full flex-shrink-0 mt-2"></span>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+
       <!-- Quick Actions -->
       <div
         class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
