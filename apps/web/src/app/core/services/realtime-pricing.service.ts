@@ -263,7 +263,7 @@ export class RealtimePricingService {
         .eq('is_active', true)
         .order('last_updated', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       if (data) {
@@ -284,7 +284,11 @@ export class RealtimePricingService {
         .select('*')
         .order('timestamp', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.warn('Failed to load demand snapshots (table may not exist yet):', error);
+        return;
+      }
+
       if (data) {
         // Agrupar por región (mantener solo el más reciente)
         const snapshotsByRegion = new Map<string, DemandSnapshot>();
@@ -296,8 +300,9 @@ export class RealtimePricingService {
 
         this.demandByRegion.set(snapshotsByRegion);
       }
-    } catch {
+    } catch (error) {
       // Silently ignore demand by region errors
+      console.warn('Failed to load demand snapshots:', error);
     }
   }
 

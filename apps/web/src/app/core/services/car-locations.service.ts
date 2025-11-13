@@ -381,6 +381,11 @@ export class CarLocationsService {
         .maybeSingle();
 
       if (error) {
+        // Silently handle car_stats table not existing (ratings are on cars table)
+        if (error.code === 'PGRST205') {
+          // Table doesn't exist - this is expected, ratings come from cars table
+          return 0;
+        }
         console.warn(`Error fetching review count for car ${carId}:`, error);
         return 0;
       }
@@ -438,7 +443,10 @@ export class CarLocationsService {
           .in('car_id', uncachedIds);
 
         if (error) {
-          console.warn('Error batch fetching review counts:', error);
+          // Silently handle car_stats table not existing (ratings are on cars table)
+          if (error.code !== 'PGRST205') {
+            console.warn('Error batch fetching review counts:', error);
+          }
           // Set 0 for all uncached
           uncachedIds.forEach((id) => result.set(id, 0));
         } else {
