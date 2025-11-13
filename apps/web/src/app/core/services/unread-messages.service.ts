@@ -2,6 +2,9 @@ import { Injectable, signal, inject, computed, effect, Injector, DestroyRef } fr
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
+import { CarOwnerNotificationsService } from './car-owner-notifications.service';
+import { CarsService } from './cars.service';
+import { ProfileService } from './profile.service';
 
 export interface UnreadConversation {
   conversationId: string; // booking_id or car_id
@@ -23,6 +26,9 @@ export interface UnreadConversation {
 export class UnreadMessagesService {
   private readonly supabase = injectSupabase();
   private readonly authService = inject(AuthService);
+  private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
+  private readonly carsService = inject(CarsService);
+  private readonly profileService = inject(ProfileService);
 
   private realtimeChannel?: RealtimeChannel;
 
@@ -45,7 +51,7 @@ export class UnreadMessagesService {
           this.cleanup();
         }
       },
-      { injector: this.injector, allowSignalWrites: true },
+      { injector: this.injector },
     );
   }
 
@@ -64,7 +70,7 @@ export class UnreadMessagesService {
       await this.fetchUnreadConversations(user.id);
       this.subscribeToNewMessages(user.id);
     } catch (_error) {
-      console.error('Error initializing unread messages:', _error);
+      // Silent fail
     } finally {
       this.isLoading.set(false);
     }
@@ -123,7 +129,7 @@ export class UnreadMessagesService {
 
       this.unreadConversations.set(Array.from(conversationsMap.values()));
     } catch (_error) {
-      console.error('Error fetching unread conversations:', _error);
+      // Silent fail
     }
   }
 
@@ -169,7 +175,7 @@ export class UnreadMessagesService {
   /**
    * Handle new message received via real-time
    */
-  private handleNewMessage(message: unknown): void {
+  private async handleNewMessage(message: unknown): Promise<void> {
     const conversationId = (message as any).booking_id || (message as any).car_id;
     if (!conversationId) return;
 
@@ -203,6 +209,56 @@ export class UnreadMessagesService {
 
     // Play notification sound
     this.playNotificationSound();
+
+    // ✅ NUEVO: Mostrar notificación profesional si es un mensaje sobre un auto
+    // Solo si el usuario actual es el dueño del auto (recipient)
+    const currentUser = this.authService.session$()?.user;
+    if (currentUser && (message as any).recipient_id === currentUser.id) {
+      const carId = (message as any).car_id;
+      if (carId && type === 'car') {
+        // Mostrar notificación de forma asíncrona sin bloquear
+        this.showCarMessageNotification(
+          carId,
+          (message as any).sender_id,
+          (message as any).body
+        ).catch(() => {
+          // Silently fail - notification is optional enhancement
+        });
+      }
+    }
+  }
+
+  /**
+   * Muestra notificación profesional cuando llega un mensaje sobre un auto
+   */
+  private async showCarMessageNotification(
+    carId: string,
+    senderId: string,
+    messageBody: string
+  ): Promise<void> {
+    try {
+      // Obtener información del auto y del remitente en paralelo
+      const [car, sender] = await Promise.all([
+        this.carsService.getCarById(carId),
+        this.profileService.getProfileById(senderId),
+      ]);
+
+      if (car && sender) {
+        const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
+        const senderName = sender.full_name || 'Un usuario';
+        const chatUrl = `/messages?carId=${carId}&userId=${senderId}`;
+
+        this.carOwnerNotifications.notifyNewChatMessage(
+          senderName,
+          carName,
+          messageBody,
+          chatUrl
+        );
+      }
+    } catch (error) {
+      // Silently fail - notification is optional enhancement
+      console.debug('Could not show car message notification:', error);
+    }
   }
 
   /**
@@ -262,7 +318,7 @@ export class UnreadMessagesService {
       );
       this.unreadConversations.set(conversations);
     } catch (_error) {
-      console.error('Error marking conversation as read:', _error);
+      // Silent fail
     }
   }
 

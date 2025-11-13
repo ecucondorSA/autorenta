@@ -31,9 +31,26 @@
   >
     <div class="dropdown-header">
       <h3>Notificaciones</h3>
-      <button *ngIf="unreadCount() > 0" class="mark-all-read" (click)="markAllAsRead()">
-        Marcar todas como leídas
-      </button>
+      <div class="header-actions">
+        <button
+          class="refresh-btn"
+          (click)="refreshNotifications(); $event.stopPropagation()"
+          title="Actualizar notificaciones"
+          type="button"
+        >
+          <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            />
+          </svg>
+        </button>
+        <button *ngIf="unreadCount() > 0" class="mark-all-read" (click)="markAllAsRead()">
+          Marcar todas como leídas
+        </button>
+      </div>
     </div>
 
     <div class="notifications-list">
@@ -48,6 +65,13 @@
           />
         </svg>
         <p>No tienes notificaciones</p>
+        <button
+          class="generate-notifications-btn"
+          (click)="generateMissingDocumentNotifications(); $event.stopPropagation()"
+          type="button"
+        >
+          Verificar documentos faltantes
+        </button>
       </div>
 
       <!-- Notifications -->
@@ -55,34 +79,52 @@
         *ngFor="let notification of recentNotifications()"
         class="notification-item"
         [class.unread]="!notification.read"
-        (click)="handleNotificationClick(notification)"
       >
-        <div class="notification-icon">
-          {{ getNotificationIcon(notification.type) }}
+        <div class="notification-main" (click)="handleNotificationClick(notification)">
+          <div class="notification-icon">
+            {{ getNotificationIcon(notification.type) }}
+          </div>
+
+          <div class="notification-content">
+            <div class="notification-header">
+              <h4 class="notification-title">{{ notification.title }}</h4>
+              <span class="notification-time">{{ getTimeAgo(notification.createdAt) }}</span>
+            </div>
+            <p class="notification-message">{{ notification.message }}</p>
+
+            <div *ngIf="notification.actionText" class="notification-action">
+              <span class="action-text">{{ notification.actionText }}</span>
+              <svg class="action-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Unread indicator -->
+          <div *ngIf="!notification.read" class="unread-dot"></div>
         </div>
 
-        <div class="notification-content">
-          <div class="notification-header">
-            <h4 class="notification-title">{{ notification.title }}</h4>
-            <span class="notification-time">{{ getTimeAgo(notification.createdAt) }}</span>
-          </div>
-          <p class="notification-message">{{ notification.message }}</p>
-
-          <div *ngIf="notification.actionText" class="notification-action">
-            <span class="action-text">{{ notification.actionText }}</span>
-            <svg class="action-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </div>
-        </div>
-
-        <!-- Unread indicator -->
-        <div *ngIf="!notification.read" class="unread-dot"></div>
+        <!-- Delete button -->
+        <button
+          class="notification-delete-btn"
+          (click)="deleteNotification(notification); $event.stopPropagation()"
+          title="Eliminar notificación"
+          type="button"
+        >
+          <svg class="delete-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </svg>
+        </button>
       </div>
     </div>
 

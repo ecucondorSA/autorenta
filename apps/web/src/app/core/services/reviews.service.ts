@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import type {
   Review,
   CreateReviewParams,
@@ -8,6 +8,9 @@ import type {
   ReviewType,
 } from '../models';
 import { injectSupabase } from './supabase-client.service';
+import { CarOwnerNotificationsService } from './car-owner-notifications.service';
+import { CarsService } from './cars.service';
+import { ProfileService } from './profile.service';
 
 export interface CreateReviewResult {
   success: boolean;
@@ -30,6 +33,9 @@ interface ReviewWithReviewer {
 })
 export class ReviewsService {
   private readonly supabase = injectSupabase();
+  private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
+  private readonly carsService = inject(CarsService);
+  private readonly profileService = inject(ProfileService);
 
   // Signals privados para estado reactivo
   private readonly reviewsSignal = signal<Review[]>([]);
@@ -97,9 +103,19 @@ export class ReviewsService {
 
       if (error) throw error;
 
+      const reviewId = data as string;
+
+      // ✅ NUEVO: Notificar al dueño del auto sobre la nueva reseña (si es renter_to_owner)
+      if (params.review_type === 'renter_to_owner') {
+        this.notifyOwnerOfNewReview(reviewId, params).catch((error) => {
+          // Silently fail - notification is optional enhancement
+          console.debug('Could not notify owner of new review', error);
+        });
+      }
+
       return {
         success: true,
-        review_id: data as string,
+        review_id: reviewId,
       };
     } catch (error: unknown) {
       return {
@@ -641,6 +657,60 @@ export class ReviewsService {
         success: false,
         error: error instanceof Error ? error.message : 'Error al moderar las reviews',
       };
+    }
+  }
+
+  /**
+   * Notifica al dueño del auto sobre una nueva reseña
+   */
+  private async notifyOwnerOfNewReview(
+    reviewId: string,
+    params: CreateReviewParams
+  ): Promise<void> {
+    try {
+      if (!params.car_id || !params.reviewee_id) return;
+
+      // Obtener el ID del reseñador desde el usuario autenticado
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+      if (!user?.id) return;
+
+      // Obtener información del auto y del reseñador en paralelo
+      const [car, reviewer] = await Promise.all([
+        this.carsService.getCarById(params.car_id),
+        this.profileService.getProfileById(user.id),
+      ]);
+
+      if (car && reviewer) {
+        const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
+        const reviewerName = reviewer.full_name || 'Un usuario';
+        
+        // Calcular rating promedio de las 6 categorías
+        const ratings = [
+          params.rating_cleanliness,
+          params.rating_communication,
+          params.rating_accuracy,
+          params.rating_location,
+          params.rating_checkin,
+          params.rating_value,
+        ];
+        const avgRating = Math.round(
+          ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+        );
+
+        const reviewUrl = `/cars/${params.car_id}/reviews`;
+
+        this.carOwnerNotifications.notifyNewReview(
+          reviewerName,
+          avgRating,
+          carName,
+          reviewUrl
+        );
+      }
+    } catch (error) {
+      // Silently fail - notification is optional enhancement
+      console.debug('Could not notify owner of new review', error);
     }
   }
 }

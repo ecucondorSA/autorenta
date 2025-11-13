@@ -8,7 +8,9 @@ import {
   VehicleDocumentKind,
   UploadDocumentParams,
 } from '../../../core/services/vehicle-documents.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { CarOwnerNotificationsService } from '../../../core/services/car-owner-notifications.service';
+import { CarsService } from '../../../core/services/cars.service';
 
 /**
  * VehicleDocumentsPage
@@ -36,7 +38,9 @@ export class VehicleDocumentsPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly documentsService = inject(VehicleDocumentsService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
+  private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
+  private readonly carsService = inject(CarsService);
 
   readonly carId = signal<string>('');
   readonly loading = signal(true);
@@ -78,6 +82,12 @@ export class VehicleDocumentsPage implements OnInit {
     this.carId.set(id);
     await this.loadDocuments();
     await this.loadExpiringDocuments();
+    
+    // ✅ NUEVO: Suscribirse a cambios de estado de documentos
+    this.subscribeToDocumentStatusChanges();
+    
+    // ✅ NUEVO: Verificar y notificar documentos próximos a vencer
+    this.checkExpiringDocuments();
   }
 
   async loadDocuments() {
@@ -287,6 +297,72 @@ export class VehicleDocumentsPage implements OnInit {
   goBack() {
     this.router.navigate(['/cars', this.carId()]);
   }
+
+  /**
+   * Suscribirse a cambios de estado de documentos
+   */
+  private subscribeToDocumentStatusChanges(): void {
+    const unsubscribe = this.documentsService.subscribeToDocumentStatusChanges(
+      this.carId(),
+      async (document) => {
+        const car = await this.carsService.getCarById(this.carId());
+        if (!car) return;
+
+        const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
+        const documentType = this.documentsService.getDocumentKindLabel(document.kind);
+        const documentsUrl = `/cars/${this.carId()}/documents`;
+
+        this.carOwnerNotifications.notifyDocumentStatusChanged(
+          documentType,
+          carName,
+          document.status as 'verified' | 'rejected',
+          document.notes || undefined,
+          documentsUrl
+        );
+      }
+    );
+
+    // Cleanup on destroy (se puede mejorar con OnDestroy)
+    // Por ahora se mantiene activo mientras la página esté abierta
+  }
+
+  /**
+   * Verificar y notificar documentos próximos a vencer
+   */
+  private async checkExpiringDocuments(): Promise<void> {
+    try {
+      const expiringDocs = this.expiringDocs();
+      
+      for (const doc of expiringDocs) {
+        const car = await this.carsService.getCarById(this.carId());
+        if (!car) continue;
+
+        const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
+        const documentType = this.documentsService.getDocumentKindLabel(doc.kind);
+        const documentsUrl = `/cars/${this.carId()}/documents`;
+
+        if (doc.expiry_date) {
+          const expiryDate = new Date(doc.expiry_date);
+          const today = new Date();
+          const daysUntilExpiry = Math.ceil((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+          if (daysUntilExpiry > 0 && daysUntilExpiry <= 30) {
+            this.carOwnerNotifications.notifyDocumentExpiring(
+              documentType,
+              carName,
+              daysUntilExpiry,
+              documentsUrl
+            );
+            // Pequeña pausa entre notificaciones
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
+      }
+    } catch (error) {
+      console.debug('Could not check expiring documents', error);
+    }
+  }
+
   getMissingDocsLabel(): string {
     return this.getMissingRequiredDocs()
       .map((k) => this.getDocumentKindLabel(k))

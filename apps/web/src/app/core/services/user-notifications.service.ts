@@ -28,6 +28,13 @@ export class NotificationsService {
     void this.subscribeToRealtime();
   }
 
+  /**
+   * Método público para refrescar notificaciones manualmente
+   */
+  async refresh(): Promise<void> {
+    await this.loadNotifications();
+  }
+
   private async loadNotifications() {
     try {
       const {

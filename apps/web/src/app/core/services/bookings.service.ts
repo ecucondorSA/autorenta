@@ -11,6 +11,10 @@ import { BookingCompletionService } from './booking-completion.service';
 import { BookingValidationService } from './booking-validation.service';
 import { BookingCancellationService } from './booking-cancellation.service';
 import { BookingUtilsService } from './booking-utils.service';
+import { TikTokEventsService } from './tiktok-events.service';
+import { CarOwnerNotificationsService } from './car-owner-notifications.service';
+import { CarsService } from './cars.service';
+import { ProfileService } from './profile.service';
 
 /**
  * Core booking service
@@ -25,6 +29,7 @@ export class BookingsService {
   private readonly pwaService = inject(PwaService);
   private readonly insuranceService = inject(InsuranceService);
   private readonly logger = inject(LoggerService);
+  private readonly tiktokEvents = inject(TikTokEventsService);
 
   // Specialized booking services
   private readonly walletService = inject(BookingWalletService);
@@ -33,6 +38,11 @@ export class BookingsService {
   private readonly validationService = inject(BookingValidationService);
   private readonly cancellationService = inject(BookingCancellationService);
   private readonly utilsService = inject(BookingUtilsService);
+  
+  // Notification services
+  private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
+  private readonly carsService = inject(CarsService);
+  private readonly profileService = inject(ProfileService);
 
   // ============================================================================
   // CORE CRUD OPERATIONS
@@ -109,11 +119,23 @@ export class BookingsService {
 
     // Fetch the updated booking
     const updated = await this.getBookingById(bookingId);
-    if (updated) {
-      return updated;
-    }
+    const finalBooking = updated || { ...(data as Booking), id: bookingId };
 
-    return { ...(data as Booking), id: bookingId };
+    // 🎯 TikTok Events: Track PlaceAnOrder
+    void this.tiktokEvents.trackPlaceAnOrder({
+      contentId: finalBooking.car_id,
+      contentName: finalBooking.car_title || (finalBooking.car as any)?.title || 'Auto',
+      value: finalBooking.total_amount || 0,
+      currency: finalBooking.currency || 'ARS',
+    });
+
+    // ✅ NUEVO: Notificar al dueño del auto sobre la nueva solicitud de reserva
+    this.notifyOwnerOfNewBooking(finalBooking).catch((error) => {
+      // Silently fail - notification is optional enhancement
+      this.logger.debug('Could not notify owner of new booking', error);
+    });
+
+    return finalBooking;
   }
 
   /**
@@ -197,11 +219,17 @@ export class BookingsService {
 
     // Fetch the updated booking
     const updated = await this.getBookingById(bookingId);
-    if (updated) {
-      return updated;
-    }
+    const finalBooking = updated || { ...(data as Booking), id: bookingId };
 
-    return { ...(data as Booking), id: bookingId };
+    // 🎯 TikTok Events: Track PlaceAnOrder
+    void this.tiktokEvents.trackPlaceAnOrder({
+      contentId: finalBooking.car_id,
+      contentName: finalBooking.car_title || (finalBooking.car as any)?.title || 'Auto',
+      value: finalBooking.total_amount || 0,
+      currency: finalBooking.currency || 'ARS',
+    });
+
+    return finalBooking;
   }
 
   /**
@@ -294,6 +322,9 @@ export class BookingsService {
    * Mark booking as paid
    */
   async markAsPaid(bookingId: string, paymentIntentId: string): Promise<void> {
+    // Fetch booking details before updating
+    const booking = await this.getBookingById(bookingId);
+
     const { error } = await this.supabase
       .from('bookings')
       .update({
@@ -304,6 +335,16 @@ export class BookingsService {
       .eq('id', bookingId);
 
     if (error) throw error;
+
+    // 🎯 TikTok Events: Track Purchase
+    if (booking) {
+      void this.tiktokEvents.trackPurchase({
+        contentId: booking.car_id,
+        contentName: booking.car_title || (booking.car as any)?.title || 'Auto',
+        value: booking.total_amount || 0,
+        currency: booking.currency || 'ARS',
+      });
+    }
   }
 
   /**
@@ -820,6 +861,38 @@ export class BookingsService {
       throw new Error(
         `Failed to load insurance coverage: ${coverageException instanceof Error ? coverageException.message : getErrorMessage(coverageException)}`,
       );
+    }
+  }
+
+  /**
+   * Notifica al dueño del auto sobre una nueva solicitud de reserva
+   */
+  private async notifyOwnerOfNewBooking(booking: Booking): Promise<void> {
+    try {
+      if (!booking.owner_id || !booking.car_id) return;
+
+      // Obtener información del auto y del locatario en paralelo
+      const [car, renter] = await Promise.all([
+        this.carsService.getCarById(booking.car_id),
+        this.profileService.getProfileById(booking.user_id || booking.renter_id || ''),
+      ]);
+
+      if (car && renter) {
+        const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
+        const renterName = renter.full_name || 'Un usuario';
+        const pricePerDay = (booking as any).price_per_day || 0;
+        const bookingUrl = `/bookings/${booking.id}`;
+
+        this.carOwnerNotifications.notifyNewBookingRequest(
+          renterName,
+          carName,
+          pricePerDay,
+          bookingUrl
+        );
+      }
+    } catch (error) {
+      // Silently fail - notification is optional enhancement
+      this.logger.debug('Could not notify owner of new booking', String(error));
     }
   }
 }

@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, map, catchError, of } from 'rxjs';
 import { injectSupabase } from './supabase-client.service';
+import { CarOwnerNotificationsService } from './car-owner-notifications.service';
+import { CarsService } from './cars.service';
 
 /**
  * VehicleDocumentsService
@@ -61,6 +63,8 @@ export interface UploadDocumentParams {
 export class VehicleDocumentsService {
   private readonly supabase = injectSupabase();
   private readonly BUCKET_NAME = 'vehicle-documents';
+  private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
+  private readonly carsService = inject(CarsService);
 
   /**
    * Obtener todos los documentos de un vehículo
@@ -145,7 +149,39 @@ export class VehicleDocumentsService {
       throw new Error(`Error creating document record: ${dbError.message}`);
     }
 
-    return data as VehicleDocument;
+    const document = data as VehicleDocument;
+
+    // ✅ NUEVO: Notificar al usuario que el documento fue subido
+    this.notifyDocumentUploaded(document).catch(() => {
+      // Silently fail - notification is optional
+    });
+
+    return document;
+  }
+
+  /**
+   * Notifica al usuario cuando se sube un documento
+   */
+  private async notifyDocumentUploaded(document: VehicleDocument): Promise<void> {
+    try {
+      const car = await this.carsService.getCarById(document.car_id);
+      if (!car) return;
+
+      const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
+      const documentType = this.getDocumentKindLabel(document.kind);
+      const documentsUrl = `/cars/${document.car_id}/documents`;
+
+      this.carOwnerNotifications.notifyDocumentStatusChanged(
+        documentType,
+        carName,
+        'verified' as any, // Se acaba de subir, está pendiente
+        undefined,
+        documentsUrl
+      );
+    } catch (error) {
+      // Silently fail
+      console.debug('Could not notify document upload', error);
+    }
   }
 
   /**
@@ -246,6 +282,68 @@ export class VehicleDocumentsService {
 
     const verifiedKinds = new Set((data || []).map((d) => d.kind));
     return requiredKinds.every((kind) => verifiedKinds.has(kind));
+  }
+
+  /**
+   * Obtener lista de documentos faltantes para un auto
+   */
+  async getMissingDocuments(carId: string): Promise<VehicleDocumentKind[]> {
+    const requiredKinds: VehicleDocumentKind[] = [
+      'registration',
+      'insurance',
+      'technical_inspection',
+    ];
+
+    const { data, error } = await this.supabase
+      .from('vehicle_documents')
+      .select('kind, status')
+      .eq('car_id', carId)
+      .in('kind', requiredKinds)
+      .eq('status', 'verified');
+
+    if (error) {
+      console.error('Error checking documents:', error);
+      return requiredKinds; // Si hay error, asumir que faltan todos
+    }
+
+    const verifiedKinds = new Set((data || []).map((d) => d.kind));
+    return requiredKinds.filter((kind) => !verifiedKinds.has(kind));
+  }
+
+  /**
+   * Suscribirse a cambios de estado de documentos para notificar al usuario
+   * 
+   * @param carId - ID del auto
+   * @param callback - Callback cuando cambia el estado
+   */
+  subscribeToDocumentStatusChanges(
+    carId: string,
+    callback: (document: VehicleDocument) => void
+  ): () => void {
+    const channel = this.supabase
+      .channel(`vehicle-documents-${carId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'vehicle_documents',
+          filter: `car_id=eq.${carId}`,
+        },
+        async (payload) => {
+          const document = payload.new as VehicleDocument;
+          
+          // Solo notificar si cambió el status a verified o rejected
+          if (document.status === 'verified' || document.status === 'rejected') {
+            callback(document);
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      this.supabase.removeChannel(channel);
+    };
   }
 
   /**

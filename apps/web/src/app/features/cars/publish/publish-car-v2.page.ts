@@ -4,6 +4,8 @@ import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
+import { PricingService } from '../../../core/services/pricing.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
 import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
@@ -14,6 +16,8 @@ import { PublishCarFormService } from './services/publish-car-form.service';
 import { PublishCarPhotoService } from './services/publish-car-photo.service';
 import { PublishCarLocationService } from './services/publish-car-location.service';
 import { PublishCarMpOnboardingService } from './services/publish-car-mp-onboarding.service';
+import { VehicleDocumentsService } from '../../../core/services/vehicle-documents.service';
+import { CarOwnerNotificationsService } from '../../../core/services/car-owner-notifications.service';
 
 /**
  * Publish Car V2 Component (REFACTORED)
@@ -56,12 +60,16 @@ export class PublishCarV2Page implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly carsService = inject(CarsService);
+  private readonly pricingService = inject(PricingService);
+  private readonly notificationManager = inject(NotificationManagerService);
 
   // Feature services
   private readonly formService = inject(PublishCarFormService);
   private readonly photoService = inject(PublishCarPhotoService);
   private readonly locationService = inject(PublishCarLocationService);
   private readonly mpService = inject(PublishCarMpOnboardingService);
+  private readonly documentsService = inject(VehicleDocumentsService);
+  private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
 
   // Component state
   readonly isSubmitting = signal(false);
@@ -92,7 +100,10 @@ export class PublishCarV2Page implements OnInit {
 
   // Min/max year for validation
   readonly minYear = 1980;
-  readonly maxYear = new Date().getFullYear() + 1;
+  readonly maxYear = new Date().getFullYear(); // ✅ Changed: removed +1 to avoid showing future years
+
+  // ✅ Feature flag: FIPE validation is optional (false = optional, true = required)
+  readonly REQUIRE_FIPE_VALIDATION = false;
 
   // Computed
   readonly selectedModelInfo = computed(() => {
@@ -108,6 +119,8 @@ export class PublishCarV2Page implements OnInit {
   readonly valueAutoCalculated = signal(false);
   readonly isFetchingFipeValue = signal(false);
   readonly fipeError = signal<string | null>(null);
+  readonly fipeErrorCode = signal<string | null>(null); // ✅ NEW: Machine-readable error code
+  readonly fipeSuggestions = signal<string[]>([]); // ✅ NEW: Actionable suggestions
   readonly allowManualValueEdit = signal(true);
   readonly fipeMultiCurrencyValues = signal<any>(null);
   readonly selectedFipeBrand = signal<any>(null);
@@ -116,6 +129,32 @@ export class PublishCarV2Page implements OnInit {
   readonly selectedCategoryName = signal<string>('');
   readonly isCalculatingSuggestedPrice = signal(false);
 
+  // ✅ NEW: Control submit button availability - Solo requiere marca, modelo, año y 3 fotos
+  // Verifica tanto valores del formulario (brand_id/model_id o brand_text_backup/model_text_backup) como signals FIPE
+  readonly canSubmit = computed(() => {
+    // Verificar valores del formulario tradicional (UUIDs)
+    const brandId = this.publishForm?.get('brand_id')?.value;
+    const modelId = this.publishForm?.get('model_id')?.value;
+    
+    // Verificar valores de texto backup (para FIPE)
+    const brandTextBackup = this.publishForm?.get('brand_text_backup')?.value;
+    const modelTextBackup = this.publishForm?.get('model_text_backup')?.value;
+    
+    // Verificar valores FIPE (nuevo sistema)
+    const fipeBrand = this.selectedFipeBrand();
+    const fipeModel = this.selectedFipeModel();
+    
+    // Aceptar cualquiera de los sistemas: UUIDs, texto backup, o FIPE signals
+    const hasBrand = !!(brandId || brandTextBackup || (fipeBrand && fipeBrand.name));
+    const hasModel = !!(modelId || modelTextBackup || (fipeModel && fipeModel.name));
+    
+    const year = this.publishForm?.get('year')?.value;
+    const hasPhotos = this.photoService.hasMinimumPhotos();
+
+    // Bloquear si falta alguno de los requisitos
+    return !!(hasBrand && hasModel && year && hasPhotos);
+  });
+
   // FIPE autocomplete signals
   readonly fipeBrands = signal<any[]>([]);
   readonly fipeModels = signal<any[]>([]);
@@ -123,11 +162,21 @@ export class PublishCarV2Page implements OnInit {
   readonly isLoadingFipeModels = signal(false);
 
   // Year options (2013-2025)
-  readonly yearOptions = Array.from({ length: 13 }, (_, i) => 2025 - i);
+  // ✅ Generate years dynamically from current year back 12 years
+  readonly yearOptions = Array.from({ length: 13 }, (_, i) => new Date().getFullYear() - i);
 
   async ngOnInit(): Promise<void> {
     // Initialize form
     this.publishForm = this.formService.initForm();
+
+    // ✅ NEW: Listen to category_id changes to update selectedCategoryName
+    this.publishForm.get('category_id')?.valueChanges.subscribe(async (categoryId) => {
+      if (categoryId) {
+        await this.updateCategoryName(categoryId);
+      } else {
+        this.selectedCategoryName.set('');
+      }
+    });
 
     // Check if editing
     this.carId = this.route.snapshot.paramMap.get('id');
@@ -137,6 +186,9 @@ export class PublishCarV2Page implements OnInit {
 
     // Load brands and models
     await this.formService.loadBrandsAndModels();
+
+    // ✅ CRITICAL: Load FIPE brands for autocomplete
+    await this.loadFipeBrands();
 
     // Load car data if editing
     if (this.carId) {
@@ -150,6 +202,27 @@ export class PublishCarV2Page implements OnInit {
     } else {
       // Auto-fill from last car
       await this.formService.autoFillFromLastCar();
+    }
+  }
+
+  /**
+   * ✅ NEW: Update selectedCategoryName when category_id changes
+   */
+  private async updateCategoryName(categoryId: string): Promise<void> {
+    try {
+      console.log('[PublishCarV2] updateCategoryName called with categoryId:', categoryId);
+      const categories = await this.pricingService.getVehicleCategories();
+      console.log('[PublishCarV2] Loaded categories:', categories.length);
+      const category = categories.find((c: any) => c.id === categoryId);
+      if (category) {
+        const categoryName = (category as any).name_es || category.name;
+        console.log('[PublishCarV2] ✅ Category name updated:', categoryName);
+        this.selectedCategoryName.set(categoryName);
+      } else {
+        console.warn('[PublishCarV2] ⚠️ Category not found for ID:', categoryId);
+      }
+    } catch (error) {
+      console.error('[PublishCarV2] ❌ Error updating category name:', error);
     }
   }
 
@@ -192,44 +265,436 @@ export class PublishCarV2Page implements OnInit {
   }
 
   /**
+   * ✅ NEW: Load FIPE brands from API
+   */
+  async loadFipeBrands(): Promise<void> {
+    this.isLoadingFipeBrands.set(true);
+    try {
+      const brands = await this.pricingService.getFipeBrands();
+      console.log('[PublishCarV2] Loaded FIPE brands:', brands.length);
+
+      // Convert to FipeAutocompleteOption format
+      const formattedBrands = brands.map((brand) => ({
+        code: brand.code,
+        name: brand.name,
+      }));
+
+      this.fipeBrands.set(formattedBrands);
+      console.log('[PublishCarV2] Formatted brands:', formattedBrands.slice(0, 5));
+    } catch (error) {
+      console.error('[PublishCarV2] Error loading FIPE brands:', error);
+      this.fipeBrands.set([]);
+    } finally {
+      this.isLoadingFipeBrands.set(false);
+    }
+  }
+
+  /**
    * Handle FIPE brand selection
    */
-  onFipeBrandSelected(brand: any): void {
+  async onFipeBrandSelected(brand: any): Promise<void> {
+    console.log('[PublishCarV2] Brand selected:', brand);
     this.selectedFipeBrand.set(brand);
     this.selectedFipeModel.set(null);
-    // TODO: Load models for selected brand
-    // this.isLoadingFipeModels.set(true);
-    // const models = await this.pricingService.getFipeModels(brand.code);
-    // this.fipeModels.set(models);
-    // this.isLoadingFipeModels.set(false);
+    this.fipeModels.set([]);
+
+    // ✅ CRITICAL: brand_id y model_id son UUIDs, NO códigos FIPE
+    // Los códigos FIPE se guardan en fipe_code y los nombres en brand_text_backup/model_text_backup
+    // Por ahora, dejamos brand_id/model_id como null y usamos los campos de texto
+    this.publishForm?.get('brand_id')?.setValue(null);
+    this.publishForm?.get('model_id')?.setValue(null);
+    
+    // Guardar nombre de marca en brand_text_backup (para backward compatibility)
+    if (brand && brand.name) {
+      this.publishForm?.patchValue({
+        brand_text_backup: brand.name,
+      });
+    }
+
+    // Load models for selected brand
+    if (brand && brand.code) {
+      this.isLoadingFipeModels.set(true);
+      try {
+        const models = await this.pricingService.getFipeModels(brand.code);
+        console.log('[PublishCarV2] Loaded models for brand:', models.length);
+
+        // Convert to FipeAutocompleteOption format
+        const formattedModels = models.map((model) => ({
+          code: model.code,
+          name: model.name,
+        }));
+
+        this.fipeModels.set(formattedModels);
+      } catch (error) {
+        console.error('[PublishCarV2] Error loading FIPE models:', error);
+        this.fipeModels.set([]);
+      } finally {
+        this.isLoadingFipeModels.set(false);
+      }
+    }
   }
 
   /**
    * Handle FIPE model selection
    */
-  onFipeModelSelected(model: any): void {
+  async onFipeModelSelected(model: any): Promise<void> {
+    console.log('[PublishCarV2] Model selected:', model);
     this.selectedFipeModel.set(model);
-    // TODO: Fetch vehicle value from FIPE API
-    // this.isFetchingFipeValue.set(true);
-    // const result = await this.pricingService.getFipeValueRealtime({...});
-    // if (result.success) {
-    //   this.publishForm.patchValue({ value_usd: result.data.value_usd });
-    //   this.valueAutoCalculated.set(true);
-    // }
-    // this.isFetchingFipeValue.set(false);
+
+    // ✅ CRITICAL: model_id es UUID, NO código FIPE
+    // Guardar nombre de modelo en model_text_backup (para backward compatibility)
+    this.publishForm?.get('model_id')?.setValue(null);
+    
+    if (model && model.name) {
+      this.publishForm?.patchValue({
+        model_text_backup: model.name,
+      });
+    }
+
+    // Fetch vehicle value from FIPE API when we have brand, model, and year
+    await this.fetchFipeValue();
   }
 
   /**
    * Handle year change (trigger FIPE value fetch)
    */
-  onYearChange(): void {
+  async onYearChange(): Promise<void> {
     const year = this.publishForm?.get('year')?.value;
+    console.log('[PublishCarV2] Year changed to:', year);
+
+    // Re-fetch FIPE value if we have all required data
+    if (year && this.selectedFipeBrand() && this.selectedFipeModel()) {
+      await this.fetchFipeValue();
+    }
+  }
+
+  /**
+   * ✅ NEW: Fetch FIPE value when brand, model, and year are available
+   */
+  async fetchFipeValue(): Promise<void> {
     const brand = this.selectedFipeBrand();
     const model = this.selectedFipeModel();
+    const year = this.publishForm?.get('year')?.value;
 
-    if (year && brand && model) {
-      // TODO: Re-fetch FIPE value with new year
-      // this.onFipeModelSelected(model);
+    // Need all three to fetch value
+    if (!brand || !model || !year) {
+      console.log('[PublishCarV2] Cannot fetch FIPE value - missing data:', {
+        brand: !!brand,
+        model: !!model,
+        year: !!year,
+      });
+      return;
+    }
+
+    console.log('[PublishCarV2] Fetching FIPE value for:', {
+      brand: brand.name,
+      model: model.name,
+      year,
+    });
+
+    this.isFetchingFipeValue.set(true);
+    this.fipeError.set(null);
+    this.fipeErrorCode.set(null);
+    this.fipeSuggestions.set([]);
+
+    try {
+      const result = await this.pricingService.getFipeValueRealtime({
+        brand: brand.name,
+        model: model.name,
+        year: year,
+        country: 'AR',
+      });
+
+      console.log('[PublishCarV2] FIPE value result:', result);
+
+      if (result && result.success && result.data) {
+        // Store multi-currency values
+        this.fipeMultiCurrencyValues.set({
+          value_brl: result.data.value_brl,
+          value_usd: result.data.value_usd,
+          value_ars: result.data.value_ars,
+          fipe_code: result.data.fipe_code,
+          reference_month: result.data.reference_month,
+        });
+
+        // Ensure value_usd is a number
+        const valueUsd = Number(result.data.value_usd);
+        if (isNaN(valueUsd) || valueUsd <= 0) {
+          console.error('[PublishCarV2] Invalid value_usd from pricing API:', result.data.value_usd);
+          this.fipeError.set('No se pudo calcular el valor automáticamente. Podés ingresarlo manualmente.');
+
+          // ✅ REMOVED: No longer blocking submit - FIPE is optional
+          return;
+        }
+
+        // Auto-fill the value_usd field
+        this.publishForm.get('value_usd')?.setValue(valueUsd, {
+          emitEvent: true, // ✅ FIX: Trigger valueChanges to recalculate price
+        });
+
+        // ✅ NEW: Auto-categorize vehicle based on value USD
+        console.log('[PublishCarV2] Calling autoCategorizeVehicle with:', {
+          valueUsd,
+          brand: brand.name,
+          model: model.name,
+          year,
+        });
+        await this.autoCategorizeVehicle(valueUsd, brand.name, model.name, year);
+
+        // Mark as auto-calculated
+        this.valueAutoCalculated.set(true);
+        this.allowManualValueEdit.set(false);
+        this.fipeError.set(null);
+        this.fipeErrorCode.set(null);
+        this.fipeSuggestions.set([]);
+
+        // ✅ CRITICAL: Force price calculation after setting value_usd
+        if (this.isDynamicPricing()) {
+          setTimeout(async () => {
+            await this.calculateSuggestedRate();
+          }, 100);
+        }
+      } else {
+        // ✅ NEW: Enhanced error handling with error codes and suggestions
+        const errorMsg = result?.error || 'No se pudo obtener el valor del vehículo';
+        const errorCode = result?.errorCode || 'UNKNOWN';
+        const suggestions = result?.suggestions || [];
+
+        console.warn('[PublishCarV2] FIPE lookup failed:', {
+          errorMsg,
+          errorCode,
+          suggestions,
+          availableOptions: result?.availableOptions,
+        });
+
+        this.fipeError.set(errorMsg);
+        this.fipeErrorCode.set(errorCode);
+        this.fipeSuggestions.set(suggestions);
+        this.valueAutoCalculated.set(false);
+
+        // ✅ FIPE es opcional - permitir input manual
+        this.allowManualValueEdit.set(true);
+        console.log('[PublishCarV2] ⚠️ FIPE failed but manual input allowed');
+      }
+    } catch (err) {
+      console.error('[PublishCarV2] Error fetching FIPE value:', err);
+      this.isFetchingFipeValue.set(false);
+      this.fipeError.set('Error al consultar el valor. Intentá nuevamente en unos momentos.');
+      this.fipeErrorCode.set('NETWORK_ERROR');
+      this.fipeSuggestions.set([
+        'Verifica tu conexión a internet',
+        'Reintenta en unos momentos',
+        'Si el problema persiste, contacta a soporte',
+      ]);
+
+      // ✅ FIPE es opcional - permitir input manual
+      this.valueAutoCalculated.set(false);
+      this.allowManualValueEdit.set(true);
+    } finally {
+      this.isFetchingFipeValue.set(false);
+    }
+  }
+
+  /**
+   * ✅ NEW: Auto-categorize vehicle based on value USD or brand/model/year
+   * Uses two methods:
+   * 1. Try estimateVehicleValue() for precise category from pricing_models
+   * 2. Fallback to value-based classification if not found
+   */
+  private async autoCategorizeVehicle(
+    valueUsd: number,
+    brand: string,
+    model: string,
+    year: number,
+  ): Promise<void> {
+    console.log('[PublishCarV2] Auto-categorizing vehicle:', { valueUsd, brand, model, year });
+
+    // Validate inputs
+    if (!valueUsd || valueUsd <= 0) {
+      console.warn('[PublishCarV2] Invalid value_usd for categorization:', valueUsd);
+      return;
+    }
+
+    // Method 1: Try to get category from pricing_models (most accurate)
+    try {
+      const estimate = await this.pricingService.estimateVehicleValue({
+        brand,
+        model,
+        year,
+        country: 'AR',
+      });
+
+      if (estimate && estimate.category_id) {
+        console.log(
+          '[PublishCarV2] ✅ Category from pricing_models:',
+          estimate.category_name,
+          `(${valueUsd} USD)`,
+          'category_id:',
+          estimate.category_id,
+        );
+        const categoryControl = this.publishForm.get('category_id');
+        if (categoryControl) {
+          categoryControl.setValue(estimate.category_id, { emitEvent: true });
+          categoryControl.markAsTouched();
+          categoryControl.updateValueAndValidity();
+          console.log(
+            '[PublishCarV2] Category control updated, value:',
+            categoryControl.value,
+            'valid:',
+            categoryControl.valid,
+            'form valid:',
+            this.publishForm.valid,
+          );
+        } else {
+          console.error('[PublishCarV2] ❌ category_id control not found in form!');
+        }
+        // Update name immediately
+        this.selectedCategoryName.set(estimate.category_name || '');
+        return;
+      }
+    } catch (error) {
+      console.warn('[PublishCarV2] Could not get category from pricing_models:', error);
+    }
+
+    // Method 2: Classify by value USD (fallback)
+    // Load categories to get IDs
+    let categories;
+    try {
+      categories = await this.pricingService.getVehicleCategories();
+      if (!categories || categories.length === 0) {
+        console.warn('[PublishCarV2] No categories available for auto-classification');
+        return;
+      }
+    } catch (error) {
+      console.error('[PublishCarV2] Error loading categories:', error);
+      return;
+    }
+
+    let categoryCode: string;
+    // ✅ UPDATED: New category thresholds
+    // Economy: < $13,000
+    // Standard: $13,000 - $25,000
+    // Premium: $25,000 - $40,000
+    // Luxury: >= $40,000
+    if (valueUsd < 13000) {
+      categoryCode = 'economy';
+    } else if (valueUsd < 25000) {
+      categoryCode = 'standard';
+    } else if (valueUsd < 40000) {
+      categoryCode = 'premium';
+    } else {
+      categoryCode = 'luxury';
+    }
+
+    console.log('[PublishCarV2] Value-based classification:', { valueUsd, categoryCode });
+
+    const category = categories.find((c: any) => c.code === categoryCode);
+    if (category) {
+      const categoryName = (category as any).name_es || category.name;
+      console.log(
+        '[PublishCarV2] ✅ Category from value USD:',
+        categoryName,
+        `(${valueUsd} USD)`,
+        'category_id:',
+        category.id,
+      );
+      const categoryControl = this.publishForm.get('category_id');
+      if (categoryControl) {
+        categoryControl.setValue(category.id, { emitEvent: true });
+        categoryControl.markAsTouched();
+        categoryControl.updateValueAndValidity();
+        console.log(
+          '[PublishCarV2] Category control updated, value:',
+          categoryControl.value,
+          'valid:',
+          categoryControl.valid,
+          'form valid:',
+          this.publishForm.valid,
+        );
+      } else {
+        console.error('[PublishCarV2] ❌ category_id control not found in form!');
+      }
+      // Update name immediately
+      this.selectedCategoryName.set(categoryName);
+    } else {
+      console.error(
+        '[PublishCarV2] ❌ Category not found for code:',
+        categoryCode,
+        'Available codes:',
+        categories.map((c: any) => c.code),
+      );
+    }
+  }
+
+  /**
+   * ✅ NEW: Calculate suggested rate based on vehicle value and category
+   * Called when: vehicle value changes, category changes, or dynamic pricing toggled on
+   */
+  private async calculateSuggestedRate(): Promise<void> {
+    const valueUsd = this.publishForm?.get('value_usd')?.value;
+    const categoryId = this.publishForm?.get('category_id')?.value;
+    const isDynamic = this.isDynamicPricing();
+
+    console.log('[PublishCarV2] calculateSuggestedRate called:', {
+      valueUsd,
+      categoryId,
+      isDynamic,
+    });
+
+    // Only calculate if dynamic pricing is enabled
+    if (!isDynamic) {
+      console.log('[PublishCarV2] Dynamic pricing not enabled, skipping calculation');
+      this.suggestedPrice.set(0);
+      return;
+    }
+
+    // Need vehicle value and category
+    if (!valueUsd) {
+      console.warn('[PublishCarV2] No value_usd, cannot calculate price');
+      this.suggestedPrice.set(0);
+      return;
+    }
+
+    if (!categoryId) {
+      console.warn(
+        '[PublishCarV2] No category_id selected. Price calculation requires a category.',
+      );
+      this.suggestedPrice.set(0);
+      return;
+    }
+
+    this.isCalculatingSuggestedPrice.set(true);
+
+    try {
+      // Call pricing service to get suggested daily rate
+      const suggestedRate = await this.pricingService.calculateSuggestedRate({
+        categoryId: categoryId,
+        estimatedValueUsd: valueUsd,
+      });
+
+      if (suggestedRate && suggestedRate > 0) {
+        // Round to nearest integer
+        const roundedPrice = Math.round(suggestedRate);
+        this.suggestedPrice.set(roundedPrice);
+
+        // ✅ CRITICAL: Also update the form field directly to ensure it's set
+        if (this.publishForm && this.isDynamicPricing()) {
+          const currentPrice = this.publishForm.get('price_per_day')?.value;
+          console.log('[PublishCarV2] Updating price_per_day:', {
+            currentPrice,
+            suggestedPrice: roundedPrice,
+            willUpdate: !currentPrice || currentPrice !== roundedPrice,
+          });
+
+          // Always update when in dynamic mode
+          this.publishForm.get('price_per_day')?.setValue(roundedPrice, { emitEvent: false });
+        }
+      }
+    } catch (error) {
+      console.error('[PublishCarV2] Error calculating suggested rate:', error);
+      this.suggestedPrice.set(0);
+    } finally {
+      this.isCalculatingSuggestedPrice.set(false);
     }
   }
 
@@ -280,8 +745,22 @@ export class PublishCarV2Page implements OnInit {
 
   /**
    * Get current brand name
+   * ✅ Updated to support FIPE autocomplete
    */
   getCurrentBrand(): string {
+    // Try FIPE signal first
+    const fipeBrand = this.selectedFipeBrand();
+    if (fipeBrand && fipeBrand.name) {
+      return fipeBrand.name;
+    }
+
+    // Try text backup (for FIPE)
+    const brandTextBackup = this.publishForm?.get('brand_text_backup')?.value;
+    if (brandTextBackup) {
+      return brandTextBackup;
+    }
+
+    // Fallback to traditional brand_id (UUID)
     const brandId = this.publishForm?.get('brand_id')?.value;
     if (!brandId) return '';
     const brand = this.brands().find((b) => b.id === brandId);
@@ -290,8 +769,22 @@ export class PublishCarV2Page implements OnInit {
 
   /**
    * Get current model name
+   * ✅ Updated to support FIPE autocomplete
    */
   getCurrentModel(): string {
+    // Try FIPE signal first
+    const fipeModel = this.selectedFipeModel();
+    if (fipeModel && fipeModel.name) {
+      return fipeModel.name;
+    }
+
+    // Try text backup (for FIPE)
+    const modelTextBackup = this.publishForm?.get('model_text_backup')?.value;
+    if (modelTextBackup) {
+      return modelTextBackup;
+    }
+
+    // Fallback to traditional model_id (UUID)
     const modelId = this.publishForm?.get('model_id')?.value;
     if (!modelId) return '';
     const model = this.models().find((m) => m.id === modelId);
@@ -380,43 +873,116 @@ export class PublishCarV2Page implements OnInit {
    * Submit form
    */
   async onSubmit(): Promise<void> {
-    if (!this.formService.isValid()) {
-      alert('Por favor completa todos los campos requeridos');
+    // ✅ NUEVO: Solo validar campos mínimos (marca, modelo, año, fotos)
+    // Verificar tanto valores del formulario como signals FIPE
+    const brandId = this.publishForm.get('brand_id')?.value;
+    const modelId = this.publishForm.get('model_id')?.value;
+    const brandTextBackup = this.publishForm.get('brand_text_backup')?.value;
+    const modelTextBackup = this.publishForm.get('model_text_backup')?.value;
+    const fipeBrand = this.selectedFipeBrand();
+    const fipeModel = this.selectedFipeModel();
+    
+    const hasBrand = !!(brandId || brandTextBackup || (fipeBrand && fipeBrand.name));
+    const hasModel = !!(modelId || modelTextBackup || (fipeModel && fipeModel.name));
+    const year = this.publishForm.get('year')?.value;
+
+    if (!hasBrand || !hasModel || !year) {
+      alert('Por favor completa: Marca, Modelo y Año');
       return;
     }
 
     if (!this.photoService.hasMinimumPhotos()) {
-      alert('Debes subir al menos 3 fotos');
+      this.notificationManager.error(
+        'Fotos requeridas',
+        'Debes subir al menos 3 fotos para publicar tu auto.'
+      );
       return;
     }
+
+    // ✅ IMPORTANTE: NO bloqueamos la publicación por documentos faltantes
+    // El usuario puede publicar su auto sin documentos, pero le notificaremos
+    // después de la publicación que faltan documentos (DNI, Cédula, Seguro, etc.)
 
     this.isSubmitting.set(true);
 
     try {
       // Get form data
       const formData = this.formService.getFormData();
+      
+      console.log('📝 Form data before processing:', {
+        brand_id: formData.brand_id,
+        model_id: formData.model_id,
+        year: formData.year,
+        price_per_day: formData.price_per_day,
+        pricing_strategy: formData.pricing_strategy,
+      });
+
+      // ✅ NUEVO: Establecer valores por defecto para campos opcionales
+      // ✅ CRITICAL: price_per_day siempre debe ser > 0 para pasar validación
+      const pricePerDay = formData.price_per_day 
+        ? Number(formData.price_per_day) 
+        : (formData.pricing_strategy === 'dynamic' ? 50 : 100); // Default: 50 si dinámico, 100 si custom
+      
+      console.log('💰 Calculated price_per_day:', pricePerDay);
+      
+      const carData: any = {
+        ...formData,
+        // Campos opcionales con valores por defecto
+        color: formData.color || 'No especificado',
+        mileage: formData.mileage || 0,
+        transmission: (formData.transmission || 'manual') as string,
+        fuel: (formData.fuel || 'nafta') as string,
+        price_per_day: pricePerDay, // ✅ Siempre un número válido > 0
+        value_usd: formData.value_usd || 10000, // Valor por defecto si no se especifica
+        category_id: formData.category_id || null, // Se puede auto-categorizar después
+        min_rental_days: formData.min_rental_days || 1,
+        max_rental_days: formData.max_rental_days || null,
+        deposit_required: formData.deposit_required ?? true,
+        deposit_amount: formData.deposit_amount || 200,
+        insurance_included: formData.insurance_included ?? false,
+        auto_approval: formData.auto_approval ?? true,
+        // Location opcional
+        location_street: formData.location_street || '',
+        location_street_number: formData.location_street_number || '',
+        location_city: formData.location_city || '',
+        location_state: formData.location_state || '',
+        location_country: formData.location_country || 'AR',
+      };
 
       // Get coordinates (manual or from address)
       let coordinates = this.locationService.getCoordinates();
-      if (!coordinates) {
-        // Geocode address
+      if (!coordinates && carData.location_street && carData.location_city) {
+        // Geocode address si está disponible
         const address = {
-          street: formData.location_street as string,
-          streetNumber: formData.location_street_number as string,
-          city: formData.location_city as string,
-          state: formData.location_state as string,
-          country: formData.location_country as string,
+          street: carData.location_street as string,
+          streetNumber: carData.location_street_number as string,
+          city: carData.location_city as string,
+          state: carData.location_state as string,
+          country: carData.location_country as string,
         };
         coordinates = await this.locationService.geocodeAddress(address);
       }
 
-      // Prepare car data
-      const carData = {
-        ...formData,
-        latitude: coordinates?.latitude || null,
-        longitude: coordinates?.longitude || null,
-        status: 'active' as const, // Car is active immediately and will appear on map
-      };
+      // Agregar coordenadas (solo si existen)
+      // ✅ CRITICAL: Solo incluir location_lat/location_lng si tienen valores válidos
+      // Esto evita errores de schema cache si las columnas no están disponibles
+      if (coordinates?.latitude && coordinates?.longitude) {
+        carData.location_lat = coordinates.latitude;
+        carData.location_lng = coordinates.longitude;
+      } else {
+        // No incluir las propiedades si no hay coordenadas
+        // El backend puede manejar autos sin coordenadas
+        delete carData.location_lat;
+        delete carData.location_lng;
+      }
+      
+      carData.status = 'active' as const; // Car is active immediately and will appear on map
+
+      console.log('🚗 Final car data to submit:', {
+        ...carData,
+        // Redact sensitive data
+        owner_id: carData.owner_id ? '***' : undefined,
+      });
 
       let carId: string;
 
@@ -424,12 +990,24 @@ export class PublishCarV2Page implements OnInit {
         // Update existing car
         await this.carsService.updateCar(this.carId, carData);
         carId = this.carId;
-        alert('✅ Auto actualizado exitosamente');
+        
+        // Mostrar notificación de actualización
+        this.notificationManager.success(
+          '✅ Auto actualizado exitosamente',
+          'Los cambios se han guardado correctamente. Tu auto ya está visible con la información actualizada.',
+          6000
+        );
       } else {
         // Create new car
         const newCar = await this.carsService.createCar(carData);
         carId = newCar.id;
-        alert('✅ Auto publicado exitosamente');
+        
+        // Mostrar notificación de éxito completa
+        this.notificationManager.success(
+          '🎉 ¡Auto publicado exitosamente!',
+          'Tu auto ya está visible en el marketplace. Podrás acompañar su rendimiento, ver cuántas personas lo están viendo, recibir mensajes en el chat y editarlo desde tu lista. ¡Esperamos que puedas realizar muchos negocios exitosos!',
+          8000
+        );
       }
 
       // Upload photos (if new or changed)
@@ -437,11 +1015,75 @@ export class PublishCarV2Page implements OnInit {
         await this.photoService.uploadPhotos(carId);
       }
 
+      // ✅ NUEVO: Notificar documentos faltantes (NO bloquea la publicación)
+      // El auto ya fue publicado exitosamente, ahora solo informamos al usuario
+      // que faltan documentos para completar su perfil
+      if (!this.editMode()) {
+        // Ejecutar después de un pequeño delay para que el usuario vea primero
+        // la notificación de éxito de publicación
+        setTimeout(() => {
+          this.checkMissingDocuments(carId).catch((error) => {
+            // Silently fail - notification is optional
+            console.debug('Could not check missing documents', error);
+          });
+        }, 2000); // 2 segundos después de la publicación exitosa
+      }
+
       // Navigate to my cars
       await this.router.navigate(['/cars/my-cars']);
     } catch (error) {
-      console.error('Failed to publish car:', error);
-      alert('❌ Error al publicar el auto. Por favor intenta nuevamente.');
+      console.error('❌ Failed to publish car:', error);
+      
+      // Log detailed error information
+      if (error instanceof Error) {
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      } else if (error && typeof error === 'object') {
+        console.error('Error object:', JSON.stringify(error, null, 2));
+        if ('message' in error) {
+          console.error('Error message:', (error as { message: string }).message);
+        }
+        if ('code' in error) {
+          console.error('Error code:', (error as { code: string }).code);
+        }
+        if ('details' in error) {
+          console.error('Error details:', (error as { details: string }).details);
+        }
+        if ('hint' in error) {
+          console.error('Error hint:', (error as { hint: string }).hint);
+        }
+      }
+      
+      // Show user-friendly error message
+      let errorTitle = 'Error al publicar el auto';
+      let errorMessage = 'Por favor intenta nuevamente.';
+      
+      if (error instanceof Error) {
+        // Check for specific error types
+        if (error.message.includes('Marca y modelo son requeridos')) {
+          errorTitle = 'Información incompleta';
+          errorMessage = 'Por favor completa la marca y el modelo del vehículo.';
+        } else if (error.message.includes('Precio por día debe ser mayor a 0')) {
+          errorTitle = 'Precio inválido';
+          errorMessage = 'El precio por día debe ser mayor a 0.';
+        } else if (error.message.includes('Usuario no autenticado')) {
+          errorTitle = 'Sesión expirada';
+          errorMessage = 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+      } else if (error && typeof error === 'object' && 'message' in error) {
+        const msg = String((error as { message: string }).message);
+        if (msg.includes('permission denied') || msg.includes('RLS')) {
+          errorTitle = 'Permisos insuficientes';
+          errorMessage = 'No tienes permisos para realizar esta acción. Verifica tu sesión.';
+        } else if (msg) {
+          errorMessage = msg;
+        }
+      }
+      
+      // Mostrar notificación de error
+      this.notificationManager.error(errorTitle, errorMessage);
     } finally {
       this.isSubmitting.set(false);
     }
@@ -452,5 +1094,37 @@ export class PublishCarV2Page implements OnInit {
    */
   async goBack(): Promise<void> {
     await this.router.navigate(['/cars/my-cars']);
+  }
+
+  /**
+   * Verifica documentos faltantes y notifica al usuario
+   */
+  private async checkMissingDocuments(carId: string): Promise<void> {
+    try {
+      const missingDocs = await this.documentsService.getMissingDocuments(carId);
+      
+      if (missingDocs.length > 0) {
+        const car = await this.carsService.getCarById(carId);
+        if (!car) return;
+
+        const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
+        const documentsUrl = `/cars/${carId}/documents`;
+
+        // Notificar sobre cada documento faltante
+        for (const docKind of missingDocs) {
+          const documentType = this.documentsService.getDocumentKindLabel(docKind);
+          this.carOwnerNotifications.notifyMissingDocument(
+            documentType,
+            carName,
+            documentsUrl
+          );
+          // Pequeña pausa entre notificaciones
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+    } catch (error) {
+      // Silently fail
+      console.debug('Could not check missing documents', error);
+    }
   }
 }

@@ -5,6 +5,7 @@ import {
   NotificationsService,
   NotificationItem,
 } from '../../../core/services/user-notifications.service';
+import { CarOwnerNotificationsService } from '../../../core/services/car-owner-notifications.service';
 
 @Component({
   standalone: true,
@@ -16,6 +17,7 @@ import {
 export class NotificationsComponent {
   private readonly router = inject(Router);
   private readonly notificationsService = inject(NotificationsService);
+  private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
 
   readonly notifications = this.notificationsService.notifications;
   readonly unreadCount = this.notificationsService.unreadCount;
@@ -24,6 +26,27 @@ export class NotificationsComponent {
   readonly recentNotifications = computed(() => this.notifications().slice(0, 5));
 
   readonly hasUnread = computed(() => this.unreadCount() > 0);
+
+  /**
+   * Refrescar notificaciones manualmente
+   */
+  async refreshNotifications(): Promise<void> {
+    await this.notificationsService.refresh();
+  }
+
+  /**
+   * Generar notificaciones de documentos faltantes para autos ya publicados
+   * Útil cuando el usuario ya tiene autos publicados pero no tiene notificaciones
+   */
+  async generateMissingDocumentNotifications(): Promise<void> {
+    try {
+      await this.carOwnerNotifications.checkAndNotifyMissingDocumentsForAllCars();
+      // Refrescar notificaciones después de generar
+      await this.notificationsService.refresh();
+    } catch (error) {
+      console.error('Error generating notifications:', error);
+    }
+  }
 
   toggleDropdown() {
     this.showDropdown.update((show) => !show);
@@ -39,6 +62,19 @@ export class NotificationsComponent {
 
   async markAllAsRead() {
     await this.notificationsService.markAllAsRead();
+  }
+
+  async deleteNotification(notification: NotificationItem) {
+    if (!confirm('¿Eliminar esta notificación?')) {
+      return;
+    }
+
+    try {
+      await this.notificationsService.deleteNotification(notification.id);
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+      alert('Error al eliminar la notificación');
+    }
   }
 
   async handleNotificationClick(notification: NotificationItem) {

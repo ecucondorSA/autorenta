@@ -4,6 +4,8 @@ import { Booking } from '../models';
 import { injectSupabase } from './supabase-client.service';
 import { WalletService } from './wallet.service';
 import { LoggerService } from './logger.service';
+import { CarOwnerNotificationsService } from './car-owner-notifications.service';
+import { CarsService } from './cars.service';
 
 /**
  * Service for managing booking-related wallet operations
@@ -16,6 +18,8 @@ export class BookingWalletService {
   private readonly supabase = injectSupabase();
   private readonly walletService = inject(WalletService);
   private readonly logger = inject(LoggerService);
+  private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
+  private readonly carsService = inject(CarsService);
 
   /**
    * Charge rental from user's wallet using the new ledger system
@@ -93,6 +97,12 @@ export class BookingWalletService {
       if (error) {
         return { ok: false, error: error.message };
       }
+
+      // ✅ NUEVO: Notificar al dueño del auto sobre el pago recibido
+      this.notifyOwnerOfPaymentReceived(booking, amountCents).catch((error) => {
+        // Silently fail - notification is optional enhancement
+        this.logger.debug('Could not notify owner of payment received', error);
+      });
 
       return { ok: true };
     } catch (err) {
@@ -323,6 +333,30 @@ export class BookingWalletService {
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error inesperado';
       return { ok: false, error: errorMsg };
+    }
+  }
+
+  /**
+   * Notifica al dueño del auto sobre un pago recibido
+   */
+  private async notifyOwnerOfPaymentReceived(
+    booking: Booking,
+    amountCents: number
+  ): Promise<void> {
+    try {
+      if (!booking.owner_id || !booking.car_id) return;
+
+      const amount = amountCents / 100; // Convertir centavos a pesos
+      const bookingUrl = `/bookings/${booking.id}`;
+
+      this.carOwnerNotifications.notifyPaymentReceived(
+        amount,
+        booking.id,
+        bookingUrl
+      );
+    } catch (error) {
+      // Silently fail - notification is optional enhancement
+      this.logger.debug('Could not notify owner of payment received', String(error));
     }
   }
 }

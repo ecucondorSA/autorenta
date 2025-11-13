@@ -7,6 +7,8 @@ import {
   computed,
   signal,
   OnInit,
+  OnChanges,
+  SimpleChanges,
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -32,20 +34,22 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
   imports: [CommonModule, MoneyPipe],
   template: `
     <div
+      *ngIf="car"
       class="enhanced-tooltip bg-surface-raised rounded-xl shadow-2xl border border-border-default overflow-hidden max-w-[320px] transition-all duration-200 hover:shadow-3xl"
       [class.enhanced-tooltip--selected]="selected"
     >
       <!-- Car Image -->
       <div class="relative w-full aspect-[16/9] bg-surface-raised overflow-hidden">
         <img
-          *ngIf="car.photoUrl"
+          *ngIf="car.photoUrl && !imageError()"
           [src]="car.photoUrl"
-          [alt]="car.title"
+          [alt]="car.title || 'Auto'"
           class="w-full h-full object-cover"
           loading="lazy"
+          (error)="onImageError()"
         />
         <div
-          *ngIf="!car.photoUrl"
+          *ngIf="!car.photoUrl || imageError()"
           class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200"
         >
           <svg
@@ -142,7 +146,7 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
         <!-- Title & Location -->
         <div>
           <h3 class="text-base font-bold text-text-primary line-clamp-1 mb-0.5">
-            {{ car.title }}
+            {{ car.title || 'Auto' }}
           </h3>
           <p class="text-xs text-text-secondary flex items-center gap-1">
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,14 +157,14 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
                 d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
               />
             </svg>
-            <span>{{ car.locationLabel }}</span>
+            <span>{{ car.locationLabel || '' }}</span>
           </p>
         </div>
 
         <!-- Price -->
         <div class="flex items-baseline gap-1.5">
           <span class="text-2xl font-bold text-text-primary">
-            {{ car.pricePerDay | money: car.currency || 'ARS' }}
+            {{ car.pricePerDay | money: (car.currency || 'ARS') }}
           </span>
           <span class="text-sm text-text-secondary font-medium">/día</span>
         </div>
@@ -245,8 +249,8 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EnhancedMapTooltipComponent implements OnInit {
-  @Input({ required: true }) car!: CarMapLocation;
+export class EnhancedMapTooltipComponent implements OnInit, OnChanges {
+  @Input({ required: true }) car: CarMapLocation | null = null;
   @Input() selected = false;
   @Input() userLocation?: { lat: number; lng: number };
 
@@ -258,11 +262,12 @@ export class EnhancedMapTooltipComponent implements OnInit {
   readonly distanceKm = signal<number | null>(null);
   readonly reviewCount = signal<number>(0);
   readonly loadingReviews = signal(false);
+  readonly imageError = signal(false);
 
   readonly isVerified = computed(() => {
     // Consider cars with photos and instant booking as "verified"
     // In the future, this could check owner verification status
-    return !!(this.car.photoUrl && this.car.instantBooking);
+    return !!(this.car?.photoUrl && this.car?.instantBooking);
   });
 
   readonly hasReviews = computed(() => {
@@ -270,10 +275,21 @@ export class EnhancedMapTooltipComponent implements OnInit {
   });
 
   readonly showInstantBookingBadge = computed(() => {
-    return this.car.instantBooking === true;
+    return this.car?.instantBooking === true;
   });
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // Reset image error when car changes
+    if (changes['car'] && this.car) {
+      this.imageError.set(false);
+    }
+  }
+
   ngOnInit(): void {
+    if (!this.car) {
+      return;
+    }
+
     // Calculate distance if user location is available
     if (this.userLocation && this.car.lat && this.car.lng) {
       const dist = this.calculateDistance(
@@ -289,7 +305,15 @@ export class EnhancedMapTooltipComponent implements OnInit {
     void this.loadReviewCount();
   }
 
+  onImageError(): void {
+    this.imageError.set(true);
+  }
+
   private async loadReviewCount(): Promise<void> {
+    if (!this.car?.carId) {
+      return;
+    }
+
     this.loadingReviews.set(true);
     try {
       // Use CarLocationsService cache to avoid multiple queries
@@ -305,12 +329,16 @@ export class EnhancedMapTooltipComponent implements OnInit {
 
   handleQuickBook(event: Event): void {
     event.stopPropagation();
-    this.quickBook.emit(this.car.carId);
+    if (this.car?.carId) {
+      this.quickBook.emit(this.car.carId);
+    }
   }
 
   handleViewDetails(event: Event): void {
     event.stopPropagation();
-    this.viewDetails.emit(this.car.carId);
+    if (this.car?.carId) {
+      this.viewDetails.emit(this.car.carId);
+    }
   }
 
   formatDistance(km: number): string {
