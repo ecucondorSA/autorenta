@@ -11,8 +11,14 @@ const path = require('path');
 
 const distPath = path.join(__dirname, '../dist/web/browser');
 
-// _redirects - Solo rutas que no son archivos
-const redirectsContent = `# Rutas de la SPA - Solo para URLs que no son archivos
+// _redirects - Cloudflare Pages SPA routing
+// IMPORTANTE: Todas las rutas deben redirigir a index.html para que Angular maneje el routing
+// Esto incluye /auth/callback que es crítico para OAuth
+const redirectsContent = `# Cloudflare Pages - SPA Routing
+# Todas las rutas de la aplicación Angular deben redirigir a index.html
+# Esto permite que Angular Router maneje las rutas, incluyendo /auth/callback
+
+# Rutas específicas de la aplicación
 /auth/* /index.html 200
 /cars/* /index.html 200
 /bookings/* /index.html 200
@@ -20,8 +26,14 @@ const redirectsContent = `# Rutas de la SPA - Solo para URLs que no son archivos
 /profile/* /index.html 200
 /admin/* /index.html 200
 /users/* /index.html 200
+/onboarding /index.html 200
+/verification/* /index.html 200
+/messages/* /index.html 200
+/notifications/* /index.html 200
+/mp-callback /index.html 200
 
-# Fallback para otras rutas (excepto archivos estáticos)
+# Fallback para todas las demás rutas (excepto archivos estáticos)
+# Cloudflare Pages automáticamente excluye archivos estáticos (.js, .css, .png, etc.)
 /*  /index.html  200
 `;
 
@@ -48,7 +60,7 @@ const headersContent = `# Headers globales de seguridad
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   
   # Content Security Policy
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://obxvffplochgeiclibng.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://*.workers.dev wss://*.supabase.co; frame-src 'self' https://www.mercadopago.com https://www.mercadopago.com.ar https://sdk.mercadopago.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://www.mercadopago.com;
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://pisqjmoklivzpwufhscx.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://*.workers.dev wss://*.supabase.co https://cloudflareinsights.com https://parallelum.com.br https://www.googleapis.com; frame-src 'self' https://www.mercadopago.com https://www.mercadopago.com.ar https://sdk.mercadopago.com https://calendar.google.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://www.mercadopago.com;
 
 # Cache para assets con hash (1 año)
 /*.js
