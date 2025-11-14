@@ -77,6 +77,46 @@ import { Toast } from 'primeng/toast';
       :host {
         display: block;
       }
+
+      /* Custom scrollbar para el dropdown del perfil */
+      [data-profile-menu]::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      [data-profile-menu]::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      [data-profile-menu]::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+
+      [data-profile-menu]::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        [data-profile-menu]::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+        }
+
+        [data-profile-menu]::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+      }
+
+      /* Firefox scrollbar */
+      [data-profile-menu] {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        [data-profile-menu] {
+          scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -103,6 +143,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   readonly darkMode = signal(false);
   readonly fullBleedLayout = signal(false);
   readonly userProfile = signal<Record<string, unknown> | null>(null);
+  readonly isOnVerificationPage = signal(false);
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('sidebarPanel', { read: ElementRef }) sidebarPanel?: ElementRef<HTMLElement>;
@@ -119,6 +160,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.loadUserProfile();
     this.pushNotificationService.initializePushNotifications();
     this.initializeProfileMenuCloseOnNavigation();
+    this.checkVerificationPage(this.router.url);
   }
 
   ngAfterViewInit(): void {
@@ -289,7 +331,10 @@ export class AppComponent implements OnInit, AfterViewInit {
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => this.syncLayoutFromRoute(this.activatedRoute));
+      .subscribe(() => {
+        this.syncLayoutFromRoute(this.activatedRoute);
+        this.checkVerificationPage(this.router.url);
+      });
   }
 
   private syncLayoutFromRoute(route: ActivatedRoute): void {
@@ -371,5 +416,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     } catch {
       // Silently fail - avatar will show placeholder
     }
+  }
+
+  private checkVerificationPage(url: string): void {
+    // Hide verification banner on verification-related pages to avoid layout conflicts
+    const verificationRoutes = [
+      '/profile/verification',
+      '/verification',
+      '/verification/upload-documents',
+    ];
+
+    const isOnVerificationPage = verificationRoutes.some((route) => url.includes(route));
+
+    this.isOnVerificationPage.set(isOnVerificationPage);
   }
 }

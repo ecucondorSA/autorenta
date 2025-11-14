@@ -22,7 +22,9 @@ import { ProfileStore } from '../../../core/stores/profile.store';
   imports: [CommonModule, IonicModule, ProfileContactSectionComponent],
   template: `
     <ion-header>
-      <ion-toolbar class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default">
+      <ion-toolbar
+        class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default"
+      >
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
@@ -56,20 +58,12 @@ import { ProfileStore } from '../../../core/stores/profile.store';
         </div>
 
         <!-- Contact Section Component -->
-        <app-profile-contact-section
-          *ngIf="!loading()"
-          [profile]="profile()"
-        />
+        <app-profile-contact-section *ngIf="!loading()" [profile]="profile()" />
 
         <!-- Help Text -->
         <div class="mt-8 p-4 rounded-lg bg-info-bg border border-info-border dark:bg-info-bg/20">
           <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
-            <svg
-              class="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -89,9 +83,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
             </li>
             <li class="flex gap-2">
               <span>•</span>
-              <span
-                ><strong>WhatsApp:</strong> Comunicación rápida durante las reservas</span
-              >
+              <span><strong>WhatsApp:</strong> Comunicación rápida durante las reservas</span>
             </li>
             <li class="flex gap-2">
               <span>•</span>
@@ -110,6 +102,11 @@ import { ProfileStore } from '../../../core/stores/profile.store';
       :host {
         display: block;
         height: 100%;
+      }
+
+      ion-content {
+        --padding-bottom: 24px;
+        min-height: 100vh;
       }
     `,
   ],

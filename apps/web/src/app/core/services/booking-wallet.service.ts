@@ -99,9 +99,14 @@ export class BookingWalletService {
       }
 
       // ✅ NUEVO: Notificar al dueño del auto sobre el pago recibido
-      this.notifyOwnerOfPaymentReceived(booking, amountCents).catch((error) => {
-        // Silently fail - notification is optional enhancement
-        this.logger.debug('Could not notify owner of payment received', error);
+      this.notifyOwnerOfPaymentReceived(booking, amountCents).catch((notificationError) => {
+        this.logger.warn(
+          'Failed to notify owner about payment received',
+          'BookingWalletService',
+          notificationError instanceof Error
+            ? notificationError
+            : new Error(String(notificationError)),
+        );
       });
 
       return { ok: true };
@@ -339,24 +344,20 @@ export class BookingWalletService {
   /**
    * Notifica al dueño del auto sobre un pago recibido
    */
-  private async notifyOwnerOfPaymentReceived(
-    booking: Booking,
-    amountCents: number
-  ): Promise<void> {
+  private async notifyOwnerOfPaymentReceived(booking: Booking, amountCents: number): Promise<void> {
     try {
       if (!booking.owner_id || !booking.car_id) return;
 
       const amount = amountCents / 100; // Convertir centavos a pesos
       const bookingUrl = `/bookings/${booking.id}`;
 
-      this.carOwnerNotifications.notifyPaymentReceived(
-        amount,
-        booking.id,
-        bookingUrl
-      );
+      this.carOwnerNotifications.notifyPaymentReceived(amount, booking.id, bookingUrl);
     } catch (error) {
-      // Silently fail - notification is optional enhancement
-      this.logger.debug('Could not notify owner of payment received', String(error));
+      this.logger.warn(
+        'Failed to notify owner about payment received',
+        'BookingWalletService',
+        error instanceof Error ? error : new Error(String(error)),
+      );
     }
   }
 }

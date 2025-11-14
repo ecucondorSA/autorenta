@@ -70,7 +70,7 @@ import { MetaService } from '../../core/services/meta.service';
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- Status Indicator -->
                 <div class="status-indicator">
                   <div class="status-dot" [class]="getStatusColor()"></div>
@@ -86,12 +86,20 @@ import { MetaService } from '../../core/services/meta.service';
           <ion-card class="protection-card" [class]="getProtectionCardStyle()">
             <ion-card-content>
               <div class="protection-header">
-                <ion-icon [name]="getProtectionIcon()" [color]="getProtectionIconColor()"></ion-icon>
+                <ion-icon
+                  [name]="getProtectionIcon()"
+                  [color]="getProtectionIconColor()"
+                ></ion-icon>
                 <div class="protection-info">
                   <h3>{{ getProtectionTitle() }}</h3>
                   <p>{{ getProtectionMessage() }}</p>
                 </div>
-                <ion-button *ngIf="needsProtection()" fill="solid" size="small" (click)="buyProtection()">
+                <ion-button
+                  *ngIf="needsProtection()"
+                  fill="solid"
+                  size="small"
+                  (click)="buyProtection()"
+                >
                   Proteger
                 </ion-button>
               </div>
@@ -113,12 +121,17 @@ import { MetaService } from '../../core/services/meta.service';
                 <div class="score-gauge">
                   <svg viewBox="0 0 200 120" class="gauge-svg">
                     <!-- Background arc -->
-                    <path d="M 20 100 A 80 80 0 0 1 180 100" stroke="#e0e0e0" stroke-width="20" fill="none"></path>
+                    <path
+                      d="M 20 100 A 80 80 0 0 1 180 100"
+                      stroke="#e0e0e0"
+                      stroke-width="20"
+                      fill="none"
+                    ></path>
                     <!-- Score arc -->
-                    <path 
-                      d="M 20 100 A 80 80 0 0 1 180 100" 
-                      [attr.stroke]="getScoreColor()" 
-                      stroke-width="20" 
+                    <path
+                      d="M 20 100 A 80 80 0 0 1 180 100"
+                      [attr.stroke]="getScoreColor()"
+                      stroke-width="20"
                       fill="none"
                       [attr.stroke-dasharray]="getScoreArcLength()"
                       [attr.stroke-dashoffset]="getScoreArcOffset()"
@@ -133,19 +146,31 @@ import { MetaService } from '../../core/services/meta.service';
                 <div class="score-breakdown">
                   <div class="score-category">
                     <div class="category-bar">
-                      <div class="bar-fill" [style.width]="getSpeedScore() + '%'" style="background: #3880ff;"></div>
+                      <div
+                        class="bar-fill"
+                        [style.width]="getSpeedScore() + '%'"
+                        style="background: #3880ff;"
+                      ></div>
                     </div>
                     <span>Velocidad: {{ getSpeedScore() }}%</span>
                   </div>
                   <div class="score-category">
                     <div class="category-bar">
-                      <div class="bar-fill" [style.width]="getBrakingScore() + '%'" style="background: #2dd36f;"></div>
+                      <div
+                        class="bar-fill"
+                        [style.width]="getBrakingScore() + '%'"
+                        style="background: #2dd36f;"
+                      ></div>
                     </div>
                     <span>Frenado: {{ getBrakingScore() }}%</span>
                   </div>
                   <div class="score-category">
                     <div class="category-bar">
-                      <div class="bar-fill" [style.width]="getAccelerationScore() + '%'" style="background: #ffc409;"></div>
+                      <div
+                        class="bar-fill"
+                        [style.width]="getAccelerationScore() + '%'"
+                        style="background: #ffc409;"
+                      ></div>
                     </div>
                     <span>Aceleración: {{ getAccelerationScore() }}%</span>
                   </div>
@@ -177,7 +202,7 @@ import { MetaService } from '../../core/services/meta.service';
                     <p class="benefit-description">{{ getFeeDescription() }}</p>
                   </div>
                 </div>
-                
+
                 <div class="benefit-item" [class]="getGuaranteeStyle()">
                   <div class="benefit-icon">
                     <ion-icon [name]="getGuaranteeIcon()"></ion-icon>
@@ -217,7 +242,7 @@ import { MetaService } from '../../core/services/meta.service';
                   <p>Años Sin Siniestros</p>
                 </div>
               </div>
-              
+
               <div class="claims-timeline" *ngIf="profile()?.last_claim_at">
                 <div class="timeline-item">
                   <div class="timeline-dot"></div>
@@ -225,12 +250,16 @@ import { MetaService } from '../../core/services/meta.service';
                     <h4>Último Siniestro</h4>
                     <p>{{ formatDate(profile()?.last_claim_at) }}</p>
                     <ion-badge [color]="profile()?.last_claim_with_fault ? 'danger' : 'medium'">
-                      {{ profile()?.last_claim_with_fault ? 'Con responsabilidad' : 'Sin responsabilidad' }}
+                      {{
+                        profile()?.last_claim_with_fault
+                          ? 'Con responsabilidad'
+                          : 'Sin responsabilidad'
+                      }}
                     </ion-badge>
                   </div>
                 </div>
               </div>
-              
+
               <div class="no-claims" *ngIf="!profile()?.total_claims">
                 <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
                 <p>¡Excelente! No tienes siniestros registrados</p>
@@ -250,28 +279,45 @@ import { MetaService } from '../../core/services/meta.service';
             </ion-card-header>
             <ion-card-content>
               <div class="class-ladder">
-                <div class="ladder-item" 
-                     *ngFor="let classItem of getClassLadder()" 
-                     [class.current]="classItem.class === driverClass()"
-                     [class.better]="classItem.class < driverClass()"
-                     [class.worse]="classItem.class > driverClass()">
+                <div
+                  class="ladder-item"
+                  *ngFor="let classItem of getClassLadder()"
+                  [class.current]="classItem.class === driverClass()"
+                  [class.better]="classItem.class < driverClass()"
+                  [class.worse]="classItem.class > driverClass()"
+                >
                   <div class="ladder-class">{{ classItem.class }}</div>
                   <div class="ladder-info">
                     <h4>{{ classItem.title }}</h4>
                     <p>{{ classItem.benefit }}</p>
                   </div>
                   <div class="ladder-status">
-                    <ion-icon *ngIf="classItem.class === driverClass()" name="location" color="primary"></ion-icon>
-                    <ion-icon *ngIf="classItem.class < driverClass()" name="arrow-up" color="success"></ion-icon>
-                    <ion-icon *ngIf="classItem.class > driverClass()" name="arrow-down" color="danger"></ion-icon>
+                    <ion-icon
+                      *ngIf="classItem.class === driverClass()"
+                      name="location"
+                      color="primary"
+                    ></ion-icon>
+                    <ion-icon
+                      *ngIf="classItem.class < driverClass()"
+                      name="arrow-up"
+                      color="success"
+                    ></ion-icon>
+                    <ion-icon
+                      *ngIf="classItem.class > driverClass()"
+                      name="arrow-down"
+                      color="danger"
+                    ></ion-icon>
                   </div>
                 </div>
               </div>
-              
+
               <div class="progression-message" *ngIf="canImprove()">
                 <ion-icon name="information-circle-outline" color="primary"></ion-icon>
-                <p>Mantén un historial limpio por <strong>{{ yearsToImprove() }} año{{ yearsToImprove() > 1 ? 's' : '' }}</strong> 
-                   para mejorar a Clase {{ getNextBetterClass() }}</p>
+                <p>
+                  Mantén un historial limpio por
+                  <strong>{{ yearsToImprove() }} año{{ yearsToImprove() > 1 ? 's' : '' }}</strong>
+                  para mejorar a Clase {{ getNextBetterClass() }}
+                </p>
               </div>
             </ion-card-content>
           </ion-card>
@@ -305,9 +351,7 @@ import { MetaService } from '../../core/services/meta.service';
             <ion-icon name="person-add-outline" color="medium"></ion-icon>
             <h2>Crear Perfil de Conductor</h2>
             <p>Inicia tu perfil de riesgo para acceder a beneficios y descuentos</p>
-            <ion-button expand="block" (click)="initializeProfile()">
-              Crear Perfil
-            </ion-button>
+            <ion-button expand="block" (click)="initializeProfile()"> Crear Perfil </ion-button>
           </ion-card-content>
         </ion-card>
       </div>
@@ -338,14 +382,15 @@ import { MetaService } from '../../core/services/meta.service';
         --background: var(--gradient-primary);
         box-shadow: var(--shadow-soft);
       }
-      
+
       .profile-content {
         --background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
         --padding-top: 0;
-        --padding-bottom: 0;
+        --padding-bottom: var(--spacing-lg);
         --padding-start: 0;
         --padding-end: 0;
         position: relative;
+        min-height: 100vh;
       }
 
       .profile-content::before {
@@ -360,12 +405,14 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       /* ===== LOADING & EMPTY STATES ===== */
-      .loading-section, .no-profile-section {
+      .loading-section,
+      .no-profile-section {
         padding: var(--spacing-lg);
         margin-top: 60px;
       }
 
-      .loading-content, .no-profile-content {
+      .loading-content,
+      .no-profile-content {
         text-align: center;
         padding: var(--spacing-xl) var(--spacing-lg);
         background: rgba(255, 255, 255, 0.95);
@@ -457,39 +504,45 @@ import { MetaService } from '../../core/services/meta.service';
         inset: -8px;
         border-radius: 50%;
         padding: 4px;
-        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
         mask-composite: exclude;
         animation: shimmer 3s linear infinite;
       }
 
       @keyframes shimmer {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
 
-      .class-badge.excellent { 
-        border-color: #10b981; 
+      .class-badge.excellent {
+        border-color: #10b981;
         background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
         color: #065f46;
       }
-      .class-badge.good { 
-        border-color: #3b82f6; 
+      .class-badge.good {
+        border-color: #3b82f6;
         background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
         color: #1e40af;
       }
-      .class-badge.base { 
-        border-color: #6b7280; 
+      .class-badge.base {
+        border-color: #6b7280;
         background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
         color: #374151;
       }
-      .class-badge.risk { 
-        border-color: #f59e0b; 
+      .class-badge.risk {
+        border-color: #f59e0b;
         background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         color: #92400e;
       }
-      .class-badge.high-risk { 
-        border-color: #ef4444; 
+      .class-badge.high-risk {
+        border-color: #ef4444;
         background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
         color: #991b1b;
       }
@@ -498,7 +551,7 @@ import { MetaService } from '../../core/services/meta.service';
         font-size: 2.5rem;
         font-weight: 900;
         line-height: 1;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
       .class-label {
@@ -546,19 +599,31 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       .benefit-highlight.discount {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.15) 0%,
+          rgba(5, 150, 105, 0.15) 100%
+        );
         color: #059669;
         border: 1px solid rgba(16, 185, 129, 0.2);
       }
 
       .benefit-highlight.surcharge {
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(239, 68, 68, 0.15) 0%,
+          rgba(220, 38, 38, 0.15) 100%
+        );
         color: #dc2626;
         border: 1px solid rgba(239, 68, 68, 0.2);
       }
 
       .benefit-highlight.neutral {
-        background: linear-gradient(135deg, rgba(107, 114, 128, 0.15) 0%, rgba(75, 85, 99, 0.15) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(107, 114, 128, 0.15) 0%,
+          rgba(75, 85, 99, 0.15) 100%
+        );
         color: #4b5563;
         border: 1px solid rgba(107, 114, 128, 0.2);
       }
@@ -589,14 +654,29 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       @keyframes pulse-ring {
-        0% { transform: scale(0.8); opacity: 0.3; }
-        50% { transform: scale(1.2); opacity: 0.1; }
-        100% { transform: scale(1.4); opacity: 0; }
+        0% {
+          transform: scale(0.8);
+          opacity: 0.3;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.1;
+        }
+        100% {
+          transform: scale(1.4);
+          opacity: 0;
+        }
       }
 
-      .status-dot.active { background: #10b981; }
-      .status-dot.warning { background: #f59e0b; }
-      .status-dot.danger { background: #ef4444; }
+      .status-dot.active {
+        background: #10b981;
+      }
+      .status-dot.warning {
+        background: #f59e0b;
+      }
+      .status-dot.danger {
+        background: #ef4444;
+      }
 
       .status-text {
         font-size: 0.75rem;
@@ -702,12 +782,12 @@ import { MetaService } from '../../core/services/meta.service';
       .gauge-svg {
         width: 100%;
         height: 100%;
-        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
       }
 
       .score-arc {
         transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1);
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
       }
 
       .score-number {
@@ -722,7 +802,7 @@ import { MetaService } from '../../core/services/meta.service';
         font-size: 3rem;
         font-weight: 900;
         color: var(--ion-color-dark);
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         display: block;
       }
 
@@ -757,7 +837,7 @@ import { MetaService } from '../../core/services/meta.service';
         background: #f1f5f9;
         border-radius: 6px;
         overflow: hidden;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
       }
 
       .bar-fill {
@@ -775,7 +855,7 @@ import { MetaService } from '../../core/services/meta.service';
         left: 0;
         right: 0;
         height: 50%;
-        background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
         border-radius: 6px 6px 0 0;
       }
 
@@ -792,7 +872,9 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       /* ===== BENEFITS SECTION ===== */
-      .benefits-section, .claims-section, .progression-section {
+      .benefits-section,
+      .claims-section,
+      .progression-section {
         padding: 0 var(--spacing-md) var(--spacing-md);
       }
 
@@ -942,20 +1024,32 @@ import { MetaService } from '../../core/services/meta.service';
         box-shadow: var(--shadow-soft);
       }
 
-      .claim-metric:nth-child(1)::before { background: #64748b; }
-      .claim-metric:nth-child(2)::before { background: #dc2626; }
-      .claim-metric:nth-child(3)::before { background: #16a34a; }
+      .claim-metric:nth-child(1)::before {
+        background: #64748b;
+      }
+      .claim-metric:nth-child(2)::before {
+        background: #dc2626;
+      }
+      .claim-metric:nth-child(3)::before {
+        background: #16a34a;
+      }
 
       .metric-number {
         font-size: 2.5rem;
         font-weight: 900;
         margin-bottom: var(--spacing-sm);
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
-      .metric-number.total { color: #475569; }
-      .metric-number.fault { color: #dc2626; }
-      .metric-number.good { color: #16a34a; }
+      .metric-number.total {
+        color: #475569;
+      }
+      .metric-number.fault {
+        color: #dc2626;
+      }
+      .metric-number.good {
+        color: #16a34a;
+      }
 
       .claim-metric p {
         margin: 0;
@@ -1302,7 +1396,7 @@ export class DriverProfilePage implements OnInit {
   private async loadData(): Promise<void> {
     try {
       await this.driverService.ensureProfile();
-      
+
       // Intentar cargar protector activo, pero no fallar si no existe
       try {
         await this.bonusProtectorService.loadActiveProtector();
@@ -1343,7 +1437,7 @@ export class DriverProfilePage implements OnInit {
   getClassStyle(): string {
     const cls = this.driverClass();
     if (cls <= 2) return 'excellent';
-    if (cls <= 4) return 'good';  
+    if (cls <= 4) return 'good';
     if (cls === 5) return 'base';
     if (cls <= 7) return 'risk';
     return 'high-risk';
@@ -1512,7 +1606,7 @@ export class DriverProfilePage implements OnInit {
   }
 
   // Class ladder
-  getClassLadder(): Array<{class: number, title: string, benefit: string}> {
+  getClassLadder(): Array<{ class: number; title: string; benefit: string }> {
     return [
       { class: 0, title: 'Excelente', benefit: '15% descuento, 25% menos garantía' },
       { class: 1, title: 'Muy Bueno', benefit: '12% descuento, 20% menos garantía' },
@@ -1553,7 +1647,8 @@ export class DriverProfilePage implements OnInit {
   private updateMeta(): void {
     this.metaService.updateMeta({
       title: 'Mi Perfil de Conductor - AutoRenta',
-      description: 'Revisa tu clase de conductor, beneficios y descuentos en el sistema Bonus-Malus.',
+      description:
+        'Revisa tu clase de conductor, beneficios y descuentos en el sistema Bonus-Malus.',
       keywords: 'perfil conductor, bonus malus, descuentos, clase conductor, seguro',
     });
   }

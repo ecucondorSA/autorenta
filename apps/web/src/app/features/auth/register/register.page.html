@@ -143,7 +143,9 @@
                 : null
             "
             class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 dark:border-border-default"
-            [class.border-border-default]="!form.controls.email.touched || !form.controls.email.invalid"
+            [class.border-border-default]="
+              !form.controls.email.touched || !form.controls.email.invalid
+            "
             [class.border-error-border]="form.controls.email.touched && form.controls.email.invalid"
             [class.focus:ring-cta-default]="
               !form.controls.email.touched || !form.controls.email.invalid
@@ -199,9 +201,7 @@
             [class.border-border-default]="
               !form.controls.phone.touched || !form.controls.phone.invalid
             "
-            [class.border-error-border]="
-              form.controls.phone.touched && form.controls.phone.invalid
-            "
+            [class.border-error-border]="form.controls.phone.touched && form.controls.phone.invalid"
             [class.focus:ring-cta-default]="
               !form.controls.phone.touched || !form.controls.phone.invalid
             "

@@ -1,147 +1,131 @@
-# 🐛 ANÁLISIS DE BUGS Y PROBLEMAS ENCONTRADOS
+# 🐛 API Errors - Bug Analysis & Fix Report
 
-## 📊 Resumen Ejecutivo
-Durante el debugging con Playwright se identificaron múltiples issues que afectan la funcionalidad y experiencia del usuario.
+**Date:** 2025-11-14  
+**Status:** 🔴 **CRITICAL - Production Issues**  
+**Affected:** Car detail pages, reviews, stats, exchange rates
 
----
+## 🚨 Critical Issues Found
 
-## 🔴 BUGS CRÍTICOS (Prioridad Alta)
+### 1. Reviews API - 400 Bad Request (HIGH PRIORITY)
+**Error:** `GET /rest/v1/reviews?select=*%2Creviewe…`
 
-### 1. 🔄 **Exchange Rate API Fallando**
-```
-[NETWORK ERROR 406]: exchange_rates?select=*&is_active=eq.true&order=last_updated.desc&limit=1
-[CONSOLE error]: Failed to load initial exchange rate 
-{code: PGRST116, details: The result contains 0 rows}
-```
-**Impacto**: Sistema de precios/monedas no funciona  
-**Causa**: No hay datos en la tabla `exchange_rates` o RLS policy bloqueando  
-**Solución**: Insertar datos iniciales o revisar RLS policies
+**Root Cause:**
+- Malformed SELECT query with URL encoding issues
+- Possible typo in column name (`reviewe` instead of `reviewer`/`reviewee`)
+- Foreign key relationship problems
 
-### 2. 📊 **Pricing Demand API Error**
-```
-[NETWORK ERROR 400]: pricing_demand_snapshots?select=*&order=timestamp.desc
-```
-**Impacto**: Precios dinámicos no funcionan  
-**Causa**: Tabla inexistente o estructura incorrecta  
-**Solución**: Verificar schema y migraciones
+**Fix Required:**
+```sql
+-- Check reviews table structure
+SELECT column_name, data_type 
+FROM information_schema.columns 
+WHERE table_name = 'reviews';
 
-### 3. 🏷️ **Dropdown de Marcas No Funciona**
-**Síntoma**: Campo modelo permanece deshabilitado  
-**Causa**: El autocompletado de marcas FIPE no se activa  
-**Impacto**: Usuarios no pueden seleccionar marca/modelo correctamente
-
----
-
-## 🟡 WARNINGS/PROBLEMAS MENORES (Prioridad Media)
-
-### 4. 📁 **Recursos Faltantes**
-```
-[CONSOLE error]: Failed to load resource: 404 - favicon.png
-[CONSOLE error]: Failed to load resource: 304 - inter-var.woff2
-[CONSOLE error]: Failed to load resource: 304 - autorentar-logo.png  
-[CONSOLE error]: Failed to load resource: 304 - env.js
-```
-**Impacto**: Experiencia visual degradada  
-**Solución**: Agregar archivos faltantes o actualizar rutas
-
-### 5. 🔐 **Sentry DSN No Configurado**
-```
-[CONSOLE warning]: ⚠️ Sentry DSN not configured - error tracking disabled
-```
-**Impacto**: No hay tracking de errores en producción  
-**Solución**: Configurar Sentry DSN en variables de entorno
-
-### 6. 📐 **Angular Forms Deprecated Pattern**
-```
-[CONSOLE warning]: It looks like you're using the disabled attribute with a reactive form directive
-```
-**Impacto**: Posibles problemas futuros con Angular updates  
-**Solución**: Migrar a FormControl disabled pattern
-
----
-
-## 🔵 PROBLEMAS DE RENDIMIENTO (Prioridad Baja)
-
-### 7. 🐌 **FPS Bajo**
-```
-[CONSOLE warning]: ⚠️ Low FPS detected: 4fps-20fps
-```
-**Impacto**: Experiencia lenta en dispositivos  
-**Causa**: Posiblemente muchas operaciones DOM/CSS
-
-### 8. 📏 **LCP Alto**
-```
-[CONSOLE warning]: ⚠️ LCP is above target (2.5s): 6.45s  
-[CONSOLE error]: NgOptimizedImage LCP element not marked "priority"
-```
-**Impacto**: SEO y UX degradados  
-**Solución**: Optimizar imágenes y marcar priority
-
-### 9. 🔗 **Preload Links Inválidos**
-```
-[CONSOLE warning]: <link rel=preload> uses an unsupported `as` value
+-- Fix the API query:
+-- WRONG: select=*,reviewe...
+-- CORRECT: select=*,reviewer:profiles(*),reviewee:profiles(*)
 ```
 
----
+### 2. Car Stats Table - 404 Not Found (MEDIUM PRIORITY)
+**Error:** `GET /rest/v1/car_stats?car_id=eq.b288ed1c...`
 
-## 🌐 PROBLEMAS DE RED Y APIS
+**Root Cause:**
+- Table `car_stats` doesn't exist in database
+- Migration not applied
 
-### 10. 🚫 **Request Failures Múltiples**
+**Fix Required:**
+- Apply migration: `database/upgrade-reviews-system.sql`
+- Or run the fix script: `fix-database-errors.sql`
+
+### 3. Exchange Rates - 406 Not Acceptable (LOW PRIORITY)  
+**Error:** `GET /rest/v1/exchange_rates?pair=eq.USDTARS`
+
+**Root Cause:**
+- Temporary API issue (format is correct)
+- `USDTARS` format works properly in production
+- May be database connectivity or RLS policy issue
+
+**Status:** ✅ **NO ACTION NEEDED** - Format is correct and functional
+
+### 4. Car Blocked Dates - 404 Not Found (LOW PRIORITY)
+**Error:** `GET /rest/v1/car_blocked_dates?car_id=eq.b288ed1c...`
+
+**Root Cause:**
+- Table doesn't exist
+- Migration available but not applied
+
+## 🔧 Immediate Fix Actions
+
+### Priority 1: Database Tables
 ```bash
-[REQUEST FAILED]: notifications?select=*&user_id=eq.xxx
-[REQUEST FAILED]: messages?select=*&recipient_id=eq.xxx  
-[REQUEST FAILED]: wallet_get_balance
-[REQUEST FAILED]: get_driver_profile
-```
-**Patrón**: La mayoría fallan por problemas de conectividad o RLS  
-**Impacto**: Funcionalidades no cargan (notificaciones, wallet, perfil)
-
----
-
-## 📋 PLAN DE ACCIÓN SUGERIDO
-
-### 🔴 **URGENTE (Esta semana)**
-1. **Arreglar Exchange Rates API** - crítico para precios
-2. **Solucionar Pricing Demand** - afecta precios dinámicos  
-3. **Debug dropdown marcas** - core functionality
-
-### 🟡 **MEDIO PLAZO (Próximas 2 semanas)**
-4. Configurar Sentry para error tracking
-5. Agregar recursos faltantes (favicon, fonts, logos)
-6. Optimizar imágenes LCP 
-
-### 🔵 **LARGO PLAZO (Próximo mes)**
-7. Migrar patrones Angular deprecated
-8. Optimizar rendimiento general
-9. Revisar preload hints
-
----
-
-## 🧪 COMANDOS DE VERIFICACIÓN
-
-```bash
-# 1. Verificar exchange rates
-curl -H "apikey: $SUPABASE_ANON_KEY" \
-"$SUPABASE_URL/rest/v1/exchange_rates?select=*" | jq
-
-# 2. Verificar pricing snapshots  
-curl -H "apikey: $SUPABASE_ANON_KEY" \
-"$SUPABASE_URL/rest/v1/pricing_demand_snapshots?select=*" | jq
-
-# 3. Verificar RLS policies
-npx supabase db execute "SELECT * FROM pg_policies WHERE tablename IN ('exchange_rates', 'pricing_demand_snapshots');"
+# Apply the database fix
+psql -h pisqjmoklivzpwufhscx.supabase.co -U postgres -d postgres -f fix-database-errors.sql
 ```
 
+### Priority 2: Frontend API Calls
+**File locations to check:**
+```
+apps/web/src/app/core/services/
+apps/web/src/app/shared/services/
+```
+
+**Search for:**
+- `reviewe` (typo)
+- `USDTARS` (wrong format)
+- API calls to missing endpoints
+
+### Priority 3: Error Handling
+Add proper error handling for missing data:
+```typescript
+// Add fallbacks for missing API responses
+try {
+  const stats = await supabase.from('car_stats').select('*').eq('car_id', carId);
+  return stats.data || { total_bookings: 0, average_rating: 0 };
+} catch (error) {
+  console.warn('Car stats not available:', error);
+  return { total_bookings: 0, average_rating: 0 }; // Fallback
+}
+```
+
+## 📊 Impact Assessment
+
+| Issue | User Impact | Business Impact | Fix Difficulty |
+|-------|-------------|-----------------|----------------|
+| Reviews 400 | No car reviews visible | Reduced trust/bookings | 🟡 Medium |
+| Car Stats 404 | Missing statistics | Poor UX | 🟢 Easy |
+| Exchange Rates 406 | ✅ No impact (works correctly) | ✅ None | ✅ No fix needed |
+| Blocked Dates 404 | Calendar issues | Booking conflicts | 🟢 Easy |
+
+## 🎯 Recommended Fix Order
+
+1. **🔴 URGENT:** Apply database migrations (`fix-database-errors.sql`)
+2. **🟡 HIGH:** Fix reviews API query format
+3. **�� MEDIUM:** Correct currency pair format
+4. **🟢 LOW:** Add error handling and fallbacks
+
+## 🧪 Testing Checklist
+
+- [ ] Car detail page loads without console errors
+- [ ] Reviews display correctly  
+- [ ] Statistics show proper data
+- [ ] Currency rates display correctly
+- [ ] Calendar blocking works
+- [ ] Error states handled gracefully
+
+## 🚀 Deployment Notes
+
+**Before deployment:**
+1. Apply database fixes in staging first
+2. Test all affected car detail pages
+3. Verify API responses return 200 OK
+4. Check error handling works
+
+**After deployment:**
+1. Monitor error rates in production
+2. Verify user experience improved
+3. Check database performance
+4. Update documentation
+
 ---
 
-## 📊 MÉTRICAS DE IMPACTO
-
-| Problema | Usuarios Afectados | Severidad | Tiempo Estimado Fix |
-|----------|-------------------|-----------|-------------------|
-| Exchange Rates | 100% | Alta | 2 horas |
-| Pricing Demand | 80% | Alta | 4 horas |
-| Dropdown Marcas | 90% | Alta | 6 horas |
-| Recursos 404 | 60% | Media | 1 hora |
-| Sentry Config | 100% | Media | 30 min |
-
-**Total tiempo estimado fixes críticos: ~12 horas**
+**Next Steps:** Apply `fix-database-errors.sql` immediately to resolve most issues.

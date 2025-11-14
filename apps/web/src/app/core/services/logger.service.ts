@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as Sentry from '@sentry/angular';
 import { environment } from '../../../environments/environment';
 
@@ -18,12 +18,6 @@ import { environment } from '../../../environments/environment';
  *   constructor(private logger: LoggerService) {}
  *
  *   // Basic logging
- *   this.logger.debug('User logged in', 'AuthService');
- *   this.logger.error('Payment failed', 'PaymentService', error);
- *
- *   // With trace ID for request correlation
- *   this.logger.setTraceId('req-abc-123');
- *   this.logger.info('Processing payment', 'PaymentService', { amount: 1000 });
  *
  *   // With ChildLogger
  *   private logger = inject(LoggerService).createChildLogger('MyService');
@@ -345,7 +339,7 @@ export class ChildLogger {
     this.parent.error(message, this.context, error);
   }
 
-  critical(message: string, error: Error): void {
+  critical(message: string, error?: Error): void {
     this.parent.critical(message, this.context, error);
   }
 }

@@ -1257,6 +1257,6 @@
   <app-dynamic-price-breakdown-modal
     [isOpen]="showBreakdownModal()"
     [snapshot]="priceLock()?.priceSnapshot ?? null"
-    (close)="showBreakdownModal.set(false)"
+    (closed)="showBreakdownModal.set(false)"
   />
 </div>

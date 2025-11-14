@@ -18,10 +18,10 @@ export class ProfileKpisComponent {
   canPublishCars = input<boolean>(false);
   canBookCars = input<boolean>(false);
 
-  onWalletClick = output<void>();
-  onBookingsClick = output<void>();
-  onCarsClick = output<void>();
-  onReviewsClick = output<void>();
+  walletClick = output<void>();
+  bookingsClick = output<void>();
+  carsClick = output<void>();
+  reviewsClick = output<void>();
 
   readonly walletStatus = computed(() => {
     const balance = this.availableBalance();

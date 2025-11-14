@@ -283,18 +283,13 @@
   "suites": [],
   "errors": [
     {
-      "message": "Error: test file \"renter/booking/06-cancel-and-refund.spec.ts\" should not import test file \"fixtures/auth.setup.ts\"",
-      "location": {
-        "file": "/home/edu/autorenta/tests/renter/booking/06-cancel-and-refund.spec.ts",
-        "line": 1,
-        "column": 1
-      },
-      "snippet": "\u001b[90m   at \u001b[39mrenter/booking/06-cancel-and-refund.spec.ts:1\n\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 1 |\u001b[39m \u001b[36mimport\u001b[39m { test\u001b[33m,\u001b[39m expect } \u001b[36mfrom\u001b[39m \u001b[32m'@playwright/test'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 2 |\u001b[39m \u001b[36mimport\u001b[39m { \u001b[33mAuthFixture\u001b[39m } \u001b[36mfrom\u001b[39m \u001b[32m'../../fixtures/auth.setup'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 3 |\u001b[39m \u001b[36mimport\u001b[39m { createClient } \u001b[36mfrom\u001b[39m \u001b[32m'@supabase/supabase-js'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 4 |\u001b[39m\u001b[0m"
+      "message": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments.",
+      "stack": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments."
     }
   ],
   "stats": {
-    "startTime": "2025-11-14T06:42:55.122Z",
-    "duration": 1516.685,
+    "startTime": "2025-11-14T09:52:19.690Z",
+    "duration": 117.43600000000004,
     "expected": 0,
     "skipped": 0,
     "unexpected": 0,

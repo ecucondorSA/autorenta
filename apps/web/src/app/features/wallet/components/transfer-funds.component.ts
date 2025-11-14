@@ -76,8 +76,9 @@ export class TransferFundsComponent {
     try {
       const result = await this.ledgerService.searchUserByWalletNumber(query);
       if (result) {
-        this.selectedRecipient.set(result);
-        this.searchResults.set([result]);
+        const typedResult = result as unknown as UserSearchResult;
+        this.selectedRecipient.set(typedResult);
+        this.searchResults.set([typedResult]);
         this.searchError.set(null);
       } else {
         this.searchError.set('Número de cuenta no encontrado');

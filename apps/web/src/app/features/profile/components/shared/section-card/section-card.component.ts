@@ -21,8 +21,8 @@
  *   [error]="error"
  *   [isDirty]="isDirty"
  *   [isValid]="isValid"
- *   (onSave)="handleSave()"
- *   (onCancel)="handleCancel()"
+ *   (saveRequested)="handleSave()"
+ *   (cancelRequested)="handleCancel()"
  * >
  *   <!-- Section content projected here -->
  *   <form [formGroup]="form">
@@ -62,9 +62,9 @@ export class SectionCardComponent {
   @Input() isValid: WritableSignal<boolean> | boolean = signal(true);
 
   // Events
-  @Output() onSave = new EventEmitter<void>();
-  @Output() onCancel = new EventEmitter<void>();
-  @Output() onEdit = new EventEmitter<void>();
+  @Output() saveRequested = new EventEmitter<void>();
+  @Output() cancelRequested = new EventEmitter<void>();
+  @Output() editRequested = new EventEmitter<void>();
 
   /**
    * Helper to get boolean value from signal or plain boolean
@@ -118,21 +118,21 @@ export class SectionCardComponent {
       (this.isEditing as WritableSignal<boolean>).set(true);
     }
 
-    this.onEdit.emit();
+  this.editRequested.emit();
   }
 
   /**
    * Handle save action
    */
   handleSave(): void {
-    this.onSave.emit();
+  this.saveRequested.emit();
   }
 
   /**
    * Handle cancel action
    */
   handleCancel(): void {
-    this.onCancel.emit();
+  this.cancelRequested.emit();
   }
 
   /**

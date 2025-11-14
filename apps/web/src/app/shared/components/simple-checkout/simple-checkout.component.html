@@ -236,7 +236,9 @@
           <div class="payment-info">
             <h4>Efectivo</h4>
             <p>Paga al retirar el auto</p>
-            <p class="payment-description">Paga en efectivo directamente al propietario cuando retires el vehículo</p>
+            <p class="payment-description">
+              Paga en efectivo directamente al propietario cuando retires el vehículo
+            </p>
           </div>
           <div class="payment-radio">
             <div class="radio" [class.checked]="paymentMethod() === 'cash'"></div>
@@ -266,9 +268,9 @@
         <div class="notice-text">
           <h4>¿Sabías que con Wallet AutoRenta no necesitas tarjeta de crédito?</h4>
           <p>
-            La Wallet AutoRenta te permite alquilar vehículos de forma rápida y segura sin necesidad de tener una tarjeta de crédito.
-            Solo carga saldo en tu wallet y podrás alquilar cualquier vehículo disponible.
-            ¡Es la forma más conveniente de alquilar!
+            La Wallet AutoRenta te permite alquilar vehículos de forma rápida y segura sin necesidad
+            de tener una tarjeta de crédito. Solo carga saldo en tu wallet y podrás alquilar
+            cualquier vehículo disponible. ¡Es la forma más conveniente de alquilar!
           </p>
         </div>
       </div>
@@ -298,9 +300,13 @@
           <div class="confirmation-item">
             <span>Método de pago</span>
             <span>
-              {{ paymentMethod() === 'wallet' ? 'Wallet AutoRenta' :
-                 paymentMethod() === 'cash' ? 'Efectivo al retirar' :
-                 'Tarjeta de Crédito' }}
+              {{
+                paymentMethod() === 'wallet'
+                  ? 'Wallet AutoRenta'
+                  : paymentMethod() === 'cash'
+                    ? 'Efectivo al retirar'
+                    : 'Tarjeta de Crédito'
+              }}
             </span>
           </div>
 

@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WizardComponent, WizardStep } from '../../../../shared/components/wizard/wizard.component';
@@ -16,6 +16,7 @@ import { PaymentGatewayFactory } from '../../../../core/services/payment-gateway
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
 import { ErrorStateComponent } from '../../../../shared/components/error-state/error-state.component';
 import { TikTokEventsService } from '../../../../core/services/tiktok-events.service';
+import type { Booking } from '../../../../core/models';
 
 /**
  * BookingCheckoutWizardPage - Multi-step booking checkout
@@ -83,8 +84,8 @@ import { TikTokEventsService } from '../../../../core/services/tiktok-events.ser
           cancelLabel="Cancelar"
           completeLabel="Confirmar y Pagar"
           (stepChange)="handleStepChange($event)"
-          (cancel)="handleCancel()"
-          (complete)="handleComplete()"
+          (cancelRequested)="handleCancel()"
+          (completed)="handleComplete()"
         >
           <!-- Step 1: Dates & Location -->
           @if (currentStep() === 0) {
@@ -177,7 +178,7 @@ export class BookingCheckoutWizardPage implements OnInit {
   /**
    * Booking data
    */
-  booking = signal<any>(null);
+  booking = signal<Booking | null>(null);
 
   /**
    * Current wizard step (0-based)
@@ -323,7 +324,7 @@ export class BookingCheckoutWizardPage implements OnInit {
         void this.tiktokEvents.trackAddToCart({
           contentId: bookingData.car_id || bookingData.id,
           contentName: bookingData.car_title || bookingData.car_model || 'Auto',
-          value: bookingData.total_price || 0,
+          value: bookingData.total_amount || 0,
           currency: bookingData.currency || 'ARS',
           quantity: 1,
         });

@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,7 +34,7 @@ import { CarsService } from '../../../core/services/cars.service';
   templateUrl: './vehicle-documents.page.html',
   styleUrls: ['./vehicle-documents.page.css'],
 })
-export class VehicleDocumentsPage implements OnInit {
+export class VehicleDocumentsPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly documentsService = inject(VehicleDocumentsService);
@@ -48,6 +48,7 @@ export class VehicleDocumentsPage implements OnInit {
   readonly documents = signal<VehicleDocument[]>([]);
   readonly expiringDocs = signal<VehicleDocument[]>([]);
   readonly showUploadModal = signal(false);
+  private documentStatusTeardown?: () => void;
 
   // Upload form
   readonly uploadForm = signal({
@@ -82,12 +83,19 @@ export class VehicleDocumentsPage implements OnInit {
     this.carId.set(id);
     await this.loadDocuments();
     await this.loadExpiringDocuments();
-    
+
     // ✅ NUEVO: Suscribirse a cambios de estado de documentos
     this.subscribeToDocumentStatusChanges();
-    
+
     // ✅ NUEVO: Verificar y notificar documentos próximos a vencer
     this.checkExpiringDocuments();
+  }
+
+  ngOnDestroy(): void {
+    if (this.documentStatusTeardown) {
+      this.documentStatusTeardown();
+      this.documentStatusTeardown = undefined;
+    }
   }
 
   async loadDocuments() {
@@ -302,7 +310,7 @@ export class VehicleDocumentsPage implements OnInit {
    * Suscribirse a cambios de estado de documentos
    */
   private subscribeToDocumentStatusChanges(): void {
-    const unsubscribe = this.documentsService.subscribeToDocumentStatusChanges(
+    this.documentStatusTeardown = this.documentsService.subscribeToDocumentStatusChanges(
       this.carId(),
       async (document) => {
         const car = await this.carsService.getCarById(this.carId());
@@ -317,13 +325,12 @@ export class VehicleDocumentsPage implements OnInit {
           carName,
           document.status as 'verified' | 'rejected',
           document.notes || undefined,
-          documentsUrl
+          documentsUrl,
         );
-      }
+      },
     );
 
-    // Cleanup on destroy (se puede mejorar con OnDestroy)
-    // Por ahora se mantiene activo mientras la página esté abierta
+    // Layer cleanup handled via ngOnDestroy teardown
   }
 
   /**
@@ -332,7 +339,7 @@ export class VehicleDocumentsPage implements OnInit {
   private async checkExpiringDocuments(): Promise<void> {
     try {
       const expiringDocs = this.expiringDocs();
-      
+
       for (const doc of expiringDocs) {
         const car = await this.carsService.getCarById(this.carId());
         if (!car) continue;
@@ -344,22 +351,25 @@ export class VehicleDocumentsPage implements OnInit {
         if (doc.expiry_date) {
           const expiryDate = new Date(doc.expiry_date);
           const today = new Date();
-          const daysUntilExpiry = Math.ceil((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+          const daysUntilExpiry = Math.ceil(
+            (expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+          );
 
           if (daysUntilExpiry > 0 && daysUntilExpiry <= 30) {
             this.carOwnerNotifications.notifyDocumentExpiring(
               documentType,
               carName,
               daysUntilExpiry,
-              documentsUrl
+              documentsUrl,
             );
             // Pequeña pausa entre notificaciones
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
           }
         }
       }
     } catch (error) {
-      console.debug('Could not check expiring documents', error);
+      console.error('[VehicleDocuments] Error while checking expiring docs:', error);
+      this.toastService.error('No pudimos verificar los vencimientos. Intenta nuevamente.', '');
     }
   }
 

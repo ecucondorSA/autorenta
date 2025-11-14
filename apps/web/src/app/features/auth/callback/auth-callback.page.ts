@@ -109,16 +109,17 @@ export class AuthCallbackPage implements OnInit {
       if (errorParam) {
         // Error de OAuth (ej: bad_oauth_state)
         let errorMessage = 'Error durante la autenticación.';
-        
+
         if (errorParam === 'bad_oauth_state') {
-          errorMessage = 'La sesión de autenticación expiró o se perdió. Por favor intentá iniciar sesión nuevamente.';
+          errorMessage =
+            'La sesión de autenticación expiró o se perdió. Por favor intentá iniciar sesión nuevamente.';
         } else if (errorDescription) {
           errorMessage = decodeURIComponent(errorDescription);
         }
 
         // Limpiar la URL
         window.history.replaceState({}, document.title, window.location.pathname);
-        
+
         throw new Error(errorMessage);
       }
 
@@ -129,7 +130,9 @@ export class AuthCallbackPage implements OnInit {
       if (error) {
         // Manejar errores específicos de Supabase
         if (error.message?.includes('bad_oauth_state') || error.message?.includes('state')) {
-          throw new Error('La sesión de autenticación expiró. Por favor intentá iniciar sesión nuevamente.');
+          throw new Error(
+            'La sesión de autenticación expiró. Por favor intentá iniciar sesión nuevamente.',
+          );
         }
         throw new Error(error.message || 'Error durante la autenticación.');
       }

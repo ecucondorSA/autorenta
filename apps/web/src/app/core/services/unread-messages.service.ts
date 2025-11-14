@@ -1,4 +1,4 @@
-import { Injectable, signal, inject, computed, effect, Injector, DestroyRef } from '@angular/core';
+import { Injectable, signal, inject, computed, effect, Injector } from '@angular/core';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
@@ -14,6 +14,21 @@ export interface UnreadConversation {
   lastMessageAt: string;
   otherUserId: string;
   otherUserName?: string;
+}
+
+interface MessageRow {
+  id: string;
+  booking_id: string | null;
+  car_id: string | null;
+  sender_id: string;
+  recipient_id: string;
+  body: string;
+  created_at: string;
+  read_at: string | null;
+}
+
+interface AudioContextWindow extends Window {
+  webkitAudioContext?: typeof AudioContext;
 }
 
 /**
@@ -40,8 +55,6 @@ export class UnreadMessagesService {
   readonly isLoading = signal(false);
 
   constructor() {
-    const destroyRef = inject(DestroyRef);
-
     effect(
       () => {
         const session = this.authService.session$();
@@ -69,7 +82,7 @@ export class UnreadMessagesService {
     try {
       await this.fetchUnreadConversations(user.id);
       this.subscribeToNewMessages(user.id);
-    } catch (_error) {
+    } catch {
       // Silent fail
     } finally {
       this.isLoading.set(false);
@@ -99,11 +112,13 @@ export class UnreadMessagesService {
       // Group by conversation (booking_id or car_id)
       const conversationsMap = new Map<string, UnreadConversation>();
 
-      for (const message of data) {
-        const conversationId = (message as any).booking_id || (message as any).car_id;
+      const messages = (data as MessageRow[]) ?? [];
+
+      for (const message of messages) {
+        const conversationId = message.booking_id ?? message.car_id;
         if (!conversationId) continue;
 
-        const type = (message as any).booking_id ? 'booking' : 'car';
+        const type = message.booking_id ? 'booking' : 'car';
         const key = `${type}-${conversationId}`;
 
         if (!conversationsMap.has(key)) {
@@ -111,9 +126,9 @@ export class UnreadMessagesService {
             conversationId,
             type: type as 'booking' | 'car',
             unreadCount: 0,
-            lastMessage: (message as any).body,
-            lastMessageAt: (message as any).created_at,
-            otherUserId: (message as any).sender_id,
+            lastMessage: message.body,
+            lastMessageAt: message.created_at,
+            otherUserId: message.sender_id,
           });
         }
 
@@ -121,14 +136,14 @@ export class UnreadMessagesService {
         conv.unreadCount++;
 
         // Keep the most recent message
-        if (new Date((message as any).created_at) > new Date(conv.lastMessageAt)) {
-          conv.lastMessage = (message as any).body;
-          conv.lastMessageAt = (message as any).created_at;
+        if (new Date(message.created_at) > new Date(conv.lastMessageAt)) {
+          conv.lastMessage = message.body;
+          conv.lastMessageAt = message.created_at;
         }
       }
 
       this.unreadConversations.set(Array.from(conversationsMap.values()));
-    } catch (_error) {
+    } catch {
       // Silent fail
     }
   }
@@ -154,7 +169,7 @@ export class UnreadMessagesService {
           filter: `recipient_id=eq.${userId}`,
         },
         (payload) => {
-          this.handleNewMessage(payload.new);
+          this.handleNewMessage(payload.new as MessageRow);
         },
       )
       .on(
@@ -166,7 +181,7 @@ export class UnreadMessagesService {
           filter: `recipient_id=eq.${userId}`,
         },
         (payload) => {
-          this.handleMessageUpdate(payload.new);
+          this.handleMessageUpdate(payload.new as MessageRow);
         },
       )
       .subscribe();
@@ -175,11 +190,11 @@ export class UnreadMessagesService {
   /**
    * Handle new message received via real-time
    */
-  private async handleNewMessage(message: unknown): Promise<void> {
-    const conversationId = (message as any).booking_id || (message as any).car_id;
+  private async handleNewMessage(message: MessageRow): Promise<void> {
+    const conversationId = message.booking_id ?? message.car_id;
     if (!conversationId) return;
 
-    const type = (message as any).booking_id ? 'booking' : 'car';
+    const type = message.booking_id ? 'booking' : 'car';
     const conversations = [...this.unreadConversations()];
     const existingIndex = conversations.findIndex(
       (c) => c.conversationId === conversationId && c.type === type,
@@ -190,8 +205,8 @@ export class UnreadMessagesService {
       conversations[existingIndex] = {
         ...conversations[existingIndex],
         unreadCount: conversations[existingIndex].unreadCount + 1,
-        lastMessage: (message as any).body,
-        lastMessageAt: (message as any).created_at,
+        lastMessage: message.body,
+        lastMessageAt: message.created_at,
       };
     } else {
       // Add new conversation
@@ -199,9 +214,9 @@ export class UnreadMessagesService {
         conversationId,
         type: type as 'booking' | 'car',
         unreadCount: 1,
-        lastMessage: (message as any).body,
-        lastMessageAt: (message as any).created_at,
-        otherUserId: (message as any).sender_id,
+        lastMessage: message.body,
+        lastMessageAt: message.created_at,
+        otherUserId: message.sender_id,
       });
     }
 
@@ -213,14 +228,14 @@ export class UnreadMessagesService {
     // ✅ NUEVO: Mostrar notificación profesional si es un mensaje sobre un auto
     // Solo si el usuario actual es el dueño del auto (recipient)
     const currentUser = this.authService.session$()?.user;
-    if (currentUser && (message as any).recipient_id === currentUser.id) {
-      const carId = (message as any).car_id;
+    if (currentUser && message.recipient_id === currentUser.id) {
+      const carId = message.car_id;
       if (carId && type === 'car') {
         // Mostrar notificación de forma asíncrona sin bloquear
         this.showCarMessageNotification(
           carId,
-          (message as any).sender_id,
-          (message as any).body
+          message.sender_id,
+          message.body,
         ).catch(() => {
           // Silently fail - notification is optional enhancement
         });
@@ -234,7 +249,7 @@ export class UnreadMessagesService {
   private async showCarMessageNotification(
     carId: string,
     senderId: string,
-    messageBody: string
+    messageBody: string,
   ): Promise<void> {
     try {
       // Obtener información del auto y del remitente en paralelo
@@ -248,29 +263,23 @@ export class UnreadMessagesService {
         const senderName = sender.full_name || 'Un usuario';
         const chatUrl = `/messages?carId=${carId}&userId=${senderId}`;
 
-        this.carOwnerNotifications.notifyNewChatMessage(
-          senderName,
-          carName,
-          messageBody,
-          chatUrl
-        );
+        this.carOwnerNotifications.notifyNewChatMessage(senderName, carName, messageBody, chatUrl);
       }
-    } catch (error) {
+    } catch {
       // Silently fail - notification is optional enhancement
-      console.debug('Could not show car message notification:', error);
     }
   }
 
   /**
    * Handle message update (e.g., marked as read)
    */
-  private handleMessageUpdate(message: unknown): void {
-    if ((message as any).read_at) {
+  private handleMessageUpdate(message: MessageRow): void {
+    if (message.read_at) {
       // Message was marked as read, decrement count
-      const conversationId = (message as any).booking_id || (message as any).car_id;
+      const conversationId = message.booking_id ?? message.car_id;
       if (!conversationId) return;
 
-      const type = (message as any).booking_id ? 'booking' : 'car';
+      const type = message.booking_id ? 'booking' : 'car';
       const conversations = [...this.unreadConversations()];
       const existingIndex = conversations.findIndex(
         (c) => c.conversationId === conversationId && c.type === type,
@@ -317,7 +326,7 @@ export class UnreadMessagesService {
         (c) => !(c.conversationId === conversationId && c.type === type),
       );
       this.unreadConversations.set(conversations);
-    } catch (_error) {
+    } catch {
       // Silent fail
     }
   }
@@ -328,7 +337,13 @@ export class UnreadMessagesService {
   private playNotificationSound(): void {
     try {
       // Create a simple notification sound using Web Audio API
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const audioContextClass =
+        window.AudioContext || (window as AudioContextWindow).webkitAudioContext;
+      if (!audioContextClass) {
+        return;
+      }
+
+      const audioContext = new audioContextClass();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
 

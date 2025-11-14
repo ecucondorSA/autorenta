@@ -30,8 +30,3 @@ export class MapLayersControlComponent {
     this.isOpen.set(!this.isOpen());
   }
 }
-
-
-
-
-

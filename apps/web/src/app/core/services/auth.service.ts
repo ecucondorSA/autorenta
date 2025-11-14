@@ -141,12 +141,12 @@ export class AuthService implements OnDestroy {
     try {
       // Verificar si hay un hash en la URL (tokens de OAuth)
       const hash = window.location.hash;
-      
+
       if (!hash && !window.location.search.includes('code=')) {
         // No hay tokens ni código - puede ser un error
         const urlParams = new URLSearchParams(window.location.search);
         const errorParam = urlParams.get('error');
-        
+
         if (errorParam) {
           return {
             data: null,

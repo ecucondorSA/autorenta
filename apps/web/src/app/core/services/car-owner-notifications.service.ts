@@ -6,15 +6,15 @@ import { injectSupabase } from './supabase-client.service';
 
 /**
  * CarOwnerNotificationsService
- * 
+ *
  * Servicio especializado para generar notificaciones para locadores (dueños de autos).
  * Proporciona notificaciones contextuales y accionables para diferentes eventos.
- * 
+ *
  * @example
  * ```typescript
  * // Cuando alguien envía un mensaje
  * carOwnerNotifications.notifyNewChatMessage('Juan Pérez', 'Porsche 911', '/messages?carId=123');
- * 
+ *
  * // Cuando alguien solicita una reserva
  * carOwnerNotifications.notifyNewBookingRequest('María García', 'Porsche 911', 25000, '/bookings/abc123');
  * ```
@@ -30,7 +30,7 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación cuando alguien envía un mensaje en el chat
-   * 
+   *
    * @param senderName - Nombre de quien envía el mensaje
    * @param carName - Nombre del auto (ej: "Porsche 911 Carrera")
    * @param messagePreview - Vista previa del mensaje (primeros 50 caracteres)
@@ -40,9 +40,9 @@ export class CarOwnerNotificationsService {
     senderName: string,
     carName: string,
     messagePreview?: string,
-    chatUrl?: string
+    chatUrl?: string,
   ): void {
-    const preview = messagePreview 
+    const preview = messagePreview
       ? `: "${messagePreview.substring(0, 50)}${messagePreview.length > 50 ? '...' : ''}"`
       : '';
 
@@ -53,28 +53,30 @@ export class CarOwnerNotificationsService {
       priority: 'normal',
       duration: 8000,
       sound: true,
-      actions: chatUrl ? [
-        {
-          label: 'Ver mensaje',
-          icon: '💬',
-          command: () => {
-            if (chatUrl) {
-              this.router.navigateByUrl(chatUrl);
-            }
-          },
-        },
-        {
-          label: 'Cerrar',
-          styleClass: 'p-button-text',
-          command: () => {},
-        },
-      ] : undefined,
+      actions: chatUrl
+        ? [
+            {
+              label: 'Ver mensaje',
+              icon: '💬',
+              command: () => {
+                if (chatUrl) {
+                  this.router.navigateByUrl(chatUrl);
+                }
+              },
+            },
+            {
+              label: 'Cerrar',
+              styleClass: 'p-button-text',
+              command: () => {},
+            },
+          ]
+        : undefined,
     });
   }
 
   /**
    * Notificación cuando alguien solicita una reserva
-   * 
+   *
    * @param renterName - Nombre del locatario
    * @param carName - Nombre del auto
    * @param pricePerDay - Precio por día
@@ -84,7 +86,7 @@ export class CarOwnerNotificationsService {
     renterName: string,
     carName: string,
     pricePerDay: number,
-    bookingUrl: string
+    bookingUrl: string,
   ): void {
     this.notificationManager.show({
       title: '🎉 ¡Nueva solicitud de reserva!',
@@ -113,27 +115,24 @@ export class CarOwnerNotificationsService {
   /**
    * Notificación cuando alguien está viendo su auto
    * (Útil para mostrar interés, pero no invasivo)
-   * 
+   *
    * @param viewerCount - Cantidad de personas viendo el auto actualmente
    * @param carName - Nombre del auto
    */
   notifyCarViews(carName: string, viewerCount: number): void {
     if (viewerCount === 0) return; // No notificar si no hay vistas
 
-    const message = viewerCount === 1
-      ? `Una persona está viendo tu ${carName} ahora mismo.`
-      : `${viewerCount} personas están viendo tu ${carName} ahora mismo.`;
+    const message =
+      viewerCount === 1
+        ? `Una persona está viendo tu ${carName} ahora mismo.`
+        : `${viewerCount} personas están viendo tu ${carName} ahora mismo.`;
 
-    this.notificationManager.info(
-      '👀 Tu auto está siendo visto',
-      message,
-      5000
-    );
+    this.notificationManager.info('👀 Tu auto está siendo visto', message, 5000);
   }
 
   /**
    * Notificación cuando se completa una reserva exitosamente
-   * 
+   *
    * @param renterName - Nombre del locatario
    * @param carName - Nombre del auto
    * @param totalAmount - Monto total de la reserva
@@ -143,7 +142,7 @@ export class CarOwnerNotificationsService {
     renterName: string,
     carName: string,
     totalAmount: number,
-    bookingUrl: string
+    bookingUrl: string,
   ): void {
     this.notificationManager.show({
       title: '✅ Reserva confirmada',
@@ -171,16 +170,12 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación cuando se recibe un pago
-   * 
+   *
    * @param amount - Monto recibido
    * @param bookingId - ID de la reserva
    * @param bookingUrl - URL para ver la reserva
    */
-  notifyPaymentReceived(
-    amount: number,
-    bookingId: string,
-    bookingUrl: string
-  ): void {
+  notifyPaymentReceived(amount: number, bookingId: string, bookingUrl: string): void {
     this.notificationManager.show({
       title: '💰 Pago recibido',
       message: `Has recibido $${amount.toLocaleString('es-AR')} por la reserva #${bookingId.substring(0, 8)}. El dinero está disponible en tu wallet.`,
@@ -214,18 +209,13 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación cuando alguien deja una reseña
-   * 
+   *
    * @param reviewerName - Nombre de quien dejó la reseña
    * @param rating - Calificación (1-5)
    * @param carName - Nombre del auto
    * @param reviewUrl - URL para ver la reseña
    */
-  notifyNewReview(
-    reviewerName: string,
-    rating: number,
-    carName: string,
-    reviewUrl?: string
-  ): void {
+  notifyNewReview(reviewerName: string, rating: number, carName: string, reviewUrl?: string): void {
     const stars = '⭐'.repeat(rating);
     const emptyStars = '☆'.repeat(5 - rating);
 
@@ -236,56 +226,50 @@ export class CarOwnerNotificationsService {
       priority: 'normal',
       duration: 8000,
       sound: false,
-      actions: reviewUrl ? [
-        {
-          label: 'Ver reseña',
-          icon: '⭐',
-          command: () => {
-            this.router.navigateByUrl(reviewUrl);
-          },
-        },
-        {
-          label: 'Cerrar',
-          styleClass: 'p-button-text',
-          command: () => {},
-        },
-      ] : undefined,
+      actions: reviewUrl
+        ? [
+            {
+              label: 'Ver reseña',
+              icon: '⭐',
+              command: () => {
+                this.router.navigateByUrl(reviewUrl);
+              },
+            },
+            {
+              label: 'Cerrar',
+              styleClass: 'p-button-text',
+              command: () => {},
+            },
+          ]
+        : undefined,
     });
   }
 
   /**
    * Notificación cuando se cancela una reserva
-   * 
+   *
    * @param renterName - Nombre del locatario
    * @param carName - Nombre del auto
    * @param reason - Razón de la cancelación (opcional)
    */
-  notifyBookingCancelled(
-    renterName: string,
-    carName: string,
-    reason?: string
-  ): void {
+  notifyBookingCancelled(renterName: string, carName: string, reason?: string): void {
     const reasonText = reason ? ` Razón: ${reason}` : '';
 
     this.notificationManager.warning(
       '⚠️ Reserva cancelada',
       `${renterName} canceló la reserva de tu ${carName}.${reasonText}`,
-      8000
+      8000,
     );
   }
 
   /**
    * Notificación cuando el auto necesita atención (ej: fecha de inspección próxima)
-   * 
+   *
    * @param carName - Nombre del auto
    * @param message - Mensaje específico sobre la atención necesaria
    * @param actionUrl - URL para realizar la acción
    */
-  notifyCarNeedsAttention(
-    carName: string,
-    message: string,
-    actionUrl?: string
-  ): void {
+  notifyCarNeedsAttention(carName: string, message: string, actionUrl?: string): void {
     this.notificationManager.show({
       title: '🔧 Tu auto necesita atención',
       message: `${carName}: ${message}`,
@@ -293,26 +277,28 @@ export class CarOwnerNotificationsService {
       priority: 'normal',
       duration: 8000,
       sound: false,
-      actions: actionUrl ? [
-        {
-          label: 'Ver detalles',
-          icon: '🔧',
-          command: () => {
-            this.router.navigateByUrl(actionUrl);
-          },
-        },
-        {
-          label: 'Cerrar',
-          styleClass: 'p-button-text',
-          command: () => {},
-        },
-      ] : undefined,
+      actions: actionUrl
+        ? [
+            {
+              label: 'Ver detalles',
+              icon: '🔧',
+              command: () => {
+                this.router.navigateByUrl(actionUrl);
+              },
+            },
+            {
+              label: 'Cerrar',
+              styleClass: 'p-button-text',
+              command: () => {},
+            },
+          ]
+        : undefined,
     });
   }
 
   /**
    * Notificación de logro/milestone (ej: "Tu auto ha sido visto 100 veces")
-   * 
+   *
    * @param achievement - Descripción del logro
    * @param carName - Nombre del auto
    */
@@ -329,19 +315,16 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación cuando hay una pregunta frecuente sin responder
-   * 
+   *
    * @param questionCount - Cantidad de preguntas sin responder
    * @param carName - Nombre del auto
    * @param chatUrl - URL para ir al chat
    */
-  notifyUnansweredQuestions(
-    questionCount: number,
-    carName: string,
-    chatUrl: string
-  ): void {
-    const message = questionCount === 1
-      ? `Tienes una pregunta sin responder sobre tu ${carName}.`
-      : `Tienes ${questionCount} preguntas sin responder sobre tu ${carName}.`;
+  notifyUnansweredQuestions(questionCount: number, carName: string, chatUrl: string): void {
+    const message =
+      questionCount === 1
+        ? `Tienes una pregunta sin responder sobre tu ${carName}.`
+        : `Tienes ${questionCount} preguntas sin responder sobre tu ${carName}.`;
 
     this.notificationManager.show({
       title: '❓ Preguntas pendientes',
@@ -369,7 +352,7 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación cuando el auto está destacado o promocionado
-   * 
+   *
    * @param carName - Nombre del auto
    * @param promotionDetails - Detalles de la promoción
    */
@@ -386,16 +369,12 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación cuando falta un documento requerido
-   * 
+   *
    * @param documentType - Tipo de documento (DNI, Cédula, Seguro, etc.)
    * @param carName - Nombre del auto
    * @param documentsUrl - URL para subir documentos
    */
-  notifyMissingDocument(
-    documentType: string,
-    carName: string,
-    documentsUrl: string
-  ): void {
+  notifyMissingDocument(documentType: string, carName: string, documentsUrl: string): void {
     const title = '📄 Documento requerido';
     const message = `Para publicar tu ${carName} necesitas subir tu ${documentType}. Es necesario para verificar tu identidad y la propiedad del vehículo.`;
 
@@ -440,7 +419,7 @@ export class CarOwnerNotificationsService {
     message: string,
     type: 'info' | 'success' | 'warning' | 'error',
     actionUrl?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ): Promise<void> {
     try {
       const {
@@ -463,7 +442,7 @@ export class CarOwnerNotificationsService {
           actionUrl,
           metadata,
         },
-        dbType
+        dbType,
       );
 
       if (result) {
@@ -482,7 +461,7 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación cuando un documento está próximo a vencer
-   * 
+   *
    * @param documentType - Tipo de documento
    * @param carName - Nombre del auto
    * @param daysUntilExpiry - Días hasta que venza
@@ -492,12 +471,13 @@ export class CarOwnerNotificationsService {
     documentType: string,
     carName: string,
     daysUntilExpiry: number,
-    documentsUrl: string
+    documentsUrl: string,
   ): void {
     const urgency = daysUntilExpiry <= 7 ? 'urgente' : 'próximo';
-    const message = daysUntilExpiry === 1
-      ? `Tu ${documentType} de ${carName} vence mañana. Renuvalo ahora para evitar interrupciones en tus reservas.`
-      : `Tu ${documentType} de ${carName} vence en ${daysUntilExpiry} días. Renuvalo para mantener tu auto disponible.`;
+    const message =
+      daysUntilExpiry === 1
+        ? `Tu ${documentType} de ${carName} vence mañana. Renuvalo ahora para evitar interrupciones en tus reservas.`
+        : `Tu ${documentType} de ${carName} vence en ${daysUntilExpiry} días. Renuvalo para mantener tu auto disponible.`;
 
     this.notificationManager.show({
       title: `⚠️ ${documentType} ${urgency} a vencer`,
@@ -525,7 +505,7 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación cuando un documento es verificado o rechazado
-   * 
+   *
    * @param documentType - Tipo de documento
    * @param carName - Nombre del auto
    * @param status - Estado: 'verified' o 'rejected'
@@ -537,13 +517,13 @@ export class CarOwnerNotificationsService {
     carName: string,
     status: 'verified' | 'rejected',
     reason?: string,
-    documentsUrl?: string
+    documentsUrl?: string,
   ): void {
     if (status === 'verified') {
       this.notificationManager.success(
         '✅ Documento verificado',
         `Tu ${documentType} de ${carName} ha sido verificado exitosamente. Tu auto está listo para recibir reservas.`,
-        8000
+        8000,
       );
     } else {
       const message = reason
@@ -557,27 +537,29 @@ export class CarOwnerNotificationsService {
         priority: 'high',
         duration: 10000,
         sound: true,
-        actions: documentsUrl ? [
-          {
-            label: 'Ver detalles',
-            icon: '👁️',
-            command: () => {
-              this.router.navigateByUrl(documentsUrl);
-            },
-          },
-          {
-            label: 'Cerrar',
-            styleClass: 'p-button-text',
-            command: () => {},
-          },
-        ] : undefined,
+        actions: documentsUrl
+          ? [
+              {
+                label: 'Ver detalles',
+                icon: '👁️',
+                command: () => {
+                  this.router.navigateByUrl(documentsUrl);
+                },
+              },
+              {
+                label: 'Cerrar',
+                styleClass: 'p-button-text',
+                command: () => {},
+              },
+            ]
+          : undefined,
       });
     }
   }
 
   /**
    * Notificación mensual de depreciación del auto
-   * 
+   *
    * @param carName - Nombre del auto
    * @param currentValue - Valor actual del auto
    * @param monthlyDepreciation - Depreciación mensual
@@ -591,7 +573,7 @@ export class CarOwnerNotificationsService {
     monthlyDepreciation: number,
     monthlyEarnings: number,
     netGain: number,
-    carUrl: string
+    carUrl: string,
   ): void {
     const isProfitable = netGain > 0;
     const message = isProfitable
@@ -599,7 +581,9 @@ export class CarOwnerNotificationsService {
       : `Tu ${carName} se depreció $${monthlyDepreciation.toLocaleString('es-AR')} este mes. Ganaste $${monthlyEarnings.toLocaleString('es-AR')} con AutoRenta. Optimiza tu precio para aumentar tus ganancias.`;
 
     this.notificationManager.show({
-      title: isProfitable ? '💰 Reporte mensual: ¡Estás ganando!' : '📊 Reporte mensual de depreciación',
+      title: isProfitable
+        ? '💰 Reporte mensual: ¡Estás ganando!'
+        : '📊 Reporte mensual de depreciación',
       message,
       type: isProfitable ? 'success' : 'info',
       priority: 'normal',
@@ -631,14 +615,11 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación educativa sobre cómo ganar dinero con AutoRenta
-   * 
+   *
    * @param carName - Nombre del auto
    * @param tips - Array de tips personalizados
    */
-  notifyHowToEarnMoney(
-    carName: string,
-    tips?: string[]
-  ): void {
+  notifyHowToEarnMoney(carName: string, tips?: string[]): void {
     const defaultTips = [
       'Aumenta tu precio en temporada alta para maximizar ganancias',
       'Mantén tu auto disponible los fines de semana (mayor demanda)',
@@ -676,7 +657,7 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación cuando el auto no está generando suficientes ganancias
-   * 
+   *
    * @param carName - Nombre del auto
    * @param monthlyEarnings - Ganancias mensuales
    * @param recommendedPrice - Precio recomendado
@@ -686,7 +667,7 @@ export class CarOwnerNotificationsService {
     carName: string,
     monthlyEarnings: number,
     recommendedPrice: number,
-    carUrl: string
+    carUrl: string,
   ): void {
     this.notificationManager.show({
       title: '📉 Oportunidad de mejorar',
@@ -721,7 +702,7 @@ export class CarOwnerNotificationsService {
 
   /**
    * Notificación cuando el auto está generando excelentes ganancias
-   * 
+   *
    * @param carName - Nombre del auto
    * @param monthlyEarnings - Ganancias mensuales
    * @param monthlyDepreciation - Depreciación mensual
@@ -731,7 +712,7 @@ export class CarOwnerNotificationsService {
     carName: string,
     monthlyEarnings: number,
     monthlyDepreciation: number,
-    netGain: number
+    netGain: number,
   ): void {
     this.notificationManager.show({
       title: '🎉 ¡Excelente mes!',
@@ -824,4 +805,3 @@ export class CarOwnerNotificationsService {
     return labels[kind] || kind;
   }
 }
-

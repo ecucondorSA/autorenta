@@ -176,11 +176,10 @@ export class VehicleDocumentsService {
         carName,
         'verified' as any, // Se acaba de subir, está pendiente
         undefined,
-        documentsUrl
+        documentsUrl,
       );
     } catch (error) {
       // Silently fail
-      console.debug('Could not notify document upload', error);
     }
   }
 
@@ -312,13 +311,13 @@ export class VehicleDocumentsService {
 
   /**
    * Suscribirse a cambios de estado de documentos para notificar al usuario
-   * 
+   *
    * @param carId - ID del auto
    * @param callback - Callback cuando cambia el estado
    */
   subscribeToDocumentStatusChanges(
     carId: string,
-    callback: (document: VehicleDocument) => void
+    callback: (document: VehicleDocument) => void,
   ): () => void {
     const channel = this.supabase
       .channel(`vehicle-documents-${carId}`)
@@ -332,7 +331,7 @@ export class VehicleDocumentsService {
         },
         async (payload) => {
           const document = payload.new as VehicleDocument;
-          
+
           // Solo notificar si cambió el status a verified o rejected
           if (document.status === 'verified' || document.status === 'rejected') {
             callback(document);

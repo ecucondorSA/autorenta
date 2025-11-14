@@ -30,11 +30,7 @@ export interface DateSearchQuery {
 @Component({
   selector: 'app-date-search',
   standalone: true,
-  imports: [
-    CommonModule,
-    TranslateModule,
-    GoogleCalendarComponent,
-  ],
+  imports: [CommonModule, TranslateModule, GoogleCalendarComponent],
   templateUrl: './date-search.component.html',
   styleUrls: ['./date-search.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

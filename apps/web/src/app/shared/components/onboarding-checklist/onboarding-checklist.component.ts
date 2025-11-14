@@ -294,9 +294,7 @@ export class OnboardingChecklistComponent {
   readonly currentProgress = computed(() => {
     const checklist = this.activeChecklist();
     if (checklist === 'both') {
-      return Math.round(
-        (this.locadorProgress() + this.locatarioProgress()) / 2
-      );
+      return Math.round((this.locadorProgress() + this.locatarioProgress()) / 2);
     }
     if (checklist === 'locador') {
       return this.locadorProgress();

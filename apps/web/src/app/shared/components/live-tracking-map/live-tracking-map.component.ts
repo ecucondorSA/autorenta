@@ -63,9 +63,7 @@ interface MarkerData {
             <p class="user-role">
               {{ session.user_role === 'locador' ? 'Propietario' : 'Arrendatario' }}
             </p>
-            <p class="last-update">
-              📍 Actualizado hace {{ getTimeSince(session.last_updated) }}
-            </p>
+            <p class="last-update">📍 Actualizado hace {{ getTimeSince(session.last_updated) }}</p>
             <p *ngIf="session.distance_remaining" class="distance">
               🚗 A {{ formatDistance(session.distance_remaining) }}
             </p>
@@ -326,10 +324,7 @@ export class LiveTrackingMapComponent implements OnInit, OnChanges, OnDestroy {
 
       if (existingMarker) {
         // Update existing marker position
-        existingMarker.marker.setLngLat([
-          Number(session.longitude),
-          Number(session.latitude),
-        ]);
+        existingMarker.marker.setLngLat([Number(session.longitude), Number(session.latitude)]);
         existingMarker.session = session;
       } else {
         // Create new marker
@@ -409,8 +404,7 @@ export class LiveTrackingMapComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateDestinationMarker(): void {
-    if (!this.map || this.destinationLat === undefined || this.destinationLng === undefined)
-      return;
+    if (!this.map || this.destinationLat === undefined || this.destinationLng === undefined) return;
 
     // Remove existing destination marker
     if (this.destinationMarker) {

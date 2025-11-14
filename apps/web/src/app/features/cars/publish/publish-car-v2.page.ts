@@ -135,19 +135,19 @@ export class PublishCarV2Page implements OnInit {
     // Verificar valores del formulario tradicional (UUIDs)
     const brandId = this.publishForm?.get('brand_id')?.value;
     const modelId = this.publishForm?.get('model_id')?.value;
-    
+
     // Verificar valores de texto backup (para FIPE)
     const brandTextBackup = this.publishForm?.get('brand_text_backup')?.value;
     const modelTextBackup = this.publishForm?.get('model_text_backup')?.value;
-    
+
     // Verificar valores FIPE (nuevo sistema)
     const fipeBrand = this.selectedFipeBrand();
     const fipeModel = this.selectedFipeModel();
-    
+
     // Aceptar cualquiera de los sistemas: UUIDs, texto backup, o FIPE signals
     const hasBrand = !!(brandId || brandTextBackup || (fipeBrand && fipeBrand.name));
     const hasModel = !!(modelId || modelTextBackup || (fipeModel && fipeModel.name));
-    
+
     const year = this.publishForm?.get('year')?.value;
     const hasPhotos = this.photoService.hasMinimumPhotos();
 
@@ -303,7 +303,7 @@ export class PublishCarV2Page implements OnInit {
     // Por ahora, dejamos brand_id/model_id como null y usamos los campos de texto
     this.publishForm?.get('brand_id')?.setValue(null);
     this.publishForm?.get('model_id')?.setValue(null);
-    
+
     // Guardar nombre de marca en brand_text_backup (para backward compatibility)
     if (brand && brand.name) {
       this.publishForm?.patchValue({
@@ -344,7 +344,7 @@ export class PublishCarV2Page implements OnInit {
     // ✅ CRITICAL: model_id es UUID, NO código FIPE
     // Guardar nombre de modelo en model_text_backup (para backward compatibility)
     this.publishForm?.get('model_id')?.setValue(null);
-    
+
     if (model && model.name) {
       this.publishForm?.patchValue({
         model_text_backup: model.name,
@@ -420,8 +420,13 @@ export class PublishCarV2Page implements OnInit {
         // Ensure value_usd is a number
         const valueUsd = Number(result.data.value_usd);
         if (isNaN(valueUsd) || valueUsd <= 0) {
-          console.error('[PublishCarV2] Invalid value_usd from pricing API:', result.data.value_usd);
-          this.fipeError.set('No se pudo calcular el valor automáticamente. Podés ingresarlo manualmente.');
+          console.error(
+            '[PublishCarV2] Invalid value_usd from pricing API:',
+            result.data.value_usd,
+          );
+          this.fipeError.set(
+            'No se pudo calcular el valor automáticamente. Podés ingresarlo manualmente.',
+          );
 
           // ✅ REMOVED: No longer blocking submit - FIPE is optional
           return;
@@ -881,7 +886,7 @@ export class PublishCarV2Page implements OnInit {
     const modelTextBackup = this.publishForm.get('model_text_backup')?.value;
     const fipeBrand = this.selectedFipeBrand();
     const fipeModel = this.selectedFipeModel();
-    
+
     const hasBrand = !!(brandId || brandTextBackup || (fipeBrand && fipeBrand.name));
     const hasModel = !!(modelId || modelTextBackup || (fipeModel && fipeModel.name));
     const year = this.publishForm.get('year')?.value;
@@ -894,7 +899,7 @@ export class PublishCarV2Page implements OnInit {
     if (!this.photoService.hasMinimumPhotos()) {
       this.notificationManager.error(
         'Fotos requeridas',
-        'Debes subir al menos 3 fotos para publicar tu auto.'
+        'Debes subir al menos 3 fotos para publicar tu auto.',
       );
       return;
     }
@@ -908,7 +913,7 @@ export class PublishCarV2Page implements OnInit {
     try {
       // Get form data
       const formData = this.formService.getFormData();
-      
+
       console.log('📝 Form data before processing:', {
         brand_id: formData.brand_id,
         model_id: formData.model_id,
@@ -919,12 +924,14 @@ export class PublishCarV2Page implements OnInit {
 
       // ✅ NUEVO: Establecer valores por defecto para campos opcionales
       // ✅ CRITICAL: price_per_day siempre debe ser > 0 para pasar validación
-      const pricePerDay = formData.price_per_day 
-        ? Number(formData.price_per_day) 
-        : (formData.pricing_strategy === 'dynamic' ? 50 : 100); // Default: 50 si dinámico, 100 si custom
-      
+      const pricePerDay = formData.price_per_day
+        ? Number(formData.price_per_day)
+        : formData.pricing_strategy === 'dynamic'
+          ? 50
+          : 100; // Default: 50 si dinámico, 100 si custom
+
       console.log('💰 Calculated price_per_day:', pricePerDay);
-      
+
       const carData: any = {
         ...formData,
         // Campos opcionales con valores por defecto
@@ -975,7 +982,7 @@ export class PublishCarV2Page implements OnInit {
         delete carData.location_lat;
         delete carData.location_lng;
       }
-      
+
       carData.status = 'active' as const; // Car is active immediately and will appear on map
 
       console.log('🚗 Final car data to submit:', {
@@ -990,23 +997,23 @@ export class PublishCarV2Page implements OnInit {
         // Update existing car
         await this.carsService.updateCar(this.carId, carData);
         carId = this.carId;
-        
+
         // Mostrar notificación de actualización
         this.notificationManager.success(
           '✅ Auto actualizado exitosamente',
           'Los cambios se han guardado correctamente. Tu auto ya está visible con la información actualizada.',
-          6000
+          6000,
         );
       } else {
         // Create new car
         const newCar = await this.carsService.createCar(carData);
         carId = newCar.id;
-        
+
         // Mostrar notificación de éxito completa
         this.notificationManager.success(
           '🎉 ¡Auto publicado exitosamente!',
           'Tu auto ya está visible en el marketplace. Podrás acompañar su rendimiento, ver cuántas personas lo están viendo, recibir mensajes en el chat y editarlo desde tu lista. ¡Esperamos que puedas realizar muchos negocios exitosos!',
-          8000
+          8000,
         );
       }
 
@@ -1024,7 +1031,6 @@ export class PublishCarV2Page implements OnInit {
         setTimeout(() => {
           this.checkMissingDocuments(carId).catch((error) => {
             // Silently fail - notification is optional
-            console.debug('Could not check missing documents', error);
           });
         }, 2000); // 2 segundos después de la publicación exitosa
       }
@@ -1033,7 +1039,7 @@ export class PublishCarV2Page implements OnInit {
       await this.router.navigate(['/cars/my-cars']);
     } catch (error) {
       console.error('❌ Failed to publish car:', error);
-      
+
       // Log detailed error information
       if (error instanceof Error) {
         console.error('Error message:', error.message);
@@ -1053,11 +1059,11 @@ export class PublishCarV2Page implements OnInit {
           console.error('Error hint:', (error as { hint: string }).hint);
         }
       }
-      
+
       // Show user-friendly error message
       let errorTitle = 'Error al publicar el auto';
       let errorMessage = 'Por favor intenta nuevamente.';
-      
+
       if (error instanceof Error) {
         // Check for specific error types
         if (error.message.includes('Marca y modelo son requeridos')) {
@@ -1081,7 +1087,7 @@ export class PublishCarV2Page implements OnInit {
           errorMessage = msg;
         }
       }
-      
+
       // Mostrar notificación de error
       this.notificationManager.error(errorTitle, errorMessage);
     } finally {
@@ -1102,7 +1108,7 @@ export class PublishCarV2Page implements OnInit {
   private async checkMissingDocuments(carId: string): Promise<void> {
     try {
       const missingDocs = await this.documentsService.getMissingDocuments(carId);
-      
+
       if (missingDocs.length > 0) {
         const car = await this.carsService.getCarById(carId);
         if (!car) return;
@@ -1113,18 +1119,13 @@ export class PublishCarV2Page implements OnInit {
         // Notificar sobre cada documento faltante
         for (const docKind of missingDocs) {
           const documentType = this.documentsService.getDocumentKindLabel(docKind);
-          this.carOwnerNotifications.notifyMissingDocument(
-            documentType,
-            carName,
-            documentsUrl
-          );
+          this.carOwnerNotifications.notifyMissingDocument(documentType, carName, documentsUrl);
           // Pequeña pausa entre notificaciones
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         }
       }
     } catch (error) {
       // Silently fail
-      console.debug('Could not check missing documents', error);
     }
   }
 }

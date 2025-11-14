@@ -215,4 +215,3 @@ export class ProfessionalDateInputComponent {
     return blockedDates;
   }
 }
-

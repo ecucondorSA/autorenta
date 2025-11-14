@@ -20,7 +20,7 @@ export interface Payout {
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
   provider: string;
   providerPayoutId?: string;
-  providerResponse?: Record<string, any>;
+  providerResponse?: Record<string, unknown>;
   createdAt: string;
   completedAt?: string;
   failureReason?: string;
@@ -36,6 +36,10 @@ export interface BankAccount {
   isDefault: boolean;
   status: 'verified' | 'unverified' | 'invalid';
   createdAt: string;
+}
+
+interface WalletBalance {
+  available_balance: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -67,7 +71,7 @@ export class PayoutService {
         .order('created_at', { ascending: false }),
     ).pipe(
       map(({ data }) => data as Payout[]),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to fetch payouts'));
       }),
     );
@@ -108,7 +112,7 @@ export class PayoutService {
         const hasMore = offset + limit < total;
         return { data, total, hasMore };
       }),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to fetch payouts'));
       }),
     );
@@ -122,7 +126,7 @@ export class PayoutService {
       this.supabase.getClient().from('payouts').select('*').eq('id', payoutId).single(),
     ).pipe(
       map(({ data }) => data as Payout),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to fetch payout status'));
       }),
     );
@@ -142,11 +146,8 @@ export class PayoutService {
         .single(),
     ).pipe(
       map(({ data }) => (data as BankAccount) || null),
-      catchError((error) => {
-        if (error.code === 'PGRST116') {
-          return of(null); // No default account found
-        }
-        return throwError(() => new Error('Failed to fetch bank account'));
+      catchError(() => {
+        return of(null); // No default account found
       }),
     );
   }
@@ -191,7 +192,7 @@ export class PayoutService {
         .single(),
     ).pipe(
       map(({ data }) => data as BankAccount),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to add bank account'));
       }),
     );
@@ -225,7 +226,7 @@ export class PayoutService {
       switchMap(() => this.getPayoutStatus(payoutId)),
       filter((payout) => payout.status !== 'processing'),
       take(1),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to monitor payout status'));
       }),
     );
@@ -288,8 +289,8 @@ export class PayoutService {
           currency: 'ARS',
         });
       }),
-      catchError((error) => {
-        return throwError(() => error);
+      catchError(() => {
+        return throwError(() => new Error('Failed to request payout'));
       }),
     );
   }
@@ -308,7 +309,7 @@ export class PayoutService {
     }
 
     // Obtener cuenta bancaria default
-    const { data: bankAccount, error: baError } = await this.supabase
+    const { data: bankAccountData, error: baError } = await this.supabase
       .getClient()
       .from('bank_accounts')
       .select('*')
@@ -316,23 +317,27 @@ export class PayoutService {
       .eq('is_default', true)
       .single();
 
+    const bankAccount = (bankAccountData as BankAccount | null) ?? null;
+
     if (baError || !bankAccount) {
       throw new Error('No default bank account configured');
     }
 
-    if ((bankAccount as any).status !== 'verified') {
+    if (bankAccount.status !== 'verified') {
       throw new Error('Bank account not verified');
     }
 
     // Validar que el usuario tenga suficiente balance
-    const { data: wallet } = await this.supabase
+    const { data: walletData } = await this.supabase
       .getClient()
       .from('user_wallets')
       .select('available_balance')
       .eq('user_id', request.userId)
       .single();
 
-    if (!wallet || (wallet as any).available_balance < request.amount) {
+    const wallet = (walletData as WalletBalance | null) ?? null;
+
+    if (!wallet || wallet.available_balance < request.amount) {
       throw new Error('Insufficient balance for payout');
     }
 
@@ -343,7 +348,7 @@ export class PayoutService {
       id: payoutId,
       splitId: request.splitId,
       userId: request.userId,
-      bankAccountId: (bankAccount as any).id,
+      bankAccountId: bankAccount.id,
       amount: request.amount,
       currency: request.currency,
       status: 'pending',
@@ -362,7 +367,7 @@ export class PayoutService {
       .getClient()
       .from('user_wallets')
       .update({
-        available_balance: (wallet as any).available_balance - request.amount,
+        available_balance: wallet.available_balance - request.amount,
       })
       .eq('user_id', request.userId);
 

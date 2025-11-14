@@ -581,7 +581,3 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
     }
   }
 }
-
-
-
-

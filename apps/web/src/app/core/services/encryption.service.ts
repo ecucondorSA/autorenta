@@ -122,10 +122,15 @@ export class EncryptionService {
       ['deriveKey'],
     );
 
+    const saltBuffer = salt.buffer.slice(
+      salt.byteOffset,
+      salt.byteOffset + salt.byteLength,
+    ) as ArrayBuffer;
+
     return crypto.subtle.deriveKey(
       {
         name: 'PBKDF2',
-        salt: salt as any,
+        salt: saltBuffer,
         iterations: this.PBKDF2_ITERATIONS,
         hash: 'SHA-256',
       },

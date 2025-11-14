@@ -131,6 +131,26 @@ interface DurationOption {
             </div>
           </div>
 
+          <!-- Wallet Warning -->
+          <div
+            *ngIf="shouldForceWalletNavigation()"
+            class="p-3 bg-warning-bg border border-warning-border rounded-lg text-sm text-warning-strong"
+          >
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-warning-strong" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="font-semibold">Saldo insuficiente</span>
+            </div>
+            <p class="mt-1 text-xs">
+              Necesitas al menos 300 USD en tu wallet para continuar. Serás redirigido para cargar fondos.
+            </p>
+          </div>
+
           <!-- Payment Method -->
           <div>
             <label class="block text-sm font-semibold text-text-primary mb-3">
@@ -464,12 +484,30 @@ export class QuickBookingModalComponent implements OnInit {
     return this.walletBalance() >= this.totalWithFees();
   });
 
+  readonly hasMinimumWalletBalance = computed(() => {
+    // Verificar si tiene al menos 300 USD (o equivalente en ARS)
+    const balance = this.walletBalance();
+    const currency = this.car.currency || 'ARS';
+
+    if (currency === 'USD') {
+      return balance >= 300;
+    } else {
+      // Asumir conversión ARS/USD aproximada (1 USD ≈ 1000 ARS)
+      return balance >= 300000;
+    }
+  });
+
+  readonly shouldForceWalletNavigation = computed(() => {
+    return !this.hasMinimumWalletBalance();
+  });
+
   readonly canConfirm = computed(() => {
     const hasPaymentMethod = !!this.selectedPaymentMethod();
     const hasDuration = !!this.selectedDuration();
     const hasValidPayment = this.selectedPaymentMethod() !== 'wallet' || this.hasWalletBalance();
+    const hasMinimumBalance = this.hasMinimumWalletBalance();
 
-    return hasPaymentMethod && hasDuration && hasValidPayment;
+    return hasPaymentMethod && hasDuration && hasValidPayment && hasMinimumBalance;
   });
 
   async ngOnInit(): Promise<void> {
@@ -490,9 +528,14 @@ export class QuickBookingModalComponent implements OnInit {
   }
 
   selectPaymentMethod(method: 'wallet' | 'cash' | 'transfer'): void {
-    // Si selecciona wallet o efectivo, navegar a la wallet
-    if (method === 'wallet' || method === 'cash') {
-      this.selectedPaymentMethod.set(method);
+    // Si no tiene el saldo mínimo requerido, forzar navegación a wallet
+    if (this.shouldForceWalletNavigation()) {
+      void this.router.navigate(['/wallet']);
+      return;
+    }
+
+    // Si selecciona efectivo, también enviar a wallet para cargar dinero
+    if (method === 'cash') {
       void this.router.navigate(['/wallet']);
       return;
     }

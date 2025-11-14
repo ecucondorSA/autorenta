@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 
@@ -29,40 +29,33 @@ import { ProfileStore } from '../../../core/stores/profile.store';
     PhoneVerificationComponent,
     SelfieCaptureComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ion-header>
-      <ion-toolbar class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default">
-        <ion-buttons slot="start">
-          <ion-back-button
-            defaultHref="/profile"
-            text="Perfil"
-            class="text-text-primary dark:text-text-secondary"
-          ></ion-back-button>
-        </ion-buttons>
-        <ion-title class="text-text-primary dark:text-text-secondary"> Verificación </ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <ion-header> </ion-header>
 
-    <ion-content class="bg-surface-base dark:bg-surface-base">
-      <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
+    <ion-content class="bg-surface-base dark:bg-surface-base ion-padding" fullscreen="true">
+      <div class="py-6 px-4 max-w-4xl mx-auto">
+
         <!-- Header -->
-        <div class="mb-6">
-          <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2">
+        <div class="mb-6 block">
+          <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2 block">
             Verificación de Identidad
           </h1>
-          <p class="text-sm text-text-secondary dark:text-text-secondary">
+          <p class="text-sm text-text-secondary dark:text-text-secondary block">
             Verifica tu identidad para acceder a todas las funcionalidades de AutoRenta.
           </p>
         </div>
 
         <!-- Verification Progress -->
-        <div class="mb-6">
-          <app-verification-progress />
+        <div class="mb-6 block">
+          <app-verification-progress class="block"></app-verification-progress>
         </div>
 
         <!-- Level 1: Email & Phone -->
         <div class="card-premium p-6 mb-6">
-          <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2">
+          <h2
+            class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2"
+          >
             <span
               class="flex items-center justify-center w-8 h-8 rounded-full bg-info-bg text-info-text font-bold text-sm"
             >
@@ -87,7 +80,9 @@ import { ProfileStore } from '../../../core/stores/profile.store';
 
         <!-- Level 2: Documents -->
         <div class="card-premium p-6 mb-6">
-          <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2">
+          <h2
+            class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2"
+          >
             <span
               class="flex items-center justify-center w-8 h-8 rounded-full bg-warning-bg text-warning-text font-bold text-sm"
             >
@@ -164,7 +159,9 @@ import { ProfileStore } from '../../../core/stores/profile.store';
 
         <!-- Level 3: Selfie -->
         <div class="card-premium p-6">
-          <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2">
+          <h2
+            class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2"
+          >
             <span
               class="flex items-center justify-center w-8 h-8 rounded-full bg-success-bg text-success-text font-bold text-sm"
             >
@@ -182,12 +179,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
         <!-- Help Section -->
         <div class="mt-6 p-4 rounded-lg bg-info-bg border border-info-border dark:bg-info-bg/20">
           <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
-            <svg
-              class="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -204,7 +196,9 @@ import { ProfileStore } from '../../../core/stores/profile.store';
             </li>
             <li class="flex gap-2">
               <span>•</span>
-              <span><strong>Confianza:</strong> Los usuarios verificados generan más confianza</span>
+              <span
+                ><strong>Confianza:</strong> Los usuarios verificados generan más confianza</span
+              >
             </li>
             <li class="flex gap-2">
               <span>•</span>
@@ -230,6 +224,14 @@ import { ProfileStore } from '../../../core/stores/profile.store';
         display: block;
         height: 100%;
       }
+
+      ion-content {
+        --background: transparent;
+        --padding-bottom: 24px;
+        min-height: 100vh;
+      }
+
+
     `,
   ],
 })

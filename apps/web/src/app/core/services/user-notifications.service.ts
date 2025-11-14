@@ -25,7 +25,9 @@ export class NotificationsService implements OnDestroy {
   // Estado reactivo
   readonly notifications = signal<NotificationItem[]>([]);
   readonly unreadCount = signal(0);
-  readonly connectionStatus = signal<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected');
+  readonly connectionStatus = signal<'disconnected' | 'connecting' | 'connected' | 'error'>(
+    'disconnected',
+  );
 
   // Referencia al channel de Realtime para poder hacer cleanup
   private realtimeChannel: RealtimeChannel | null = null;
@@ -35,7 +37,7 @@ export class NotificationsService implements OnDestroy {
     // Efecto reactivo: suscribirse cuando el usuario se autentica
     effect(() => {
       const isAuthenticated = this.authService.isAuthenticated();
-      
+
       if (isAuthenticated) {
         // Usuario autenticado: cargar notificaciones y suscribirse
         void this.initializeNotifications();
@@ -121,7 +123,7 @@ export class NotificationsService implements OnDestroy {
       const {
         data: { user },
       } = await this.supabase.auth.getUser();
-      
+
       if (!user) {
         console.warn('[NotificationsService] No user found, skipping Realtime subscription');
         this.connectionStatus.set('disconnected');
@@ -134,7 +136,10 @@ export class NotificationsService implements OnDestroy {
       }
 
       this.connectionStatus.set('connecting');
-      console.log('[NotificationsService] Subscribing to Realtime notifications for user:', user.id);
+      console.log(
+        '[NotificationsService] Subscribing to Realtime notifications for user:',
+        user.id,
+      );
 
       // Crear nuevo channel
       this.realtimeChannel = this.supabase
@@ -154,16 +159,18 @@ export class NotificationsService implements OnDestroy {
         )
         .subscribe((status) => {
           console.log('[NotificationsService] Realtime subscription status:', status);
-          
+
           if (status === 'SUBSCRIBED') {
             this.connectionStatus.set('connected');
             this.isSubscribed = true;
-            console.log('[NotificationsService] ✅ Successfully subscribed to Realtime notifications');
+            console.log(
+              '[NotificationsService] ✅ Successfully subscribed to Realtime notifications',
+            );
           } else if (status === 'CHANNEL_ERROR') {
             this.connectionStatus.set('error');
             this.isSubscribed = false;
             console.error('[NotificationsService] ❌ Realtime channel error');
-            
+
             // Intentar reconectar después de 5 segundos
             setTimeout(() => {
               console.log('[NotificationsService] Attempting to reconnect...');
@@ -173,7 +180,7 @@ export class NotificationsService implements OnDestroy {
             this.connectionStatus.set('error');
             this.isSubscribed = false;
             console.warn('[NotificationsService] ⚠️ Realtime subscription timed out');
-            
+
             // Intentar reconectar después de 5 segundos
             setTimeout(() => {
               console.log('[NotificationsService] Attempting to reconnect after timeout...');
@@ -185,12 +192,11 @@ export class NotificationsService implements OnDestroy {
             console.log('[NotificationsService] Realtime channel closed');
           }
         });
-
     } catch (error) {
       console.error('[NotificationsService] Error subscribing to Realtime:', error);
       this.connectionStatus.set('error');
       this.isSubscribed = false;
-      
+
       // Intentar reconectar después de 5 segundos
       setTimeout(() => {
         console.log('[NotificationsService] Attempting to reconnect after error...');

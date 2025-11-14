@@ -87,7 +87,9 @@ export class NotificationManagerService {
 
   // Track active notifications for queue management
   private readonly activeNotifications = signal<TrackedNotification[]>([]);
-  private readonly notificationQueue = signal<(NotificationOptions & { type: 'success' | 'error' | 'warning' | 'info' })[]>([]);
+  private readonly notificationQueue = signal<
+    (NotificationOptions & { type: 'success' | 'error' | 'warning' | 'info' })[]
+  >([]);
   private readonly MAX_SIMULTANEOUS_TOASTS = 5;
 
   // Grouping tracking
@@ -278,13 +280,17 @@ export class NotificationManagerService {
 
   // ===== Private Helper Methods =====
 
-  private queueNotification(options: NotificationOptions & { type: 'success' | 'error' | 'warning' | 'info' }): void {
+  private queueNotification(
+    options: NotificationOptions & { type: 'success' | 'error' | 'warning' | 'info' },
+  ): void {
     const queue = this.notificationQueue();
     const priority = options.priority || 'normal';
 
     // Insert based on priority
     const priorityOrder = { critical: 0, high: 1, normal: 2, low: 3 };
-    const insertIndex = queue.findIndex((n) => priorityOrder[n.priority || 'normal'] > priorityOrder[priority]);
+    const insertIndex = queue.findIndex(
+      (n) => priorityOrder[n.priority || 'normal'] > priorityOrder[priority],
+    );
 
     if (insertIndex === -1) {
       this.notificationQueue.set([...queue, options]);
@@ -400,7 +406,10 @@ export class NotificationManagerService {
     return baseDurations[type] * priorityMultipliers[priority];
   }
 
-  private playNotificationSound(type: 'success' | 'error' | 'warning' | 'info', priority: NotificationPriority): void {
+  private playNotificationSound(
+    type: 'success' | 'error' | 'warning' | 'info',
+    priority: NotificationPriority,
+  ): void {
     // Play different sounds based on type and priority
     if (type === 'error' || priority === 'critical') {
       this.soundService.playNotificationSound();

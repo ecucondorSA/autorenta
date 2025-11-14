@@ -14,14 +14,14 @@
 
   <!-- Initial Goal Modal (shown on first login) -->
   @if (showInitialModal()) {
-  <app-initial-goal-modal />
+    <app-initial-goal-modal />
   }
 
   <!-- Onboarding Checklist (shown after goal selection) -->
   @if (activeChecklist() && !showInitialModal()) {
-  <div class="onboarding-section">
-    <app-onboarding-checklist />
-  </div>
+    <div class="onboarding-section">
+      <app-onboarding-checklist />
+    </div>
   }
 
   <!-- Hero Section -->

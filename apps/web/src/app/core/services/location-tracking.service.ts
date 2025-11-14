@@ -1,8 +1,8 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
 import { interval, Subscription, Observable, from } from 'rxjs';
-import { switchMap, filter } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
+import { SupabaseClientService } from './supabase-client.service';
 
 export interface LocationUpdate {
   latitude: number;
@@ -48,10 +48,7 @@ export class LocationTrackingService {
    * @param trackingType 'check_in' or 'check_out'
    * @returns Tracking session ID
    */
-  async startTracking(
-    bookingId: string,
-    trackingType: 'check_in' | 'check_out',
-  ): Promise<string> {
+  async startTracking(bookingId: string, trackingType: 'check_in' | 'check_out'): Promise<string> {
     try {
       // Start tracking session in database
       const { data, error } = await this.supabaseClient.rpc('start_location_tracking', {
@@ -147,12 +144,9 @@ export class LocationTrackingService {
         },
         async () => {
           // Fetch latest tracking data
-          const { data } = await this.supabaseClient.rpc(
-            'get_active_tracking_for_booking',
-            {
-              p_booking_id: bookingId,
-            },
-          );
+          const { data } = await this.supabaseClient.rpc('get_active_tracking_for_booking', {
+            p_booking_id: bookingId,
+          });
           callback((data as TrackingSession[]) || []);
         },
       )
@@ -168,12 +162,7 @@ export class LocationTrackingService {
    * Calculate distance between two coordinates (Haversine formula)
    * @returns Distance in meters
    */
-  calculateDistance(
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number,
-  ): number {
+  calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371e3; // Earth radius in meters
     const φ1 = (lat1 * Math.PI) / 180;
     const φ2 = (lat2 * Math.PI) / 180;
@@ -315,10 +304,7 @@ export class LocationTrackingService {
   /**
    * Update location in database
    */
-  private async updateLocation(
-    trackingId: string,
-    location: LocationUpdate,
-  ): Promise<void> {
+  private async updateLocation(trackingId: string, location: LocationUpdate): Promise<void> {
     try {
       const { error } = await this.supabaseClient.rpc('update_location', {
         p_tracking_id: trackingId,

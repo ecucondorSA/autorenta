@@ -41,7 +41,7 @@ import { PriceTransparencyModalComponent } from '@/shared/components/price-trans
     <!-- Modal de transparencia -->
     @if (showPriceModal()) {
       <app-price-transparency-modal
-        (close)="onPriceModalClose()"
+         (closed)="onPriceModalClose()"
       />
     }
   `,
@@ -94,7 +94,7 @@ export class MarketplaceV2Page {
     <!-- Modal -->
     @if (showPriceInfoModal()) {
       <app-price-transparency-modal
-        (close)="showPriceInfoModal.set(false)"
+         (closed)="showPriceInfoModal.set(false)"
       />
     }
   `,
@@ -131,7 +131,7 @@ export class CarCardComponent {
     <!-- Modal -->
     @if (showPriceInfo()) {
       <app-price-transparency-modal
-        (close)="showPriceInfo.set(false)"
+         (closed)="showPriceInfo.set(false)"
       />
     }
   `,
@@ -246,7 +246,7 @@ import { PriceTransparencyModalComponent } from '@/shared/components/price-trans
 2. **Agregar al template**:
 ```html
 @if (showPriceModal()) {
-  <app-price-transparency-modal (close)="onPriceModalClose()" />
+  <app-price-transparency-modal (closed)="onPriceModalClose()" />
 }
 ```
 

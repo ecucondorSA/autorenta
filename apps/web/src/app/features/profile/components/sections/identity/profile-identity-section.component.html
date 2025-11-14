@@ -7,9 +7,9 @@
   [error]="error"
   [isDirty]="isDirty()"
   [isValid]="isValid()"
-  (onSave)="onSave()"
-  (onCancel)="onCancel()"
-  (onEdit)="onEdit()"
+  (saveRequested)="onSave()"
+  (cancelRequested)="onCancel()"
+  (editRequested)="onEdit()"
 >
   <!-- View Mode (readonly) -->
   @if (!isEditing()) {

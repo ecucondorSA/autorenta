@@ -1,8 +1,5 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { from } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
 import { injectSupabase } from './supabase-client.service';
 
 export type LedgerKind =
@@ -159,7 +156,7 @@ export class WalletLedgerService {
     }
   }
 
-  async searchUserByWalletNumber(query: string): Promise<any | null> {
+  async searchUserByWalletNumber(query: string): Promise<Record<string, unknown> | null> {
     const cleanQuery = query.trim().toUpperCase();
     if (!cleanQuery.startsWith('AR') || cleanQuery.length !== 16) return null;
 
@@ -168,7 +165,7 @@ export class WalletLedgerService {
     });
 
     if (error) return null;
-    return data?.[0] || null;
+    return (data?.[0] as Record<string, unknown>) || null;
   }
 
   formatAmount(cents: number, currency = 'ARS'): string {

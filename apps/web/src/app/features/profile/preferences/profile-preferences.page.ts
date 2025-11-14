@@ -23,7 +23,9 @@ import { ProfileStore } from '../../../core/stores/profile.store';
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
   template: `
     <ion-header>
-      <ion-toolbar class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default">
+      <ion-toolbar
+        class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default"
+      >
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
@@ -46,10 +48,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
             Personaliza tu experiencia en AutoRenta.
           </p>
           <!-- Auto-save indicator -->
-          <div
-            *ngIf="autoSaving()"
-            class="mt-2 flex items-center gap-2 text-xs text-text-muted"
-          >
+          <div *ngIf="autoSaving()" class="mt-2 flex items-center gap-2 text-xs text-text-muted">
             <div
               class="h-3 w-3 animate-spin rounded-full border-2 border-solid border-cta-default border-r-transparent"
             ></div>
@@ -181,12 +180,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
         <!-- Help Section -->
         <div class="mt-8 p-4 rounded-lg bg-info-bg border border-info-border dark:bg-info-bg/20">
           <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
-            <svg
-              class="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -219,6 +213,11 @@ import { ProfileStore } from '../../../core/stores/profile.store';
       :host {
         display: block;
         height: 100%;
+      }
+
+      ion-content {
+        --padding-bottom: 24px;
+        min-height: 100vh;
       }
     `,
   ],
@@ -309,9 +308,7 @@ export class ProfilePreferencesPage implements OnInit {
     try {
       const formValue = this.preferencesForm.value;
       // Filter out null values to match UpdateProfileData type
-      const updates = Object.fromEntries(
-        Object.entries(formValue).filter(([_, v]) => v !== null)
-      );
+      const updates = Object.fromEntries(Object.entries(formValue).filter(([_, v]) => v !== null));
       await this.profileStore.updateSection('preferences', updates);
 
       this.preferencesForm.markAsPristine();
@@ -339,9 +336,7 @@ export class ProfilePreferencesPage implements OnInit {
     try {
       const formValue = this.preferencesForm.value;
       // Filter out null values to match UpdateProfileData type
-      const updates = Object.fromEntries(
-        Object.entries(formValue).filter(([_, v]) => v !== null)
-      );
+      const updates = Object.fromEntries(Object.entries(formValue).filter(([_, v]) => v !== null));
       await this.profileStore.updateSection('preferences', updates);
 
       this.preferencesForm.markAsPristine();

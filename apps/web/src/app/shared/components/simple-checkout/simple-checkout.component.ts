@@ -1,4 +1,13 @@
-import { Component, Input, Output, EventEmitter, signal, inject, computed, effect } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  inject,
+  computed,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -427,7 +436,7 @@ export class SimpleCheckoutComponent {
     // La reserva queda confirmada pero el pago pendiente hasta el encuentro
     this.toastService.success(
       'Reserva confirmada',
-      'Recuerda llevar el efectivo al momento de retirar el vehículo'
+      'Recuerda llevar el efectivo al momento de retirar el vehículo',
     );
   }
 

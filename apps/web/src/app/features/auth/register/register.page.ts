@@ -48,7 +48,7 @@ export class RegisterPage {
       // 🎯 TikTok Events: Track CompleteRegistration
       void this.tiktokEvents.trackCompleteRegistration({
         value: 0,
-        currency: environment.defaultCurrency
+        currency: environment.defaultCurrency,
       });
 
       this.message.set('¡Cuenta creada exitosamente! Vamos a configurarte.');

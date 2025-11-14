@@ -59,9 +59,7 @@ export class ClickOutsideDirective implements OnInit, OnDestroy {
     const excludedElements = this.exclude();
 
     // Check if click is on an excluded element
-    const isExcluded = excludedElements.some((excluded) => 
-      excluded && excluded.contains(target)
-    );
+    const isExcluded = excludedElements.some((excluded) => excluded && excluded.contains(target));
 
     // Check if the click is outside the element and not on an excluded element
     if (element && !element.contains(target) && !isExcluded) {
@@ -70,4 +68,3 @@ export class ClickOutsideDirective implements OnInit, OnDestroy {
     }
   }
 }
-

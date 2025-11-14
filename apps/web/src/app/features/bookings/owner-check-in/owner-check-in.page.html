@@ -64,9 +64,7 @@
             <ion-icon name="checkmark-circle" class="text-green-600 text-xl"></ion-icon>
             <span class="font-semibold text-green-700">Compartiendo ubicación</span>
           </div>
-          <p class="text-sm text-green-700">
-            El locatario puede ver tu ubicación en tiempo real
-          </p>
+          <p class="text-sm text-green-700">El locatario puede ver tu ubicación en tiempo real</p>
         </div>
 
         <div class="flex gap-3">
@@ -98,11 +96,14 @@
         [destinationLat]="booking()?.pickup_location_lat ?? undefined"
         [destinationLng]="booking()?.pickup_location_lng ?? undefined"
         [destinationLabel]="'Punto de encuentro'"
-        style="height: 400px; width: 100%;"
+        style="height: 400px; width: 100%"
       />
 
       <div class="mt-4 space-y-3">
-        <div *ngFor="let session of trackingSessions()" class="flex items-center gap-3 p-3 bg-surface-raised rounded-lg">
+        <div
+          *ngFor="let session of trackingSessions()"
+          class="flex items-center gap-3 p-3 bg-surface-raised rounded-lg"
+        >
           <img
             [src]="session.user_photo || 'assets/default-avatar.png'"
             [alt]="session.user_name"

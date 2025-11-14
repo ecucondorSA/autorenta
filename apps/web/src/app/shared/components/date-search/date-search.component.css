@@ -40,7 +40,7 @@
   position: relative;
   width: 100%;
   padding: 0;
-  background: linear-gradient(135deg, #00D9E1 0%, #00B8D4 100%);
+  background: linear-gradient(135deg, #00d9e1 0%, #00b8d4 100%);
   border: none;
   border-radius: 1rem;
   cursor: pointer;
@@ -104,7 +104,8 @@
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {

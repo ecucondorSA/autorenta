@@ -367,7 +367,7 @@ export class ProfilePage implements OnInit {
     } catch (err) {
       console.error('Error disconnecting calendar:', err);
       this.error.set(
-        err instanceof Error ? err.message : 'No pudimos desconectar tu Google Calendar.'
+        err instanceof Error ? err.message : 'No pudimos desconectar tu Google Calendar.',
       );
     } finally {
       this.calendarLoading.set(false);

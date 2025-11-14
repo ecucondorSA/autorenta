@@ -16,6 +16,7 @@ describe('DistanceBadgeComponent', () => {
     fixture = TestBed.createComponent(DistanceBadgeComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
+    fixture.detectChanges();
   });
 
   it('should create', () => {

@@ -31,12 +31,7 @@ import { CommonModule } from '@angular/common';
           class="absolute top-4 right-4 text-text-muted hover:text-text-secondary transition"
           aria-label="Cerrar"
         >
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -49,9 +44,7 @@ import { CommonModule } from '@angular/common';
         <!-- Icon - Auto con etiqueta de precio -->
         <div class="mb-6 flex justify-center relative">
           <!-- Auto icon -->
-          <div
-            class="w-20 h-20 rounded-2xl bg-cta-default/10 flex items-center justify-center"
-          >
+          <div class="w-20 h-20 rounded-2xl bg-cta-default/10 flex items-center justify-center">
             <svg
               class="w-12 h-12 text-cta-default"
               fill="none"
@@ -76,12 +69,7 @@ import { CommonModule } from '@angular/common';
           <div
             class="absolute -top-2 -right-2 w-10 h-10 rounded-lg bg-success-icon flex items-center justify-center transform rotate-12 shadow-lg"
           >
-            <svg
-              class="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -94,13 +82,11 @@ import { CommonModule } from '@angular/common';
 
         <!-- Content -->
         <div class="text-center mb-8">
-          <h2 class="text-2xl font-bold text-text-primary mb-4">
-            El precio que ves incluye todo
-          </h2>
+          <h2 class="text-2xl font-bold text-text-primary mb-4">El precio que ves incluye todo</h2>
           <p class="text-text-secondary text-base leading-relaxed">
             En AutoRenta, el precio que te mostramos para tu alquiler
-            <strong class="text-text-primary">incluye todas las tarifas</strong>.
-            Sin sorpresas al finalizar la reserva.
+            <strong class="text-text-primary">incluye todas las tarifas</strong>. Sin sorpresas al
+            finalizar la reserva.
           </p>
         </div>
 
@@ -219,13 +205,13 @@ import { CommonModule } from '@angular/common';
 })
 export class PriceTransparencyModalComponent {
   // Evento de cierre
-  close = output<void>();
+  closed = output<void>();
 
   onClose(): void {
-    this.close.emit();
+    this.closed.emit();
   }
 
-  onBackdropClick(event: MouseEvent): void {
+  onBackdropClick(_event: MouseEvent): void {
     this.onClose();
   }
 }

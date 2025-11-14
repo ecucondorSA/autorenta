@@ -2,8 +2,8 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { AnalyticsService } from './analytics.service';
 import { ProfileStore } from '../stores/profile.store';
+import { AnalyticsService } from './analytics.service';
 
 /**
  * Onboarding MVP Service
@@ -62,14 +62,14 @@ export class OnboardingService {
   readonly locadorProgress = computed(() => {
     const steps = this.locadorSteps();
     if (steps.length === 0) return 0;
-    const completed = steps.filter(s => s.completed).length;
+    const completed = steps.filter((s) => s.completed).length;
     return Math.round((completed / steps.length) * 100);
   });
 
   readonly locatarioProgress = computed(() => {
     const steps = this.locatarioSteps();
     if (steps.length === 0) return 0;
-    const completed = steps.filter(s => s.completed).length;
+    const completed = steps.filter((s) => s.completed).length;
     return Math.round((completed / steps.length) * 100);
   });
 
@@ -93,10 +93,7 @@ export class OnboardingService {
   });
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseAnonKey
-    );
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
   }
 
   /**
@@ -206,9 +203,8 @@ export class OnboardingService {
    * Get next pending step for a checklist
    */
   getNextStep(checklist: 'locador' | 'locatario'): OnboardingStep | null {
-    const steps =
-      checklist === 'locador' ? this.locadorSteps() : this.locatarioSteps();
-    return steps.find(s => !s.completed) || null;
+    const steps = checklist === 'locador' ? this.locadorSteps() : this.locatarioSteps();
+    return steps.find((s) => !s.completed) || null;
   }
 
   /**

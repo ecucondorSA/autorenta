@@ -38,7 +38,7 @@ export class BookingsService {
   private readonly validationService = inject(BookingValidationService);
   private readonly cancellationService = inject(BookingCancellationService);
   private readonly utilsService = inject(BookingUtilsService);
-  
+
   // Notification services
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
   private readonly carsService = inject(CarsService);
@@ -130,9 +130,14 @@ export class BookingsService {
     });
 
     // ✅ NUEVO: Notificar al dueño del auto sobre la nueva solicitud de reserva
-    this.notifyOwnerOfNewBooking(finalBooking).catch((error) => {
-      // Silently fail - notification is optional enhancement
-      this.logger.debug('Could not notify owner of new booking', error);
+    this.notifyOwnerOfNewBooking(finalBooking).catch((notificationError) => {
+      this.logger.warn(
+        'Failed to notify owner of new booking request',
+        'BookingsService',
+        notificationError instanceof Error
+          ? notificationError
+          : new Error(getErrorMessage(notificationError)),
+      );
     });
 
     return finalBooking;
@@ -887,12 +892,15 @@ export class BookingsService {
           renterName,
           carName,
           pricePerDay,
-          bookingUrl
+          bookingUrl,
         );
       }
     } catch (error) {
-      // Silently fail - notification is optional enhancement
-      this.logger.debug('Could not notify owner of new booking', String(error));
+      this.logger.warn(
+        'Failed to notify owner of booking request',
+        'BookingsService',
+        error instanceof Error ? error : new Error(getErrorMessage(error)),
+      );
     }
   }
 }

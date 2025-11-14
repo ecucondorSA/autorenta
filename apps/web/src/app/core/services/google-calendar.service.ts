@@ -77,13 +77,13 @@ export class GoogleCalendarService {
       switchMap((headers) =>
         this.http.get<{ authUrl: string }>(`${this.OAUTH_FUNCTION_URL}?action=get-auth-url`, {
           headers,
-        })
+        }),
       ),
       map((response) => response.authUrl),
       catchError((error) => {
         console.error('Error getting auth URL:', error);
         return throwError(() => new Error('Failed to get authorization URL'));
-      })
+      }),
     );
   }
 
@@ -102,7 +102,7 @@ export class GoogleCalendarService {
         const popup = window.open(
           authUrl,
           'Google Calendar Authorization',
-          `width=${width},height=${height},left=${left},top=${top}`
+          `width=${width},height=${height},left=${left},top=${top}`,
         );
 
         if (!popup) {
@@ -120,15 +120,18 @@ export class GoogleCalendarService {
           }, 500);
 
           // Timeout after 5 minutes
-          setTimeout(() => {
-            clearInterval(pollInterval);
-            if (!popup.closed) {
-              popup.close();
-            }
-            observer.error(new Error('Authorization timeout'));
-          }, 5 * 60 * 1000);
+          setTimeout(
+            () => {
+              clearInterval(pollInterval);
+              if (!popup.closed) {
+                popup.close();
+              }
+              observer.error(new Error('Authorization timeout'));
+            },
+            5 * 60 * 1000,
+          );
         });
-      })
+      }),
     );
   }
 
@@ -140,12 +143,12 @@ export class GoogleCalendarService {
       switchMap((headers) =>
         this.http.get<CalendarConnectionStatus>(`${this.OAUTH_FUNCTION_URL}?action=status`, {
           headers,
-        })
+        }),
       ),
       catchError((error) => {
         console.error('Error getting connection status:', error);
         return throwError(() => new Error('Failed to get connection status'));
-      })
+      }),
     );
   }
 
@@ -157,13 +160,13 @@ export class GoogleCalendarService {
       switchMap((headers) =>
         this.http.get<{ success: boolean }>(`${this.OAUTH_FUNCTION_URL}?action=disconnect`, {
           headers,
-        })
+        }),
       ),
       map(() => undefined),
       catchError((error) => {
         console.error('Error disconnecting calendar:', error);
         return throwError(() => new Error('Failed to disconnect calendar'));
-      })
+      }),
     );
   }
 
@@ -175,13 +178,13 @@ export class GoogleCalendarService {
       switchMap((headers) =>
         this.http.get<{ success: boolean }>(`${this.OAUTH_FUNCTION_URL}?action=refresh-token`, {
           headers,
-        })
+        }),
       ),
       map(() => undefined),
       catchError((error) => {
         console.error('Error refreshing token:', error);
         return throwError(() => new Error('Failed to refresh token'));
-      })
+      }),
     );
   }
 
@@ -190,7 +193,7 @@ export class GoogleCalendarService {
    */
   syncBookingToCalendar(
     bookingId: string,
-    operation: 'create' | 'update' | 'delete' = 'create'
+    operation: 'create' | 'update' | 'delete' = 'create',
   ): Observable<SyncBookingResponse> {
     return rxFrom(this.getAuthHeaders()).pipe(
       switchMap((headers) =>
@@ -200,13 +203,13 @@ export class GoogleCalendarService {
             booking_id: bookingId,
             operation,
           },
-          { headers }
-        )
+          { headers },
+        ),
       ),
       catchError((error) => {
         console.error('Error syncing booking to calendar:', error);
         return throwError(() => new Error('Failed to sync booking to calendar'));
-      })
+      }),
     );
   }
 
@@ -224,7 +227,7 @@ export class GoogleCalendarService {
   getCarCalendarAvailability(
     carId: string,
     from: string,
-    to: string
+    to: string,
   ): Observable<{
     available: boolean;
     blocked_dates: string[];
@@ -249,7 +252,7 @@ export class GoogleCalendarService {
           events: [],
           google_calendar_checked: false,
         }));
-      })
+      }),
     );
   }
 }

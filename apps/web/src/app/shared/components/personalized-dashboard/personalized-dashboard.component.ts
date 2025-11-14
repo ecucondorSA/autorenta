@@ -11,7 +11,7 @@ import { WalletService } from '../../../core/services/wallet.service';
 import { NotificationsService } from '../../../core/services/user-notifications.service';
 
 // Models
-import type { Car } from '../../../core/models';
+import type { Car, Booking } from '../../../core/models';
 
 // Utils
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
@@ -66,7 +66,7 @@ export class PersonalizedDashboardComponent implements OnInit {
   });
 
   readonly recentCars = signal<Car[]>([]);
-  readonly recentBookings = signal<any[]>([]);
+  readonly recentBookings = signal<Booking[]>([]);
 
   // Acciones rápidas basadas en rol
   readonly quickActions = computed<QuickAction[]>(() => {
@@ -232,8 +232,8 @@ export class PersonalizedDashboardComponent implements OnInit {
         }));
 
         // Reservas pendientes para owner
-        const ownerBookings = await this.bookingsService.getOwnerBookings();
-        const pendingBookings = ownerBookings.filter((b) => b.status === 'pending').length;
+  const ownerBookings = await this.bookingsService.getOwnerBookings();
+  const pendingBookings = ownerBookings.filter((b: Booking) => b.status === 'pending').length;
 
         this.stats.update((stats) => ({
           ...stats,
@@ -245,7 +245,7 @@ export class PersonalizedDashboardComponent implements OnInit {
         // Reservas activas del renter
         const bookings = await this.bookingsService.getMyBookings();
         const activeBookings = bookings.filter(
-          (b) => b.status === 'confirmed' || b.status === 'in_progress',
+          (b: Booking) => b.status === 'confirmed' || b.status === 'in_progress',
         ).length;
 
         this.stats.update((stats) => ({

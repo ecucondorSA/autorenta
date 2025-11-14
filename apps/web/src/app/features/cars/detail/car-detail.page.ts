@@ -507,7 +507,7 @@ export class CarDetailPage implements OnInit {
           contentId: state.car.id,
           contentName: state.car.title,
           value: state.car.price_per_day,
-          currency: state.car.currency || 'ARS'
+          currency: state.car.currency || 'ARS',
         });
       }
     });

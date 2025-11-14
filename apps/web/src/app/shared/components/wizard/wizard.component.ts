@@ -1,4 +1,4 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export interface WizardStep {
@@ -25,8 +25,8 @@ export interface WizardStep {
  *   [steps]="wizardSteps"
  *   [currentStepIndex]="currentStep()"
  *   (stepChange)="handleStepChange($event)"
- *   (cancel)="handleCancel()"
- *   (complete)="handleComplete()">
+ *   (cancelRequested)="handleCancel()"
+ *   (completed)="handleComplete()">
  *
  *   <!-- Step content via ng-content -->
  *   <ng-container *ngIf="currentStep() === 0">
@@ -480,12 +480,12 @@ export class WizardComponent {
   /**
    * Emitted when cancel is clicked
    */
-  cancel = output<void>();
+  cancelRequested = output<void>();
 
   /**
    * Emitted when wizard is completed
    */
-  complete = output<void>();
+  completed = output<void>();
 
   // ==================== COMPUTED ====================
 
@@ -605,7 +605,7 @@ export class WizardComponent {
    */
   handleCancel(): void {
     if (this.isProcessing()) return;
-    this.cancel.emit();
+  this.cancelRequested.emit();
   }
 
   /**
@@ -615,6 +615,6 @@ export class WizardComponent {
     if (!this.canComplete()) return;
     if (this.isProcessing()) return;
 
-    this.complete.emit();
+  this.completed.emit();
   }
 }

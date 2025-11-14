@@ -7,10 +7,10 @@ import { AuthService } from './auth.service';
 
 /**
  * CarDepreciationNotificationsService
- * 
+ *
  * Servicio para calcular y notificar sobre depreciación mensual de autos
  * y cómo contrarrestarla con ganancias de AutoRenta.
- * 
+ *
  * Funcionalidades:
  * - Calcula depreciación mensual basada en categoría y edad del auto
  * - Calcula ganancias mensuales de reservas
@@ -32,13 +32,13 @@ export class CarDepreciationNotificationsService {
 
   /**
    * Calcula la depreciación mensual de un auto
-   * 
+   *
    * @param car - Auto a calcular
    * @returns Depreciación mensual en ARS
    */
-  async calculateMonthlyDepreciation(car: { 
-    id: string; 
-    year?: number | null; 
+  async calculateMonthlyDepreciation(car: {
+    id: string;
+    year?: number | null;
     estimated_value_usd?: number | null;
     category_id?: string | null;
   }): Promise<number> {
@@ -49,7 +49,7 @@ export class CarDepreciationNotificationsService {
 
       // Obtener tasa de depreciación de la categoría
       let depreciationRate = 0.05; // Default 5% anual
-      
+
       if (car.category_id) {
         const { data: category } = await this.supabase
           .from('vehicle_categories')
@@ -77,7 +77,7 @@ export class CarDepreciationNotificationsService {
 
   /**
    * Calcula las ganancias mensuales de un auto
-   * 
+   *
    * @param carId - ID del auto
    * @param month - Mes a calcular (formato YYYY-MM)
    * @returns Ganancias mensuales en ARS
@@ -105,7 +105,7 @@ export class CarDepreciationNotificationsService {
       const totalEarnings = (bookings || []).reduce((sum, booking) => {
         if (booking.status === 'completed' || booking.status === 'active') {
           // El owner recibe 85% del total
-          return sum + (booking.total_amount * 0.85);
+          return sum + booking.total_amount * 0.85;
         }
         return sum;
       }, 0);
@@ -119,7 +119,7 @@ export class CarDepreciationNotificationsService {
 
   /**
    * Envía notificación mensual de depreciación para un auto
-   * 
+   *
    * @param carId - ID del auto
    */
   async sendMonthlyDepreciationNotification(carId: string): Promise<void> {
@@ -159,7 +159,7 @@ export class CarDepreciationNotificationsService {
         monthlyDepreciation,
         monthlyEarnings,
         netGain,
-        carUrl
+        carUrl,
       );
 
       // Actualizar fecha de última notificación
@@ -176,7 +176,7 @@ export class CarDepreciationNotificationsService {
           carName,
           monthlyEarnings,
           recommendedPrice,
-          carUrl
+          carUrl,
         );
       } else if (netGain > monthlyDepreciation * 0.5) {
         // Si está ganando bien, enviar notificación positiva
@@ -184,7 +184,7 @@ export class CarDepreciationNotificationsService {
           carName,
           monthlyEarnings,
           monthlyDepreciation,
-          netGain
+          netGain,
         );
       }
     } catch (error) {
@@ -208,7 +208,7 @@ export class CarDepreciationNotificationsService {
         if (car.status === 'active') {
           await this.sendMonthlyDepreciationNotification(car.id);
           // Pequeña pausa entre notificaciones para no saturar
-          await new Promise(resolve => setTimeout(resolve, 500));
+          await new Promise((resolve) => setTimeout(resolve, 500));
         }
       }
     } catch (error) {
@@ -255,7 +255,3 @@ export class CarDepreciationNotificationsService {
     }
   }
 }
-
-
-
-

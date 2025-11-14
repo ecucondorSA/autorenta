@@ -21,12 +21,7 @@
   <div class="layers-panel" *ngIf="isOpen()">
     <div class="layers-panel-header">
       <h3 class="layers-panel-title">Capas del Mapa</h3>
-      <button
-        type="button"
-        (click)="togglePanel()"
-        class="layers-panel-close"
-        aria-label="Cerrar"
-      >
+      <button type="button" (click)="togglePanel()" class="layers-panel-close" aria-label="Cerrar">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
@@ -39,11 +34,7 @@
     </div>
 
     <div class="layers-list">
-      <div
-        *ngFor="let layer of layers"
-        class="layer-item"
-        [class.disabled]="!layer.enabled"
-      >
+      <div *ngFor="let layer of layers" class="layer-item" [class.disabled]="!layer.enabled">
         <label class="layer-label">
           <input
             type="checkbox"
@@ -59,8 +50,3 @@
     </div>
   </div>
 </div>
-
-
-
-
-

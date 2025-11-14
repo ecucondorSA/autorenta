@@ -2,6 +2,42 @@ import { Injectable } from '@angular/core';
 import * as Sentry from '@sentry/angular';
 import { environment } from '../../../environments/environment';
 
+type LargestContentfulPaintEntry = PerformanceEntry & {
+  renderTime?: number;
+  loadTime?: number;
+};
+
+type FirstInputDelayEntry = PerformanceEntry & {
+  processingStart: number;
+  startTime: number;
+};
+
+type LayoutShiftEntry = PerformanceEntry & {
+  value: number;
+  hadRecentInput: boolean;
+};
+
+type PerformanceWithMemory = Performance & {
+  memory?: {
+    usedJSHeapSize: number;
+    totalJSHeapSize: number;
+    jsHeapSizeLimit: number;
+  };
+};
+
+// Network Information API types (not in standard lib)
+interface NetworkInformation extends EventTarget {
+  readonly effectiveType: 'slow-2g' | '2g' | '3g' | '4g';
+  readonly downlink: number;
+  readonly rtt: number;
+  readonly saveData: boolean;
+  onchange: ((this: NetworkInformation, ev: Event) => unknown) | null;
+}
+
+type NavigatorWithOptionalConnection = Navigator & {
+  connection?: NetworkInformation;
+};
+
 /**
  * 📊 Performance Monitoring Service
  *
@@ -71,10 +107,10 @@ export class PerformanceMonitoringService {
     if ('PerformanceObserver' in window) {
       try {
         const lcpObserver = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1] as any;
+          const entries = list.getEntries() as LargestContentfulPaintEntry[];
+          const lastEntry = entries[entries.length - 1];
 
-          const lcp = lastEntry.renderTime || lastEntry.loadTime;
+          const lcp = lastEntry?.renderTime ?? lastEntry?.loadTime ?? 0;
           console.log(`📊 LCP: ${lcp.toFixed(2)}ms`);
 
           // Send to Sentry as measurement
@@ -98,15 +134,16 @@ export class PerformanceMonitoringService {
         });
 
         lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
-      } catch (_e) {
+      } catch {
         // Browser doesn't support LCP
       }
 
       // FID (First Input Delay)
       try {
         const fidObserver = new PerformanceObserver((list) => {
-          list.getEntries().forEach((entry: unknown) => {
-            const fid = (entry as any).processingStart - (entry as any).startTime;
+          list.getEntries().forEach((entry) => {
+            const fidEntry = entry as FirstInputDelayEntry;
+            const fid = fidEntry.processingStart - fidEntry.startTime;
             console.log(`📊 FID: ${fid.toFixed(2)}ms`);
 
             // Send to Sentry as measurement
@@ -131,7 +168,7 @@ export class PerformanceMonitoringService {
         });
 
         fidObserver.observe({ entryTypes: ['first-input'] });
-      } catch (_e) {
+      } catch {
         // Browser doesn't support FID
       }
 
@@ -139,9 +176,10 @@ export class PerformanceMonitoringService {
       try {
         let clsScore = 0;
         const clsObserver = new PerformanceObserver((list) => {
-          list.getEntries().forEach((entry: unknown) => {
-            if (!(entry as any).hadRecentInput) {
-              clsScore += (entry as any).value;
+          list.getEntries().forEach((entry) => {
+            const clsEntry = entry as LayoutShiftEntry;
+            if (!clsEntry.hadRecentInput) {
+              clsScore += clsEntry.value;
               console.log(`📊 CLS: ${clsScore.toFixed(4)}`);
 
               // Send to Sentry as measurement
@@ -167,7 +205,7 @@ export class PerformanceMonitoringService {
         });
 
         clsObserver.observe({ entryTypes: ['layout-shift'] });
-      } catch (_e) {
+      } catch {
         // Browser doesn't support CLS
       }
     }
@@ -177,21 +215,24 @@ export class PerformanceMonitoringService {
    * Log información del dispositivo
    */
   private logDeviceInfo(): void {
+    const performanceMemory = (performance as PerformanceWithMemory).memory;
+    const networkConnection = (navigator as NavigatorWithOptionalConnection).connection;
+
     const info = {
       userAgent: navigator.userAgent,
       platform: navigator.platform,
-      memory: (performance as any).memory
+      memory: performanceMemory
         ? {
-            used: ((performance as any).memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
-            total: ((performance as any).memory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
-            limit: ((performance as any).memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
+            used: (performanceMemory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
+            total: (performanceMemory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
+            limit: (performanceMemory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
           }
         : 'Not available',
-      connection: (navigator as any).connection
+      connection: networkConnection
         ? {
-            effectiveType: (navigator as any).connection.effectiveType,
-            downlink: (navigator as any).connection.downlink + ' Mbps',
-            rtt: (navigator as any).connection.rtt + ' ms',
+            effectiveType: networkConnection.effectiveType,
+            downlink: `${networkConnection.downlink} Mbps`,
+            rtt: `${networkConnection.rtt} ms`,
           }
         : 'Not available',
       screen: {
@@ -250,11 +291,12 @@ export class PerformanceMonitoringService {
    * Obtiene el uso actual de memoria (si está disponible)
    */
   getMemoryUsage(): { used: string; total: string; limit: string } | null {
-    if ((performance as any).memory) {
+    const perfWithMemory = performance as PerformanceWithMemory;
+    if (perfWithMemory.memory) {
       return {
-        used: ((performance as any).memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
-        total: ((performance as any).memory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
-        limit: ((performance as any).memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
+        used: (perfWithMemory.memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
+        total: (perfWithMemory.memory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
+        limit: (perfWithMemory.memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
       };
     }
     return null;

@@ -21,7 +21,9 @@ import { AuthService } from '../../../core/services/auth.service';
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
   template: `
     <ion-header>
-      <ion-toolbar class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default">
+      <ion-toolbar
+        class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default"
+      >
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
@@ -111,7 +113,8 @@ import { AuthService } from '../../../core/services/auth.service';
               />
               <p
                 *ngIf="
-                  passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched
+                  passwordForm.get('newPassword')?.invalid &&
+                  passwordForm.get('newPassword')?.touched
                 "
                 class="mt-1 text-xs text-error-text"
               >
@@ -135,7 +138,10 @@ import { AuthService } from '../../../core/services/auth.service';
                 placeholder="Repite la nueva contraseña"
               />
               <p
-                *ngIf="passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched"
+                *ngIf="
+                  passwordForm.hasError('passwordMismatch') &&
+                  passwordForm.get('confirmPassword')?.touched
+                "
                 class="mt-1 text-xs text-error-text"
               >
                 Las contraseñas no coinciden
@@ -225,7 +231,9 @@ import { AuthService } from '../../../core/services/auth.service';
 
             <!-- Driver License -->
             <div class="flex items-center justify-between">
-              <span class="text-sm text-text-primary dark:text-text-primary">Licencia de Conducir</span>
+              <span class="text-sm text-text-primary dark:text-text-primary"
+                >Licencia de Conducir</span
+              >
               <span
                 [class]="
                   profile()?.is_driver_verified
@@ -261,6 +269,11 @@ import { AuthService } from '../../../core/services/auth.service';
       :host {
         display: block;
         height: 100%;
+      }
+
+      ion-content {
+        --padding-bottom: 24px;
+        min-height: 100vh;
       }
     `,
   ],

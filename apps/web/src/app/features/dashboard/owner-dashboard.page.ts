@@ -72,8 +72,8 @@ export class OwnerDashboardPage implements OnInit {
   // Notifications computed signals
   readonly notifications = this.notificationsService.notifications;
   readonly unreadCount = this.notificationsService.unreadCount;
-  readonly recentNotifications = computed(() => 
-    this.notifications().slice(0, 5) // Last 5 notifications
+  readonly recentNotifications = computed(
+    () => this.notifications().slice(0, 5), // Last 5 notifications
   );
 
   async ngOnInit() {

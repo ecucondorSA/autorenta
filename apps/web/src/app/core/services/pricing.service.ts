@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { injectSupabase } from './supabase-client.service';
-import { DistanceCalculatorService } from './distance-calculator.service';
 import { environment } from '../../../environments/environment';
 import type { VehicleCategory } from '../models';
+import { injectSupabase } from './supabase-client.service';
+import { DistanceCalculatorService } from './distance-calculator.service';
 
 export interface QuoteBreakdown {
   price_subtotal: number;
@@ -283,7 +283,7 @@ export class PricingService {
 
       const result: FipeValueResult = await response.json();
       return result;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -296,13 +296,13 @@ export class PricingService {
     categoryId: string;
     estimatedValueUsd?: number;
   }): Promise<number | null> {
-    const { data, error } = await this.supabase
+    const { data } = await this.supabase
       .from('vehicle_categories')
       .select('base_daily_rate_pct, code')
       .eq('id', params.categoryId)
       .single();
 
-    if (error || !data) {
+    if (!data) {
       return null;
     }
 
@@ -346,7 +346,7 @@ export class PricingService {
 
       const brands: FipeBrand[] = await response.json();
       return brands;
-    } catch (error) {
+    } catch {
       return [];
     }
   }
@@ -367,7 +367,7 @@ export class PricingService {
 
       const models: FipeModel[] = await response.json();
       return models;
-    } catch (error) {
+    } catch {
       return [];
     }
   }
@@ -474,7 +474,7 @@ export class PricingService {
         success: false,
         error: `No se encontró información de precio para ${baseName} ${params.year}`,
       };
-    } catch (error) {
+    } catch {
       return null;
     }
   }

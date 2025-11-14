@@ -123,7 +123,7 @@ export class MercadoPagoOAuthService {
       console.log('[OAuth] Estado:', status.connected ? '✅ Conectado' : '❌ No conectado');
 
       return status;
-    } catch (err: unknown) {
+    } catch {
       return { connected: false };
     }
   }
@@ -189,7 +189,7 @@ export class MercadoPagoOAuthService {
       }
 
       return data;
-    } catch (err: unknown) {
+    } catch {
       return null;
     }
   }

@@ -164,7 +164,7 @@ import { CarLocationsService } from '../../../core/services/car-locations.servic
         <!-- Price -->
         <div class="flex items-baseline gap-1.5">
           <span class="text-2xl font-bold text-text-primary">
-            {{ car.pricePerDay | money: (car.currency || 'ARS') }}
+            {{ car.pricePerDay | money: car.currency || 'ARS' }}
           </span>
           <span class="text-sm text-text-secondary font-medium">/día</span>
         </div>

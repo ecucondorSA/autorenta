@@ -7,8 +7,6 @@ import {
   CoverageUpgrade,
   calculateDeductibleUsd,
   applyUpgradeToDeductible,
-  calculateHoldEstimatedArs,
-  calculateCreditSecurityUsd,
 } from '../models/booking-detail-payment.model';
 import { SupabaseClientService } from './supabase-client.service';
 import { RiskCalculatorService } from './risk-calculator.service';

@@ -146,9 +146,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly locationSuggestions = signal<GeocodingResult[]>([]); // Sugerencias de ubicación
   readonly showLocationSuggestions = signal(false); // Mostrar dropdown de sugerencias
   readonly locationSearchLoading = signal(false); // Cargando sugerencias
-  readonly googleCalendarId = signal<string | null>(
-    environment.googleCalendarId || null
-  ); // ID del calendario de Google desde environment
+  readonly googleCalendarId = signal<string | null>(environment.googleCalendarId || null); // ID del calendario de Google desde environment
   readonly showPriceTransparencyModal = signal(false); // Modal de transparencia de precios
 
   // Computed
@@ -597,7 +595,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
     // 🎯 TikTok Events: Track Search
     void this.tiktokEvents.trackSearch({
-      searchString: value
+      searchString: value,
     });
 
     void this.loadCars();
@@ -812,7 +810,14 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   showToast(message: string, type: ToastType = 'info'): void {
     // Using NotificationManagerService instead of inline toast
-    const title = type === 'success' ? 'Éxito' : type === 'error' ? 'Error' : type === 'warning' ? 'Advertencia' : 'Información';
+    const title =
+      type === 'success'
+        ? 'Éxito'
+        : type === 'error'
+          ? 'Error'
+          : type === 'warning'
+            ? 'Advertencia'
+            : 'Información';
 
     if (type === 'success') {
       this.notificationManager.success(title, message);

@@ -26,7 +26,10 @@ import { MapBookingPanelComponent } from '../map-booking-panel/map-booking-panel
 import { environment } from '../../../../environments/environment';
 import { MapDetailsPanelComponent } from '../map-details-panel/map-details-panel.component';
 import { MapMarkerComponent } from '../map-marker/map-marker.component';
-import { MapLayersControlComponent, type MapLayer } from '../map-layers-control/map-layers-control.component';
+import {
+  MapLayersControlComponent,
+  type MapLayer,
+} from '../map-layers-control/map-layers-control.component';
 import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
 import { MapboxDirectionsService } from '../../../core/services/mapbox-directions.service';
 
@@ -34,6 +37,15 @@ type MapboxGL = typeof import('mapbox-gl').default;
 type MapboxMap = import('mapbox-gl').Map;
 type MapboxMarker = import('mapbox-gl').Marker;
 type MapboxPopup = import('mapbox-gl').Popup;
+type MapboxGeoJSONSource = import('mapbox-gl').GeoJSONSource;
+type MapLayerMouseEvent = import('mapbox-gl').MapLayerMouseEvent;
+type MapboxErrorEvent = import('mapbox-gl').ErrorEvent;
+type MapboxGeoJSONFeature = import('mapbox-gl').MapboxGeoJSONFeature;
+
+type MapboxErrorDetails = MapboxErrorEvent & {
+  status?: number;
+  error?: (Error & { status?: number }) | undefined;
+};
 
 /**
  * MAPBOX 10K+ CARS OPTIMIZATION
@@ -331,7 +343,6 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     // Update Mapbox Standard style theme
     if (this.map && this.map.isStyleLoaded()) {
       try {
-        // @ts-ignore - Mapbox Standard setConfigProperty not yet in types
         this.map.setConfigProperty('basemap', 'lightPreset', isDark ? 'dusk' : 'day');
 
         // No need for canvas filters with Standard style - it handles theming natively
@@ -395,14 +406,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       // Validate Mapbox access token
       if (!environment.mapboxAccessToken || environment.mapboxAccessToken.trim() === '') {
         throw new Error(
-          'Mapbox access token no configurado. Por favor, configura NG_APP_MAPBOX_ACCESS_TOKEN en .env.local'
+          'Mapbox access token no configurado. Por favor, configura NG_APP_MAPBOX_ACCESS_TOKEN en .env.local',
         );
       }
 
       // Validate token format (should start with 'pk.')
       if (!environment.mapboxAccessToken.startsWith('pk.')) {
         throw new Error(
-          'Token de Mapbox inválido. El token debe comenzar con "pk." y ser un Public Access Token válido.'
+          'Token de Mapbox inválido. El token debe comenzar con "pk." y ser un Public Access Token válido.',
         );
       }
 
@@ -419,7 +430,6 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           [-57.9, -34.3], // Northeast
         ],
         // Mapbox Standard configuration
-        // @ts-ignore - Mapbox Standard config not yet in types
         config: {
           basemap: {
             lightPreset: 'day', // Options: 'day', 'dusk', 'dawn', 'night'
@@ -449,20 +459,27 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       });
 
       // Handle map errors
-      this.map.on('error', (e: any) => {
-        console.error('[CarsMap] Map error:', e);
-        
-        // Check for authentication errors (401)
-        if (e.error?.status === 401 || e.error?.message?.includes('401') || e.status === 401) {
+      this.map.on('error', (event: MapboxErrorDetails) => {
+        console.error('[CarsMap] Map error:', event);
+
+        const errorStatus =
+          (event.error && 'status' in event.error ? event.error.status : undefined) ??
+          event.status;
+        const errorMessage =
+          (event.error && event.error.message) || ('message' in event ? event.message : '');
+
+        if (errorStatus === 401 || (typeof errorMessage === 'string' && errorMessage.includes('401'))) {
           this.error.set(
-            'Token de Mapbox inválido o expirado. Por favor, verifica tu NG_APP_MAPBOX_ACCESS_TOKEN en .env.local'
+            'Token de Mapbox inválido o expirado. Por favor, verifica tu NG_APP_MAPBOX_ACCESS_TOKEN en .env.local',
           );
-        } else if (e.error?.message) {
-          this.error.set(`Error al cargar el mapa: ${e.error.message}`);
+        } else if (event.error?.message) {
+          this.error.set(`Error al cargar el mapa: ${event.error.message}`);
         } else {
-          this.error.set('Error al cargar el mapa. Por favor, verifica tu conexión e intenta nuevamente.');
+          this.error.set(
+            'Error al cargar el mapa. Por favor, verifica tu conexión e intenta nuevamente.',
+          );
         }
-        
+
         this.loading.set(false);
       });
     } catch (err) {
@@ -501,8 +518,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }));
 
     // Add source with Mapbox-recommended optimizations
-    if (this.map.getSource(this.clusterSourceId)) {
-      (this.map.getSource(this.clusterSourceId) as any).setData({
+    const existingClusterSource = this.map.getSource(
+      this.clusterSourceId,
+    ) as MapboxGeoJSONSource | undefined;
+
+    if (existingClusterSource) {
+      existingClusterSource.setData({
         type: 'FeatureCollection',
         features,
       });
@@ -599,24 +620,44 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }
 
     // Handle cluster clicks
-    this.map.on('click', this.clusterLayerId, (e) => {
-      const features = this.map!.queryRenderedFeatures(e.point, {
+    this.map.on('click', this.clusterLayerId, (event: MapLayerMouseEvent) => {
+      if (!this.map) return;
+
+      const features = this.map.queryRenderedFeatures(event.point, {
         layers: [this.clusterLayerId],
-      });
-      const clusterId = features[0].properties?.cluster_id;
-      const source = this.map!.getSource(this.clusterSourceId) as any;
-      source.getClusterExpansionZoom(clusterId, (err: Error | null, zoom: number) => {
-        if (err) return;
-        this.map!.easeTo({
-          center: e.lngLat as any,
+      }) as MapboxGeoJSONFeature[];
+
+      if (!features.length) {
+        return;
+      }
+
+      const properties = (features[0].properties || {}) as Record<string, unknown>;
+      const clusterId =
+        typeof properties.cluster_id === 'number' ? (properties.cluster_id as number) : undefined;
+
+      if (clusterId === undefined) {
+        return;
+      }
+
+      const source = this.map.getSource(this.clusterSourceId) as MapboxGeoJSONSource | undefined;
+      if (!source) {
+        return;
+      }
+
+      source.getClusterExpansionZoom(clusterId, (err, zoom) => {
+        if (err || zoom === null || zoom === undefined) return;
+        this.map?.easeTo({
+          center: event.lngLat,
           zoom,
         });
       });
     });
 
     // Handle individual car clicks
-    this.map.on('click', 'cars-unclustered', (e) => {
-      const carId = (e.features?.[0]?.properties as any)?.carId;
+    this.map.on('click', 'cars-unclustered', (event: MapLayerMouseEvent) => {
+      const carFeature = event.features?.[0] as MapboxGeoJSONFeature | undefined;
+      const properties = (carFeature?.properties || {}) as Record<string, unknown>;
+      const carId = typeof properties.carId === 'string' ? (properties.carId as string) : undefined;
       if (carId) {
         this.carSelected.emit(carId);
         const car = this.cars.find((c) => c.carId === carId);
@@ -1070,7 +1111,6 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Prioritizes cars available today with instant booking
    */
   private groupCarsByAvailability(): CarMapLocation[] {
-    const now = new Date();
     const cars = [...this.cars];
 
     // Group cars by priority:
@@ -1562,8 +1602,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       properties: {},
     };
 
-    if (this.map.getSource(this.searchRadiusSourceId)) {
-      (this.map.getSource(this.searchRadiusSourceId) as any).setData(feature);
+    const source = this.map.getSource(this.searchRadiusSourceId) as MapboxGeoJSONSource | undefined;
+    if (source) {
+      source.setData(feature);
     } else {
       this.map.addSource(this.searchRadiusSourceId, {
         type: 'geojson',
@@ -1900,11 +1941,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         return;
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as GeoJSON.FeatureCollection;
 
       // Add or update source
-      if (this.map.getSource(this.isochroneSourceId)) {
-        (this.map.getSource(this.isochroneSourceId) as any).setData(data);
+      const source = this.map.getSource(this.isochroneSourceId) as MapboxGeoJSONSource | undefined;
+      if (source) {
+        source.setData(data);
       } else {
         this.map.addSource(this.isochroneSourceId, {
           type: 'geojson',
@@ -2026,8 +2068,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       };
 
       // Add or update source
-      if (this.map.getSource(this.routeSourceId)) {
-        (this.map.getSource(this.routeSourceId) as any).setData(routeGeoJSON);
+      const source = this.map.getSource(this.routeSourceId) as MapboxGeoJSONSource | undefined;
+      if (source) {
+        source.setData(routeGeoJSON);
       } else {
         this.map.addSource(this.routeSourceId, {
           type: 'geojson',

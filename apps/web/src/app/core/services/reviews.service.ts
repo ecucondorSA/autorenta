@@ -109,7 +109,6 @@ export class ReviewsService {
       if (params.review_type === 'renter_to_owner') {
         this.notifyOwnerOfNewReview(reviewId, params).catch((error) => {
           // Silently fail - notification is optional enhancement
-          console.debug('Could not notify owner of new review', error);
         });
       }
 
@@ -665,7 +664,7 @@ export class ReviewsService {
    */
   private async notifyOwnerOfNewReview(
     reviewId: string,
-    params: CreateReviewParams
+    params: CreateReviewParams,
   ): Promise<void> {
     try {
       if (!params.car_id || !params.reviewee_id) return;
@@ -685,7 +684,7 @@ export class ReviewsService {
       if (car && reviewer) {
         const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
         const reviewerName = reviewer.full_name || 'Un usuario';
-        
+
         // Calcular rating promedio de las 6 categorías
         const ratings = [
           params.rating_cleanliness,
@@ -696,21 +695,15 @@ export class ReviewsService {
           params.rating_value,
         ];
         const avgRating = Math.round(
-          ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+          ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length,
         );
 
         const reviewUrl = `/cars/${params.car_id}/reviews`;
 
-        this.carOwnerNotifications.notifyNewReview(
-          reviewerName,
-          avgRating,
-          carName,
-          reviewUrl
-        );
+        this.carOwnerNotifications.notifyNewReview(reviewerName, avgRating, carName, reviewUrl);
       }
     } catch (error) {
       // Silently fail - notification is optional enhancement
-      console.debug('Could not notify owner of new review', error);
     }
   }
 }

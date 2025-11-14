@@ -200,10 +200,7 @@ export class TikTokEventsService {
    * Track CompleteRegistration event
    * Cuando un usuario completa el registro
    */
-  async trackCompleteRegistration(params?: {
-    value?: number;
-    currency?: string;
-  }): Promise<void> {
+  async trackCompleteRegistration(params?: { value?: number; currency?: string }): Promise<void> {
     await this.sendEvent('CompleteRegistration', {
       value: params?.value || 0,
       currency: params?.currency || 'ARS',
@@ -248,10 +245,7 @@ export class TikTokEventsService {
   /**
    * Send event to Edge Function
    */
-  private async sendEvent(
-    event: string,
-    properties: Record<string, unknown>
-  ): Promise<void> {
+  private async sendEvent(event: string, properties: Record<string, unknown>): Promise<void> {
     if (!this.isEnabled) {
       console.log('[TikTok Events] Disabled in development');
       return;
@@ -280,7 +274,7 @@ export class TikTokEventsService {
           headers: {
             'Content-Type': 'application/json',
           },
-        })
+        }),
       );
 
       console.log(`[TikTok Events] ${event} sent successfully`);

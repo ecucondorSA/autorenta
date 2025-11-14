@@ -2,7 +2,6 @@ import { Injectable, signal, inject } from '@angular/core';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import {
   MessagesRepository,
-  ConversationDTO,
   ConversationListOptions,
   PaginatedConversations,
 } from '../repositories/messages.repository';

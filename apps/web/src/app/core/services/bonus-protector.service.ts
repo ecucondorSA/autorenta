@@ -117,13 +117,13 @@ export class BonusProtectorService {
               validity_days: 365,
             },
           ];
-          
+
           this.state.update((s) => ({
             ...s,
             options: mockOptions,
             loading: false,
           }));
-          
+
           return mockOptions;
         }
         throw new Error(`Error al cargar opciones: ${error.message}`);
@@ -196,19 +196,19 @@ export class BonusProtectorService {
       return activeProtector;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-      
+
       // Solo loggear el error si no es por función no encontrada
       if (!errorMessage.includes('Could not find the function')) {
         console.error('[BonusProtectorService] Error:', errorMessage);
       }
-      
+
       this.state.update((s) => ({
         ...s,
         activeProtector: null,
         loading: false,
         error: null, // No mostrar error al usuario por funciones faltantes
       }));
-      
+
       return null;
     }
   }

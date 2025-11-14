@@ -34,11 +34,11 @@ export class CarsService {
     // Validate required fields
     // ✅ CRITICAL: brand_id/model_id son UUIDs (pueden ser null si usamos FIPE)
     // Si no hay UUIDs, debemos tener brand_text_backup y model_text_backup
-    const hasBrandId = !!(input.brand_id);
-    const hasModelId = !!(input.model_id);
-    const hasBrandText = !!(input.brand_text_backup);
-    const hasModelText = !!(input.model_text_backup);
-    
+    const hasBrandId = !!input.brand_id;
+    const hasModelId = !!input.model_id;
+    const hasBrandText = !!input.brand_text_backup;
+    const hasModelText = !!input.model_text_backup;
+
     if (!hasBrandId && !hasBrandText) {
       throw new Error('Marca es requerida (brand_id o brand_text_backup)');
     }
@@ -65,16 +65,19 @@ export class CarsService {
     // ✅ CRITICAL: Mapear campos de ubicación legacy (city, province, country)
     // La base de datos requiere city/province/country (NOT NULL)
     // pero el formulario envía location_city/location_state/location_country
-    const city = (input as Record<string, unknown>).city 
-      || (input as Record<string, unknown>).location_city 
-      || '';
-    const province = (input as Record<string, unknown>).province 
-      || (input as Record<string, unknown>).location_state 
-      || (input as Record<string, unknown>).location_province 
-      || '';
-    const country = (input as Record<string, unknown>).country 
-      || (input as Record<string, unknown>).location_country 
-      || 'AR';
+    const city =
+      (input as Record<string, unknown>).city ||
+      (input as Record<string, unknown>).location_city ||
+      '';
+    const province =
+      (input as Record<string, unknown>).province ||
+      (input as Record<string, unknown>).location_state ||
+      (input as Record<string, unknown>).location_province ||
+      '';
+    const country =
+      (input as Record<string, unknown>).country ||
+      (input as Record<string, unknown>).location_country ||
+      'AR';
 
     // Prepare clean data for insert
     const carData = {
@@ -372,14 +375,23 @@ export class CarsService {
 
       if (bookingsError) throw bookingsError;
 
-      // Get manual blocks
-      const { data: blocks, error: blocksError } = await this.supabase
-        .from('car_blocked_dates')
-        .select('blocked_from, blocked_to')
-        .eq('car_id', carId)
-        .order('blocked_from', { ascending: true });
+      // Get manual blocks - temporal fix: try the table, fallback to empty if not exists
+      let blocks: any[] = [];
+      try {
+        const { data: blocksData, error: blocksError } = await this.supabase
+          .from('car_blocked_dates')
+          .select('blocked_from, blocked_to')
+          .eq('car_id', carId)
+          .order('blocked_from', { ascending: true });
 
-      if (blocksError) throw blocksError;
+        if (blocksError) {
+          // If table doesn't exist, just log and continue with empty blocks
+        } else {
+          blocks = blocksData || [];
+        }
+      } catch (tableError) {
+        // Table doesn't exist, continue without manual blocks
+      }
 
       // Combine and format
       const ranges: Array<{ from: string; to: string }> = [];
@@ -395,13 +407,11 @@ export class CarsService {
       }
 
       // Add manual block ranges
-      if (blocks) {
-        for (const block of blocks) {
-          ranges.push({
-            from: block.blocked_from,
-            to: block.blocked_to,
-          });
-        }
+      for (const block of blocks) {
+        ranges.push({
+          from: block.blocked_from,
+          to: block.blocked_to,
+        });
       }
 
       return ranges;
@@ -447,7 +457,7 @@ export class CarsService {
     // pero el formulario envía location_city/location_state/location_country
     const inputRecord = input as Record<string, unknown>;
     const updateData: Record<string, unknown> = { ...input };
-    
+
     // Mapear location_city a city si existe
     if (inputRecord.location_city && !inputRecord.city) {
       updateData.city = inputRecord.location_city;

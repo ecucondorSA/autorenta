@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, throwError } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
 import { SupabaseClientService } from './supabase-client.service';
 
 export interface SplitPaymentCollector {
@@ -42,6 +41,11 @@ export interface SplitPaymentResponse {
   errors?: string[];
 }
 
+type PaymentRecord = Record<string, unknown> & {
+  amount?: number | null;
+  currency?: string | null;
+};
+
 @Injectable({ providedIn: 'root' })
 export class SplitPaymentService {
   private readonly DEFAULT_PLATFORM_FEE = 5; // 5% platform fee
@@ -65,7 +69,7 @@ export class SplitPaymentService {
       this.supabase.getClient().from('payment_splits').select('*').eq('booking_id', bookingId),
     ).pipe(
       map(({ data }) => data as PaymentSplit[]),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to fetch payment splits'));
       }),
     );
@@ -84,7 +88,7 @@ export class SplitPaymentService {
         .order('created_at', { ascending: false }),
     ).pipe(
       map(({ data }) => data as PaymentSplit[]),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to fetch user payment splits'));
       }),
     );
@@ -164,7 +168,7 @@ export class SplitPaymentService {
         .single(),
     ).pipe(
       map(({ data }) => data as PaymentSplit),
-      catchError((error) => {
+      catchError(() => {
         return throwError(() => new Error('Failed to mark payment split as failed'));
       }),
     );
@@ -189,23 +193,22 @@ export class SplitPaymentService {
           .from('payments')
           .select('*')
           .eq('id', paymentId)
-          .single()
-          .then((res: any) => (res as any).data),
+          .single(),
         this.supabase
           .getClient()
           .from('payment_splits')
           .select('*')
-          .eq('payment_id', paymentId)
-          .then((res: any) => (res as any).data),
+          .eq('payment_id', paymentId),
       ]),
     ).pipe(
-      map(([payment, splits]) => {
-        const splitsList = splits as PaymentSplit[];
+      map(([paymentResponse, splitsResponse]) => {
+        const payment = (paymentResponse.data as PaymentRecord | null) ?? null;
+        const splitsList = (splitsResponse.data || []) as PaymentSplit[];
         return {
           payment,
           splits: splitsList,
           summary: {
-            totalAmount: payment?.amount || 0,
+            totalAmount: payment?.amount ?? 0,
             totalFees: splitsList.reduce((sum, s) => sum + (s.platformFee || 0), 0),
             netDistributed: splitsList.reduce((sum, s) => sum + (s.netAmount || 0), 0),
           },

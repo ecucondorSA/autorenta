@@ -36,7 +36,12 @@
       <h3>Notificaciones</h3>
       <div class="header-actions">
         <!-- Connection Status Indicator -->
-        <div class="connection-status" [class.connected]="isConnected()" [class.error]="hasConnectionError()" [class.connecting]="isConnecting()">
+        <div
+          class="connection-status"
+          [class.connected]="isConnected()"
+          [class.error]="hasConnectionError()"
+          [class.connecting]="isConnecting()"
+        >
           <span class="status-dot"></span>
           <span class="status-text">{{ getConnectionStatusMessage() }}</span>
         </div>

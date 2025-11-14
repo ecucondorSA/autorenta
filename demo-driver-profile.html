@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil de Conductor - Demo</title>
+    <style>
+        /* ===== GLOBAL VARIABLES ===== */
+        :root {
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --gradient-warning: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-danger: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --shadow-strong: 0 12px 48px rgba(0, 0, 0, 0.15);
+            --border-radius: 16px;
+            --border-radius-large: 24px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: var(--gradient-primary);
+            z-index: -1;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .help-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        /* ===== CONTENT ===== */
+        .content {
+            padding: var(--spacing-md);
+            margin-top: 40px;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-strong);
+            border-radius: var(--border-radius-large);
+            margin: 0 0 var(--spacing-md) 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: var(--spacing-lg);
+        }
+
+        .class-display {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .class-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid #6b7280;
+            position: relative;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            color: #374151;
+            box-shadow: var(--shadow-medium);
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .class-badge::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: shimmer-ring 3s linear infinite;
+        }
+
+        @keyframes shimmer-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .class-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .class-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .class-info h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin: 0 0 var(--spacing-sm) 0;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .class-description {
+            color: #6b7280;
+            margin: 0 0 var(--spacing-md) 0;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .benefit-highlight {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 24px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-soft);
+            background: linear-gradient(135deg, rgba(107, 114, 128, 0.15) 0%, rgba(75, 85, 99, 0.15) 100%);
+            color: #4b5563;
+            border: 1px solid rgba(107, 114, 128, 0.2);
+        }
+
+        .status-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .status-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: var(--shadow-soft);
+            background: #10b981;
+        }
+
+        .status-dot::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: inherit;
+            opacity: 0.3;
+            animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.1; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+
+        .status-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ===== PROTECTION SECTION ===== */
+        .protection-card {
+            margin: 0 0 var(--spacing-md) 0;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border: 2px solid #9ca3af;
+        }
+
+        .protection-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-lg);
+        }
+
+        .protection-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+            background: white;
+            border-radius: 50%;
+            padding: var(--spacing-sm);
+            box-shadow: var(--shadow-soft);
+            color: #9ca3af;
+        }
+
+        .protection-info {
+            flex: 1;
+        }
+
+        .protection-info h3 {
+            margin: 0 0 var(--spacing-xs) 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        .protection-info p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            background: white;
+            overflow: hidden;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card-header {
+            padding: var(--spacing-lg) var(--spacing-lg) 0;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card-content {
+            padding: 0 var(--spacing-lg) var(--spacing-lg);
+        }
+
+        /* ===== SCORE GAUGE ===== */
+        .score-display {
+            display: flex;
+            gap: var(--spacing-xl);
+            align-items: center;
+        }
+
+        .score-gauge {
+            position: relative;
+            width: 220px;
+            height: 140px;
+            flex-shrink: 0;
+        }
+
+        .gauge-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
+
+        .score-number {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #374151;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: block;
+        }
+
+        .score-max {
+            font-size: 1.1rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .score-breakdown {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .score-category {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .score-category span {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .category-bar {
+            height: 12px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+            border-radius: 6px 6px 0 0;
+        }
+
+        /* ===== BENEFITS GRID ===== */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+        }
+
+        .benefit-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            border-radius: var(--border-radius);
+            border: 2px solid #64748b;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .benefit-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #64748b, #94a3b8);
+        }
+
+        .benefit-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-md);
+            background: white;
+            box-shadow: var(--shadow-medium);
+            font-size: 1.8rem;
+        }
+
+        .benefit-content h4 {
+            margin: 0 0 var(--spacing-sm) 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        .benefit-value {
+            margin: 0 0 var(--spacing-xs) 0;
+            font-size: 1.4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .benefit-description {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* ===== CLAIMS OVERVIEW ===== */
+        .claims-overview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .claim-metric {
+            text-align: center;
+            padding: var(--spacing-lg);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .claim-metric::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .claim-metric:nth-child(1)::before { background: #64748b; }
+        .claim-metric:nth-child(2)::before { background: #dc2626; }
+        .claim-metric:nth-child(3)::before { background: #16a34a; }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: var(--spacing-sm);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .metric-number.total { color: #475569; }
+        .metric-number.fault { color: #dc2626; }
+        .metric-number.good { color: #16a34a; }
+
+        .claim-metric p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .no-claims {
+            text-align: center;
+            padding: var(--spacing-xl);
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-radius: var(--border-radius);
+        }
+
+        .no-claims-icon {
+            font-size: 3.5rem;
+            margin-bottom: var(--spacing-md);
+            color: #16a34a;
+        }
+
+        .no-claims p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #166534;
+            margin: 0;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero-content {
+                flex-direction: column;
+                gap: var(--spacing-lg);
+                text-align: center;
+            }
+
+            .class-display {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+
+            .score-display {
+                flex-direction: column;
+                gap: var(--spacing-lg);
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .claims-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <button class="back-button">←</button>
+        <h1>Mi Perfil de Conductor</h1>
+        <button class="help-button">?</button>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Hero Section -->
+        <div class="hero-card">
+            <div class="hero-content">
+                <div class="class-display">
+                    <div class="class-badge">
+                        <div class="class-number">5</div>
+                        <div class="class-label">CLASE</div>
+                    </div>
+                    <div class="class-info">
+                        <h2>Conductor Base</h2>
+                        <p class="class-description">Clase estándar sin ajustes en tarifas</p>
+                        <div class="benefit-highlight">
+                            <span>➖</span>
+                            <span>Sin ajustes</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span class="status-text">Excelente</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Protection Status -->
+        <div class="protection-card">
+            <div class="protection-header">
+                <div class="protection-icon">🛡️</div>
+                <div class="protection-info">
+                    <h3>Protección de Clase</h3>
+                    <p>El sistema de protección estará disponible próximamente</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Telemático -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span>📊</span>
+                    Score Telemático
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="score-display">
+                    <div class="score-gauge">
+                        <svg viewBox="0 0 200 120" class="gauge-svg">
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" stroke="#e0e0e0" stroke-width="20" fill="none"></path>
+                            <path d="M 20 100 A 80 80 0 0 1 140 50" stroke="#3880ff" stroke-width="20" fill="none" stroke-linecap="round"></path>
+                        </svg>
+                        <div class="score-number">
+                            <span class="score-value">75</span>
+                            <span class="score-max">/100</span>
+                        </div>
+                    </div>
+                    <div class="score-breakdown">
+                        <div class="score-category">
+                            <div class="category-bar">
+                                <div class="bar-fill" style="width: 80%; background: #3880ff;"></div>
+                            </div>
+                            <span>Velocidad: 80%</span>
+                        </div>
+                        <div class="score-category">
+                            <div class="category-bar">
+                                <div class="bar-fill" style="width: 85%; background: #2dd36f;"></div>
+                            </div>
+                            <span>Frenado: 85%</span>
+                        </div>
+                        <div class="score-category">
+                            <div class="category-bar">
+                                <div class="bar-fill" style="width: 70%; background: #ffc409;"></div>
+                            </div>
+                            <span>Aceleración: 70%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Beneficios -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span>🏆</span>
+                    Tus Beneficios Actuales
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">💰</div>
+                        <div class="benefit-content">
+                            <h4>Tarifa de Servicio</h4>
+                            <div class="benefit-value">Sin ajustes</div>
+                            <div class="benefit-description">Tarifa estándar</div>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🛡️</div>
+                        <div class="benefit-content">
+                            <h4>Garantía</h4>
+                            <div class="benefit-value">Garantía estándar</div>
+                            <div class="benefit-description">Depósito estándar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historial de Siniestros -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span>📄</span>
+                    Historial de Siniestros
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="claims-overview">
+                    <div class="claim-metric">
+                        <div class="metric-number total">0</div>
+                        <p>Total de Siniestros</p>
+                    </div>
+                    <div class="claim-metric">
+                        <div class="metric-number fault">0</div>
+                        <p>Con Responsabilidad</p>
+                    </div>
+                    <div class="claim-metric">
+                        <div class="metric-number good">2</div>
+                        <p>Años Sin Siniestros</p>
+                    </div>
+                </div>
+                
+                <div class="no-claims">
+                    <div class="no-claims-icon">✅</div>
+                    <p>¡Excelente! No tienes siniestros registrados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

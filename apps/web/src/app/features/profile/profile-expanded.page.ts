@@ -47,7 +47,9 @@ export class ProfileExpandedPage {
 
   // Verification status
   readonly driverLicenseStatus = computed(() => this.getDocumentStatus('driver_license'));
-  readonly vehicleRegistrationStatus = computed(() => this.getDocumentStatus('vehicle_registration'));
+  readonly vehicleRegistrationStatus = computed(() =>
+    this.getDocumentStatus('vehicle_registration'),
+  );
   readonly kycStatus = computed(() => this.calculateKycStatus());
 
   // Computed stats from userStats

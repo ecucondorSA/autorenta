@@ -176,7 +176,7 @@
             type="file"
             accept="image/*"
             class="hidden"
-            (change)="onAvatarChange.emit($event)"
+            (change)="avatarChange.emit($event)"
             [disabled]="uploadingAvatar()"
           />
           <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,7 +190,7 @@
           Cambiar foto
         </label>
 
-        <button type="button" (click)="onEditProfile.emit()" class="btn-hero btn-hero-primary">
+  <button type="button" (click)="editProfile.emit()" class="btn-hero btn-hero-primary">
           <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -204,7 +204,7 @@
 
         <button
           type="button"
-          (click)="onUploadDocuments.emit()"
+          (click)="uploadDocuments.emit()"
           class="btn-hero btn-hero-secondary"
         >
           <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,7 +218,7 @@
           Subir documentos
         </button>
 
-        <button type="button" (click)="onSignOut.emit()" class="btn-hero btn-hero-danger">
+  <button type="button" (click)="signOut.emit()" class="btn-hero btn-hero-danger">
           <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"

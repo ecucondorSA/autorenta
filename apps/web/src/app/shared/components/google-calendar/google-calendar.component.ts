@@ -177,4 +177,3 @@ export class GoogleCalendarComponent implements OnInit, OnChanges {
     this.errorMessage.set('Error al cargar el calendario de Google');
   }
 }
-

@@ -41,6 +41,7 @@ export class MercadoPagoScriptService {
         resolve();
       };
       script.onerror = (error: unknown) => {
+        console.error('Mercado Pago SDK script failed to load', error);
         reject(new Error('Failed to load Mercado Pago script.'));
       };
       this.renderer.appendChild(this.document.body, script);
@@ -75,12 +76,15 @@ export class MercadoPagoScriptService {
         locale: 'es-AR',
       });
       return this.mercadoPagoInstance;
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const normalizedError =
+        error instanceof Error ? error : new Error(typeof error === 'string' ? error : 'Unknown error');
+
       console.error(
         'Detailed error object in getMercadoPago:',
-        JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
+        JSON.stringify(normalizedError, Object.getOwnPropertyNames(normalizedError), 2),
       );
-      return Promise.reject(error);
+      return Promise.reject(normalizedError);
     }
   }
 }

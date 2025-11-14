@@ -1,18 +1,12 @@
 import { Injectable, signal } from '@angular/core';
-import { injectSupabase } from './supabase-client.service';
-import {
-  PriceLockErrorCode,
-  rpcResponseToPriceLock,
-  isPriceLockExpired,
-  calculateLockExpiresIn,
-  validatePriceLock,
-} from '../models/dynamic-pricing.model';
 import type {
   PriceLock,
   LockPriceResult,
   LockPriceRpcResponse,
   LockPriceRpcParams,
 } from '../models/dynamic-pricing.model';
+import { PriceLockErrorCode, rpcResponseToPriceLock } from '../models/dynamic-pricing.model';
+import { injectSupabase } from './supabase-client.service';
 
 export interface PricingRequest {
   region_id: string;
