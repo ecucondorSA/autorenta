@@ -513,7 +513,7 @@ export class BottomNavBarComponent implements OnInit {
       { id: 'cars', label: 'Autos', icon: '🚗', badge: 3, route: '/cars' },
       { id: 'bookings', label: 'Reservas', icon: '📅', badge: 2, route: '/bookings' },
       { id: 'wallet', label: 'Billetera', icon: '💰', route: '/wallet' },
-      { id: 'messages', label: 'Mensajes', icon: '💬', badge: unreadCount || undefined, route: '/messages/inbox' },
+      { id: 'messages', label: 'Mensajes', icon: '💬', badge: unreadCount || undefined, route: '/messages' },
       { id: 'profile', label: 'Perfil', icon: '👤', route: '/profile' },
     ];
   });

@@ -20,6 +20,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
   selector: 'app-inbox',
   standalone: true,
   imports: [CommonModule, OfflineMessagesIndicatorComponent],
+  styleUrls: ['./inbox-pro.styles.css'],
   template: `
     <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
       <!-- Header -->
