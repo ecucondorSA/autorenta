@@ -1,0 +1,479 @@
+/**
+ * AutoRenta V2 - Animation Library
+ * Colección de animaciones reutilizables para transiciones fluidas
+ */
+
+@import './tokens';
+
+// ============================================
+// KEYFRAMES
+// ============================================
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-left {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-right {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+// Fade animations
+.animate-fade-in {
+  animation: fade-in $transition-base $ease-in-out;
+}
+
+.animate-fade-out {
+  animation: fade-out $transition-base $ease-in-out;
+}
+
+// Slide animations
+.animate-slide-up {
+  animation: slide-up $transition-base $ease-out;
+}
+
+.animate-slide-down {
+  animation: slide-down $transition-base $ease-out;
+}
+
+.animate-slide-left {
+  animation: slide-left $transition-base $ease-out;
+}
+
+.animate-slide-right {
+  animation: slide-right $transition-base $ease-out;
+}
+
+// Scale animations
+.animate-scale-in {
+  animation: scale-in $transition-fast $ease-spring;
+}
+
+.animate-scale-out {
+  animation: scale-out $transition-fast $ease-spring;
+}
+
+// Special effects
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s $ease-in-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s $ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s linear infinite;
+  background: linear-gradient(
+    90deg,
+    $gray-100 0%,
+    $gray-200 50%,
+    $gray-100 100%
+  );
+  background-size: 1000px 100%;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-ripple {
+  animation: ripple 0.6s $ease-out;
+}
+
+// ============================================
+// TRANSITION UTILITIES
+// ============================================
+
+.transition-default {
+  transition: $transition-default;
+}
+
+.transition-colors {
+  transition: color $transition-base $ease-in-out,
+              background-color $transition-base $ease-in-out,
+              border-color $transition-base $ease-in-out;
+}
+
+.transition-transform {
+  transition: transform $transition-base $ease-out;
+}
+
+.transition-opacity {
+  transition: opacity $transition-base $ease-in-out;
+}
+
+.transition-all {
+  transition: all $transition-base $ease-in-out;
+}
+
+// ============================================
+// PAGE TRANSITIONS (para router)
+// ============================================
+
+.page-enter {
+  animation: slide-left $transition-base $ease-out;
+}
+
+.page-leave {
+  animation: fade-out $transition-fast $ease-in;
+}
+
+// Modal transitions
+.modal-enter {
+  animation: scale-in $transition-fast $ease-spring,
+             fade-in $transition-fast $ease-in;
+}
+
+.modal-leave {
+  animation: scale-out $transition-fast $ease-in,
+             fade-out $transition-fast $ease-in;
+}
+
+// Bottom sheet transitions
+.bottom-sheet-enter {
+  animation: slide-up $transition-base $ease-out;
+}
+
+.bottom-sheet-leave {
+  animation: slide-down $transition-base $ease-in;
+}
+
+// Toast transitions
+.toast-enter {
+  animation: slide-down $transition-base $ease-spring;
+}
+
+.toast-leave {
+  animation: slide-up $transition-fast $ease-in;
+}
+
+// ============================================
+// GESTURE ANIMATIONS
+// ============================================
+
+// Tap feedback
+.tap-feedback {
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+  }
+  
+  &:active::after {
+    animation: ripple 0.6s $ease-out;
+  }
+}
+
+// Long press indicator
+.long-press-indicator {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle, rgba(79, 70, 229, 0.2) 0%, transparent 70%);
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  &.long-pressing::before {
+    animation: scale-in 0.8s $ease-out forwards;
+  }
+}
+
+// Swipe indicator
+.swipe-indicator {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(79, 70, 229, 0.1) 100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity $transition-fast $ease-in-out;
+  }
+  
+  &.swiping-right::after {
+    opacity: 1;
+  }
+}
+
+// ============================================
+// SKELETON LOADING
+// ============================================
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    $gray-200 0%,
+    $gray-300 25%,
+    $gray-200 50%,
+    $gray-300 75%,
+    $gray-200 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+  border-radius: $radius-md;
+}
+
+// ============================================
+// LOADING SPINNER
+// ============================================
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid $gray-200;
+  border-top-color: $primary-500;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner-sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+.spinner-lg {
+  width: 60px;
+  height: 60px;
+  border-width: 4px;
+}
+
+// ============================================
+// PROGRESS INDICATORS
+// ============================================
+
+.progress-bar {
+  position: relative;
+  height: 4px;
+  background: $gray-200;
+  border-radius: $radius-full;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: $primary-500;
+    border-radius: inherit;
+    transition: width $transition-slow $ease-out;
+  }
+}
+
+.progress-indeterminate {
+  &::after {
+    width: 30%;
+    animation: progress-slide 1.5s $ease-in-out infinite;
+  }
+}
+
+@keyframes progress-slide {
+  0% {
+    left: -30%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+// ============================================
+// SCROLL ANIMATIONS (con Intersection Observer)
+// ============================================
+
+.scroll-fade-in {
+  opacity: 0;
+  transition: opacity $transition-slow $ease-out;
+  
+  &.visible {
+    opacity: 1;
+  }
+}
+
+.scroll-slide-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity $transition-slow $ease-out,
+              transform $transition-slow $ease-out;
+  
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-scale-in {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity $transition-slow $ease-out,
+              transform $transition-slow $ease-spring;
+  
+  &.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

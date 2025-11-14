@@ -1,0 +1,215 @@
+{
+  "name": "AutoRenta V2 - Alquiler de Autos P2P",
+  "short_name": "AutoRenta",
+  "description": "Nueva experiencia móvil para alquilar autos entre personas. Rápido, seguro y 100% offline-ready.",
+  "theme_color": "#4F46E5",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "scope": "/",
+  "start_url": "/?source=pwa",
+  "orientation": "portrait-primary",
+  "lang": "es-AR",
+  "dir": "ltr",
+  "categories": ["travel", "business", "lifestyle", "finance"],
+  "screenshots": [
+    {
+      "src": "/screenshots/home-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Pantalla principal con búsqueda rápida"
+    },
+    {
+      "src": "/screenshots/discover-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Explorar autos con mapa interactivo"
+    },
+    {
+      "src": "/screenshots/car-detail-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Detalle del vehículo con galería inmersiva"
+    },
+    {
+      "src": "/screenshots/wallet-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Wallet digital con soporte crypto"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Buscar Auto",
+      "short_name": "Buscar",
+      "description": "Encuentra el auto perfecto cerca tuyo",
+      "url": "/discover?source=shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-search.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Mis Viajes",
+      "short_name": "Viajes",
+      "description": "Ver tus reservas y viajes activos",
+      "url": "/trips?source=shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-trips.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Wallet",
+      "short_name": "Wallet",
+      "description": "Gestiona tu saldo y transacciones",
+      "url": "/wallet?source=shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-wallet.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Publicar Auto",
+      "short_name": "Publicar",
+      "description": "Empieza a ganar con tu auto",
+      "url": "/hosting/publish?source=shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-publish.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "short_name": "Mensajes",
+      "description": "Tus conversaciones",
+      "url": "/inbox?source=shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-chat.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "media",
+          "accept": ["image/*", "video/*"]
+        }
+      ]
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/open-booking",
+      "accept": {
+        "application/vnd.autorenta.booking+json": [".arb"]
+      },
+      "icons": [
+        {
+          "src": "/icons/file-icon.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ],
+      "launch_type": "single-client"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+autorenta",
+      "url": "/redirect?url=%s"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "scope_extensions": [
+    {
+      "origin": "*.autorenta.com"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "handle_links": "preferred"
+}

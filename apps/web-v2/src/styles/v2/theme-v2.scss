@@ -1,0 +1,226 @@
+/**
+ * AutoRenta V2 - Main Theme
+ * Importa todos los estilos del sistema de diseño
+ */
+
+@import './tokens';
+@import './animations';
+@import './utilities';
+
+// ============================================
+// RESET & BASE STYLES
+// ============================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: $font-sans;
+  font-size: 16px;
+  line-height: $leading-normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  // Prevent text size adjust after orientation change
+  -webkit-text-size-adjust: 100%;
+  
+  // Smooth scrolling
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: $text-primary;
+  background-color: $surface-base;
+  overflow-x: hidden;
+  
+  // Prevent pull-to-refresh en iOS
+  overscroll-behavior-y: contain;
+  
+  // Touch gestures optimization
+  touch-action: manipulation;
+}
+
+// ============================================
+// TYPOGRAPHY DEFAULTS
+// ============================================
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: $font-semibold;
+  line-height: $leading-tight;
+}
+
+h1 {
+  @include text-style('h1');
+}
+
+h2 {
+  @include text-style('h2');
+}
+
+h3 {
+  @include text-style('h3');
+}
+
+p {
+  margin: 0;
+  @include text-style('body');
+}
+
+a {
+  color: $text-link;
+  text-decoration: none;
+  transition: color $transition-fast $ease-in-out;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+  
+  &:focus-visible {
+    @include focus-ring($primary-500);
+  }
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// ============================================
+// FORM ELEMENTS
+// ============================================
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  
+  // Prevent zoom on iOS
+  @media screen and (max-width: $breakpoint-sm) {
+    font-size: 16px;
+  }
+  
+  &:focus-visible {
+    @include focus-ring($primary-500);
+  }
+}
+
+// ============================================
+// MOBILE-SPECIFIC
+// ============================================
+
+// Remove tap highlight on mobile
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+// Remove iOS input shadows
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+// ============================================
+// SCROLLBAR STYLING (webkit only)
+// ============================================
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $gray-300;
+  border-radius: $radius-full;
+  
+  &:hover {
+    background: $gray-400;
+  }
+}
+
+// ============================================
+// SELECTION
+// ============================================
+
+::selection {
+  background-color: rgba($primary-500, 0.2);
+  color: $text-primary;
+}
+
+::-moz-selection {
+  background-color: rgba($primary-500, 0.2);
+  color: $text-primary;
+}
+
+// ============================================
+// PRINT STYLES
+// ============================================
+
+@media print {
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+  
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+  
+  img {
+    page-break-inside: avoid;
+  }
+  
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
