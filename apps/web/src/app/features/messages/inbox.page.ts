@@ -5,6 +5,7 @@ import { MessagesService, Message } from '../../core/services/messages.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UnreadMessagesService } from '../../core/services/unread-messages.service';
 import { SupabaseClientService } from '../../core/services/supabase-client.service';
+import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import {
   RealtimeConnectionService,
   ConnectionStatus,
@@ -193,6 +194,7 @@ export class InboxPage implements OnInit, OnDestroy {
   private readonly unreadMessagesService = inject(UnreadMessagesService);
   private readonly realtimeConnection = inject(RealtimeConnectionService);
   private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
+  private readonly notifications = inject(NotificationManagerService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -434,7 +436,11 @@ export class InboxPage implements OnInit, OnDestroy {
     // Validar tamaño (máx 10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
-      alert('El archivo es demasiado grande. Máximo 10MB');
+      this.notifications.warning(
+        'Archivo muy grande',
+        'El archivo supera el límite de 10MB. Por favor selecciona uno más pequeño.',
+        4000
+      );
       input.value = '';
       return;
     }
@@ -458,8 +464,16 @@ export class InboxPage implements OnInit, OnDestroy {
 
       // Determinar el bucket según el tipo
       const bucket = fileType === 'document' ? 'documents' : 'avatars';
+      const fileSize = (file.size / 1024).toFixed(2);
       
-      console.log(`📤 Subiendo archivo: ${fileName} (${(file.size / 1024).toFixed(2)}KB) al bucket ${bucket}`);
+      console.log(`📤 Subiendo archivo: ${fileName} (${fileSize}KB) al bucket ${bucket}`);
+
+      // Mostrar notificación de progreso
+      this.notifications.info(
+        'Subiendo archivo',
+        `${file.name} (${fileSize}KB)`,
+        2000
+      );
 
       // Subir a Supabase Storage
       const { data, error } = await this.supabase.storage
@@ -484,16 +498,25 @@ export class InboxPage implements OnInit, OnDestroy {
       
       console.log(`🔗 URL pública: ${urlData.publicUrl}`);
       
-      // Mostrar notificación de éxito con detalles
-      const fileSize = (file.size / 1024).toFixed(2);
-      alert(`✅ ${file.name} subido correctamente\n📦 Tamaño: ${fileSize}KB\n📁 Bucket: ${bucket}\n🔗 URL disponible`);
+      // Notificación de éxito profesional
+      this.notifications.success(
+        'Archivo subido',
+        `${file.name} se subió correctamente (${fileSize}KB)`,
+        5000
+      );
       
       // Limpiar input
       input.value = '';
       
     } catch (error) {
       console.error('Error subiendo archivo:', error);
-      alert('❌ Error al subir el archivo. Intenta nuevamente.');
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      
+      this.notifications.error(
+        'Error al subir archivo',
+        errorMessage,
+        5000
+      );
     } finally {
       this.loading.set(false);
     }
