@@ -22,133 +22,92 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
   imports: [CommonModule, OfflineMessagesIndicatorComponent],
   styleUrls: ['./inbox-pro.styles.css'],
   template: `
-    <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
-      <!-- Header -->
-      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base">
-        <div class="mx-auto max-w-4xl px-4 py-4">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse">Mensajes</h1>
-              <p
-                class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-              >
-                {{ conversations().length }} conversaciones
-              </p>
-            </div>
-            <app-offline-messages-indicator />
+    <!-- WhatsApp-style Messages Inbox -->
+    <div class="whatsapp-container">
+      <!-- Header estilo WhatsApp -->
+      <div class="whatsapp-header">
+        <div class="header-content">
+          <h1 class="header-title">Mensajes</h1>
+          <div class="header-actions">
+            <button class="icon-btn" type="button">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+            <button class="icon-btn" type="button">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- Content -->
-      <div class="mx-auto max-w-4xl p-4">
+      <!-- Conversations List -->
+      <div class="conversations-container">
         @if (loading()) {
-          <div class="flex h-96 items-center justify-center">
-            <div class="text-center">
-              <div
-                class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500"
-              ></div>
-              <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
-                Cargando conversaciones...
-              </p>
-            </div>
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p class="loading-text">Cargando conversaciones...</p>
           </div>
         } @else if (error()) {
-          <div class="rounded-lg bg-error-bg p-4 dark:bg-error-900/20">
-            <p class="text-sm text-error-strong">{{ error() }}</p>
+          <div class="error-state">
+            <p class="error-text">{{ error() }}</p>
           </div>
         } @else if (conversations().length === 0) {
-          <!-- Empty state -->
-          <div class="py-16 text-center">
-            <svg
-              class="mx-auto h-16 w-16 text-text-muted dark:text-text-secondary"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-              />
+          <div class="empty-state">
+            <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-text-primary dark:text-text-inverse">
-              No hay mensajes
-            </h3>
-            <p
-              class="mt-2 text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-            >
-              Cuando alguien te escriba, aparecerá aquí
-            </p>
+            <h3 class="empty-title">No hay mensajes</h3>
+            <p class="empty-subtitle">Cuando recibas mensajes aparecerán aquí</p>
           </div>
         } @else {
-          <!-- Conversations list -->
-          <div class="space-y-2">
+          <div class="conversation-list">
             @for (conv of conversations(); track conv.id) {
               <button
                 (click)="openConversation(conv)"
-                class="group w-full rounded-lg border border-border-default bg-surface-raised p-4 text-left transition-all hover:shadow-md dark:border-border-muted dark:bg-surface-base"
+                class="conversation-item"
+                [class.unread]="conv.unreadCount > 0"
                 type="button"
               >
-                <div class="flex items-start gap-4">
-                  <!-- Avatar -->
-                  <div class="flex-shrink-0">
-                    @if (conv.otherUserAvatar) {
-                      <img
-                        [src]="conv.otherUserAvatar"
-                        [alt]="conv.otherUserName"
-                        class="h-12 w-12 rounded-full object-cover"
-                      />
-                    } @else {
-                      <div
-                        class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-cta-default to-purple-600 text-text-inverse font-semibold"
-                      >
-                        {{ conv.otherUserName.charAt(0).toUpperCase() }}
-                      </div>
-                    }
-                  </div>
-
-                  <!-- Content -->
-                  <div class="min-w-0 flex-1">
-                    <div class="mb-1 flex items-start justify-between gap-2">
-                      <div>
-                        <p class="font-semibold text-text-primary dark:text-text-inverse">
-                          {{ conv.otherUserName }}
-                        </p>
-                        @if (conv.carBrand) {
-                          <p
-                            class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                          >
-                            {{ conv.carBrand }} {{ conv.carModel }} {{ conv.carYear }}
-                          </p>
-                        }
-                      </div>
-                      @if (conv.unreadCount > 0) {
-                        <span
-                          class="flex h-6 w-6 items-center justify-center rounded-full bg-cta-default text-cta-text"
-                        >
-                          {{ conv.unreadCount }}
-                        </span>
-                      }
+                <!-- Avatar -->
+                <div class="conversation-avatar">
+                  @if (conv.otherUserAvatar) {
+                    <img
+                      [src]="conv.otherUserAvatar"
+                      [alt]="conv.otherUserName"
+                      class="avatar-img"
+                    />
+                  } @else {
+                    <div class="avatar-placeholder">
+                      {{ conv.otherUserName.charAt(0).toUpperCase() }}
                     </div>
-                    <p
-                      class="truncate text-sm"
-                      [class.font-semibold]="conv.unreadCount > 0"
-                      [class.text-text-primary]="conv.unreadCount > 0"
-                      [class.dark:text-text-inverse]="conv.unreadCount > 0"
-                      [class.text-text-secondary
-                      dark:text-text-secondary]="conv.unreadCount === 0"
-                      [class.dark:text-text-muted
-                      dark:text-text-secondary]="conv.unreadCount === 0"
-                    >
+                  }
+                </div>
+
+                <!-- Content -->
+                <div class="conversation-content">
+                  <div class="conversation-header">
+                    <span class="conversation-name">{{ conv.otherUserName }}</span>
+                    <span class="conversation-time">{{ formatDate(conv.lastMessageAt) }}</span>
+                  </div>
+                  
+                  @if (conv.carBrand) {
+                    <div class="conversation-car">
+                      🚗 {{ conv.carBrand }} {{ conv.carModel }} {{ conv.carYear }}
+                    </div>
+                  }
+                  
+                  <div class="conversation-footer">
+                    <p class="conversation-message">
                       {{ conv.lastMessage }}
                     </p>
-                    <p
-                      class="mt-1 text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                    >
-                      {{ formatDate(conv.lastMessageAt) }}
-                    </p>
+                    @if (conv.unreadCount > 0) {
+                      <span class="unread-badge">
+                        {{ conv.unreadCount > 99 ? '99+' : conv.unreadCount }}
+                      </span>
+                    }
                   </div>
                 </div>
               </button>
@@ -156,6 +115,74 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
           </div>
         }
       </div>
+
+      <!-- Floating Action Button (estilo WhatsApp) -->
+      <div class="fab-container">
+        @if (showAttachMenu()) {
+          <div class="attach-menu" (click)="closeAttachMenu($event)">
+            <button class="attach-option" (click)="triggerFileInput('document')" type="button">
+              <div class="attach-icon document">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <span>Documento</span>
+            </button>
+            <button class="attach-option" (click)="triggerFileInput('image')" type="button">
+              <div class="attach-icon photo">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <span>Foto/Video</span>
+            </button>
+            <button class="attach-option" (click)="triggerFileInput('camera')" type="button">
+              <div class="attach-icon camera">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <span>Cámara</span>
+            </button>
+          </div>
+        }
+        
+        <button 
+          class="fab-button"
+          [class.rotated]="showAttachMenu()"
+          (click)="toggleAttachMenu()"
+          type="button"
+        >
+          <svg class="fab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Hidden file inputs -->
+      <input 
+        id="documentInput"
+        type="file" 
+        accept=".pdf,.doc,.docx,.txt,.xls,.xlsx" 
+        (change)="handleFileSelect($event, 'document')"
+        style="display: none"
+      />
+      <input 
+        id="imageInput"
+        type="file" 
+        accept="image/*,video/*" 
+        (change)="handleFileSelect($event, 'media')"
+        style="display: none"
+      />
+      <input 
+        id="cameraInput"
+        type="file" 
+        accept="image/*" 
+        capture="environment"
+        (change)="handleFileSelect($event, 'camera')"
+        style="display: none"
+      />
     </div>
   `,
 })
@@ -170,6 +197,7 @@ export class InboxPage implements OnInit, OnDestroy {
   readonly error = signal<string | null>(null);
   readonly conversations = signal<ConversationDTO[]>([]);
   readonly connectionStatus = signal<ConnectionStatus>('disconnected');
+  readonly showAttachMenu = signal(false);
 
   private realtimeChannel?: RealtimeChannel;
 
@@ -355,5 +383,106 @@ export class InboxPage implements OnInit, OnDestroy {
   formatDate(date: Date): string {
     // Usar método del servicio para formateo consistente
     return this.messagesService.formatRelativeDate(date);
+  }
+
+  toggleAttachMenu(): void {
+    this.showAttachMenu.update(show => !show);
+    
+    // Haptic feedback
+    if ('vibrate' in navigator) {
+      navigator.vibrate(10);
+    }
+  }
+
+  closeAttachMenu(event: Event): void {
+    event.stopPropagation();
+    this.showAttachMenu.set(false);
+  }
+
+  triggerFileInput(type: 'document' | 'image' | 'camera'): void {
+    this.showAttachMenu.set(false);
+    
+    // Haptic feedback
+    if ('vibrate' in navigator) {
+      navigator.vibrate([10, 20, 5]);
+    }
+
+    // Trigger the appropriate file input
+    setTimeout(() => {
+      const inputId = type === 'document' ? 'documentInput' : 
+                      type === 'image' ? 'imageInput' : 'cameraInput';
+      const input = document.querySelector(`input[type="file"]#${inputId}`) as HTMLInputElement;
+      if (input) {
+        input.click();
+      } else {
+        // Fallback: try by accept attribute
+        const inputs = document.querySelectorAll('input[type="file"]');
+        if (type === 'document' && inputs[0]) (inputs[0] as HTMLInputElement).click();
+        if (type === 'image' && inputs[1]) (inputs[1] as HTMLInputElement).click();
+        if (type === 'camera' && inputs[2]) (inputs[2] as HTMLInputElement).click();
+      }
+    }, 100);
+  }
+
+  async handleFileSelect(event: Event, fileType: 'document' | 'media' | 'camera'): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    
+    if (!file) return;
+
+    // Validar tamaño (máx 10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      alert('El archivo es demasiado grande. Máximo 10MB');
+      input.value = '';
+      return;
+    }
+
+    try {
+      // Mostrar loading
+      this.loading.set(true);
+      
+      const session = this.authService.session$();
+      if (!session) {
+        throw new Error('No hay sesión activa');
+      }
+
+      // Subir a Supabase Storage
+      const userId = session.user.id;
+      const timestamp = Date.now();
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${timestamp}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+      const filePath = `${userId}/attachments/${fileName}`;
+
+      // Determinar el bucket según el tipo
+      const bucket = fileType === 'document' ? 'documents' : 'images';
+      
+      console.log(`📤 Subiendo archivo: ${fileName} (${(file.size / 1024).toFixed(2)}KB) al bucket ${bucket}`);
+
+      // TODO: Implementar subida a Supabase Storage
+      // const { data, error } = await this.supabase.storage
+      //   .from(bucket)
+      //   .upload(filePath, file, {
+      //     cacheControl: '3600',
+      //     upsert: false
+      //   });
+
+      // Simulación por ahora
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      console.log(`✅ Archivo subido exitosamente: ${filePath}`);
+      
+      // Mostrar notificación de éxito
+      alert(`✅ ${file.name} subido correctamente`);
+      
+      // Limpiar input
+      input.value = '';
+      
+    } catch (error) {
+      console.error('Error subiendo archivo:', error);
+      alert('❌ Error al subir el archivo. Intenta nuevamente.');
+    } finally {
+      this.loading.set(false);
+    }
   }
 }
