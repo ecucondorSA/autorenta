@@ -1,4 +1,15 @@
-import { Component, Input, Output, EventEmitter, computed, effect, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EffectRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  computed,
+  effect,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import type { PriceLock } from '../../../../core/models/dynamic-pricing.model';
 
@@ -16,6 +27,7 @@ import type { PriceLock } from '../../../../core/models/dynamic-pricing.model';
   selector: 'app-dynamic-price-lock-panel',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="price-lock-panel" [class.expiring-soon]="isExpiringSoon()">
       <!-- Header -->
@@ -337,7 +349,7 @@ import type { PriceLock } from '../../../../core/models/dynamic-pricing.model';
     `,
   ],
 })
-export class DynamicPriceLockPanelComponent {
+export class DynamicPriceLockPanelComponent implements OnDestroy {
   @Input() priceLock: PriceLock | null = null;
   @Input() comparison: {
     fixedPrice: number;
@@ -376,10 +388,18 @@ export class DynamicPriceLockPanelComponent {
   });
 
   private countdownInterval: ReturnType<typeof setInterval> | null = null;
+  private refreshTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private readonly currencyFormatter = new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  private readonly countdownEffect: EffectRef;
 
   constructor() {
     // Start countdown when priceLock changes
-    effect(() => {
+    this.countdownEffect = effect(() => {
       const lock = this.priceLock;
       if (lock) {
         this.startCountdown(lock);
@@ -391,6 +411,8 @@ export class DynamicPriceLockPanelComponent {
 
   ngOnDestroy(): void {
     this.stopCountdown();
+    this.clearRefreshTimeout();
+    this.countdownEffect.destroy();
   }
 
   private startCountdown(priceLock: PriceLock): void {
@@ -419,6 +441,13 @@ export class DynamicPriceLockPanelComponent {
     }
   }
 
+  private clearRefreshTimeout(): void {
+    if (this.refreshTimeoutId) {
+      clearTimeout(this.refreshTimeoutId);
+      this.refreshTimeoutId = null;
+    }
+  }
+
   onRefresh(): void {
     if (this.refreshing()) return;
 
@@ -426,8 +455,10 @@ export class DynamicPriceLockPanelComponent {
     this.refresh.emit();
 
     // Reset refreshing state after 2 seconds
-    setTimeout(() => {
+    this.clearRefreshTimeout();
+    this.refreshTimeoutId = setTimeout(() => {
       this.refreshing.set(false);
+      this.refreshTimeoutId = null;
     }, 2000);
   }
 
@@ -436,11 +467,6 @@ export class DynamicPriceLockPanelComponent {
   }
 
   formatPrice(amount: number): string {
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(amount);
+    return this.currencyFormatter.format(amount);
   }
 }

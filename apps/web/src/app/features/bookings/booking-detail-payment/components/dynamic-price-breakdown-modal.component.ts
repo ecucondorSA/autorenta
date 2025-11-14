@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-pricing.model';
 
@@ -16,6 +16,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
   selector: 'app-dynamic-price-breakdown-modal',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (isOpen) {
       <div class="modal-overlay" (click)="onClose()">
@@ -482,19 +483,31 @@ export class DynamicPriceBreakdownModalComponent {
   @Input() isOpen = false;
   @Input() snapshot: DynamicPriceSnapshot | null = null;
 
-  @Output() close = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
+
+  private readonly currencyFormatter = new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  private readonly dayNames = [
+    'Domingo',
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+  ];
 
   onClose(): void {
-    this.close.emit();
+    this.closed.emit();
   }
 
   formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(amount);
+    return this.currencyFormatter.format(amount);
   }
 
   formatFactor(factor: number): string {
@@ -503,8 +516,7 @@ export class DynamicPriceBreakdownModalComponent {
   }
 
   getDayName(dayOfWeek: number): string {
-    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    return days[dayOfWeek] || 'Desconocido';
+    return this.dayNames[dayOfWeek] || 'Desconocido';
   }
 
   getHourDescription(hour: number): string {
