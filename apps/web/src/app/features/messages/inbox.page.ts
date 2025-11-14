@@ -5,7 +5,6 @@ import { MessagesService, Message } from '../../core/services/messages.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UnreadMessagesService } from '../../core/services/unread-messages.service';
 import { SupabaseClientService } from '../../core/services/supabase-client.service';
-import { OfflineMessagesIndicatorComponent } from '../../shared/components/offline-messages-indicator/offline-messages-indicator.component';
 import {
   RealtimeConnectionService,
   ConnectionStatus,
@@ -20,7 +19,7 @@ import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 @Component({
   selector: 'app-inbox',
   standalone: true,
-  imports: [CommonModule, OfflineMessagesIndicatorComponent],
+  imports: [CommonModule],
   styleUrls: ['./inbox-pro.styles.css'],
   template: `
     <!-- WhatsApp-style Messages Inbox -->
