@@ -38,7 +38,12 @@
           <img
             src="/assets/images/c40-logo.png"
             alt="Autorentar Logo"
+            width="144"
+            height="144"
             class="w-full h-full object-contain p-2 pointer-events-none"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
             onerror="this.style.display='none'"
           />
         </div>
@@ -62,7 +67,15 @@
         <div
           class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
         >
-          <img src="assets/images/MB.png" alt="Auto" class="h-6 w-6 object-contain" />
+          <img
+            src="assets/images/MB.png"
+            alt="Auto"
+            width="24"
+            height="24"
+            class="h-6 w-6 object-contain"
+            loading="eager"
+            decoding="async"
+          />
           <span class="text-sm md:text-base font-semibold text-white"
             >{{ carsWithDistance().length }}+ autos</span
           >
@@ -404,96 +417,98 @@
       <app-stats-strip [stats]="statsStripData()" />
     </div>
 
-    <!-- Trust Badges -->
-    <div class="mb-12 grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+    <!-- Trust Badges - Diseño mejorado y responsive -->
+    <div class="mb-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
       <app-tooltip
         text="Todos nuestros locadores pasan por un proceso de verificación exhaustivo con DNI, licencia de conducir y antecedentes"
         position="top"
       >
-        <app-card
-          variant="elevated"
-          padding="lg"
-          [hoverable]="true"
-          class="flex items-center gap-3"
-        >
-          <div
-            class="w-10 h-10 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center"
-          >
-            <span class="text-xl">✓</span>
+        <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-border-default dark:border-border-default hover:border-success-light dark:hover:border-success-light group">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+            >
+              <span class="text-2xl">✓</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-text-primary dark:text-text-primary whitespace-nowrap">
+                Verificación 100% Segura
+              </p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary">
+                Locadores verificados
+              </p>
+            </div>
           </div>
-          <div>
-            <p class="text-xs text-text-secondary dark:text-text-secondary">Verificación</p>
-            <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
-              100% Segura
-            </p>
-          </div>
-        </app-card>
+        </div>
       </app-tooltip>
 
       <app-tooltip
         text="Cobertura completa de seguro para daños al vehículo, robo y responsabilidad civil incluida en todas las reservas"
         position="top"
       >
-        <app-card
-          variant="elevated"
-          padding="lg"
-          [hoverable]="true"
-          class="flex items-center gap-3"
-        >
-          <div
-            class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
-          >
-            <span class="text-xl">🛡️</span>
+        <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-border-default dark:border-border-default hover:border-cta-default dark:hover:border-cta-default group">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+            >
+              <span class="text-2xl">🛡️</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-text-primary dark:text-text-primary whitespace-nowrap">
+                Seguro Incluido
+              </p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary">
+                Cobertura completa
+              </p>
+            </div>
           </div>
-          <div>
-            <p class="text-xs text-text-secondary dark:text-text-secondary">Seguro</p>
-            <p class="text-sm font-semibold text-text-primary dark:text-text-primary">Incluido</p>
-          </div>
-        </app-card>
+        </div>
       </app-tooltip>
 
       <app-tooltip
         text="Reserva sin necesidad de tarjeta de crédito. Paga en efectivo al recoger el auto o usa otros métodos de pago"
         position="top"
       >
-        <app-card
-          variant="elevated"
-          padding="lg"
-          [hoverable]="true"
-          class="flex items-center gap-3"
-        >
-          <div
-            class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
-          >
-            <span class="text-xl">💳</span>
+        <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-border-default dark:border-border-default hover:border-cta-default dark:hover:border-cta-default group">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+            >
+              <span class="text-2xl">💳</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-text-primary dark:text-text-primary whitespace-nowrap">
+                Sin Tarjeta Requerida
+              </p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary">
+                Múltiples métodos
+              </p>
+            </div>
           </div>
-          <div>
-            <p class="text-xs text-text-secondary dark:text-text-secondary">Sin tarjeta</p>
-            <p class="text-sm font-semibold text-text-primary dark:text-text-primary">Requerida</p>
-          </div>
-        </app-card>
+        </div>
       </app-tooltip>
 
       <app-tooltip
         text="Entrega inmediata en la mayoría de las ubicaciones. Recoge tu auto en minutos sin esperas innecesarias"
         position="top"
       >
-        <app-card
-          variant="elevated"
-          padding="lg"
-          [hoverable]="true"
-          class="flex items-center gap-3"
-        >
-          <div
-            class="w-10 h-10 bg-warning-light/20 dark:bg-warning-light/30 rounded-full flex items-center justify-center"
-          >
-            <span class="text-xl">⚡</span>
+        <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-border-default dark:border-border-default hover:border-warning-light dark:hover:border-warning-light group">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 bg-warning-light/20 dark:bg-warning-light/30 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+            >
+              <span class="text-2xl">⚡</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-text-primary dark:text-text-primary whitespace-nowrap">
+                Entrega Inmediata
+              </p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary">
+                En minutos
+              </p>
+            </div>
           </div>
-          <div>
-            <p class="text-xs text-text-secondary dark:text-text-secondary">Entrega</p>
-            <p class="text-sm font-semibold text-text-primary dark:text-text-primary">Inmediata</p>
-          </div>
-        </app-card>
+        </div>
       </app-tooltip>
     </div>
 
@@ -627,7 +642,7 @@
             <!-- Title and Rating -->
             <div class="mb-3">
               <div class="flex items-center gap-2 mb-1">
-                <h3 class="text-lg font-bold text-text-primary dark:text-text-primary truncate">
+                <h3 class="text-lg font-bold text-text-primary dark:text-text-primary truncate flex-1 min-w-0">
                   {{ car.brand_text_backup }} {{ car.model_text_backup }}
                 </h3>
                 <!-- ✅ NEW: Dynamic pricing badge -->
@@ -641,7 +656,7 @@
                   <span class="font-semibold">4.8</span>
                   <span>(124 viajes)</span>
                 </div>
-                <span class="text-xs text-text-secondary">{{ car.location_city }}</span>
+                <span class="text-xs text-text-secondary truncate max-w-[120px]">{{ car.location_city }}</span>
               </div>
             </div>
 
@@ -1063,9 +1078,6 @@
     </div>
   </div>
 </div>
-
-<!-- Mobile Bottom Nav -->
-<app-mobile-bottom-nav />
 
 <!-- WhatsApp FAB -->
 <app-whatsapp-fab />

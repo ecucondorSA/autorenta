@@ -114,8 +114,17 @@ export class GoogleCalendarComponent implements OnInit, OnChanges {
       const baseUrl = 'https://calendar.google.com/calendar/embed';
       const params = new URLSearchParams();
 
-      // Calendar ID (puede ser email o calendar ID)
-      params.set('src', config.calendarId);
+      // Calendar ID - usar 'cid' para calendarios secundarios públicos
+      // Si el ID contiene '@group.calendar.google.com', es un calendario secundario
+      const isSecondaryCalendar = config.calendarId.includes('@group.calendar.google.com');
+      
+      if (isSecondaryCalendar) {
+        // Para calendarios secundarios, usar 'cid' que funciona mejor con calendarios públicos
+        params.set('cid', config.calendarId);
+      } else {
+        // Para calendarios primarios (emails), usar 'src'
+        params.set('src', config.calendarId);
+      }
 
       // Vista del calendario
       params.set('mode', config.view || 'month');
@@ -148,7 +157,14 @@ export class GoogleCalendarComponent implements OnInit, OnChanges {
         params.set('wkst', config.wkst.toString());
       }
 
+      // ✅ CRITICAL: Add color parameter to ensure proper rendering
+      params.set('color', '%23039BE5'); // Blue color
+
       const fullUrl = `${baseUrl}?${params.toString()}`;
+      console.log('📅 Calendar URL:', fullUrl);
+      console.log('📅 Calendar ID:', config.calendarId);
+      console.log('📅 Is secondary calendar:', isSecondaryCalendar);
+      
       this.calendarUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl));
       this.hasError.set(false);
       this.errorMessage.set('');

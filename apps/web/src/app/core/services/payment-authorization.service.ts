@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, from, of } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { FunctionsResponse } from '@supabase/functions-js';
 import {
   PaymentAuthorization,
   AuthorizePaymentResult,
@@ -86,7 +87,7 @@ export class PaymentAuthorizationService {
               }),
             );
           }),
-          map((mpResponse: FunctionInvokeResponse<MercadoPagoPreauthResponse>) => {
+          map((mpResponse: FunctionsResponse<MercadoPagoPreauthResponse>) => {
             const responseData = mpResponse.data;
             if (!responseData) {
               throw new Error('Authorization failed');
@@ -159,7 +160,7 @@ export class PaymentAuthorizationService {
           }),
         );
       }),
-      map((response: FunctionInvokeResponse<MercadoPagoFunctionResponse>) => {
+      map((response: FunctionsResponse<MercadoPagoFunctionResponse>) => {
         if (!response.data?.success) {
           throw new Error(response.data?.error || 'Function call failed');
         }

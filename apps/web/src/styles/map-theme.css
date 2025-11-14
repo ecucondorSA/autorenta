@@ -231,7 +231,7 @@
 }
 
 /* Mobile adjustments for photo markers */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .car-marker-photo {
     width: 60px;
   }
@@ -508,7 +508,7 @@
    MOBILE OPTIMIZATIONS
    ============================================================================ */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .mapboxgl-ctrl-top-right {
     top: 70px; /* Below floating search */
     right: 12px;

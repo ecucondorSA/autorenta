@@ -379,7 +379,7 @@
 }
 
 /* ===== Responsive Design ===== */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .p-toast-top-right {
     top: 0.5rem;
     right: 0.5rem;

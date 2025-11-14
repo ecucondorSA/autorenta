@@ -23,6 +23,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { LocationService } from '../../../core/services/location.service';
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
+import { BreakpointService } from '../../../core/services/breakpoint.service';
 import { Car } from '../../../core/models';
 import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
@@ -36,7 +37,6 @@ import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { PwaTitlebarComponent } from '../../../shared/components/pwa-titlebar/pwa-titlebar.component';
-import { MobileBottomNavComponent } from '../../../shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
 import { getErrorMessage } from '../../../core/utils/type-guards';
 
 // Interface para auto con distancia
@@ -69,7 +69,6 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     UrgentRentalBannerComponent,
     WhatsappFabComponent,
     PwaTitlebarComponent,
-    MobileBottomNavComponent,
     TranslateModule,
   ],
   templateUrl: './cars-list.page.html',
@@ -92,6 +91,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly distanceCalculator = inject(DistanceCalculatorService);
   private readonly locationService = inject(LocationService);
   private readonly urgentRentalService = inject(UrgentRentalService);
+  private readonly breakpoint = inject(BreakpointService);
   private readonly economyRadiusKm = ECONOMY_RADIUS_KM;
   private sortInitialized = false;
   private analyticsLastKey: string | null = null;
@@ -145,10 +145,8 @@ export class CarsListPage implements OnInit, OnDestroy {
     eta?: number;
   } | null>(null);
   readonly expressModeSignal = signal(true);
-  readonly isMobile = computed(() => {
-    if (!this.isBrowser) return false;
-    return window.innerWidth < 1024;
-  });
+  readonly isMobile = this.breakpoint.isMobile;
+  readonly isDesktop = this.breakpoint.isDesktop;
 
   // Filtros y ordenamiento
   readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('rating');

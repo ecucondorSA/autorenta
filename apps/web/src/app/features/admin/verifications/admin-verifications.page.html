@@ -211,10 +211,11 @@
           </div>
         </div>
       } @else {
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-surface-base">
-            <tr>
-              <th
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-surface-base">
+              <tr>
+                <th
                 class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
               >
                 Usuario
@@ -355,6 +356,7 @@
             }
           </tbody>
         </table>
+        </div>
 
         <!-- Load More Button -->
         @if (canLoadMore()) {

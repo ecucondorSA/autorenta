@@ -29,6 +29,11 @@ export const routes: Routes = [
       import('./features/become-renter/become-renter.page').then((m) => m.BecomeRenterPage),
   },
   {
+    path: 'v2',
+    data: { layout: 'full-bleed' },
+    loadComponent: () => import('./features/v2-preview/v2-preview.page').then((m) => m.V2PreviewPage),
+  },
+  {
     path: 'referrals',
     canMatch: [AuthGuard],
     loadComponent: () => import('./features/referrals/referrals.page').then((m) => m.ReferralsPage),
@@ -266,6 +271,13 @@ export const routes: Routes = [
         path: 'location-settings',
         loadComponent: () =>
           import('./features/profile/location-settings.page').then((m) => m.LocationSettingsPage),
+      },
+      {
+        path: 'calendar',
+        loadComponent: () =>
+          import('./features/profile/calendar/calendar-settings.page').then(
+            (m) => m.CalendarSettingsPage,
+          ),
       },
       {
         path: 'contact',

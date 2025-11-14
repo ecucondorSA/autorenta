@@ -40,7 +40,7 @@ import { VerificationBadgeComponent } from './shared/components/verification-bad
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
-import { MobileBottomNavComponent } from './shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
+import { MobileBottomNavPortalService } from './core/services/mobile-bottom-nav-portal.service';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
@@ -66,7 +66,6 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     LanguageSelectorComponent,
     HelpButtonComponent,
     NotificationsComponent,
-    MobileBottomNavComponent,
     ShareButtonComponent,
     FooterComponent,
     Toast,
@@ -76,6 +75,10 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     `
       :host {
         display: block;
+        /* Asegurar que app-root no cree nuevo stacking context */
+        transform: none !important;
+        will-change: auto !important;
+        isolation: auto !important;
       }
 
       /* Custom scrollbar para el dropdown del perfil */
@@ -134,6 +137,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly mobileBottomNavPortal: MobileBottomNavPortalService = inject(MobileBottomNavPortalService);
   private readonly isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
   readonly isAuthenticatedSig = this.authService.isAuthenticated;
@@ -168,6 +172,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (!this.isBrowser) {
       return;
     }
+
+    // Crear el mobile bottom nav usando el portal service
+    // Esto asegura que se renderice directamente en el body
+    requestAnimationFrame(() => {
+      this.mobileBottomNavPortal.create();
+    });
 
     // Wait for splash screen (4s) + initial render (1s) + buffer (1s)
     setTimeout(() => {

@@ -86,3 +86,4 @@ GRANT ALL ON public.car_blocked_dates TO service_role;
 COMMENT ON TABLE public.car_blocked_dates IS 'Manual date blocking for cars by owners';
 COMMENT ON COLUMN public.car_blocked_dates.reason IS 'Reason for blocking: maintenance, personal_use, vacation, other';
 
+

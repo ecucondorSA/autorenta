@@ -1,7 +1,18 @@
 import { Injectable, computed, inject, signal, OnDestroy } from '@angular/core';
-import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
+import type {
+  RealtimeChannel,
+  RealtimePostgresChangesPayload,
+  SupabaseClient,
+} from '@supabase/supabase-js';
 import { SupabaseClientService } from './supabase-client.service';
 import type { VerificationProgress } from './identity-level.service';
+
+type VerificationStatusRow = {
+  email_verified_at?: string | null;
+  phone_verified_at?: string | null;
+  selfie_verified_at?: string | null;
+  current_level: number;
+};
 
 /**
  * Centralized verification state management with Realtime sync
@@ -142,7 +153,7 @@ export class VerificationStateService implements OnDestroy {
           table: 'user_identity_levels',
           filter: `user_id=eq.${userId}`,
         },
-        async (payload) => {
+        async (payload: RealtimePostgresChangesPayload<VerificationStatusRow>) => {
           console.log('[VerificationState] Realtime update:', payload);
 
           // Refresh progress when changes detected
@@ -180,37 +191,39 @@ export class VerificationStateService implements OnDestroy {
   /**
    * Emit custom events for notification system
    */
-  private emitVerificationEvent(payload: unknown): void {
-    const eventType = (payload as any).eventType; // INSERT, UPDATE, DELETE
-    const newData = (payload as any).new;
-    const oldData = (payload as any).old;
+  private emitVerificationEvent(
+    payload: RealtimePostgresChangesPayload<VerificationStatusRow>,
+  ): void {
+    if (payload.eventType !== 'UPDATE' || !payload.new || !payload.old) {
+      return;
+    }
 
-    // Check what changed
-    if (eventType === 'UPDATE') {
-      // Email verified
-      if (!oldData.email_verified_at && newData.email_verified_at) {
-        this.dispatchEvent('email_verified');
-      }
+    const newData = payload.new;
+    const oldData = payload.old;
 
-      // Phone verified
-      if (!oldData.phone_verified_at && newData.phone_verified_at) {
-        this.dispatchEvent('phone_verified');
-      }
+    // Email verified
+    if (!oldData.email_verified_at && newData.email_verified_at) {
+      this.dispatchEvent('email_verified');
+    }
 
-      // Documents verified (Level 2)
-      if (oldData.current_level < 2 && newData.current_level >= 2) {
-        this.dispatchEvent('level_2_achieved');
-      }
+    // Phone verified
+    if (!oldData.phone_verified_at && newData.phone_verified_at) {
+      this.dispatchEvent('phone_verified');
+    }
 
-      // Selfie verified (Level 3)
-      if (!oldData.selfie_verified_at && newData.selfie_verified_at) {
-        this.dispatchEvent('selfie_verified');
-      }
+    // Documents verified (Level 2)
+    if ((oldData.current_level ?? 0) < 2 && (newData.current_level ?? 0) >= 2) {
+      this.dispatchEvent('level_2_achieved');
+    }
 
-      // Level 3 achieved
-      if (oldData.current_level < 3 && newData.current_level >= 3) {
-        this.dispatchEvent('level_3_achieved');
-      }
+    // Selfie verified (Level 3)
+    if (!oldData.selfie_verified_at && newData.selfie_verified_at) {
+      this.dispatchEvent('selfie_verified');
+    }
+
+    // Level 3 achieved
+    if ((oldData.current_level ?? 0) < 3 && (newData.current_level ?? 0) >= 3) {
+      this.dispatchEvent('level_3_achieved');
     }
   }
 

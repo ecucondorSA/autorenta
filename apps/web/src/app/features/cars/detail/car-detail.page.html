@@ -33,6 +33,9 @@
             [alt]="car()?.title ?? ''"
             [loading]="currentPhotoIndex() === 0 ? 'eager' : 'lazy'"
             [attr.fetchpriority]="currentPhotoIndex() === 0 ? 'high' : 'auto'"
+            [width]="800"
+            [height]="600"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
             decoding="async"
             (load)="onImageLoad()"
             [class.opacity-0]="!imageLoaded()"
@@ -538,7 +541,7 @@
         class="card-premium rounded-2xl border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 shadow-soft"
       >
         <h2 class="h4 mb-3">Descripción</h2>
-        <p class="leading-relaxed text-text-secondary dark:text-text-secondary">
+        <p class="leading-relaxed text-text-secondary dark:text-text-secondary whitespace-pre-line">
           {{ car()?.description || 'Sin descripción disponible' }}
         </p>
       </div>
@@ -582,16 +585,81 @@
             </div>
           }
 
-          <!-- Embedded Calendar -->
-          <app-google-calendar
-            [calendarId]="calendarId()!"
-            [view]="'month'"
-            [language]="'es'"
-            [height]="500"
-            [showTitle]="false"
-            [showPrint]="false"
-            [showTabs]="false"
-          />
+          <!-- Embedded Calendar or Events List -->
+          @if (calendarId()) {
+            <!-- Owner only: Button to fix calendar permissions -->
+            @if (isCarOwner()) {
+              <div class="mb-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                <div class="flex items-start space-x-3">
+                  <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <div class="flex-1">
+                    <h4 class="text-sm font-semibold text-amber-900 dark:text-amber-300 mb-1">
+                      ⚠️ Propietario: ¿El calendario muestra "contenido bloqueado"?
+                    </h4>
+                    <p class="text-xs text-amber-800 dark:text-amber-400 mb-3">
+                      Click aquí para hacer tu calendario público y que los usuarios puedan ver tu disponibilidad.
+                    </p>
+                    <app-make-calendar-public-button [carId]="car()!.id" />
+                  </div>
+                </div>
+              </div>
+            }
+            
+            <!-- Try iframe first -->
+            <div class="mb-4">
+              <app-google-calendar
+                [calendarId]="calendarId()!"
+                [view]="'month'"
+                [language]="'es'"
+                [height]="500"
+                [showTitle]="false"
+                [showPrint]="false"
+                [showTabs]="false"
+              />
+            </div>
+            
+            <!-- Fallback: Show events list if iframe has issues -->
+            <details class="mt-4">
+              <summary class="cursor-pointer text-sm font-medium text-cta-default hover:text-cta-hover mb-2">
+                Ver lista de fechas bloqueadas
+              </summary>
+              <app-calendar-events-list
+                [carId]="car()!.id"
+                [fromDate]="dateRange().from || today()"
+                [toDate]="dateRange().to || thirtyDaysFromNow()"
+              />
+            </details>
+          } @else {
+            <!-- Estado vacío cuando no hay calendar ID -->
+            <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+              <div class="w-16 h-16 mb-4 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                <svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-2">
+                Calendario no disponible
+              </h3>
+              <p class="text-sm text-text-secondary dark:text-text-secondary mb-4 max-w-md">
+                El calendario de disponibilidad aún no está configurado para este vehículo.
+                Puedes verificar la disponibilidad usando el selector de fechas arriba.
+              </p>
+              @if (isOwner()) {
+                <p class="text-xs text-text-muted dark:text-text-muted mb-4">
+                  💡 <strong>Propietario:</strong> Conecta tu Google Calendar para sincronizar automáticamente 
+                  las reservas y mostrar tu disponibilidad en tiempo real.
+                </p>
+                <button 
+                  (click)="openGoogleCalendarSettings()"
+                  class="px-4 py-2 bg-cta-default hover:bg-cta-hover text-white rounded-lg transition-colors"
+                >
+                  Configurar Google Calendar
+                </button>
+              }
+            </div>
+          }
         </div>
       }
 

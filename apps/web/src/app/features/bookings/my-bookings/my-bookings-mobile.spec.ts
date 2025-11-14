@@ -16,12 +16,12 @@ import { MyBookingsPage } from './my-bookings.page';
 /**
  * SPRINT 6 - Tests de Responsive Design y Funcionalidad Móvil
  *
- * Breakpoints de referencia (Bootstrap/Tailwind estándar):
- * - xs: 0-575px (Móvil pequeño)
- * - sm: 576-767px (Móvil grande)
- * - md: 768-991px (Tablet)
- * - lg: 992-1199px (Desktop)
- * - xl: 1200px+ (Desktop grande)
+ * Breakpoints de referencia (Tailwind estándar):
+ * - xs: <640px (Móvil pequeño)
+ * - sm: 640-767px (Móvil)
+ * - md: 768-1023px (Tablet)
+ * - lg: 1024-1279px (Desktop)
+ * - xl: ≥1280px (Desktop grande)
  *
  * Devices de prueba:
  * - iPhone SE: 375x667 (referencia móvil pequeño)

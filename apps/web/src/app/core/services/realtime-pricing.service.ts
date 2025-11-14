@@ -188,13 +188,13 @@ export class RealtimePricingService {
           table: 'pricing_special_events',
           filter: 'active=eq.true',
         },
-        (payload: RealtimePostgresChangesPayload<SpecialEvent>) => {
+        (_payload: RealtimePostgresChangesPayload<SpecialEvent>) => {
           // Recargar todos los eventos activos
           void this.loadActiveEvents();
           onChange?.();
         },
       )
-      .subscribe((status) => {
+      .subscribe((_status) => {
         // Status handled by isConnected and connectionStatus signals
         // No specific action needed here
       });

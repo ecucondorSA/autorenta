@@ -1,2 +1,4 @@
- Port 4200 is already in use.
-Would you like to use a different port? (Y/n)[47G
+npm warn Unknown env config "verify-deps-before-run". This will stop working in the next major version of npm.
+npm warn Unknown env config "npm-globalconfig". This will stop working in the next major version of npm.
+npm warn Unknown env config "_jsr-registry". This will stop working in the next major version of npm.
+❯ Building...

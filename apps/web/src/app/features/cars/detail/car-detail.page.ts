@@ -62,6 +62,8 @@ import {
   PickupLocationSelection,
 } from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
 import { GoogleCalendarComponent } from '../../../shared/components/google-calendar/google-calendar.component';
+import { CalendarEventsListComponent } from '../../../shared/components/calendar-events-list/calendar-events-list.component';
+import { MakeCalendarPublicButtonComponent } from '../../../shared/components/make-calendar-public-button/make-calendar-public-button.component';
 
 // Services
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
@@ -99,6 +101,8 @@ interface CarDetailState {
     BookingLocationFormComponent,
     PickupLocationSelectorComponent,
     GoogleCalendarComponent,
+    CalendarEventsListComponent,
+    MakeCalendarPublicButtonComponent,
   ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -175,6 +179,7 @@ export class CarDetailPage implements OnInit {
     events: Array<{ date: string; title: string }>;
     google_calendar_checked: boolean;
   } | null>(null);
+  readonly isCarOwner = signal<boolean>(false);
 
   private readonly carId$ = this.route.paramMap.pipe(map((params) => params.get('id')));
 
@@ -294,6 +299,11 @@ export class CarDetailPage implements OnInit {
 
     return car.owner.rating_count >= 50 && car.owner.rating_avg >= 4.8;
   });
+
+  /**
+   * Verifica si el usuario actual es el propietario del auto
+   */
+  readonly isOwner = computed(() => this.isCarOwner());
 
   readonly walletBalance = toSignal(this.walletService.getBalance(), {
     initialValue: null,
@@ -502,6 +512,14 @@ export class CarDetailPage implements OnInit {
         this.expressMode.set(true);
         void this.setupExpressMode();
       }
+      
+      // ✅ NEW: Check if returning from calendar connection
+      if (params['calendar_connected'] === 'true') {
+        // Refresh calendar data after a short delay to allow backend processing
+        setTimeout(() => {
+          this.refreshCalendarData();
+        }, 2000);
+      }
     });
 
     // Cargar fechas bloqueadas cuando el auto esté disponible
@@ -517,6 +535,9 @@ export class CarDetailPage implements OnInit {
 
         // ✅ NEW: Load Google Calendar ID for this car
         void this.loadCarCalendarId(state.car.id);
+
+        // ✅ NEW: Check if current user is the owner
+        void this.checkOwnership(state.car.owner_id);
 
         // 🎯 TikTok Events: Track ViewContent
         void this.tiktokEvents.trackViewContent({
@@ -1106,6 +1127,53 @@ export class CarDetailPage implements OnInit {
   /**
    * ✅ NEW: Load Google Calendar ID for this car
    */
+  /**
+   * Check if the current user is the owner of the car
+   */
+  private async checkOwnership(ownerId: string): Promise<void> {
+    try {
+      const { data } = await this.supabase.auth.getSession();
+      this.isCarOwner.set(data.session?.user?.id === ownerId);
+    } catch (error) {
+      console.error('Error checking ownership:', error);
+      this.isCarOwner.set(false);
+    }
+  }
+
+  /**
+   * Open Google Calendar settings (navigate to profile/calendar)
+   */
+  openGoogleCalendarSettings(): void {
+    void this.router.navigate(['/profile/calendar']);
+  }
+
+  /**
+   * ✅ NEW: Refresh calendar data after connection
+   * This is called when the user returns from /profile/calendar
+   */
+  refreshCalendarData(): void {
+    const carId = this.car()?.id;
+    if (carId) {
+      void this.loadCarCalendarId(carId);
+    }
+  }
+
+  /**
+   * Helper: Get today's date in YYYY-MM-DD format
+   */
+  today(): string {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  /**
+   * Helper: Get date 30 days from now in YYYY-MM-DD format
+   */
+  thirtyDaysFromNow(): string {
+    const date = new Date();
+    date.setDate(date.getDate() + 30);
+    return date.toISOString().split('T')[0];
+  }
+
   private async loadCarCalendarId(carId: string): Promise<void> {
     try {
       this.googleCalendarService.getCarCalendarId(carId).subscribe({

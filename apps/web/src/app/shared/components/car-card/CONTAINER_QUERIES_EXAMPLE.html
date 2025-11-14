@@ -1,0 +1,368 @@
+<!-- 
+  Ejemplo de uso de Container Queries en Autorenta
+  
+  Este archivo demuestra cómo los container queries permiten que
+  los car-cards se adapten a su contenedor en lugar del viewport.
+-->
+
+<div class="container-examples">
+  <!-- ════════════════════════════════════════════════════════════
+       Ejemplo 1: Sidebar (280px wide)
+       ════════════════════════════════════════════════════════════ -->
+  
+  <section class="example-section">
+    <h2>Sidebar Layout (280px container)</h2>
+    <p class="description">
+      En un sidebar estrecho, el car-card se muestra ultra-compacto:
+      solo imagen, título y precio.
+    </p>
+    
+    <div style="width: 280px; border: 2px solid #ccc; padding: 1rem;">
+      <!-- Container automático: .car-card tiene container-type: inline-size -->
+      <app-car-card [car]="sampleCar"></app-car-card>
+      
+      <!-- Resultado automático con @container (max-width: 280px):
+           - car-specs: OCULTOS
+           - car-location: OCULTOS  
+           - car-features: OCULTOS
+           - Solo visible: imagen + título + precio
+      -->
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       Ejemplo 2: Grid de 2 columnas (350px each)
+       ════════════════════════════════════════════════════════════ -->
+  
+  <section class="example-section">
+    <h2>Grid Layout (350px containers)</h2>
+    <p class="description">
+      En un grid de 2 columnas, cada card muestra información básica.
+    </p>
+    
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+      <!-- Cada card tiene ~350px de ancho -->
+      <app-car-card [car]="sampleCar1"></app-car-card>
+      <app-car-card [car]="sampleCar2"></app-car-card>
+      
+      <!-- Resultado automático con @container (280px < x < 400px):
+           - car-specs: VISIBLES (año, transmisión)
+           - car-location: VISIBLE
+           - car-features: OCULTOS
+      -->
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       Ejemplo 3: Lista vertical (600px+ wide)
+       ════════════════════════════════════════════════════════════ -->
+  
+  <section class="example-section">
+    <h2>List Layout (600px+ container)</h2>
+    <p class="description">
+      En una lista vertical ancha, el card muestra toda la información.
+    </p>
+    
+    <div style="width: 100%; max-width: 800px;">
+      <app-car-card [car]="sampleCar"></app-car-card>
+      
+      <!-- Resultado automático con @container (min-width: 400px):
+           - car-specs: VISIBLES
+           - car-location: VISIBLE
+           - car-features: VISIBLES (grid 2 columnas)
+           - Layout: puede cambiar a horizontal (imagen 35% + contenido 65%)
+      -->
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       Ejemplo 4: Modal/Dialog
+       ════════════════════════════════════════════════════════════ -->
+  
+  <section class="example-section">
+    <h2>Modal Layout (variable width)</h2>
+    <p class="description">
+      En un modal, el car-card se adapta al ancho del modal automáticamente.
+      No necesita media queries especiales.
+    </p>
+    
+    <div class="modal-content" style="width: 90vw; max-width: 500px; padding: 2rem;">
+      <h3>Detalles del Auto</h3>
+      
+      <!-- El card se adapta al modal, independiente del viewport -->
+      <app-car-card [car]="sampleCar"></app-car-card>
+      
+      <!-- Si el modal es angosto (<400px): layout compacto
+           Si el modal es ancho (>400px): layout completo
+           TODO AUTOMÁTICO, sin lógica adicional
+      -->
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       Ejemplo 5: Responsive Grid (auto-fit)
+       ════════════════════════════════════════════════════════════ -->
+  
+  <section class="example-section">
+    <h2>Auto-fit Grid (responsive containers)</h2>
+    <p class="description">
+      Grid con auto-fit crea columnas según el espacio disponible.
+      Cada card se adapta a su columna automáticamente.
+    </p>
+    
+    <div style="
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    ">
+      <app-car-card [car]="car1"></app-car-card>
+      <app-car-card [car]="car2"></app-car-card>
+      <app-car-card [car]="car3"></app-car-card>
+      <app-car-card [car]="car4"></app-car-card>
+      
+      <!-- Resultado:
+           - Viewport grande: 3-4 cards por fila, cada uno ~350px → layout mediano
+           - Viewport medio: 2 cards por fila, cada uno ~400px → layout completo
+           - Viewport pequeño: 1 card por fila, 100% ancho → layout completo
+           
+           Sin media queries, todo automático basado en container width
+      -->
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       Ventajas vs Media Queries
+       ════════════════════════════════════════════════════════════ -->
+  
+  <section class="comparison">
+    <h2>Container Queries vs Media Queries</h2>
+    
+    <div class="comparison-grid">
+      <div class="media-queries">
+        <h3>❌ Con Media Queries</h3>
+        <pre><code>
+@media (max-width: 768px) {
+  .car-card .car-features {
+    display: none;
+  }
+}
+        </code></pre>
+        <p>
+          <strong>Problema:</strong> Todos los cards se ocultan en mobile,
+          incluso si están en un modal ancho o sidebar expandido.
+        </p>
+      </div>
+      
+      <div class="container-queries">
+        <h3>✅ Con Container Queries</h3>
+        <pre><code>
+@container card (max-width: 280px) {
+  .car-features {
+    display: none;
+  }
+}
+        </code></pre>
+        <p>
+          <strong>Solución:</strong> Cada card decide según su propio ancho.
+          Un card en modal ancho muestra features, uno en sidebar no.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       Implementación en Car Card
+       ════════════════════════════════════════════════════════════ -->
+  
+  <section class="implementation">
+    <h2>Cómo Funciona en Car Card</h2>
+    
+    <ol class="steps">
+      <li>
+        <strong>Componente marca container:</strong>
+        <pre><code>&lt;article class="car-card"&gt;</code></pre>
+        
+        <p>CSS automático desde <code>container-queries.css</code>:</p>
+        <pre><code>
+.car-card {
+  container-type: inline-size;
+  container-name: card;
+}
+        </code></pre>
+      </li>
+      
+      <li>
+        <strong>Elementos internos usan clases semánticas:</strong>
+        <pre><code>
+&lt;div class="car-specs"&gt;...&lt;/div&gt;
+&lt;div class="car-features"&gt;...&lt;/div&gt;
+&lt;div class="car-price"&gt;...&lt;/div&gt;
+        </code></pre>
+      </li>
+      
+      <li>
+        <strong>Container queries aplican automáticamente:</strong>
+        <pre><code>
+/* < 280px: ultra-compacto */
+@container card (max-width: 280px) {
+  .car-specs,
+  .car-location,
+  .car-features {
+    display: none;
+  }
+}
+
+/* 280-400px: compacto */
+@container card (min-width: 280px) and (max-width: 400px) {
+  .car-features {
+    display: none;
+  }
+  .car-specs {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+/* > 400px: completo */
+@container card (min-width: 400px) {
+  .car-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+        </code></pre>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       Testing en DevTools
+       ════════════════════════════════════════════════════════════ -->
+  
+  <section class="testing">
+    <h2>Testing Container Queries</h2>
+    
+    <div class="instructions">
+      <h3>Chrome DevTools (2025)</h3>
+      <ol>
+        <li>Inspecciona el <code>.car-card</code></li>
+        <li>En <strong>Styles</strong> panel, busca <code>container-type</code></li>
+        <li>Verás todas las <code>@container</code> rules activas</li>
+        <li>Cambia el ancho del contenedor padre para ver cambios en vivo</li>
+      </ol>
+      
+      <h3>Manual Testing</h3>
+      <ol>
+        <li>Coloca cards en diferentes layouts (sidebar, grid, list)</li>
+        <li>Verifica que cada card se adapte a su container</li>
+        <li>Confirma que no dependen del viewport size</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       Migration Path
+       ════════════════════════════════════════════════════════════ -->
+  
+  <section class="migration">
+    <h2>Migración desde Media Queries</h2>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Paso</th>
+          <th>Acción</th>
+          <th>Archivo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Agregar clase <code>.car-card</code> al componente</td>
+          <td><code>car-card.component.html</code></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Agregar clases semánticas (<code>.car-specs</code>, <code>.car-features</code>)</td>
+          <td><code>car-card.component.html</code></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Importar <code>container-queries.css</code></td>
+          <td><code>styles.css</code> (ya hecho ✅)</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Testear en diferentes layouts</td>
+          <td>DevTools + manual testing</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>(Opcional) Remover media queries redundantes</td>
+          <td><code>car-card.component.scss</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<style>
+  .container-examples {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .example-section {
+    margin-bottom: 4rem;
+    padding: 2rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #f9fafb;
+  }
+
+  .description {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+  }
+
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  pre {
+    background: #1f2937;
+    color: #f3f4f6;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    overflow-x: auto;
+  }
+
+  .steps {
+    padding-left: 1.5rem;
+  }
+
+  .steps li {
+    margin-bottom: 2rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  th {
+    background: #f3f4f6;
+    font-weight: 600;
+  }
+</style>

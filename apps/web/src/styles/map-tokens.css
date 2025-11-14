@@ -151,7 +151,7 @@
 }
 
 /* Mobile Responsive Tokens */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   :root {
     --map-marker-photo-size: 60px;
     --map-marker-price-size: 44px;

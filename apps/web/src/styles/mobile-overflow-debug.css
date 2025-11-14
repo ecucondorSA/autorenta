@@ -7,7 +7,7 @@
 /* ⚠️ MODO DEBUG - Descomenta para activar */
 
 /*
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   * {
     outline: 1px solid rgba(255, 0, 0, 0.2);
   }
@@ -40,7 +40,7 @@
    🔧 OVERFLOW FIXES ESPECÍFICOS
    ═══════════════════════════════════════════════════════════════ */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Fix para car-card que sobresale */
   app-car-card,
   .card-premium {

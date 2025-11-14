@@ -1,6 +1,6 @@
 <article
   [routerLink]="['/cars', car.id]"
-  class="card-premium flex flex-col overflow-hidden group cursor-pointer hover-lift transition-smooth"
+  class="car-card card-premium flex flex-col overflow-hidden group cursor-pointer hover-lift transition-smooth"
   [class.selected]="selected"
   [class.urgent-mode]="urgentMode"
   [class.bg-gradient-to-br]="urgentMode"
@@ -132,8 +132,8 @@
       </span>
     </div>
 
-    <!-- Specs: Asientos y Puertas -->
-    <div class="flex items-center gap-4">
+    <!-- Specs: Asientos y Puertas (usa car-specs para container queries) -->
+    <div class="car-specs flex items-center gap-4">
       <div class="flex items-center gap-2 text-text-secondary dark:text-text-secondary">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -171,7 +171,7 @@
           d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
         />
       </svg>
-      <p class="text-sm font-medium leading-relaxed">
+      <p class="text-sm font-medium leading-relaxed line-clamp-2 flex-1 min-w-0">
         <ng-container *ngIf="car.location_formatted_address; else oldLocation">
           {{ car.location_formatted_address }}
         </ng-container>
@@ -199,8 +199,8 @@
       <span>{{ car.fuel_type | titlecase }}</span>
     </div>
 
-    <!-- Features y Badges -->
-    <div class="flex flex-wrap gap-2 items-center">
+    <!-- Features y Badges (usa car-features para container queries) -->
+    <div class="car-features flex flex-wrap gap-2 items-center">
       <!-- Badge de seguro incluido -->
       <span *ngIf="car.insurance_included"
             class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-success-bg text-success-strong border border-success-border">

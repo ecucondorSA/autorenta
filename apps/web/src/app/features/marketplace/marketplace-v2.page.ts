@@ -25,7 +25,6 @@ import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.comp
 import { SocialProofIndicatorsComponent } from '../../shared/components/social-proof-indicators/social-proof-indicators.component';
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
 import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
-import { MobileBottomNavComponent } from '../../shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
 import { QuickFilter } from '../../shared/components/utility-bar/utility-bar.component';
 import {
   FloatingActionFabComponent,
@@ -46,10 +45,10 @@ import {
   QuickBookingModalComponent,
   QuickBookingData,
 } from '../../shared/components/quick-booking-modal/quick-booking-modal.component';
-import { CardComponent } from '../../shared/components/card/card.component';
 import { TooltipComponent } from '../../shared/components/tooltip/tooltip.component';
 import { BookingsService } from '../../core/services/bookings.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { BreakpointService } from '../../core/services/breakpoint.service';
 import { DynamicPricingBadgeComponent } from '../../shared/components/dynamic-pricing-badge/dynamic-pricing-badge.component';
 import { MapFiltersComponent } from '../../shared/components/map-filters/map-filters.component';
 import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
@@ -73,12 +72,10 @@ type ToastType = 'success' | 'info' | 'warning' | 'error';
     CarsMapComponent,
     SocialProofIndicatorsComponent,
     WhatsappFabComponent,
-    MobileBottomNavComponent,
     QuickBookingModalComponent,
     FloatingActionFabComponent,
     // NotificationToastComponent, // REMOVED: Using PrimeNG Toast now
     StatsStripComponent,
-    CardComponent,
     TooltipComponent,
     DateRangePickerComponent,
     DateSearchComponent,
@@ -105,6 +102,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private readonly distanceCalculator = inject(DistanceCalculatorService);
   private readonly bookingsService = inject(BookingsService);
   private readonly analyticsService = inject(AnalyticsService);
+  private readonly breakpoint = inject(BreakpointService);
   private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -149,11 +147,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly googleCalendarId = signal<string | null>(environment.googleCalendarId || null); // ID del calendario de Google desde environment
   readonly showPriceTransparencyModal = signal(false); // Modal de transparencia de precios
 
-  // Computed
-  readonly isMobile = computed(() => {
-    if (!this.isBrowser) return false;
-    return window.innerWidth < 1024;
-  });
+  // Computed - Ahora usa BreakpointService
+  readonly isMobile = this.breakpoint.isMobile;
+  readonly isTablet = this.breakpoint.isTablet;
+  readonly isDesktop = this.breakpoint.isDesktop;
 
   readonly selectedCar = computed(() => {
     const carId = this.selectedCarId();

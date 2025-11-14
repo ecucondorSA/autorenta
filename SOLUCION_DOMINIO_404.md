@@ -91,3 +91,4 @@ Esta URL funciona perfectamente y procesará el callback de OAuth correctamente.
 **Última actualización**: 2025-11-14 13:48
 **Commit**: `b52b808` - fix: add OAuth callback redirect handler for root domain
 
+

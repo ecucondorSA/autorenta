@@ -7,13 +7,18 @@
    OVERFLOW FIX - Prevenir desbordamiento horizontal
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Prevenir overflow horizontal global */
   html,
   body {
     max-width: 100vw;
     overflow-x: hidden;
     position: relative;
+    background-color: var(--surface-base);
+  }
+
+  body {
+    padding-bottom: var(--safe-area-bottom);
   }
 
   /* Contenedores principales */
@@ -104,16 +109,19 @@
    Header Móvil Optimizado
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Header más compacto en móvil */
   #main-header {
-    height: 56px !important;
+    min-height: calc(56px + var(--safe-area-top));
+    padding-top: var(--safe-area-top);
+    background-color: var(--surface-base);
   }
 
   #main-header .container-page {
-    height: 56px !important;
+    min-height: 56px;
     padding-left: 12px;
     padding-right: 12px;
+    padding-top: var(--safe-area-top);
   }
 
   /* Logo más pequeño en móvil */
@@ -144,12 +152,23 @@
    Main Content - Espaciado Móvil
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .app-main {
     /* Asegurar padding bottom para la bottom nav */
-    padding-bottom: 80px !important;
+    padding-bottom: calc(80px + var(--safe-area-bottom)) !important;
+    padding-top: max(8px, var(--safe-area-top));
     min-height: 100vh;
     box-sizing: border-box;
+  }
+
+  .app-main > *:first-child {
+    margin-top: 0 !important;
+    padding-top: max(0px, var(--safe-area-top));
+  }
+
+  .mobile-bottom-nav {
+    padding-bottom: calc(16px + var(--safe-area-bottom));
+    padding-top: 12px;
   }
 
   /* Padding horizontal consistente */
@@ -184,9 +203,9 @@
    Footer Compacto en Móvil
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   footer {
-    padding-bottom: 80px !important;
+    padding-bottom: calc(80px + var(--safe-area-bottom)) !important;
   }
 
   /* Grid de 1 columna en móvil */
@@ -219,7 +238,7 @@
    Sidebar Móvil Optimizado
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Reducir ancho del sidebar */
   #mobile-sidebar {
     width: 280px;
@@ -252,7 +271,7 @@
    Floating Actions - Z-index y Posición
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Badge de comparación */
   .fixed.bottom-24 {
     bottom: 85px !important;
@@ -276,7 +295,7 @@
    Scroll Behavior Optimizado
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   html {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
@@ -302,7 +321,7 @@
    Touch Targets - Mínimo 44x44px
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Asegurar touch targets mínimos */
   button,
   a.btn,
@@ -322,7 +341,7 @@
    Typography - Escala Móvil
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Headings más pequeños */
   h1,
   .h1 {
@@ -372,7 +391,7 @@
    Cards y Componentes Móvil
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Cards más compactas */
   .card-premium,
   [class*='card'] {
@@ -406,7 +425,7 @@
    Modals y Overlays Móvil
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Modals full screen en móvil */
   [role='dialog'],
   .modal {
@@ -431,7 +450,7 @@
    Forms Móvil Optimizados
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Inputs más cómodos */
   input,
   textarea,
@@ -471,7 +490,7 @@
    ───────────────────────────────────────────────────────────── */
 
 @supports (padding: max(0px)) {
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     #main-header {
       padding-left: max(12px, env(safe-area-inset-left));
       padding-right: max(12px, env(safe-area-inset-right));
@@ -488,21 +507,130 @@
    Landscape Mode (Móvil Horizontal)
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) and (orientation: landscape) {
-  /* Header más pequeño en landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  /* Header compacto en landscape - máximo aprovechamiento vertical */
   #main-header {
-    height: 48px !important;
+    min-height: calc(48px + var(--safe-area-top));
+    padding-top: var(--safe-area-top);
+    padding-bottom: 0.25rem;
   }
 
-  /* Bottom nav puede ocultarse o ser más pequeña */
+  #main-header .container-page {
+    min-height: 48px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: var(--safe-area-top);
+  }
+
+  #main-header img,
+  #main-header .logo {
+    height: 32px !important;
+  }
+
+  /* Bottom nav más pequeña o auto-oculta */
   .mobile-bottom-nav {
-    transform: scale(0.9);
+    height: 56px;
+    padding: 0.5rem 0;
+    padding-bottom: calc(0.5rem + var(--safe-area-bottom));
   }
 
-  /* Reducir padding vertical */
+  .mobile-bottom-nav a {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* Reducir padding vertical agresivamente */
   .app-main {
-    padding-top: 8px !important;
-    padding-bottom: 60px !important;
+    padding-top: max(4px, var(--safe-area-top)) !important;
+    padding-bottom: calc(56px + var(--safe-area-bottom)) !important;
+  }
+
+  /* Modales en landscape - full width, menos altura */
+  .modal-content,
+  [class*='modal'] {
+    max-height: 90vh;
+    width: 95vw;
+    max-width: none;
+  }
+
+  /* Cards en grid - 2 columnas en landscape */
+  .grid.grid-cols-1 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Reducir espaciado de secciones */
+  section,
+  .section {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* Forms compactos */
+  input,
+  textarea,
+  select {
+    padding: 0.5rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  /* Botones más pequeños */
+  button,
+  .btn {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  /* Hero sections reducidas */
+  .hero-header,
+  [class*='hero'] {
+    min-height: 300px !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  /* Imágenes aspect ratio ajustado */
+  .aspect-video,
+  [class*='aspect'] {
+    aspect-ratio: 16/9 !important;
+  }
+
+  /* Tablas scrollables horizontalmente */
+  table {
+    font-size: 0.75rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* Carousels/Sliders más compactos */
+  .carousel,
+  .slider {
+    height: auto;
+    max-height: 50vh;
+  }
+
+  /* Maps reducidos */
+  [class*='map-container'],
+  .map-view {
+    height: 40vh !important;
+    min-height: 300px !important;
+  }
+
+  /* Toast/Notifications posicionadas mejor */
+  .toast,
+  [class*='notification'] {
+    top: 4px;
+    max-width: 90vw;
+    font-size: 0.875rem;
+  }
+
+  /* Sheets/Drawers menos altura */
+  [class*='sheet'],
+  [class*='drawer'] {
+    max-height: 70vh;
   }
 }
 
@@ -510,7 +638,7 @@
    Loading States Optimizados
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Skeleton loaders más pequeños */
   [class*='skeleton'],
   [class*='loading'] {
@@ -528,7 +656,7 @@
    Dark Mode Móvil
    ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .dark {
     /* Asegurar contraste en móvil */
     color-scheme: dark;
@@ -541,5 +669,140 @@
   /* Reducir brillo de elementos en dark mode */
   .dark [class*='shadow'] {
     box-shadow: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Landscape - Component Specific Optimizations
+   ───────────────────────────────────────────────────────────── */
+
+/* Booking cards en landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  .booking-card,
+  [class*='booking'] {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: 1rem;
+  }
+
+  .booking-card img {
+    aspect-ratio: 4/3;
+    object-fit: cover;
+  }
+}
+
+/* Car cards optimizados para landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  .car-card,
+  [class*='car-card'] {
+    display: grid;
+    grid-template-columns: 35% 65%;
+    gap: 0.75rem;
+  }
+
+  .car-card img {
+    aspect-ratio: 3/2;
+  }
+
+  .car-card .card-content {
+    padding: 0.5rem;
+  }
+}
+
+/* Profile/Settings pages */
+@media (max-width: 768px) and (orientation: landscape) {
+  .profile-page,
+  .settings-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Dashboard widgets */
+@media (max-width: 768px) and (orientation: landscape) {
+  .dashboard-widget,
+  .stat-card {
+    min-height: auto !important;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Chat/Messaging interfaces */
+@media (max-width: 768px) and (orientation: landscape) {
+  .chat-container {
+    height: calc(100vh - 120px) !important;
+  }
+
+  .message-input {
+    padding: 0.5rem;
+  }
+
+  .message-bubble {
+    max-width: 60%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Video players en landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  video,
+  iframe[src*='youtube'],
+  iframe[src*='vimeo'] {
+    height: 70vh !important;
+  }
+}
+
+/* Filter panels/Sidebars */
+@media (max-width: 768px) and (orientation: landscape) {
+  .filters-panel,
+  .sidebar {
+    width: 50vw;
+    max-width: 400px;
+  }
+}
+
+/* Search bars en landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  .search-bar,
+  [class*='search'] {
+    height: 36px;
+    font-size: 0.875rem;
+  }
+
+  .search-bar input {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Tabs navigation */
+@media (max-width: 768px) and (orientation: landscape) {
+  .tabs,
+  [role='tablist'] {
+    gap: 0.5rem;
+    padding: 0.25rem;
+  }
+
+  .tab,
+  [role='tab'] {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+
+@supports (height: 100svh) {
+  @media (max-width: 768px) {
+    .app-main {
+      min-height: calc(100svh - var(--safe-area-top));
+    }
+
+    body {
+      min-height: 100svh;
+    }
   }
 }

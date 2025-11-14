@@ -26,6 +26,8 @@ interface NotificationRow {
   metadata?: Record<string, unknown> | null;
 }
 
+type NotificationListItem = NotificationItem & { dbType: string };
+
 @Injectable({
   providedIn: 'root',
 })
@@ -231,18 +233,8 @@ export class NotificationsService implements OnDestroy {
     await this.subscribeToRealtime();
   }
 
-  private addNotification(notificationData: unknown) {
-    const notification: NotificationItem = {
-      id: (notificationData as any).id,
-      title: (notificationData as any).title,
-      message: (notificationData as any).body, // DB column is 'body'
-      type: this.mapNotificationType((notificationData as any).type),
-      read: false,
-      createdAt: new Date((notificationData as any).created_at),
-      actionUrl: (notificationData as any).cta_link, // DB column is 'cta_link'
-      actionText: 'Ver detalles', // Default action text
-      metadata: (notificationData as any).metadata,
-    };
+  private addNotification(notificationData: NotificationRow) {
+    const notification = this.mapNotification(notificationData, false);
 
     const current = this.notifications();
     this.notifications.set([notification, ...current]);
@@ -250,6 +242,32 @@ export class NotificationsService implements OnDestroy {
 
     // Mostrar notificación push si está disponible
     this.showBrowserNotification(notification);
+  }
+
+  private mapNotification(
+    notification: NotificationRow,
+    preserveReadState: boolean = true,
+  ): NotificationItem {
+    return {
+      id: notification.id,
+      title: notification.title,
+      message: notification.body,
+      type: this.mapNotificationType(notification.type),
+      read: preserveReadState ? notification.is_read ?? false : false,
+      createdAt: new Date(notification.created_at),
+      actionUrl: notification.cta_link ?? undefined,
+      actionText: 'Ver detalles',
+      metadata: notification.metadata ?? undefined,
+    };
+  }
+
+  private mapNotificationWithDbType(
+    notification: NotificationRow,
+  ): NotificationListItem {
+    return {
+      ...this.mapNotification(notification),
+      dbType: notification.type,
+    };
   }
 
   // Map database notification types to UI types
@@ -322,11 +340,11 @@ export class NotificationsService implements OnDestroy {
   // Notificaciones push del navegador
   private async showBrowserNotification(notification: NotificationItem) {
     if ('Notification' in window && Notification.permission === 'granted') {
-      const browserNotification = new Notification((notification as any).title, {
-        body: (notification as any).message,
+      const browserNotification = new Notification(notification.title, {
+        body: notification.message,
         icon: '/assets/icons/icon-192x192.png',
         badge: '/assets/icons/icon-192x192.png',
-        tag: (notification as any).id, // Evita duplicados
+        tag: notification.id,
       });
 
       browserNotification.onclick = () => {
@@ -369,17 +387,21 @@ export class NotificationsService implements OnDestroy {
         .from('notifications')
         .insert({
           user_id: userId,
-          title: (notification as any).title,
-          body: (notification as any).message, // DB column is 'body'
-          type: dbType, // Use the database notification type enum
-          cta_link: notification.actionUrl, // DB column is 'cta_link'
-          metadata: (notification as any).metadata,
+          title: notification.title,
+          body: notification.message,
+          type: dbType,
+          is_read: false,
+          cta_link: notification.actionUrl || null,
+          metadata: notification.metadata || {},
         })
-        .select()
+        .select('*')
         .single();
 
       if (error) throw error as Error;
-      return data;
+      if (data) {
+        this.addNotification(data as NotificationRow);
+      }
+      return data as NotificationRow;
     } catch (_error) {
       console.error('Error creating notification:', _error);
       throw _error as Error;
@@ -546,22 +568,11 @@ export class NotificationsService implements OnDestroy {
       if (limit) query = query.limit(limit);
       if (offset) query = query.range(offset, offset + (limit || 50) - 1);
 
-      const { data, error } = await query;
+      const { data, error } = await query.returns<NotificationRow[]>();
 
       if (error) throw error as Error;
 
-      return (data || []).map((notification: unknown) => ({
-        id: (notification as any).id,
-        title: (notification as any).title,
-        message: (notification as any).body,
-        type: this.mapNotificationType((notification as any).type),
-        read: (notification as any).is_read || false,
-        createdAt: new Date((notification as any).created_at),
-        actionUrl: (notification as any).cta_link,
-        actionText: 'Ver detalles',
-        metadata: (notification as any).metadata,
-        dbType: (notification as any).type, // Keep original DB type for filtering
-      }));
+      return (data || []).map((notification) => this.mapNotificationWithDbType(notification));
     } catch (_error) {
       console.error('Error loading all notifications:', _error);
       return [];
@@ -585,22 +596,11 @@ export class NotificationsService implements OnDestroy {
         query = query.eq('type', dbType);
       }
 
-      const { data, error } = await query;
+      const { data, error } = await query.returns<NotificationRow[]>();
 
       if (error) throw error as Error;
 
-      return (data || []).map((notification: unknown) => ({
-        id: (notification as any).id,
-        title: (notification as any).title,
-        message: (notification as any).body,
-        type: this.mapNotificationType((notification as any).type),
-        read: (notification as any).is_read || false,
-        createdAt: new Date((notification as any).created_at),
-        actionUrl: (notification as any).cta_link,
-        actionText: 'Ver detalles',
-        metadata: (notification as any).metadata,
-        dbType: (notification as any).type,
-      }));
+      return (data || []).map((notification) => this.mapNotificationWithDbType(notification));
     } catch (_error) {
       console.error('Error filtering notifications:', _error);
       return [];

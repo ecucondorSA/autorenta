@@ -174,11 +174,11 @@ export class VehicleDocumentsService {
       this.carOwnerNotifications.notifyDocumentStatusChanged(
         documentType,
         carName,
-        'verified' as any, // Se acaba de subir, está pendiente
+        'verified',
         undefined,
         documentsUrl,
       );
-    } catch (error) {
+    } catch {
       // Silently fail
     }
   }

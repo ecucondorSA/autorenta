@@ -20,6 +20,190 @@ interface TokenResponse {
   scope: string;
 }
 
+/**
+ * ✅ NEW: Create Google Calendars for all user's cars
+ * This function is called after successful OAuth to automatically
+ * create a dedicated calendar for each car the user owns
+ */
+async function createCalendarsForUserCars(
+  userId: string,
+  accessToken: string,
+  supabase: any
+): Promise<void> {
+  console.log('🚀 Creating calendars for user cars:', userId);
+
+  // Get all cars owned by the user
+  const { data: userCars, error: carsError } = await supabase
+    .from('cars')
+    .select('id, brand, model, year, title')
+    .eq('owner_id', userId);
+
+  if (carsError) {
+    console.error('❌ Error fetching user cars:', carsError);
+    throw new Error('Failed to fetch user cars');
+  }
+
+  if (!userCars || userCars.length === 0) {
+    console.log('ℹ️ User has no cars, skipping calendar creation');
+    return;
+  }
+
+  console.log(`📋 Found ${userCars.length} car(s) for user`);
+
+  // Process each car
+  for (const car of userCars) {
+    try {
+      // Check if calendar already exists for this car
+      const { data: existingCalendar } = await supabase
+        .from('car_google_calendars')
+        .select('car_id')
+        .eq('car_id', car.id)
+        .single();
+
+      if (existingCalendar) {
+        console.log(`⏭️ Calendar already exists for car ${car.id}`);
+        continue;
+      }
+
+      // Create calendar name
+      const carName = car.title || `${car.brand || ''} ${car.model || ''} ${car.year || ''}`.trim();
+      const calendarName = `Autorenta - ${carName}`;
+
+      console.log(`📅 Creating calendar: "${calendarName}"`);
+
+      // Create calendar in Google
+      const createResponse = await fetch(
+        'https://www.googleapis.com/calendar/v3/calendars',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            summary: calendarName,
+            description: `Calendario de disponibilidad para ${carName}`,
+            timeZone: 'America/Argentina/Buenos_Aires',
+          }),
+        }
+      );
+
+      if (!createResponse.ok) {
+        const error = await createResponse.text();
+        console.error(`❌ Failed to create calendar for car ${car.id}:`, error);
+        continue; // Skip to next car
+      }
+
+      const newCalendar = await createResponse.json();
+      console.log(`✅ Calendar created with ID: ${newCalendar.id}`);
+
+      // Make calendar public (reader access for everyone)
+      try {
+        await makeCalendarPublic(newCalendar.id, accessToken);
+        console.log(`🌐 Calendar made public: ${newCalendar.id}`);
+      } catch (aclError) {
+        console.error(`⚠️ Failed to make calendar public (non-fatal):`, aclError);
+        // Continue - calendar is created but not public
+      }
+
+      // Save calendar to database
+      const { error: insertError } = await supabase.from('car_google_calendars').insert({
+        car_id: car.id,
+        google_calendar_id: newCalendar.id,
+        calendar_name: calendarName,
+        owner_id: userId,
+        sync_enabled: true,
+        created_at: new Date().toISOString(),
+      });
+
+      if (insertError) {
+        console.error(`❌ Failed to save calendar to DB for car ${car.id}:`, insertError);
+        // Try to delete the created calendar to avoid orphans
+        try {
+          await fetch(
+            `https://www.googleapis.com/calendar/v3/calendars/${newCalendar.id}`,
+            {
+              method: 'DELETE',
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+        } catch (deleteError) {
+          console.error('Failed to cleanup orphaned calendar:', deleteError);
+        }
+        continue;
+      }
+
+      console.log(`✅ Calendar saved to database for car ${car.id}`);
+    } catch (error) {
+      console.error(`❌ Error processing car ${car.id}:`, error);
+      // Continue with next car
+    }
+  }
+
+  console.log('✅ Calendar creation completed');
+}
+
+/**
+ * ✅ NEW: Make a Google Calendar public (reader access for everyone)
+ * This allows the calendar to be embedded in iframes without authentication
+ */
+async function makeCalendarPublic(calendarId: string, accessToken: string): Promise<void> {
+  console.log(`🔓 Making calendar public: ${calendarId}`);
+  
+  // Step 1: Add ACL rule for public read access
+  const aclResponse = await fetch(
+    `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/acl`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        role: 'reader', // Read-only access
+        scope: {
+          type: 'default', // Public for everyone
+        },
+      }),
+    }
+  );
+
+  if (!aclResponse.ok) {
+    const error = await aclResponse.text();
+    console.error(`❌ ACL creation failed:`, error);
+    throw new Error(`ACL creation failed: ${error}`);
+  }
+
+  const aclResult = await aclResponse.json();
+  console.log(`✅ ACL rule added:`, aclResult);
+
+  // Step 2: Update calendar settings to ensure it's publicly accessible
+  const updateResponse = await fetch(
+    `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        // Ensure calendar is visible and accessible
+        description: 'Calendario público de disponibilidad de Autorenta',
+      }),
+    }
+  );
+
+  if (!updateResponse.ok) {
+    const error = await updateResponse.text();
+    console.error(`⚠️ Calendar update warning:`, error);
+    // Non-fatal error, ACL is more important
+  } else {
+    console.log(`✅ Calendar settings updated`);
+  }
+
+  console.log(`🌐 Calendar ${calendarId} is now public`);
+}
+
 serve(async (req) => {
   // CORS headers
   const corsHeaders = {
@@ -179,6 +363,14 @@ serve(async (req) => {
 
       console.log('✅ Tokens saved to database');
 
+      // ✅ NEW: Create Google Calendars for all user's cars
+      try {
+        await createCalendarsForUserCars(callbackUserId, tokens.access_token, supabase);
+      } catch (calendarError) {
+        console.error('⚠️ Error creating calendars (non-fatal):', calendarError);
+        // Continue - this is not critical for OAuth success
+      }
+
       // Log successful connection
       await supabase.from('calendar_sync_log').insert({
         user_id: callbackUserId,
@@ -187,7 +379,7 @@ serve(async (req) => {
         sync_direction: 'to_google',
       });
 
-      // Return HTML page that closes popup and redirects parent window
+      // Return HTML page that closes popup and notifies parent window
       const successHtml = `
         <!DOCTYPE html>
         <html>
@@ -233,13 +425,43 @@ serve(async (req) => {
               <p>Cerrando ventana...</p>
             </div>
             <script>
-              // Close popup and redirect parent window
-              if (window.opener) {
-                window.opener.location.href = '${FRONTEND_URL}/profile?calendar_connected=true';
-                window.close();
-              } else {
-                // Fallback: direct redirect if not in popup
-                window.location.href = '${FRONTEND_URL}/profile?calendar_connected=true';
+              console.log('OAuth callback page loaded');
+              console.log('window.opener exists:', !!window.opener);
+              
+              // Try multiple methods to close the popup
+              try {
+                // Method 1: Send postMessage to parent window
+                if (window.opener) {
+                  console.log('Sending postMessage to opener');
+                  window.opener.postMessage(
+                    { type: 'GOOGLE_CALENDAR_CONNECTED', success: true },
+                    '${FRONTEND_URL}'
+                  );
+                  
+                  // Give postMessage time to send, then close
+                  setTimeout(() => {
+                    console.log('Attempting to close popup');
+                    window.close();
+                    
+                    // If window.close() didn't work, try redirect
+                    setTimeout(() => {
+                      if (!window.closed) {
+                        console.log('Popup still open, redirecting');
+                        window.location.href = '${FRONTEND_URL}/profile/calendar?connected=true';
+                      }
+                    }, 500);
+                  }, 1000);
+                } else {
+                  // Not in popup, direct redirect
+                  console.log('No opener, redirecting directly');
+                  window.location.href = '${FRONTEND_URL}/profile/calendar?connected=true';
+                }
+              } catch (error) {
+                console.error('Error in OAuth callback:', error);
+                // Fallback: redirect after delay
+                setTimeout(() => {
+                  window.location.href = '${FRONTEND_URL}/profile/calendar?connected=true';
+                }, 2000);
               }
             </script>
           </body>

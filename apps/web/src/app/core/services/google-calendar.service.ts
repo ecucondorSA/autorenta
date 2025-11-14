@@ -123,11 +123,36 @@ export class GoogleCalendarService {
           throw new Error('Failed to open popup. Please allow popups for this site.');
         }
 
-        // Poll for popup closure
+        // Listen for postMessage from OAuth callback
         return new Observable<void>((observer) => {
-          const pollInterval = setInterval(() => {
-            if (popup.closed) {
+          let completed = false;
+
+          const messageHandler = (event: MessageEvent) => {
+            // Verify origin for security
+            if (!event.origin.includes('supabase.co') && event.origin !== window.location.origin) {
+              return;
+            }
+
+            // Check if this is our calendar connection message
+            if (event.data?.type === 'GOOGLE_CALENDAR_CONNECTED') {
+              console.log('✅ Received calendar connection confirmation via postMessage');
+              completed = true;
+              window.removeEventListener('message', messageHandler);
               clearInterval(pollInterval);
+              observer.next();
+              observer.complete();
+            }
+          };
+
+          // Add message listener
+          window.addEventListener('message', messageHandler);
+
+          // Fallback: Poll for popup closure (in case postMessage fails)
+          const pollInterval = setInterval(() => {
+            if (popup.closed && !completed) {
+              console.log('📭 Popup closed without postMessage, assuming success');
+              clearInterval(pollInterval);
+              window.removeEventListener('message', messageHandler);
               observer.next();
               observer.complete();
             }
@@ -136,11 +161,14 @@ export class GoogleCalendarService {
           // Timeout after 5 minutes
           setTimeout(
             () => {
-              clearInterval(pollInterval);
-              if (!popup.closed) {
-                popup.close();
+              if (!completed) {
+                clearInterval(pollInterval);
+                window.removeEventListener('message', messageHandler);
+                if (!popup.closed) {
+                  popup.close();
+                }
+                observer.error(new Error('Authorization timeout'));
               }
-              observer.error(new Error('Authorization timeout'));
             },
             5 * 60 * 1000,
           );
@@ -300,7 +328,7 @@ export class GoogleCalendarService {
       catchError((error) => {
         console.error('Error getting car calendar availability:', error);
         // Return fallback response on error
-        return throwError<CarCalendarAvailability>(() => ({
+        return throwError(() => ({
           available: true,
           blocked_dates: [],
           events: [],

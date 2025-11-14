@@ -770,12 +770,6 @@
     <router-outlet></router-outlet>
   </main>
 
-  <!-- Mobile Bottom Navigation (solo móvil) -->
-  <app-mobile-bottom-nav></app-mobile-bottom-nav>
-
-  <!-- PWA Install Banner - Minimalista y menos intrusivo que pwa-install-prompt -->
-  <app-pwa-install-banner></app-pwa-install-banner>
-
   <!-- Floating Comparison Badge (ajustado para no chocar con bottom nav) -->
   <a
     *ngIf="compareCountSig() > 0"
@@ -797,3 +791,9 @@
   <!-- Footer Profesional (oculto en móvil, visible en desktop) -->
   <app-footer class="hidden md:block"></app-footer>
 </div>
+
+<!-- Mobile Bottom Navigation (solo móvil) - Renderizado via Portal Service directamente en body -->
+<!-- El componente se crea dinámicamente en app.component.ts usando MobileBottomNavPortalService -->
+
+<!-- PWA Install Banner - Minimalista y menos intrusivo que pwa-install-prompt -->
+<app-pwa-install-banner></app-pwa-install-banner>

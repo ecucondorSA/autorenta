@@ -33,6 +33,7 @@ import { MapDrawerComponent } from '../../shared/components/map-drawer/map-drawe
 import { StickyCtaMobileComponent } from '../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { CarsService } from '../../core/services/cars.service';
+import { BreakpointService } from '../../core/services/breakpoint.service';
 import { Car } from '../../core/models';
 import type { CarMapLocation } from '../../core/services/car-locations.service';
 
@@ -71,7 +72,7 @@ export class ExplorePage implements OnInit, AfterViewInit, OnDestroy {
   // State signals
   readonly selectedCarId = signal<string | null>(null);
   readonly isDrawerOpen = signal(false);
-  readonly isMobileView = signal(false);
+  readonly isMobileView;
   readonly currentFilters = signal<FilterState | null>(null);
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
 
@@ -109,13 +110,14 @@ export class ExplorePage implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private carsService: CarsService,
     private router: Router,
+    private breakpoint: BreakpointService,
   ) {
     addIcons({ optionsOutline, locateOutline });
+    // Usar BreakpointService en lugar de window.innerWidth
+    this.isMobileView = this.breakpoint.isMobile;
   }
 
   ngOnInit() {
-    this.detectMobileView();
-    window.addEventListener('resize', () => this.detectMobileView());
     this.loadCars();
     this.getUserLocation();
   }
@@ -127,14 +129,7 @@ export class ExplorePage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    window.removeEventListener('resize', () => this.detectMobileView());
-  }
-
-  /**
-   * Detect mobile screen size
-   */
-  private detectMobileView(): void {
-    this.isMobileView.set(window.innerWidth < 768);
+    // No cleanup needed - BreakpointService maneja los listeners
   }
 
   async loadCars() {

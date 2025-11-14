@@ -61,6 +61,25 @@ npm run dev              # Angular + Payment webhook
 # - Worker: http://localhost:8787
 ```
 
+### Supabase Local (Docker)
+
+```bash
+# Requisitos previos
+sudo systemctl start docker   # Asegúrate de que Docker daemon esté activo
+supabase start                # Levanta Postgres, auth, storage, realtime, etc.
+supabase status               # Muestra URLs locales y llaves
+supabase stop                 # Apaga y respalda los contenedores
+```
+
+- Base de datos local: `postgresql://postgres:postgres@127.0.0.1:54322/postgres`
+- API Gateway (Kong): `http://127.0.0.1:54321`
+- Studio: `http://127.0.0.1:54323`
+- Mailpit: `http://127.0.0.1:54324`
+
+La CLI crea contenedores `supabase_*_autorenta` y los marca como saludables. Si ves servicios "Stopped" en `supabase status` (por ejemplo `imgproxy` o `pooler`), es normal: solo arrancan cuando se necesitan. Recuerda ejecutar `supabase stop` para liberar recursos antes de limpiar Docker o apagar la máquina.
+
+
+
 ### Comandos Principales
 
 ```bash

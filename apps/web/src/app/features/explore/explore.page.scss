@@ -11,7 +11,7 @@
   width: 100%;
   position: relative;
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     flex-direction: column;
   }
 }
@@ -96,7 +96,7 @@
   right: 16px;
   z-index: 30;
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     bottom: 120px;
   }
 }
@@ -112,7 +112,7 @@
   background: transparent;
   pointer-events: none;
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     padding: 12px 0 max(12px, env(safe-area-inset-bottom));
   }
 }
@@ -133,7 +133,7 @@
     display: none;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     padding: 0 16px 10px 16px;
     gap: 12px;
   }
@@ -183,7 +183,7 @@
     }
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     width: 290px;
 
     app-car-card {

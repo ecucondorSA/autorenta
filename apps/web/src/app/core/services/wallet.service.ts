@@ -1,6 +1,5 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { RealtimeChannel, SupabaseClient, PostgrestSingleResponse } from '@supabase/supabase-js';
-import { environment } from '@environment';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import type {
@@ -322,7 +321,12 @@ export class WalletService {
         },
         (payload) => {
           onTransaction(payload.new as WalletTransaction);
-          this.getBalance().subscribe();
+          this.getBalance().subscribe({
+            next: (balance) => onBalanceChange(balance),
+            error: (error) => {
+              this.logger.warn('Failed to refresh wallet balance after transaction', error);
+            },
+          });
         },
       )
       .subscribe();
