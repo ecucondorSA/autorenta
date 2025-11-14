@@ -1,7 +1,9 @@
-import { Component, output, signal, OnInit, PLATFORM_ID, inject, effect } from '@angular/core';
+import { Component, output, signal, OnInit, PLATFORM_ID, inject, effect, computed } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { UnreadMessagesService } from '../../../core/services/unread-messages.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 export interface NavItem {
   id: string;
@@ -448,6 +450,8 @@ export class BottomNavBarComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly unreadMessagesService = inject(UnreadMessagesService);
+  private readonly authService = inject(AuthService);
 
   // Outputs
   navClick = output<NavItem>();
@@ -456,6 +460,10 @@ export class BottomNavBarComponent implements OnInit {
   // State
   activeItem = signal('home');
   showDashboard = signal(false);
+
+  // Real-time unread counts
+  readonly unreadMessagesCount = computed(() => this.unreadMessagesService.totalUnreadCount());
+  readonly isAuthenticated = computed(() => !!this.authService.session$());
 
   constructor() {
     // Update active item based on route changes
@@ -497,15 +505,18 @@ export class BottomNavBarComponent implements OnInit {
     }
   }
 
-  // Navigation items (6 buttons)
-  navItems: NavItem[] = [
-    { id: 'home', label: 'Inicio', icon: '🏠', route: '/home-v2' },
-    { id: 'cars', label: 'Autos', icon: '🚗', badge: 3, route: '/cars' },
-    { id: 'bookings', label: 'Reservas', icon: '📅', badge: 2, route: '/bookings' },
-    { id: 'wallet', label: 'Billetera', icon: '💰', route: '/wallet' },
-    { id: 'messages', label: 'Mensajes', icon: '💬', badge: 5, route: '/messages/inbox' },
-    { id: 'profile', label: 'Perfil', icon: '👤', route: '/profile' },
-  ];
+  // Navigation items (6 buttons) with real-time counts
+  readonly navItems = computed<NavItem[]>(() => {
+    const unreadCount = this.unreadMessagesCount();
+    return [
+      { id: 'home', label: 'Inicio', icon: '🏠', route: '/home-v2' },
+      { id: 'cars', label: 'Autos', icon: '🚗', badge: 3, route: '/cars' },
+      { id: 'bookings', label: 'Reservas', icon: '📅', badge: 2, route: '/bookings' },
+      { id: 'wallet', label: 'Billetera', icon: '💰', route: '/wallet' },
+      { id: 'messages', label: 'Mensajes', icon: '💬', badge: unreadCount || undefined, route: '/messages/inbox' },
+      { id: 'profile', label: 'Perfil', icon: '👤', route: '/profile' },
+    ];
+  });
 
   // Dashboard items (3x4 grid = 12 items)
   dashboardItems: DashboardItem[] = [
