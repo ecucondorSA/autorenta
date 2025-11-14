@@ -160,7 +160,7 @@ export class RealtimePricingService {
           }
         },
       )
-      .subscribe((status) => {
+      .subscribe((_status) => {
         // Status handled by isConnected and connectionStatus signals
         // No specific action needed here
       });

@@ -1,5 +1,14 @@
 import { Injectable, signal } from '@angular/core';
 
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+}
+
+type NavigatorWithStandalone = Navigator & { standalone?: boolean };
+type WindowWithMSStream = Window & { MSStream?: unknown };
+
 /**
  * 📲 PWA Install Service
  *
@@ -9,7 +18,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class PwaInstallService {
-  private deferredPrompt: any = null;
+  private deferredPrompt: BeforeInstallPromptEvent | null = null;
 
   // Señales reactivas
   readonly canInstall = signal(false);
@@ -25,12 +34,13 @@ export class PwaInstallService {
    * Inicializa el evento de instalación
    */
   private initializeInstallPrompt(): void {
-    window.addEventListener('beforeinstallprompt', (e: unknown) => {
+    window.addEventListener('beforeinstallprompt', (event: Event) => {
+      const beforeInstallPrompt = event as BeforeInstallPromptEvent;
       // Prevenir el prompt automático de Chrome
-      (e as Event).preventDefault();
+      beforeInstallPrompt.preventDefault();
 
       // Guardar el evento para usarlo después
-      this.deferredPrompt = e;
+      this.deferredPrompt = beforeInstallPrompt;
       this.canInstall.set(true);
 
       console.log('✅ PWA instalable detectada');
@@ -69,7 +79,8 @@ export class PwaInstallService {
     }
 
     // Detecta si es iOS instalado
-    if ((window.navigator as any).standalone === true) {
+    const navigatorWithStandalone = window.navigator as NavigatorWithStandalone;
+    if (navigatorWithStandalone.standalone === true) {
       this.isInstalled.set(true);
       console.log('✅ App ya instalada (iOS standalone)');
     }
@@ -134,7 +145,8 @@ export class PwaInstallService {
     const ua = navigator.userAgent;
 
     // iOS Safari
-    if (/iPad|iPhone|iPod/.test(ua) && !(window as any).MSStream) {
+    const windowWithMsStream = window as WindowWithMSStream;
+    if (/iPad|iPhone|iPod/.test(ua) && !windowWithMsStream.MSStream) {
       return {
         browser: 'Safari iOS',
         instructions: [

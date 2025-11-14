@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 2
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -46,7 +48,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "setup:visitor",
         "name": "setup:visitor",
         "testDir": "/home/edu/autorenta/tests",
@@ -60,7 +64,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "setup:renter",
         "name": "setup:renter",
         "testDir": "/home/edu/autorenta/tests",
@@ -74,7 +80,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "setup:owner",
         "name": "setup:owner",
         "testDir": "/home/edu/autorenta/tests",
@@ -88,7 +96,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "setup:admin",
         "name": "setup:admin",
         "testDir": "/home/edu/autorenta/tests",
@@ -102,7 +112,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium:auth",
         "name": "chromium:auth",
         "testDir": "/home/edu/autorenta/tests",
@@ -116,7 +128,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium:e2e",
         "name": "chromium:e2e",
         "testDir": "/home/edu/autorenta/tests",
@@ -130,7 +144,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium:wallet-ui",
         "name": "chromium:wallet-ui",
         "testDir": "/home/edu/autorenta/tests",
@@ -144,7 +160,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium:wallet",
         "name": "chromium:wallet",
         "testDir": "/home/edu/autorenta/tests",
@@ -158,7 +176,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium:visitor",
         "name": "chromium:visitor",
         "testDir": "/home/edu/autorenta/tests",
@@ -172,7 +192,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium:renter",
         "name": "chromium:renter",
         "testDir": "/home/edu/autorenta/tests",
@@ -186,7 +208,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium:owner",
         "name": "chromium:owner",
         "testDir": "/home/edu/autorenta/tests",
@@ -200,7 +224,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium:admin",
         "name": "chromium:admin",
         "testDir": "/home/edu/autorenta/tests",
@@ -214,7 +240,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "mobile-safari:renter",
         "name": "mobile-safari:renter",
         "testDir": "/home/edu/autorenta/tests",
@@ -228,7 +256,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "mobile-chrome:owner",
         "name": "mobile-chrome:owner",
         "testDir": "/home/edu/autorenta/tests",
@@ -242,7 +272,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium:dark-mode",
         "name": "chromium:dark-mode",
         "testDir": "/home/edu/autorenta/tests",
@@ -256,7 +288,9 @@
         "outputDir": "/home/edu/autorenta/test-results/artifacts",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "webkit:visual",
         "name": "webkit:visual",
         "testDir": "/home/edu/autorenta/tests",
@@ -280,19 +314,426 @@
       "cwd": "./apps/web"
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments.",
-      "stack": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments."
+      "title": "e2e/google-calendar-full-flow.spec.ts",
+      "file": "e2e/google-calendar-full-flow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Google Calendar Integration",
+          "file": "e2e/google-calendar-full-flow.spec.ts",
+          "line": 13,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should connect Google Calendar from profile page",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium:e2e",
+                  "projectName": "chromium:e2e",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 40971,
+                      "error": {
+                        "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================",
+                        "stack": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================\n    at /home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts:20:16",
+                        "location": {
+                          "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                          "column": 16,
+                          "line": 20
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[type=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mTEST_USER_PASSWORD\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m   test(\u001b[32m'should connect Google Calendar from profile page'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                            "column": 16,
+                            "line": 20
+                          },
+                          "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================\n\n\u001b[0m \u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[type=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mTEST_USER_PASSWORD\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m   test(\u001b[32m'should connect Google Calendar from profile page'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts:20:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-14T15:08:08.161Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-4c466--Calendar-from-profile-page-chromium-e2e/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-4c466--Calendar-from-profile-page-chromium-e2e/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-4c466--Calendar-from-profile-page-chromium-e2e/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-4c466--Calendar-from-profile-page-chromium-e2e/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                        "column": 16,
+                        "line": 20
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce6810968fda928ccc35-7fedeff9cecac7e9708d",
+              "file": "e2e/google-calendar-full-flow.spec.ts",
+              "line": 23,
+              "column": 7
+            },
+            {
+              "title": "should display calendar in car detail page",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium:e2e",
+                  "projectName": "chromium:e2e",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 41364,
+                      "error": {
+                        "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================",
+                        "stack": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================\n    at /home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts:20:16",
+                        "location": {
+                          "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                          "column": 16,
+                          "line": 20
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[type=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mTEST_USER_PASSWORD\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m   test(\u001b[32m'should connect Google Calendar from profile page'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                            "column": 16,
+                            "line": 20
+                          },
+                          "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================\n\n\u001b[0m \u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[type=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mTEST_USER_PASSWORD\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m   test(\u001b[32m'should connect Google Calendar from profile page'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts:20:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-14T15:08:08.167Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-7544f-calendar-in-car-detail-page-chromium-e2e/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-7544f-calendar-in-car-detail-page-chromium-e2e/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-7544f-calendar-in-car-detail-page-chromium-e2e/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-7544f-calendar-in-car-detail-page-chromium-e2e/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                        "column": 16,
+                        "line": 20
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce6810968fda928ccc35-5c4288d7bea72a67e17b",
+              "file": "e2e/google-calendar-full-flow.spec.ts",
+              "line": 49,
+              "column": 7
+            },
+            {
+              "title": "should sync booking to Google Calendar",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium:e2e",
+                  "projectName": "chromium:e2e",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "interrupted",
+                      "duration": 31126,
+                      "error": {
+                        "message": "Error: page.waitForURL: Test ended.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================",
+                        "stack": "Error: page.waitForURL: Test ended.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================\n    at /home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts:20:16",
+                        "location": {
+                          "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                          "column": 16,
+                          "line": 20
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[type=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mTEST_USER_PASSWORD\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m   test(\u001b[32m'should connect Google Calendar from profile page'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                            "column": 16,
+                            "line": 20
+                          },
+                          "message": "Error: page.waitForURL: Test ended.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================\n\n\u001b[0m \u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[type=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mTEST_USER_PASSWORD\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m   test(\u001b[32m'should connect Google Calendar from profile page'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts:20:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-14T15:08:51.295Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-53b3b--booking-to-Google-Calendar-chromium-e2e/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-53b3b--booking-to-Google-Calendar-chromium-e2e/video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-53b3b--booking-to-Google-Calendar-chromium-e2e/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                        "column": 16,
+                        "line": 20
+                      }
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ce6810968fda928ccc35-7e76b4512dc283cd79a8",
+              "file": "e2e/google-calendar-full-flow.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "should display calendar management panel in profile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium:e2e",
+                  "projectName": "chromium:e2e",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "interrupted",
+                      "duration": 31048,
+                      "error": {
+                        "message": "Error: page.waitForURL: Test ended.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================",
+                        "stack": "Error: page.waitForURL: Test ended.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================\n    at /home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts:20:16",
+                        "location": {
+                          "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                          "column": 16,
+                          "line": 20
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[type=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mTEST_USER_PASSWORD\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m   test(\u001b[32m'should connect Google Calendar from profile page'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                            "column": 16,
+                            "line": 20
+                          },
+                          "message": "Error: page.waitForURL: Test ended.\n=========================== logs ===========================\nwaiting for navigation to \"/\" until \"load\"\n============================================================\n\n\u001b[0m \u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[type=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mTEST_USER_PASSWORD\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m\n \u001b[90m 23 |\u001b[39m   test(\u001b[32m'should connect Google Calendar from profile page'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts:20:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-14T15:08:51.470Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-8b579-management-panel-in-profile-chromium-e2e/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-8b579-management-panel-in-profile-chromium-e2e/video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-google-calendar-full-f-8b579-management-panel-in-profile-chromium-e2e/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/tests/e2e/google-calendar-full-flow.spec.ts",
+                        "column": 16,
+                        "line": 20
+                      }
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ce6810968fda928ccc35-f6843b47fd7ed3662a5f",
+              "file": "e2e/google-calendar-full-flow.spec.ts",
+              "line": 126,
+              "column": 7
+            },
+            {
+              "title": "should handle calendar availability data",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium:e2e",
+                  "projectName": "chromium:e2e",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ce6810968fda928ccc35-f235dc1db2d0f5db80e2",
+              "file": "e2e/google-calendar-full-flow.spec.ts",
+              "line": 165,
+              "column": 7
+            },
+            {
+              "title": "should verify calendar OAuth callback",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium:e2e",
+                  "projectName": "chromium:e2e",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ce6810968fda928ccc35-a903dcded296fb374fa9",
+              "file": "e2e/google-calendar-full-flow.spec.ts",
+              "line": 200,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Google Calendar - Integration Scenarios",
+          "file": "e2e/google-calendar-full-flow.spec.ts",
+          "line": 221,
+          "column": 6,
+          "specs": [
+            {
+              "title": "scenario: owner publishes car with calendar sync",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium:e2e",
+                  "projectName": "chromium:e2e",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ce6810968fda928ccc35-fc6e51beb81f24fae6c3",
+              "file": "e2e/google-calendar-full-flow.spec.ts",
+              "line": 222,
+              "column": 7
+            },
+            {
+              "title": "scenario: renter sees availability and books",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium:e2e",
+                  "projectName": "chromium:e2e",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ce6810968fda928ccc35-3a7379ad8287692801ef",
+              "file": "e2e/google-calendar-full-flow.spec.ts",
+              "line": 242,
+              "column": 7
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2025-11-14T09:52:19.690Z",
-    "duration": 117.43600000000004,
+    "startTime": "2025-11-14T15:08:07.068Z",
+    "duration": 76948.919,
     "expected": 0,
-    "skipped": 0,
-    "unexpected": 0,
+    "skipped": 6,
+    "unexpected": 2,
     "flaky": 0
   }
 }

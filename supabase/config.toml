@@ -15,8 +15,9 @@ verify_jwt = false
 verify_jwt = true
 
 [functions.google-calendar-oauth]
-# Requires JWT verification (user must be authenticated)
-verify_jwt = true
+# Disable JWT verification for OAuth callback (Google redirects without JWT)
+# The callback handler validates the 'state' parameter instead
+verify_jwt = false
 
 [functions.sync-booking-to-calendar]
 # Requires JWT verification (user must be authenticated)

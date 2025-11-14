@@ -18,6 +18,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { MessageService } from 'primeng/api';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
@@ -25,7 +26,6 @@ import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor
 import { SupabaseClientService } from './core/services/supabase-client.service';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
 import { SentryErrorHandler } from './core/services/sentry.service';
-import { MessageService } from 'primeng/api';
 
 /**
  * Inicializa el servicio de monitoreo de performance

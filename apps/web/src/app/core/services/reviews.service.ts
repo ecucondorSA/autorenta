@@ -107,7 +107,7 @@ export class ReviewsService {
 
       // ✅ NUEVO: Notificar al dueño del auto sobre la nueva reseña (si es renter_to_owner)
       if (params.review_type === 'renter_to_owner') {
-        this.notifyOwnerOfNewReview(reviewId, params).catch((error) => {
+        this.notifyOwnerOfNewReview(reviewId, params).catch((_error) => {
           // Silently fail - notification is optional enhancement
         });
       }
@@ -601,7 +601,7 @@ export class ReviewsService {
 
       if (authError || !user?.id) throw new Error('Usuario no autenticado');
 
-      const { data, error } = await this.supabase.rpc('moderate_review', {
+      const { error } = await this.supabase.rpc('moderate_review', {
         p_review_id: reviewId,
         p_admin_id: user.id,
         p_action: action,
@@ -702,7 +702,7 @@ export class ReviewsService {
 
         this.carOwnerNotifications.notifyNewReview(reviewerName, avgRating, carName, reviewUrl);
       }
-    } catch (error) {
+    } catch (_error) {
       // Silently fail - notification is optional enhancement
     }
   }

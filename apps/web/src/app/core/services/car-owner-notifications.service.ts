@@ -419,7 +419,7 @@ export class CarOwnerNotificationsService {
     message: string,
     type: 'info' | 'success' | 'warning' | 'error',
     actionUrl?: string,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, unknown>,
   ): Promise<void> {
     try {
       const {

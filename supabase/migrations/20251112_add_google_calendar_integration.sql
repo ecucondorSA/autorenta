@@ -30,6 +30,12 @@ CREATE TABLE IF NOT EXISTS google_calendar_tokens (
 -- RLS Policies for google_calendar_tokens
 ALTER TABLE google_calendar_tokens ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Users can view their own calendar tokens" ON google_calendar_tokens;
+DROP POLICY IF EXISTS "Users can insert their own calendar tokens" ON google_calendar_tokens;
+DROP POLICY IF EXISTS "Users can update their own calendar tokens" ON google_calendar_tokens;
+DROP POLICY IF EXISTS "Users can delete their own calendar tokens" ON google_calendar_tokens;
+
 -- Users can only see and manage their own tokens
 CREATE POLICY "Users can view their own calendar tokens"
   ON google_calendar_tokens
@@ -52,8 +58,8 @@ CREATE POLICY "Users can delete their own calendar tokens"
   USING (auth.uid() = user_id);
 
 -- Index for faster lookups
-CREATE INDEX idx_google_calendar_tokens_user_id ON google_calendar_tokens(user_id);
-CREATE INDEX idx_google_calendar_tokens_expires_at ON google_calendar_tokens(expires_at);
+CREATE INDEX IF NOT EXISTS idx_google_calendar_tokens_user_id ON google_calendar_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_google_calendar_tokens_expires_at ON google_calendar_tokens(expires_at);
 
 -- ============================================================================
 -- 2. Car Calendars Table
@@ -80,13 +86,19 @@ CREATE TABLE IF NOT EXISTS car_google_calendars (
 -- RLS Policies for car_google_calendars
 ALTER TABLE car_google_calendars ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Car owners can view their car calendars" ON car_google_calendars;
+DROP POLICY IF EXISTS "Car owners can create car calendars" ON car_google_calendars;
+DROP POLICY IF EXISTS "Car owners can update their car calendars" ON car_google_calendars;
+DROP POLICY IF EXISTS "Car owners can delete their car calendars" ON car_google_calendars;
+
 -- Car owners can see their calendars
 CREATE POLICY "Car owners can view their car calendars"
   ON car_google_calendars
   FOR SELECT
   USING (
     owner_id = auth.uid() OR
-    car_id IN (SELECT id FROM cars WHERE user_id = auth.uid())
+    car_id IN (SELECT id FROM cars WHERE owner_id = auth.uid())
   );
 
 -- Car owners can create calendars for their cars
@@ -95,7 +107,7 @@ CREATE POLICY "Car owners can create car calendars"
   FOR INSERT
   WITH CHECK (
     owner_id = auth.uid() AND
-    car_id IN (SELECT id FROM cars WHERE user_id = auth.uid())
+    car_id IN (SELECT id FROM cars WHERE owner_id = auth.uid())
   );
 
 -- Car owners can update their car calendars
@@ -104,7 +116,7 @@ CREATE POLICY "Car owners can update their car calendars"
   FOR UPDATE
   USING (
     owner_id = auth.uid() OR
-    car_id IN (SELECT id FROM cars WHERE user_id = auth.uid())
+    car_id IN (SELECT id FROM cars WHERE owner_id = auth.uid())
   );
 
 -- Car owners can delete their car calendars
@@ -113,13 +125,13 @@ CREATE POLICY "Car owners can delete their car calendars"
   FOR DELETE
   USING (
     owner_id = auth.uid() OR
-    car_id IN (SELECT id FROM cars WHERE user_id = auth.uid())
+    car_id IN (SELECT id FROM cars WHERE owner_id = auth.uid())
   );
 
 -- Indexes
-CREATE INDEX idx_car_google_calendars_car_id ON car_google_calendars(car_id);
-CREATE INDEX idx_car_google_calendars_owner_id ON car_google_calendars(owner_id);
-CREATE INDEX idx_car_google_calendars_google_calendar_id ON car_google_calendars(google_calendar_id);
+CREATE INDEX IF NOT EXISTS idx_car_google_calendars_car_id ON car_google_calendars(car_id);
+CREATE INDEX IF NOT EXISTS idx_car_google_calendars_owner_id ON car_google_calendars(owner_id);
+CREATE INDEX IF NOT EXISTS idx_car_google_calendars_google_calendar_id ON car_google_calendars(google_calendar_id);
 
 -- ============================================================================
 -- 3. Update Bookings Table
@@ -170,26 +182,29 @@ CREATE TABLE IF NOT EXISTS calendar_sync_log (
 -- RLS for calendar_sync_log
 ALTER TABLE calendar_sync_log ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policy if it exists
+DROP POLICY IF EXISTS "Users can view their own sync logs" ON calendar_sync_log;
+
 -- Users can see their own sync logs
 CREATE POLICY "Users can view their own sync logs"
   ON calendar_sync_log
   FOR SELECT
   USING (
     user_id = auth.uid() OR
-    car_id IN (SELECT id FROM cars WHERE user_id = auth.uid()) OR
+    car_id IN (SELECT id FROM cars WHERE owner_id = auth.uid()) OR
     booking_id IN (
       SELECT id FROM bookings
-      WHERE locatario_id = auth.uid() OR car_id IN (
-        SELECT id FROM cars WHERE user_id = auth.uid()
+      WHERE renter_id = auth.uid() OR car_id IN (
+        SELECT id FROM cars WHERE owner_id = auth.uid()
       )
     )
   );
 
 -- Indexes
-CREATE INDEX idx_calendar_sync_log_booking_id ON calendar_sync_log(booking_id);
-CREATE INDEX idx_calendar_sync_log_user_id ON calendar_sync_log(user_id);
-CREATE INDEX idx_calendar_sync_log_status ON calendar_sync_log(status);
-CREATE INDEX idx_calendar_sync_log_created_at ON calendar_sync_log(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_calendar_sync_log_booking_id ON calendar_sync_log(booking_id);
+CREATE INDEX IF NOT EXISTS idx_calendar_sync_log_user_id ON calendar_sync_log(user_id);
+CREATE INDEX IF NOT EXISTS idx_calendar_sync_log_status ON calendar_sync_log(status);
+CREATE INDEX IF NOT EXISTS idx_calendar_sync_log_created_at ON calendar_sync_log(created_at DESC);
 
 -- ============================================================================
 -- 5. Helper Functions
@@ -239,11 +254,13 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Triggers for updated_at
+DROP TRIGGER IF EXISTS update_google_calendar_tokens_timestamp ON google_calendar_tokens;
 CREATE TRIGGER update_google_calendar_tokens_timestamp
   BEFORE UPDATE ON google_calendar_tokens
   FOR EACH ROW
   EXECUTE FUNCTION update_calendar_sync_timestamp();
 
+DROP TRIGGER IF EXISTS update_car_google_calendars_timestamp ON car_google_calendars;
 CREATE TRIGGER update_car_google_calendars_timestamp
   BEFORE UPDATE ON car_google_calendars
   FOR EACH ROW

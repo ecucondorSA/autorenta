@@ -5,6 +5,10 @@ import { CarsService } from './cars.service';
 import { BookingsService } from './bookings.service';
 import { AuthService } from './auth.service';
 
+type CarWithEstimatedValue = {
+  estimated_value_usd?: number | null;
+};
+
 /**
  * CarDepreciationNotificationsService
  *
@@ -151,11 +155,12 @@ export class CarDepreciationNotificationsService {
 
       const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
       const carUrl = `/cars/${carId}`;
+      const estimatedValueUsd = (car as CarWithEstimatedValue).estimated_value_usd ?? 0;
 
       // Enviar notificación
       this.carOwnerNotifications.notifyMonthlyDepreciation(
         carName,
-        (car as any).estimated_value_usd || 0,
+        estimatedValueUsd,
         monthlyDepreciation,
         monthlyEarnings,
         netGain,

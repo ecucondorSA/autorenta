@@ -16,6 +16,11 @@ import { CarOwnerNotificationsService } from './car-owner-notifications.service'
 import { CarsService } from './cars.service';
 import { ProfileService } from './profile.service';
 
+type BookingWithMetadata = Booking & {
+  car?: { title?: string | null } | null;
+  price_per_day?: number | null;
+};
+
 /**
  * Core booking service
  * Handles CRUD operations and coordinates with specialized booking services
@@ -122,9 +127,10 @@ export class BookingsService {
     const finalBooking = updated || { ...(data as Booking), id: bookingId };
 
     // 🎯 TikTok Events: Track PlaceAnOrder
+    const placeOrderContentName = this.getBookingCarTitle(finalBooking);
     void this.tiktokEvents.trackPlaceAnOrder({
       contentId: finalBooking.car_id,
-      contentName: finalBooking.car_title || (finalBooking.car as any)?.title || 'Auto',
+      contentName: placeOrderContentName,
       value: finalBooking.total_amount || 0,
       currency: finalBooking.currency || 'ARS',
     });
@@ -227,9 +233,10 @@ export class BookingsService {
     const finalBooking = updated || { ...(data as Booking), id: bookingId };
 
     // 🎯 TikTok Events: Track PlaceAnOrder
+    const placeOrderWithLocationContentName = this.getBookingCarTitle(finalBooking);
     void this.tiktokEvents.trackPlaceAnOrder({
       contentId: finalBooking.car_id,
-      contentName: finalBooking.car_title || (finalBooking.car as any)?.title || 'Auto',
+      contentName: placeOrderWithLocationContentName,
       value: finalBooking.total_amount || 0,
       currency: finalBooking.currency || 'ARS',
     });
@@ -343,9 +350,10 @@ export class BookingsService {
 
     // 🎯 TikTok Events: Track Purchase
     if (booking) {
+      const purchaseContentName = this.getBookingCarTitle(booking);
       void this.tiktokEvents.trackPurchase({
         contentId: booking.car_id,
-        contentName: booking.car_title || (booking.car as any)?.title || 'Auto',
+        contentName: purchaseContentName,
         value: booking.total_amount || 0,
         currency: booking.currency || 'ARS',
       });
@@ -885,7 +893,7 @@ export class BookingsService {
       if (car && renter) {
         const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
         const renterName = renter.full_name || 'Un usuario';
-        const pricePerDay = (booking as any).price_per_day || 0;
+        const pricePerDay = this.getBookingPricePerDay(booking);
         const bookingUrl = `/bookings/${booking.id}`;
 
         this.carOwnerNotifications.notifyNewBookingRequest(
@@ -902,5 +910,14 @@ export class BookingsService {
         error instanceof Error ? error : new Error(getErrorMessage(error)),
       );
     }
+  }
+
+  private getBookingCarTitle(booking: BookingWithMetadata): string {
+    const fallbackTitle = booking.car?.title?.trim();
+    return booking.car_title || fallbackTitle || 'Auto';
+  }
+
+  private getBookingPricePerDay(booking: BookingWithMetadata): number {
+    return typeof booking.price_per_day === 'number' ? booking.price_per_day ?? 0 : 0;
   }
 }

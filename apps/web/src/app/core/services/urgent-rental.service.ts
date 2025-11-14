@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { injectSupabase } from './supabase-client.service';
 import { DynamicPricingService } from './dynamic-pricing.service';
 import { BookingsService } from './bookings.service';
@@ -204,7 +204,6 @@ export class UrgentRentalService {
   ): Promise<UrgentRentalQuote> {
     try {
       const now = new Date();
-      const rentalEnd = new Date(now.getTime() + durationHours * 60 * 60 * 1000);
 
       // Usar DynamicPricingService para calcular precio
       const pricing = await this.pricingService.calculatePrice({
@@ -233,7 +232,7 @@ export class UrgentRentalService {
   async createUrgentBooking(
     carId: string,
     durationHours: number,
-    userLocation?: UserLocation,
+    _userLocation?: UserLocation,
   ): Promise<{ success: boolean; bookingId?: string; error?: string }> {
     try {
       const now = new Date();

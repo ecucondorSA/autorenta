@@ -117,7 +117,7 @@ export class LocationService {
             lng: position.coords.longitude,
           });
         },
-        (error: any) => {
+        (error: GeolocationPositionError) => {
           console.warn('Error getting current position:', error.message);
           resolve(null);
         },

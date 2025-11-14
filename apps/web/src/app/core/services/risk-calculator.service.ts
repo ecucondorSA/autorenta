@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { FranchiseTableService } from './franchise-table.service';
-import { DriverProfileService } from './driver-profile.service';
 import { injectSupabase } from './supabase-client.service';
 
 /**

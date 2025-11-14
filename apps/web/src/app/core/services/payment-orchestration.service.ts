@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, throwError, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { PaymentsService } from './payments.service';
 import { PaymentAuthorizationService } from './payment-authorization.service';
 import { SplitPaymentService } from './split-payment.service';
@@ -56,6 +56,12 @@ export interface RefundResult {
   amount: number;
   message: string;
   error?: string;
+}
+
+interface PaymentWebhookPayload {
+  booking_id?: string;
+  status?: string;
+  payment_id?: string;
 }
 
 /**
@@ -265,7 +271,11 @@ export class PaymentOrchestrationService {
       //   throw new Error('Invalid webhook signature');
       // }
 
-      const { booking_id, status, payment_id } = payload as any;
+      if (!this.isPaymentWebhookPayload(payload)) {
+        throw new Error('Invalid webhook payload');
+      }
+
+      const { booking_id, status, payment_id } = payload;
 
       if (!booking_id) {
         throw new Error('Missing booking_id in webhook payload');
@@ -298,6 +308,21 @@ export class PaymentOrchestrationService {
       this.logger.error('Webhook processing failed', String(error));
       throw error;
     }
+  }
+
+  private isPaymentWebhookPayload(payload: unknown): payload is PaymentWebhookPayload {
+    if (!payload || typeof payload !== 'object') {
+      return false;
+    }
+
+    const candidate = payload as Record<string, unknown>;
+    const isBookingIdValid =
+      !('booking_id' in candidate) || typeof candidate.booking_id === 'string';
+    const isStatusValid = !('status' in candidate) || typeof candidate.status === 'string';
+    const isPaymentIdValid =
+      !('payment_id' in candidate) || typeof candidate.payment_id === 'string';
+
+    return isBookingIdValid && isStatusValid && isPaymentIdValid;
   }
 
   /**

@@ -22,12 +22,13 @@ import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { Toast } from 'primeng/toast';
 import { AuthService } from './core/services/auth.service';
-import { ProfileService } from './core/services/profile.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
-import { PwaService } from './core/services/pwa.service';
 import { GuidedTourService } from './core/guided-tour';
 import { LocaleManagerService } from './core/services/locale-manager.service';
+import { ProfileService } from './core/services/profile.service';
+import { PwaService } from './core/services/pwa.service';
 import { PushNotificationService } from './core/services/push-notification.service';
 import { PendingReviewsBannerComponent } from './shared/components/pending-reviews-banner/pending-reviews-banner.component';
 import { SplashLoaderComponent } from './shared/components/splash-loader/splash-loader.component';
@@ -43,7 +44,6 @@ import { MobileBottomNavComponent } from './shared/components/mobile-bottom-nav/
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
-import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-root',

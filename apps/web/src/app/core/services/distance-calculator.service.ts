@@ -62,7 +62,7 @@ export class DistanceCalculatorService {
    */
   calculateDistanceMetadata(
     distanceKm: number,
-    baseGuaranteeUsd: number = 300,
+    _baseGuaranteeUsd: number = 300,
   ): DistanceCalculation {
     const tier = this.getDistanceTier(distanceKm);
     const guaranteeMultiplier = this.getGuaranteeMultiplier(tier);

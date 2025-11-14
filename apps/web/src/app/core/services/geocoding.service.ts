@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
+interface MapboxFeature {
+  center: [number, number];
+  place_name: string;
+  text: string;
+}
+
 export interface GeocodingResult {
   latitude: number;
   longitude: number;
@@ -190,7 +196,7 @@ export class GeocodingService {
       }
 
       // Map features to GeocodingResult array
-      return data.features.map((feature: any) => {
+      return data.features.map((feature: MapboxFeature) => {
         const [longitude, latitude] = feature.center;
         return {
           latitude,

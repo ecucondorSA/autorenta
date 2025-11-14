@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, of } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
-import { environment } from '@environment';
 import { SupabaseClient } from '@supabase/supabase-js';
 import {
   PaymentAuthorization,
@@ -10,6 +9,19 @@ import {
 } from '../models/booking-detail-payment.model';
 import { AuthService } from './auth.service';
 import { injectSupabase } from './supabase-client.service';
+
+interface MercadoPagoPreauthResponse {
+  success: boolean;
+  status: 'approved' | 'authorized' | 'in_process' | 'rejected' | 'pending';
+  status_detail?: string;
+  error?: string;
+  expires_at?: string;
+}
+
+interface MercadoPagoFunctionResponse {
+  success: boolean;
+  error?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -63,7 +75,7 @@ export class PaymentAuthorizationService {
           switchMap((session) => {
             if (!session?.access_token) throw new Error('No session token');
             return from(
-              this.supabase.functions.invoke('mp-create-preauth', {
+              this.supabase.functions.invoke<MercadoPagoPreauthResponse>('mp-create-preauth', {
                 body: {
                   intent_id: data.intent_id,
                   ...params,
@@ -74,19 +86,21 @@ export class PaymentAuthorizationService {
               }),
             );
           }),
-          map((mpResponse: unknown) => {
-            if ((mpResponse as any).data.status === 'rejected') {
-              throw new Error(this.getErrorMessage((mpResponse as any).data.status_detail));
+          map((mpResponse: FunctionInvokeResponse<MercadoPagoPreauthResponse>) => {
+            const responseData = mpResponse.data;
+            if (!responseData) {
+              throw new Error('Authorization failed');
             }
-            if (!(mpResponse as any).data.success) {
-              throw new Error((mpResponse as any).data.error || 'Authorization failed');
+            if (responseData.status === 'rejected') {
+              throw new Error(this.getErrorMessage(responseData.status_detail));
+            }
+            if (!responseData.success) {
+              throw new Error(responseData.error || 'Authorization failed');
             }
             return {
               ok: true,
               authorizedPaymentId: data.intent_id,
-              expiresAt: (mpResponse as any).data.expires_at
-                ? new Date((mpResponse as any).data.expires_at)
-                : undefined,
+              expiresAt: responseData.expires_at ? new Date(responseData.expires_at) : undefined,
             };
           }),
         );
@@ -131,23 +145,24 @@ export class PaymentAuthorizationService {
     return this.invokeFunction('mp-cancel-preauth', { intent_id: authorizedPaymentId });
   }
 
-  private invokeFunction(
+  private invokeFunction<TBody extends Record<string, unknown>>(
     functionName: string,
-    body: unknown,
+    body: TBody,
   ): Observable<{ ok: boolean; error?: string }> {
     return from(this.authService.ensureSession()).pipe(
       switchMap((session) => {
         if (!session?.access_token) throw new Error('No session token');
         return from(
-          this.supabase.functions.invoke(functionName, {
-            body: body as any,
+          this.supabase.functions.invoke<MercadoPagoFunctionResponse>(functionName, {
+            body,
             headers: { Authorization: `Bearer ${session.access_token}` },
           }),
         );
       }),
-      map((response: unknown) => {
-        if (!(response as any).data.success)
-          throw new Error((response as any).data.error || 'Function call failed');
+      map((response: FunctionInvokeResponse<MercadoPagoFunctionResponse>) => {
+        if (!response.data?.success) {
+          throw new Error(response.data?.error || 'Function call failed');
+        }
         return { ok: true };
       }),
       catchError((error) => of({ ok: false, error: error.message || 'Error desconocido' })),

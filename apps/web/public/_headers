@@ -33,7 +33,12 @@
 /assets/images/*
   Cache-Control: public, max-age=604800
 
-# No cache para HTML
+# No cache para HTML (especialmente index.html)
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
 

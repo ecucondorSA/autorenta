@@ -134,7 +134,7 @@ export class PaymentGatewayFactory {
   private createMockBookingGateway(): PaymentGateway {
     return {
       provider: 'mock',
-      createBookingPreference: (bookingId: string) => {
+      createBookingPreference: (_bookingId: string) => {
         // Implementación mock para testing
         throw new Error('Mock gateway not implemented. Use real provider in production.');
       },
@@ -152,7 +152,7 @@ export class PaymentGatewayFactory {
   private createMockWalletGateway(): WalletPaymentGateway {
     return {
       provider: 'mock',
-      createDepositOrder: (amountUSD: number, transactionId: string) => {
+      createDepositOrder: (_amountUSD: number, _transactionId: string) => {
         throw new Error('Mock wallet gateway not implemented. Use real provider in production.');
       },
       verifyDeposit: async () => true,

@@ -24,6 +24,10 @@ export interface MarketplaceStatus {
   error?: string;
 }
 
+type WindowWithEnv = Window & {
+  env?: Record<string, string | undefined>;
+};
+
 /**
  * Servicio para gestionar la configuración del Marketplace de MercadoPago
  * y validar que todo esté correcto para split payments
@@ -155,8 +159,9 @@ export class MarketplaceService {
    */
   private getEnvVar(key: string): string | undefined {
     // Obtener de window.env (generado por scripts/generate-env.js)
-    if (typeof window !== 'undefined' && (window as any).env) {
-      return (window as any).env[key];
+    if (typeof window !== 'undefined') {
+      const win = window as WindowWithEnv;
+      return win.env?.[key];
     }
 
     return undefined;

@@ -18,6 +18,20 @@ interface SyncBookingResponse {
   synced_to_locatario: boolean;
 }
 
+interface CarCalendarEvent {
+  date: string;
+  event_id: string;
+  title: string;
+  description?: string;
+}
+
+interface CarCalendarAvailability {
+  available: boolean;
+  blocked_dates: string[];
+  events: CarCalendarEvent[];
+  google_calendar_checked: boolean;
+}
+
 /**
  * GoogleCalendarService
  *
@@ -214,6 +228,56 @@ export class GoogleCalendarService {
   }
 
   /**
+   * ✅ NEW: Sync booking with user notification
+   * Wraps syncBookingToCalendar with automatic success/error notifications
+   */
+  syncBookingWithNotification(
+    bookingId: string,
+    operation: 'create' | 'update' | 'delete' = 'create',
+    notificationService?: {
+      success: (title: string, message: string) => void;
+      error: (title: string, message: string) => void;
+    },
+  ): Observable<SyncBookingResponse> {
+    const operationLabels = {
+      create: { action: 'creada', title: 'Reserva sincronizada' },
+      update: { action: 'actualizada', title: 'Reserva actualizada' },
+      delete: { action: 'eliminada', title: 'Reserva eliminada' },
+    };
+
+    const label = operationLabels[operation];
+
+    return this.syncBookingToCalendar(bookingId, operation).pipe(
+      map((response) => {
+        // Show success notification if service provided
+        if (notificationService && response.success) {
+          const syncDetails = [];
+          if (response.synced_to_locador) syncDetails.push('calendario del propietario');
+          if (response.synced_to_locatario) syncDetails.push('tu calendario');
+
+          const message =
+            syncDetails.length > 0
+              ? `Tu reserva fue ${label.action} en ${syncDetails.join(' y ')}`
+              : `Tu reserva fue ${label.action} correctamente`;
+
+          notificationService.success(`📅 ${label.title}`, message);
+        }
+        return response;
+      }),
+      catchError((error) => {
+        // Show error notification if service provided
+        if (notificationService) {
+          notificationService.error(
+            '⚠️ Error de sincronización',
+            `No se pudo sincronizar tu reserva con Google Calendar. La reserva sigue activa.`,
+          );
+        }
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  /**
    * Check if user has Google Calendar connected
    */
   isCalendarConnected(): Observable<boolean> {
@@ -228,30 +292,84 @@ export class GoogleCalendarService {
     carId: string,
     from: string,
     to: string,
-  ): Observable<{
-    available: boolean;
-    blocked_dates: string[];
-    events: Array<{
-      date: string;
-      event_id: string;
-      title: string;
-      description?: string;
-    }>;
-    google_calendar_checked: boolean;
-  }> {
+  ): Observable<CarCalendarAvailability> {
     const url = `${environment.supabaseUrl}/functions/v1/get-car-calendar-availability?car_id=${carId}&from=${from}&to=${to}`;
 
     return rxFrom(this.getAuthHeaders()).pipe(
-      switchMap((headers) => this.http.get<any>(url, { headers })),
+      switchMap((headers) => this.http.get<CarCalendarAvailability>(url, { headers })),
       catchError((error) => {
         console.error('Error getting car calendar availability:', error);
         // Return fallback response on error
-        return throwError(() => ({
+        return throwError<CarCalendarAvailability>(() => ({
           available: true,
           blocked_dates: [],
           events: [],
           google_calendar_checked: false,
         }));
+      }),
+    );
+  }
+
+  /**
+   * ✅ NEW: Get calendar ID for a specific car
+   * Returns the Google Calendar ID associated with this car
+   */
+  getCarCalendarId(carId: string): Observable<string | null> {
+    return rxFrom(
+      this.supabase
+        .from('car_google_calendars')
+        .select('google_calendar_id')
+        .eq('car_id', carId)
+        .single(),
+    ).pipe(
+      map((result) => result.data?.google_calendar_id || null),
+      catchError(() => {
+        return rxFrom(Promise.resolve(null));
+      }),
+    );
+  }
+
+  /**
+   * ✅ NEW: Get all car calendars for current user
+   * Returns list of cars with their associated Google Calendars
+   */
+  getUserCarCalendars(): Observable<
+    Array<{
+      car_id: string;
+      google_calendar_id: string;
+      calendar_name: string;
+      sync_enabled: boolean;
+      last_synced_at: string | null;
+    }>
+  > {
+    return rxFrom(this.getAuthHeaders()).pipe(
+      switchMap(() =>
+        rxFrom(
+          this.supabase.auth.getUser().then(async ({ data: { user } }) => {
+            if (!user) throw new Error('Not authenticated');
+
+            // Get user's cars
+            const { data: cars } = await this.supabase
+              .from('cars')
+              .select('id')
+              .eq('owner_id', user.id);
+
+            if (!cars || cars.length === 0) return [];
+
+            // Get calendar info for each car
+            const carIds = cars.map((c) => c.id);
+            const { data: calendars } = await this.supabase
+              .from('car_google_calendars')
+              .select('*')
+              .in('car_id', carIds);
+
+            return calendars || [];
+          }),
+        ),
+      ),
+      catchError((error) => {
+        console.error('Error getting user car calendars:', error);
+        return rxFrom(Promise.resolve([]));
       }),
     );
   }

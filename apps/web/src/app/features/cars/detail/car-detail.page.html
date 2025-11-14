@@ -543,6 +543,58 @@
         </p>
       </div>
 
+      <!-- Google Calendar Section -->
+      @if (showCalendarSection() && calendarId()) {
+        <div
+          class="card-premium rounded-2xl border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 shadow-soft"
+        >
+          <div class="mb-4">
+            <h2 class="h4 mb-2 flex items-center gap-2">
+              📅 Disponibilidad en Tiempo Real
+              @if (calendarAvailability()?.google_calendar_checked) {
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                >
+                  ✓ Sincronizado con Google Calendar
+                </span>
+              }
+            </h2>
+            <p class="text-sm text-text-secondary dark:text-text-secondary">
+              Este auto está conectado con Google Calendar para mostrar su disponibilidad real.
+              Las fechas bloqueadas se actualizan automáticamente.
+            </p>
+          </div>
+
+          <!-- Calendar Events Summary -->
+          @if (calendarAvailability()?.events && calendarAvailability()!.events.length > 0) {
+            <div class="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <p class="text-sm font-medium text-amber-900 mb-2">
+                🗓️ Próximas reservas ({{ calendarAvailability()!.events.length }}):
+              </p>
+              <ul class="text-xs text-amber-800 space-y-1">
+                @for (event of calendarAvailability()!.events.slice(0, 3); track event.date) {
+                  <li>• {{ event.date }} - {{ event.title }}</li>
+                }
+                @if (calendarAvailability()!.events.length > 3) {
+                  <li class="italic">... y {{ calendarAvailability()!.events.length - 3 }} más</li>
+                }
+              </ul>
+            </div>
+          }
+
+          <!-- Embedded Calendar -->
+          <app-google-calendar
+            [calendarId]="calendarId()!"
+            [view]="'month'"
+            [language]="'es'"
+            [height]="500"
+            [showTitle]="false"
+            [showPrint]="false"
+            [showTabs]="false"
+          />
+        </div>
+      }
+
       <div
         id="reviews"
         class="card-premium reviews-section rounded-2xl border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 shadow-soft max-w-3xl mx-auto"

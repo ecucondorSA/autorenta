@@ -1,7 +1,7 @@
 import { Injectable, signal, inject, OnDestroy, effect } from '@angular/core';
+import type { RealtimeChannel, RealtimePostgresInsertPayload } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
-import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface NotificationItem {
   id: string;
@@ -12,7 +12,18 @@ export interface NotificationItem {
   createdAt: Date;
   actionUrl?: string;
   actionText?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
+}
+
+interface NotificationRow {
+  id: string;
+  title: string;
+  body: string;
+  type: string;
+  is_read: boolean;
+  created_at: string;
+  cta_link?: string | null;
+  metadata?: Record<string, unknown> | null;
 }
 
 @Injectable({
@@ -91,21 +102,14 @@ export class NotificationsService implements OnDestroy {
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(50);
+        .limit(50)
+        .returns<NotificationRow[]>();
 
       if (error) throw error as Error;
 
-      const notifications: NotificationItem[] = (data || []).map((notification: unknown) => ({
-        id: (notification as any).id,
-        title: (notification as any).title,
-        message: (notification as any).body, // DB column is 'body'
-        type: this.mapNotificationType((notification as any).type),
-        read: (notification as any).is_read || false, // DB column is 'is_read'
-        createdAt: new Date((notification as any).created_at),
-        actionUrl: (notification as any).cta_link, // DB column is 'cta_link'
-        actionText: 'Ver detalles', // Default action text
-        metadata: (notification as any).metadata,
-      }));
+      const notifications: NotificationItem[] = (data || []).map((notification) =>
+        this.mapNotification(notification),
+      );
 
       this.notifications.set(notifications);
       this.updateUnreadCount();
@@ -152,9 +156,9 @@ export class NotificationsService implements OnDestroy {
             table: 'notifications',
             filter: `user_id=eq.${user.id}`,
           },
-          (payload: unknown) => {
+          (payload: RealtimePostgresInsertPayload<NotificationRow>) => {
             console.log('[NotificationsService] New notification received via Realtime:', payload);
-            this.addNotification((payload as any).new as any);
+            this.addNotification(payload.new);
           },
         )
         .subscribe((status) => {

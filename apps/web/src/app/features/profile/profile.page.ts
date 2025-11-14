@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   computed,
   inject,
   OnInit,
@@ -8,6 +9,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -16,11 +18,55 @@ import { GoogleCalendarService } from '../../core/services/google-calendar.servi
 import { ProfileStore } from '../../core/stores/profile.store';
 import { UserProfile, Role } from '../../core/models';
 import type { UpdateProfileData } from '../../core/services/profile.service';
+import { DOCUMENT_TYPES } from '../../core/config/document-types.config';
+import { CalendarManagementComponent } from '../../shared/components/calendar-management/calendar-management.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+const SECTION_ANCHORS = {
+  'basic-info': 'basic-info-card',
+  contact: 'contact-block',
+  address: 'address-block',
+  license: 'license-block',
+} as const;
+
+type ProfileSection = keyof typeof SECTION_ANCHORS;
+
+const SECTION_LABELS: Record<ProfileSection, string> = {
+  'basic-info': 'Información básica',
+  contact: 'Contacto',
+  address: 'Dirección',
+  license: 'Licencia de conducir',
+};
+
+const DOC_DEEP_LINKS: Record<
+  string,
+  {
+    section: ProfileSection;
+    reason: string;
+  }
+> = {
+  gov_id_front: { section: 'basic-info', reason: 'tu DNI' },
+  gov_id_back: { section: 'basic-info', reason: 'tu DNI' },
+  passport: { section: 'basic-info', reason: 'tu pasaporte' },
+  selfie: { section: 'basic-info', reason: 'tu selfie y datos personales' },
+  driver_license: { section: 'license', reason: 'tu licencia' },
+  utility_bill: { section: 'address', reason: 'tu domicilio' },
+  vehicle_registration: { section: 'address', reason: 'el domicilio del titular del auto' },
+  vehicle_insurance: { section: 'address', reason: 'la póliza del vehículo' },
+  technical_inspection: { section: 'license', reason: 'la verificación técnica' },
+  circulation_permit: { section: 'address', reason: 'tu permiso de circulación' },
+  ownership_proof: { section: 'address', reason: 'los datos del titular' },
+};
 
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    CalendarManagementComponent,
+  ],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -31,6 +77,10 @@ export class ProfilePage implements OnInit {
   private readonly walletService = inject(WalletService);
   private readonly googleCalendarService = inject(GoogleCalendarService);
   private readonly profileStore = inject(ProfileStore);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  private highlightTimeout: ReturnType<typeof setTimeout> | null = null;
 
   // Use ProfileStore for profile state
   readonly profile = this.profileStore.profile;
@@ -46,6 +96,8 @@ export class ProfilePage implements OnInit {
   readonly copiedWAN = signal(false);
   readonly calendarConnected = signal(false);
   readonly calendarLoading = signal(false);
+  readonly highlightedSection = signal<ProfileSection | null>(null);
+  readonly calendarSuccessMessage = signal(false);
 
   // Use ProfileStore computed values
   readonly userEmail = this.profileStore.userEmail;
@@ -98,8 +150,55 @@ export class ProfilePage implements OnInit {
   ];
 
   ngOnInit(): void {
+    // Handle document prefill from query params
+    this.route.queryParamMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        const docId = params.get('doc');
+        if (docId) {
+          this.handleDocPrefill(docId);
+          void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { doc: null },
+            queryParamsHandling: 'merge',
+            replaceUrl: true,
+          });
+        }
+      });
+
     void this.loadProfile();
     void this.checkCalendarConnection();
+    this.checkCalendarConnectionSuccess();
+  }
+
+  /**
+   * Check if user was redirected from Google Calendar OAuth callback
+   */
+  private checkCalendarConnectionSuccess(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['calendar_connected'] === 'true') {
+        this.calendarSuccessMessage.set(true);
+        this.message.set('✅ Google Calendar conectado exitosamente');
+        
+        // Refresh calendar connection status
+        void this.checkCalendarConnection();
+        
+        // Clear the query parameter from URL
+        void this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {},
+          queryParamsHandling: 'merge',
+        });
+        
+        // Clear message after 5 seconds
+        setTimeout(() => {
+          this.calendarSuccessMessage.set(false);
+          if (this.message() === '✅ Google Calendar conectado exitosamente') {
+            this.message.set(null);
+          }
+        }, 5000);
+      }
+    });
   }
 
   async loadProfile(): Promise<void> {
@@ -281,6 +380,52 @@ export class ProfilePage implements OnInit {
     } catch {
       this.error.set('Error al copiar el número de cuenta');
     }
+  }
+
+  private handleDocPrefill(docId: string): void {
+    const docLabel = DOCUMENT_TYPES[docId]?.label ?? 'tu documentación';
+    const config = DOC_DEEP_LINKS[docId];
+    const message = config
+      ? `Revisá ${docLabel}: ya completamos ${config.reason} en ${SECTION_LABELS[config.section]}.`
+      : `Revisá ${docLabel} y confirmá que los datos estén correctos.`;
+
+    if (!this.editMode()) {
+      this.editMode.set(true);
+    }
+
+    this.focusSection(config?.section ?? 'basic-info');
+    this.message.set(message);
+
+    setTimeout(() => {
+      if (this.message() === message) {
+        this.message.set(null);
+      }
+    }, 5000);
+  }
+
+  private focusSection(section: ProfileSection): void {
+    this.highlightedSection.set(section);
+
+    if (this.highlightTimeout) {
+      clearTimeout(this.highlightTimeout);
+    }
+
+    this.highlightTimeout = setTimeout(() => {
+      this.highlightedSection.set(null);
+      this.highlightTimeout = null;
+    }, 5000);
+
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    const anchorId = SECTION_ANCHORS[section];
+    requestAnimationFrame(() => {
+      document.getElementById(anchorId)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
   }
 
   /**

@@ -219,6 +219,13 @@
             </div>
           </div>
 
+          <!-- Calendar Management Section -->
+          @if (calendarConnected()) {
+            <div class="bg-surface-secondary dark:bg-surface-secondary/70 rounded-xl p-4 shadow-soft">
+              <app-calendar-management />
+            </div>
+          }
+
           <!-- Verifications Section -->
           <div class="bg-surface-secondary dark:bg-surface-secondary/70 rounded-xl p-4 shadow-soft">
             <h3
@@ -283,7 +290,11 @@
         <!-- ==================== MAIN CONTENT ==================== -->
         <div class="md:col-span-2 space-y-6">
           <!-- ==================== ABOUT SECTION ==================== -->
-          <div class="bg-surface-secondary dark:bg-surface-secondary/70 rounded-xl p-6 shadow-soft">
+          <div
+            id="basic-info-card"
+            class="bg-surface-secondary dark:bg-surface-secondary/70 rounded-xl p-6 shadow-soft"
+            [class.profile-section-highlight]="highlightedSection() === 'basic-info'"
+          >
             <h3
               class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2"
             >
@@ -384,7 +395,11 @@
             </h3>
 
             <!-- Contact Info -->
-            <div class="mb-6">
+            <div
+              id="contact-block"
+              class="mb-6"
+              [class.profile-section-highlight]="highlightedSection() === 'contact'"
+            >
               <h4 class="text-lg font-medium text-text-primary dark:text-text-primary mb-3">
                 📞 Contacto
               </h4>
@@ -445,7 +460,11 @@
             </div>
 
             <!-- Address Info -->
-            <div class="mb-6">
+            <div
+              id="address-block"
+              class="mb-6"
+              [class.profile-section-highlight]="highlightedSection() === 'address'"
+            >
               <h4 class="text-lg font-medium text-text-primary dark:text-text-primary mb-3">
                 📍 Dirección
               </h4>
@@ -505,7 +524,10 @@
             </div>
 
             <!-- License Info -->
-            <div>
+            <div
+              id="license-block"
+              [class.profile-section-highlight]="highlightedSection() === 'license'"
+            >
               <h4 class="text-lg font-medium text-text-primary dark:text-text-primary mb-3">
                 🚗 Licencia de conducir
               </h4>

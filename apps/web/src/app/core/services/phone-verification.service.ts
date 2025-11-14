@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import type { AuthError } from '@supabase/supabase-js';
 import { VerificationBaseService, VerificationStatus } from './verification-base.service';
 
 /**
@@ -17,6 +18,11 @@ export interface OTPVerificationResult {
   error?: string;
   message?: string;
 }
+
+type AuthErrorWithCode = AuthError & {
+  code?: string;
+  error_code?: string;
+};
 
 /**
  * Service for managing phone number verification via SMS OTP
@@ -182,9 +188,9 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       });
 
       if (error) {
-        // Get error code if available (Supabase uses 'code' or 'error_code')
-        const errorCode = (error as any).code || (error as any).error_code || '';
-        const errorMessage = error.message || '';
+        const extendedError = error as AuthErrorWithCode;
+        const errorCode = extendedError.code || extendedError.error_code || '';
+        const errorMessage = extendedError.message || '';
 
         // Provide more user-friendly error messages
         // Check for phone provider errors (multiple ways Supabase can return this)

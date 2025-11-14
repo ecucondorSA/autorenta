@@ -204,3 +204,11 @@
     background: var(--text-muted, #6b7280);
   }
 }
+
+.profile-section-highlight {
+  outline: 2px solid var(--primary-500, #2563eb);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.08);
+  border-radius: 1rem;
+  transition: outline-offset 0.2s ease, box-shadow 0.2s ease;
+}

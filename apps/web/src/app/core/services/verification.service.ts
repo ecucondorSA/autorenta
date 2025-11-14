@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import type { UserVerificationStatus, VerificationRole } from '../models';
+import type { UserVerificationStatus, VerificationRole, UserDocument } from '../models';
 import { SupabaseClientService } from './supabase-client.service';
 
 @Injectable({
@@ -9,6 +9,7 @@ export class VerificationService {
   private readonly supabase = inject(SupabaseClientService).getClient();
 
   readonly statuses = signal<UserVerificationStatus[]>([]);
+  readonly documents = signal<UserDocument[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
@@ -63,6 +64,31 @@ export class VerificationService {
 
   clearError(): void {
     this.error.set(null);
+  }
+
+  async loadDocuments(): Promise<UserDocument[]> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+
+    if (!user) {
+      this.documents.set([]);
+      return [];
+    }
+
+    const { data, error } = await this.supabase
+      .from('user_documents')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    const docs = (data ?? []) as UserDocument[];
+    this.documents.set(docs);
+    return docs;
   }
 
   private setStatuses(statuses: UserVerificationStatus[]): UserVerificationStatus[] {

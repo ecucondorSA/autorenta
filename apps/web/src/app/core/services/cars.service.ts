@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
+import { firstValueFrom } from 'rxjs';
 import { Car, CarFilters, CarPhoto } from '../models';
 import { injectSupabase } from './supabase-client.service';
+import { GoogleCalendarService } from './google-calendar.service';
 
 interface ImageOptimizeOptions {
   maxWidth: number;
@@ -21,6 +23,7 @@ type CarWithPhotosRaw = Record<string, unknown> & {
 })
 export class CarsService {
   private readonly supabase = injectSupabase();
+  private readonly googleCalendarService = inject(GoogleCalendarService);
   private readonly defaultValuationConfig = {
     averageRentalDays: 300,
   };
@@ -376,7 +379,7 @@ export class CarsService {
       if (bookingsError) throw bookingsError;
 
       // Get manual blocks - temporal fix: try the table, fallback to empty if not exists
-      let blocks: any[] = [];
+      let blocks: Array<{ blocked_from: string; blocked_to: string }> = [];
       try {
         const { data: blocksData, error: blocksError } = await this.supabase
           .from('car_blocked_dates')
@@ -389,7 +392,7 @@ export class CarsService {
         } else {
           blocks = blocksData || [];
         }
-      } catch (tableError) {
+      } catch {
         // Table doesn't exist, continue without manual blocks
       }
 
@@ -639,6 +642,68 @@ export class CarsService {
     );
 
     return carsWithPhotos;
+  }
+
+  /**
+   * ✅ NEW: Get available cars with Google Calendar availability check
+   * Enhanced version that includes Calendar blocked dates
+   */
+  async getAvailableCarsWithCalendar(
+    startDate: string,
+    endDate: string,
+    options: {
+      limit?: number;
+      offset?: number;
+      city?: string;
+    } = {},
+  ): Promise<
+    Array<
+      Car & {
+        calendar_availability?: {
+          google_calendar_checked: boolean;
+          blocked_dates: string[];
+          events: Array<{ date: string; title: string }>;
+        };
+      }
+    >
+  > {
+    // First get available cars from database
+    const cars = await this.getAvailableCars(startDate, endDate, options);
+
+    // Enrich with Google Calendar data for each car
+    const carsWithCalendarData = await Promise.all(
+      cars.map(async (car) => {
+        try {
+          const calendarData = await firstValueFrom(
+            this.googleCalendarService.getCarCalendarAvailability(car.id, startDate, endDate),
+          );
+
+          return {
+            ...car,
+            calendar_availability: {
+              google_calendar_checked: calendarData.google_calendar_checked,
+              blocked_dates: calendarData.blocked_dates,
+              events: calendarData.events.map((e) => ({
+                date: e.date,
+                title: e.title,
+              })),
+            },
+          };
+        } catch {
+          // If Calendar check fails, return car without calendar data
+          return {
+            ...car,
+            calendar_availability: {
+              google_calendar_checked: false,
+              blocked_dates: [],
+              events: [],
+            },
+          };
+        }
+      }),
+    );
+
+    return carsWithCalendarData;
   }
 
   /**

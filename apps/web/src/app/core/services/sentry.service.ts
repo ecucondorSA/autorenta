@@ -76,7 +76,7 @@ export function initSentry(): void {
     release: `autorenta-web@${environment.production ? 'production' : 'development'}`,
 
     // Filter sensitive data
-    beforeSend(event, hint) {
+    beforeSend(event, _hint) {
       // Remove sensitive query parameters
       if (event.request?.url) {
         try {
@@ -90,7 +90,7 @@ export function initSentry(): void {
           });
 
           event.request.url = url.toString();
-        } catch (e) {
+        } catch (_e) {
           // Invalid URL, ignore
         }
       }

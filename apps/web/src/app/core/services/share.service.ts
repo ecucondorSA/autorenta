@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 
+type NavigatorWithAdvancedShare = Navigator & {
+  canShare?: (data?: ShareData | { files: File[] }) => boolean;
+};
+
 /**
  * 📤 Share Service
  *
@@ -31,7 +35,7 @@ export class ShareService {
       console.log('✅ Compartido exitosamente');
       return true;
     } catch (error: unknown) {
-      if ((error as any)?.name === 'AbortError') {
+      if (error instanceof DOMException && error.name === 'AbortError') {
         console.log('Usuario canceló compartir');
         return false;
       }
@@ -117,7 +121,8 @@ export class ShareService {
     if (!this.canShare) return false;
 
     try {
-      return (navigator as any).canShare({ files });
+      const navigatorWithShare = navigator as NavigatorWithAdvancedShare;
+      return navigatorWithShare.canShare?.({ files }) ?? false;
     } catch {
       return false;
     }

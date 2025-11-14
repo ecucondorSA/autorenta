@@ -98,7 +98,7 @@ export class PwaService {
     // Listen for version updates
     this.swUpdate.versionUpdates
       .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
-      .subscribe((event) => {
+      .subscribe((_event) => {
         this.updateAvailable.set(true);
       });
 
