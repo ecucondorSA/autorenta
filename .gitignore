@@ -19,6 +19,10 @@ functions/workers/*/.wrangler
 .env.*
 .supabase
 
+# Supabase temp files (anywhere in the project)
+**/.temp/
+**/supabase/.temp/
+
 # Editor/OS
 .DS_Store
 .idea
