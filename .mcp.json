@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=pisqjmoklivzpwufhscx"
+    },
+    "autorenta-platform": {
+      "command": "node",
+      "args": ["/home/edu/autorenta/mcp-server/dist/index.js"],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}

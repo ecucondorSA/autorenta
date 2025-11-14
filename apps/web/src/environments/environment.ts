@@ -4,11 +4,11 @@ export const environment = buildEnvironment({
   production: true,
   defaultCurrency: 'ARS',
   appUrl: 'https://autorentar.com',
-  supabaseUrl: 'https://obxvffplochgeiclibng.supabase.co',
+  supabaseUrl: 'https://pisqjmoklivzpwufhscx.supabase.co',
   supabaseAnonKey:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NTMyMzIsImV4cCI6MjA3NjEyOTIzMn0.1b4XQpOgNm6bXdcU8gXGG2aUbTkjvr8xyJU4Mkgt6GU',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.wE2jTut2JSexoKFtHdEaIpl9MZ0sOHy9zMYBbhFbzt4',
   mapboxAccessToken:
-    'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtZ3R0bjQ2dDA4Znkyd3B5ejkzNDFrb3IifQ.WwgMG-oIfT_9BDvwAT3nUg',
+    'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaHdwN3FxMjAyc2gybHNoYjkzM29ya3UifQ.qUEBGbOKgchKHgZFX5BDFA',
   googleAnalyticsMeasurementId: '', // Configurar via NG_APP_GA4_MEASUREMENT_ID
   enableAnalytics: true,
   docVerifierUrl: 'https://doc-verifier.autorentar.workers.dev',
@@ -18,6 +18,14 @@ export const environment = buildEnvironment({
   sentryDsn: '', // Se configura via NG_APP_SENTRY_DSN
   sentryEnvironment: 'production',
   sentryTracesSampleRate: 0.1, // 10% sampling for performance monitoring
+  // Google Calendar Configuration
+  // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
+  // NG_APP_GOOGLE_CALENDAR_ID - ID del calendario de Google (email o calendar ID)
+  // NG_APP_GOOGLE_CALENDAR_API_KEY - API Key de Google Cloud Console
+  // NG_APP_GOOGLE_CALENDAR_CLIENT_ID - OAuth Client ID (opcional, para escritura/calendarios privados)
+  googleCalendarId: '', // Se configura via NG_APP_GOOGLE_CALENDAR_ID
+  googleCalendarApiKey: '', // Se configura via NG_APP_GOOGLE_CALENDAR_API_KEY
+  googleCalendarClientId: '', // Se configura via NG_APP_GOOGLE_CALENDAR_CLIENT_ID
   // PayPal Production Credentials
   // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
   // NG_APP_PAYPAL_CLIENT_ID - Client ID de PayPal Production

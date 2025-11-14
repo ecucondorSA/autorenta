@@ -26,7 +26,9 @@ import { MapBookingPanelComponent } from '../map-booking-panel/map-booking-panel
 import { environment } from '../../../../environments/environment';
 import { MapDetailsPanelComponent } from '../map-details-panel/map-details-panel.component';
 import { MapMarkerComponent } from '../map-marker/map-marker.component';
+import { MapLayersControlComponent, type MapLayer } from '../map-layers-control/map-layers-control.component';
 import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
+import { MapboxDirectionsService } from '../../../core/services/mapbox-directions.service';
 
 type MapboxGL = typeof import('mapbox-gl').default;
 type MapboxMap = import('mapbox-gl').Map;
@@ -165,7 +167,12 @@ class QuadTree {
 @Component({
   selector: 'app-cars-map',
   standalone: true,
-  imports: [CommonModule, MapBookingPanelComponent, MapDetailsPanelComponent],
+  imports: [
+    CommonModule,
+    MapBookingPanelComponent,
+    MapDetailsPanelComponent,
+    MapLayersControlComponent,
+  ],
   templateUrl: './cars-map.component.html',
   styleUrls: ['./cars-map.component.css'],
 })
@@ -178,6 +185,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input() locationMode: 'searching' | 'booking-confirmed' | 'default' = 'default';
   @Input() searchRadiusKm: number = 5;
   @Input() showSearchRadius: boolean = true;
+  @Input() showDeliveryIsochrone: boolean = false; // Show isochrone for selected car delivery area
+  @Input() deliveryTimeMinutes: number = 30; // Default delivery time for isochrone
+  @Input() showDirectionsRoute: boolean = false; // Show turn-by-turn route to selected car
   @Input() followUserLocation: boolean = false;
   @Input() lockZoomRotation: boolean = false;
   @Input() locationAccuracy?: number; // Precisión GPS en metros
@@ -199,12 +209,42 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly applicationRef = inject(ApplicationRef);
   private readonly injector = inject(EnvironmentInjector);
+  private readonly directionsService = inject(MapboxDirectionsService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly bookingPanelOpen = signal(false);
   readonly selectedCarForBooking = signal<CarMapLocation | null>(null);
   readonly selectedCar = signal<CarMapLocation | null>(null);
+
+  // Map Layers Control
+  readonly showBaseMap = signal(true);
+  readonly showUserLocation = signal(true);
+  readonly showMarketplaceCars = signal(true);
+
+  readonly mapLayers = computed<MapLayer[]>(() => [
+    {
+      id: 'base-map',
+      label: 'Mapa Base',
+      icon: '🗺️',
+      visible: this.showBaseMap(),
+      enabled: true,
+    },
+    {
+      id: 'user-location',
+      label: 'Ubicación Central',
+      icon: '📍',
+      visible: this.showUserLocation(),
+      enabled: !!this.userLocation,
+    },
+    {
+      id: 'marketplace-cars',
+      label: 'Autos del Marketplace',
+      icon: '🚗',
+      visible: this.showMarketplaceCars(),
+      enabled: this.cars.length > 0,
+    },
+  ]);
 
   // Expose map instance for external components
   get mapInstance(): MapboxMap | null {
@@ -242,6 +282,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   // User location tracking
   private searchRadiusSourceId = 'search-radius-source';
   private searchRadiusLayerId = 'search-radius-layer';
+  private isochroneSourceId = 'delivery-isochrone-source';
+  private isochroneLayerId = 'delivery-isochrone-layer';
+  private isochroneOutlineLayerId = 'delivery-isochrone-outline-layer';
+  private routeSourceId = 'directions-route-source';
+  private routeLayerId = 'directions-route-layer';
+  private routeOutlineLayerId = 'directions-route-outline-layer';
   private followLocationInterval: ReturnType<typeof setInterval> | null = null;
   private isDarkMode = signal(false);
   private circleSizeMultiplier = signal(1.0); // Para ajustar tamaño del círculo
@@ -274,7 +320,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   /**
    * Update map theme based on dark mode and marker variant
-   * Synchronizes CSS tokens with prefers-color-scheme and markerVariant
+   * Uses Mapbox Standard style configuration for native theme support
    */
   private updateMapTheme(): void {
     if (!this.isBrowser) return;
@@ -282,16 +328,23 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const isDark = this.isDarkMode();
     const variant = this.markerVariant;
 
-    // Apply theme class to map container (already handled in template with [class] binding)
-    // But we also need to update the map canvas filter if map is initialized
-    if (this.map) {
-      const canvas = this.map.getCanvas();
-      if (canvas) {
-        // Update canvas filter based on dark mode tokens
-        const brightness = isDark ? '0.95' : '1';
-        const contrast = isDark ? '1.1' : '1';
-        const saturate = isDark ? '0.95' : '1';
-        canvas.style.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturate})`;
+    // Update Mapbox Standard style theme
+    if (this.map && this.map.isStyleLoaded()) {
+      try {
+        // @ts-ignore - Mapbox Standard setConfigProperty not yet in types
+        this.map.setConfigProperty('basemap', 'lightPreset', isDark ? 'dusk' : 'day');
+
+        // No need for canvas filters with Standard style - it handles theming natively
+      } catch (error) {
+        console.warn('[CarsMap] Could not update theme, falling back to canvas filter', error);
+        // Fallback for older Mapbox versions or non-Standard styles
+        const canvas = this.map.getCanvas();
+        if (canvas) {
+          const brightness = isDark ? '0.95' : '1';
+          const contrast = isDark ? '1.1' : '1';
+          const saturate = isDark ? '0.95' : '1';
+          canvas.style.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturate})`;
+        }
       }
     }
 
@@ -335,22 +388,47 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       const mapboxModule = await import('mapbox-gl');
       this.mapboxgl = mapboxModule.default;
 
-      if (!this.mapboxgl || !environment.mapboxAccessToken) {
-        throw new Error('Mapbox GL or access token not available');
+      if (!this.mapboxgl) {
+        throw new Error('Mapbox GL library failed to load');
+      }
+
+      // Validate Mapbox access token
+      if (!environment.mapboxAccessToken || environment.mapboxAccessToken.trim() === '') {
+        throw new Error(
+          'Mapbox access token no configurado. Por favor, configura NG_APP_MAPBOX_ACCESS_TOKEN en .env.local'
+        );
+      }
+
+      // Validate token format (should start with 'pk.')
+      if (!environment.mapboxAccessToken.startsWith('pk.')) {
+        throw new Error(
+          'Token de Mapbox inválido. El token debe comenzar con "pk." y ser un Public Access Token válido.'
+        );
       }
 
       this.mapboxgl.accessToken = environment.mapboxAccessToken;
 
-      // Initialize map with neutral light style
+      // Initialize map with Mapbox Standard style (v12+ with theme support)
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/light-v11', // Neutral light style
+        style: 'mapbox://styles/mapbox/standard', // Modern Standard style with theme support
         center: [-58.3816, -34.6037], // Buenos Aires center
         zoom: 11,
         maxBounds: [
           [-58.8, -34.9], // Southwest
           [-57.9, -34.3], // Northeast
         ],
+        // Mapbox Standard configuration
+        // @ts-ignore - Mapbox Standard config not yet in types
+        config: {
+          basemap: {
+            lightPreset: 'day', // Options: 'day', 'dusk', 'dawn', 'night'
+            showPointOfInterestLabels: true,
+            showTransitLabels: false, // Hide transit for cleaner car-focused map
+            showPlaceLabels: true,
+            showRoadLabels: true,
+          },
+        },
       });
 
       // Add navigation controls
@@ -371,9 +449,20 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       });
 
       // Handle map errors
-      this.map.on('error', (e) => {
+      this.map.on('error', (e: any) => {
         console.error('[CarsMap] Map error:', e);
-        this.error.set('Error al cargar el mapa');
+        
+        // Check for authentication errors (401)
+        if (e.error?.status === 401 || e.error?.message?.includes('401') || e.status === 401) {
+          this.error.set(
+            'Token de Mapbox inválido o expirado. Por favor, verifica tu NG_APP_MAPBOX_ACCESS_TOKEN en .env.local'
+          );
+        } else if (e.error?.message) {
+          this.error.set(`Error al cargar el mapa: ${e.error.message}`);
+        } else {
+          this.error.set('Error al cargar el mapa. Por favor, verifica tu conexión e intenta nuevamente.');
+        }
+        
         this.loading.set(false);
       });
     } catch (err) {
@@ -399,10 +488,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       geometry: {
         type: 'Point' as const,
         // Limit to 6 decimal places (~11cm accuracy) for smaller payload
-        coordinates: [
-          parseFloat(car.lng.toFixed(6)),
-          parseFloat(car.lat.toFixed(6)),
-        ],
+        coordinates: [parseFloat(car.lng.toFixed(6)), parseFloat(car.lat.toFixed(6))],
       },
       properties: {
         carId: car.carId,
@@ -957,6 +1043,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     // Clear existing markers
     this.clearMarkers();
 
+    // Si la capa de autos está oculta, no renderizar
+    if (!this.showMarketplaceCars()) {
+      return;
+    }
+
     // Group cars by availability and price for visual organization
     const groupedCars = this.groupCarsByAvailability();
 
@@ -1187,6 +1278,15 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private addUserLocationMarker(): void {
     if (!this.map || !this.mapboxgl || !this.userLocation) return;
 
+    // Si la capa de ubicación está oculta, remover el marcador si existe
+    if (!this.showUserLocation()) {
+      if (this.userLocationMarker) {
+        this.userLocationMarker.remove();
+        this.userLocationMarker = null;
+      }
+      return;
+    }
+
     // Save previous location before removing marker
     let previousLocation: { lat: number; lng: number } | null = null;
     if (this.userLocationMarker) {
@@ -1339,28 +1439,28 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Get count of available cars
    */
   public getAvailableCarsCount(): number {
-    return this.cars.filter(car => car.availabilityStatus === 'available').length;
+    return this.cars.filter((car) => car.availabilityStatus === 'available').length;
   }
 
   /**
    * Get count of cars in use
    */
   public getInUseCarsCount(): number {
-    return this.cars.filter(car => car.availabilityStatus === 'in_use').length;
+    return this.cars.filter((car) => car.availabilityStatus === 'in_use').length;
   }
 
   /**
    * Get count of soon available cars
    */
   public getSoonAvailableCarsCount(): number {
-    return this.cars.filter(car => car.availabilityStatus === 'soon_available').length;
+    return this.cars.filter((car) => car.availabilityStatus === 'soon_available').length;
   }
 
   /**
    * Get count of unavailable cars
    */
   public getUnavailableCarsCount(): number {
-    return this.cars.filter(car => car.availabilityStatus === 'unavailable').length;
+    return this.cars.filter((car) => car.availabilityStatus === 'unavailable').length;
   }
 
   /**
@@ -1435,6 +1535,15 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    */
   private addSearchRadiusLayer(): void {
     if (!this.map || !this.mapboxgl || !this.userLocation) return;
+
+    // Check if style is loaded before adding layers
+    if (!this.map.isStyleLoaded()) {
+      // Wait for style to load, then add layer
+      this.map.once('styledata', () => {
+        this.addSearchRadiusLayer();
+      });
+      return;
+    }
 
     // Convert radius from km to meters
     const radiusMeters = this.searchRadiusKm * 1000;
@@ -1627,6 +1736,30 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
+   * Toggle delivery zone (isochrone)
+   */
+  public toggleDeliveryZone(): void {
+    this.showDeliveryIsochrone = !this.showDeliveryIsochrone;
+    if (this.showDeliveryIsochrone) {
+      this.addDeliveryIsochrone();
+    } else {
+      this.removeDeliveryIsochrone();
+    }
+  }
+
+  /**
+   * Toggle directions route
+   */
+  public toggleDirections(): void {
+    this.showDirectionsRoute = !this.showDirectionsRoute;
+    if (this.showDirectionsRoute) {
+      this.addDirectionsRoute();
+    } else {
+      this.removeDirectionsRoute();
+    }
+  }
+
+  /**
    * Handle search radius slider change
    */
   public onSearchRadiusChange(event: Event): void {
@@ -1687,7 +1820,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
-   * Clear all markers
+   * Clear all markers and related resources
    */
   private clearMarkers(): void {
     // Clear hover timeouts
@@ -1713,6 +1846,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       this.returnMarkerComponentToPool(markerData.componentRef);
     });
     this.carMarkers.clear();
+    this.visibleCarIds.clear();
   }
 
   /**
@@ -1727,6 +1861,250 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       }
       if (this.map.getSource(this.searchRadiusSourceId)) {
         this.map.removeSource(this.searchRadiusSourceId);
+      }
+    } catch {
+      // Layers may not exist
+    }
+  }
+
+  /**
+   * Add delivery isochrone layer for selected car
+   * Shows the area reachable from the car's location within deliveryTimeMinutes
+   */
+  private async addDeliveryIsochrone(): Promise<void> {
+    if (!this.map || !this.mapboxgl) return;
+
+    const selectedCar = this.selectedCar();
+    if (!selectedCar) return;
+
+    // Check if style is loaded
+    if (!this.map.isStyleLoaded()) {
+      this.map.once('styledata', () => {
+        this.addDeliveryIsochrone();
+      });
+      return;
+    }
+
+    try {
+      // Fetch isochrone from Mapbox API
+      const lng = selectedCar.lng;
+      const lat = selectedCar.lat;
+      const profile = 'driving'; // Options: driving, walking, cycling
+      const minutes = this.deliveryTimeMinutes;
+
+      const url = `https://api.mapbox.com/isochrone/v1/mapbox/${profile}/${lng},${lat}?contours_minutes=${minutes}&polygons=true&access_token=${environment.mapboxAccessToken}`;
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.warn('[CarsMap] Failed to fetch isochrone:', response.statusText);
+        return;
+      }
+
+      const data = await response.json();
+
+      // Add or update source
+      if (this.map.getSource(this.isochroneSourceId)) {
+        (this.map.getSource(this.isochroneSourceId) as any).setData(data);
+      } else {
+        this.map.addSource(this.isochroneSourceId, {
+          type: 'geojson',
+          data: data,
+        });
+      }
+
+      // Add fill layer
+      const fillColor = this.isDarkMode() ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.25)';
+      if (!this.map.getLayer(this.isochroneLayerId)) {
+        this.map.addLayer({
+          id: this.isochroneLayerId,
+          type: 'fill',
+          source: this.isochroneSourceId,
+          paint: {
+            'fill-color': fillColor,
+            'fill-opacity': 0.8,
+          },
+        });
+      } else {
+        this.map.setPaintProperty(this.isochroneLayerId, 'fill-color', fillColor);
+      }
+
+      // Add outline layer for better visibility
+      const outlineColor = this.isDarkMode()
+        ? 'rgba(16, 185, 129, 0.8)'
+        : 'rgba(16, 185, 129, 0.9)';
+      if (!this.map.getLayer(this.isochroneOutlineLayerId)) {
+        this.map.addLayer({
+          id: this.isochroneOutlineLayerId,
+          type: 'line',
+          source: this.isochroneSourceId,
+          paint: {
+            'line-color': outlineColor,
+            'line-width': 2,
+            'line-dasharray': [2, 2],
+          },
+        });
+      } else {
+        this.map.setPaintProperty(this.isochroneOutlineLayerId, 'line-color', outlineColor);
+      }
+
+      console.log(
+        `[CarsMap] Added delivery isochrone: ${minutes} min driving radius from car location`,
+      );
+    } catch (error) {
+      console.error('[CarsMap] Error adding delivery isochrone:', error);
+    }
+  }
+
+  /**
+   * Remove delivery isochrone layer
+   */
+  private removeDeliveryIsochrone(): void {
+    if (!this.map) return;
+
+    try {
+      if (this.map.getLayer(this.isochroneOutlineLayerId)) {
+        this.map.removeLayer(this.isochroneOutlineLayerId);
+      }
+      if (this.map.getLayer(this.isochroneLayerId)) {
+        this.map.removeLayer(this.isochroneLayerId);
+      }
+      if (this.map.getSource(this.isochroneSourceId)) {
+        this.map.removeSource(this.isochroneSourceId);
+      }
+    } catch {
+      // Layers may not exist
+    }
+  }
+
+  /**
+   * Add directions route layer from user location to selected car
+   * Shows turn-by-turn directions with estimated time and distance
+   */
+  private async addDirectionsRoute(): Promise<void> {
+    if (!this.map || !this.mapboxgl || !this.userLocation) {
+      console.warn('[CarsMap] Cannot show directions: missing map or user location');
+      return;
+    }
+
+    const selectedCar = this.selectedCar();
+    if (!selectedCar) {
+      console.warn('[CarsMap] Cannot show directions: no selected car');
+      return;
+    }
+
+    // Check if style is loaded
+    if (!this.map.isStyleLoaded()) {
+      this.map.once('styledata', () => {
+        this.addDirectionsRoute();
+      });
+      return;
+    }
+
+    try {
+      const origin: [number, number] = [this.userLocation.lng, this.userLocation.lat];
+      const destination: [number, number] = [selectedCar.lng, selectedCar.lat];
+
+      // Fetch directions from API
+      const directions = await this.directionsService.getDirections(origin, destination, 'driving');
+
+      if (!directions || !directions.routes || directions.routes.length === 0) {
+        console.warn('[CarsMap] No route found');
+        return;
+      }
+
+      const route = directions.routes[0];
+      const routeGeometry = route.geometry;
+
+      // Create GeoJSON for the route
+      const routeGeoJSON: GeoJSON.Feature<GeoJSON.LineString> = {
+        type: 'Feature',
+        geometry: routeGeometry,
+        properties: {
+          duration: route.duration,
+          distance: route.distance,
+        },
+      };
+
+      // Add or update source
+      if (this.map.getSource(this.routeSourceId)) {
+        (this.map.getSource(this.routeSourceId) as any).setData(routeGeoJSON);
+      } else {
+        this.map.addSource(this.routeSourceId, {
+          type: 'geojson',
+          data: routeGeoJSON,
+        });
+      }
+
+      // Add outline layer (casing) for better visibility
+      if (!this.map.getLayer(this.routeOutlineLayerId)) {
+        this.map.addLayer({
+          id: this.routeOutlineLayerId,
+          type: 'line',
+          source: this.routeSourceId,
+          paint: {
+            'line-color': '#ffffff',
+            'line-width': 8,
+            'line-opacity': 0.8,
+          },
+        });
+      }
+
+      // Add main route layer
+      const routeColor = '#805ad5'; // AutoRenta brand color
+      if (!this.map.getLayer(this.routeLayerId)) {
+        this.map.addLayer({
+          id: this.routeLayerId,
+          type: 'line',
+          source: this.routeSourceId,
+          paint: {
+            'line-color': routeColor,
+            'line-width': 5,
+            'line-opacity': 0.9,
+          },
+        });
+      } else {
+        this.map.setPaintProperty(this.routeLayerId, 'line-color', routeColor);
+      }
+
+      // Fit map to show entire route
+      const coordinates = routeGeometry.coordinates as [number, number][];
+      const bounds = coordinates.reduce(
+        (bounds, coord) => {
+          return bounds.extend(coord as [number, number]);
+        },
+        new this.mapboxgl.LngLatBounds(coordinates[0], coordinates[0]),
+      );
+
+      this.map.fitBounds(bounds, {
+        padding: { top: 100, bottom: 100, left: 100, right: 100 },
+        maxZoom: 15,
+        duration: 1000,
+      });
+
+      console.log('[CarsMap] Directions route added:', {
+        duration: this.directionsService.formatDuration(route.duration),
+        distance: this.directionsService.formatDistance(route.distance),
+      });
+    } catch (error) {
+      console.error('[CarsMap] Error adding directions route:', error);
+    }
+  }
+
+  /**
+   * Remove directions route layer
+   */
+  private removeDirectionsRoute(): void {
+    if (!this.map) return;
+
+    try {
+      if (this.map.getLayer(this.routeLayerId)) {
+        this.map.removeLayer(this.routeLayerId);
+      }
+      if (this.map.getLayer(this.routeOutlineLayerId)) {
+        this.map.removeLayer(this.routeOutlineLayerId);
+      }
+      if (this.map.getSource(this.routeSourceId)) {
+        this.map.removeSource(this.routeSourceId);
       }
     } catch {
       // Layers may not exist
@@ -1762,6 +2140,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           this.map.removeSource(this.clusterSourceId);
         }
         this.removeSearchRadiusLayer();
+        this.removeDeliveryIsochrone();
+        this.removeDirectionsRoute();
       } catch {
         // Layers may not exist
       }
@@ -1904,6 +2284,59 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }
     if (changes['lockZoomRotation'] && !changes['lockZoomRotation'].firstChange) {
       this.setupLockControls();
+    }
+    if (
+      changes['showDeliveryIsochrone'] ||
+      changes['selectedCarId'] ||
+      changes['deliveryTimeMinutes']
+    ) {
+      if (this.showDeliveryIsochrone && this.selectedCarId && this.map) {
+        this.addDeliveryIsochrone();
+      } else {
+        this.removeDeliveryIsochrone();
+      }
+    }
+    if (changes['showDirectionsRoute'] || changes['selectedCarId'] || changes['userLocation']) {
+      if (this.showDirectionsRoute && this.selectedCarId && this.userLocation && this.map) {
+        this.addDirectionsRoute();
+      } else {
+        this.removeDirectionsRoute();
+      }
+    }
+  }
+
+  /**
+   * Maneja el toggle de capas del mapa
+   */
+  onLayerToggle(event: { layerId: string; visible: boolean }): void {
+    switch (event.layerId) {
+      case 'base-map':
+        this.showBaseMap.set(event.visible);
+        // Ocultar/mostrar el mapa base (si es necesario)
+        if (this.map) {
+          const container = this.map.getContainer();
+          container.style.opacity = event.visible ? '1' : '0.3';
+        }
+        break;
+      case 'user-location':
+        this.showUserLocation.set(event.visible);
+        if (event.visible) {
+          this.addUserLocationMarker();
+        } else {
+          if (this.userLocationMarker) {
+            this.userLocationMarker.remove();
+            this.userLocationMarker = null;
+          }
+        }
+        break;
+      case 'marketplace-cars':
+        this.showMarketplaceCars.set(event.visible);
+        if (event.visible) {
+          this.renderCarMarkers();
+        } else {
+          this.clearMarkers();
+        }
+        break;
     }
   }
 }

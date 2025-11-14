@@ -2,11 +2,12 @@
 <div class="notifications-container">
   <button
     class="notifications-bell"
-    (click)="toggleDropdown()"
+    (click)="onBellButtonClick($event)"
     [class.has-unread]="hasUnread()"
     [attr.aria-label]="
       'Notificaciones' + (unreadCount() > 0 ? ' (' + unreadCount() + ' sin leer)' : '')
     "
+    #bellButton
   >
     <svg class="bell-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path
@@ -27,11 +28,18 @@
   <div
     class="notifications-dropdown"
     [class.show]="showDropdown()"
+    appClickOutside
+    [exclude]="excludedElements"
     (clickOutside)="closeDropdown()"
   >
     <div class="dropdown-header">
       <h3>Notificaciones</h3>
       <div class="header-actions">
+        <!-- Connection Status Indicator -->
+        <div class="connection-status" [class.connected]="isConnected()" [class.error]="hasConnectionError()" [class.connecting]="isConnecting()">
+          <span class="status-dot"></span>
+          <span class="status-text">{{ getConnectionStatusMessage() }}</span>
+        </div>
         <button
           class="refresh-btn"
           (click)="refreshNotifications(); $event.stopPropagation()"
@@ -46,6 +54,15 @@
               d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
             />
           </svg>
+        </button>
+        <button
+          *ngIf="hasConnectionError()"
+          class="reconnect-btn"
+          (click)="reconnect(); $event.stopPropagation()"
+          title="Reconectar"
+          type="button"
+        >
+          🔄 Reconectar
         </button>
         <button *ngIf="unreadCount() > 0" class="mark-all-read" (click)="markAllAsRead()">
           Marcar todas como leídas

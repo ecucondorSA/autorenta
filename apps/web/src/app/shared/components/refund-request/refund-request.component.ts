@@ -2,7 +2,7 @@ import { Component, input, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RefundService } from '../../../core/services/refund.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-refund-request',
@@ -189,7 +189,7 @@ import { ToastService } from '../../../core/services/toast.service';
 })
 export class RefundRequestComponent {
   private readonly refundService = inject(RefundService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly isOpen = input.required<boolean>();
   readonly bookingId = input.required<string>();

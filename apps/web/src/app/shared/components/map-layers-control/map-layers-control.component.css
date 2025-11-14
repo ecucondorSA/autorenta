@@ -1,0 +1,89 @@
+.map-layers-control {
+  @apply absolute top-4 right-4 z-20;
+}
+
+.layers-toggle-button {
+  @apply bg-surface-raised dark:bg-surface-raised;
+  @apply text-text-primary dark:text-text-primary;
+  @apply rounded-lg shadow-lg;
+  @apply p-3;
+  @apply border border-border-default dark:border-border-default;
+  @apply hover:bg-surface-secondary dark:hover:bg-surface-secondary;
+  @apply transition-all duration-200;
+  @apply cursor-pointer;
+}
+
+.layers-toggle-button.open {
+  @apply bg-cta-default text-cta-text;
+}
+
+.layers-panel {
+  @apply absolute top-14 right-0;
+  @apply bg-surface-raised dark:bg-surface-raised;
+  @apply rounded-lg shadow-2xl;
+  @apply border border-border-default dark:border-border-default;
+  @apply min-w-[240px];
+  @apply overflow-hidden;
+}
+
+.layers-panel-header {
+  @apply flex items-center justify-between;
+  @apply px-4 py-3;
+  @apply border-b border-border-default dark:border-border-default;
+}
+
+.layers-panel-title {
+  @apply text-sm font-semibold;
+  @apply text-text-primary dark:text-text-primary;
+}
+
+.layers-panel-close {
+  @apply p-1 rounded;
+  @apply text-text-secondary dark:text-text-secondary;
+  @apply hover:bg-surface-secondary dark:hover:bg-surface-secondary;
+  @apply transition-colors;
+  @apply cursor-pointer;
+}
+
+.layers-list {
+  @apply p-2;
+}
+
+.layer-item {
+  @apply mb-1;
+}
+
+.layer-item.disabled {
+  @apply opacity-50;
+}
+
+.layer-label {
+  @apply flex items-center gap-3;
+  @apply px-3 py-2;
+  @apply rounded-lg;
+  @apply cursor-pointer;
+  @apply hover:bg-surface-secondary dark:hover:bg-surface-secondary;
+  @apply transition-colors;
+}
+
+.layer-checkbox {
+  @apply w-4 h-4;
+  @apply text-cta-default;
+  @apply rounded;
+  @apply cursor-pointer;
+}
+
+.layer-icon {
+  @apply text-lg;
+}
+
+.layer-text {
+  @apply text-sm;
+  @apply text-text-primary dark:text-text-primary;
+  @apply flex-1;
+}
+
+
+
+
+

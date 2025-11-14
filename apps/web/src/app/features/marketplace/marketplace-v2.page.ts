@@ -32,17 +32,16 @@ import {
   FabAction,
 } from '../../shared/components/floating-action-fab/floating-action-fab.component';
 import {
-  NotificationToastComponent,
-  ToastType,
-} from '../../shared/components/notification-toast/notification-toast.component';
-import {
   StatsStripComponent,
   Stat,
 } from '../../shared/components/stats-strip/stats-strip.component';
+import { NotificationManagerService } from '../../core/services/notification-manager.service';
+import { TikTokEventsService } from '../../core/services/tiktok-events.service';
 import {
   DateRange,
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
+import { DateSearchComponent } from '../../shared/components/date-search/date-search.component';
 import {
   QuickBookingModalComponent,
   QuickBookingData,
@@ -52,6 +51,9 @@ import { TooltipComponent } from '../../shared/components/tooltip/tooltip.compon
 import { BookingsService } from '../../core/services/bookings.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { DynamicPricingBadgeComponent } from '../../shared/components/dynamic-pricing-badge/dynamic-pricing-badge.component';
+import { MapFiltersComponent } from '../../shared/components/map-filters/map-filters.component';
+import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
+import { environment } from '../../../environments/environment';
 
 export interface CarWithDistance extends Car {
   distance?: number;
@@ -59,6 +61,9 @@ export interface CarWithDistance extends Car {
 }
 
 export type ViewMode = 'grid' | 'list' | 'map';
+
+// Type alias for backward compatibility
+type ToastType = 'success' | 'info' | 'warning' | 'error';
 
 @Component({
   selector: 'app-marketplace-v2-page',
@@ -71,12 +76,15 @@ export type ViewMode = 'grid' | 'list' | 'map';
     MobileBottomNavComponent,
     QuickBookingModalComponent,
     FloatingActionFabComponent,
-    NotificationToastComponent,
+    // NotificationToastComponent, // REMOVED: Using PrimeNG Toast now
     StatsStripComponent,
     CardComponent,
     TooltipComponent,
     DateRangePickerComponent,
+    DateSearchComponent,
     DynamicPricingBadgeComponent,
+    MapFiltersComponent,
+    PriceTransparencyModalComponent,
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -85,12 +93,15 @@ export type ViewMode = 'grid' | 'list' | 'map';
 export class MarketplaceV2Page implements OnInit, OnDestroy {
   @ViewChild(CarsMapComponent) carsMapComponent!: CarsMapComponent;
   @ViewChild('drawerContent', { read: ElementRef }) drawerContent?: ElementRef<HTMLDivElement>;
+  @ViewChild(DateSearchComponent) dateSearchComponent?: DateSearchComponent;
 
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
   private readonly locationService = inject(LocationService);
   private readonly geocodingService = inject(GeocodingService);
   private readonly urgentRentalService = inject(UrgentRentalService);
+  private readonly notificationManager = inject(NotificationManagerService);
+  private readonly tiktokEvents = inject(TikTokEventsService);
   private readonly distanceCalculator = inject(DistanceCalculatorService);
   private readonly bookingsService = inject(BookingsService);
   private readonly analyticsService = inject(AnalyticsService);
@@ -135,6 +146,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly locationSuggestions = signal<GeocodingResult[]>([]); // Sugerencias de ubicación
   readonly showLocationSuggestions = signal(false); // Mostrar dropdown de sugerencias
   readonly locationSearchLoading = signal(false); // Cargando sugerencias
+  readonly googleCalendarId = signal<string | null>(
+    environment.googleCalendarId || null
+  ); // ID del calendario de Google desde environment
+  readonly showPriceTransparencyModal = signal(false); // Modal de transparencia de precios
 
   // Computed
   readonly isMobile = computed(() => {
@@ -286,6 +301,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     void this.loadCars();
     if (this.isBrowser) {
       this.setupRealtimeSubscription();
+      this.checkPriceTransparencyModal();
     }
 
     // Show welcome toast
@@ -518,6 +534,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.mapFilters.set(filters);
     void this.loadCars();
     this.showToast('Filtros aplicados', 'success');
+    this.closeFiltersPanel();
   }
 
   /**
@@ -577,6 +594,12 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   onSearchSubmit(value: string): void {
     this.searchValue.set(value);
     this.showToast(`Buscando autos en "${value}"...`, 'info');
+
+    // 🎯 TikTok Events: Track Search
+    void this.tiktokEvents.trackSearch({
+      searchString: value
+    });
+
     void this.loadCars();
   }
 
@@ -584,6 +607,43 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     console.log('Quick filter clicked:', filterId);
     this.showToast(`Filtro "${filterId}" aplicado`, 'info');
     // TODO: Apply quick filter
+  }
+
+  private openQuickBooking(): void {
+    const selectedCar = this.selectedCar();
+    const carToBook = selectedCar ?? this.cars()[0] ?? null;
+
+    if (!carToBook) {
+      this.showToast('No hay autos disponibles para reservar en este momento.', 'warning');
+      return;
+    }
+
+    this.selectedCarId.set(carToBook.id);
+    this.quickBookingCar.set(carToBook);
+    this.quickBookingModalOpen.set(true);
+
+    this.analyticsService.trackEvent('cta_clicked', {
+      car_id: carToBook.id,
+      source: 'fab_quick_booking',
+    });
+  }
+
+  private async handleLocationAction(): Promise<void> {
+    await this.onLogoClick();
+    this.analyticsService.trackEvent('cta_clicked', {
+      source: 'fab_location',
+    });
+  }
+
+  private openFiltersPanel(): void {
+    this.showFilters.set(true);
+    this.analyticsService.trackEvent('filters_opened', {
+      source: 'fab',
+    });
+  }
+
+  closeFiltersPanel(): void {
+    this.showFilters.set(false);
   }
 
   /**
@@ -605,9 +665,16 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
    */
   onDateRangeChange(range: DateRange): void {
     this.dateRange.set(range);
+
+    // Actualizar el componente date-search si está disponible
+    if (this.dateSearchComponent) {
+      this.dateSearchComponent.updateDates(range.from, range.to);
+    }
+
     if (range.from && range.to) {
       this.showToast(`Fechas: ${range.from} - ${range.to}`, 'success');
       void this.loadCars();
+      this.closeDatePicker(); // Cerrar el modal al seleccionar fechas
     }
   }
 
@@ -720,21 +787,13 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   onFabActionClick(actionId: string): void {
     switch (actionId) {
       case 'filter':
-        this.showFilters.set(!this.showFilters());
+        this.openFiltersPanel();
         break;
       case 'quick-rent':
-        // Open quick rent modal if car selected
-        if (this.selectedCarId()) {
-          const car = this.cars().find((c) => c.id === this.selectedCarId());
-          if (car) {
-            this.quickBookingCar.set(car);
-            this.quickBookingModalOpen.set(true);
-          }
-        }
+        this.openQuickBooking();
         break;
       case 'location':
-        // Trigger location permission request
-        void this.initializeUserLocation();
+        void this.handleLocationAction();
         break;
     }
   }
@@ -752,13 +811,18 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   showToast(message: string, type: ToastType = 'info'): void {
-    this.toastMessage.set(message);
-    this.toastType.set(type);
-    this.toastVisible.set(true);
+    // Using NotificationManagerService instead of inline toast
+    const title = type === 'success' ? 'Éxito' : type === 'error' ? 'Error' : type === 'warning' ? 'Advertencia' : 'Información';
 
-    setTimeout(() => {
-      this.toastVisible.set(false);
-    }, 3000);
+    if (type === 'success') {
+      this.notificationManager.success(title, message);
+    } else if (type === 'error') {
+      this.notificationManager.error(title, message);
+    } else if (type === 'warning') {
+      this.notificationManager.warning(title, message);
+    } else {
+      this.notificationManager.info(title, message);
+    }
   }
 
   /**
@@ -768,5 +832,39 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.radiusKm.set(radiusKm);
     // Reload cars with new radius filter
     void this.loadCars();
+  }
+
+  /**
+   * Check if user has seen price transparency modal
+   * Show it on first visit with a 1.5s delay
+   */
+  private checkPriceTransparencyModal(): void {
+    if (!this.isBrowser) return;
+
+    const hasSeenModal = localStorage.getItem('hasSeenPriceTransparencyModal');
+
+    if (!hasSeenModal) {
+      // Show modal after 1.5 seconds (after welcome toast)
+      setTimeout(() => {
+        this.showPriceTransparencyModal.set(true);
+      }, 1500);
+    }
+  }
+
+  /**
+   * Handle price transparency modal close
+   */
+  onPriceTransparencyModalClose(): void {
+    this.showPriceTransparencyModal.set(false);
+
+    if (this.isBrowser) {
+      localStorage.setItem('hasSeenPriceTransparencyModal', 'true');
+    }
+
+    // Track analytics event
+    this.analyticsService.trackEvent('price_transparency_modal_viewed', {
+      context: 'marketplace_first_visit',
+      timestamp: new Date().toISOString(),
+    });
   }
 }

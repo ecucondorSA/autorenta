@@ -21,13 +21,13 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule],
   template: `
-    <div class="bg-gradient-to-r from-sand-light to-ivory-soft dark:from-slate-deep/50 dark:to-anthracite rounded-xl border border-border-default dark:border-slate-deep p-6 mb-6 transition-colors">
+    <div
+      class="bg-gradient-to-r from-sand-light to-ivory-soft dark:from-slate-deep/50 dark:to-anthracite rounded-xl border border-border-default dark:border-slate-deep p-6 mb-6 transition-colors"
+    >
       <!-- Header -->
       <div class="flex items-start justify-between gap-4 mb-4">
         <div class="flex items-start gap-3 flex-1">
-          <div class="flex-shrink-0 w-10 h-10 bg-cta-default text-cta-text text-xl">
-            💡
-          </div>
+          <div class="flex-shrink-0 w-10 h-10 bg-cta-default text-cta-text text-xl">💡</div>
           <div class="flex-1">
             <h3 class="text-lg font-bold text-text-primary dark:text-text-primary mb-1">
               Guía para Anfitriones
@@ -44,8 +44,19 @@ import { TranslateModule } from '@ngx-translate/core';
           class="flex-shrink-0 text-cta-default dark:text-cta-default/70 hover:text-warning-light dark:hover:text-warning-light transition-colors"
           [attr.aria-label]="isExpanded() ? 'Ocultar guía' : 'Mostrar guía'"
         >
-          <svg class="w-6 h-6 transition-transform" [class.rotate-180]="isExpanded()" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          <svg
+            class="w-6 h-6 transition-transform"
+            [class.rotate-180]="isExpanded()"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </button>
       </div>
@@ -54,17 +65,31 @@ import { TranslateModule } from '@ngx-translate/core';
       <div *ngIf="isExpanded()" class="space-y-6">
         <!-- Quick Stats -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep">
+          <div
+            class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
+          >
             <div class="text-2xl font-bold text-cta-default dark:text-cta-default/80">+40%</div>
-            <div class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">Más reservas con fotos de calidad</div>
+            <div class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+              Más reservas con fotos de calidad
+            </div>
           </div>
-          <div class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep">
-            <div class="text-2xl font-bold text-warning-light dark:text-warning-light/90">15-25%</div>
-            <div class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">Comisión de la plataforma</div>
+          <div
+            class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
+          >
+            <div class="text-2xl font-bold text-warning-light dark:text-warning-light/90">
+              15-25%
+            </div>
+            <div class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+              Comisión de la plataforma
+            </div>
           </div>
-          <div class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep">
+          <div
+            class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
+          >
             <div class="text-2xl font-bold text-cta-default dark:text-cta-default/80">24-48h</div>
-            <div class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">Tiempo de revisión</div>
+            <div class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+              Tiempo de revisión
+            </div>
           </div>
         </div>
 
@@ -103,7 +128,9 @@ import { TranslateModule } from '@ngx-translate/core';
           <!-- Tips Tab -->
           <div *ngIf="activeTab() === 'tips'" class="space-y-3">
             <!-- Accordion Items -->
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden">
+            <div
+              class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden"
+            >
               <button
                 type="button"
                 (click)="toggleAccordion('obligations')"
@@ -111,13 +138,29 @@ import { TranslateModule } from '@ngx-translate/core';
               >
                 <div class="flex items-center gap-3">
                   <span class="text-xl">📋</span>
-                  <span class="font-semibold text-text-primary dark:text-text-primary">Obligaciones del Anfitrión</span>
+                  <span class="font-semibold text-text-primary dark:text-text-primary"
+                    >Obligaciones del Anfitrión</span
+                  >
                 </div>
-                <svg class="w-5 h-5 transition-transform" [class.rotate-180]="openAccordion() === 'obligations'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                <svg
+                  class="w-5 h-5 transition-transform"
+                  [class.rotate-180]="openAccordion() === 'obligations'"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
-              <div *ngIf="openAccordion() === 'obligations'" class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2">
+              <div
+                *ngIf="openAccordion() === 'obligations'"
+                class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2"
+              >
                 <ul class="list-disc list-inside space-y-1">
                   <li>Mantener el auto en excelentes condiciones de funcionamiento</li>
                   <li>Contar con seguro vigente que cubra alquiler a terceros</li>
@@ -129,7 +172,9 @@ import { TranslateModule } from '@ngx-translate/core';
               </div>
             </div>
 
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden">
+            <div
+              class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden"
+            >
               <button
                 type="button"
                 (click)="toggleAccordion('maintenance')"
@@ -137,25 +182,50 @@ import { TranslateModule } from '@ngx-translate/core';
               >
                 <div class="flex items-center gap-3">
                   <span class="text-xl">🔧</span>
-                  <span class="font-semibold text-text-primary dark:text-text-primary">Mantenimiento Requerido</span>
+                  <span class="font-semibold text-text-primary dark:text-text-primary"
+                    >Mantenimiento Requerido</span
+                  >
                 </div>
-                <svg class="w-5 h-5 transition-transform" [class.rotate-180]="openAccordion() === 'maintenance'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                <svg
+                  class="w-5 h-5 transition-transform"
+                  [class.rotate-180]="openAccordion() === 'maintenance'"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
-              <div *ngIf="openAccordion() === 'maintenance'" class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2">
+              <div
+                *ngIf="openAccordion() === 'maintenance'"
+                class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2"
+              >
                 <ul class="list-disc list-inside space-y-1">
-                  <li><strong>Antes de cada alquiler:</strong> Limpieza completa interior y exterior</li>
+                  <li>
+                    <strong>Antes de cada alquiler:</strong> Limpieza completa interior y exterior
+                  </li>
                   <li><strong>Cada 5,000 km:</strong> Cambio de aceite y filtros</li>
                   <li><strong>Cada 10,000 km:</strong> Revisión de frenos y alineación</li>
-                  <li><strong>Mensual:</strong> Verificar presión de neumáticos y niveles de fluidos</li>
+                  <li>
+                    <strong>Mensual:</strong> Verificar presión de neumáticos y niveles de fluidos
+                  </li>
                   <li><strong>Anual:</strong> Verificación técnica vehicular (VTV)</li>
-                  <li><strong>Recomendado:</strong> Kit de emergencia (matafuego, balizas, herramientas)</li>
+                  <li>
+                    <strong>Recomendado:</strong> Kit de emergencia (matafuego, balizas,
+                    herramientas)
+                  </li>
                 </ul>
               </div>
             </div>
 
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden">
+            <div
+              class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden"
+            >
               <button
                 type="button"
                 (click)="toggleAccordion('insurance')"
@@ -163,28 +233,63 @@ import { TranslateModule } from '@ngx-translate/core';
               >
                 <div class="flex items-center gap-3">
                   <span class="text-xl">🛡️</span>
-                  <span class="font-semibold text-text-primary dark:text-text-primary">Seguros Necesarios</span>
+                  <span class="font-semibold text-text-primary dark:text-text-primary"
+                    >Seguros Necesarios</span
+                  >
                 </div>
-                <svg class="w-5 h-5 transition-transform" [class.rotate-180]="openAccordion() === 'insurance'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                <svg
+                  class="w-5 h-5 transition-transform"
+                  [class.rotate-180]="openAccordion() === 'insurance'"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
-              <div *ngIf="openAccordion() === 'insurance'" class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2">
+              <div
+                *ngIf="openAccordion() === 'insurance'"
+                class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2"
+              >
                 <div class="space-y-3">
-                  <div class="bg-cta-default/5 dark:bg-cta-default/10 p-3 rounded-lg border border-cta-default/20">
-                    <p class="font-semibold text-cta-default dark:text-cta-default/80 mb-1">Seguro Obligatorio</p>
-                    <p class="text-sm">Responsabilidad civil contra terceros con cobertura de alquiler a terceros explícita en la póliza.</p>
+                  <div
+                    class="bg-cta-default/5 dark:bg-cta-default/10 p-3 rounded-lg border border-cta-default/20"
+                  >
+                    <p class="font-semibold text-cta-default dark:text-cta-default/80 mb-1">
+                      Seguro Obligatorio
+                    </p>
+                    <p class="text-sm">
+                      Responsabilidad civil contra terceros con cobertura de alquiler a terceros
+                      explícita en la póliza.
+                    </p>
                   </div>
-                  <div class="bg-warning-light/5 dark:bg-warning-light/10 p-3 rounded-lg border border-warning-light/20">
-                    <p class="font-semibold text-warning-light dark:text-warning-light/90 mb-1">Seguro Recomendado</p>
-                    <p class="text-sm">Todo riesgo con franquicia reducida. Protege tu inversión ante daños, robo o accidentes.</p>
+                  <div
+                    class="bg-warning-light/5 dark:bg-warning-light/10 p-3 rounded-lg border border-warning-light/20"
+                  >
+                    <p class="font-semibold text-warning-light dark:text-warning-light/90 mb-1">
+                      Seguro Recomendado
+                    </p>
+                    <p class="text-sm">
+                      Todo riesgo con franquicia reducida. Protege tu inversión ante daños, robo o
+                      accidentes.
+                    </p>
                   </div>
-                  <p class="text-xs italic text-text-secondary dark:text-text-secondary/70">💡 Tip: Incluir el costo del seguro en el precio diario aumenta la confianza del locatario.</p>
+                  <p class="text-xs italic text-text-secondary dark:text-text-secondary/70">
+                    💡 Tip: Incluir el costo del seguro en el precio diario aumenta la confianza del
+                    locatario.
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden">
+            <div
+              class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden"
+            >
               <button
                 type="button"
                 (click)="toggleAccordion('legal')"
@@ -192,31 +297,60 @@ import { TranslateModule } from '@ngx-translate/core';
               >
                 <div class="flex items-center gap-3">
                   <span class="text-xl">⚖️</span>
-                  <span class="font-semibold text-text-primary dark:text-text-primary">Documentación Legal</span>
+                  <span class="font-semibold text-text-primary dark:text-text-primary"
+                    >Documentación Legal</span
+                  >
                 </div>
-                <svg class="w-5 h-5 transition-transform" [class.rotate-180]="openAccordion() === 'legal'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                <svg
+                  class="w-5 h-5 transition-transform"
+                  [class.rotate-180]="openAccordion() === 'legal'"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
-              <div *ngIf="openAccordion() === 'legal'" class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2">
+              <div
+                *ngIf="openAccordion() === 'legal'"
+                class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2"
+              >
                 <ul class="list-disc list-inside space-y-1">
-                  <li><strong>Cédula verde/azul:</strong> Debe estar a tu nombre o tener autorización notarial</li>
+                  <li>
+                    <strong>Cédula verde/azul:</strong> Debe estar a tu nombre o tener autorización
+                    notarial
+                  </li>
                   <li><strong>Póliza de seguro:</strong> Con cláusula de alquiler a terceros</li>
                   <li><strong>VTV vigente:</strong> No mayor a 1 año (vehículos de +3 años)</li>
                   <li><strong>Contrato de alquiler:</strong> AutoRenta provee template estándar</li>
-                  <li><strong>AFIP/ARBA:</strong> Ingresos por alquiler son gravables (consultá con contador)</li>
+                  <li>
+                    <strong>AFIP/ARBA:</strong> Ingresos por alquiler son gravables (consultá con
+                    contador)
+                  </li>
                 </ul>
               </div>
             </div>
           </div>
 
           <!-- Calculator Tab -->
-          <div *ngIf="activeTab() === 'calculator'" class="bg-surface-raised dark:bg-surface-raised rounded-lg p-6 border border-border-default dark:border-border-muted">
-            <h4 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">Calculadora de Ganancias</h4>
+          <div
+            *ngIf="activeTab() === 'calculator'"
+            class="bg-surface-raised dark:bg-surface-raised rounded-lg p-6 border border-border-default dark:border-border-muted"
+          >
+            <h4 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">
+              Calculadora de Ganancias
+            </h4>
 
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+                <label
+                  class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                >
                   Precio por día (USD)
                 </label>
                 <input
@@ -230,7 +364,9 @@ import { TranslateModule } from '@ngx-translate/core';
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+                <label
+                  class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                >
                   Días alquilados por mes (promedio)
                 </label>
                 <input
@@ -243,33 +379,68 @@ import { TranslateModule } from '@ngx-translate/core';
                   placeholder="15"
                 />
                 <div class="mt-2 flex gap-2">
-                  <button type="button" (click)="setDaysPerMonth(10)" class="px-3 py-1 text-xs bg-surface-raised dark:bg-surface-base rounded hover:bg-surface-hover dark:hover:bg-gray-600">10 días</button>
-                  <button type="button" (click)="setDaysPerMonth(15)" class="px-3 py-1 text-xs bg-surface-raised dark:bg-surface-base rounded hover:bg-surface-hover dark:hover:bg-gray-600">15 días</button>
-                  <button type="button" (click)="setDaysPerMonth(20)" class="px-3 py-1 text-xs bg-surface-raised dark:bg-surface-base rounded hover:bg-surface-hover dark:hover:bg-gray-600">20 días</button>
+                  <button
+                    type="button"
+                    (click)="setDaysPerMonth(10)"
+                    class="px-3 py-1 text-xs bg-surface-raised dark:bg-surface-base rounded hover:bg-surface-hover dark:hover:bg-gray-600"
+                  >
+                    10 días
+                  </button>
+                  <button
+                    type="button"
+                    (click)="setDaysPerMonth(15)"
+                    class="px-3 py-1 text-xs bg-surface-raised dark:bg-surface-base rounded hover:bg-surface-hover dark:hover:bg-gray-600"
+                  >
+                    15 días
+                  </button>
+                  <button
+                    type="button"
+                    (click)="setDaysPerMonth(20)"
+                    class="px-3 py-1 text-xs bg-surface-raised dark:bg-surface-base rounded hover:bg-surface-hover dark:hover:bg-gray-600"
+                  >
+                    20 días
+                  </button>
                 </div>
               </div>
 
               <div class="border-t border-border-default dark:border-slate-deep pt-4 space-y-2">
                 <div class="flex justify-between text-sm">
                   <span class="text-text-secondary dark:text-text-secondary">Ingresos brutos</span>
-                  <span class="font-semibold text-text-primary dark:text-text-primary">USD {{ grossIncome() }}</span>
+                  <span class="font-semibold text-text-primary dark:text-text-primary"
+                    >USD {{ grossIncome() }}</span
+                  >
                 </div>
                 <div class="flex justify-between text-sm">
-                  <span class="text-text-secondary dark:text-text-secondary">Comisión AutoRenta (20%)</span>
-                  <span class="font-semibold text-warning-light dark:text-warning-light/90">- USD {{ platformFee() }}</span>
+                  <span class="text-text-secondary dark:text-text-secondary"
+                    >Comisión AutoRenta (20%)</span
+                  >
+                  <span class="font-semibold text-warning-light dark:text-warning-light/90"
+                    >- USD {{ platformFee() }}</span
+                  >
                 </div>
-                <div class="flex justify-between text-sm border-t border-border-default dark:border-slate-deep pt-2">
-                  <span class="font-semibold text-text-primary dark:text-text-primary">Ganancia neta</span>
-                  <span class="font-bold text-cta-default dark:text-cta-default/80 text-lg">USD {{ netIncome() }}</span>
+                <div
+                  class="flex justify-between text-sm border-t border-border-default dark:border-slate-deep pt-2"
+                >
+                  <span class="font-semibold text-text-primary dark:text-text-primary"
+                    >Ganancia neta</span
+                  >
+                  <span class="font-bold text-cta-default dark:text-cta-default/80 text-lg"
+                    >USD {{ netIncome() }}</span
+                  >
                 </div>
-                <div class="flex justify-between text-xs text-text-muted dark:text-text-secondary/60">
+                <div
+                  class="flex justify-between text-xs text-text-muted dark:text-text-secondary/60"
+                >
                   <span>Proyección anual</span>
                   <span>USD {{ annualIncome() }}</span>
                 </div>
               </div>
 
-              <div class="bg-warning-light/5 dark:bg-warning-light/10 border border-warning-light/20 rounded-lg p-3 text-xs text-warning-light dark:text-warning-light/90">
-                ⚠️ <strong>Nota:</strong> Estos cálculos son estimativos. No incluyen gastos de mantenimiento, combustible, seguro o impuestos.
+              <div
+                class="bg-warning-light/5 dark:bg-warning-light/10 border border-warning-light/20 rounded-lg p-3 text-xs text-warning-light dark:text-warning-light/90"
+              >
+                ⚠️ <strong>Nota:</strong> Estos cálculos son estimativos. No incluyen gastos de
+                mantenimiento, combustible, seguro o impuestos.
               </div>
             </div>
           </div>
@@ -277,54 +448,101 @@ import { TranslateModule } from '@ngx-translate/core';
           <!-- Pricing Tab -->
           <div *ngIf="activeTab() === 'pricing'" class="space-y-4">
             <p class="text-sm text-text-secondary dark:text-text-secondary mb-4">
-              Precios sugeridos por categoría (USD por día). Basados en promedios de mercado en Argentina.
+              Precios sugeridos por categoría (USD por día). Basados en promedios de mercado en
+              Argentina.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep">
+              <div
+                class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
+              >
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🚗</span>
-                  <h5 class="font-semibold text-text-primary dark:text-text-primary">Compacto/Económico</h5>
+                  <h5 class="font-semibold text-text-primary dark:text-text-primary">
+                    Compacto/Económico
+                  </h5>
                 </div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">Ej: Chevrolet Onix, Fiat Cronos</p>
-                <div class="text-2xl font-bold text-cta-default dark:text-cta-default/80">$25-35</div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">USD por día</p>
+                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">
+                  Ej: Chevrolet Onix, Fiat Cronos
+                </p>
+                <div class="text-2xl font-bold text-cta-default dark:text-cta-default/80">
+                  $25-35
+                </div>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+                  USD por día
+                </p>
               </div>
 
-              <div class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep">
+              <div
+                class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
+              >
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🚙</span>
-                  <h5 class="font-semibold text-text-primary dark:text-text-primary">Sedán Mediano</h5>
+                  <h5 class="font-semibold text-text-primary dark:text-text-primary">
+                    Sedán Mediano
+                  </h5>
                 </div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">Ej: Toyota Corolla, Volkswagen Vento</p>
-                <div class="text-2xl font-bold text-warning-light dark:text-warning-light/90">$40-55</div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">USD por día</p>
+                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">
+                  Ej: Toyota Corolla, Volkswagen Vento
+                </p>
+                <div class="text-2xl font-bold text-warning-light dark:text-warning-light/90">
+                  $40-55
+                </div>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+                  USD por día
+                </p>
               </div>
 
-              <div class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep">
+              <div
+                class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
+              >
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🚐</span>
-                  <h5 class="font-semibold text-text-primary dark:text-text-primary">SUV/Camioneta</h5>
+                  <h5 class="font-semibold text-text-primary dark:text-text-primary">
+                    SUV/Camioneta
+                  </h5>
                 </div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">Ej: Ford Ranger, Chevrolet Tracker</p>
-                <div class="text-2xl font-bold text-cta-default dark:text-cta-default/80">$60-85</div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">USD por día</p>
+                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">
+                  Ej: Ford Ranger, Chevrolet Tracker
+                </p>
+                <div class="text-2xl font-bold text-cta-default dark:text-cta-default/80">
+                  $60-85
+                </div>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+                  USD por día
+                </p>
               </div>
 
-              <div class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep">
+              <div
+                class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
+              >
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-2xl">🏎️</span>
-                  <h5 class="font-semibold text-text-primary dark:text-text-primary">Premium/Lujo</h5>
+                  <h5 class="font-semibold text-text-primary dark:text-text-primary">
+                    Premium/Lujo
+                  </h5>
                 </div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">Ej: Audi A4, BMW Serie 3</p>
-                <div class="text-2xl font-bold text-warning-light dark:text-warning-light/90">$90-150+</div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">USD por día</p>
+                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">
+                  Ej: Audi A4, BMW Serie 3
+                </p>
+                <div class="text-2xl font-bold text-warning-light dark:text-warning-light/90">
+                  $90-150+
+                </div>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+                  USD por día
+                </p>
               </div>
             </div>
 
-            <div class="bg-cta-default/5 dark:bg-cta-default/10 border border-cta-default/20 rounded-lg p-4 text-sm">
-              <p class="font-semibold text-cta-default dark:text-cta-default/80 mb-2">💡 Tips de Pricing:</p>
-              <ul class="list-disc list-inside space-y-1 text-text-secondary dark:text-text-secondary text-xs">
+            <div
+              class="bg-cta-default/5 dark:bg-cta-default/10 border border-cta-default/20 rounded-lg p-4 text-sm"
+            >
+              <p class="font-semibold text-cta-default dark:text-cta-default/80 mb-2">
+                💡 Tips de Pricing:
+              </p>
+              <ul
+                class="list-disc list-inside space-y-1 text-text-secondary dark:text-text-secondary text-xs"
+              >
                 <li>Precio competitivo: Revisar autos similares en tu ciudad</li>
                 <li>Descuentos por semana (5-10%) y mes (15-20%) atraen más clientes</li>
                 <li>Temporada alta (verano/feriados): Aumentar 20-30%</li>
@@ -345,7 +563,8 @@ export class HostSupportInfoPanelComponent {
   getTabClasses(tab: 'tips' | 'calculator' | 'pricing'): Record<string, boolean> {
     const isActive = this.activeTab() === tab;
     return {
-      'border-cta-default text-cta-default dark:border-cta-default/70 dark:text-cta-default/70': isActive,
+      'border-cta-default text-cta-default dark:border-cta-default/70 dark:text-cta-default/70':
+        isActive,
       'border-transparent text-text-muted dark:text-text-secondary/70': !isActive,
     };
   }

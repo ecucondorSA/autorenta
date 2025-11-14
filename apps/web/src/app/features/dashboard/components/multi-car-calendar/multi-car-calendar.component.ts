@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { format, addDays, startOfMonth, endOfMonth, addMonths, eachDayOfInterval } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { ToastService } from '../../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
 import { CarsService } from '../../../../core/services/cars.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
@@ -40,7 +40,7 @@ export class MultiCarCalendarComponent implements OnInit {
   private readonly carsService = inject(CarsService);
   private readonly availabilityService = inject(CarAvailabilityService);
   private readonly blockingService = inject(CarBlockingService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
   private readonly authService = inject(AuthService);
   private readonly supabase = inject(SupabaseClientService).getClient();
 

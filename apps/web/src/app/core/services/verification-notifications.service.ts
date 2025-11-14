@@ -1,5 +1,5 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
-import { ToastService } from './toast.service';
+import { NotificationManagerService } from './notification-manager.service';
 import { VerificationStateService } from './verification-state.service';
 
 /**
@@ -12,7 +12,7 @@ import { VerificationStateService } from './verification-state.service';
   providedIn: 'root',
 })
 export class VerificationNotificationsService implements OnDestroy {
-  private readonly toast = inject(ToastService);
+  private readonly toast = inject(NotificationManagerService);
   private readonly verificationStateService = inject(VerificationStateService);
 
   private unsubscribe?: () => void;

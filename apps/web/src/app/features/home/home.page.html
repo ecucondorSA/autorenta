@@ -12,6 +12,18 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <!-- Initial Goal Modal (shown on first login) -->
+  @if (showInitialModal()) {
+  <app-initial-goal-modal />
+  }
+
+  <!-- Onboarding Checklist (shown after goal selection) -->
+  @if (activeChecklist() && !showInitialModal()) {
+  <div class="onboarding-section">
+    <app-onboarding-checklist />
+  </div>
+  }
+
   <!-- Hero Section -->
   <div class="hero-section">
     <div class="hero-overlay">

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ReviewsService } from '../../../../core/services/reviews.service';
-import { ToastService } from '../../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
 import type { Review } from '../../../../core/models';
 
 @Component({
@@ -135,7 +135,7 @@ import type { Review } from '../../../../core/models';
 })
 export class ModerateReviewsPage implements OnInit {
   private readonly reviewsService = inject(ReviewsService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly flaggedReviews = signal<Review[]>([]);
   readonly loading = signal(false);

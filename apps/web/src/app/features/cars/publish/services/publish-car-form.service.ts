@@ -20,7 +20,7 @@ export class PublishCarFormService {
   private readonly supabase = injectSupabase();
 
   private readonly minYear = 1980;
-  private readonly maxYear = new Date().getFullYear() + 1;
+  private readonly maxYear = new Date().getFullYear(); // ✅ Changed: removed +1 to avoid future years
 
   // State
   readonly brands = signal<CarBrand[]>([]);
@@ -38,37 +38,40 @@ export class PublishCarFormService {
    */
   initForm(): FormGroup {
     this.formInstance = this.fb.group({
-      // Vehicle
-      brand_id: ['', Validators.required],
-      model_id: ['', Validators.required],
+      // Vehicle - SOLO ESTOS SON REQUERIDOS
+      brand_id: [null], // UUID - puede ser null si usamos FIPE
+      model_id: [null], // UUID - puede ser null si usamos FIPE
+      brand_text_backup: [''], // Texto backup para FIPE
+      model_text_backup: [''], // Texto backup para FIPE
       year: [
         new Date().getFullYear(),
         [Validators.required, Validators.min(this.minYear), Validators.max(this.maxYear)],
       ],
-      color: ['', Validators.required],
-      mileage: [null, [Validators.required, Validators.min(0)]],
-      transmission: ['', Validators.required],
-      fuel: ['', Validators.required],
+      // Campos opcionales
+      color: [''],
+      mileage: [null, [Validators.min(0)]],
+      transmission: [''],
+      fuel: [''],
 
-      // Pricing
+      // Pricing - Opcional (se calcula automáticamente si es dinámico)
       pricing_strategy: ['dynamic'],
-      price_per_day: [null, [Validators.required, Validators.min(1)]],
+      price_per_day: [null, [Validators.min(1)]], // Opcional si es dinámico
       currency: ['USD', Validators.required],
-      value_usd: [null, [Validators.required, Validators.min(5000), Validators.max(500000)]],
-      category_id: [null, Validators.required], // NEW: Vehicle category
-      min_rental_days: [1, [Validators.required, Validators.min(1)]],
+      value_usd: [null, [Validators.min(5000), Validators.max(500000)]], // Opcional
+      category_id: [null], // Opcional (se auto-categoriza)
+      min_rental_days: [1, [Validators.min(1)]],
       max_rental_days: [30],
       deposit_required: [true],
       deposit_amount: [200],
       insurance_included: [false],
       auto_approval: [true],
 
-      // Location
-      location_street: ['', Validators.required],
-      location_street_number: ['', Validators.required],
-      location_city: ['', Validators.required],
-      location_state: ['', Validators.required],
-      location_country: ['AR', Validators.required],
+      // Location - Opcional
+      location_street: [''],
+      location_street_number: [''],
+      location_city: [''],
+      location_state: [''],
+      location_country: ['AR'],
     });
 
     return this.formInstance;
@@ -278,6 +281,8 @@ export class PublishCarFormService {
     const {
       brand_id,
       model_id,
+      brand_text_backup,
+      model_text_backup,
       year,
       color,
       mileage,
@@ -300,9 +305,9 @@ export class PublishCarFormService {
       location_country,
     } = rawValue;
 
-    // Get brand and model info
-    const brand = this.brands().find((b) => b.id === brand_id);
-    const model = this.models().find((m) => m.id === model_id);
+    // Get brand and model info (solo si tenemos UUIDs)
+    const brand = brand_id ? this.brands().find((b) => b.id === brand_id) : null;
+    const model = model_id ? this.models().find((m) => m.id === model_id) : null;
 
     // Convert pricing_strategy (UI field) to uses_dynamic_pricing (DB field)
     const uses_dynamic_pricing = pricing_strategy === 'dynamic';
@@ -310,8 +315,12 @@ export class PublishCarFormService {
     // Return clean data for database
     return {
       // Vehicle fields
-      brand_id,
-      model_id,
+      // ✅ CRITICAL: brand_id y model_id son UUIDs, pueden ser null si usamos FIPE
+      brand_id: brand_id || null,
+      model_id: model_id || null,
+      // ✅ CRITICAL: brand_text_backup y model_text_backup para FIPE
+      brand_text_backup: brand_text_backup || brand?.name || '',
+      model_text_backup: model_text_backup || model?.name || '',
       year,
       color,
       mileage,
@@ -340,8 +349,6 @@ export class PublishCarFormService {
       // Generated/computed fields
       title: this.generateTitle() || 'Auto sin título',
       description: '',
-      brand_text_backup: brand?.name || '',
-      model_text_backup: model?.name || '',
       seats: model?.seats || 5,
       doors: model?.doors || 4,
       features: {},

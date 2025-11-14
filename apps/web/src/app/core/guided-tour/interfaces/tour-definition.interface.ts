@@ -8,6 +8,12 @@ export enum TourId {
   Renter = 'renter',
   Owner = 'owner',
   CarDetail = 'car-detail',
+  // Renter-specific tours
+  BecomeRenter = 'become-renter-onboarding',
+  PublishCar = 'publish-car', // Updated: wizard removed, using publish-car-v2
+  ReferralSystem = 'referral-system',
+  WalletEarnings = 'wallet-earnings',
+  FirstBooking = 'first-booking-received',
 }
 
 export enum TourPriority {

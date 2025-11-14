@@ -19,7 +19,7 @@ import { buildEnvironment } from './environment.base';
  */
 export const environment = buildEnvironment({
   production: false,
-  supabaseUrl: 'https://obxvffplochgeiclibng.supabase.co',
+  supabaseUrl: 'https://pisqjmoklivzpwufhscx.supabase.co',
   // ✅ Secrets se leen de .env.local (NO hardcodeados)
   supabaseAnonKey: undefined, // Lee de NG_APP_SUPABASE_ANON_KEY
   defaultCurrency: 'ARS',
@@ -33,4 +33,12 @@ export const environment = buildEnvironment({
   sentryDsn: '', // Opcional: NG_APP_SENTRY_DSN
   sentryEnvironment: 'development',
   sentryTracesSampleRate: 0.1,
+  // Google Calendar Configuration
+  // IMPORTANTE: Configurar via variables de entorno
+  // NG_APP_GOOGLE_CALENDAR_ID - ID del calendario (email o calendar ID)
+  // NG_APP_GOOGLE_CALENDAR_API_KEY - API Key de Google Cloud Console
+  // NG_APP_GOOGLE_CALENDAR_CLIENT_ID - OAuth Client ID (opcional, para escritura/calendarios privados)
+  googleCalendarId: undefined, // Lee de NG_APP_GOOGLE_CALENDAR_ID
+  googleCalendarApiKey: undefined, // Lee de NG_APP_GOOGLE_CALENDAR_API_KEY
+  googleCalendarClientId: undefined, // Lee de NG_APP_GOOGLE_CALENDAR_CLIENT_ID
 });

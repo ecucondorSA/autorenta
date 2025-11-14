@@ -4,7 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { BookingsService } from '../../../core/services/bookings.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 interface PendingApproval {
   booking_id: string;
@@ -31,7 +31,7 @@ interface PendingApproval {
 })
 export class PendingApprovalPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
   private readonly router = inject(Router);
 
   readonly loading = signal(true);

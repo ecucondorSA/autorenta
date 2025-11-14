@@ -23,7 +23,7 @@ import type { AddBankAccountParams, RequestWithdrawalParams } from '../../core/m
 import { WalletService } from '../../core/services/wallet.service';
 import { MetaService } from '../../core/services/meta.service';
 import { ProfileService } from '../../core/services/profile.service';
-import { ToastService } from '../../core/services/toast.service';
+import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 
 /**
@@ -113,7 +113,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   private readonly walletService = inject(WalletService);
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
   private readonly analyticsService = inject(AnalyticsService);
 
   /**

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { InsuranceService } from '../../../core/services/insurance.service';
 import { InsuranceClaim } from '../../../core/models/insurance.model';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 /**
  * MyClaimsPage
@@ -29,7 +29,7 @@ import { ToastService } from '../../../core/services/toast.service';
 export class MyClaimsPage {
   private readonly router = inject(Router);
   private readonly insuranceService = inject(InsuranceService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly claims = signal<InsuranceClaim[]>([]);
   readonly loading = signal(true);

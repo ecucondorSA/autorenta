@@ -47,6 +47,7 @@ export class TourOrchestratorService implements OnDestroy {
   private routeSubscription?: Subscription;
   private currentDefinition?: TourDefinition;
   private stepIndexMap = new Map<string, number>();
+  private isCancelling = false; // Prevent infinite loop
 
   constructor() {
     this.loadCompletedTours();
@@ -96,16 +97,24 @@ export class TourOrchestratorService implements OnDestroy {
    * Cancel the current tour
    */
   cancelTour(): void {
+    // Prevent infinite recursion (onCancel callback calls cancelTour again)
+    if (this.isCancelling) return;
     if (!this.state().isRunning) return;
 
-    const tourId = this.state().activeTourId;
-    if (tourId) {
-      this.telemetry.trackTourCancelled(tourId, this.adapter.getCurrentStepId());
-    }
+    this.isCancelling = true;
 
-    this.adapter.cancel();
-    this.cleanupTour();
-    this.processQueue();
+    try {
+      const tourId = this.state().activeTourId;
+      if (tourId) {
+        this.telemetry.trackTourCancelled(tourId, this.adapter.getCurrentStepId());
+      }
+
+      this.adapter.cancel();
+      this.cleanupTour();
+      this.processQueue();
+    } finally {
+      this.isCancelling = false;
+    }
   }
 
   /**

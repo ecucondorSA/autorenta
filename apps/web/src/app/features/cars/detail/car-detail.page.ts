@@ -65,7 +65,8 @@ import {
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 import { AnalyticsService } from '../../../core/services/analytics.service';
 import { WaitlistService } from '../../../core/services/waitlist.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { TikTokEventsService } from '../../../core/services/tiktok-events.service';
 
 interface CarDetailState {
   car: Car | null;
@@ -116,7 +117,8 @@ export class CarDetailPage implements OnInit {
   private readonly distanceCalculator = inject(DistanceCalculatorService);
   private readonly locationService = inject(LocationService);
   private readonly waitlistService = inject(WaitlistService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
+  private readonly tiktokEvents = inject(TikTokEventsService);
 
   readonly expressMode = signal(false);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -185,7 +187,6 @@ export class CarDetailPage implements OnInit {
       // ✅ FIX: Validar que el ID sea un UUID válido
       // Previene errores cuando se navega a rutas como /cars/publish
       if (!this.isValidUUID(id)) {
-        console.warn(`ID inválido para auto: "${id}". Redirigiendo...`);
         // Redirigir a la lista de autos si el ID no es válido
         setTimeout(() => this.router.navigate(['/cars']), 100);
         return of({
@@ -199,16 +200,10 @@ export class CarDetailPage implements OnInit {
       return combineLatest([
         from(this.carsService.getCarById(id)),
         from(this.reviewsService.getReviewsForCar(id)).pipe(
-          catchError((err) => {
-            console.error('Error cargando reviews:', err);
-            return of([]); // Retornar array vacío si falla
-          }),
+          catchError(() => of([])), // Retornar array vacío si falla
         ),
         from(this.reviewsService.getCarStats(id)).pipe(
-          catchError((err) => {
-            console.error('Error cargando estadísticas:', err);
-            return of(null); // Retornar null si falla
-          }),
+          catchError(() => of(null)), // Retornar null si falla
         ),
       ]).pipe(
         map(([car, reviews, stats]) => {
@@ -218,7 +213,6 @@ export class CarDetailPage implements OnInit {
           return { car, reviews, stats, loading: false, error: car ? null : 'Auto no disponible' };
         }),
         catchError((err) => {
-          console.error('Error cargando auto:', err);
           // Determinar mensaje de error más específico
           let errorMessage = 'Error al cargar el auto';
           if (err?.code === 'PGRST116') {
@@ -365,25 +359,16 @@ export class CarDetailPage implements OnInit {
     // Prioridad 2: Calcular desde precio diario dinámico/estático
     const car = this.car();
     if (!car) {
-      console.warn('⚠️ [CarDetail] No car available for hourly rate calculation');
       return null;
     }
 
     const pricePerDay = this.displayPrice();
     if (!pricePerDay || isNaN(pricePerDay) || pricePerDay <= 0) {
-      console.warn(`⚠️ [CarDetail] Invalid price per day: ${pricePerDay}`, {
-        dynamicPrice: this.dynamicPrice(),
-        staticPrice: car.price_per_day,
-        displayPrice: this.displayPrice(),
-      });
       return null;
     }
 
     // 75% del precio diario / 24 horas
     const hourlyRate = (pricePerDay * 0.75) / 24;
-    console.log(
-      `💰 [CarDetail] Calculated hourly rate from daily price: $${pricePerDay}/día → $${hourlyRate}/hora`,
-    );
     return hourlyRate;
   });
 
@@ -470,7 +455,6 @@ export class CarDetailPage implements OnInit {
     try {
       return await this.carsService.isCarAvailable(carId, from, to);
     } catch (_error) {
-      console.error('Error checking availability:', _error);
       return false;
     }
   };
@@ -493,7 +477,7 @@ export class CarDetailPage implements OnInit {
         to: this.normalizeDateInput(firstSuggestion.endDate),
       };
     } catch (_error) {
-      console.warn('No se pudo obtener próxima ventana disponible:', _error);
+      // Silent fail - próxima ventana disponible es opcional
       return null;
     }
   };
@@ -517,6 +501,14 @@ export class CarDetailPage implements OnInit {
         }
         // ✅ NEW: Inicializar ubicación y calcular distancia
         void this.initializeUserLocationAndDistance(state.car);
+
+        // 🎯 TikTok Events: Track ViewContent
+        void this.tiktokEvents.trackViewContent({
+          contentId: state.car.id,
+          contentName: state.car.title,
+          value: state.car.price_per_day,
+          currency: state.car.currency || 'ARS'
+        });
       }
     });
   }
@@ -524,7 +516,6 @@ export class CarDetailPage implements OnInit {
   onContactOwner(): void {
     const car = this.car();
     if (!car?.owner_id) {
-      console.warn('No se puede iniciar el chat: falta owner_id en el auto');
       return;
     }
 
@@ -609,7 +600,6 @@ export class CarDetailPage implements OnInit {
       }
     } catch (_error) {
       // Silently fail - distance is optional
-      console.warn('Could not calculate distance:', _error);
     }
   }
 
@@ -638,15 +628,11 @@ export class CarDetailPage implements OnInit {
       });
 
       if (error) {
-        console.error('❌ [CarDetail] Error loading dynamic price:', error);
         return;
       }
 
       if (data && data.total_price) {
         this.dynamicPrice.set(data.total_price);
-        console.log(
-          `💰 [CarDetail] Dynamic price loaded: $${data.total_price} (was $${car.price_per_day})`,
-        );
       }
 
       // ✅ FIX: Cargar precio por hora para modo express (5 horas mínimo)
@@ -657,24 +643,19 @@ export class CarDetailPage implements OnInit {
           const quote = await this.urgentRentalService.getUrgentQuote(car.id, car.region_id, hours);
           // Usar el precio por hora del sistema de pricing dinámico
           this.dynamicHourlyRate.set(quote.hourlyRate);
-          console.log(
-            `💰 [CarDetail] Dynamic hourly rate loaded: $${quote.hourlyRate}/hora (quote para ${hours} horas)`,
-          );
         } catch (_error) {
-          console.warn('⚠️ [CarDetail] Could not load dynamic hourly rate:', _error);
           // Fallback: calcular desde precio diario
           const pricePerDay = this.displayPrice();
           if (pricePerDay > 0) {
             const fallbackHourly = (pricePerDay * 0.75) / 24;
             this.dynamicHourlyRate.set(fallbackHourly);
-            console.log(`💰 [CarDetail] Using fallback hourly rate: $${fallbackHourly}/hora`);
           }
         } finally {
           this.hourlyRateLoading.set(false);
         }
       }
     } catch (_error) {
-      console.error('❌ [CarDetail] Error loading dynamic price:', _error);
+      // Silent fail - will use static price
     } finally {
       this.priceLoading.set(false);
     }
@@ -698,7 +679,7 @@ export class CarDetailPage implements OnInit {
       try {
         await this.urgentRentalService.getCurrentLocation();
       } catch (_error) {
-        console.warn('No se pudo obtener ubicación:', _error);
+        // Silent fail - location is optional
       }
 
       // Verificar disponibilidad inmediata

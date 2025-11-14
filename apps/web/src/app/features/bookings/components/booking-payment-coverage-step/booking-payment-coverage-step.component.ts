@@ -552,12 +552,9 @@ export class BookingPaymentCoverageStepComponent {
 
   constructor() {
     // Initialize local data from input
-    effect(
-      () => {
-        this.localData = { ...this.data() };
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      this.localData = { ...this.data() };
+    });
 
     // Emit changes when local data changes
     effect(() => {

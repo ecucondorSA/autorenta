@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -22,6 +22,9 @@ import { searchOutline, locationOutline, calendarOutline, trendingUp } from 'ion
 import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
 import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
 import { CarsService } from '../../core/services/cars.service';
+import { OnboardingService } from '../../core/services/onboarding.service';
+import { InitialGoalModalComponent } from '../../shared/components/initial-goal-modal/initial-goal-modal.component';
+import { OnboardingChecklistComponent } from '../../shared/components/onboarding-checklist/onboarding-checklist.component';
 import { Car } from '../../core/models';
 
 @Component({
@@ -48,19 +51,32 @@ import { Car } from '../../core/models';
     IonRefresherContent,
     CarCardComponent,
     SkeletonLoaderComponent,
+    InitialGoalModalComponent,
+    OnboardingChecklistComponent,
   ],
 })
 export class HomePage implements OnInit {
+  private readonly carsService = inject(CarsService);
+  readonly onboardingService = inject(OnboardingService);
+
   featuredCars: Car[] = [];
   loading = true;
   searchQuery = '';
 
-  constructor(private carsService: CarsService) {
+  // Onboarding signals
+  readonly showInitialModal = this.onboardingService.showInitialModal;
+  readonly activeChecklist = this.onboardingService.activeChecklist;
+
+  constructor() {
     addIcons({ searchOutline, locationOutline, calendarOutline, trendingUp });
   }
 
-  ngOnInit() {
-    this.loadFeaturedCars();
+  async ngOnInit() {
+    // Load onboarding status first
+    await this.onboardingService.loadOnboardingStatus();
+
+    // Then load featured cars
+    await this.loadFeaturedCars();
   }
 
   async loadFeaturedCars() {

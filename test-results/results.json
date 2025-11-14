@@ -316,20 +316,20 @@
   },
   "suites": [
     {
-      "title": "e2e/wallet-deposit-flow.spec.ts",
-      "file": "e2e/wallet-deposit-flow.spec.ts",
+      "title": "e2e/complete-porsche-publication-flow.spec.ts",
+      "file": "e2e/complete-porsche-publication-flow.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Wallet Deposit Flow",
-          "file": "e2e/wallet-deposit-flow.spec.ts",
-          "line": 33,
+          "title": "Flujo Completo: Registro → Login → Publicar Porsche Carrera con IA",
+          "file": "e2e/complete-porsche-publication-flow.spec.ts",
+          "line": 24,
           "column": 6,
           "specs": [
             {
-              "title": "should display wallet balance on page load",
+              "title": "Flujo completo: Registro → Login → Publicar Porsche Carrera con Fotos IA",
               "ok": false,
               "tags": [],
               "tests": [
@@ -344,67 +344,203 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 17286,
+                      "duration": 36643,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"wallet-balance\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"wallet-balance\"]')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"wallet-balance\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"wallet-balance\"]')\u001b[22m\n\n    at /home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts:265:34",
+                        "message": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"🔍 Buscar Fotos de Stock\")')\u001b[22m\n\u001b[2m    - locator resolved to <button disabled type=\"button\" _ngcontent-ng-c904914049=\"\" class=\"w-full px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    28 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+                        "stack": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"🔍 Buscar Fotos de Stock\")')\u001b[22m\n\u001b[2m    - locator resolved to <button disabled type=\"button\" _ngcontent-ng-c904914049=\"\" class=\"w-full px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    28 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /home/edu/autorenta/tests/e2e/complete-porsche-publication-flow.spec.ts:381:32\n    at captureStep (/home/edu/autorenta/tests/e2e/complete-porsche-publication-flow.spec.ts:106:9)\n    at /home/edu/autorenta/tests/e2e/complete-porsche-publication-flow.spec.ts:354:5",
                         "location": {
-                          "file": "/home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts",
-                          "column": 34,
-                          "line": 265
+                          "file": "/home/edu/autorenta/tests/e2e/complete-porsche-publication-flow.spec.ts",
+                          "column": 32,
+                          "line": 381
                         },
-                        "snippet": "  263 |     // Verify balance element is visible\n  264 |     const balanceElement = page.locator('[data-testid=\"wallet-balance\"]');\n> 265 |     await expect(balanceElement).toBeVisible({ timeout: 5000 });\n      |                                  ^\n  266 |\n  267 |     // Verify balance has currency format ($X,XXX)\n  268 |     const balanceText = await balanceElement.textContent();"
+                        "snippet": "  379 |           if (await searchButton.isVisible({ timeout: 5000 }).catch(() => false)) {\n  380 |             console.log('✅ Clickeando botón de búsqueda...');\n> 381 |             await searchButton.click();\n      |                                ^\n  382 |             await page.waitForTimeout(3000);\n  383 |           }\n  384 |         }"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "/home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts",
-                            "column": 34,
-                            "line": 265
+                            "file": "/home/edu/autorenta/tests/e2e/complete-porsche-publication-flow.spec.ts",
+                            "column": 32,
+                            "line": 381
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"wallet-balance\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"wallet-balance\"]')\u001b[22m\n\n\n  263 |     // Verify balance element is visible\n  264 |     const balanceElement = page.locator('[data-testid=\"wallet-balance\"]');\n> 265 |     await expect(balanceElement).toBeVisible({ timeout: 5000 });\n      |                                  ^\n  266 |\n  267 |     // Verify balance has currency format ($X,XXX)\n  268 |     const balanceText = await balanceElement.textContent();\n    at /home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts:265:34"
+                          "message": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"🔍 Buscar Fotos de Stock\")')\u001b[22m\n\u001b[2m    - locator resolved to <button disabled type=\"button\" _ngcontent-ng-c904914049=\"\" class=\"w-full px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:opacity-50 disabled:cursor-not-allowed\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    28 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n  379 |           if (await searchButton.isVisible({ timeout: 5000 }).catch(() => false)) {\n  380 |             console.log('✅ Clickeando botón de búsqueda...');\n> 381 |             await searchButton.click();\n      |                                ^\n  382 |             await page.waitForTimeout(3000);\n  383 |           }\n  384 |         }\n    at /home/edu/autorenta/tests/e2e/complete-porsche-publication-flow.spec.ts:381:32\n    at captureStep (/home/edu/autorenta/tests/e2e/complete-porsche-publication-flow.spec.ts:106:9)\n    at /home/edu/autorenta/tests/e2e/complete-porsche-publication-flow.spec.ts:354:5"
                         }
                       ],
-                      "stdout": [],
+                      "stdout": [
+                        {
+                          "text": "\n📸 Paso: 1. Login con Usuario Existente\n"
+                        },
+                        {
+                          "text": "[CONSOLE warning]: <link rel=preload> uses an unsupported `as` value\n"
+                        },
+                        {
+                          "text": "[CONSOLE debug]: [vite] connecting...\n"
+                        },
+                        {
+                          "text": "[CONSOLE debug]: [vite] connected.\n"
+                        },
+                        {
+                          "text": "[CONSOLE warning]: ⚠️ Sentry DSN not configured - error tracking disabled\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📱 Device Info: {userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb…L, like Gecko) Chrome/141.0.7390.37 Safari/537.36, platform: Linux x86_64, memory: Object, connection: Object, screen: Object}\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 Performance Monitoring initialized\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: Angular is running in development mode.\n"
+                        },
+                        {
+                          "text": "[REQUEST FAILED]: http://localhost:4200/assets/videos/volvo-c-recharge-splash.mp4\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 LCP: 2120.00ms\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 FID: 4.40ms\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 CLS: 0.0125\n"
+                        },
+                        {
+                          "text": "✅ Usuario autenticado, redirigido a: http://localhost:4200/\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 CLS: 0.4086\n"
+                        },
+                        {
+                          "text": "[CONSOLE warning]: ⚠️ CLS is above target (0.1): 0.4086\n"
+                        },
+                        {
+                          "text": "[CONSOLE warning]: Error getting current position: User denied Geolocation\n"
+                        },
+                        {
+                          "text": "[REQUEST FAILED]: https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings?select=*&car_id=eq.75a7efe3-dc31-4346-a126-c5e3fa734e63&status=in.%28confirmed%2Ccompleted%2Cin_progress%29&created_at=gte.2025-10-14T04%3A45%3A14.764Z\n"
+                        },
+                        {
+                          "text": "[REQUEST FAILED]: https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings?select=*&car_id=eq.628e8fa3-78b8-46de-bd4d-ad8fd5f1ad0e&status=in.%28confirmed%2Ccompleted%2Cin_progress%29&created_at=gte.2025-10-14T04%3A45%3A14.762Z\n"
+                        },
+                        {
+                          "text": "[REQUEST FAILED]: https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings?select=*&car_id=eq.10326ee8-2bb1-41a5-ac6e-0f639126b797&status=in.%28confirmed%2Ccompleted%2Cin_progress%29&created_at=gte.2025-10-14T04%3A45%3A14.765Z\n"
+                        },
+                        {
+                          "text": "[REQUEST FAILED]: https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings?select=*&car_id=eq.b288ed1c-9544-44e1-b159-8e3335425051&status=in.%28confirmed%2Ccompleted%2Cin_progress%29&created_at=gte.2025-10-14T04%3A45%3A14.767Z\n"
+                        },
+                        {
+                          "text": "[REQUEST FAILED]: https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings?select=*&car_id=eq.cf33b6b0-94a6-4e8b-844d-8aaa0a32eb14&status=in.%28confirmed%2Ccompleted%2Cin_progress%29&created_at=gte.2025-10-14T04%3A45%3A14.770Z\n"
+                        },
+                        {
+                          "text": "[REQUEST FAILED]: https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings?select=*&car_id=eq.9fe9a17d-f33c-48e9-9889-8d4f1e876fc6&status=in.%28confirmed%2Ccompleted%2Cin_progress%29&created_at=gte.2025-10-14T04%3A45%3A14.766Z\n"
+                        },
+                        {
+                          "text": "[REQUEST FAILED]: https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings?select=*&car_id=eq.d8e47708-b9f9-460a-bf7b-81ed68bf601c&status=in.%28confirmed%2Ccompleted%2Cin_progress%29&created_at=gte.2025-10-14T04%3A45%3A14.769Z\n"
+                        },
+                        {
+                          "text": "[REQUEST FAILED]: https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings?select=*&car_id=eq.4da4c7ed-33e9-4a30-92b8-342332d660a9&status=in.%28confirmed%2Ccompleted%2Cin_progress%29&created_at=gte.2025-10-14T04%3A45%3A14.768Z\n"
+                        },
+                        {
+                          "text": "\n📸 Paso: 2. Navegar a Publicar Auto\n"
+                        },
+                        {
+                          "text": "[CONSOLE warning]: <link rel=preload> uses an unsupported `as` value\n"
+                        },
+                        {
+                          "text": "[CONSOLE debug]: [vite] connecting...\n"
+                        },
+                        {
+                          "text": "[CONSOLE debug]: [vite] connected.\n"
+                        },
+                        {
+                          "text": "[CONSOLE warning]: ⚠️ Sentry DSN not configured - error tracking disabled\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📱 Device Info: {userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb…L, like Gecko) Chrome/141.0.7390.37 Safari/537.36, platform: Linux x86_64, memory: Object, connection: Object, screen: Object}\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 Performance Monitoring initialized\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: Angular is running in development mode.\n"
+                        },
+                        {
+                          "text": "[CONSOLE warning]: \n  It looks like you're using the disabled attribute with a reactive form directive. If you set disabled to true\n  when you set up this control in your component class, the disabled attribute will actually be set in the DOM for\n  you. We recommend using this approach to avoid 'changed after checked' errors.\n\n  Example:\n  // Specify the `disabled` property at control creation time:\n  form = new FormGroup({\n    first: new FormControl({value: 'Nancy', disabled: true}, Validators.required),\n    last: new FormControl('Drew', Validators.required)\n  });\n\n  // Controls can also be enabled/disabled after creation:\n  form.get('first')?.enable();\n  form.get('last')?.disable();\n\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 CLS: 0.0041\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 LCP: 1084.00ms\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 CLS: 0.0101\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: [PublishCarV2] Loaded FIPE brands: 103\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: [PublishCarV2] Formatted brands: [Object, Object, Object, Object, Object]\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 CLS: 0.0187\n"
+                        },
+                        {
+                          "text": "\n📸 Paso: 3. Completar Formulario - Porsche Carrera\n"
+                        },
+                        {
+                          "text": "\n📸 Paso: 4. Buscar Fotos de Stock\n"
+                        },
+                        {
+                          "text": "✅ Botón de fotos de stock encontrado\n"
+                        },
+                        {
+                          "text": "[CONSOLE log]: 📊 FID: 2.90ms\n"
+                        },
+                        {
+                          "text": "✅ Modal de stock photos abierto\n"
+                        },
+                        {
+                          "text": "✅ Clickeando botón de búsqueda...\n"
+                        }
+                      ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-11-05T00:25:52.083Z",
+                      "startTime": "2025-11-13T04:45:06.675Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/test-failed-1.png"
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-complete-porsche-publi-1b90c-orsche-Carrera-con-Fotos-IA-chromium-e2e/test-failed-1.png"
                         },
                         {
                           "name": "video",
                           "contentType": "video/webm",
-                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/video.webm"
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-complete-porsche-publi-1b90c-orsche-Carrera-con-Fotos-IA-chromium-e2e/video.webm"
                         },
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/error-context.md"
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-complete-porsche-publi-1b90c-orsche-Carrera-con-Fotos-IA-chromium-e2e/error-context.md"
                         },
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-wallet-deposit-flow-Wa-01962-wallet-balance-on-page-load-chromium-e2e/trace.zip"
+                          "path": "/home/edu/autorenta/test-results/artifacts/e2e-complete-porsche-publi-1b90c-orsche-Carrera-con-Fotos-IA-chromium-e2e/trace.zip"
                         }
                       ],
                       "errorLocation": {
-                        "file": "/home/edu/autorenta/tests/e2e/wallet-deposit-flow.spec.ts",
-                        "column": 34,
-                        "line": 265
+                        "file": "/home/edu/autorenta/tests/e2e/complete-porsche-publication-flow.spec.ts",
+                        "column": 32,
+                        "line": 381
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "2b7cf7666064fed5ba41-288e1018c00a900093b5",
-              "file": "e2e/wallet-deposit-flow.spec.ts",
-              "line": 262,
+              "id": "d9343363f40bf42bde31-d7d58c0e262b339a134b",
+              "file": "e2e/complete-porsche-publication-flow.spec.ts",
+              "line": 87,
               "column": 7
             }
           ]
@@ -414,8 +550,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-11-05T00:25:48.252Z",
-    "duration": 23540.038,
+    "startTime": "2025-11-13T04:45:05.429Z",
+    "duration": 39099.24,
     "expected": 0,
     "skipped": 0,
     "unexpected": 1,

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, inject, signal } from '@angular/core';
 import { DatabaseExportService } from '../../../core/services/database-export.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-database-export',
@@ -81,7 +81,7 @@ import { ToastService } from '../../../core/services/toast.service';
 })
 export class DatabaseExportPage {
   private readonly exportService = inject(DatabaseExportService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   limit = 3;
   readonly exporting = signal(false);

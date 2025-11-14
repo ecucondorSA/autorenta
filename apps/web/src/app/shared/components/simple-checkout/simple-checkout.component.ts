@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, signal, inject, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,7 +13,8 @@ import { WalletService } from '../../../core/services/wallet.service';
 import { NotificationsService } from '../../../core/services/user-notifications.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { WaitlistService } from '../../../core/services/waitlist.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { TikTokEventsService } from '../../../core/services/tiktok-events.service';
 
 // Models
 import type { Car } from '../../../core/models';
@@ -47,7 +48,8 @@ export class SimpleCheckoutComponent {
   private readonly notificationsService = inject(NotificationsService);
   private readonly errorHandler = inject(ErrorHandlerService);
   private readonly waitlistService = inject(WaitlistService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
+  private readonly tiktokEvents = inject(TikTokEventsService);
 
   // Estado del checkout
   readonly currentStep = signal(0);
@@ -93,13 +95,28 @@ export class SimpleCheckoutComponent {
   ];
 
   // Métodos de pago
-  readonly paymentMethod = signal<'wallet' | 'card'>('wallet');
+  readonly paymentMethod = signal<'wallet' | 'card' | 'cash'>('wallet');
 
   // Balance de wallet
   readonly walletBalance = signal(0);
 
   constructor() {
     this.loadWalletBalance();
+
+    // 🎯 TikTok Events: Track AddPaymentInfo when payment method changes
+    effect(() => {
+      const method = this.paymentMethod();
+      const step = this.currentStep();
+
+      // Only track if we're on the payment step (step 2)
+      if (step === 2 && method) {
+        void this.tiktokEvents.trackAddPaymentInfo({
+          value: this.finalTotal(),
+          currency: this.car.currency || 'ARS',
+          contentId: this.car.id,
+        });
+      }
+    });
   }
 
   private async loadWalletBalance() {
@@ -118,7 +135,8 @@ export class SimpleCheckoutComponent {
   }
 
   async nextStep() {
-    const currentStepData = this.steps[this.currentStep()];
+    const previousStep = this.currentStep();
+    const currentStepData = this.steps[previousStep];
 
     // Validar paso actual
     const stepIsValid = await this.runStepValidation();
@@ -130,8 +148,19 @@ export class SimpleCheckoutComponent {
     currentStepData.completed = true;
 
     // Avanzar al siguiente paso
-    if (this.currentStep() < this.steps.length - 1) {
-      this.currentStep.update((step) => step + 1);
+    if (previousStep < this.steps.length - 1) {
+      const newStep = previousStep + 1;
+      this.currentStep.update(() => newStep);
+
+      // 🎯 TikTok Events: Track InitiateCheckout when entering payment step
+      if (newStep === 2) {
+        void this.tiktokEvents.trackInitiateCheckout({
+          contentId: this.car.id,
+          contentName: this.car.title || `${this.car.brand} ${this.car.model}`,
+          value: this.finalTotal(),
+          currency: this.car.currency || 'ARS',
+        });
+      }
     } else {
       // Último paso - procesar reserva
       this.processBooking();
@@ -171,6 +200,10 @@ export class SimpleCheckoutComponent {
         if (this.paymentMethod() === 'wallet' && this.finalTotal() > this.walletBalance()) {
           this.error.set('Saldo insuficiente en tu wallet');
           return false;
+        }
+        // Para pago en efectivo no se requiere validación previa
+        if (this.paymentMethod() === 'cash') {
+          return true;
         }
         break;
     }
@@ -290,6 +323,8 @@ export class SimpleCheckoutComponent {
       // 3. Procesar pago
       if (this.paymentMethod() === 'wallet') {
         await this.processWalletPayment(booking.id);
+      } else if (this.paymentMethod() === 'cash') {
+        await this.processCashPayment(booking.id);
       } else {
         await this.processCardPayment(booking.id);
       }
@@ -382,6 +417,18 @@ export class SimpleCheckoutComponent {
 
     // Aquí se integraría MercadoPago para autorizar la tarjeta
     // Por ahora, marcamos como pendiente de aprobación manual
+  }
+
+  private async processCashPayment(bookingId: string) {
+    // Crear payment intent para pago en efectivo
+    await this.paymentsService.createPaymentIntent(bookingId, 'cash');
+
+    // Para pagos en efectivo, el pago se realiza al momento de retirar el vehículo
+    // La reserva queda confirmada pero el pago pendiente hasta el encuentro
+    this.toastService.success(
+      'Reserva confirmada',
+      'Recuerda llevar el efectivo al momento de retirar el vehículo'
+    );
   }
 
   getMinDate(): string {

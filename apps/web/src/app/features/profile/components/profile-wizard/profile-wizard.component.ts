@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 import { ProfileStore } from '../../../../core/stores/profile.store';
-import { ToastService } from '../../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
 import { AnalyticsService } from '../../../../core/services/analytics.service';
 import type { Role, UpdateProfileData } from '../../../../core/models';
 
@@ -46,7 +46,7 @@ interface StepState {
 export class ProfileWizardComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly profileStore = inject(ProfileStore);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
   private readonly analytics = inject(AnalyticsService);
 
   // Inputs

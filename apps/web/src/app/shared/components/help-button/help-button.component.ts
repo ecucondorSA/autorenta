@@ -91,27 +91,59 @@ import { AuthService } from '../../../core/services/auth.service';
 
           <button
             (click)="showTour('welcome')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
             role="menuitem"
           >
-            🎯 Ver tour de bienvenida
+            <span>🎯</span>
+            <span>Tour de bienvenida</span>
           </button>
 
           <button
             (click)="showTour('renter')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
             role="menuitem"
           >
-            🔍 Cómo buscar autos
+            <span>🔍</span>
+            <span>Cómo buscar y reservar autos</span>
           </button>
 
           <button
-            (click)="showTour('owner')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-2 transition-base text-text-secondary dark:text-text-secondary"
+            (click)="showTour('become-renter')"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
             role="menuitem"
           >
-            💸 Cómo publicar mi auto
+            <span>🏠</span>
+            <span>Convertirse en Renter</span>
           </button>
+
+          <button
+            (click)="showTour('publish-car')"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+            role="menuitem"
+          >
+            <span>💸</span>
+            <span>Cómo publicar mi auto</span>
+          </button>
+
+          <button
+            (click)="showTour('referrals')"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+            role="menuitem"
+          >
+            <span>🎁</span>
+            <span>Sistema de referidos</span>
+          </button>
+
+          @if (isAuthenticated()) {
+            <button
+              (click)="showTour('wallet')"
+              class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-2 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+              role="menuitem"
+            >
+              <span>💰</span>
+              <span>Wallet y ganancias</span>
+            </button>
+          }
 
           <hr class="my-2 border-border-default/40 dark:border-white/10" />
 
@@ -176,31 +208,53 @@ export class HelpButtonComponent {
     this.showMenu.set(false);
   }
 
-  showTour(tourType: 'welcome' | 'renter' | 'owner'): void {
+  showTour(
+    tourType:
+      | 'welcome'
+      | 'renter'
+      | 'owner'
+      | 'become-renter'
+      | 'publish-car'
+      | 'referrals'
+      | 'wallet',
+  ): void {
     this.closeMenu();
 
-    // NEW TOUR SYSTEM: Use GuidedTourService
-    const tourIdMap: Record<'welcome' | 'renter' | 'owner', TourId> = {
+    // Map tour types to Tour IDs
+    const tourIdMap: Record<
+      'welcome' | 'renter' | 'owner' | 'become-renter' | 'publish-car' | 'referrals' | 'wallet',
+      TourId
+    > = {
       welcome: TourId.Welcome,
       renter: TourId.Renter,
       owner: TourId.Owner,
+      'become-renter': TourId.BecomeRenter,
+      'publish-car': TourId.PublishCar,
+      referrals: TourId.ReferralSystem,
+      wallet: TourId.WalletEarnings,
     };
+
     const tourId = tourIdMap[tourType];
 
-    // Navegar a la ruta correcta si es necesario
-    if (tourType === 'renter' && !this.router.url.includes('/cars')) {
-      this.router.navigate(['/cars']).then(() => {
-        setTimeout(() => {
-          this.guidedTour.reset(tourId);
-          this.guidedTour.request({
-            id: tourId,
-            mode: 'user-triggered',
-            force: true,
-          });
-        }, 500);
-      });
-    } else if (tourType === 'owner' && !this.router.url.includes('/publish')) {
-      this.router.navigate(['/cars/publish']).then(() => {
+    // Define the required routes for each tour
+    const tourRoutes: Record<
+      'welcome' | 'renter' | 'owner' | 'become-renter' | 'publish-car' | 'referrals' | 'wallet',
+      string | null
+    > = {
+      welcome: null, // Can be shown anywhere
+      renter: '/cars',
+      owner: null, // Old tour, keep for compatibility
+      'become-renter': '/become-renter',
+      'publish-car': '/cars/publish',
+      referrals: '/referrals',
+      wallet: '/wallet',
+    };
+
+    const requiredRoute = tourRoutes[tourType];
+
+    if (requiredRoute && !this.router.url.includes(requiredRoute)) {
+      // Navigate to the required route first
+      this.router.navigate([requiredRoute]).then(() => {
         setTimeout(() => {
           this.guidedTour.reset(tourId);
           this.guidedTour.request({
@@ -211,7 +265,7 @@ export class HelpButtonComponent {
         }, 500);
       });
     } else {
-      // Reset and start tour (user-triggered = bypass throttling)
+      // Start tour immediately
       this.guidedTour.reset(tourId);
       this.guidedTour.request({
         id: tourId,

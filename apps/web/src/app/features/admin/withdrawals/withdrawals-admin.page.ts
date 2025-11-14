@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { WithdrawalService } from '@core/services/withdrawal.service';
-import { ToastService } from '@core/services/toast.service';
+import { NotificationManagerService } from '@core/services/notification-manager.service';
 import type { WithdrawalRequest } from '@core/models/wallet.model';
 
 @Component({
@@ -177,7 +177,7 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
 })
 export class WithdrawalsAdminPage implements OnInit {
   private readonly withdrawalService = inject(WithdrawalService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly withdrawals = signal<WithdrawalRequest[]>([]);
   readonly loading = signal(false);

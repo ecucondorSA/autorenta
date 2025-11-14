@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 /**
  * ToastComponent
@@ -25,9 +25,11 @@ import { ToastService } from '../../../core/services/toast.service';
   ],
 })
 export class ToastComponent {
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
-  readonly toasts = this.toastService.notifications;
+  // NOTE: This component is deprecated - use PrimeNG Toast via NotificationManagerService instead
+  // readonly toasts = this.toastService.notifications;
+  readonly toasts = []; // Placeholder - this component should not be used
 
   /**
    * Remueve un toast manualmente

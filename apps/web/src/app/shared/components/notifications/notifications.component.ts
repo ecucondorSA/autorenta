@@ -1,4 +1,4 @@
-import { Component, signal, inject, computed } from '@angular/core';
+import { Component, signal, inject, computed, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import {
@@ -6,11 +6,12 @@ import {
   NotificationItem,
 } from '../../../core/services/user-notifications.service';
 import { CarOwnerNotificationsService } from '../../../core/services/car-owner-notifications.service';
+import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 
 @Component({
   standalone: true,
   selector: 'app-notifications',
-  imports: [CommonModule],
+  imports: [CommonModule, ClickOutsideDirective],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
 })
@@ -21,17 +22,58 @@ export class NotificationsComponent {
 
   readonly notifications = this.notificationsService.notifications;
   readonly unreadCount = this.notificationsService.unreadCount;
+  readonly connectionStatus = this.notificationsService.connectionStatus;
   readonly showDropdown = signal(false);
+
+  // Referencia al botón de la campana para excluirlo del clickOutside
+  @ViewChild('bellButton') bellButton?: ElementRef<HTMLButtonElement>;
 
   readonly recentNotifications = computed(() => this.notifications().slice(0, 5));
 
   readonly hasUnread = computed(() => this.unreadCount() > 0);
+
+  readonly isConnected = computed(() => this.connectionStatus() === 'connected');
+  readonly isConnecting = computed(() => this.connectionStatus() === 'connecting');
+  readonly hasConnectionError = computed(() => this.connectionStatus() === 'error');
+
+  /**
+   * Elementos a excluir del click outside (botón de la campana)
+   */
+  get excludedElements(): HTMLElement[] {
+    return this.bellButton?.nativeElement ? [this.bellButton.nativeElement] : [];
+  }
 
   /**
    * Refrescar notificaciones manualmente
    */
   async refreshNotifications(): Promise<void> {
     await this.notificationsService.refresh();
+  }
+
+  /**
+   * Reconectar manualmente a Realtime
+   */
+  async reconnect(): Promise<void> {
+    await this.notificationsService.reconnect();
+  }
+
+  /**
+   * Obtener mensaje de estado de conexión
+   */
+  getConnectionStatusMessage(): string {
+    const status = this.connectionStatus();
+    switch (status) {
+      case 'connected':
+        return 'Conectado';
+      case 'connecting':
+        return 'Conectando...';
+      case 'error':
+        return 'Error de conexión';
+      case 'disconnected':
+        return 'Desconectado';
+      default:
+        return 'Desconocido';
+    }
   }
 
   /**
@@ -54,6 +96,12 @@ export class NotificationsComponent {
 
   closeDropdown() {
     this.showDropdown.set(false);
+  }
+
+  onBellButtonClick(event: Event) {
+    // Prevenir que el clickOutside se active cuando se hace clic en el botón
+    event.stopPropagation();
+    this.toggleDropdown();
   }
 
   async markAsRead(notification: NotificationItem) {

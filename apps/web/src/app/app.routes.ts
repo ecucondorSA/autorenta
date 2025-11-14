@@ -11,9 +11,8 @@ export const routes: Routes = [
   },
   {
     path: 'marketplace',
-    data: { layout: 'full-bleed' },
-    loadComponent: () =>
-      import('./features/marketplace/marketplace.page').then((m) => m.MarketplacePage),
+    redirectTo: '',
+    pathMatch: 'full',
   },
   {
     path: 'auth',
@@ -32,8 +31,7 @@ export const routes: Routes = [
   {
     path: 'referrals',
     canMatch: [AuthGuard],
-    loadComponent: () =>
-      import('./features/referrals/referrals.page').then((m) => m.ReferralsPage),
+    loadComponent: () => import('./features/referrals/referrals.page').then((m) => m.ReferralsPage),
   },
   {
     path: 'ref/:code',
@@ -60,14 +58,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
       },
-      {
-        path: 'publish-wizard',
-        canMatch: [AuthGuard],
-        loadComponent: () =>
-          import('./features/cars/pages/publish-car-wizard/publish-car-wizard.page').then(
-            (m) => m.PublishCarWizardPage,
-          ),
-      },
+      // Wizard removed - using publish-car-v2 as single publish system
       {
         path: 'my',
         canMatch: [AuthGuard],
@@ -275,6 +266,34 @@ export const routes: Routes = [
         path: 'location-settings',
         loadComponent: () =>
           import('./features/profile/location-settings.page').then((m) => m.LocationSettingsPage),
+      },
+      {
+        path: 'contact',
+        loadComponent: () =>
+          import('./features/profile/contact/profile-contact.page').then(
+            (m) => m.ProfileContactPage,
+          ),
+      },
+      {
+        path: 'preferences',
+        loadComponent: () =>
+          import('./features/profile/preferences/profile-preferences.page').then(
+            (m) => m.ProfilePreferencesPage,
+          ),
+      },
+      {
+        path: 'security',
+        loadComponent: () =>
+          import('./features/profile/security/profile-security.page').then(
+            (m) => m.ProfileSecurityPage,
+          ),
+      },
+      {
+        path: 'verification',
+        loadComponent: () =>
+          import('./features/profile/verification-page/profile-verification.page').then(
+            (m) => m.ProfileVerificationPage,
+          ),
       },
     ],
   },

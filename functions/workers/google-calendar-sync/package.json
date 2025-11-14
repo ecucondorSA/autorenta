@@ -1,0 +1,28 @@
+{
+  "name": "google-calendar-sync",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker para sincronizar Google Calendar con AutoRenta",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "tsc --project tsconfig.json",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": ["cloudflare", "worker", "google-calendar"],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20251011.0",
+    "@supabase/supabase-js": "^2.75.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "wrangler": "^4.43.0"
+  }
+}
+
+
+
+
+

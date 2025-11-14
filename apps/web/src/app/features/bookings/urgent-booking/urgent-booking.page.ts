@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { CarsService } from '../../../core/services/cars.service';
 import type { Car } from '../../../core/models';
 
@@ -18,7 +18,7 @@ export class UrgentBookingPage implements OnInit {
   private readonly router = inject(Router);
   private readonly urgentRentalService = inject(UrgentRentalService);
   private readonly carsService = inject(CarsService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly car = signal<Car | null>(null);
   readonly availability = signal<any>(null);

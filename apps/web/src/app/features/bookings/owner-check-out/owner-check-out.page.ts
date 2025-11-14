@@ -7,7 +7,7 @@ import { BookingsService } from '../../../core/services/bookings.service';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { BookingConfirmationService } from '../../../core/services/booking-confirmation.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { Booking } from '../../../core/models';
 
 /**
@@ -33,7 +33,7 @@ export class OwnerCheckOutPage implements OnInit {
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly confirmationService = inject(BookingConfirmationService);
   private readonly authService = inject(AuthService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 

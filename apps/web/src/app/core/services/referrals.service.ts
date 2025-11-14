@@ -42,7 +42,12 @@ export interface ReferralReward {
   id: string;
   referral_id: string;
   user_id: string;
-  reward_type: 'welcome_bonus' | 'referrer_bonus' | 'first_car_bonus' | 'milestone_bonus' | 'promotion';
+  reward_type:
+    | 'welcome_bonus'
+    | 'referrer_bonus'
+    | 'first_car_bonus'
+    | 'milestone_bonus'
+    | 'promotion';
   amount_cents: number;
   currency: string;
   status: 'pending' | 'approved' | 'paid' | 'expired' | 'cancelled';
@@ -119,9 +124,12 @@ export class ReferralsService {
       } = await this.supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      const { data: newCode, error: createError } = await this.supabase.rpc('generate_referral_code', {
-        p_user_id: user.id,
-      });
+      const { data: newCode, error: createError } = await this.supabase.rpc(
+        'generate_referral_code',
+        {
+          p_user_id: user.id,
+        },
+      );
 
       if (createError) throw createError;
 

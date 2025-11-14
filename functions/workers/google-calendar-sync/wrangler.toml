@@ -1,0 +1,23 @@
+name = "autorenta-google-calendar-sync"
+main = "dist/index.js"
+compatibility_date = "2024-09-10"
+account_id = "5b448192fe4b369642b68ad8f53a7603"
+
+env = { }
+
+[vars]
+SUPABASE_URL = "https://pisqjmoklivzpwufhscx.supabase.co"
+
+[build]
+command = "npm run build"
+
+# Secrets requeridos (configurar con: wrangler secret put <NAME>)
+# GOOGLE_CALENDAR_API_KEY
+# GOOGLE_CALENDAR_ID
+# SUPABASE_SERVICE_ROLE_KEY
+# GOOGLE_CALENDAR_CLIENT_ID (opcional, para OAuth)
+
+
+
+
+

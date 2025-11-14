@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { ContractsService, BookingContract } from '../../../core/services/contracts.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-booking-contract',
@@ -111,7 +111,7 @@ export class BookingContractComponent implements OnInit {
   @Input({ required: true }) bookingId!: string;
 
   private readonly contractsService = inject(ContractsService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly contract = signal<BookingContract | null>(null);
   readonly loading = signal(false);

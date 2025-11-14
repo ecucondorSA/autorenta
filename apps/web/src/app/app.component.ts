@@ -39,11 +39,11 @@ import { VerificationBadgeComponent } from './shared/components/verification-bad
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
-import { ToastComponent } from './shared/components/toast/toast.component';
 import { MobileBottomNavComponent } from './shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
@@ -66,10 +66,10 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     LanguageSelectorComponent,
     HelpButtonComponent,
     NotificationsComponent,
-    ToastComponent,
     MobileBottomNavComponent,
     ShareButtonComponent,
     FooterComponent,
+    Toast,
   ],
   templateUrl: './app.component.html',
   styles: [
@@ -84,6 +84,8 @@ import { FooterComponent } from './shared/components/footer/footer.component';
 export class AppComponent implements OnInit, AfterViewInit {
   private readonly authService = inject(AuthService);
   private readonly profileService = inject(ProfileService);
+
+  readonly userEmail = this.authService.userEmail;
   private readonly compareService = inject(CarsCompareService);
   private readonly pwaService = inject(PwaService);
   private readonly guidedTour = inject(GuidedTourService);
@@ -97,6 +99,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   readonly isAuthenticatedSig = this.authService.isAuthenticated;
   readonly compareCountSig = computed(() => this.compareService.count());
   readonly sidebarOpen = signal(false);
+  readonly profileMenuOpen = signal(false);
   readonly darkMode = signal(false);
   readonly fullBleedLayout = signal(false);
   readonly userProfile = signal<Record<string, unknown> | null>(null);
@@ -115,6 +118,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.initializeLayoutWatcher();
     this.loadUserProfile();
     this.pushNotificationService.initializePushNotifications();
+    this.initializeProfileMenuCloseOnNavigation();
   }
 
   ngAfterViewInit(): void {
@@ -190,6 +194,57 @@ export class AppComponent implements OnInit, AfterViewInit {
     document.documentElement.classList.toggle('dark', next);
     localStorage.setItem('theme', next ? 'dark' : 'light');
     window.dispatchEvent(new CustomEvent('autorenta:theme-change', { detail: { dark: next } }));
+  }
+
+  toggleProfileMenu(): void {
+    const next = !this.profileMenuOpen();
+    this.profileMenuOpen.set(next);
+    if (next && this.isBrowser) {
+      // Close menu when clicking outside
+      setTimeout(() => {
+        const handler = (event: MouseEvent) => {
+          const target = event.target as HTMLElement;
+          const profileMenu = document.querySelector('[data-profile-menu]');
+          const profileButton = document.querySelector('[data-profile-button]');
+
+          if (
+            profileMenu &&
+            profileButton &&
+            !profileMenu.contains(target) &&
+            !profileButton.contains(target)
+          ) {
+            this.closeProfileMenu();
+            document.removeEventListener('click', handler);
+          }
+        };
+        document.addEventListener('click', handler);
+      }, 0);
+    }
+  }
+
+  closeProfileMenu(): void {
+    this.profileMenuOpen.set(false);
+  }
+
+  private initializeProfileMenuCloseOnNavigation(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => {
+        this.closeProfileMenu();
+      });
+  }
+
+  async signOut(): Promise<void> {
+    this.closeProfileMenu();
+    await this.authService.signOut();
+    await this.router.navigate(['/']);
   }
 
   private initializeSplash(): void {

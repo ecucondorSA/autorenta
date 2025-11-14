@@ -1,3 +1,13 @@
+/* ============================================ */
+/* ALL @import RULES MUST COME FIRST */
+/* ============================================ */
+
+/* Ionic CSS - Required for Ionic components to render */
+@import '@ionic/angular/css/core.css';
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+
 /* Mapbox GL JS CSS - Required for markers and controls */
 @import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -16,9 +26,32 @@
 /* 📱 Mobile Optimizations - Professional mobile experience */
 @import './styles/mobile-optimizations.css';
 
+/* ============================================ */
+/* CSS RULES START HERE */
+/* ============================================ */
+
+/* Ionic customizations - Removido: componentes de Ionic eliminados */
+
 /* 🐛 Mobile Overflow Debug & Fixes */
 /* Comentado - archivo de debug removido */
 /* @import './styles/mobile-overflow-debug.css'; */
+
+/* 🚨 URGENT FIX: Force body scroll to be enabled */
+body,
+html {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100vh !important;
+  position: relative !important;
+}
+
+/* Prevent any scroll locking classes from blocking */
+body.p-overflow-hidden,
+body.modal-open,
+body.no-scroll {
+  overflow-y: auto !important;
+}
 
 /* 🎨 Fuente Inter - Premium UI Typography
    Self-hosted variable font optimizado para performance */

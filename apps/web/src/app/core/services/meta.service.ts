@@ -30,9 +30,9 @@ export class MetaService {
   private readonly router = inject(Router);
 
   private readonly defaultConfig: MetaConfig = {
-    title: 'AutoRenta - Alquiler de Autos Premium',
+    title: 'AutoRenta - Alquiler de Autos entre Personas',
     description:
-      'Alquiler de autos premium en Argentina y Uruguay. Plataforma peer-to-peer segura con wallet integrada.',
+      'Alquiler de autos entre personas en Argentina y Uruguay. Plataforma peer-to-peer segura con wallet integrada.',
     keywords: 'alquiler autos, rent a car, argentina, uruguay, autorentar',
     author: 'AutoRenta',
     ogType: 'website',

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NotificationsService } from '../../../core/services/user-notifications.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 /**
  * NotificationsSettingsPage
@@ -28,7 +28,7 @@ import { ToastService } from '../../../core/services/toast.service';
 export class NotificationsSettingsPage {
   private readonly router = inject(Router);
   private readonly notificationsService = inject(NotificationsService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   // Estado de configuración
   readonly settings = signal({

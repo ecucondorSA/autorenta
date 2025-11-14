@@ -1,0 +1,247 @@
+<app-section-card
+  [title]="'Información de Contacto'"
+  [description]="'Datos de contacto y dirección para comunicación y envíos'"
+  [icon]="'call'"
+  [isEditing]="isEditing"
+  [loading]="loading"
+  [error]="error"
+  [isDirty]="isDirty()"
+  [isValid]="isValid()"
+  (onSave)="onSave()"
+  (onCancel)="onCancel()"
+  (onEdit)="onEdit()"
+>
+  <!-- Auto-save indicator -->
+  @if (autoSaving()) {
+    <div class="auto-save-indicator">
+      <ion-spinner name="crescent"></ion-spinner>
+      <span>Guardando automáticamente...</span>
+    </div>
+  }
+
+  <!-- View Mode (readonly) -->
+  @if (!isEditing()) {
+    <div class="contact-view">
+      <!-- Phone -->
+      @if (profile?.phone) {
+        <div class="field-group">
+          <label class="field-label">Teléfono</label>
+          <p class="field-value">
+            <ion-icon name="call-outline" class="field-icon"></ion-icon>
+            {{ profile?.phone }}
+          </p>
+        </div>
+      }
+
+      <!-- WhatsApp -->
+      @if (profile?.whatsapp) {
+        <div class="field-group">
+          <label class="field-label">WhatsApp</label>
+          <p class="field-value">
+            <ion-icon name="logo-whatsapp" class="field-icon text-success"></ion-icon>
+            {{ profile?.whatsapp }}
+          </p>
+        </div>
+      }
+
+      <!-- Address -->
+      @if (hasCompleteAddress()) {
+        <div class="field-group">
+          <label class="field-label">Dirección</label>
+          <p class="field-value field-value--multiline">
+            <ion-icon name="location-outline" class="field-icon"></ion-icon>
+            <span class="preserve-newlines">{{ getFormattedAddress() }}</span>
+          </p>
+        </div>
+      } @else {
+        <div class="field-group">
+          <label class="field-label">Dirección</label>
+          <p class="field-value text-text-muted">No especificada</p>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Edit Mode (form) -->
+  @if (isEditing()) {
+    <form [formGroup]="form" class="contact-form">
+      <!-- Phone Number -->
+      <div class="form-field">
+        <label class="form-label" for="phone"> Teléfono </label>
+
+        <div class="input-with-prefix">
+          <span class="input-prefix">{{ getPhonePrefix() }}</span>
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            class="form-input form-input--with-prefix"
+            [class.form-input--error]="hasFieldError('phone')"
+            placeholder="11 1234 5678"
+          />
+        </div>
+
+        @if (hasFieldError('phone')) {
+          <p class="form-error">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            {{ getFieldError('phone') }}
+          </p>
+        }
+
+        <p class="form-hint">
+          Número con código de área. Ejemplo: {{ getPhonePrefix() }} 11 1234 5678
+        </p>
+      </div>
+
+      <!-- WhatsApp -->
+      <div class="form-field">
+        <label class="form-label" for="whatsapp">
+          WhatsApp
+          <span class="field-badge">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+            Opcional
+          </span>
+        </label>
+
+        <!-- Same as phone checkbox -->
+        <div class="form-checkbox mb-2">
+          <input
+            type="checkbox"
+            id="same_as_phone"
+            [checked]="sameAsPhone()"
+            (change)="toggleSameAsPhone()"
+          />
+          <label for="same_as_phone"> Usar el mismo número de teléfono </label>
+        </div>
+
+        <div class="input-with-prefix">
+          <span class="input-prefix">{{ getPhonePrefix() }}</span>
+          <input
+            type="tel"
+            id="whatsapp"
+            formControlName="whatsapp"
+            class="form-input form-input--with-prefix"
+            [class.form-input--error]="hasFieldError('whatsapp')"
+            [class.form-input--disabled]="sameAsPhone()"
+            placeholder="11 1234 5678"
+          />
+        </div>
+
+        @if (hasFieldError('whatsapp')) {
+          <p class="form-error">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            {{ getFieldError('whatsapp') }}
+          </p>
+        }
+
+        <p class="form-hint">Número de WhatsApp para comunicación rápida</p>
+      </div>
+
+      <!-- Divider -->
+      <div class="form-divider">
+        <span class="form-divider__text">Dirección</span>
+      </div>
+
+      <!-- Address Line 1 -->
+      <div class="form-field">
+        <label class="form-label" for="address_line1"> Calle y Número </label>
+
+        <input
+          type="text"
+          id="address_line1"
+          formControlName="address_line1"
+          class="form-input"
+          placeholder="Av. Corrientes 1234"
+          maxlength="100"
+        />
+
+        <p class="form-hint">Dirección principal (calle y número)</p>
+      </div>
+
+      <!-- Address Line 2 -->
+      <div class="form-field">
+        <label class="form-label" for="address_line2"> Piso/Depto (opcional) </label>
+
+        <input
+          type="text"
+          id="address_line2"
+          formControlName="address_line2"
+          class="form-input"
+          placeholder="Piso 3, Depto A"
+          maxlength="50"
+        />
+      </div>
+
+      <!-- City and State (row) -->
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label" for="city"> Ciudad </label>
+
+          <input
+            type="text"
+            id="city"
+            formControlName="city"
+            class="form-input"
+            placeholder="Buenos Aires"
+            maxlength="50"
+          />
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="state"> Provincia/Estado </label>
+
+          <input
+            type="text"
+            id="state"
+            formControlName="state"
+            class="form-input"
+            placeholder="CABA"
+            maxlength="50"
+          />
+        </div>
+      </div>
+
+      <!-- Postal Code and Country (row) -->
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label" for="postal_code"> Código Postal </label>
+
+          <input
+            type="text"
+            id="postal_code"
+            formControlName="postal_code"
+            class="form-input"
+            [placeholder]="getPostalCodePlaceholder()"
+            maxlength="10"
+          />
+
+          @if (hasFieldError('postal_code')) {
+            <p class="form-error">
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              {{ getFieldError('postal_code') }}
+            </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="country"> País </label>
+
+          <select id="country" formControlName="country" class="form-select">
+            @for (country of countries; track country.code) {
+              <option [value]="country.code">{{ country.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Auto-save notice -->
+      <div class="form-notice form-notice--info">
+        <ion-icon name="information-circle" class="form-notice__icon"></ion-icon>
+        <div class="form-notice__content">
+          <strong>Auto-guardado activado</strong>
+          <p>Los cambios se guardan automáticamente después de 2 segundos de inactividad.</p>
+        </div>
+      </div>
+    </form>
+  }
+</app-section-card>

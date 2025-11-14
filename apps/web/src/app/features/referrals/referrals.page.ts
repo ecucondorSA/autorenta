@@ -1,12 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ReferralsService } from '../../core/services/referrals.service';
 
 @Component({
   selector: 'app-referrals',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './referrals.page.html',
 })
 export class ReferralsPage implements OnInit {

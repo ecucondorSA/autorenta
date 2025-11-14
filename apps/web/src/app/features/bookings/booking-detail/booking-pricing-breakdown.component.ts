@@ -104,8 +104,21 @@ import { Booking } from '../../../core/models';
               <span>Cargo de servicio</span>
               <span>{{ formatCurrency(booking.breakdown.fees_cents, booking.currency) }}</span>
             </div>
-            <div class="flex justify-between" *ngIf="deliveryFee > 0">
-              <span>Entrega a domicilio</span>
+            <!-- ✅ NEW: Show delivery fee with distance tier badge -->
+            <div class="flex justify-between items-center" *ngIf="deliveryFee > 0">
+              <div class="flex items-center gap-2">
+                <span>Entrega a domicilio</span>
+
+                <!-- Distance tier badge -->
+                <span *ngIf="distanceTier" [class]="getDistanceTierBadgeClass()">
+                  {{ getDistanceTierLabel() }}
+                </span>
+
+                <!-- Distance in km -->
+                <span class="text-xs text-text-muted" *ngIf="deliveryDistanceKm > 0">
+                  ({{ deliveryDistanceKm | number: '1.0-0' }} km)
+                </span>
+              </div>
               <span>{{ formatCurrency(deliveryFee, booking.currency) }}</span>
             </div>
           </div>
@@ -303,6 +316,44 @@ export class BookingPricingBreakdownComponent {
 
   protected get deliveryFee(): number {
     return this.booking.delivery_fee_cents || 0;
+  }
+
+  // ✅ NEW: Distance tier properties and methods
+  protected get distanceTier(): string | null {
+    return this.booking.distance_risk_tier || null;
+  }
+
+  protected get deliveryDistanceKm(): number {
+    return this.booking.delivery_distance_km || 0;
+  }
+
+  protected getDistanceTierLabel(): string {
+    switch (this.distanceTier) {
+      case 'local':
+        return '📍 Local';
+      case 'regional':
+        return '🚗 Regional';
+      case 'long_distance':
+        return '🛣️ Larga distancia';
+      default:
+        return '';
+    }
+  }
+
+  protected getDistanceTierBadgeClass(): string {
+    const baseClasses =
+      'inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full';
+
+    switch (this.distanceTier) {
+      case 'local':
+        return `${baseClasses} bg-green-50 text-green-700 border border-green-200`;
+      case 'regional':
+        return `${baseClasses} bg-yellow-50 text-yellow-700 border border-yellow-200`;
+      case 'long_distance':
+        return `${baseClasses} bg-red-50 text-red-700 border border-red-200`;
+      default:
+        return baseClasses;
+    }
   }
 
   protected formatCurrency(cents: number, currency: string): string {

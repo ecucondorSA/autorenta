@@ -15,7 +15,7 @@ import { Spanish } from 'flatpickr/dist/l10n/es';
 import type { Instance } from 'flatpickr/dist/types/instance';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import {
   CarAvailabilityService,
   DetailedBlockedRange,
@@ -40,7 +40,7 @@ export class AvailabilityCalendarPage implements AfterViewInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly availabilityService = inject(CarAvailabilityService);
   private readonly blockingService = inject(CarBlockingService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly carId = signal<string>('');
   readonly loading = signal(true);

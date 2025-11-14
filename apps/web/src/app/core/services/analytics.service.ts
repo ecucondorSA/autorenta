@@ -51,7 +51,9 @@ export type ConversionEventType =
   | 'onboarding_goal_selected'
   | 'onboarding_step_clicked'
   | 'onboarding_step_completed'
-  | 'onboarding_modal_dismissed';
+  | 'onboarding_modal_dismissed'
+  // Price Transparency Events
+  | 'price_transparency_modal_viewed';
 
 export interface ConversionEventData {
   // Common fields
@@ -90,6 +92,10 @@ export interface ConversionEventData {
   cta_type?: string;
   error_message?: string;
   failure_reason?: string;
+
+  // Price Transparency specific
+  context?: string;
+  timestamp?: string;
 
   // Additional metadata
   [key: string]: unknown;
@@ -236,6 +242,9 @@ export class AnalyticsService {
       onboarding_step_clicked: 'select_content',
       onboarding_step_completed: 'tutorial_complete',
       onboarding_modal_dismissed: 'refund',
+
+      // Price Transparency
+      price_transparency_modal_viewed: 'view_promotion',
     };
 
     return mapping[eventType] || eventType;

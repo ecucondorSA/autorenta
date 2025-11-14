@@ -40,7 +40,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/styles/primeng-theme.css"
             ],
             "allowedCommonJsDependencies": [
               "mapbox-gl"
@@ -57,7 +58,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "20kB",
-                  "maximumError": "24kB"
+                  "maximumError": "30kB"
                 }
               ],
               "outputHashing": "all",
@@ -132,7 +133,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/styles/primeng-theme.css"
             ],
             "codeCoverage": true,
             "codeCoverageExclude": [

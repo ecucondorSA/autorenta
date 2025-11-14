@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { getErrorMessage } from '../utils/type-guards';
 import { LoggerService } from './logger.service';
-import { ToastService } from './toast.service';
+import { NotificationManagerService } from './notification-manager.service';
 
 /**
  * ErrorHandlerService: Centralized error handling
@@ -28,7 +28,7 @@ import { ToastService } from './toast.service';
 })
 export class ErrorHandlerService {
   private readonly logger = inject(LoggerService);
-  private readonly toast = inject(ToastService);
+  private readonly toast = inject(NotificationManagerService);
 
   /**
    * Handle an error with optional user notification

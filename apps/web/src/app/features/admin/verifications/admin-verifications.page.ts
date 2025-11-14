@@ -14,7 +14,7 @@ import {
   VerificationQueueItem,
   VerificationStats,
 } from '@core/services/admin.service';
-import { ToastService } from '@core/services/toast.service';
+import { NotificationManagerService } from '@core/services/notification-manager.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 type VerificationFilterType = 'all' | 'level_2' | 'level_3';
@@ -30,7 +30,7 @@ type VerificationFilterStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'all';
 })
 export class AdminVerificationsPage implements OnInit {
   private readonly adminService = inject(AdminService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   // State signals
   private readonly verificationsSignal = signal<VerificationQueueItem[]>([]);

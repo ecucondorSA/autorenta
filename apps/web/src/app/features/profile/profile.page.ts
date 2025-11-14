@@ -8,34 +8,19 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
 import { WalletService } from '../../core/services/wallet.service';
-import { ReviewsService } from '../../core/services/reviews.service';
+import { GoogleCalendarService } from '../../core/services/google-calendar.service';
 import { ProfileStore } from '../../core/stores/profile.store';
-import { UserProfile, Role, UserStats, Review } from '../../core/models';
+import { UserProfile, Role } from '../../core/models';
 import type { UpdateProfileData } from '../../core/services/profile.service';
-
-import { UserBadgesComponent } from '../../shared/components/user-badges/user-badges.component';
-import { ReviewCardComponent } from '../../shared/components/review-card/review-card.component';
-import { PwaCapabilitiesComponent } from '../../shared/components/pwa-capabilities/pwa-capabilities.component';
-import { ProfileWizardComponent } from './components/profile-wizard/profile-wizard.component';
 
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink,
-    UserBadgesComponent,
-    ReviewCardComponent,
-    PwaCapabilitiesComponent,
-    ProfileWizardComponent,
-    TranslateModule,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -44,7 +29,7 @@ export class ProfilePage implements OnInit {
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
   private readonly walletService = inject(WalletService);
-  private readonly reviewsService = inject(ReviewsService);
+  private readonly googleCalendarService = inject(GoogleCalendarService);
   private readonly profileStore = inject(ProfileStore);
 
   // Use ProfileStore for profile state
@@ -59,14 +44,8 @@ export class ProfilePage implements OnInit {
   readonly editMode = signal(false);
   readonly useWizard = signal(true); // Toggle between wizard and old form
   readonly copiedWAN = signal(false);
-
-  // Reviews and stats
-  readonly userStats = signal<UserStats | null>(null);
-  readonly reviewsAsOwner = signal<Review[]>([]);
-  readonly reviewsAsRenter = signal<Review[]>([]);
-  readonly reviewsLoading = signal(false);
-  readonly showAllReviewsOwner = signal(false);
-  readonly showAllReviewsRenter = signal(false);
+  readonly calendarConnected = signal(false);
+  readonly calendarLoading = signal(false);
 
   // Use ProfileStore computed values
   readonly userEmail = this.profileStore.userEmail;
@@ -80,20 +59,6 @@ export class ProfilePage implements OnInit {
   readonly protectedCreditBalance = this.profileStore.protectedCreditBalance;
   readonly lockedBalance = this.profileStore.lockedBalance;
   readonly totalBalance = this.profileStore.totalBalance;
-
-  // Computed reviews for display
-  readonly displayedReviewsAsOwner = computed(() => {
-    const reviews = this.reviewsAsOwner();
-    return this.showAllReviewsOwner() ? reviews : reviews.slice(0, 3);
-  });
-
-  readonly displayedReviewsAsRenter = computed(() => {
-    const reviews = this.reviewsAsRenter();
-    return this.showAllReviewsRenter() ? reviews : reviews.slice(0, 3);
-  });
-
-  readonly hasMoreReviewsOwner = computed(() => this.reviewsAsOwner().length > 3);
-  readonly hasMoreReviewsRenter = computed(() => this.reviewsAsRenter().length > 3);
 
   readonly form = this.fb.nonNullable.group({
     full_name: ['', [Validators.required, Validators.minLength(3)]],
@@ -134,7 +99,7 @@ export class ProfilePage implements OnInit {
 
   ngOnInit(): void {
     void this.loadProfile();
-    void this.loadReviewsAndStats();
+    void this.checkCalendarConnection();
   }
 
   async loadProfile(): Promise<void> {
@@ -160,8 +125,7 @@ export class ProfilePage implements OnInit {
       }
     } catch (err) {
       // Error is already handled by ProfileStore
-      // Just log for debugging
-      console.error('Error loading profile:', err);
+      // Silent fail - error is shown via ProfileStore.error signal
     }
   }
 
@@ -299,39 +263,6 @@ export class ProfilePage implements OnInit {
     }
   }
 
-  async loadReviewsAndStats(): Promise<void> {
-    this.reviewsLoading.set(true);
-
-    try {
-      const userId = this.authService.session$()?.user?.id;
-      if (!userId) {
-        return;
-      }
-
-      const [stats, reviewsAsOwner, reviewsAsRenter] = await Promise.all([
-        this.reviewsService.getUserStats(userId),
-        this.reviewsService.getReviewsForUser(userId, true), // as owner
-        this.reviewsService.getReviewsForUser(userId, false), // as renter
-      ]);
-
-      this.userStats.set(stats);
-      this.reviewsAsOwner.set(reviewsAsOwner);
-      this.reviewsAsRenter.set(reviewsAsRenter);
-    } catch (__error) {
-      console.error('Error loading reviews and stats:', __error);
-    } finally {
-      this.reviewsLoading.set(false);
-    }
-  }
-
-  toggleShowAllOwnerReviews(): void {
-    this.showAllReviewsOwner.set(!this.showAllReviewsOwner());
-  }
-
-  toggleShowAllRenterReviews(): void {
-    this.showAllReviewsRenter.set(!this.showAllReviewsRenter());
-  }
-
   /**
    * Copia el Wallet Account Number al portapapeles
    */
@@ -349,6 +280,97 @@ export class ProfilePage implements OnInit {
       }, 2000);
     } catch {
       this.error.set('Error al copiar el número de cuenta');
+    }
+  }
+
+  /**
+   * Check Google Calendar connection status
+   */
+  async checkCalendarConnection(): Promise<void> {
+    // Only check if user is authenticated
+    if (!this.authService.isAuthenticated()) {
+      this.calendarConnected.set(false);
+      return;
+    }
+
+    try {
+      this.calendarLoading.set(true);
+      const status = await this.googleCalendarService.getConnectionStatus().toPromise();
+      this.calendarConnected.set(status?.connected ?? false);
+    } catch (err) {
+      console.error('Error checking calendar connection:', err);
+      this.calendarConnected.set(false);
+      // Don't show error if it's just "not connected" - that's expected
+      if (err instanceof Error && !err.message.includes('No active session')) {
+        // Only log, don't show to user for status checks
+      }
+    } finally {
+      this.calendarLoading.set(false);
+    }
+  }
+
+  /**
+   * Connect Google Calendar
+   */
+  async connectGoogleCalendar(): Promise<void> {
+    // Verify user is authenticated
+    if (!this.authService.isAuthenticated()) {
+      this.error.set('Debes iniciar sesión para conectar Google Calendar.');
+      return;
+    }
+
+    try {
+      this.calendarLoading.set(true);
+      this.message.set(null);
+      this.error.set(null);
+
+      await this.googleCalendarService.connectGoogleCalendar().toPromise();
+
+      // Check connection status after popup closes
+      await this.checkCalendarConnection();
+
+      if (this.calendarConnected()) {
+        this.message.set('Google Calendar conectado exitosamente');
+        setTimeout(() => this.message.set(null), 3000);
+      }
+    } catch (err) {
+      console.error('Error connecting calendar:', err);
+      const errorMessage =
+        err instanceof Error
+          ? err.message.includes('No active session')
+            ? 'Debes iniciar sesión para conectar Google Calendar.'
+            : err.message
+          : 'No pudimos conectar tu Google Calendar. Por favor, intenta nuevamente.';
+      this.error.set(errorMessage);
+    } finally {
+      this.calendarLoading.set(false);
+    }
+  }
+
+  /**
+   * Disconnect Google Calendar
+   */
+  async disconnectGoogleCalendar(): Promise<void> {
+    if (!confirm('¿Estás seguro de desconectar tu Google Calendar?')) {
+      return;
+    }
+
+    try {
+      this.calendarLoading.set(true);
+      this.message.set(null);
+
+      await this.googleCalendarService.disconnectCalendar().toPromise();
+      this.calendarConnected.set(false);
+
+      this.message.set('Google Calendar desconectado');
+      setTimeout(() => this.message.set(null), 3000);
+    } catch (err) {
+      console.error('Error disconnecting calendar:', err);
+      this.error.set(
+        err instanceof Error ? err.message : 'No pudimos desconectar tu Google Calendar.'
+      );
+    } finally {
+      this.calendarLoading.set(false);
     }
   }
 }

@@ -38,6 +38,9 @@ interface EnvDefaults {
   sentryDsn?: string;
   sentryEnvironment?: string;
   sentryTracesSampleRate?: number;
+  googleCalendarId?: string;
+  googleCalendarApiKey?: string;
+  googleCalendarClientId?: string;
 }
 
 // Type-safe interfaces for global environment access
@@ -136,6 +139,9 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     defaults.sentryEnvironment ?? (defaults.production ? 'production' : 'development'),
   ),
   sentryTracesSampleRate: defaults.sentryTracesSampleRate ?? (defaults.production ? 0.1 : 1.0),
+  googleCalendarId: resolve('NG_APP_GOOGLE_CALENDAR_ID', defaults.googleCalendarId),
+  googleCalendarApiKey: resolve('NG_APP_GOOGLE_CALENDAR_API_KEY', defaults.googleCalendarApiKey),
+  googleCalendarClientId: resolve('NG_APP_GOOGLE_CALENDAR_CLIENT_ID', defaults.googleCalendarClientId),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

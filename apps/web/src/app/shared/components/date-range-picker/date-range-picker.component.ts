@@ -7,11 +7,13 @@ import {
   signal,
   inject,
   computed,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from '../../../core/services/analytics.service';
-import { InlineCalendarModalComponent } from '../inline-calendar-modal/inline-calendar-modal.component';
+import { GoogleCalendarService } from '../../../core/services/google-calendar.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 export interface DateRange {
   from: string | null;
@@ -43,12 +45,15 @@ export interface AlternativeDateSuggestion {
 @Component({
   selector: 'app-date-range-picker',
   standalone: true,
-  imports: [CommonModule, TranslateModule, InlineCalendarModalComponent],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './date-range-picker.component.html',
+  styleUrls: ['./date-range-picker.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DateRangePickerComponent {
+export class DateRangePickerComponent implements OnInit {
   private readonly analytics = inject(AnalyticsService);
+  private readonly googleCalendar = inject(GoogleCalendarService);
+  private readonly authService = inject(AuthService);
 
   @Input() label = 'Fechas';
   @Input() initialFrom: string | null = null;
@@ -85,6 +90,12 @@ export class DateRangePickerComponent {
 
     return diff > 0 ? diff : null;
   });
+
+  // Google Calendar integration signals
+  readonly calendarConnected = signal(false);
+  readonly calendarLoading = signal(false);
+  readonly calendarEmail = signal<string | null>(null);
+  readonly isAuthenticated = computed(() => this.authService.isAuthenticated());
 
   readonly presets: DatePreset[] = [
     { label: 'Fin de semana', days: 'weekend', icon: '🎉' },
@@ -401,6 +412,24 @@ export class DateRangePickerComponent {
   }
 
   /**
+   * Maneja el click en el input de fechas
+   * Solo abre el calendario si Google Calendar está conectado
+   */
+  handleDateInputClick(): void {
+    // Si el usuario está autenticado pero NO ha conectado Google Calendar,
+    // no hacer nada (el card de Google Calendar ya está visible arriba)
+    if (this.isAuthenticated() && !this.calendarConnected()) {
+      // Opcionalmente, podríamos hacer scroll al card o mostrar un mensaje
+      console.log('⚠️ Conecta Google Calendar primero para seleccionar fechas');
+      return;
+    }
+
+    // Si Google Calendar está conectado O el usuario no está autenticado,
+    // abrir el calendario normalmente
+    this.openCalendarModal();
+  }
+
+  /**
    * Abre el calendario inline
    */
   openCalendarModal(): void {
@@ -459,5 +488,55 @@ export class DateRangePickerComponent {
     }
 
     return blockedDates;
+  }
+
+  // ==================== Google Calendar Integration ====================
+
+  ngOnInit(): void {
+    this.checkCalendarConnection();
+  }
+
+  /**
+   * Check if Google Calendar is connected
+   */
+  private checkCalendarConnection(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.calendarConnected.set(false);
+      return;
+    }
+
+    this.googleCalendar.getConnectionStatus().subscribe({
+      next: (status) => {
+        this.calendarConnected.set(status.connected);
+        this.calendarEmail.set(status.primary_calendar_id);
+      },
+      error: () => {
+        this.calendarConnected.set(false);
+      },
+    });
+  }
+
+  /**
+   * Connect Google Calendar
+   */
+  connectGoogleCalendar(): void {
+    if (!this.authService.isAuthenticated()) {
+      console.warn('User must be authenticated to connect Google Calendar');
+      return;
+    }
+
+    this.calendarLoading.set(true);
+
+    this.googleCalendar.connectGoogleCalendar().subscribe({
+      next: () => {
+        this.calendarLoading.set(false);
+        // Check connection status after popup closes
+        setTimeout(() => this.checkCalendarConnection(), 1000);
+      },
+      error: (error) => {
+        this.calendarLoading.set(false);
+        console.error('Error connecting calendar:', error);
+      },
+    });
   }
 }

@@ -144,7 +144,7 @@ export class DynamicPricingService {
       params['p_car_id'] = carId;
     }
 
-    const { data, error} = await this.supabase.rpc('calculate_dynamic_price', params);
+    const { data, error } = await this.supabase.rpc('calculate_dynamic_price', params);
 
     if (error) {
       throw new Error(`Failed to calculate price via RPC: ${error.message}`);

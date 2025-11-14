@@ -85,6 +85,86 @@
   }
 }
 
+/* Connection Status Indicator */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--surface-secondary);
+  transition: all 0.2s ease;
+}
+
+.connection-status .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.connection-status.connected .status-dot {
+  background: #10b981; /* green-500 */
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.connection-status.connecting .status-dot {
+  background: #f59e0b; /* amber-500 */
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.connection-status.error .status-dot {
+  background: #ef4444; /* red-500 */
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.connection-status .status-text {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.connection-status.connected .status-text {
+  color: #10b981;
+}
+
+.connection-status.connecting .status-text {
+  color: #f59e0b;
+}
+
+.connection-status.error .status-text {
+  color: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Reconnect Button */
+.reconnect-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reconnect-btn:hover {
+  background: var(--surface-secondary);
+  border-color: var(--cta-default);
+  color: var(--cta-default);
+}
+
 /* Dropdown */
 .notifications-dropdown {
   position: absolute;

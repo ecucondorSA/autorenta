@@ -172,7 +172,7 @@ export class SmartOnboardingComponent implements OnInit {
           value: 'luxury',
           label: 'De lujo',
           icon: '🏎️',
-          description: 'Autos premium y deportivos',
+          description: 'Autos deportivos y de lujo',
         },
         {
           value: 'electric',

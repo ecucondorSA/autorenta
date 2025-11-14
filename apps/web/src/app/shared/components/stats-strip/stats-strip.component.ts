@@ -5,6 +5,7 @@ export interface Stat {
   label: string;
   value: string | number;
   icon?: string;
+  iconImage?: string;
 }
 
 @Component({
@@ -17,7 +18,7 @@ export interface Stat {
 })
 export class StatsStripComponent {
   @Input() stats: Stat[] = [
-    { label: 'Autos disponibles', value: '+2k', icon: '🚗' },
+    { label: 'Autos disponibles', value: '+2k', iconImage: 'assets/images/MB.png' },
     { label: 'Soporte', value: '24/7', icon: '💬' },
     { label: 'Usuarios activos', value: '+500', icon: '👥' },
   ];

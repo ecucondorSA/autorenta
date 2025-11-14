@@ -28,7 +28,7 @@
       <div class="flex items-center justify-center gap-4 mb-6">
         <div
           (click)="onLogoClick()"
-          class="w-24 h-24 md:w-28 md:h-28 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-2xl overflow-hidden cursor-pointer hover:bg-white/20 transition-all duration-200 hover:scale-105"
+          class="w-32 h-32 md:w-36 md:h-36 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg border border-white/20 overflow-hidden cursor-pointer hover:bg-white/20 hover:shadow-xl hover:border-white/30 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent transition-all duration-200"
           role="button"
           tabindex="0"
           (keydown.enter)="onLogoClick()"
@@ -62,7 +62,7 @@
         <div
           class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
         >
-          <span class="text-2xl">🚗</span>
+          <img src="assets/images/MB.png" alt="Auto" class="h-6 w-6 object-contain" />
           <span class="text-sm md:text-base font-semibold text-white"
             >{{ carsWithDistance().length }}+ autos</span
           >
@@ -255,37 +255,16 @@
           </div>
 
           <!-- Date Range -->
-          <div class="relative group">
-            <label
-              class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
-            >
-              <svg
-                class="w-5 h-5 text-cyan-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              Fechas
-            </label>
-            <input
-              type="text"
-              placeholder="Selecciona tus fechas"
-              [value]="
-                dateRange().from && dateRange().to ? dateRange().from + ' - ' + dateRange().to : ''
-              "
-              [placeholder]="dateRange().from && dateRange().to ? '' : '¿Cuándo lo necesitas?'"
-              (click)="openDatePicker()"
-              readonly
-              class="w-full px-5 py-4 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-400 cursor-pointer transition-all duration-200 hover:border-cyan-300 dark:hover:border-cyan-400"
-            />
-          </div>
+          <app-date-search
+            [label]="'Fechas'"
+            [placeholder]="'¿Cuándo lo necesitas?'"
+            [initialFrom]="dateRange().from"
+            [initialTo]="dateRange().to"
+            [googleCalendarId]="googleCalendarId()"
+            [showGoogleCalendar]="true"
+            (searchClick)="openDatePicker()"
+            (dateChange)="onDateRangeChange($event)"
+          ></app-date-search>
 
           <!-- Search Button -->
           <div class="flex items-end">
@@ -861,8 +840,46 @@
   [userLocation]="userLocation() || undefined"
   [isOpen]="quickBookingModalOpen()"
   (confirmBooking)="onQuickBookingConfirm($event)"
-  (cancel)="onQuickBookingCancel()"
+  (cancelBooking)="onQuickBookingCancel()"
 />
+
+<!-- Filters Sheet -->
+<div
+  *ngIf="showFilters()"
+  class="fixed inset-0 z-[999] flex items-end md:items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+  (click)="closeFiltersPanel()"
+>
+  <div
+    class="w-full max-w-4xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden border border-white/20 dark:border-slate-700/60"
+    (click)="$event.stopPropagation()"
+  >
+    <div
+      class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-700"
+    >
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Filtros avanzados</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Personalizá tu búsqueda para encontrar el auto perfecto
+        </p>
+      </div>
+      <button
+        type="button"
+        class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-200 flex items-center justify-center hover:scale-105 transition-transform"
+        aria-label="Cerrar filtros"
+        (click)="closeFiltersPanel()"
+      >
+        ✕
+      </button>
+    </div>
+    <div class="max-h-[80vh] overflow-y-auto p-6">
+      <app-map-filters
+        [availableCars]="carMapLocations()"
+        [userLocation]="userLocation() || undefined"
+        (filterChange)="onFiltersChange($event)"
+      ></app-map-filters>
+    </div>
+  </div>
+</div>
 
 <!-- Floating Action Button -->
 <app-floating-action-fab
@@ -871,34 +888,45 @@
   (actionClick)="onFabActionClick($event)"
 />
 
-<!-- Notification Toast -->
-<app-notification-toast
-  [message]="toastMessage()"
-  [type]="toastType()"
-  [isVisible]="toastVisible"
-  (dismiss)="toastVisible.set(false)"
-/>
-
 <!-- Date Picker Modal -->
 <div
   *ngIf="showDatePicker()"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+  class="fixed inset-0 z-50 flex items-start justify-center pt-6 px-4"
   (click)="closeDatePicker()"
 >
   <div
-    class="w-full max-w-2xl bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden"
+    class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-700/50 overflow-hidden transform transition-all duration-300"
     (click)="$event.stopPropagation()"
   >
+    <!-- Header con gradiente de marca -->
     <div
-      class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between"
+      class="bg-gradient-to-r from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between"
     >
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Selecciona las fechas</h3>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+          <svg
+            class="w-5 h-5 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-white">Selecciona las fechas</h3>
+      </div>
       <button
         (click)="closeDatePicker()"
-        class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+        class="w-8 h-8 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
+        aria-label="Cerrar"
       >
         <svg
-          class="w-6 h-6 text-gray-600 dark:text-gray-300"
+          class="w-5 h-5 text-white"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -912,17 +940,40 @@
         </svg>
       </button>
     </div>
-    <div class="p-6">
+
+    <!-- Contenido -->
+    <div class="p-5 bg-gradient-to-b from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50">
       <app-date-range-picker
         [initialFrom]="dateRange().from"
         [initialTo]="dateRange().to"
         (rangeChange)="onDateRangeChange($event)"
       />
-      <div class="mt-6 flex justify-end">
+      
+      <!-- Footer con botón de acción -->
+      <div class="mt-5 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex items-center justify-end gap-3">
         <button
           (click)="closeDatePicker()"
-          class="px-6 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl transition-all duration-200"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
+          Cancelar
+        </button>
+        <button
+          (click)="closeDatePicker()"
+          class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl text-sm shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
           Aplicar fechas
         </button>
       </div>
@@ -1027,3 +1078,10 @@
 
 <!-- WhatsApp FAB -->
 <app-whatsapp-fab />
+
+<!-- Price Transparency Modal -->
+@if (showPriceTransparencyModal()) {
+  <app-price-transparency-modal
+    (close)="onPriceTransparencyModalClose()"
+  />
+}

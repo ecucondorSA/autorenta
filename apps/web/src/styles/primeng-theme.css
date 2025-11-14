@@ -1,0 +1,423 @@
+/**
+ * PrimeNG Theme Customization for AutoRenta
+ *
+ * Customizes PrimeNG Toast component to match AutoRenta's design system
+ * Uses existing design tokens and maintains consistency with brand colors
+ */
+
+/* ===== Toast Container ===== */
+.p-toast {
+  z-index: 9999 !important;
+  opacity: 1;
+}
+
+.p-toast-top-right {
+  top: 1rem;
+  right: 1rem;
+}
+
+/* ===== Toast Message Base ===== */
+.p-toast .p-toast-message {
+  margin: 0 0 0.75rem 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 0.75rem; /* 12px = rounded-xl */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-width: 2px;
+  border-style: solid;
+  max-width: 28rem; /* max-w-md */
+  transition: all 0.3s ease-out;
+}
+
+.p-toast .p-toast-message:hover {
+  transform: translateX(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.p-toast .p-toast-message-content {
+  padding: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+/* ===== Success Variant ===== */
+.p-toast .p-toast-message.p-toast-message-success {
+  background-color: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success-900);
+}
+
+.p-toast .p-toast-message-success .p-toast-message-icon,
+.p-toast .p-toast-message-success .p-toast-icon-close {
+  color: var(--success-700);
+}
+
+.p-toast .p-toast-message-success .p-toast-summary {
+  color: var(--success-900);
+  font-weight: 600;
+}
+
+.p-toast .p-toast-message-success .p-toast-detail {
+  color: var(--success-800);
+}
+
+/* ===== Error Variant ===== */
+.p-toast .p-toast-message.p-toast-message-error {
+  background-color: var(--error-bg);
+  border-color: var(--error-border);
+  color: var(--error-900);
+}
+
+.p-toast .p-toast-message-error .p-toast-message-icon,
+.p-toast .p-toast-message-error .p-toast-icon-close {
+  color: var(--error-700);
+}
+
+.p-toast .p-toast-message-error .p-toast-summary {
+  color: var(--error-900);
+  font-weight: 600;
+}
+
+.p-toast .p-toast-message-error .p-toast-detail {
+  color: var(--error-800);
+}
+
+/* ===== Warning Variant ===== */
+.p-toast .p-toast-message.p-toast-message-warn {
+  background-color: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning-900);
+}
+
+.p-toast .p-toast-message-warn .p-toast-message-icon,
+.p-toast .p-toast-message-warn .p-toast-icon-close {
+  color: var(--warning-700);
+}
+
+.p-toast .p-toast-message-warn .p-toast-summary {
+  color: var(--warning-900);
+  font-weight: 600;
+}
+
+.p-toast .p-toast-message-warn .p-toast-detail {
+  color: var(--warning-800);
+}
+
+/* ===== Info Variant ===== */
+.p-toast .p-toast-message.p-toast-message-info {
+  background-color: rgba(167, 216, 244, 0.1); /* cta-default with opacity */
+  border-color: var(--cta-default);
+  color: var(--text-primary);
+}
+
+.p-toast .p-toast-message-info .p-toast-message-icon,
+.p-toast .p-toast-message-info .p-toast-icon-close {
+  color: var(--cta-pressed);
+}
+
+.p-toast .p-toast-message-info .p-toast-summary {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.p-toast .p-toast-message-info .p-toast-detail {
+  color: var(--text-secondary);
+}
+
+/* ===== Icon Styling ===== */
+.p-toast-message-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+/* ===== Content Styling ===== */
+.p-toast-message-text {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.p-toast-summary {
+  font-size: 0.9375rem; /* 15px */
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.p-toast-detail {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ===== Close Button ===== */
+.p-toast-icon-close {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  opacity: 0.7;
+}
+
+.p-toast-icon-close:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.p-toast-icon-close:focus {
+  outline: 2px solid var(--cta-default);
+  outline-offset: 2px;
+}
+
+/* ===== Animations ===== */
+@keyframes primeng-toast-slide-in-right {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes primeng-toast-slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
+
+.p-toast-message-enter {
+  animation: primeng-toast-slide-in-right 0.3s ease-out;
+}
+
+.p-toast-message-leave {
+  animation: primeng-toast-slide-out-right 0.3s ease-out;
+}
+
+/* ===== Dark Mode ===== */
+@media (prefers-color-scheme: dark) {
+  .p-toast .p-toast-message {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  }
+
+  .p-toast .p-toast-message:hover {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Success - Dark */
+  .p-toast .p-toast-message-success {
+    background-color: rgba(157, 179, 139, 0.2);
+    border-color: var(--success-600);
+    color: var(--success-200);
+  }
+
+  .p-toast .p-toast-message-success .p-toast-message-icon,
+  .p-toast .p-toast-message-success .p-toast-icon-close {
+    color: var(--success-300);
+  }
+
+  .p-toast .p-toast-message-success .p-toast-summary {
+    color: var(--success-100);
+  }
+
+  .p-toast .p-toast-message-success .p-toast-detail {
+    color: var(--success-200);
+  }
+
+  /* Error - Dark */
+  .p-toast .p-toast-message-error {
+    background-color: rgba(178, 94, 94, 0.2);
+    border-color: var(--error-600);
+    color: var(--error-200);
+  }
+
+  .p-toast .p-toast-message-error .p-toast-message-icon,
+  .p-toast .p-toast-message-error .p-toast-icon-close {
+    color: var(--error-300);
+  }
+
+  .p-toast .p-toast-message-error .p-toast-summary {
+    color: var(--error-100);
+  }
+
+  .p-toast .p-toast-message-error .p-toast-detail {
+    color: var(--error-200);
+  }
+
+  /* Warning - Dark */
+  .p-toast .p-toast-message-warn {
+    background-color: rgba(196, 168, 130, 0.2);
+    border-color: var(--warning-600);
+    color: var(--warning-200);
+  }
+
+  .p-toast .p-toast-message-warn .p-toast-message-icon,
+  .p-toast .p-toast-message-warn .p-toast-icon-close {
+    color: var(--warning-300);
+  }
+
+  .p-toast .p-toast-message-warn .p-toast-summary {
+    color: var(--warning-100);
+  }
+
+  .p-toast .p-toast-message-warn .p-toast-detail {
+    color: var(--warning-200);
+  }
+
+  /* Info - Dark */
+  .p-toast .p-toast-message-info {
+    background-color: rgba(167, 216, 244, 0.15);
+    border-color: var(--cta-hover);
+  }
+
+  .p-toast .p-toast-message-info .p-toast-message-icon,
+  .p-toast .p-toast-message-info .p-toast-icon-close {
+    color: var(--cta-default);
+  }
+
+  .p-toast-icon-close:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Dark mode class-based (for .dark class) */
+.dark .p-toast .p-toast-message {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.dark .p-toast .p-toast-message:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Success - Dark */
+.dark .p-toast .p-toast-message-success {
+  background-color: rgba(157, 179, 139, 0.2);
+  border-color: var(--success-600);
+  color: var(--success-200);
+}
+
+.dark .p-toast .p-toast-message-success .p-toast-message-icon,
+.dark .p-toast .p-toast-message-success .p-toast-icon-close {
+  color: var(--success-300);
+}
+
+.dark .p-toast .p-toast-message-success .p-toast-summary {
+  color: var(--success-100);
+}
+
+.dark .p-toast .p-toast-message-success .p-toast-detail {
+  color: var(--success-200);
+}
+
+/* Error - Dark */
+.dark .p-toast .p-toast-message-error {
+  background-color: rgba(178, 94, 94, 0.2);
+  border-color: var(--error-600);
+  color: var(--error-200);
+}
+
+.dark .p-toast .p-toast-message-error .p-toast-message-icon,
+.dark .p-toast .p-toast-message-error .p-toast-icon-close {
+  color: var(--error-300);
+}
+
+.dark .p-toast .p-toast-message-error .p-toast-summary {
+  color: var(--error-100);
+}
+
+.dark .p-toast .p-toast-message-error .p-toast-detail {
+  color: var(--error-200);
+}
+
+/* Warning - Dark */
+.dark .p-toast .p-toast-message-warn {
+  background-color: rgba(196, 168, 130, 0.2);
+  border-color: var(--warning-600);
+  color: var(--warning-200);
+}
+
+.dark .p-toast .p-toast-message-warn .p-toast-message-icon,
+.dark .p-toast .p-toast-message-warn .p-toast-icon-close {
+  color: var(--warning-300);
+}
+
+.dark .p-toast .p-toast-message-warn .p-toast-summary {
+  color: var(--warning-100);
+}
+
+.dark .p-toast .p-toast-message-warn .p-toast-detail {
+  color: var(--warning-200);
+}
+
+/* Info - Dark */
+.dark .p-toast .p-toast-message-info {
+  background-color: rgba(167, 216, 244, 0.15);
+  border-color: var(--cta-hover);
+}
+
+.dark .p-toast .p-toast-message-info .p-toast-message-icon,
+.dark .p-toast .p-toast-message-info .p-toast-icon-close {
+  color: var(--cta-default);
+}
+
+.dark .p-toast-icon-close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 767px) {
+  .p-toast-top-right {
+    top: 0.5rem;
+    right: 0.5rem;
+    left: 0.5rem;
+  }
+
+  .p-toast .p-toast-message {
+    max-width: 100%;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .p-toast-message-content {
+    padding: 0.875rem;
+  }
+
+  .p-toast-summary {
+    font-size: 0.875rem;
+  }
+
+  .p-toast-detail {
+    font-size: 0.8125rem;
+  }
+}
+
+/* ===== Accessibility ===== */
+.p-toast-message:focus-within {
+  outline: 2px solid var(--cta-default);
+  outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .p-toast-message-enter,
+  .p-toast-message-leave {
+    animation: none;
+  }
+
+  .p-toast .p-toast-message {
+    transition: none;
+  }
+}

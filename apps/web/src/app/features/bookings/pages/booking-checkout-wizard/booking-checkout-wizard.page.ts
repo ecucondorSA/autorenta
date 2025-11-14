@@ -15,6 +15,7 @@ import { BookingsService } from '../../../../core/services/bookings.service';
 import { PaymentGatewayFactory } from '../../../../core/services/payment-gateway.factory';
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
 import { ErrorStateComponent } from '../../../../shared/components/error-state/error-state.component';
+import { TikTokEventsService } from '../../../../core/services/tiktok-events.service';
 
 /**
  * BookingCheckoutWizardPage - Multi-step booking checkout
@@ -164,6 +165,7 @@ export class BookingCheckoutWizardPage implements OnInit {
   private readonly router = inject(Router);
   private readonly bookingsService = inject(BookingsService);
   private readonly gatewayFactory = inject(PaymentGatewayFactory);
+  private readonly tiktokEvents = inject(TikTokEventsService);
 
   // ==================== SIGNALS ====================
 
@@ -311,7 +313,22 @@ export class BookingCheckoutWizardPage implements OnInit {
    * Handle step change
    */
   handleStepChange(newStep: number): void {
+    const previousStep = this.currentStep();
     this.currentStep.set(newStep);
+
+    // 🎯 TikTok Events: Track AddToCart when proceeding from dates to payment
+    if (previousStep === 0 && newStep === 1) {
+      const bookingData = this.booking();
+      if (bookingData) {
+        void this.tiktokEvents.trackAddToCart({
+          contentId: bookingData.car_id || bookingData.id,
+          contentName: bookingData.car_title || bookingData.car_model || 'Auto',
+          value: bookingData.total_price || 0,
+          currency: bookingData.currency || 'ARS',
+          quantity: 1,
+        });
+      }
+    }
   }
 
   /**

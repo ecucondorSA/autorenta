@@ -1,7 +1,7 @@
 import { Component, Input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShareService } from '../../../core/services/share.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 export type ShareType = 'car' | 'booking' | 'app' | 'custom';
 
@@ -84,7 +84,7 @@ export class ShareButtonComponent {
   @Input() ariaLabel = 'Compartir';
 
   private readonly shareService = inject(ShareService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly sharing = signal(false);
 

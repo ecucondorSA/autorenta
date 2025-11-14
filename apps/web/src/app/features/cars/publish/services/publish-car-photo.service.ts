@@ -353,7 +353,6 @@ export class PublishCarPhotoService {
   async loadExistingPhotos(carId: string): Promise<void> {
     try {
       // const photos = await this.carsService.getCarPhotos(carId);
-
       // // Convert URLs to PhotoPreview format
       // const previews: PhotoPreview[] = await Promise.all(
       //   photos.map(async (photo: any) => {
@@ -361,14 +360,12 @@ export class PublishCarPhotoService {
       //     const response = await fetch(photo.url);
       //     const blob = await response.blob();
       //     const file = new File([blob], `photo-${photo.position}.jpg`, { type: 'image/jpeg' });
-
       //     return {
       //       file,
       //       preview: photo.url,
       //     };
       //   })
       // );
-
       // this.uploadedPhotos.set(previews);
       // console.warn(
       //   'loadExistingPhotos not implemented - getCarPhotos method missing in CarsService',

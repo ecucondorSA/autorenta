@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { PwaService } from '../../../core/services/pwa.service';
 import { ShareService } from '../../../core/services/share.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-share-menu',
@@ -18,7 +18,7 @@ export class ShareMenuComponent {
   @Input() url = '';
 
   private readonly shareService = inject(ShareService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly menuOpen = signal(false);
   readonly sharing = signal(false);

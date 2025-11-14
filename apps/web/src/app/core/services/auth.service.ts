@@ -86,13 +86,14 @@ export class AuthService implements OnDestroy {
     );
   }
 
-  async signUp(email: string, password: string, fullName: string): Promise<void> {
+  async signUp(email: string, password: string, fullName: string, phone?: string): Promise<void> {
     const { error } = await this.supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           full_name: fullName,
+          phone: phone || null,
           default_currency: environment.defaultCurrency,
         },
       },
@@ -100,6 +101,8 @@ export class AuthService implements OnDestroy {
     if (error) {
       throw this.mapError(error);
     }
+
+    // Note: CompleteRegistration tracking moved to register component to avoid circular dependency
   }
 
   async signIn(email: string, password: string): Promise<void> {
@@ -136,10 +139,34 @@ export class AuthService implements OnDestroy {
    */
   async handleOAuthCallback(): Promise<{ data: Session | null; error: Error | null }> {
     try {
+      // Verificar si hay un hash en la URL (tokens de OAuth)
+      const hash = window.location.hash;
+      
+      if (!hash && !window.location.search.includes('code=')) {
+        // No hay tokens ni código - puede ser un error
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorParam = urlParams.get('error');
+        
+        if (errorParam) {
+          return {
+            data: null,
+            error: new Error(`OAuth error: ${errorParam}`),
+          };
+        }
+      }
+
       // getSession() automáticamente detecta y procesa tokens en el hash de la URL
+      // También puede procesar tokens de query params si Supabase los maneja
       const { data, error } = await this.supabase.auth.getSession();
 
       if (error) {
+        // Mejorar mensajes de error comunes
+        if (error.message?.includes('bad_oauth_state') || error.message?.includes('state')) {
+          return {
+            data: null,
+            error: new Error('La sesión de autenticación expiró. Por favor intentá nuevamente.'),
+          };
+        }
         return { data: null, error };
       }
 
@@ -167,6 +194,18 @@ export class AuthService implements OnDestroy {
   async resetPassword(email: string, redirectTo?: string): Promise<void> {
     const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
       redirectTo,
+    });
+    if (error) {
+      throw this.mapError(error);
+    }
+  }
+
+  /**
+   * Update user password
+   */
+  async updatePassword(newPassword: string): Promise<void> {
+    const { error } = await this.supabase.auth.updateUser({
+      password: newPassword,
     });
     if (error) {
       throw this.mapError(error);

@@ -1,7 +1,7 @@
 {
-  "name": "Autorentar - Alquiler de Autos Premium",
+  "name": "Autorentar - Alquiler de Autos entre Personas",
   "short_name": "Autorentar",
-  "description": "Alquiler de autos premium en Uruguay. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura. PWA segura con HTTPS y certificado SSL válido.",
+  "description": "Alquiler de autos entre personas. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura. PWA segura con HTTPS y certificado SSL válido.",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "scope": "/",

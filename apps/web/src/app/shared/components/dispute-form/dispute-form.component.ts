@@ -2,7 +2,7 @@ import { Component, input, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DisputesService, DisputeKind } from '../../../core/services/disputes.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-dispute-form',
@@ -142,7 +142,7 @@ import { ToastService } from '../../../core/services/toast.service';
 })
 export class DisputeFormComponent {
   private readonly disputesService = inject(DisputesService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly isOpen = input.required<boolean>();
   readonly bookingId = input.required<string>();

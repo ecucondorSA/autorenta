@@ -24,9 +24,17 @@
       "description": "MercadoPago MCP Server - Integraciones con IA, documentación y optimización de pagos"
     },
     "supabase": {
-      "url": "https://mcp.supabase.com/mcp?project_ref=obxvffplochgeiclibng",
+      "url": "https://mcp.supabase.com/mcp?project_ref=pisqjmoklivzpwufhscx",
       "transport": "streamble-http",
-      "description": "Supabase MCP Server - Database queries, schema management, TypeScript generation, and project operations for AutoRenta verification system"
+      "description": "Supabase MCP Server - Database queries, schema management, TypeScript generation, Edge Functions deployment for AutoRenta FIPE+Binance integration"
+    },
+    "autorenta-platform": {
+      "command": "node",
+      "args": ["/home/edu/autorenta/mcp-server/dist/index.js"],
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "description": "AutoRenta Platform MCP - Real-time access to cars, bookings, users, and platform operations"
     }
   },
   "allowedTools": [

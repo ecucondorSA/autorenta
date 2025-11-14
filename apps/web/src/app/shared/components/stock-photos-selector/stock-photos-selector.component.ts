@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StockPhotosService, StockPhoto } from '../../../core/services/stock-photos.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-stock-photos-selector',
@@ -32,35 +32,50 @@ import { ToastService } from '../../../core/services/toast.service';
             class="w-24 px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
           />
         </div>
-        <button
-          type="button"
-          (click)="searchPhotos()"
-          [disabled]="searching() || !canSearch()"
-          class="w-full px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          @if (searching()) {
-            <span class="flex items-center justify-center gap-2">
-              <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Buscando...
-            </span>
+
+        @if (searching()) {
+          <!-- Loading state -->
+          <div class="flex items-center justify-center gap-2 py-3 text-cta-default">
+            <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            <span class="font-medium">Buscando fotos de {{ brand }} {{ model }}...</span>
+          </div>
+        } @else {
+          <!-- Search button (only show if not auto-loaded) -->
+          @if (!searched()) {
+            <button
+              type="button"
+              (click)="searchPhotos()"
+              [disabled]="!canSearch()"
+              class="w-full px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              🔍 Buscar Fotos de Stock
+            </button>
           } @else {
-            🔍 Buscar Fotos de Stock
+            <!-- Re-search button -->
+            <button
+              type="button"
+              (click)="searchPhotos()"
+              [disabled]="!canSearch()"
+              class="w-full px-4 py-2 bg-surface-raised text-text-primary border border-border-muted rounded-lg hover:bg-surface-base disabled:opacity-50"
+            >
+              🔄 Buscar nuevamente
+            </button>
           }
-        </button>
+        }
       </div>
 
       <!-- Results Grid -->
@@ -127,20 +142,31 @@ import { ToastService } from '../../../core/services/toast.service';
     `,
   ],
 })
-export class StockPhotosSelectorComponent {
+export class StockPhotosSelectorComponent implements OnInit {
   @Input() brand = '';
   @Input() model = '';
   @Input() year?: number;
   @Output() photosSelected = new EventEmitter<File[]>();
 
   private readonly stockPhotosService = inject(StockPhotosService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly photos = signal<StockPhoto[]>([]);
   readonly selectedPhotos = signal<Set<string>>(new Set());
   readonly searching = signal(false);
   readonly downloading = signal(false);
   readonly searched = signal(false);
+
+  /**
+   * ✅ Auto-search photos when component initializes with brand/model
+   */
+  ngOnInit(): void {
+    // If brand and model are provided, automatically search for photos
+    if (this.canSearch()) {
+      console.log(`🔍 Auto-searching stock photos for ${this.brand} ${this.model}`);
+      this.searchPhotos();
+    }
+  }
 
   canSearch(): boolean {
     return !!(this.brand && this.model);

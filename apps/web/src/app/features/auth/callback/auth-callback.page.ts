@@ -101,12 +101,37 @@ export class AuthCallbackPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
+      // Verificar si hay errores en la URL (query params)
+      const urlParams = new URLSearchParams(window.location.search);
+      const errorParam = urlParams.get('error');
+      const errorDescription = urlParams.get('error_description');
+
+      if (errorParam) {
+        // Error de OAuth (ej: bad_oauth_state)
+        let errorMessage = 'Error durante la autenticación.';
+        
+        if (errorParam === 'bad_oauth_state') {
+          errorMessage = 'La sesión de autenticación expiró o se perdió. Por favor intentá iniciar sesión nuevamente.';
+        } else if (errorDescription) {
+          errorMessage = decodeURIComponent(errorDescription);
+        }
+
+        // Limpiar la URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        throw new Error(errorMessage);
+      }
+
       // Procesar tokens del hash de OAuth
       // Supabase Auth detecta automáticamente tokens en URL fragments (#access_token=...)
       const { error } = await this.auth.handleOAuthCallback();
 
       if (error) {
-        throw new Error(error.message);
+        // Manejar errores específicos de Supabase
+        if (error.message?.includes('bad_oauth_state') || error.message?.includes('state')) {
+          throw new Error('La sesión de autenticación expiró. Por favor intentá iniciar sesión nuevamente.');
+        }
+        throw new Error(error.message || 'Error durante la autenticación.');
       }
 
       // Esperar a que la sesión esté disponible

@@ -7,7 +7,7 @@ import type {
   TelemetryAverage,
   TelemetryInsights,
 } from '../../../core/services/telemetry.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 /**
  * DrivingStatsPage
@@ -34,7 +34,7 @@ import { ToastService } from '../../../core/services/toast.service';
 export class DrivingStatsPage implements OnInit {
   private readonly router = inject(Router);
   private readonly telemetryService = inject(TelemetryService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly loading = signal(true);
   readonly summary = signal<TelemetryAverage | null>(null);

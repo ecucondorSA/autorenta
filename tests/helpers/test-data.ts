@@ -39,7 +39,7 @@ export interface TestBooking {
 export function generateTestUser(role: 'locador' | 'locatario' | 'ambos' = 'locatario'): TestUser {
   const uniqueId = uuidv4().slice(0, 8);
   return {
-    email: `test.${role}.${uniqueId}@autorenta.test`,
+    email: `test.${role}.${uniqueId}@autorentar.com`,
     password: `Test${role}${uniqueId}!`,
     fullName: `Test User ${uniqueId}`,
     phone: `+549${Math.floor(1000000000 + Math.random() * 9000000000)}`,
@@ -111,22 +111,22 @@ export function generateTestBooking(daysFromNow: number = 7, duration: number = 
  */
 export const SEED_USERS = {
   renter: {
-    email: 'renter.test@autorenta.com',
+    email: 'renter.test@autorentar.com',
     password: 'TestRenter123!',
     role: 'locatario' as const,
   },
   owner: {
-    email: 'owner.test@autorenta.com',
+    email: 'owner.test@autorentar.com',
     password: 'TestOwner123!',
     role: 'locador' as const,
   },
   admin: {
-    email: 'admin.test@autorenta.com',
+    email: 'admin.test@autorentar.com',
     password: 'TestAdmin123!',
     role: 'admin' as const,
   },
   both: {
-    email: 'both.test@autorenta.com',
+    email: 'both.test@autorentar.com',
     password: 'TestBoth123!',
     role: 'ambos' as const,
   },

@@ -2,7 +2,7 @@ import { Component, input, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReviewsService } from '../../../core/services/reviews.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-flag-review-modal',
@@ -139,7 +139,7 @@ import { ToastService } from '../../../core/services/toast.service';
 })
 export class FlagReviewModalComponent {
   private readonly reviewsService = inject(ReviewsService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly isOpen = input.required<boolean>();
   readonly reviewId = input.required<string>();

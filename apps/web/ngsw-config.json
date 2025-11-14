@@ -68,7 +68,7 @@
     {
       "name": "api-supabase-rpc",
       "urls": [
-        "https://obxvffplochgeiclibng.supabase.co/rest/v1/rpc/*"
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/*"
       ],
       "cacheConfig": {
         "strategy": "freshness",
@@ -80,7 +80,7 @@
     {
       "name": "api-supabase-auth",
       "urls": [
-        "https://obxvffplochgeiclibng.supabase.co/auth/*"
+        "https://pisqjmoklivzpwufhscx.supabase.co/auth/*"
       ],
       "cacheConfig": {
         "strategy": "freshness",
@@ -92,7 +92,7 @@
     {
       "name": "api-supabase-functions",
       "urls": [
-        "https://obxvffplochgeiclibng.supabase.co/functions/*"
+        "https://pisqjmoklivzpwufhscx.supabase.co/functions/*"
       ],
       "cacheConfig": {
         "strategy": "freshness",
@@ -104,10 +104,10 @@
     {
       "name": "api-supabase-fresh",
       "urls": [
-        "https://obxvffplochgeiclibng.supabase.co/rest/v1/bookings*",
-        "https://obxvffplochgeiclibng.supabase.co/rest/v1/payments*",
-        "https://obxvffplochgeiclibng.supabase.co/rest/v1/wallet_transactions*",
-        "https://obxvffplochgeiclibng.supabase.co/rest/v1/user_wallets*"
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/payments*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_wallets*"
       ],
       "cacheConfig": {
         "strategy": "freshness",
@@ -119,9 +119,9 @@
     {
       "name": "api-supabase-performance",
       "urls": [
-        "https://obxvffplochgeiclibng.supabase.co/rest/v1/cars*",
-        "https://obxvffplochgeiclibng.supabase.co/rest/v1/car_photos*",
-        "https://obxvffplochgeiclibng.supabase.co/rest/v1/profiles*"
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/cars*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/car_photos*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles*"
       ],
       "cacheConfig": {
         "strategy": "performance",
@@ -171,7 +171,7 @@
     "!/**/*.*",
     "!/**/*__*",
     "!/**/*__*/**",
-    "!https://obxvffplochgeiclibng.supabase.co/**",
+    "!https://pisqjmoklivzpwufhscx.supabase.co/**",
     "!https://api.mapbox.com/**",
     "!https://events.mapbox.com/**",
     "/auth/**"

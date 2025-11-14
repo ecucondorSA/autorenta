@@ -1,7 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { Car, CarComparison, ComparisonRow } from '../models';
 import { CarsService } from './cars.service';
-import { ToastService } from './toast.service';
+import { NotificationManagerService } from './notification-manager.service';
 
 const STORAGE_KEY = 'autorenta_comparison';
 const MAX_COMPARE = 3;
@@ -13,7 +13,7 @@ export class CarsCompareService {
   private readonly comparedCarIds = signal<string[]>([]);
   readonly comparedCars = signal<Car[]>([]);
   readonly count = signal<number>(0);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   constructor(private readonly carsService: CarsService) {
     this.loadFromStorage();

@@ -25,6 +25,7 @@ import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor
 import { SupabaseClientService } from './core/services/supabase-client.service';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
 import { SentryErrorHandler } from './core/services/sentry.service';
+import { MessageService } from 'primeng/api';
 
 /**
  * Inicializa el servicio de monitoreo de performance
@@ -65,6 +66,8 @@ export const appConfig: ApplicationConfig = {
       prefix: './assets/i18n/',
       suffix: '.json',
     }),
+    // ✅ PrimeNG MessageService for notifications
+    MessageService,
     // ✅ Sentry Error Handler (production only)
     ...(environment.sentryDsn ? [{ provide: ErrorHandler, useClass: SentryErrorHandler }] : []),
     // ✅ Performance Monitoring (solo en desarrollo)

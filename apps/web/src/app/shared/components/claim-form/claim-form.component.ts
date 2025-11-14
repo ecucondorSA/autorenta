@@ -7,7 +7,7 @@ import {
   DamageType,
 } from '../../../core/services/settlement.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -39,7 +39,7 @@ export class ClaimFormComponent implements OnInit {
 
   private readonly settlementService = inject(SettlementService);
   private readonly supabase = injectSupabase();
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   // Estado del componente
   readonly damages = signal<DamageItem[]>([]);

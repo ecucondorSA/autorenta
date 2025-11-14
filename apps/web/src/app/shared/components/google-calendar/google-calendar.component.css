@@ -1,0 +1,56 @@
+.google-calendar-container {
+  @apply w-full rounded-lg overflow-hidden border border-border-default dark:border-border-default;
+  @apply bg-surface-raised dark:bg-surface-secondary;
+}
+
+.google-calendar-iframe {
+  @apply w-full border-0;
+  min-height: 400px;
+}
+
+.loading-container {
+  @apply flex flex-col items-center justify-center p-12;
+  @apply bg-surface-raised dark:bg-surface-secondary;
+  min-height: 400px;
+}
+
+.loading-spinner {
+  @apply w-12 h-12 text-cta-default mb-4;
+}
+
+.loading-spinner svg {
+  @apply w-full h-full;
+}
+
+.loading-text {
+  @apply text-text-secondary dark:text-text-secondary;
+  @apply text-sm font-medium;
+}
+
+.error-container {
+  @apply flex flex-col items-center justify-center p-12;
+  @apply bg-surface-raised dark:bg-surface-secondary;
+  min-height: 400px;
+}
+
+.error-icon {
+  @apply w-16 h-16 mb-4;
+  color: var(--error-text);
+}
+
+.error-icon svg {
+  @apply w-full h-full;
+}
+
+.error-message {
+  @apply text-text-primary dark:text-text-primary;
+  @apply text-lg font-semibold mb-2;
+}
+
+.error-hint {
+  @apply text-text-secondary dark:text-text-secondary;
+  @apply text-sm text-center max-w-md;
+}
+
+
+

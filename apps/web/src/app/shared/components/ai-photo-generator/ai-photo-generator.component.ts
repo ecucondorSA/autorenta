@@ -6,7 +6,7 @@ import {
   EnhancedPhoto,
   GenerationMethod,
 } from '../../../core/services/ai-photo-enhancer.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-ai-photo-generator',
@@ -178,7 +178,7 @@ export class AiPhotoGeneratorComponent {
   @Output() photosGenerated = new EventEmitter<File[]>();
 
   private readonly aiPhotoService = inject(AiPhotoEnhancerService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly method = signal<GenerationMethod>('stock-photos');
   readonly count = signal(3);

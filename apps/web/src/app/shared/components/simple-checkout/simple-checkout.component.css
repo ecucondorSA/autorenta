@@ -934,3 +934,66 @@
     padding: 0.25rem 0.5rem;
   }
 }
+
+/* Wallet Benefits Styles */
+.wallet-benefits {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.benefit-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: #10b981;
+  color: white;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Wallet Method Highlight */
+.wallet-method {
+  position: relative;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-color: #10b981;
+}
+
+.wallet-method.selected {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  border-color: #059669;
+}
+
+.wallet-method .payment-description strong {
+  color: #059669;
+  font-weight: 700;
+}
+
+/* Wallet Highlight Notice */
+.wallet-highlight {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.wallet-highlight .notice-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.wallet-highlight .notice-text h4 {
+  color: #92400e;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.wallet-highlight .notice-text p {
+  color: #78350f;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}

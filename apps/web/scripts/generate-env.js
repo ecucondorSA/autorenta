@@ -8,9 +8,16 @@
 const fs = require('fs');
 const path = require('path');
 
-// Load environment variables from .env files
-require('dotenv').config({ path: path.join(__dirname, '../.env.development.local') });
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
+// Load environment variables from root .env.local (single source of truth)
+// Use absolute path to ensure it works regardless of cwd
+const envPath = path.resolve(__dirname, '../../../.env.local');
+console.log(`Loading environment from: ${envPath}`);
+const result = require('dotenv').config({ path: envPath });
+if (result.error) {
+  console.error('❌ Error loading .env.local:', result.error);
+} else {
+  console.log(`✅ Loaded ${Object.keys(result.parsed || {}).length} variables from .env.local`);
+}
 
 const envVars = {
   NG_APP_SUPABASE_URL: process.env.NG_APP_SUPABASE_URL || '',

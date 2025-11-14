@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { Booking } from '../../../core/models';
 import { v4 as uuidv4 } from 'uuid';
@@ -30,7 +30,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class OwnerDamageReportPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
   private readonly authService = inject(AuthService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
   private readonly supabase = injectSupabase();
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);

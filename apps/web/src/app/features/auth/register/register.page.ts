@@ -4,6 +4,8 @@ import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
+import { TikTokEventsService } from '../../../core/services/tiktok-events.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   standalone: true,
@@ -16,6 +18,7 @@ export class RegisterPage {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly tiktokEvents = inject(TikTokEventsService);
 
   readonly loading = signal(false);
   readonly message = signal<string | null>(null);
@@ -25,6 +28,7 @@ export class RegisterPage {
     fullName: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
+    phone: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
   });
 
   async submit(): Promise<void> {
@@ -38,8 +42,15 @@ export class RegisterPage {
     this.message.set(null);
 
     try {
-      const { email, password, fullName } = this.form.getRawValue();
-      await this.auth.signUp(email, password, fullName);
+      const { email, password, fullName, phone } = this.form.getRawValue();
+      await this.auth.signUp(email, password, fullName, phone);
+
+      // 🎯 TikTok Events: Track CompleteRegistration
+      void this.tiktokEvents.trackCompleteRegistration({
+        value: 0,
+        currency: environment.defaultCurrency
+      });
+
       this.message.set('¡Cuenta creada exitosamente! Vamos a configurarte.');
       setTimeout(() => void this.router.navigate(['/onboarding']), 1500);
     } catch (err) {

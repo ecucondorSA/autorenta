@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { SettlementService } from '../../../core/services/settlement.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-settlement-simulator',
@@ -14,7 +14,7 @@ export class SettlementSimulatorComponent {
   @Input({ required: true }) bookingId!: string;
 
   private readonly settlementService = inject(SettlementService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   claimAmountUsd = 100;
   readonly simulating = signal(false);

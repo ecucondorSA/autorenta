@@ -1,34 +1,50 @@
 <!-- Hero Section -->
-<section class="relative bg-gradient-to-br from-cta-default/5 via-surface-base to-cta-hover/5 dark:from-cyan-900/20 dark:via-slate-900 dark:to-cyan-800/20 py-16 lg:py-24 overflow-hidden">
+<section
+  class="relative bg-gradient-to-br from-cta-default/5 via-surface-base to-cta-hover/5 dark:from-cyan-900/20 dark:via-slate-900 dark:to-cyan-800/20 py-16 lg:py-24 overflow-hidden"
+>
   <!-- Background decorative elements -->
   <div class="absolute inset-0 pointer-events-none">
-    <div class="absolute top-0 right-0 w-96 h-96 bg-cta-default/10 dark:bg-cyan-500/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-0 left-0 w-96 h-96 bg-cta-hover/10 dark:bg-cyan-600/10 rounded-full blur-3xl"></div>
+    <div
+      class="absolute top-0 right-0 w-96 h-96 bg-cta-default/10 dark:bg-cyan-500/10 rounded-full blur-3xl"
+    ></div>
+    <div
+      class="absolute bottom-0 left-0 w-96 h-96 bg-cta-hover/10 dark:bg-cyan-600/10 rounded-full blur-3xl"
+    ></div>
   </div>
 
   <div class="container-page px-container relative z-10">
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <!-- Left: Content -->
       <div>
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised dark:bg-slate-800 border border-cta-default/20 dark:border-cyan-500/20 mb-6">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised dark:bg-slate-800 border border-cta-default/20 dark:border-cyan-500/20 mb-6"
+        >
           <span class="text-2xl">🏠</span>
-          <span class="text-sm font-medium text-cta-default dark:text-cyan-400">Programa de Renters</span>
+          <span class="text-sm font-medium text-cta-default dark:text-cyan-400"
+            >Programa de Renters</span
+          >
         </div>
 
-        <h1 class="text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 text-text-primary dark:text-white leading-tight">
+        <h1
+          class="text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 text-text-primary dark:text-white leading-tight"
+        >
           Convertí tu auto en una
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-cta-default to-cta-hover dark:from-cyan-400 dark:to-cyan-300">
+          <span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-cta-default to-cta-hover dark:from-cyan-400 dark:to-cyan-300"
+          >
             fuente de ingresos
           </span>
         </h1>
 
         <p class="text-lg lg:text-xl text-text-secondary dark:text-gray-300 mb-8 leading-relaxed">
-          Publicá tu auto en Autorentar y generá entre <strong class="text-cta-default dark:text-cyan-400">$50,000 y $200,000</strong> por mes.
+          Publicá tu auto en Autorentar y generá entre
+          <strong class="text-cta-default dark:text-cyan-400">$50,000 y $200,000</strong> por mes.
           Miles de personas están buscando rentar un auto como el tuyo.
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 mb-8">
           <button
+            data-tour-step="start-publishing"
             (click)="startPublishing()"
             class="btn-primary btn-lg justify-center"
           >
@@ -50,15 +66,21 @@
         <!-- Stats -->
         <div class="grid grid-cols-3 gap-4">
           <div class="text-center">
-            <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">1,500+</div>
+            <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">
+              1,500+
+            </div>
             <div class="text-xs lg:text-sm text-text-muted dark:text-gray-400">Renters activos</div>
           </div>
           <div class="text-center">
-            <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">$120k</div>
+            <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">
+              $120k
+            </div>
             <div class="text-xs lg:text-sm text-text-muted dark:text-gray-400">Promedio/mes</div>
           </div>
           <div class="text-center">
-            <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">24hs</div>
+            <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">
+              24hs
+            </div>
             <div class="text-xs lg:text-sm text-text-muted dark:text-gray-400">Para activar</div>
           </div>
         </div>
@@ -66,19 +88,25 @@
 
       <!-- Right: Image/Illustration -->
       <div class="relative">
-        <div class="aspect-square lg:aspect-auto lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl dark:shadow-slate-950">
+        <div
+          class="aspect-square lg:aspect-auto lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl dark:shadow-slate-950"
+        >
           <img
-            src="/assets/images/become-renter-hero.jpg"
+            src="/BM.png"
             alt="Convertite en Renter"
             class="w-full h-full object-cover"
             loading="lazy"
           />
           <!-- Overlay with stats card -->
-          <div class="absolute bottom-6 left-6 right-6 bg-surface-raised/95 dark:bg-slate-800/95 backdrop-blur-md rounded-xl p-4 border border-border-default/50 dark:border-white/10 shadow-lg">
+          <div
+            class="absolute bottom-6 left-6 right-6 bg-surface-raised/95 dark:bg-slate-800/95 backdrop-blur-md rounded-xl p-4 border border-border-default/50 dark:border-white/10 shadow-lg"
+          >
             <div class="flex items-center gap-3 mb-2">
               <div class="text-3xl">💰</div>
               <div>
-                <div class="text-sm font-medium text-text-muted dark:text-gray-400">Ganancia promedio</div>
+                <div class="text-sm font-medium text-text-muted dark:text-gray-400">
+                  Ganancia promedio
+                </div>
                 <div class="text-2xl font-bold text-text-primary dark:text-white">$120,000/mes</div>
               </div>
             </div>
@@ -105,7 +133,7 @@
         </p>
       </div>
 
-      <div class="card-premium p-8">
+      <div data-tour-step="income-calculator" class="card-premium p-8">
         <div class="grid md:grid-cols-2 gap-8">
           <!-- Inputs -->
           <div class="space-y-6">
@@ -122,7 +150,7 @@
                 class="w-full"
               />
               <div class="text-right text-sm text-text-muted dark:text-gray-400 mt-1">
-                {{ carValue() | number:'1.0-0' }} ARS
+                {{ carValue() | number: '1.0-0' }} ARS
               </div>
             </div>
 
@@ -156,49 +184,50 @@
                 class="w-full"
               />
               <div class="text-right text-sm text-text-muted dark:text-gray-400 mt-1">
-                {{ pricePerDay() | number:'1.0-0' }} ARS/día
+                {{ pricePerDay() | number: '1.0-0' }} ARS/día
               </div>
             </div>
           </div>
 
           <!-- Results -->
-          <div class="bg-gradient-to-br from-cta-default/10 to-cta-hover/10 dark:from-cyan-900/20 dark:to-cyan-800/20 rounded-xl p-6 border border-cta-default/20 dark:border-cyan-500/20">
+          <div
+            class="bg-gradient-to-br from-cta-default/10 to-cta-hover/10 dark:from-cyan-900/20 dark:to-cyan-800/20 rounded-xl p-6 border border-cta-default/20 dark:border-cyan-500/20"
+          >
             <div class="text-center mb-6">
               <div class="text-sm font-medium text-text-muted dark:text-gray-400 mb-2">
                 Ingresos mensuales estimados
               </div>
               <div class="text-4xl lg:text-5xl font-bold text-cta-default dark:text-cyan-400">
-                ${{ estimatedMonthlyIncome() | number:'1.0-0' }}
+                ${{ estimatedMonthlyIncome() | number: '1.0-0' }}
               </div>
             </div>
 
             <div class="space-y-4">
               <div class="flex justify-between items-center">
-                <span class="text-sm text-text-secondary dark:text-gray-300">Ingresos anuales:</span>
+                <span class="text-sm text-text-secondary dark:text-gray-300"
+                  >Ingresos anuales:</span
+                >
                 <span class="text-lg font-semibold text-text-primary dark:text-white">
-                  ${{ estimatedYearlyIncome() | number:'1.0-0' }}
+                  ${{ estimatedYearlyIncome() | number: '1.0-0' }}
                 </span>
               </div>
 
               <div class="flex justify-between items-center">
                 <span class="text-sm text-text-secondary dark:text-gray-300">ROI aproximado:</span>
                 <span class="text-lg font-semibold text-text-primary dark:text-white">
-                  {{ estimatedROI() | number:'1.1-1' }}%
+                  {{ estimatedROI() | number: '1.1-1' }}%
                 </span>
               </div>
 
               <div class="flex justify-between items-center">
                 <span class="text-sm text-text-secondary dark:text-gray-300">Te quedás (85%):</span>
                 <span class="text-lg font-semibold text-green-600 dark:text-green-400">
-                  ${{ (estimatedMonthlyIncome() * 0.85) | number:'1.0-0' }}
+                  ${{ estimatedMonthlyIncome() * 0.85 | number: '1.0-0' }}
                 </span>
               </div>
             </div>
 
-            <button
-              (click)="startPublishing()"
-              class="btn-primary w-full mt-6"
-            >
+            <button (click)="startPublishing()" class="btn-primary w-full mt-6">
               Comenzar a ganar
             </button>
           </div>
@@ -220,7 +249,7 @@
       </p>
     </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div data-tour-step="benefits-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       @for (benefit of benefits; track benefit.title) {
         <div class="card-premium p-6 hover:scale-[1.02] transition-transform">
           <div class="text-4xl mb-4">{{ benefit.icon }}</div>
@@ -249,12 +278,14 @@
     </div>
 
     <div class="max-w-5xl mx-auto">
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div data-tour-step="process-steps" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         @for (step of steps; track step.number) {
           <div class="relative">
             <div class="card-premium p-6 text-center h-full">
               <div class="text-5xl mb-4">{{ step.icon }}</div>
-              <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-cta-default dark:bg-cyan-600 text-white font-bold mb-4">
+              <div
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-cta-default dark:bg-cyan-600 text-white font-bold mb-4"
+              >
                 {{ step.number }}
               </div>
               <h3 class="text-lg font-semibold mb-2 text-text-primary dark:text-white">
@@ -267,9 +298,19 @@
 
             <!-- Connector arrow (except last item) -->
             @if (step.number < steps.length) {
-              <div class="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10">
-                <svg class="w-6 h-6 text-cta-default dark:text-cyan-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              <div
+                class="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10"
+              >
+                <svg
+                  class="w-6 h-6 text-cta-default dark:text-cyan-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd"
+                  ></path>
                 </svg>
               </div>
             }
@@ -278,12 +319,7 @@
       </div>
 
       <div class="text-center mt-12">
-        <button
-          (click)="startPublishing()"
-          class="btn-primary btn-lg"
-        >
-          Empezar ahora
-        </button>
+        <button (click)="startPublishing()" class="btn-primary btn-lg">Empezar ahora</button>
       </div>
     </div>
   </div>
@@ -301,13 +337,15 @@
       </p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6">
+    <div data-tour-step="testimonials" class="grid md:grid-cols-3 gap-6">
       @for (testimonial of testimonials; track testimonial.name) {
         <div class="card-premium p-6">
           <div class="flex items-center gap-1 mb-4">
-            @for (star of [1,2,3,4,5]; track star) {
+            @for (star of [1, 2, 3, 4, 5]; track star) {
               <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path>
               </svg>
             }
           </div>
@@ -317,14 +355,24 @@
           </p>
 
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-surface-secondary dark:bg-slate-700 flex items-center justify-center text-xl font-bold text-cta-default dark:text-cyan-400">
+            <div
+              class="w-12 h-12 rounded-full bg-surface-secondary dark:bg-slate-700 flex items-center justify-center text-xl font-bold text-cta-default dark:text-cyan-400"
+            >
               {{ testimonial.name.charAt(0) }}
             </div>
             <div>
-              <div class="font-semibold text-text-primary dark:text-white">{{ testimonial.name }}</div>
-              <div class="text-sm text-text-muted dark:text-gray-400">{{ testimonial.location }}</div>
-              <div class="text-xs text-cta-default dark:text-cyan-400">{{ testimonial.carBrand }}</div>
-              <div class="text-xs font-semibold text-green-600 dark:text-green-400">{{ testimonial.earning }}</div>
+              <div class="font-semibold text-text-primary dark:text-white">
+                {{ testimonial.name }}
+              </div>
+              <div class="text-sm text-text-muted dark:text-gray-400">
+                {{ testimonial.location }}
+              </div>
+              <div class="text-xs text-cta-default dark:text-cyan-400">
+                {{ testimonial.carBrand }}
+              </div>
+              <div class="text-xs font-semibold text-green-600 dark:text-green-400">
+                {{ testimonial.earning }}
+              </div>
             </div>
           </div>
         </div>
@@ -334,16 +382,20 @@
 </section>
 
 <!-- Programa de Referidos -->
-<section class="py-16 bg-gradient-to-br from-cta-default/10 via-surface-base to-cta-hover/10 dark:from-cyan-900/20 dark:via-slate-950 dark:to-cyan-800/20">
+<section
+  class="py-16 bg-gradient-to-br from-cta-default/10 via-surface-base to-cta-hover/10 dark:from-cyan-900/20 dark:via-slate-950 dark:to-cyan-800/20"
+>
   <div class="container-page px-container">
-    <div class="max-w-4xl mx-auto text-center">
+    <div data-tour-step="referral-program" class="max-w-4xl mx-auto text-center">
       <div class="text-5xl mb-6">🎁</div>
       <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
         Ganás más con nuestro programa de referidos
       </h2>
       <p class="text-lg text-text-secondary dark:text-gray-300 mb-8">
-        Invitá a tus amigos propietarios y ganás <strong class="text-cta-default dark:text-cyan-400">$1,500 ARS</strong> por cada uno que publique su auto.
-        Ellos también reciben <strong class="text-cta-default dark:text-cyan-400">$500 ARS</strong> de bienvenida.
+        Invitá a tus amigos propietarios y ganás
+        <strong class="text-cta-default dark:text-cyan-400">$1,500 ARS</strong> por cada uno que
+        publique su auto. Ellos también reciben
+        <strong class="text-cta-default dark:text-cyan-400">$500 ARS</strong> de bienvenida.
       </p>
 
       <div class="grid md:grid-cols-2 gap-6 mb-8">
@@ -364,10 +416,7 @@
         </div>
       </div>
 
-      <button
-        (click)="goToReferrals()"
-        class="btn-primary btn-lg"
-      >
+      <button (click)="goToReferrals()" class="btn-primary btn-lg">
         Ver mi código de referidos
       </button>
     </div>
@@ -391,7 +440,9 @@
               (click)="toggleFAQ($index)"
               class="w-full text-left px-6 py-4 flex items-center justify-between hover:bg-surface-secondary dark:hover:bg-slate-800 transition-colors"
             >
-              <span class="font-semibold text-text-primary dark:text-white">{{ faq.question }}</span>
+              <span class="font-semibold text-text-primary dark:text-white">{{
+                faq.question
+              }}</span>
               <svg
                 class="w-5 h-5 text-text-muted dark:text-gray-400 transition-transform"
                 [class.rotate-180]="faq.open"
@@ -399,7 +450,12 @@
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
               </svg>
             </button>
 
@@ -416,12 +472,12 @@
 </section>
 
 <!-- Final CTA -->
-<section class="py-20 bg-gradient-to-br from-cta-default to-cta-hover dark:from-cyan-600 dark:to-cyan-500 text-white">
+<section
+  class="py-20 bg-gradient-to-br from-cta-default to-cta-hover dark:from-cyan-600 dark:to-cyan-500 text-white"
+>
   <div class="container-page px-container">
     <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-3xl lg:text-5xl font-bold mb-6">
-        ¿Listo para comenzar a ganar?
-      </h2>
+      <h2 class="text-3xl lg:text-5xl font-bold mb-6">¿Listo para comenzar a ganar?</h2>
       <p class="text-xl mb-8 opacity-90">
         Unite a miles de Renters que ya están generando ingresos con sus autos.
       </p>
@@ -438,7 +494,7 @@
       </button>
 
       <div class="mt-8 text-sm opacity-75">
-        ✅ Sin costos iniciales  •  ✅ Sin contratos  •  ✅ Cancelás cuando quieras
+        ✅ Sin costos iniciales • ✅ Sin contratos • ✅ Cancelás cuando quieras
       </div>
     </div>
   </div>

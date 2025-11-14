@@ -1,0 +1,75 @@
+========================================
+RUNTIME CONFIGURATION - AutoRenta
+========================================
+
+Configuración para Cloud Agent en Cursor:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. INSTALL SCRIPT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+npm run install
+
+📋 Explicación:
+   - Instala todas las dependencias del proyecto
+   - Incluye dependencias de web (Angular) y workers
+   - Ejecuta postinstall automáticamente
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. START SCRIPT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+npm run dev
+
+📋 Explicación:
+   - Inicia el entorno de desarrollo completo
+   - Angular dev server en http://localhost:4200
+   - Payment webhook worker en http://localhost:8787
+   - Ambos servicios se ejecutan en background
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3. DEFAULT TERMINALS (Opcional)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Puedes agregar terminals adicionales si necesitas:
+
+Terminal 1 (Opcional - para monitoreo):
+   npm run status
+
+Terminal 2 (Opcional - para tests):
+   npm run test:quick
+
+Terminal 3 (Opcional - para logs):
+   tail -f logs/*.log
+
+📋 Nota: Los terminals son opcionales. El start script ya
+   inicia todos los servicios necesarios.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RESUMEN DE CONFIGURACIÓN:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Install Script: npm run install
+✅ Start Script: npm run dev
+⏭️  Default Terminals: Opcional (no necesario)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VERIFICACIÓN:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Después de configurar, el cloud agent:
+1. Hará checkout del commit apropiado
+2. Ejecutará: npm run install
+3. Ejecutará: npm run dev
+4. Estará listo para desarrollo
+
+URLs esperadas:
+- Web: http://localhost:4200
+- Worker: http://localhost:8787/webhooks/payments
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+

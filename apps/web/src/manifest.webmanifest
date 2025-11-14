@@ -1,7 +1,7 @@
 {
-  "name": "AutoRenta - Alquiler de Autos Premium",
+  "name": "AutoRenta - Alquiler de Autos entre Personas",
   "short_name": "AutoRenta",
-  "description": "Alquilá autos premium en Argentina y Uruguay. Plataforma peer-to-peer segura con wallet integrada.",
+  "description": "Alquilá autos entre personas en Argentina y Uruguay. Plataforma peer-to-peer segura con wallet integrada.",
   "theme_color": "#2c4a52",
   "background_color": "#FAF9F6",
   "display": "standalone",

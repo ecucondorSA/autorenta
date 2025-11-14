@@ -33,23 +33,46 @@ export interface FipeAutocompleteOption {
 
         <!-- Loading spinner -->
         @if (isLoading) {
-          <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
-            <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          <div class="absolute right-3 top-1/2 transform -translate-y-1/2 z-10">
+            <svg
+              class="animate-spin h-5 w-5 text-blue-500"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
           </div>
         }
 
         <!-- Clear button -->
-        @if (searchQuery() && !disabled) {
+        @if (searchQuery() && !disabled && !isLoading) {
           <button
             type="button"
-            (click)="clearSelection()"
-            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            (click)="clearSelection(); $event.stopPropagation()"
+            (mousedown)="$event.preventDefault()"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 z-20 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+            aria-label="Limpiar selección"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
             </svg>
           </button>
         }
@@ -57,7 +80,9 @@ export interface FipeAutocompleteOption {
 
       <!-- Dropdown list -->
       @if (showDropdown() && filteredOptions().length > 0) {
-        <div class="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+        <div
+          class="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-y-auto"
+        >
           @for (option of filteredOptions(); track option.code) {
             <button
               type="button"
@@ -72,7 +97,9 @@ export interface FipeAutocompleteOption {
 
       <!-- No results message -->
       @if (showDropdown() && filteredOptions().length === 0 && searchQuery().length >= minChars) {
-        <div class="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4">
+        <div
+          class="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4"
+        >
           <p class="text-sm text-gray-500 text-center">No se encontraron resultados</p>
         </div>
       }
@@ -83,11 +110,13 @@ export interface FipeAutocompleteOption {
       }
     </div>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class FipeAutocompleteComponent implements OnChanges {
   @Input() placeholder = 'Escribe para buscar...';
@@ -113,9 +142,9 @@ export class FipeAutocompleteComponent implements OnChanges {
     }
 
     // Filter options that contain the search query
-    return this.options.filter((option: FipeAutocompleteOption) =>
-      option.name.toLowerCase().includes(query)
-    ).slice(0, 50); // Limit to 50 results for performance
+    return this.options
+      .filter((option: FipeAutocompleteOption) => option.name.toLowerCase().includes(query))
+      .slice(0, 50); // Limit to 50 results for performance
   });
 
   ngOnChanges(): void {
@@ -145,7 +174,7 @@ export class FipeAutocompleteComponent implements OnChanges {
 
   onBlur(): void {
     this.isFocused.set(false);
-    // Delay hiding dropdown to allow click on option
+    // Delay hiding dropdown to allow click on option or clear button
     setTimeout(() => {
       this.showDropdown.set(false);
     }, 200);
@@ -162,6 +191,9 @@ export class FipeAutocompleteComponent implements OnChanges {
     this.searchQuery.set('');
     this.selectedValue = null;
     this.showDropdown.set(false);
+    this.isFocused.set(false);
+    // Emit null to indicate clearing
     this.optionSelected.emit({ code: '', name: '' });
+    this.searchQueryChanged.emit('');
   }
 }

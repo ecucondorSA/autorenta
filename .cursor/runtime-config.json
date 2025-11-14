@@ -1,0 +1,5 @@
+{
+  "installScript": "npm run install",
+  "startScript": "npm run dev",
+  "defaultTerminals": []
+}

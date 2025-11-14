@@ -1,5 +1,7 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, signal, inject, OnDestroy, effect } from '@angular/core';
 import { injectSupabase } from './supabase-client.service';
+import { AuthService } from './auth.service';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface NotificationItem {
   id: string;
@@ -16,16 +18,49 @@ export interface NotificationItem {
 @Injectable({
   providedIn: 'root',
 })
-export class NotificationsService {
+export class NotificationsService implements OnDestroy {
   private readonly supabase = injectSupabase();
+  private readonly authService = inject(AuthService);
 
   // Estado reactivo
   readonly notifications = signal<NotificationItem[]>([]);
   readonly unreadCount = signal(0);
+  readonly connectionStatus = signal<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected');
+
+  // Referencia al channel de Realtime para poder hacer cleanup
+  private realtimeChannel: RealtimeChannel | null = null;
+  private isSubscribed = false;
 
   constructor() {
-    this.loadNotificationsInternal();
-    void this.subscribeToRealtime();
+    // Efecto reactivo: suscribirse cuando el usuario se autentica
+    effect(() => {
+      const isAuthenticated = this.authService.isAuthenticated();
+      
+      if (isAuthenticated) {
+        // Usuario autenticado: cargar notificaciones y suscribirse
+        void this.initializeNotifications();
+      } else {
+        // Usuario no autenticado: limpiar suscripción
+        this.unsubscribe();
+        this.notifications.set([]);
+        this.unreadCount.set(0);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe();
+  }
+
+  /**
+   * Inicializa notificaciones cuando el usuario está autenticado
+   */
+  private async initializeNotifications(): Promise<void> {
+    // Cargar notificaciones existentes
+    await this.loadNotificationsInternal();
+
+    // Suscribirse a cambios en tiempo real
+    await this.subscribeToRealtime();
   }
 
   /**
@@ -77,27 +112,113 @@ export class NotificationsService {
     }
   }
 
-  private async subscribeToRealtime() {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-    if (!user) return;
+  /**
+   * Suscribirse a cambios en tiempo real de notificaciones
+   * Maneja reconexión automática y estado de conexión
+   */
+  private async subscribeToRealtime(): Promise<void> {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+      
+      if (!user) {
+        console.warn('[NotificationsService] No user found, skipping Realtime subscription');
+        this.connectionStatus.set('disconnected');
+        return;
+      }
 
-    const channel = this.supabase
-      .channel('notifications')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'notifications',
-          filter: `user_id=eq.${user.id}`,
-        },
-        (payload: unknown) => {
-          this.addNotification((payload as any).new as any);
-        },
-      )
-      .subscribe();
+      // Limpiar suscripción anterior si existe
+      if (this.realtimeChannel) {
+        this.unsubscribe();
+      }
+
+      this.connectionStatus.set('connecting');
+      console.log('[NotificationsService] Subscribing to Realtime notifications for user:', user.id);
+
+      // Crear nuevo channel
+      this.realtimeChannel = this.supabase
+        .channel(`notifications:${user.id}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'notifications',
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload: unknown) => {
+            console.log('[NotificationsService] New notification received via Realtime:', payload);
+            this.addNotification((payload as any).new as any);
+          },
+        )
+        .subscribe((status) => {
+          console.log('[NotificationsService] Realtime subscription status:', status);
+          
+          if (status === 'SUBSCRIBED') {
+            this.connectionStatus.set('connected');
+            this.isSubscribed = true;
+            console.log('[NotificationsService] ✅ Successfully subscribed to Realtime notifications');
+          } else if (status === 'CHANNEL_ERROR') {
+            this.connectionStatus.set('error');
+            this.isSubscribed = false;
+            console.error('[NotificationsService] ❌ Realtime channel error');
+            
+            // Intentar reconectar después de 5 segundos
+            setTimeout(() => {
+              console.log('[NotificationsService] Attempting to reconnect...');
+              void this.subscribeToRealtime();
+            }, 5000);
+          } else if (status === 'TIMED_OUT') {
+            this.connectionStatus.set('error');
+            this.isSubscribed = false;
+            console.warn('[NotificationsService] ⚠️ Realtime subscription timed out');
+            
+            // Intentar reconectar después de 5 segundos
+            setTimeout(() => {
+              console.log('[NotificationsService] Attempting to reconnect after timeout...');
+              void this.subscribeToRealtime();
+            }, 5000);
+          } else if (status === 'CLOSED') {
+            this.connectionStatus.set('disconnected');
+            this.isSubscribed = false;
+            console.log('[NotificationsService] Realtime channel closed');
+          }
+        });
+
+    } catch (error) {
+      console.error('[NotificationsService] Error subscribing to Realtime:', error);
+      this.connectionStatus.set('error');
+      this.isSubscribed = false;
+      
+      // Intentar reconectar después de 5 segundos
+      setTimeout(() => {
+        console.log('[NotificationsService] Attempting to reconnect after error...');
+        void this.subscribeToRealtime();
+      }, 5000);
+    }
+  }
+
+  /**
+   * Desuscribirse del channel de Realtime
+   */
+  private unsubscribe(): void {
+    if (this.realtimeChannel) {
+      console.log('[NotificationsService] Unsubscribing from Realtime notifications');
+      this.supabase.removeChannel(this.realtimeChannel);
+      this.realtimeChannel = null;
+      this.isSubscribed = false;
+      this.connectionStatus.set('disconnected');
+    }
+  }
+
+  /**
+   * Reconectar manualmente a Realtime
+   */
+  async reconnect(): Promise<void> {
+    console.log('[NotificationsService] Manual reconnect requested');
+    this.unsubscribe();
+    await this.subscribeToRealtime();
   }
 
   private addNotification(notificationData: unknown) {

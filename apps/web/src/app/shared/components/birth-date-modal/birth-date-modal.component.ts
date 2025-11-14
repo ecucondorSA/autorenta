@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProfileService } from '../../../core/services/profile.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/age-calculator';
 
 /**
@@ -130,7 +130,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
 export class BirthDateModalComponent {
   private readonly fb = inject(FormBuilder);
   private readonly profileService = inject(ProfileService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
 
   @Output() completed = new EventEmitter<string>(); // Emits date_of_birth on success
   @Output() cancelled = new EventEmitter<void>();

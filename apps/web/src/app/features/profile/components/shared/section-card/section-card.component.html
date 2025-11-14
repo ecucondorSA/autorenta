@@ -1,0 +1,84 @@
+<div
+  class="section-card"
+  [class.section-card--editing]="isEditingValue"
+  [class.section-card--readonly]="readonly"
+  [class.section-card--loading]="loadingValue"
+>
+  <!-- Header -->
+  <div class="section-header">
+    <div class="section-header__content">
+      <!-- Icon + Title -->
+      <div class="section-title">
+        @if (icon) {
+          <ion-icon [name]="icon" class="section-title__icon"></ion-icon>
+        }
+        <h3 class="section-title__text">{{ title }}</h3>
+      </div>
+
+      <!-- Description -->
+      @if (description) {
+        <p class="section-description">{{ description }}</p>
+      }
+    </div>
+
+    <!-- Edit Button (only in view mode) -->
+    @if (showEditButton && !isEditingValue && !readonly) {
+      <button
+        type="button"
+        class="btn-text section-header__edit-btn"
+        (click)="startEdit()"
+        [disabled]="loadingValue"
+      >
+        <ion-icon name="create-outline" class="mr-1"></ion-icon>
+        Editar
+      </button>
+    }
+  </div>
+
+  <!-- Content (projected from parent) -->
+  <div class="section-content" [class.section-content--readonly]="readonly">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- Footer Actions (only in edit mode) -->
+  @if (isEditingValue && showActions && !readonly) {
+    <div class="section-actions">
+      <!-- Cancel Button -->
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="handleCancel()"
+        [disabled]="loadingValue"
+      >
+        <ion-icon name="close-outline" class="mr-1"></ion-icon>
+        Cancelar
+      </button>
+
+      <!-- Save Button -->
+      <button type="button" class="btn-primary" (click)="handleSave()" [disabled]="isSaveDisabled">
+        @if (loadingValue) {
+          <ion-spinner name="crescent" class="mr-2"></ion-spinner>
+          Guardando...
+        } @else {
+          <ion-icon name="checkmark-outline" class="mr-1"></ion-icon>
+          Guardar Cambios
+        }
+      </button>
+    </div>
+  }
+
+  <!-- Error Alert -->
+  @if (errorValue) {
+    <div class="section-error" role="alert">
+      <ion-icon name="alert-circle-outline" class="section-error__icon"></ion-icon>
+      <span class="section-error__message">{{ errorValue }}</span>
+    </div>
+  }
+
+  <!-- Loading Overlay (for heavy operations) -->
+  @if (loadingValue) {
+    <div class="section-loading-overlay">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  }
+</div>

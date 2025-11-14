@@ -1,5 +1,80 @@
 <!-- 🎯 MAP FILTERS - Desktop & Mobile Responsive -->
 
+<ng-template #priceRangeTemplate>
+  <div class="price-range-card">
+    <div class="price-range-header">
+      <div>
+        <h3 class="price-range-title">Rango de precios</h3>
+        <p class="price-range-subtitle">Precio total estimado (incluye tarifas)</p>
+      </div>
+      <div class="price-range-summary">
+        <span>{{ formatPrice(priceRange()?.min ?? priceMin()) }}</span>
+        <span class="separator">—</span>
+        <span>
+          {{
+            (priceRange()?.max ?? 0) >= priceMax()
+              ? formatPrice(priceRange()?.max ?? priceMax()) + '+'
+              : formatPrice(priceRange()?.max ?? priceMax())
+          }}
+        </span>
+      </div>
+    </div>
+
+    <div class="price-histogram">
+      <div
+        *ngFor="let bar of priceHistogram(); trackBy: trackByIndex"
+        class="price-bar"
+        [class.price-bar--active]="bar.active"
+        [style.height.%]="bar.height"
+        [attr.title]="formatPrice(Math.round(bar.start)) + ' - ' + formatPrice(Math.round(bar.end))"
+      ></div>
+    </div>
+
+    <div class="price-slider">
+      <div class="price-slider-track">
+        <div
+          class="price-slider-active"
+          [style.left.%]="priceRangeVisual().left"
+          [style.width.%]="priceRangeVisual().width"
+        ></div>
+      </div>
+      <input
+        type="range"
+        [min]="priceMin()"
+        [max]="priceMax()"
+        [step]="getPriceStep()"
+        [value]="priceRange()?.min ?? priceMin()"
+        (input)="onPriceSliderInput('min', +$any($event.target).value)"
+      />
+      <input
+        type="range"
+        [min]="priceMin()"
+        [max]="priceMax()"
+        [step]="getPriceStep()"
+        [value]="priceRange()?.max ?? priceMax()"
+        (input)="onPriceSliderInput('max', +$any($event.target).value)"
+      />
+    </div>
+
+    <div class="price-range-footer">
+      <div class="price-range-chip">
+        <span>Mínimo</span>
+        <strong>{{ formatPrice(priceRange()?.min ?? priceMin()) }}</strong>
+      </div>
+      <div class="price-range-chip">
+        <span>Máximo</span>
+        <strong>
+          {{
+            (priceRange()?.max ?? priceMax()) >= priceMax()
+              ? formatPrice(priceRange()?.max ?? priceMax()) + '+'
+              : formatPrice(priceRange()?.max ?? priceMax())
+          }}
+        </strong>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 <!-- Desktop: Floating Chips Top-Left -->
 <div
   *ngIf="!isMobile()"

@@ -1,13 +1,14 @@
 <div
   *ngIf="carLocation"
-  class="bg-surface-raised dark:bg-surface-raised shadow-lg rounded-lg overflow-hidden h-full flex flex-col"
+  class="bg-surface-raised dark:bg-surface-raised shadow-lg rounded-lg h-full flex flex-col relative"
 >
   <!-- Close Button -->
-  <div class="relative">
-    <button
-      (click)="onClose()"
-      class="absolute top-2 right-2 bg-surface-base dark:bg-surface-base rounded-full p-1 z-10 text-text-secondary dark:text-text-secondary hover:bg-border-muted dark:hover:bg-border-muted"
-    >
+  <button
+    type="button"
+    (click)="onClose(); $event.stopPropagation()"
+    aria-label="Cerrar panel"
+    class="absolute top-2 right-2 bg-surface-base dark:bg-surface-base rounded-full p-1 z-50 text-text-secondary dark:text-text-secondary hover:bg-border-muted dark:hover:bg-border-muted transition-colors cursor-pointer"
+  >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-6 w-6"
@@ -22,19 +23,18 @@
           d="M6 18L18 6M6 6l12 12"
         />
       </svg>
-    </button>
+  </button>
 
-    <!-- Image -->
-    <div class="h-48 bg-surface-base dark:bg-surface-base flex items-center justify-center">
-      <img
-        *ngIf="carLocation.photoUrl"
-        [src]="carLocation.photoUrl"
-        alt="Photo of {{ carLocation.title }}"
-        class="h-full w-full object-cover"
-      />
-      <div *ngIf="!carLocation.photoUrl" class="text-text-muted dark:text-text-muted">
-        No photo available
-      </div>
+  <!-- Image -->
+  <div class="h-48 bg-surface-base dark:bg-surface-base flex items-center justify-center overflow-hidden">
+    <img
+      *ngIf="carLocation.photoUrl"
+      [src]="carLocation.photoUrl"
+      alt="Photo of {{ carLocation.title }}"
+      class="h-full w-full object-cover"
+    />
+    <div *ngIf="!carLocation.photoUrl" class="text-text-muted dark:text-text-muted">
+      No photo available
     </div>
   </div>
 

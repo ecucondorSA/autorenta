@@ -1,0 +1,66 @@
+<div class="map-layers-control">
+  <!-- Toggle Button -->
+  <button
+    type="button"
+    (click)="togglePanel()"
+    class="layers-toggle-button"
+    aria-label="Control de capas"
+    [class.open]="isOpen()"
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
+      />
+    </svg>
+  </button>
+
+  <!-- Layers Panel -->
+  <div class="layers-panel" *ngIf="isOpen()">
+    <div class="layers-panel-header">
+      <h3 class="layers-panel-title">Capas del Mapa</h3>
+      <button
+        type="button"
+        (click)="togglePanel()"
+        class="layers-panel-close"
+        aria-label="Cerrar"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <div class="layers-list">
+      <div
+        *ngFor="let layer of layers"
+        class="layer-item"
+        [class.disabled]="!layer.enabled"
+      >
+        <label class="layer-label">
+          <input
+            type="checkbox"
+            [checked]="layer.visible"
+            [disabled]="!layer.enabled"
+            (change)="toggleLayer(layer.id, $any($event.target).checked)"
+            class="layer-checkbox"
+          />
+          <span class="layer-icon">{{ layer.icon }}</span>
+          <span class="layer-text">{{ layer.label }}</span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

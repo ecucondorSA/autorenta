@@ -1,0 +1,214 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ==================== CONTAINER ==================== */
+
+.date-search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* ==================== HEADER ==================== */
+
+.search-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calendar-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--cta-default);
+  flex-shrink: 0;
+}
+
+.header-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* ==================== DATE INPUT BUTTON ==================== */
+
+.date-input-button {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  background: linear-gradient(135deg, #00D9E1 0%, #00B8D4 100%);
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 217, 225, 0.2),
+    0 2px 4px -1px rgba(0, 217, 225, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.date-input-button:hover {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 217, 225, 0.3),
+    0 4px 6px -2px rgba(0, 217, 225, 0.2);
+  transform: translateY(-2px);
+}
+
+.date-input-button:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+.date-input-button:focus {
+  outline: none;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 217, 225, 0.3),
+    0 4px 6px -2px rgba(0, 217, 225, 0.2),
+    0 0 0 3px rgba(0, 217, 225, 0.2);
+}
+
+/* ==================== INPUT CONTENT ==================== */
+
+.input-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  min-height: 4rem;
+}
+
+.input-content.selected {
+  padding: 1rem 1.5rem;
+}
+
+/* ==================== PLACEHOLDER STATE ==================== */
+
+.placeholder-text {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: -0.02em;
+  text-align: left;
+}
+
+.chevron-down {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  flex-shrink: 0;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* ==================== SELECTED STATE ==================== */
+
+.date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.date-range-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: -0.01em;
+  text-align: left;
+}
+
+.duration-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+}
+
+.clear-dates-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clear-dates-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.clear-dates-button:active {
+  transform: scale(0.95);
+}
+
+.close-icon {
+  width: 1rem;
+  height: 1rem;
+  color: white;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 640px) {
+  .input-content {
+    padding: 1rem 1.25rem;
+    min-height: 3.5rem;
+  }
+
+  .input-content.selected {
+    padding: 0.875rem 1.25rem;
+  }
+
+  .placeholder-text {
+    font-size: 1rem;
+  }
+
+  .date-range-text {
+    font-size: 0.9375rem;
+  }
+
+  .duration-badge {
+    font-size: 0.6875rem;
+    padding: 0.25rem 0.625rem;
+  }
+}
+
+/* ==================== DARK MODE ==================== */
+
+@media (prefers-color-scheme: dark) {
+  .date-input-button {
+    box-shadow:
+      0 4px 6px -1px rgba(0, 217, 225, 0.3),
+      0 2px 4px -1px rgba(0, 217, 225, 0.2);
+  }
+
+  .date-input-button:hover {
+    box-shadow:
+      0 10px 15px -3px rgba(0, 217, 225, 0.4),
+      0 4px 6px -2px rgba(0, 217, 225, 0.3);
+  }
+}

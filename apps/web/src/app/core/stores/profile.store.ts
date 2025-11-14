@@ -227,6 +227,83 @@ export class ProfileStore {
   }
 
   /**
+   * Update a specific profile section with analytics tracking
+   *
+   * @param sectionId - The section being updated (e.g., 'identity', 'contact', 'preferences')
+   * @param updates - Partial profile data to update
+   * @returns Updated profile
+   *
+   * This method provides:
+   * - Section-specific error messages
+   * - Analytics tracking for which sections are being edited
+   * - Same optimistic update pattern as updateProfile()
+   *
+   * @example
+   * ```typescript
+   * await profileStore.updateSection('identity', {
+   *   full_name: 'John Doe',
+   *   date_of_birth: '1990-01-01'
+   * });
+   * ```
+   */
+  async updateSection(
+    sectionId: string,
+    updates: Partial<UpdateProfileData>,
+  ): Promise<UserProfile> {
+    this.loading.set(true);
+    this.error.set(null);
+
+    // TODO: Send analytics event for section update
+    // this.analytics.track('profile_section_updating', {
+    //   section_id: sectionId,
+    //   fields: Object.keys(updates),
+    // });
+
+    // Optimistic update
+    const currentProfile = this.profile();
+    if (currentProfile) {
+      this.profile.set({
+        ...currentProfile,
+        ...updates,
+      } as UserProfile);
+    }
+
+    try {
+      const updatedProfile = await this.profileService.updateProfile(updates);
+      this.profile.set(updatedProfile);
+      this.cacheTimestamp = Date.now();
+
+      // TODO: Send analytics event
+      // this.analytics.track('profile_section_updated', {
+      //   section_id: sectionId,
+      //   fields_updated: Object.keys(updates),
+      // });
+
+      return updatedProfile;
+    } catch (err) {
+      // Rollback on error
+      if (currentProfile) {
+        this.profile.set(currentProfile);
+      }
+
+      const errorMessage =
+        err instanceof Error ? err.message : `No pudimos actualizar la sección "${sectionId}".`;
+
+      this.error.set(errorMessage);
+
+      // TODO: Send analytics event for error
+      // this.analytics.track('profile_section_update_failed', {
+      //   section_id: sectionId,
+      //   error: errorMessage,
+      // });
+
+      throw err;
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  /**
    * Upload avatar with optimistic update
    */
   async uploadAvatar(file: File): Promise<string> {

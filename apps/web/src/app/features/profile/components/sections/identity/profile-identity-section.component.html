@@ -1,0 +1,169 @@
+<app-section-card
+  [title]="'Información de Identidad'"
+  [description]="'Datos personales requeridos para verificación y seguros'"
+  [icon]="'person'"
+  [isEditing]="isEditing"
+  [loading]="loading"
+  [error]="error"
+  [isDirty]="isDirty()"
+  [isValid]="isValid()"
+  (onSave)="onSave()"
+  (onCancel)="onCancel()"
+  (onEdit)="onEdit()"
+>
+  <!-- View Mode (readonly) -->
+  @if (!isEditing()) {
+    <div class="identity-view">
+      <!-- Full Name -->
+      <div class="field-group">
+        <label class="field-label">Nombre Completo</label>
+        <p class="field-value">{{ profile?.full_name || '—' }}</p>
+      </div>
+
+      <!-- Date of Birth -->
+      <div class="field-group">
+        <label class="field-label">Fecha de Nacimiento</label>
+        <p class="field-value">
+          @if (profile?.date_of_birth) {
+            {{ formatDate(profile?.date_of_birth) }}
+            <span class="field-hint">({{ calculatedAge() }} años)</span>
+          } @else {
+            <span class="text-text-muted">No especificada</span>
+          }
+        </p>
+      </div>
+
+      <!-- Government ID -->
+      @if (profile?.gov_id_type && profile?.gov_id_number) {
+        <div class="field-group">
+          <label class="field-label">Documento de Identidad</label>
+          <p class="field-value">{{ profile?.gov_id_type }}: {{ profile?.gov_id_number }}</p>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Edit Mode (form) -->
+  @if (isEditing()) {
+    <form [formGroup]="form" class="identity-form">
+      <!-- Full Name Field -->
+      <div class="form-field">
+        <label class="form-label" for="full_name">
+          Nombre Completo
+          <span class="text-error">*</span>
+        </label>
+
+        <input
+          type="text"
+          id="full_name"
+          formControlName="full_name"
+          class="form-input"
+          [class.form-input--error]="hasFieldError('full_name')"
+          placeholder="Ej: Juan Pérez González"
+          maxlength="100"
+        />
+
+        @if (hasFieldError('full_name')) {
+          <p class="form-error">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            {{ getFieldError('full_name') }}
+          </p>
+        }
+
+        <p class="form-hint">
+          Debe coincidir con tu documento de identidad. Nombre y apellido completos.
+        </p>
+      </div>
+
+      <!-- Date of Birth Field -->
+      <div class="form-field">
+        <label class="form-label" for="date_of_birth">
+          Fecha de Nacimiento
+          @if (calculatedAge() !== null) {
+            <span class="field-badge" [class.field-badge--success]="calculatedAge()! >= 18">
+              {{ calculatedAge() }} años
+            </span>
+          }
+        </label>
+
+        <input
+          type="date"
+          id="date_of_birth"
+          formControlName="date_of_birth"
+          class="form-input"
+          [class.form-input--error]="hasFieldError('date_of_birth')"
+          [max]="getMaxDate()"
+        />
+
+        @if (hasFieldError('date_of_birth')) {
+          <p class="form-error">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            {{ getFieldError('date_of_birth') }}
+          </p>
+        }
+
+        <p class="form-hint">
+          Debes tener al menos 18 años para alquilar autos. Esta información es requerida para
+          cálculos de seguro.
+        </p>
+      </div>
+
+      <!-- Divider -->
+      <div class="form-divider"></div>
+
+      <!-- Government ID Type -->
+      <div class="form-field">
+        <label class="form-label" for="gov_id_type"> Tipo de Documento (opcional) </label>
+
+        <select id="gov_id_type" formControlName="gov_id_type" class="form-select">
+          <option value="">Seleccionar tipo...</option>
+          @for (type of govIdTypes; track type.value) {
+            <option [value]="type.value">{{ type.label }}</option>
+          }
+        </select>
+
+        <p class="form-hint">Selecciona tu tipo de documento de identidad</p>
+      </div>
+
+      <!-- Government ID Number (conditional) -->
+      @if (form.get('gov_id_type')?.value) {
+        <div class="form-field">
+          <label class="form-label" for="gov_id_number">
+            Número de Documento
+            @if (form.get('gov_id_type')?.value) {
+              <span class="text-error">*</span>
+            }
+          </label>
+
+          <input
+            type="text"
+            id="gov_id_number"
+            formControlName="gov_id_number"
+            class="form-input"
+            [class.form-input--error]="hasFieldError('gov_id_number')"
+            [placeholder]="getGovIdPlaceholder()"
+            maxlength="20"
+          />
+
+          @if (hasFieldError('gov_id_number')) {
+            <p class="form-error">
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              {{ getFieldError('gov_id_number') }}
+            </p>
+          }
+
+          <p class="form-hint">Ingresa tu número de documento sin puntos ni guiones</p>
+        </div>
+      }
+
+      <!-- Important Notice -->
+      <div class="form-notice">
+        <ion-icon name="information-circle" class="form-notice__icon"></ion-icon>
+        <div class="form-notice__content">
+          <strong>Información importante:</strong>
+          <p>Los cambios en tu información de identidad pueden requerir verificación adicional.</p>
+        </div>
+      </div>
+    </form>
+  }
+</app-section-card>

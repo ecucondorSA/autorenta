@@ -1,0 +1,136 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.professional-date-input {
+  width: 100%;
+}
+
+.date-input-button {
+  @apply w-full relative flex items-center gap-3 px-5 py-4;
+  @apply bg-gray-50 dark:bg-slate-700;
+  @apply border-2 border-gray-200 dark:border-slate-600;
+  @apply rounded-2xl;
+  @apply text-left;
+  @apply cursor-pointer;
+  @apply transition-all duration-200;
+  @apply focus:outline-none focus:ring-2 focus:ring-cta-default/40 focus:border-transparent;
+  @apply hover:border-cta-default/50 dark:hover:border-cta-default/50;
+  @apply active:scale-[0.98];
+}
+
+.date-input-button.has-selection {
+  @apply border-cta-default/40 dark:border-cta-default/40;
+  @apply bg-cta-default/5 dark:bg-cta-default/10;
+}
+
+.date-input-button.disabled {
+  @apply opacity-50 cursor-not-allowed;
+  @apply hover:border-gray-200 dark:hover:border-slate-600;
+}
+
+.date-input-button:not(.disabled):hover {
+  @apply shadow-md;
+}
+
+.date-input-button:not(.disabled):active {
+  @apply shadow-sm;
+}
+
+.calendar-icon {
+  @apply h-5 w-5 flex-shrink-0;
+  @apply text-gray-400 dark:text-gray-400;
+  @apply transition-colors duration-200;
+}
+
+.date-input-button.has-selection .calendar-icon {
+  @apply text-cta-default dark:text-cta-default;
+}
+
+.date-display {
+  @apply flex-1 text-base font-semibold;
+  @apply text-gray-900 dark:text-white;
+  @apply transition-colors duration-200;
+  @apply truncate;
+}
+
+.date-display.placeholder {
+  @apply text-gray-400 dark:text-gray-400;
+  @apply font-normal;
+}
+
+.days-badge {
+  @apply px-2.5 py-1;
+  @apply bg-cta-default/10 dark:bg-cta-default/20;
+  @apply text-cta-default dark:text-cta-default;
+  @apply text-xs font-semibold;
+  @apply rounded-full;
+  @apply whitespace-nowrap;
+  @apply flex-shrink-0;
+}
+
+.clear-button {
+  @apply p-1.5 rounded-full;
+  @apply text-gray-400 dark:text-gray-400;
+  @apply hover:text-gray-600 dark:hover:text-gray-200;
+  @apply hover:bg-gray-100 dark:hover:bg-slate-600;
+  @apply transition-all duration-200;
+  @apply flex-shrink-0;
+  @apply focus:outline-none focus:ring-2 focus:ring-cta-default/40;
+}
+
+.clear-button:hover {
+  @apply scale-110;
+}
+
+.clear-button:active {
+  @apply scale-95;
+}
+
+.arrow-icon {
+  @apply h-4 w-4 flex-shrink-0;
+  @apply text-gray-400 dark:text-gray-400;
+  @apply transition-transform duration-200;
+}
+
+.date-input-button:not(.disabled):hover .arrow-icon {
+  @apply text-gray-600 dark:text-gray-300;
+  @apply translate-y-0.5;
+}
+
+/* Animación de entrada para el badge de días */
+.days-badge {
+  animation: fadeInScale 0.2s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .date-input-button {
+    @apply px-4 py-3.5;
+  }
+
+  .date-display {
+    @apply text-sm;
+  }
+
+  .days-badge {
+    @apply px-2 py-0.5;
+    @apply text-[10px];
+  }
+}
+
+
+
+

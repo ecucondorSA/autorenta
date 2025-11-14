@@ -204,19 +204,42 @@
       <div class="payment-methods">
         <!-- Wallet Payment -->
         <div
-          class="payment-method"
+          class="payment-method wallet-method"
           [class.selected]="paymentMethod() === 'wallet'"
-          [class.disabled]="finalTotal() > walletBalance()"
           (click)="paymentMethod.set('wallet')"
         >
           <div class="payment-icon">💰</div>
           <div class="payment-info">
             <h4>Wallet AutoRenta</h4>
             <p>Saldo disponible: {{ walletBalance() | currency: 'ARS' : 'symbol' : '1.0-0' }}</p>
-            <p class="payment-description">Pago instantáneo y sin comisiones</p>
+            <p class="payment-description">
+              <strong>¡Alquila sin tarjeta de crédito!</strong> Pago instantáneo y sin comisiones
+            </p>
+            <div class="wallet-benefits">
+              <span class="benefit-badge">✓ Sin tarjeta</span>
+              <span class="benefit-badge">✓ Sin comisiones</span>
+              <span class="benefit-badge">✓ Instantáneo</span>
+            </div>
           </div>
           <div class="payment-radio">
             <div class="radio" [class.checked]="paymentMethod() === 'wallet'"></div>
+          </div>
+        </div>
+
+        <!-- Cash Payment -->
+        <div
+          class="payment-method"
+          [class.selected]="paymentMethod() === 'cash'"
+          (click)="paymentMethod.set('cash')"
+        >
+          <div class="payment-icon">💵</div>
+          <div class="payment-info">
+            <h4>Efectivo</h4>
+            <p>Paga al retirar el auto</p>
+            <p class="payment-description">Paga en efectivo directamente al propietario cuando retires el vehículo</p>
+          </div>
+          <div class="payment-radio">
+            <div class="radio" [class.checked]="paymentMethod() === 'cash'"></div>
           </div>
         </div>
 
@@ -238,11 +261,15 @@
         </div>
       </div>
 
-      <div class="payment-notice">
-        <div class="notice-icon">🔒</div>
+      <div class="payment-notice wallet-highlight">
+        <div class="notice-icon">💡</div>
         <div class="notice-text">
-          <h4>Pago Seguro</h4>
-          <p>Tus datos están protegidos. El depósito se devuelve al finalizar el alquiler.</p>
+          <h4>¿Sabías que con Wallet AutoRenta no necesitas tarjeta de crédito?</h4>
+          <p>
+            La Wallet AutoRenta te permite alquilar vehículos de forma rápida y segura sin necesidad de tener una tarjeta de crédito.
+            Solo carga saldo en tu wallet y podrás alquilar cualquier vehículo disponible.
+            ¡Es la forma más conveniente de alquilar!
+          </p>
         </div>
       </div>
     </div>
@@ -270,7 +297,11 @@
 
           <div class="confirmation-item">
             <span>Método de pago</span>
-            <span>{{ paymentMethod() === 'wallet' ? 'Wallet' : 'Tarjeta' }}</span>
+            <span>
+              {{ paymentMethod() === 'wallet' ? 'Wallet AutoRenta' :
+                 paymentMethod() === 'cash' ? 'Efectivo al retirar' :
+                 'Tarjeta de Crédito' }}
+            </span>
           </div>
 
           <div class="confirmation-total">

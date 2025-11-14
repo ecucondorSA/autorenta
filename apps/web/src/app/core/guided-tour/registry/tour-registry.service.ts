@@ -6,6 +6,7 @@ import {
   StepDefinition,
   StepContent,
 } from '../interfaces/tour-definition.interface';
+import { RENTER_TOURS } from '../tours/renter-tours';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,7 @@ export class TourRegistryService {
 
   constructor() {
     this.loadDefaultTours();
+    this.loadRenterTours();
   }
 
   register(definition: TourDefinition): void {
@@ -518,5 +520,14 @@ export class TourRegistryService {
       buttons: options.buttons || [{ text: 'Siguiente', action: 'next' }],
       ...options,
     };
+  }
+
+  /**
+   * Load Renter-specific tours
+   */
+  private loadRenterTours(): void {
+    RENTER_TOURS.forEach((tour) => {
+      this.register(tour);
+    });
   }
 }

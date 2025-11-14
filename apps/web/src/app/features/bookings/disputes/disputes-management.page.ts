@@ -11,7 +11,7 @@ import {
 } from '../../../core/services/disputes.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
-import { ToastService } from '../../../core/services/toast.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
 @Component({
@@ -24,7 +24,7 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
 export class DisputesManagementPage implements OnInit {
   private readonly disputesService = inject(DisputesService);
   private readonly bookingsService = inject(BookingsService);
-  private readonly toastService = inject(ToastService);
+  private readonly toastService = inject(NotificationManagerService);
   private readonly supabaseService = inject(SupabaseClientService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);

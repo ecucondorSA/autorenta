@@ -32,22 +32,57 @@ export class CarsService {
     }
 
     // Validate required fields
-    if (!input.brand_id || !input.model_id) {
-      throw new Error('Marca y modelo son requeridos');
+    // ✅ CRITICAL: brand_id/model_id son UUIDs (pueden ser null si usamos FIPE)
+    // Si no hay UUIDs, debemos tener brand_text_backup y model_text_backup
+    const hasBrandId = !!(input.brand_id);
+    const hasModelId = !!(input.model_id);
+    const hasBrandText = !!(input.brand_text_backup);
+    const hasModelText = !!(input.model_text_backup);
+    
+    if (!hasBrandId && !hasBrandText) {
+      throw new Error('Marca es requerida (brand_id o brand_text_backup)');
+    }
+    if (!hasModelId && !hasModelText) {
+      throw new Error('Modelo es requerido (model_id o model_text_backup)');
     }
     if (!input.price_per_day || input.price_per_day <= 0) {
       throw new Error('Precio por día debe ser mayor a 0');
     }
 
-    // Check for coordinates (using type assertion since latitude/longitude come from form)
+    // Check for coordinates (using type assertion since location_lat/location_lng come from form)
     const carInput = input as Record<string, unknown>;
-    if (!carInput.latitude || !carInput.longitude) {
+
+    // ✅ CRITICAL: Preparar datos limpios, excluyendo coordenadas null/undefined
+    // Esto evita errores de schema cache si las columnas no están disponibles
+    const cleanInput = { ...input };
+    if (!carInput.location_lat || !carInput.location_lng) {
       console.warn('⚠️ Auto sin coordenadas - no aparecerá en el mapa');
+      // Remover propiedades null/undefined para evitar errores de schema cache
+      delete (cleanInput as Record<string, unknown>).location_lat;
+      delete (cleanInput as Record<string, unknown>).location_lng;
     }
+
+    // ✅ CRITICAL: Mapear campos de ubicación legacy (city, province, country)
+    // La base de datos requiere city/province/country (NOT NULL)
+    // pero el formulario envía location_city/location_state/location_country
+    const city = (input as Record<string, unknown>).city 
+      || (input as Record<string, unknown>).location_city 
+      || '';
+    const province = (input as Record<string, unknown>).province 
+      || (input as Record<string, unknown>).location_state 
+      || (input as Record<string, unknown>).location_province 
+      || '';
+    const country = (input as Record<string, unknown>).country 
+      || (input as Record<string, unknown>).location_country 
+      || 'AR';
 
     // Prepare clean data for insert
     const carData = {
-      ...input,
+      ...cleanInput,
+      // ✅ Mapear campos legacy requeridos por la base de datos
+      city: city || 'Buenos Aires', // Default si está vacío
+      province: province || 'Buenos Aires', // Default si está vacío
+      country: country || 'AR',
       owner_id: userId,
       status: input.status || 'active', // Default to active if not specified
       created_at: new Date().toISOString(),
@@ -407,9 +442,28 @@ export class CarsService {
     const userId = (await this.supabase.auth.getUser()).data.user?.id;
     if (!userId) throw new Error('Usuario no autenticado');
 
+    // ✅ CRITICAL: Mapear campos de ubicación legacy (city, province, country)
+    // La base de datos requiere city/province/country (NOT NULL)
+    // pero el formulario envía location_city/location_state/location_country
+    const inputRecord = input as Record<string, unknown>;
+    const updateData: Record<string, unknown> = { ...input };
+    
+    // Mapear location_city a city si existe
+    if (inputRecord.location_city && !inputRecord.city) {
+      updateData.city = inputRecord.location_city;
+    }
+    // Mapear location_state/location_province a province si existe
+    if ((inputRecord.location_state || inputRecord.location_province) && !inputRecord.province) {
+      updateData.province = inputRecord.location_state || inputRecord.location_province;
+    }
+    // Mapear location_country a country si existe
+    if (inputRecord.location_country && !inputRecord.country) {
+      updateData.country = inputRecord.location_country;
+    }
+
     const { data, error } = await this.supabase
       .from('cars')
-      .update(input)
+      .update(updateData)
       .eq('id', carId)
       .eq('owner_id', userId)
       .select('*, car_photos(*)')
