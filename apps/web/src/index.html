@@ -92,12 +92,106 @@
       type="video/mp4"
     />
     <link rel="prefetch" href="/assets/images/volvo-c-recharge-splash-poster.jpg" as="image" />
+    
+    <!-- PWA Manifests -->
     <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="manifest" href="manifest-v2.webmanifest" />
   </head>
   <body>
     <!-- Runtime environment configuration (loaded before Angular) -->
     <script src="env.js?v=20251024"></script>
     <app-root></app-root>
     <noscript>Please enable JavaScript to continue using this application.</noscript>
+
+    <!-- Service Worker Registration -->
+    <script>
+      // Register service worker for offline support
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/service-worker.js')
+            .then(registration => {
+              console.log('✅ Service Worker registered:', registration.scope);
+              
+              // Check for updates every 60 seconds
+              setInterval(() => {
+                registration.update();
+              }, 60000);
+
+              // Listen for updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                if (newWorker) {
+                  newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                      // New version available
+                      if (confirm('Nueva versión disponible. ¿Actualizar ahora?')) {
+                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                        window.location.reload();
+                      }
+                    }
+                  });
+                }
+              });
+            })
+            .catch(error => {
+              console.error('❌ Service Worker registration failed:', error);
+            });
+
+          // Reload page when new SW takes control
+          let refreshing = false;
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) {
+              refreshing = true;
+              window.location.reload();
+            }
+          });
+        });
+      }
+
+      // Install prompt for PWA
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        console.log('💡 PWA install prompt ready');
+        
+        // Dispatch custom event for app to show install button
+        window.dispatchEvent(new CustomEvent('pwa-install-available', { detail: e }));
+      });
+
+      // Track PWA installation
+      window.addEventListener('appinstalled', () => {
+        console.log('✅ PWA installed successfully');
+        deferredPrompt = null;
+      });
+
+      // Show PWA install banner on iOS Safari
+      if (
+        /iPhone|iPad|iPod/.test(navigator.userAgent) && 
+        !window.navigator.standalone &&
+        !window.matchMedia('(display-mode: standalone)').matches
+      ) {
+        console.log('💡 iOS: Show "Add to Home Screen" hint');
+        window.dispatchEvent(new CustomEvent('ios-install-hint'));
+      }
+    </script>
+
+    <!-- Network status monitoring -->
+    <script>
+      window.addEventListener('online', () => {
+        console.log('🌐 Online');
+        window.dispatchEvent(new CustomEvent('network-status-change', { 
+          detail: { online: true } 
+        }));
+      });
+
+      window.addEventListener('offline', () => {
+        console.log('📴 Offline');
+        window.dispatchEvent(new CustomEvent('network-status-change', { 
+          detail: { online: false } 
+        }));
+      });
+    </script>
   </body>
 </html>

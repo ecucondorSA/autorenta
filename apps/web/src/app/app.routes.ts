@@ -34,6 +34,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/v2-preview/v2-preview.page').then((m) => m.V2PreviewPage),
   },
   {
+    path: 'home-v2',
+    data: { layout: 'full-bleed' },
+    loadComponent: () => import('./features/home-v2/home-v2.page').then((m) => m.HomeV2Page),
+  },
+  {
     path: 'ui-showcase',
     data: { layout: 'full-bleed' },
     loadComponent: () => import('./features/ui-showcase/ui-showcase.page').then((m) => m.UIShowcasePage),
