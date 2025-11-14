@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeroSwiperComponent } from './components/hero-swiper.component';
 import { QuickSearchCardComponent, type SearchCriteria } from './components/quick-search-card.component';
 import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/featured-cars-carousel.component';
+import { FacebookSidebarComponent } from '../../shared/components-v2/layout/facebook-sidebar.component';
 
 /**
  * Home Page V2
@@ -24,8 +25,23 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
     HeroSwiperComponent,
     QuickSearchCardComponent,
     FeaturedCarsCarouselComponent,
+    FacebookSidebarComponent,
   ],
   template: `
+    <!-- Facebook Sidebar -->
+    <app-facebook-sidebar #sidebar />
+
+    <!-- Menu FAB Button -->
+    <button 
+      class="menu-fab"
+      (click)="sidebar.open()"
+      aria-label="Abrir menú"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
     <div class="home-v2">
       <!-- Hero Swiper -->
       <app-hero-swiper />
@@ -131,6 +147,35 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
     </div>
   `,
   styles: [`
+    /* Menu FAB */
+    .menu-fab {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      color: #050505;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .menu-fab:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-fab:active {
+      transform: scale(0.95);
+    }
+
     .home-v2 {
       min-height: 100vh;
       background: #F8F4EC; /* Marfil Autorenta */
