@@ -44,6 +44,7 @@ import { MobileBottomNavPortalService } from './core/services/mobile-bottom-nav-
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { BottomNavBarComponent } from './features/home-v2/components/bottom-nav-bar.component';
 
 @Component({
   selector: 'app-root',
@@ -68,6 +69,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     NotificationsComponent,
     ShareButtonComponent,
     FooterComponent,
+    BottomNavBarComponent,
     Toast,
   ],
   templateUrl: './app.component.html',
@@ -79,6 +81,11 @@ import { FooterComponent } from './shared/components/footer/footer.component';
         transform: none !important;
         will-change: auto !important;
         isolation: auto !important;
+      }
+
+      /* Fix for bottom nav bar - ensure body doesn't have transform */
+      :host-context(body) {
+        transform: none !important;
       }
 
       /* Custom scrollbar para el dropdown del perfil */

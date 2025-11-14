@@ -52,7 +52,7 @@ export interface SidebarMenuItem {
             <img 
               [src]="userAvatar()" 
               [alt]="userName()"
-              onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent('{{ userName() }}') + '&background=A7D8F4&color=050505'"
+              (error)="onImageError($event)"
             />
           </div>
           <div class="user-info">
@@ -713,6 +713,12 @@ export class FacebookSidebarComponent {
     if ('vibrate' in navigator) {
       navigator.vibrate(10);
     }
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    const name = encodeURIComponent(this.userName());
+    img.src = `https://ui-avatars.com/api/?name=${name}&background=A7D8F4&color=050505&size=128`;
   }
 
   openDashboard(): void {

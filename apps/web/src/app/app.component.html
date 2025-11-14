@@ -792,6 +792,10 @@
   <app-footer class="hidden md:block"></app-footer>
 </div>
 
+<!-- Bottom Navigation Bar (V2) - Visible solo en móvil -->
+<!-- IMPORTANTE: Debe estar fuera del contenedor principal para que position:fixed funcione -->
+<app-bottom-nav-bar class="md:hidden"></app-bottom-nav-bar>
+
 <!-- Mobile Bottom Navigation (solo móvil) - Renderizado via Portal Service directamente en body -->
 <!-- El componente se crea dinámicamente en app.component.ts usando MobileBottomNavPortalService -->
 
