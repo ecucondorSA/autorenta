@@ -481,18 +481,19 @@ export class BottomNavBarComponent implements OnInit {
   }
 
   private updateActiveItemFromRoute(url: string): void {
-    if (url.includes('/home')) {
+    // Check in order of specificity (most specific first)
+    if (url === '/' || url.includes('/home')) {
       this.activeItem.set('home');
-    } else if (url.includes('/cars')) {
-      this.activeItem.set('cars');
+    } else if (url.includes('/messages')) {
+      this.activeItem.set('messages');
     } else if (url.includes('/bookings')) {
       this.activeItem.set('bookings');
     } else if (url.includes('/wallet')) {
       this.activeItem.set('wallet');
-    } else if (url.includes('/messages')) {
-      this.activeItem.set('messages');
     } else if (url.includes('/profile')) {
       this.activeItem.set('profile');
+    } else if (url.includes('/cars')) {
+      this.activeItem.set('cars');
     }
   }
 
@@ -502,7 +503,7 @@ export class BottomNavBarComponent implements OnInit {
     { id: 'cars', label: 'Autos', icon: '🚗', badge: 3, route: '/cars' },
     { id: 'bookings', label: 'Reservas', icon: '📅', badge: 2, route: '/bookings' },
     { id: 'wallet', label: 'Billetera', icon: '💰', route: '/wallet' },
-    { id: 'messages', label: 'Mensajes', icon: '💬', badge: 5, route: '/messages' },
+    { id: 'messages', label: 'Mensajes', icon: '💬', badge: 5, route: '/messages/inbox' },
     { id: 'profile', label: 'Perfil', icon: '👤', route: '/profile' },
   ];
 

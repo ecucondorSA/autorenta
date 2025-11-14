@@ -1,0 +1,102 @@
+/**
+ * Mejoras visuales profesionales para InboxPage
+ * Aplicar estos estilos sobrescribiendo los existentes
+ */
+
+/* Modern Header con glassmorphism */
+.sticky.top-0 {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    0 4px 24px rgba(0, 0, 0, 0.06),
+    inset 0 -1px 0 rgba(188, 188, 188, 0.2);
+}
+
+/* Conversation cards con animaciones */
+.space-y-2 > button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 244, 236, 0.8) 100%);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ripple effect en conversaciones */
+.space-y-2 > button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(167, 216, 244, 0.3) 0%, transparent 70%);
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+}
+
+.space-y-2 > button:active::before {
+  transform: scale(2);
+  opacity: 1;
+  transition: transform 0s, opacity 0s;
+}
+
+.space-y-2 > button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+.space-y-2 > button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Avatar con glow effect */
+.space-y-2 > button img {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s;
+}
+
+.space-y-2 > button:hover img {
+  box-shadow: 0 6px 20px rgba(167, 216, 244, 0.4);
+  transform: scale(1.05);
+}
+
+/* Unread badge con pulse animation */
+.space-y-2 > button .bg-cta-default {
+  background: linear-gradient(135deg, #A7D8F4 0%, #75BAE4 100%);
+  box-shadow: 
+    0 2px 8px rgba(167, 216, 244, 0.4),
+    0 0 0 0 rgba(167, 216, 244, 0.7);
+  animation: badgePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    box-shadow: 
+      0 2px 8px rgba(167, 216, 244, 0.4),
+      0 0 0 0 rgba(167, 216, 244, 0.7);
+  }
+  50% {
+    box-shadow: 
+      0 2px 12px rgba(167, 216, 244, 0.6),
+      0 0 0 8px rgba(167, 216, 244, 0);
+  }
+}
+
+/* Empty state mejorado */
+.py-16.text-center svg {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Loading spinner mejorado */
+.animate-spin {
+  border-color: rgba(188, 188, 188, 0.2);
+  border-top-color: #A7D8F4;
+  box-shadow: 0 4px 12px rgba(167, 216, 244, 0.3);
+}
