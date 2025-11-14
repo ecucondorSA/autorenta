@@ -117,11 +117,11 @@ import { MetaService } from '../../core/services/meta.service';
                     <!-- Score arc -->
                     <path 
                       d="M 20 100 A 80 80 0 0 1 180 100" 
-                      [stroke]="getScoreColor()" 
+                      [attr.stroke]="getScoreColor()" 
                       stroke-width="20" 
                       fill="none"
-                      [stroke-dasharray]="getScoreArcLength()"
-                      [stroke-dashoffset]="getScoreArcOffset()"
+                      [attr.stroke-dasharray]="getScoreArcLength()"
+                      [attr.stroke-dashoffset]="getScoreArcOffset()"
                       class="score-arc"
                     ></path>
                   </svg>
@@ -1277,8 +1277,8 @@ import { MetaService } from '../../core/services/meta.service';
   ],
 })
 export class DriverProfilePage implements OnInit {
-  private readonly driverService = inject(DriverProfileService);
-  private readonly bonusProtectorService = inject(BonusProtectorService);
+  protected readonly driverService = inject(DriverProfileService);
+  protected readonly bonusProtectorService = inject(BonusProtectorService);
   private readonly modalController = inject(ModalController);
   private readonly alertController = inject(AlertController);
   private readonly metaService = inject(MetaService);
