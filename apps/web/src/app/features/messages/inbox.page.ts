@@ -4,13 +4,14 @@ import { Router } from '@angular/router';
 import { MessagesService, Message } from '../../core/services/messages.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UnreadMessagesService } from '../../core/services/unread-messages.service';
+import { SupabaseClientService } from '../../core/services/supabase-client.service';
 import { OfflineMessagesIndicatorComponent } from '../../shared/components/offline-messages-indicator/offline-messages-indicator.component';
 import {
   RealtimeConnectionService,
   ConnectionStatus,
 } from '../../core/services/realtime-connection.service';
 import type { ConversationDTO } from '../../core/repositories/messages.repository';
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 
 /**
  * 📬 Bandeja de entrada de mensajes
@@ -192,6 +193,7 @@ export class InboxPage implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly unreadMessagesService = inject(UnreadMessagesService);
   private readonly realtimeConnection = inject(RealtimeConnectionService);
+  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -451,29 +453,41 @@ export class InboxPage implements OnInit, OnDestroy {
       const userId = session.user.id;
       const timestamp = Date.now();
       const fileExt = file.name.split('.').pop();
-      const fileName = `${timestamp}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-      const filePath = `${userId}/attachments/${fileName}`;
+      const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      const fileName = `${timestamp}_${sanitizedName}`;
+      const filePath = `${userId}/messages/${fileName}`;
 
       // Determinar el bucket según el tipo
-      const bucket = fileType === 'document' ? 'documents' : 'images';
+      const bucket = fileType === 'document' ? 'documents' : 'avatars';
       
       console.log(`📤 Subiendo archivo: ${fileName} (${(file.size / 1024).toFixed(2)}KB) al bucket ${bucket}`);
 
-      // TODO: Implementar subida a Supabase Storage
-      // const { data, error } = await this.supabase.storage
-      //   .from(bucket)
-      //   .upload(filePath, file, {
-      //     cacheControl: '3600',
-      //     upsert: false
-      //   });
+      // Subir a Supabase Storage
+      const { data, error } = await this.supabase.storage
+        .from(bucket)
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.type
+        });
 
-      // Simulación por ahora
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      if (error) {
+        console.error('❌ Error de Supabase Storage:', error);
+        throw new Error(error.message || 'Error al subir archivo');
+      }
       
-      console.log(`✅ Archivo subido exitosamente: ${filePath}`);
+      console.log(`✅ Archivo subido exitosamente:`, data);
       
-      // Mostrar notificación de éxito
-      alert(`✅ ${file.name} subido correctamente`);
+      // Obtener URL pública del archivo
+      const { data: urlData } = this.supabase.storage
+        .from(bucket)
+        .getPublicUrl(filePath);
+      
+      console.log(`🔗 URL pública: ${urlData.publicUrl}`);
+      
+      // Mostrar notificación de éxito con detalles
+      const fileSize = (file.size / 1024).toFixed(2);
+      alert(`✅ ${file.name} subido correctamente\n📦 Tamaño: ${fileSize}KB\n📁 Bucket: ${bucket}\n🔗 URL disponible`);
       
       // Limpiar input
       input.value = '';
