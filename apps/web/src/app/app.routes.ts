@@ -34,6 +34,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/v2-preview/v2-preview.page').then((m) => m.V2PreviewPage),
   },
   {
+    path: 'ui-showcase',
+    data: { layout: 'full-bleed' },
+    loadComponent: () => import('./features/ui-showcase/ui-showcase.page').then((m) => m.UIShowcasePage),
+  },
+  {
     path: 'referrals',
     canMatch: [AuthGuard],
     loadComponent: () => import('./features/referrals/referrals.page').then((m) => m.ReferralsPage),
