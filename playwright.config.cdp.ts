@@ -10,11 +10,20 @@ dotenv.config({ path: '.env.test' });
  * This config connects to an already-running Chrome instance via CDP
  * for real-time test execution and debugging.
  *
+ * Features:
+ * - Live debugging with breakpoints
+ * - Real-time DOM inspection
+ * - Network monitoring
+ * - Console logging
+ * - Performance profiling
+ *
  * Usage:
  * 1. Start Chrome: ./scripts/chrome-dev.sh
  * 2. Start dev server: npm run dev:web
- * 3. Run tests: npx playwright test --config=playwright.config.cdp.ts
- * 4. Or with UI: npx playwright test --config=playwright.config.cdp.ts --ui
+ * 3. Get WebSocket endpoint: ./scripts/get-chrome-ws.sh
+ * 4. Run tests: ./scripts/test-with-cdp.sh
+ * 5. Or with UI: ./scripts/test-with-cdp.sh --ui
+ * 6. Or directly: npx playwright test --config=playwright.config.cdp.ts
  */
 
 export default defineConfig({
@@ -49,24 +58,58 @@ export default defineConfig({
     // Video always for debugging
     video: 'on',
 
-    // Action timeout
-    actionTimeout: 15 * 1000,
+    // Action timeout (longer for debugging)
+    actionTimeout: 30 * 1000,
 
-    // Navigation timeout
-    navigationTimeout: 30 * 1000,
+    // Navigation timeout (longer for debugging)
+    navigationTimeout: 60 * 1000,
 
     // Connect to existing Chrome via CDP
     connectOptions: {
-      wsEndpoint: process.env.CHROME_CDP_WS_ENDPOINT,
+      wsEndpoint: process.env.CHROME_CDP_WS_ENDPOINT || 'ws://localhost:9222/devtools/browser',
     },
+
+    // Enable DevTools features
+    launchOptions: {
+      devtools: true,
+      slowMo: 500, // Slow down actions for debugging
+      headless: false, // Always visible for debugging
+    },
+
+    // Extra HTTP headers
+    extraHTTPHeaders: {
+      'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+    },
+
+    // Ignore HTTPS errors for dev
+    ignoreHTTPSErrors: true,
+
+    // Locale and timezone for consistent testing
+    locale: 'es-ES',
+    timezoneId: 'America/Argentina/Buenos_Aires',
   },
 
-  // Configure single project for live debugging
+  // Configure projects for live debugging
   projects: [
     {
-      name: 'chrome-cdp',
+      name: 'chrome-cdp-desktop',
       use: {
         ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+        // Chrome CDP connection is configured in use.connectOptions above
+      },
+    },
+    {
+      name: 'chrome-cdp-mobile',
+      use: {
+        ...devices['iPhone 13 Pro'],
+        // Chrome CDP connection is configured in use.connectOptions above
+      },
+    },
+    {
+      name: 'chrome-cdp-tablet',
+      use: {
+        ...devices['iPad Pro'],
         // Chrome CDP connection is configured in use.connectOptions above
       },
     },

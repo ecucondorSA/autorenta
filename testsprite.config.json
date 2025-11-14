@@ -19,11 +19,39 @@
     "parallel": false,
     "maxConcurrent": 1,
     "retryOnFailure": 2,
-    "timeout": 30000,
+    "timeout": 60000,
     "browser": {
       "type": "chrome",
       "connectOverCDP": true,
-      "cdpPort": 9222
+      "cdpPort": 9222,
+      "wsEndpoint": "ws://localhost:9222/devtools/browser",
+      "launchOptions": {
+        "headless": false,
+        "devtools": true,
+        "slowMo": 250,
+        "args": [
+          "--disable-web-security",
+          "--disable-features=VizDisplayCompositor",
+          "--disable-popup-blocking",
+          "--disable-background-timer-throttling",
+          "--disable-renderer-backgrounding",
+          "--enable-logging",
+          "--v=1"
+        ]
+      },
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "screenshots": {
+        "enabled": true,
+        "onFailure": true,
+        "onStep": true
+      },
+      "video": {
+        "enabled": true,
+        "mode": "retain-on-failure"
+      }
     }
   },
   "excludePaths": [
@@ -44,13 +72,28 @@
     "development": {
       "needTunnel": true,
       "tunnelProvider": "testsprite",
-      "mockServices": true
+      "mockServices": true,
+      "browser": {
+        "devtools": true,
+        "slowMo": 500,
+        "headless": false
+      },
+      "debugging": {
+        "pauseOnFailure": true,
+        "stepByStep": true,
+        "verboseLogging": true
+      }
     },
     "staging": {
       "needTunnel": false,
       "mockServices": false,
       "mercadoPago": {
         "useSandbox": true
+      },
+      "browser": {
+        "devtools": false,
+        "slowMo": 100,
+        "headless": true
       }
     },
     "production": {
@@ -60,7 +103,38 @@
       "mercadoPago": {
         "useSandbox": false,
         "testAmount": 1
+      },
+      "browser": {
+        "devtools": false,
+        "slowMo": 0,
+        "headless": true
       }
     }
+  },
+  "debugging": {
+    "breakpoints": {
+      "enabled": true,
+      "onError": true,
+      "onAssertion": false
+    },
+    "console": {
+      "capture": true,
+      "logLevel": "debug"
+    },
+    "network": {
+      "capture": true,
+      "failedRequestsOnly": false
+    },
+    "performance": {
+      "trace": true,
+      "metrics": true
+    }
+  },
+  "reporting": {
+    "formats": ["html", "json", "junit"],
+    "outputDir": "test-results",
+    "includeScreenshots": true,
+    "includeVideos": true,
+    "includeTraces": true
   }
 }

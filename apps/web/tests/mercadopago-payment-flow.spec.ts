@@ -15,7 +15,7 @@ import { test, expect } from '@playwright/test';
 
 // Test configuration
 const BASE_URL = process.env.BASE_URL || 'http://localhost:4200';
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://obxvffplochgeiclibng.supabase.co';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pisqjmoklivzpwufhscx.supabase.co';
 
 test.describe('MercadoPago Wallet Deposit Flow', () => {
 
