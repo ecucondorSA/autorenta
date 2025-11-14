@@ -31,7 +31,7 @@ export interface DashboardItem {
   template: `
     <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav">
-      @for (item of navItems; track item.id) {
+      @for (item of navItems(); track item.id) {
         <button 
           class="nav-item"
           [class.active]="activeItem() === item.id"
