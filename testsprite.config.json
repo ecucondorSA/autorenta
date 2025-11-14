@@ -16,10 +16,15 @@
     "production": "https://autorenta.com"
   },
   "testingStrategy": {
-    "parallel": true,
-    "maxConcurrent": 5,
+    "parallel": false,
+    "maxConcurrent": 1,
     "retryOnFailure": 2,
-    "timeout": 30000
+    "timeout": 30000,
+    "browser": {
+      "type": "chrome",
+      "connectOverCDP": true,
+      "cdpPort": 9222
+    }
   },
   "excludePaths": [
     "node_modules",
