@@ -173,11 +173,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Crear el mobile bottom nav usando el portal service
-    // Esto asegura que se renderice directamente en el body
-    requestAnimationFrame(() => {
-      this.mobileBottomNavPortal.create();
-    });
+    // V2: Mobile bottom nav deshabilitado
+    // requestAnimationFrame(() => {
+    //   this.mobileBottomNavPortal.create();
+    // });
 
     // Wait for splash screen (4s) + initial render (1s) + buffer (1s)
     setTimeout(() => {
