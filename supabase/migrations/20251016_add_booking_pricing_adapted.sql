@@ -206,7 +206,7 @@ SELECT
   ) AS main_photo_url,
   -- Payment info
   pay.status AS payment_status,
-  pay.provider AS payment_provider
+  pay.provider AS payment_table_provider
 FROM public.bookings b
 JOIN public.cars c ON c.id = b.car_id
 LEFT JOIN public.payments pay ON pay.id = b.payment_id
