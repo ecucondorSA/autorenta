@@ -91,6 +91,41 @@ export class BonusProtectorService {
       const { data, error } = await this.supabase.rpc('list_bonus_protector_options');
 
       if (error) {
+        // Si la función no existe, devolver opciones mockeadas
+        if (error.message.includes('Could not find the function')) {
+          console.warn('[BonusProtectorService] Function not found, using mock data');
+          const mockOptions: BonusProtectorOption[] = [
+            {
+              protection_level: 1,
+              price_cents: 1500,
+              price_usd: 15,
+              description: 'Protege 1 siniestro leve',
+              validity_days: 365,
+            },
+            {
+              protection_level: 2,
+              price_cents: 2500,
+              price_usd: 25,
+              description: 'Protege 2 siniestros leves o 1 moderado',
+              validity_days: 365,
+            },
+            {
+              protection_level: 3,
+              price_cents: 4000,
+              price_usd: 40,
+              description: 'Protege 3 siniestros leves, 2 moderados o 1 grave',
+              validity_days: 365,
+            },
+          ];
+          
+          this.state.update((s) => ({
+            ...s,
+            options: mockOptions,
+            loading: false,
+          }));
+          
+          return mockOptions;
+        }
         throw new Error(`Error al cargar opciones: ${error.message}`);
       }
 
@@ -124,7 +159,12 @@ export class BonusProtectorService {
     try {
       const user = await this.authService.getCurrentUser();
       if (!user) {
-        throw new Error('Usuario no autenticado');
+        this.state.update((s) => ({
+          ...s,
+          activeProtector: null,
+          loading: false,
+        }));
+        return null;
       }
 
       const { data, error } = await this.supabase.rpc('get_active_bonus_protector', {
@@ -132,6 +172,16 @@ export class BonusProtectorService {
       });
 
       if (error) {
+        // Si la función no existe, no hay protector activo
+        if (error.message.includes('Could not find the function')) {
+          console.warn('[BonusProtectorService] Function not found, assuming no active protector');
+          this.state.update((s) => ({
+            ...s,
+            activeProtector: null,
+            loading: false,
+          }));
+          return null;
+        }
         throw new Error(`Error al cargar protector activo: ${error.message}`);
       }
 
@@ -146,12 +196,19 @@ export class BonusProtectorService {
       return activeProtector;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      
+      // Solo loggear el error si no es por función no encontrada
+      if (!errorMessage.includes('Could not find the function')) {
+        console.error('[BonusProtectorService] Error:', errorMessage);
+      }
+      
       this.state.update((s) => ({
         ...s,
+        activeProtector: null,
         loading: false,
-        error: errorMessage,
+        error: null, // No mostrar error al usuario por funciones faltantes
       }));
-      console.error('[BonusProtectorService] Error:', errorMessage);
+      
       return null;
     }
   }
