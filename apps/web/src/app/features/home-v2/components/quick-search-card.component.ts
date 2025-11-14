@@ -218,17 +218,17 @@ export interface SearchCriteria {
       gap: 12px;
       font-size: 1.5rem;
       font-weight: 700;
-      color: #1a1a1a;
+      color: #050505;
       margin: 0 0 8px 0;
     }
 
     .search-title svg {
-      color: #4F46E5;
+      color: #A7D8F4;
     }
 
     .search-subtitle {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: #4E4E4E;
       margin: 0;
     }
 
@@ -254,7 +254,7 @@ export interface SearchCriteria {
     }
 
     .form-label svg {
-      color: #6b7280;
+      color: #4E4E4E;
     }
 
     .input-wrapper {
@@ -265,7 +265,7 @@ export interface SearchCriteria {
       width: 100%;
       padding: 14px 16px;
       font-size: 1rem;
-      color: #1a1a1a;
+      color: #050505;
       background: #f9fafb;
       border: 2px solid #e5e7eb;
       border-radius: 12px;
@@ -279,7 +279,7 @@ export interface SearchCriteria {
     .form-input:focus {
       outline: none;
       background: white;
-      border-color: #4F46E5;
+      border-color: #A7D8F4;
       box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
     }
 
@@ -297,7 +297,7 @@ export interface SearchCriteria {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #4F46E5;
+      background: #A7D8F4;
       color: white;
       border: none;
       border-radius: 8px;
@@ -343,7 +343,7 @@ export interface SearchCriteria {
       font-size: 1rem;
       font-weight: 600;
       color: white;
-      background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+      background: linear-gradient(135deg, #A7D8F4 0%, #8EC9EC 100%);
       border: none;
       border-radius: 12px;
       cursor: pointer;
@@ -379,13 +379,13 @@ export interface SearchCriteria {
     .stat-value {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #4F46E5;
+      color: #A7D8F4;
       margin-bottom: 4px;
     }
 
     .stat-label {
       font-size: 0.75rem;
-      color: #6b7280;
+      color: #4E4E4E;
     }
 
     /* Tablet & Desktop */

@@ -196,13 +196,13 @@ export interface FeaturedCar {
     .carousel-title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #1a1a1a;
+      color: #050505;
       margin: 0 0 4px 0;
     }
 
     .carousel-subtitle {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: #4E4E4E;
       margin: 0;
     }
 
@@ -213,16 +213,16 @@ export interface FeaturedCar {
       padding: 8px 16px;
       font-size: 0.875rem;
       font-weight: 600;
-      color: #4F46E5;
+      color: #A7D8F4;
       background: transparent;
-      border: 2px solid #4F46E5;
+      border: 2px solid #A7D8F4;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
     .view-all-btn:hover {
-      background: #4F46E5;
+      background: #A7D8F4;
       color: white;
     }
 
@@ -331,7 +331,7 @@ export interface FeaturedCar {
       align-items: center;
       justify-content: center;
       background: rgba(255, 255, 255, 0.95);
-      color: #6b7280;
+      color: #4E4E4E;
       border: none;
       border-radius: 50%;
       cursor: pointer;
@@ -356,13 +356,13 @@ export interface FeaturedCar {
     .car-title {
       font-size: 1.125rem;
       font-weight: 700;
-      color: #1a1a1a;
+      color: #050505;
       margin: 0 0 4px 0;
     }
 
     .car-year {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: #4E4E4E;
       margin: 0 0 12px 0;
     }
 
@@ -379,12 +379,12 @@ export interface FeaturedCar {
       gap: 4px;
       font-size: 0.875rem;
       font-weight: 600;
-      color: #1a1a1a;
+      color: #050505;
     }
 
     .trips {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: #4E4E4E;
     }
 
     .car-location {
@@ -393,7 +393,7 @@ export interface FeaturedCar {
       gap: 6px;
       margin-bottom: 12px;
       font-size: 0.875rem;
-      color: #6b7280;
+      color: #4E4E4E;
     }
 
     .car-features {
@@ -406,7 +406,7 @@ export interface FeaturedCar {
     .feature-tag {
       padding: 4px 8px;
       font-size: 0.75rem;
-      color: #4F46E5;
+      color: #A7D8F4;
       background: rgba(79, 70, 229, 0.1);
       border-radius: 4px;
     }
@@ -422,12 +422,12 @@ export interface FeaturedCar {
     .price-amount {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #4F46E5;
+      color: #A7D8F4;
     }
 
     .price-period {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: #4E4E4E;
     }
 
     /* Skeleton Loading */
@@ -492,7 +492,7 @@ export interface FeaturedCar {
       align-items: center;
       justify-content: center;
       background: white;
-      color: #1a1a1a;
+      color: #050505;
       border: none;
       border-radius: 50%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -502,7 +502,7 @@ export interface FeaturedCar {
     }
 
     .scroll-btn:hover:not(:disabled) {
-      background: #4F46E5;
+      background: #A7D8F4;
       color: white;
       transform: scale(1.1);
     }

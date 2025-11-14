@@ -133,7 +133,7 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
   styles: [`
     .home-v2 {
       min-height: 100vh;
-      background: #fafafa;
+      background: #F8F4EC; /* Marfil Autorenta */
     }
 
     .section {
@@ -151,13 +151,13 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
     .section-title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #1a1a1a;
+      color: #050505;
       margin: 0 0 8px 0;
     }
 
     .section-subtitle {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: #4E4E4E;
       margin: 0;
     }
 
@@ -175,7 +175,7 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
       align-items: center;
       padding: 24px 16px;
       background: white;
-      border: none;
+      border: 1px solid #BCBCBC; /* G20 Autorenta */
       border-radius: 16px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
       cursor: pointer;
@@ -208,13 +208,13 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
     .category-name {
       font-size: 1rem;
       font-weight: 600;
-      color: #1a1a1a;
+      color: #050505;
       margin: 0 0 4px 0;
     }
 
     .category-count {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: #4E4E4E;
       margin: 0;
     }
 
@@ -234,7 +234,7 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
     .trust-card {
       text-align: center;
       padding: 24px;
-      background: #fafafa;
+      background: #DFD2BF; /* Beige Autorenta */
       border-radius: 16px;
     }
 
@@ -246,13 +246,13 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
     .trust-title {
       font-size: 1.125rem;
       font-weight: 700;
-      color: #1a1a1a;
+      color: #050505;
       margin: 0 0 8px 0;
     }
 
     .trust-text {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: #4E4E4E;
       line-height: 1.5;
       margin: 0;
     }
@@ -263,7 +263,7 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
     }
 
     .cta-card {
-      background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+      background: linear-gradient(135deg, #A7D8F4 0%, #8EC9EC 100%);
       padding: 48px 32px;
       border-radius: 24px;
       text-align: center;
@@ -289,7 +289,7 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
       padding: 16px 32px;
       font-size: 1.125rem;
       font-weight: 600;
-      color: #4F46E5;
+      color: #A7D8F4;
       background: white;
       border: none;
       border-radius: 12px;
@@ -431,10 +431,10 @@ export class HomeV2Page implements OnInit {
   ];
 
   categories = [
-    { id: '1', name: 'Económicos', count: 340, emoji: '🚗', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-    { id: '2', name: 'SUVs', count: 180, emoji: '🚙', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
-    { id: '3', name: 'Camionetas', count: 95, emoji: '🚚', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
-    { id: '4', name: 'Lujo', count: 42, emoji: '✨', gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)' },
+    { id: '1', name: 'Económicos', count: 340, emoji: '🚗', gradient: 'linear-gradient(135deg, #A7D8F4 0%, #75BAE4 100%)' },
+    { id: '2', name: 'SUVs', count: 180, emoji: '🚙', gradient: 'linear-gradient(135deg, #DFD2BF 0%, #8B7355 100%)' },
+    { id: '3', name: 'Camionetas', count: 95, emoji: '🚚', gradient: 'linear-gradient(135deg, #E0F3FB 0%, #A7D8F4 100%)' },
+    { id: '4', name: 'Lujo', count: 42, emoji: '✨', gradient: 'linear-gradient(135deg, #F8F4EC 0%, #DFD2BF 100%)' },
   ];
 
   ngOnInit(): void {

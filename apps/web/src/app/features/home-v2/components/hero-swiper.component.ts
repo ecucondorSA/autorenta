@@ -111,7 +111,7 @@ interface HeroSlide {
       height: 100vh;
       height: 100dvh;
       overflow: hidden;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #A7D8F4 0%, #75BAE4 100%);
     }
 
     .slides-container {
@@ -195,7 +195,7 @@ interface HeroSlide {
       padding: 16px 32px;
       font-size: 1.125rem;
       font-weight: 600;
-      color: #1a1a1a;
+      color: #050505;
       background: white;
       border: none;
       border-radius: 50px;
@@ -358,7 +358,7 @@ export class HeroSwiperComponent implements OnInit, OnDestroy, AfterViewInit {
       image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=1200&auto=format&fit=crop',
       cta: 'Explorar autos',
       ctaAction: () => console.log('Navigate to /cars'),
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      gradient: 'linear-gradient(135deg, #A7D8F4 0%, #75BAE4 100%)'
     },
     {
       id: '2',
