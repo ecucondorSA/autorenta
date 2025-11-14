@@ -31,6 +31,8 @@ export type ConversionEventType =
   // Review Events
   | 'review_viewed'
   | 'review_section_clicked'
+  // Marketplace Events
+  | 'filters_opened'
   // Wallet Events
   | 'wallet_page_viewed'
   | 'wallet_onboarding_banner_viewed'
@@ -43,7 +45,13 @@ export type ConversionEventType =
   | 'wallet_cta_clicked'
   | 'wallet_benefits_section_expanded'
   | 'wallet_transaction_filter_applied'
-  | 'wallet_retry_deposit_clicked';
+  | 'wallet_retry_deposit_clicked'
+  // Onboarding Events
+  | 'onboarding_modal_shown'
+  | 'onboarding_goal_selected'
+  | 'onboarding_step_clicked'
+  | 'onboarding_step_completed'
+  | 'onboarding_modal_dismissed';
 
 export interface ConversionEventData {
   // Common fields
@@ -205,6 +213,9 @@ export class AnalyticsService {
       review_viewed: 'view_item',
       review_section_clicked: 'select_content',
 
+      // Marketplace
+      filters_opened: 'view_search_results',
+
       // Wallet
       wallet_page_viewed: 'page_view',
       wallet_onboarding_banner_viewed: 'view_promotion',
@@ -218,6 +229,13 @@ export class AnalyticsService {
       wallet_benefits_section_expanded: 'view_item',
       wallet_transaction_filter_applied: 'search',
       wallet_retry_deposit_clicked: 'refund',
+
+      // Onboarding
+      onboarding_modal_shown: 'view_promotion',
+      onboarding_goal_selected: 'select_content',
+      onboarding_step_clicked: 'select_content',
+      onboarding_step_completed: 'tutorial_complete',
+      onboarding_modal_dismissed: 'refund',
     };
 
     return mapping[eventType] || eventType;
