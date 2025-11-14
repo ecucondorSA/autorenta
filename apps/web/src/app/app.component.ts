@@ -154,6 +154,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   showSplash = signal(true);
 
   ngOnInit(): void {
+    this.handleOAuthCallbackRedirect();
     this.initializeSplash();
     this.initializeTheme();
     this.initializeLayoutWatcher();
@@ -429,5 +430,34 @@ export class AppComponent implements OnInit, AfterViewInit {
     const isOnVerificationPage = verificationRoutes.some((route) => url.includes(route));
 
     this.isOnVerificationPage.set(isOnVerificationPage);
+  }
+
+  /**
+   * Detecta tokens de OAuth en el hash de la URL y redirige a /auth/callback si es necesario
+   * Esto maneja el caso donde Supabase redirige a la raíz (/) en lugar de /auth/callback
+   */
+  private handleOAuthCallbackRedirect(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    // Verificar si hay tokens de OAuth en el hash (access_token, refresh_token, etc.)
+    const hash = window.location.hash;
+    const hasOAuthTokens =
+      hash.includes('access_token=') ||
+      hash.includes('refresh_token=') ||
+      hash.includes('provider_token=');
+
+    // Solo redirigir si estamos en la raíz y no ya en /auth/callback
+    const isRoot = window.location.pathname === '/' || window.location.pathname === '';
+    const isNotCallback = !window.location.pathname.includes('/auth/callback');
+
+    if (hasOAuthTokens && isRoot && isNotCallback) {
+      // Redirigir a /auth/callback preservando el hash
+      void this.router.navigate(['/auth/callback'], {
+        fragment: hash.substring(1), // Remover el '#' del hash
+        replaceUrl: true, // Reemplazar en el historial para evitar loops
+      });
+    }
   }
 }
