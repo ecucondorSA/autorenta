@@ -41,16 +41,29 @@ jobs:
           NODE_ENV: production
       - name: Inject production env.js
         run: |
-          # Use printf to avoid line breaks in long tokens
-          printf '// Auto-generated environment configuration\n' > apps/web/dist/web/browser/env.js
-          printf '// This file is generated during GitHub Actions deployment\n' >> apps/web/dist/web/browser/env.js
-          printf 'window.__env = ' >> apps/web/dist/web/browser/env.js
-          printf '{"NG_APP_SUPABASE_URL":"%s","NG_APP_SUPABASE_ANON_KEY":"%s","NG_APP_DEFAULT_CURRENCY":"ARS","NG_APP_PAYMENTS_WEBHOOK_URL":"http://localhost:8787/webhooks/payments","NG_APP_MAPBOX_ACCESS_TOKEN":"%s","NG_APP_CAR_LOCATIONS_EDGE_FUNCTION":"","NG_APP_MERCADOPAGO_PUBLIC_KEY":"%s","NG_APP_CLOUDFLARE_WORKER_URL":"https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev"};\n' \
-            "${{ secrets.SUPABASE_URL }}" \
-            "${{ secrets.SUPABASE_ANON_KEY }}" \
-            "${{ secrets.MAPBOX_ACCESS_TOKEN }}" \
-            "${{ secrets.MERCADOPAGO_PROD_PUBLIC_KEY }}" \
-            >> apps/web/dist/web/browser/env.js
+          # Use jq to create compact JSON without line breaks
+          jq -n --compact-output \
+            --arg supabase_url "${{ secrets.SUPABASE_URL }}" \
+            --arg supabase_key "${{ secrets.SUPABASE_ANON_KEY }}" \
+            --arg mapbox_token "${{ secrets.MAPBOX_ACCESS_TOKEN }}" \
+            --arg mp_key "${{ secrets.MERCADOPAGO_PROD_PUBLIC_KEY }}" \
+            '{
+              NG_APP_SUPABASE_URL: $supabase_url,
+              NG_APP_SUPABASE_ANON_KEY: $supabase_key,
+              NG_APP_DEFAULT_CURRENCY: "ARS",
+              NG_APP_PAYMENTS_WEBHOOK_URL: "http://localhost:8787/webhooks/payments",
+              NG_APP_MAPBOX_ACCESS_TOKEN: $mapbox_token,
+              NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: "",
+              NG_APP_MERCADOPAGO_PUBLIC_KEY: $mp_key,
+              NG_APP_CLOUDFLARE_WORKER_URL: "https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev"
+            }' > /tmp/env.json
+          
+          # Build the final JavaScript file
+          echo "// Auto-generated environment configuration" > apps/web/dist/web/browser/env.js
+          echo "// This file is generated during GitHub Actions deployment" >> apps/web/dist/web/browser/env.js
+          echo -n "window.__env = " >> apps/web/dist/web/browser/env.js
+          cat /tmp/env.json >> apps/web/dist/web/browser/env.js
+          echo ";" >> apps/web/dist/web/browser/env.js
           
       - name: Prepare deployment directory
         run: |
