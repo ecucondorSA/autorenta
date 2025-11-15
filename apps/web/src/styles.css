@@ -2,6 +2,9 @@
 /* ALL @import RULES MUST COME FIRST */
 /* ============================================ */
 
+/* 🎚️ Responsive Tokens - CSS custom properties */
+@import ./styles/responsive-tokens.css;
+
 /* Ionic CSS - Required for Ionic components to render */
 @import '@ionic/angular/css/core.css';
 @import '@ionic/angular/css/normalize.css';
@@ -1435,6 +1438,19 @@ body.no-scroll {
   .nav-link-primary:hover {
     background-color: rgba(167, 216, 244, 0.15); /* cta-default/15 */
     color: var(--cta-default);
+  }
+
+  .nav-link-highlight {
+    background: linear-gradient(120deg, #f8d34b 0%, #ffae42 100%);
+    color: #050505;
+    box-shadow: 0 10px 35px rgba(248, 211, 75, 0.35);
+    border: none;
+  }
+
+  .nav-link-highlight:hover {
+    background: linear-gradient(120deg, #ffdf70 0%, #ffba57 100%);
+    box-shadow: 0 15px 40px rgba(248, 211, 75, 0.45);
+    color: #050505;
   }
 
   .nav-link-active {
