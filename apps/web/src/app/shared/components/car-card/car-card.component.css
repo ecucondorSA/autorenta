@@ -2,6 +2,11 @@
   display: block;
 }
 
+.cq-card {
+  container-type: inline-size;
+  container-name: car-card;
+}
+
 /* Efectos de hover premium */
 .card-premium {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -52,4 +57,52 @@
 
 .card-premium:hover .text-cta-default {
   color: var(--cta-hover); /* cta-hover (azul pastel más oscuro) */
+}
+
+@container car-card (max-width: 640px) {
+  .car-specs {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .car-specs .divider-dot {
+    display: none;
+  }
+
+  .car-features {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.75rem;
+    padding-bottom: 0.35rem;
+  }
+
+  .car-features > * {
+    scroll-snap-align: start;
+  }
+
+  .car-features::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .car-features::-webkit-scrollbar-thumb {
+    background-color: rgba(17, 17, 17, 0.2);
+    border-radius: 999px;
+  }
+
+  .car-features::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .price-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .price-actions .btn-primary,
+  .price-actions .bg-gradient-to-r {
+    width: 100%;
+  }
 }
