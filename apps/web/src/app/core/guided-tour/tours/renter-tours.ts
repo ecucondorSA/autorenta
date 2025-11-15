@@ -105,7 +105,7 @@ export const BECOME_RENTER_TOUR: TourDefinition = {
       id: 'renter-testimonials',
       content: {
         title: '⭐ Testimonios Reales',
-        text: 'Lee las experiencias de otros Renters que ya están ganando dinero. María gana $120,000/mes, Carlos $85,000/mes y Laura $95,000/mes.',
+        text: 'Lee las experiencias de otros Renters que ya están ganando dinero. María gana $120,000/mes, Carlos $80,000/mes, Laura $150,000/mes y Diego $95,000/mes.',
       },
       position: 'bottom',
       target: {
