@@ -148,7 +148,7 @@ export class PaymentMethodSelectorComponent implements OnInit {
     this.isLoadingBalance.set(true);
     try {
       await this.walletService.getBalance();
-    } catch (_err) {
+    } catch {
       /* Silenced */
     } finally {
       this.isLoadingBalance.set(false);

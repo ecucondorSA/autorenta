@@ -238,7 +238,7 @@ export class AdminSettlementsPage implements OnInit {
       } else {
         alert(`Error: ${result.error}`);
       }
-    } catch (err) {
+    } catch {
       alert('Error al procesar claim');
     } finally {
       this.loading.set(false);

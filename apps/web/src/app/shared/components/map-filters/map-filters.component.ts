@@ -110,7 +110,7 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
 
   readonly availableTransmissions = computed(() => {
     const types = new Set<string>();
-    this.availableCarsSignal().forEach((car) => {
+    this.availableCarsSignal().forEach((_car) => {
       // Placeholder: agregar transmisión desde car object cuando esté disponible
       // Por ahora retorna set vacío
     });

@@ -205,7 +205,7 @@ export class DynamicPriceDisplayComponent implements OnInit, OnDestroy {
 
       const result = await this.pricingService.calculatePrice(request);
       this.pricing.set(result);
-    } catch (_err) {
+    } catch {
       this.error.set('No se pudo calcular el precio. Intenta nuevamente.');
     } finally {
       this.loading.set(false);

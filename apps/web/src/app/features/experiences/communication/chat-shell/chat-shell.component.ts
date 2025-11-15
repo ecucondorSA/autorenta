@@ -96,7 +96,7 @@ export class ChatShellComponent implements OnInit, OnDestroy {
           ? await this.messagesService.listByBooking(ctx.contextId)
           : await this.messagesService.listByCar(ctx.contextId);
       this.messages.set(messages);
-    } catch (_err) {
+    } catch {
       this.error.set('No pudimos cargar los mensajes');
     } finally {
       this.loading.set(false);
@@ -183,7 +183,7 @@ export class ChatShellComponent implements OnInit, OnDestroy {
 
       this.newMessage.set('');
       this.messageSent.emit({ messageId: '', context: ctx }); // TODO: obtener ID real
-    } catch (_err) {
+    } catch {
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
     } finally {
       this.sending.set(false);

@@ -524,7 +524,7 @@ export class MpOnboardingModalComponent implements OnInit {
         await this.dismiss({ completed: true, alreadyLinked: true });
         return;
       }
-    } catch (_err) {
+    } catch {
       this.error.set('Error al cargar estado');
     } finally {
       this.loading.set(false);

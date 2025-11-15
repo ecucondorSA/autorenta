@@ -2,7 +2,7 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { CarBlockingService, BlockDateParams } from '../../../core/services/car-blocking.service';
+import { CarBlockingService} from '../../../core/services/car-blocking.service';
 import { CarsService } from '../../../core/services/cars.service';
 import { Car } from '../../../core/models';
 

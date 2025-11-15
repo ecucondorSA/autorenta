@@ -116,7 +116,7 @@ export class DepositsMonitoringPage implements OnInit {
         this.loadRecentDeposits(),
         this.loadFailedDeposits(),
       ]);
-    } catch (_err) {
+    } catch {
       this.error.set('Error al cargar datos del dashboard');
     } finally {
       this.loading.set(false);
@@ -340,7 +340,7 @@ export class DepositsMonitoringPage implements OnInit {
         alert(`✅ Polling completado\n\nConfirmados: ${result.summary?.confirmed || 0}`);
 
         await this.loadData();
-      } catch (_err) {
+      } catch {
         alert('Error al ejecutar polling');
       } finally {
         this.loading.set(false);

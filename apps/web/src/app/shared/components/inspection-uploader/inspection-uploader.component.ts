@@ -125,7 +125,7 @@ export class InspectionUploaderComponent implements OnInit {
           this.photos.update((p) => [...p, photo]);
         }
       }
-    } catch (_err) {
+    } catch {
       this.error.set('Error al subir fotos. Intente nuevamente.');
     } finally {
       this.uploading.set(false);
@@ -173,7 +173,7 @@ export class InspectionUploaderComponent implements OnInit {
         url: publicUrl,
         type: 'exterior', // Por defecto exterior, en versión avanzada podría categorizarse
       };
-    } catch (__error) {
+    } catch {
       return null;
     }
   }

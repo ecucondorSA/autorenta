@@ -50,7 +50,7 @@ export class UrgentBookingPage implements OnInit {
     try {
       const car = await this.carsService.getCarById(this.carId);
       this.car.set(car);
-    } catch (err) {
+    } catch {
       this.error.set('Error al cargar información del auto');
     } finally {
       this.loading.set(false);

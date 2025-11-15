@@ -247,7 +247,7 @@ export class OfflineMessagesPanelComponent implements OnInit, OnDestroy {
 
       this.pendingMessages.set(pendingList);
       this.failedMessages.set(failedList);
-    } catch (error) {
+    } catch {
       console.error('Error loading offline messages:', error);
     } finally {
       this.loading.set(false);
@@ -279,7 +279,7 @@ export class OfflineMessagesPanelComponent implements OnInit, OnDestroy {
       // Success: remove from queue
       await this.offlineMessages.removeMessage(message.id);
       await this.loadMessages();
-    } catch (error) {
+    } catch {
       // Increment retry counter
       await this.offlineMessages.incrementRetry(message.id);
       await this.loadMessages();

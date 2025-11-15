@@ -39,14 +39,11 @@ import {
 } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
-import { PaymentMethodSelectorComponent } from '../../../shared/components/payment-method-selector/payment-method-selector.component';
 import { ShareMenuComponent } from '../../../shared/components/share-menu/share-menu.component';
 import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
-import { DynamicPriceDisplayComponent } from '../../../shared/components/dynamic-price-display/dynamic-price-display.component';
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { SocialProofIndicatorsComponent } from '../../../shared/components/social-proof-indicators/social-proof-indicators.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
-import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { DistanceBadgeComponent } from '../../../shared/components/distance-badge/distance-badge.component';
 import { CarChatComponent } from '../../messages/components/car-chat.component';
 import {
@@ -467,7 +464,7 @@ export class CarDetailPage implements OnInit {
   checkAvailability = async (carId: string, from: string, to: string): Promise<boolean> => {
     try {
       return await this.carsService.isCarAvailable(carId, from, to);
-    } catch (_error) {
+    } catch {
       return false;
     }
   };
@@ -489,7 +486,7 @@ export class CarDetailPage implements OnInit {
         from: this.normalizeDateInput(firstSuggestion.startDate),
         to: this.normalizeDateInput(firstSuggestion.endDate),
       };
-    } catch (_error) {
+    } catch {
       // Silent fail - próxima ventana disponible es opcional
       return null;
     }
@@ -614,7 +611,7 @@ export class CarDetailPage implements OnInit {
           address: homeLocation.address,
         });
       }
-    } catch (_error) {
+    } catch {
       // Silently fail - distance is optional
     }
   }
@@ -659,7 +656,7 @@ export class CarDetailPage implements OnInit {
           const quote = await this.urgentRentalService.getUrgentQuote(car.id, car.region_id, hours);
           // Usar el precio por hora del sistema de pricing dinámico
           this.dynamicHourlyRate.set(quote.hourlyRate);
-        } catch (_error) {
+        } catch {
           // Fallback: calcular desde precio diario
           const pricePerDay = this.displayPrice();
           if (pricePerDay > 0) {
@@ -670,7 +667,7 @@ export class CarDetailPage implements OnInit {
           this.hourlyRateLoading.set(false);
         }
       }
-    } catch (_error) {
+    } catch {
       // Silent fail - will use static price
     } finally {
       this.priceLoading.set(false);
@@ -694,7 +691,7 @@ export class CarDetailPage implements OnInit {
       // Obtener ubicación del usuario
       try {
         await this.urgentRentalService.getCurrentLocation();
-      } catch (_error) {
+      } catch {
         // Silent fail - location is optional
       }
 

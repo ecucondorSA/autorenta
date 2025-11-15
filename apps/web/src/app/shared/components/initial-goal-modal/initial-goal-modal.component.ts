@@ -248,7 +248,7 @@ export class InitialGoalModalComponent {
     this.onboardingService.dismissInitialModal();
   }
 
-  onBackdropClick(event: MouseEvent): void {
+  onBackdropClick(_event: MouseEvent): void {
     // Close on backdrop click
     this.onDismiss();
   }

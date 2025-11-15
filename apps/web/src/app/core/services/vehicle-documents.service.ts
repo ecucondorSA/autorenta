@@ -178,7 +178,7 @@ export class VehicleDocumentsService {
         undefined,
         documentsUrl,
       );
-    } catch (error) {
+    } catch {
       // Silently fail
     }
   }

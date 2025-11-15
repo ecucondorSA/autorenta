@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   LocationService,
-  LocationData,
   LocationChoice,
 } from '../../../core/services/location.service';
 import { GeocodingService } from '../../../core/services/geocoding.service';

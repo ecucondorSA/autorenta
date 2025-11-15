@@ -60,7 +60,7 @@ export class VerificationBadgeComponent implements OnInit {
     if (!this.statuses().length) {
       try {
         await this.verificationService.loadStatuses();
-      } catch (__error) {
+      } catch {
         // Silent fail - verification status is optional
       }
     }

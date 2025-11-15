@@ -702,7 +702,7 @@ export class ReviewsService {
 
         this.carOwnerNotifications.notifyNewReview(reviewerName, avgRating, carName, reviewUrl);
       }
-    } catch (_error) {
+    } catch {
       // Silently fail - notification is optional enhancement
     }
   }

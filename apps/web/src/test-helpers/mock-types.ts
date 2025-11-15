@@ -385,7 +385,7 @@ export function createMockSupabaseClient(options?: {
   const mockAuth = createMockAuth(options?.user || null);
 
   return {
-    from: jasmine.createSpy('from').and.callFake((table: string) => {
+    from: jasmine.createSpy('from').and.callFake((_table: string) => {
       return createMockQueryBuilder(options?.defaultData);
     }),
     storage: {

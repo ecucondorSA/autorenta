@@ -154,12 +154,12 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
     paypal
       .Buttons({
         // Create order on PayPal side
-        createOrder: async (data: unknown, actions: unknown) => {
+        createOrder: async (_data: unknown, _actions: unknown) => {
           return this.createOrder();
         },
 
         // Handle approval
-        onApprove: async (data: any, actions: any) => {
+        onApprove: async (data: any, _actions: any) => {
           return this.handleApproval(data.orderID);
         },
 

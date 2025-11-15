@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  computed,
   inject,
   OnInit,
   signal,
@@ -16,7 +15,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { WalletService } from '../../core/services/wallet.service';
 import { GoogleCalendarService } from '../../core/services/google-calendar.service';
 import { ProfileStore } from '../../core/stores/profile.store';
-import { UserProfile, Role } from '../../core/models';
+import { Role } from '../../core/models';
 import type { UpdateProfileData } from '../../core/services/profile.service';
 import { DOCUMENT_TYPES } from '../../core/config/document-types.config';
 import { CalendarManagementComponent } from '../../shared/components/calendar-management/calendar-management.component';
@@ -222,7 +221,7 @@ export class ProfilePage implements OnInit {
           country: profile.country ?? '',
         });
       }
-    } catch (err) {
+    } catch {
       // Error is already handled by ProfileStore
       // Silent fail - error is shown via ProfileStore.error signal
     }
@@ -308,7 +307,7 @@ export class ProfilePage implements OnInit {
 
       // Limpiar mensaje después de 3 segundos
       setTimeout(() => this.message.set(null), 3000);
-    } catch (err) {
+    } catch {
       // Error is already handled by ProfileStore
       this.message.set(err instanceof Error ? err.message : 'No pudimos actualizar tu perfil.');
     } finally {
@@ -328,7 +327,7 @@ export class ProfilePage implements OnInit {
       await this.profileStore.uploadAvatar(file);
       this.message.set('Avatar actualizado exitosamente');
       setTimeout(() => this.message.set(null), 3000);
-    } catch (err) {
+    } catch {
       // Error is already handled by ProfileStore
       this.message.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
     } finally {
@@ -348,7 +347,7 @@ export class ProfilePage implements OnInit {
       await this.profileStore.deleteAvatar();
       this.message.set('Avatar eliminado');
       setTimeout(() => this.message.set(null), 3000);
-    } catch (err) {
+    } catch {
       // Error is already handled by ProfileStore
       this.message.set(err instanceof Error ? err.message : 'No pudimos eliminar tu avatar.');
     }
@@ -357,7 +356,7 @@ export class ProfilePage implements OnInit {
   async signOut(): Promise<void> {
     try {
       await this.authService.signOut();
-    } catch (_err) {
+    } catch {
       this.error.set('Error al cerrar sesión');
     }
   }
@@ -442,7 +441,7 @@ export class ProfilePage implements OnInit {
       this.calendarLoading.set(true);
       const status = await this.googleCalendarService.getConnectionStatus().toPromise();
       this.calendarConnected.set(status?.connected ?? false);
-    } catch (err) {
+    } catch {
       console.error('Error checking calendar connection:', err);
       this.calendarConnected.set(false);
       // Don't show error if it's just "not connected" - that's expected
@@ -478,7 +477,7 @@ export class ProfilePage implements OnInit {
         this.message.set('Google Calendar conectado exitosamente');
         setTimeout(() => this.message.set(null), 3000);
       }
-    } catch (err) {
+    } catch {
       console.error('Error connecting calendar:', err);
       const errorMessage =
         err instanceof Error
@@ -509,7 +508,7 @@ export class ProfilePage implements OnInit {
 
       this.message.set('Google Calendar desconectado');
       setTimeout(() => this.message.set(null), 3000);
-    } catch (err) {
+    } catch {
       console.error('Error disconnecting calendar:', err);
       this.error.set(
         err instanceof Error ? err.message : 'No pudimos desconectar tu Google Calendar.',

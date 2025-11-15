@@ -1029,7 +1029,7 @@ export class PublishCarV2Page implements OnInit {
         // Ejecutar después de un pequeño delay para que el usuario vea primero
         // la notificación de éxito de publicación
         setTimeout(() => {
-          this.checkMissingDocuments(carId).catch((error) => {
+          this.checkMissingDocuments(carId).catch((_error) => {
             // Silently fail - notification is optional
           });
         }, 2000); // 2 segundos después de la publicación exitosa
@@ -1124,7 +1124,7 @@ export class PublishCarV2Page implements OnInit {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }
       }
-    } catch (error) {
+    } catch {
       // Silently fail
     }
   }

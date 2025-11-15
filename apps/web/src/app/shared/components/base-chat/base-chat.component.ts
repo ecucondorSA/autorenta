@@ -7,7 +7,6 @@ import {
   signal,
   inject,
   effect,
-  computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -396,7 +395,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
           ? await this.messagesService.listByBooking(ctx.contextId)
           : await this.messagesService.listByCar(ctx.contextId);
       this.messages.set(messages);
-    } catch (_err) {
+    } catch {
       this.error.set('No pudimos cargar los mensajes');
     } finally {
       this.loading.set(false);
@@ -522,7 +521,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
       // El mensaje real llegará via realtime subscription y reemplazará al optimistic
       // Ver subscribeToMessages() para la lógica de deduplicación
       this.messageSent.emit({ messageId: optimisticId, context: ctx });
-    } catch (_err) {
+    } catch {
       // Remover mensaje optimistic en caso de error
       this.messages.update((prev) => prev.filter((m) => m.id !== optimisticId));
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');

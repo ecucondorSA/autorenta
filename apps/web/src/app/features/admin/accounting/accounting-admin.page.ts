@@ -4,7 +4,6 @@ import {
   Component,
   OnInit,
   computed,
-  inject,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';

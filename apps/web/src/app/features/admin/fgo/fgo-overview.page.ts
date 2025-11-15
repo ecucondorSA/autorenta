@@ -96,7 +96,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           schema: 'public',
           table: 'fgo_movements',
         },
-        (payload) => {
+        (_payload) => {
           // Recargar todos los datos cuando hay un cambio
           this.refreshData();
         },
@@ -108,7 +108,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           schema: 'public',
           table: 'fgo_metrics',
         },
-        (payload) => {
+        (_payload) => {
           // Recargar estado cuando cambian las métricas
           this.loadFgoStatus();
         },
@@ -135,7 +135,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           this.fgoStatus = status;
           this.loadingStatus = false;
         },
-        error: (error) => {
+        error: (_error) => {
           this.loadingStatus = false;
         },
       });
@@ -192,7 +192,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           this.recentMovements = movements;
           this.loadingMovements = false;
         },
-        error: (error: unknown) => {
+        error: (_error: unknown) => {
           this.loadingMovements = false;
         },
       });
@@ -220,7 +220,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
             this.refreshData();
           }
         },
-        error: (error: unknown) => {
+        error: (_error: unknown) => {
           console.error('Error recalculating metrics:', error);
         },
       });

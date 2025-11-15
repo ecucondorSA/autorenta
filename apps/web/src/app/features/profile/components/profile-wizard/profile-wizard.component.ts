@@ -18,12 +18,6 @@ import type { Role, UpdateProfileData } from '../../../../core/models';
 
 export type WizardStep = 'general' | 'contact' | 'address' | 'license';
 
-interface StepState {
-  step: WizardStep;
-  completed: boolean;
-  dirty: boolean;
-}
-
 /**
  * ProfileWizardComponent - Wizard de edición de perfil por pasos
  *

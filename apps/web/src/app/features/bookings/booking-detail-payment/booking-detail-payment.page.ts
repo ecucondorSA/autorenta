@@ -481,7 +481,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           endDate: new Date(parsed.endDate),
         });
         return;
-      } catch (_e) {
+      } catch {
         /* Silenced */
       }
     }
@@ -609,7 +609,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Actualizar bookingInput con datos reales del auto (si vinieron en query params, ya están seteados)
       // No sobrescribimos porque bucket y value_usd ya vienen calculados de car-detail.page.ts
       // this.bookingInput.update() - No es necesario, ya tenemos los valores correctos
-    } catch (err: unknown) {
+    } catch {
       this.error.set('Error al cargar información del vehículo');
     }
   }
@@ -1392,9 +1392,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const bookingId = booking.id;
     const riskSnap = this.riskSnapshot();
     const depositUsd = riskSnap?.creditSecurityUsd || 0;
-
-    // Crear intención de pago
-    const intent = await this.paymentsService.createIntent(bookingId);
 
     // Actualizar booking con método de pago
     await this.bookingsService.updateBooking(bookingId, {

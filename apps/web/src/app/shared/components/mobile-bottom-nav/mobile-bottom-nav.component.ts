@@ -1,4 +1,4 @@
-import { Component, computed, signal, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { UnreadMessagesService } from '../../../core/services/unread-messages.service';
@@ -82,7 +82,7 @@ export class MobileBottomNavComponent {
       if ('vibrate' in navigator) {
         navigator.vibrate(10);
       }
-    } catch (_e) {
+    } catch {
       // Silently fail en navegadores sin soporte
     }
 

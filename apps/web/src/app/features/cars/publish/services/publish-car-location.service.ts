@@ -111,7 +111,7 @@ export class PublishCarLocationService {
       };
 
       return address;
-    } catch (error) {
+    } catch {
       // console.error('Reverse geocoding failed:', error);
       return null;
     }
@@ -149,7 +149,7 @@ export class PublishCarLocationService {
       this.manualCoordinates.set(location);
 
       return location;
-    } catch (error) {
+    } catch {
       // console.error('Geocoding failed:', error);
       return null;
     }

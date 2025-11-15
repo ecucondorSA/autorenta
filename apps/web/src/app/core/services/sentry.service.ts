@@ -90,7 +90,7 @@ export function initSentry(): void {
           });
 
           event.request.url = url.toString();
-        } catch (_e) {
+        } catch {
           // Invalid URL, ignore
         }
       }

@@ -175,7 +175,7 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
       this.map.on('error', (_e: unknown) => {
         this.isLoading.set(false);
       });
-    } catch (__error) {
+    } catch {
       this.isLoading.set(false);
     }
   }

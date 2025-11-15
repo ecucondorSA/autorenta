@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed, effect } from '@angular/core';
+import { Injectable, inject, signal, computed} from '@angular/core';
 import {
   MarketplaceService,
   MarketplaceStatus,
@@ -113,7 +113,7 @@ export class PublishCarMpOnboardingService {
       }
 
       return false;
-    } catch (error) {
+    } catch {
       // console.error('Failed to open onboarding modal:', error);
       alert('Error al abrir el proceso de vinculación. Intenta nuevamente.');
       return false;

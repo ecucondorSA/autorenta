@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModalController } from '@ionic/angular/standalone';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { from } from 'rxjs';
 import { CarsService } from '../../../core/services/cars.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Car, CarStatus } from '../../../core/models';
@@ -59,7 +57,7 @@ export class MyCarsPage {
 
       await this.carsService.deleteCar(carId);
       this.cars.set(this.cars().filter((car) => car.id !== carId));
-    } catch (error) {
+    } catch {
       // Handle error
     } finally {
       this.loading.set(false);
@@ -74,7 +72,7 @@ export class MyCarsPage {
       this.cars.update((cars) =>
         cars.map((car) => (car.id === carId ? { ...car, status: newStatus } : car)),
       );
-    } catch (error) {
+    } catch {
       // Handle error
     } finally {
       this.loading.set(false);

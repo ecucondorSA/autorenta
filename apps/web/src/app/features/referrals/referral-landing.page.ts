@@ -160,7 +160,7 @@ export class ReferralLandingPage implements OnInit {
         // Guardar código en sessionStorage para aplicarlo después del registro
         sessionStorage.setItem('referral_code', this.code());
       }
-    } catch (err) {
+    } catch {
       this.error.set('Hubo un error al validar el código. Por favor, intentá de nuevo.');
     } finally {
       this.loading.set(false);

@@ -8,23 +8,12 @@ import { of, from } from 'rxjs';
 import { ProfileService } from '../../core/services/profile.service';
 import { CarsService } from '../../core/services/cars.service';
 import { ReviewsService } from '../../core/services/reviews.service';
-import type { UserProfile, Car, Review } from '../../core/models';
+import type { Car, Review } from '../../core/models';
 import { getCarImageUrl } from '../../shared/utils/car-placeholder.util';
 import {
   ReviewRadarChartComponent,
   type RadarChartData,
 } from '../../shared/components/review-radar-chart/review-radar-chart.component';
-
-interface UserStats {
-  owner_rating_avg: number | null;
-  owner_reviews_count: number;
-  owner_trips_count: number;
-  renter_rating_avg: number | null;
-  renter_reviews_count: number;
-  renter_trips_count: number;
-  total_cars: number;
-  member_since: string;
-}
 
 @Component({
   selector: 'app-public-profile',

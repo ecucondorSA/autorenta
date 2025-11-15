@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MessagesService, Message } from '../../core/services/messages.service';
@@ -214,7 +214,7 @@ export class InboxPage implements OnInit, OnDestroy {
     );
 
     // Canal para mensajes donde el usuario es el destinatario
-    const recipientChannel = this.realtimeConnection.subscribeWithRetry<Message>(
+    this.realtimeConnection.subscribeWithRetry<Message>(
       'inbox-conversations-recipient',
       {
         event: '*', // INSERT, UPDATE

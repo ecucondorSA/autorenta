@@ -9,9 +9,6 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
-import { SocialProofIndicatorsComponent } from '../social-proof-indicators/social-proof-indicators.component';
-import { SimpleCheckoutComponent } from '../simple-checkout/simple-checkout.component';
-
 /**
  * Map Drawer Component
  *

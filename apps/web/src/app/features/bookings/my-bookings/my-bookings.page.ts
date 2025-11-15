@@ -77,7 +77,7 @@ export class MyBookingsPage implements OnInit {
     try {
       const items = await this.bookingsService.getMyBookings();
       this.bookings.set(items);
-    } catch (_err) {
+    } catch {
       this.error.set('No pudimos cargar tus reservas. Por favor intentá de nuevo más tarde.');
     } finally {
       this.loading.set(false);

@@ -16,8 +16,6 @@ import { ExchangeRateService } from '../../../core/services/exchange-rate.servic
 import { AnalyticsService } from '../../../core/services/analytics.service';
 import type { WalletPaymentProvider } from '../../../core/models/wallet.model';
 import { FocusTrapDirective } from '../../directives/focus-trap.directive';
-import { EscapeKeyDirective } from '../../directives/escape-key.directive';
-
 @Component({
   selector: 'app-deposit-modal',
   standalone: true,
@@ -108,7 +106,7 @@ export class DepositModalComponent implements OnInit {
     try {
       const rate = await this.exchangeRateService.getPlatformRate();
       this.platformRate.set(rate);
-    } catch (__error) {
+    } catch {
       this.platformRate.set(1748.01);
     } finally {
       this.loadingRate.set(false);

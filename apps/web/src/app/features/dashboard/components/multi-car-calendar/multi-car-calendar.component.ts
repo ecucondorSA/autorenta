@@ -2,7 +2,7 @@ import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { format, addDays, startOfMonth, endOfMonth, addMonths, eachDayOfInterval } from 'date-fns';
+import { format, startOfMonth, endOfMonth, addMonths, eachDayOfInterval } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
 import { CarsService } from '../../../../core/services/cars.service';

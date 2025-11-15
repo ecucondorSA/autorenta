@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { toSignalOrNull } from '@app/core/utils/signal-helpers';
 import { WalletLedgerService, TransferResponse } from '@app/core/services/wallet-ledger.service';
 import { WalletService } from '@app/core/services/wallet.service';
-import { WalletBalance } from '@app/core/models/wallet.model';
-
 interface UserSearchResult {
   id: string;
   full_name: string;
@@ -83,7 +81,7 @@ export class TransferFundsComponent {
       } else {
         this.searchError.set('Número de cuenta no encontrado');
       }
-    } catch (_err) {
+    } catch {
       this.searchError.set('Error al buscar usuario');
     }
   }

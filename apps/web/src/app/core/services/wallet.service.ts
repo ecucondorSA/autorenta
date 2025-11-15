@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { RealtimeChannel, SupabaseClient, PostgrestSingleResponse } from '@supabase/supabase-js';
-import { environment } from '@environment';
+
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import type {
@@ -303,7 +303,7 @@ export class WalletService {
    */
   async subscribeToWalletChanges(
     onTransaction: (transaction: WalletTransaction) => void,
-    onBalanceChange: (balance: WalletBalance) => void,
+    _onBalanceChange: (balance: WalletBalance) => void,
   ): Promise<RealtimeChannel> {
     const {
       data: { user },

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, output, Signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Booking } from '../../../core/models';
 import { AuthService } from '../../../core/services/auth.service';

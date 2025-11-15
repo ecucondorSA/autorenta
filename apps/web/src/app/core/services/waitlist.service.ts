@@ -75,7 +75,7 @@ export class WaitlistService {
     error?: string;
   }> {
     try {
-      const { data, error } = await this.supabase.rpc('remove_from_waitlist', {
+      const { error } = await this.supabase.rpc('remove_from_waitlist', {
         p_waitlist_id: waitlistId,
       });
 

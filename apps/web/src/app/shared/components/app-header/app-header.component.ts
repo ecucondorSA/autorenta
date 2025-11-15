@@ -6,7 +6,6 @@ import {
   OnInit,
   OnDestroy,
   signal,
-  computed,
   inject,
   PLATFORM_ID,
   ChangeDetectionStrategy,

@@ -119,7 +119,7 @@ export class OwnerCheckOutPage implements OnInit {
       // Cargar datos del check-in
       // TODO: Implementar cuando FGO service esté listo
       this.checkInData.set({ odometer_reading: 0, fuel_level: 100 });
-    } catch (error) {
+    } catch {
       this.toastService.error('Error', 'No se pudo cargar la reserva');
       this.router.navigate(['/bookings/owner']);
     } finally {

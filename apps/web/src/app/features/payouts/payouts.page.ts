@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { PayoutService, Payout, BankAccount } from '../../core/services/payout.service';
+import { PayoutService, BankAccount } from '../../core/services/payout.service';
 import { WalletService } from '../../core/services/wallet.service';
 import { SupabaseClientService } from '../../core/services/supabase-client.service';
 import { take } from 'rxjs/operators';

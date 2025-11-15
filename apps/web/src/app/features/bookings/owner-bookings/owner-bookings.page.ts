@@ -94,7 +94,7 @@ export class OwnerBookingsPage implements OnInit {
       await this.loadRenterContacts(items);
       this.bookings.set(items);
       await this.loadCarLeads();
-    } catch (_err) {
+    } catch {
       this.error.set('No pudimos cargar las reservas. Por favor intentá de nuevo más tarde.');
     } finally {
       this.loading.set(false);
@@ -347,7 +347,7 @@ export class OwnerBookingsPage implements OnInit {
             if (contact.success) {
               participantName = contact.name || contact.email || null;
             }
-          } catch (_err) {
+          } catch {
             // Silently ignore error, participant name is optional
           }
 

@@ -151,7 +151,7 @@ export class PublishCarPhotoService {
       this.uploadedPhotos.set([...currentPhotos, { file, preview }]);
 
       alert(`✨ Foto generada exitosamente con IA en ${result.metadata?.duration_ms}ms`);
-    } catch (error) {
+    } catch {
       // console.error('AI photo generation failed:', error);
       alert('No se pudo generar la foto. Intenta nuevamente o sube fotos manualmente.');
     } finally {
@@ -350,7 +350,7 @@ export class PublishCarPhotoService {
    * Load existing photos for editing
    * TODO: Implement getCarPhotos method in CarsService
    */
-  async loadExistingPhotos(carId: string): Promise<void> {
+  async loadExistingPhotos(_carId: string): Promise<void> {
     try {
       // const photos = await this.carsService.getCarPhotos(carId);
       // // Convert URLs to PhotoPreview format
@@ -370,7 +370,7 @@ export class PublishCarPhotoService {
       // console.warn(
       //   'loadExistingPhotos not implemented - getCarPhotos method missing in CarsService',
       // );
-    } catch (error) {
+    } catch {
       // console.error('Failed to load existing photos:', error);
     }
   }

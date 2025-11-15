@@ -107,7 +107,7 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
 
       // Subscribe to location tracking updates for this booking
       this.subscribeToLocationUpdates(bookingId);
-    } catch (error) {
+    } catch {
       this.toastService.error('Error', 'No se pudo cargar la reserva');
       this.router.navigate(['/bookings/owner']);
     } finally {

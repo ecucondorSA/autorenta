@@ -4,11 +4,9 @@ import {
   ChangeDetectionStrategy,
   computed,
   signal,
-  inject,
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import { DistanceBadgeComponent } from '../distance-badge/distance-badge.component';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';

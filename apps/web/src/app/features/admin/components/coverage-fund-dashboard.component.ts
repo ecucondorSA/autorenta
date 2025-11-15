@@ -396,7 +396,7 @@ export class CoverageFundDashboardComponent implements OnInit {
         total_ledger_entries: entries.length,
         avg_franchise_amount: avgAmount,
       });
-    } catch (_err) {
+    } catch {
       /* Silenced */
     }
   }
@@ -415,7 +415,7 @@ export class CoverageFundDashboardComponent implements OnInit {
       if (error) throw error;
 
       this.recentActivity.set(data || []);
-    } catch (_err) {
+    } catch {
       /* Silenced */
     } finally {
       this.loadingActivity.set(false);

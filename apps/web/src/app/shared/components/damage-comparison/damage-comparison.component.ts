@@ -10,8 +10,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { SettlementService, DamageItem } from '../../../core/services/settlement.service';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import { firstValueFrom } from 'rxjs';
-
 @Component({
   selector: 'app-damage-comparison',
   standalone: true,

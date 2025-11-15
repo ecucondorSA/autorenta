@@ -3,11 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   WalletLedgerService,
-  LedgerEntry,
   LedgerKind,
 } from '@app/core/services/wallet-ledger.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-
 @Component({
   selector: 'app-ledger-history',
   standalone: true,

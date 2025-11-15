@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import type { UserProfile, Role } from '../models';
+import type { UserProfile } from '../models';
 import type { UpdateProfileData } from '../services/profile.service';
 import { ProfileService } from '../services/profile.service';
 import { WalletService } from '../services/wallet.service';

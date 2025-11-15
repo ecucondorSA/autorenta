@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, inject, signal } from '@angular/core';
 import { SettlementService } from '../../../core/services/settlement.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 

@@ -5,7 +5,6 @@ import {
   OnInit,
   computed,
   inject,
-  signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IdentityLevelService } from '../../../core/services/identity-level.service';
