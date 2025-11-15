@@ -29,12 +29,6 @@ export const routes: Routes = [
       import('./features/become-renter/become-renter.page').then((m) => m.BecomeRenterPage),
   },
   {
-    path: 'v2',
-    data: { layout: 'full-bleed' },
-    loadComponent: () =>
-      import('./features/v2-preview/v2-preview.page').then((m) => m.V2PreviewPage),
-  },
-  {
     path: 'home-v2',
     data: { layout: 'full-bleed' },
     loadComponent: () => import('./features/home-v2/home-v2.page').then((m) => m.HomeV2Page),
