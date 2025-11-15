@@ -395,6 +395,7 @@ export class ProfileService {
       .eq('id', user.id);
 
     if (error) {
+      console.error('Error completing onboarding:', error);
       throw error;
     }
   }
