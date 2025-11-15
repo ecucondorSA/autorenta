@@ -160,17 +160,11 @@ export class AnalyticsService {
 
   /**
    * Track de evento en Supabase
-   * DISABLED: Analytics not enabled in Supabase project
-   * TODO: Enable analytics in Supabase dashboard and uncomment
    */
   private async trackSupabaseEvent(
     eventType: ConversionEventType,
     data: ConversionEventData,
   ): Promise<void> {
-    // Analytics temporalmente deshabilitado - causaba 401 en producción
-    return;
-    
-    /* COMMENTED OUT UNTIL ANALYTICS ENABLED
     try {
       const userId = data.user_id ?? (await this.getCurrentUserId());
 
@@ -188,7 +182,6 @@ export class AnalyticsService {
     } catch (error) {
       console.error('Error in trackSupabaseEvent:', error);
     }
-    */
   }
 
   /**
