@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -25,7 +25,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
   templateUrl: './notifications-settings.page.html',
   styleUrls: ['./notifications-settings.page.css'],
 })
-export class NotificationsSettingsPage {
+export class NotificationsSettingsPage implements OnInit {
   private readonly router = inject(Router);
   private readonly notificationsService = inject(NotificationsService);
   private readonly toastService = inject(NotificationManagerService);

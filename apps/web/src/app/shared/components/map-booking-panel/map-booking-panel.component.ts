@@ -12,13 +12,14 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MoneyPipe } from '../../pipes/money.pipe';
+import { Router } from '@angular/router';
+
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
 import { CarAvailabilityService } from '../../../core/services/car-availability.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PricingService } from '../../../core/services/pricing.service';
 import { ProfileService } from '../../../core/services/profile.service';
-import { Router } from '@angular/router';
+import { MoneyPipe } from '../../pipes/money.pipe';
 import { getAgeFromProfile } from '../../utils/age-calculator';
 import { BirthDateModalComponent } from '../birth-date-modal/birth-date-modal.component';
 import { DynamicPricingBadgeComponent } from '../dynamic-pricing-badge/dynamic-pricing-badge.component';

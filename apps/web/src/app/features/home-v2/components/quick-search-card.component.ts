@@ -486,7 +486,7 @@ export interface SearchCriteria {
 })
 export class QuickSearchCardComponent {
   // Outputs (avoid native event names to satisfy Angular ESLint rules)
-  search = output<SearchCriteria>({ alias: 'quickSearch' });
+  quickSearch = output<SearchCriteria>();
 
   // State
   location = signal('');
@@ -509,7 +509,7 @@ export class QuickSearchCardComponent {
     };
 
     console.log('Search criteria:', criteria);
-    this.search.emit(criteria);
+    this.quickSearch.emit(criteria);
   }
 
   getUserLocation(): void {

@@ -4,7 +4,6 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
-  OnDestroy,
   signal,
   computed,
 } from '@angular/core';
@@ -58,7 +57,7 @@ import type { CarMapLocation } from '../../core/services/car-locations.service';
     MapDrawerComponent,
   ],
 })
-export class ExplorePage implements OnInit, AfterViewInit, OnDestroy {
+export class ExplorePage implements OnInit, AfterViewInit {
   @ViewChild('mapContainer') mapContainer?: ElementRef<HTMLDivElement>;
   @ViewChild('carouselContainer') carouselContainer?: ElementRef<HTMLDivElement>;
   @ViewChild(CarsMapComponent) carsMap?: CarsMapComponent;
@@ -126,10 +125,6 @@ export class ExplorePage implements OnInit, AfterViewInit, OnDestroy {
     if (this.mapContainer?.nativeElement) {
       // Aquí podría inicializarse lógica adicional de mapa si se requiere.
     }
-  }
-
-  ngOnDestroy(): void {
-    // Punto único para liberar recursos ligados a ExplorePage en el futuro.
   }
 
   async loadCars() {

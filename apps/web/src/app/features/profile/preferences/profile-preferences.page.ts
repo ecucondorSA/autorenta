@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, effect } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -222,7 +222,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
     `,
   ],
 })
-export class ProfilePreferencesPage implements OnInit {
+export class ProfilePreferencesPage implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly profileStore = inject(ProfileStore);
   private readonly destroy$ = new Subject<void>();

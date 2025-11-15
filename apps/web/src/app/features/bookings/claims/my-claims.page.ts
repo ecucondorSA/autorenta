@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { InsuranceService } from '../../../core/services/insurance.service';
@@ -26,7 +26,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
   templateUrl: './my-claims.page.html',
   styleUrls: ['./my-claims.page.css'],
 })
-export class MyClaimsPage {
+export class MyClaimsPage implements OnInit {
   private readonly router = inject(Router);
   private readonly insuranceService = inject(InsuranceService);
   private readonly toastService = inject(NotificationManagerService);
