@@ -10,6 +10,7 @@ import {
   AfterViewInit,
   OnChanges,
   SimpleChanges,
+  ChangeDetectionStrategy,
   signal,
   computed,
   inject,
@@ -187,6 +188,7 @@ class QuadTree {
   ],
   templateUrl: './cars-map.component.html',
   styleUrls: ['./cars-map.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
