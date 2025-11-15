@@ -1,0 +1,25 @@
+# Copilot development environment setup
+# This file pre-installs dependencies so Copilot can build, test, and validate changes immediately
+name: Setup AutoRenta Development Environment
+
+steps:
+  - name: Install pnpm
+    run: npm install -g pnpm@9
+
+  - name: Install dependencies
+    run: pnpm install --frozen-lockfile
+
+  - name: Setup Supabase CLI
+    run: npm install -g supabase
+
+  - name: Generate Supabase types
+    run: pnpm run sync:types
+    env:
+      SUPABASE_PROJECT_ID: obxvffplochgeiclibng
+
+  - name: Verify setup
+    run: |
+      node --version
+      pnpm --version
+      supabase --version
+      echo "✅ AutoRenta development environment ready!"

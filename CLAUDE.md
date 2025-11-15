@@ -8,6 +8,7 @@ Guía principal para Claude Code trabajando en AutoRenta.
 > - [CLAUDE_STORAGE.md](./CLAUDE_STORAGE.md) - Supabase Storage, buckets y RLS
 > - [CLAUDE_PAYMENTS.md](./CLAUDE_PAYMENTS.md) - Sistema de pagos MercadoPago y Wallet
 > - [CLAUDE_MCP.md](./CLAUDE_MCP.md) - Model Context Protocol integration
+> - [COPILOT_BEST_PRACTICES.md](./COPILOT_BEST_PRACTICES.md) - Mejores prácticas para GitHub Copilot
 
 ## Project Overview
 
@@ -513,6 +514,7 @@ AutoRenta usa servidores MCP de Cloudflare para workflows mejorados:
 | **Storage** | [CLAUDE_STORAGE.md](./CLAUDE_STORAGE.md) | Buckets, RLS, Path conventions |
 | **Payments** | [CLAUDE_PAYMENTS.md](./CLAUDE_PAYMENTS.md) | MercadoPago, Wallet, Webhooks |
 | **MCP** | [CLAUDE_MCP.md](./CLAUDE_MCP.md) | Model Context Protocol |
+| **Copilot** | [COPILOT_BEST_PRACTICES.md](./COPILOT_BEST_PRACTICES.md) | Mejores prácticas para GitHub Copilot |
 | **Deployment** | [docs/deployment-guide.md](./docs/deployment-guide.md) | Deployment procedures |
 | **Troubleshooting** | [docs/runbooks/troubleshooting.md](./docs/runbooks/troubleshooting.md) | Problem solving |
 
