@@ -12,11 +12,12 @@ Guía principal para Claude Code trabajando en AutoRenta.
 ## Project Overview
 
 AutoRenta es un marketplace de renta de autos MVP para Argentina construido con:
-- **Frontend**: Angular 17 (standalone components) + Tailwind CSS
+- **Frontend**: Angular 20 (standalone components) + Tailwind CSS + PrimeNG
 - **Backend**: Supabase (PostgreSQL + Edge Functions)
 - **Hosting**: Cloudflare Pages
 - **Workers**: Cloudflare Workers para webhooks y workers especializados
 - **Payments**: MercadoPago (producción) + Mock (desarrollo)
+- **Package Manager**: pnpm 10.22.0
 
 ## Preferencias de Documentación
 
@@ -41,11 +42,11 @@ cp .env.local.example .env.local
 # - NG_APP_PAYPAL_CLIENT_ID (obtener de PayPal Developer)
 
 # 3. Instalar dependencias
-npm run install
+pnpm install
 
 # 4. Verificar configuración
-npm run check:auth
-npm run status
+pnpm run check:auth
+pnpm run status
 ```
 
 **⚠️ IMPORTANTE**: Nunca commitear `.env.local` - está en `.gitignore` automáticamente.
@@ -64,11 +65,11 @@ npm run dev              # Angular + Payment webhook
 ### Comandos Principales
 
 ```bash
-npm run dev              # Desarrollo
-npm run test:quick       # Tests rápidos
-npm run ci               # Pipeline completo (lint + test + build)
-npm run deploy           # Deploy a producción
-npm run status           # Estado del proyecto
+pnpm run dev             # Desarrollo
+pnpm run test:quick      # Tests rápidos
+pnpm run ci              # Pipeline completo (lint + test + build)
+pnpm run deploy          # Deploy a producción
+pnpm run status          # Estado del proyecto
 ```
 
 **Ver todos los comandos**: [CLAUDE_WORKFLOWS.md](./CLAUDE_WORKFLOWS.md)
@@ -95,7 +96,7 @@ Después del setup inicial (`./tools/setup-auth.sh`):
 - **Reference ID**: obxvffplochgeiclibng
 - **URL**: https://obxvffplochgeiclibng.supabase.co
 - **Región**: us-east-2
-- **Edge Functions activas**: 20 functions (mercadopago-webhook, create-preference, wallet-*, etc.)
+- **Edge Functions activas**: 30+ functions (mercadopago-*, google-calendar-oauth, wallet-*, monitoring-*, etc.)
 
 #### Cloudflare
 - **Account ID**: `5b448192fe4b369642b68ad8f53a7603`
@@ -108,10 +109,17 @@ Después del setup inicial (`./tools/setup-auth.sh`):
 
 ```
 autorenta/
-  apps/web/                      # Angular 17 app
+  apps/web/                      # Angular 20 app
     src/app/
       core/                      # Services, guards, interceptors
       features/                  # Feature modules (lazy-loaded)
+        auth/                    # Authentication
+        cars/                    # Car listings & management
+        bookings/                # Booking system
+        admin/                   # Admin dashboard
+        notifications/           # Notifications system
+        driver-profile/          # Driver profiles
+        dashboard/               # User dashboards
       shared/                    # Shared components
   functions/workers/             # Cloudflare Workers
     payments_webhook/            # Mock payment webhook (dev only)
@@ -131,12 +139,13 @@ autorenta/
 
 ## Architecture Overview
 
-### Frontend (Angular 17)
+### Frontend (Angular 20)
 - **Standalone Components** - No NgModules
 - **Lazy Loading** - Features cargados bajo demanda
 - **Route Guards** - AuthGuard para rutas protegidas
 - **HTTP Interceptor** - JWT automático en requests
 - **Signals & RxJS** - State management reactivo
+- **UI Libraries** - PrimeNG 20.3.0, Tailwind CSS, Ionic Angular
 
 ### Backend (Supabase)
 - **PostgreSQL** - Base de datos con RLS
@@ -161,11 +170,13 @@ autorenta/
 - CRUD de autos con fotos (hasta 10 por auto)
 - Estados: draft, pending, active, suspended
 - Verificación de locador requerida para publicar
+- Dynamic pricing con AI car generator
 
 ### 3. Booking System
 - Solicitud de booking con validación de disponibilidad
 - Estados: pending, approved, active, completed, cancelled
 - Lock de fondos en wallet durante booking
+- Google Calendar integration para sincronización automática
 
 ### 4. Payment & Wallet System
 - Depósitos vía MercadoPago (tarjeta, débito, efectivo)
@@ -183,34 +194,50 @@ autorenta/
 
 **Guía de Storage**: [CLAUDE_STORAGE.md](./CLAUDE_STORAGE.md)
 
+### 6. Google Calendar Integration
+- OAuth 2.0 flow para conectar calendarios
+- Sincronización bidireccional de bookings
+- Calendarios secundarios por auto
+- Eventos con colores por estado del booking
+
+**Guía completa**: [docs/GOOGLE_CALENDAR_INTEGRATION.md](./docs/GOOGLE_CALENDAR_INTEGRATION.md)
+
+### 7. Notifications System
+- Notificaciones en tiempo real
+- Preferencias configurables por usuario
+- Dashboard de notificaciones
+- Integration con Supabase Realtime
+
 ## Common Commands Reference
 
 ### Development
 ```bash
-npm run dev              # Full dev environment
-npm run dev:web          # Solo web app
-npm run dev:worker       # Solo payment webhook
+pnpm run dev             # Full dev environment
+pnpm run dev:web         # Solo web app
+pnpm run dev:worker      # Solo payment webhook
 ```
 
 ### Testing
 ```bash
-npm run test             # All tests
-npm run test:quick       # Quick tests (no coverage)
-npm run test:e2e         # Playwright E2E tests
+pnpm run test            # All tests
+pnpm run test:quick      # Quick tests (no coverage)
+pnpm run test:e2e        # Playwright E2E tests
+pnpm run test:e2e:calendar  # Google Calendar OAuth tests
 ```
 
 ### Building & Deployment
 ```bash
-npm run build            # Build all
-npm run ci               # Full CI pipeline
-npm run deploy           # Deploy to production
+pnpm run build           # Build all
+pnpm run ci              # Full CI pipeline
+pnpm run deploy          # Deploy to production
 ```
 
 ### Utilities
 ```bash
-npm run status           # Project health check
-npm run lint:fix         # Fix lint + format
-npm run sync:types       # Sync DB types from Supabase
+pnpm run status          # Project health check
+pnpm run lint:fix        # Fix lint + format
+pnpm run sync:types      # Sync DB types from Supabase
+pnpm run check:a11y      # Accessibility checks
 ```
 
 **Todos los comandos**: [CLAUDE_WORKFLOWS.md](./CLAUDE_WORKFLOWS.md)
@@ -224,20 +251,20 @@ npm run sync:types       # Sync DB types from Supabase
 git checkout -b feature/nueva-funcionalidad
 
 # 2. Iniciar dev
-npm run dev
+pnpm run dev
 
 # 3. Hacer cambios...
 # (Husky ejecuta lint + format en pre-commit)
 
 # 4. Tests
-npm run test:quick
+pnpm run test:quick
 ```
 
 ### 2. Antes de PR
 
 ```bash
 # Run full CI pipeline
-npm run ci
+pnpm run ci
 
 # Si todo pasa:
 git push origin feature/nueva-funcionalidad
@@ -250,7 +277,7 @@ git push origin feature/nueva-funcionalidad
 ```bash
 # Automático vía GitHub Actions
 # O manual:
-npm run deploy
+pnpm run deploy
 ```
 
 ## Debugging Resources
@@ -441,7 +468,7 @@ SELECT (storage.foldername('user-uuid/file.jpg'))[1] = 'user-uuid';
 
 ```bash
 # Sincronizar tipos después de cambios en DB
-npm run sync:types
+pnpm run sync:types
 ```
 
 ## Environment Variables
@@ -534,32 +561,49 @@ AutoRenta usa servidores MCP de Cloudflare para workflows mejorados:
 ```bash
 # Ver ayuda de comandos
 ./tools/run.sh help
-npm run status
+pnpm run status
 
 # Check autenticación
-npm run check:auth
+pnpm run check:auth
 
 # Ver estado del proyecto
-npm run status
+pnpm run status
 
 # Troubleshooting
 cat docs/runbooks/troubleshooting.md
 ```
 
+## Recent Updates (2025-11-15)
+
+### Major Changes Since Last Update (2025-11-06)
+- ✅ **Google Calendar Integration**: OAuth 2.0 flow completo con sincronización bidireccional de bookings
+- ✅ **Notifications System**: Sistema de notificaciones en tiempo real con preferencias configurables
+- ✅ **Driver Profile Page**: Página optimizada con diseño premium y manejo de errores
+- ✅ **Angular 20 Migration**: Upgrade completo a Angular 20.3.7 con PrimeNG 20.3.0
+- ✅ **pnpm Migration**: Cambio de package manager a pnpm 10.22.0
+- ✅ **Testing Improvements**: Nuevos tests E2E para Google Calendar y booking flows
+- ✅ **CI/CD Updates**: Workflow actualizado para usar pnpm en GitHub Actions
+
+### Recent Commits
+```
+fd6fc81 feat: complete Google Calendar integration with management UI
+a1d1a51 fix: correct pnpm setup order in deploy workflow
+b52b808 fix: add OAuth callback redirect handler for root domain
+710778f fix: Resolve Angular compilation errors in DriverProfilePage
+c5e6fc3 feat: optimize driver profile page with premium visual design
+```
+
 ## Last Updated
 
-- **Date**: 2025-11-06
-- **Version**: v1.0 (modularizado)
-- **Changelog**: Dividido en archivos específicos para mejor performance de Claude Code
+- **Date**: 2025-11-15
+- **Version**: v1.1 (Angular 20 + pnpm + nuevas features)
+- **Previous Version**: v1.0 (2025-11-06)
+- **Changelog**:
+  - Actualizado a Angular 20.3.7 y pnpm 10.22.0
+  - Agregadas secciones para Google Calendar y Notifications
+  - Todos los comandos npm actualizados a pnpm
+  - Limpieza de contenido obsoleto
 
 ---
 
-**Nota**: Este archivo es ahora ~8k caracteres (vs 41k original), mejorando significativamente el performance de Claude Code. Para información detallada, consulta los archivos modulares correspondientes.
-- ultrathink     Ejecutar el test
-npx playwright test tests/e2e/complete-porsche-publication-flow.spec.ts
-
-# Con UI (recomendad
-- ehecutar el comando  ultrathink     Ejecutar el test
-npx playwright test tests/e2e/complete-porsche-publication-flow.spec.ts
-
-# Con UI (recomendad
+**Nota**: Este archivo es ahora ~9k caracteres (modularizado), optimizado para Claude Code. Para información detallada, consulta los archivos modulares correspondientes.
