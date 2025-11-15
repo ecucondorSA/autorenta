@@ -41,18 +41,20 @@ jobs:
           NODE_ENV: production
       - name: Inject production env.js
         run: |
-          echo "// Auto-generated environment configuration" > apps/web/dist/web/browser/env.js
-          echo "// This file is generated during GitHub Actions deployment" >> apps/web/dist/web/browser/env.js
-          echo "window.__env = {" >> apps/web/dist/web/browser/env.js
-          echo "  \"NG_APP_SUPABASE_URL\": \"${{ secrets.SUPABASE_URL }}\"," >> apps/web/dist/web/browser/env.js
-          echo "  \"NG_APP_SUPABASE_ANON_KEY\": \"${{ secrets.SUPABASE_ANON_KEY }}\"," >> apps/web/dist/web/browser/env.js
-          echo "  \"NG_APP_DEFAULT_CURRENCY\": \"ARS\"," >> apps/web/dist/web/browser/env.js
-          echo "  \"NG_APP_PAYMENTS_WEBHOOK_URL\": \"http://localhost:8787/webhooks/payments\"," >> apps/web/dist/web/browser/env.js
-          echo "  \"NG_APP_MAPBOX_ACCESS_TOKEN\": \"${{ secrets.MAPBOX_ACCESS_TOKEN }}\"," >> apps/web/dist/web/browser/env.js
-          echo "  \"NG_APP_CAR_LOCATIONS_EDGE_FUNCTION\": \"\"," >> apps/web/dist/web/browser/env.js
-          echo "  \"NG_APP_MERCADOPAGO_PUBLIC_KEY\": \"${{ secrets.MERCADOPAGO_PROD_PUBLIC_KEY }}\"," >> apps/web/dist/web/browser/env.js
-          echo "  \"NG_APP_CLOUDFLARE_WORKER_URL\": \"https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev\"" >> apps/web/dist/web/browser/env.js
-          echo "};" >> apps/web/dist/web/browser/env.js
+          cat > apps/web/dist/web/browser/env.js << 'EOF'
+          // Auto-generated environment configuration
+          // This file is generated during GitHub Actions deployment
+          window.__env = {
+            "NG_APP_SUPABASE_URL": "${{ secrets.SUPABASE_URL }}",
+            "NG_APP_SUPABASE_ANON_KEY": "${{ secrets.SUPABASE_ANON_KEY }}",
+            "NG_APP_DEFAULT_CURRENCY": "ARS",
+            "NG_APP_PAYMENTS_WEBHOOK_URL": "http://localhost:8787/webhooks/payments",
+            "NG_APP_MAPBOX_ACCESS_TOKEN": "${{ secrets.MAPBOX_ACCESS_TOKEN }}",
+            "NG_APP_CAR_LOCATIONS_EDGE_FUNCTION": "",
+            "NG_APP_MERCADOPAGO_PUBLIC_KEY": "${{ secrets.MERCADOPAGO_PROD_PUBLIC_KEY }}",
+            "NG_APP_CLOUDFLARE_WORKER_URL": "https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev"
+          };
+          EOF
           
       - name: Prepare deployment directory
         run: |
