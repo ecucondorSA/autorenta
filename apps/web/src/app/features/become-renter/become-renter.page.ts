@@ -90,6 +90,16 @@ export class BecomeRenterPage implements OnInit {
         'Lo que más me gusta es la flexibilidad. Yo controlo cuándo mi auto está disponible y el precio. ¡Es como tener un ingreso pasivo!',
       rating: 5,
     },
+    {
+      name: 'Diego Fernández',
+      location: 'Mendoza',
+      photo: '/assets/images/testimonials/diego.svg',
+      carBrand: 'Ford Focus 2020',
+      earning: '$95,000/mes',
+      quote:
+        'Empecé con un solo auto y ahora tengo tres en la plataforma. Las condiciones son excelentes y el soporte siempre está disponible para ayudar.',
+      rating: 5,
+    },
   ];
 
   // Steps
