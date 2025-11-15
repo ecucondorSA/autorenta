@@ -1,11 +1,14 @@
-name: Deploy Pages
+name: Deploy to Cloudflare Pages
+
 on:
   push:
     branches: [ main ]
     paths:
       - 'apps/web/**'
       - 'package.json'
+      - 'pnpm-lock.yaml'
       - '.github/workflows/deploy_pages.yml'
+  workflow_dispatch:  # Permite deployment manual desde GitHub UI
 
 jobs:
   deploy:
@@ -14,17 +17,28 @@ jobs:
       contents: read
       deployments: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
-      - uses: actions/setup-node@v4
+          version: 10.22.0  # Actualizado a la versión del proyecto
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
-      - run: pnpm install --frozen-lockfile
-      - run: cd apps/web && pnpm run build
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build Angular app
+        run: cd apps/web && npm run build
+        env:
+          NODE_ENV: production
       - name: Inject production env.js
         run: |
           echo "// Auto-generated environment configuration" > apps/web/dist/web/browser/env.js
@@ -39,12 +53,20 @@ jobs:
           echo "  \"NG_APP_MERCADOPAGO_PUBLIC_KEY\": \"${{ secrets.MERCADOPAGO_PROD_PUBLIC_KEY }}\"," >> apps/web/dist/web/browser/env.js
           echo "  \"NG_APP_CLOUDFLARE_WORKER_URL\": \"https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev\"" >> apps/web/dist/web/browser/env.js
           echo "};" >> apps/web/dist/web/browser/env.js
-      - name: Publish to Cloudflare Pages
+      - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          projectName: ${{ secrets.CF_PAGES_PROJECT }}
+          accountId: 5b448192fe4b369642b68ad8f53a7603
+          projectName: autorenta-web
           directory: apps/web/dist/web/browser
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          wranglerVersion: 3
+          wranglerVersion: '3'
+          branch: main
+          
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "✅ Deployment successful!"
+          echo "🌐 Production URL: https://autorentar.com"
+          echo "🔗 Pages URL: https://autorenta-web.pages.dev"
