@@ -1,183 +1,235 @@
-# Supabase CLI
+# AutoRenta 🚗
 
-[![Coverage Status](https://coveralls.io/repos/github/supabase/cli/badge.svg?branch=main)](https://coveralls.io/github/supabase/cli?branch=main) [![Bitbucket Pipelines](https://img.shields.io/bitbucket/pipelines/supabase-cli/setup-cli/master?style=flat-square&label=Bitbucket%20Canary)](https://bitbucket.org/supabase-cli/setup-cli/pipelines) [![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/sweatybridge%2Fsetup-cli?label=Gitlab%20Canary)
-](https://gitlab.com/sweatybridge/setup-cli/-/pipelines)
+[![Production Readiness](https://img.shields.io/badge/Production%20Ready-67%25-yellow)](https://github.com/ecucondorSA/autorenta)
+[![Angular](https://img.shields.io/badge/Angular-17-red)](https://angular.io/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green)](https://supabase.com/)
+[![Cloudflare](https://img.shields.io/badge/Cloudflare-Pages-orange)](https://pages.cloudflare.com/)
 
-[Supabase](https://supabase.io) is an open source Firebase alternative. We're building the features of Firebase using enterprise-grade open source tools.
+Marketplace de renta de autos peer-to-peer para Argentina. Conecta dueños de autos con personas que necesitan alquilar un vehículo de forma segura y confiable.
 
-This repository contains all the functionality for Supabase CLI.
+## 🌟 Features
 
-- [x] Running Supabase locally
-- [x] Managing database migrations
-- [x] Creating and deploying Supabase Functions
-- [x] Generating types directly from your database schema
-- [x] Making authenticated HTTP requests to [Management API](https://supabase.com/docs/reference/api/introduction)
+### ✅ Implementado
+- **Autenticación & Autorización**: Sistema completo con roles (locador, locatario, admin)
+- **Publicación de Autos**: CRUD completo con hasta 10 fotos por auto
+- **Sistema de Reservas**: Flujo completo de booking con estados y validaciones
+- **Pagos & Wallet**: Integración con MercadoPago, wallet interno con balance bloqueado
+- **Mensajería**: Chat estilo WhatsApp con archivos, fotos y cámara
+- **Verificación**: Sistema de verificación de identidad y documentos
+- **Protecciones**: Sistema de protectores para cobertura de seguros
+- **Calendario**: Integración con Google Calendar para disponibilidad
+- **Admin Panel**: Dashboard administrativo completo
 
-## Getting started
+### 🚧 En Desarrollo
+- Precios dinámicos basados en demanda
+- Sistema de referidos con bonos
+- Monitoreo y alertas en tiempo real
+- Integración con FIPE (valuación de autos en Brasil/Argentina)
 
-### Install the CLI
+## 🚀 Quick Start
 
-Available via [NPM](https://www.npmjs.com) as dev dependency. To install:
+### Prerequisites
 
-```bash
-npm i supabase --save-dev
-```
+- Node.js 20+ (check with `node -v`)
+- Docker (for Supabase local)
+- pnpm 10.22.0+ (check with `pnpm -v`)
 
-To install the beta release channel:
-
-```bash
-npm i supabase@beta --save-dev
-```
-
-When installing with yarn 4, you need to disable experimental fetch with the following nodejs config.
-
-```
-NODE_OPTIONS=--no-experimental-fetch yarn add supabase
-```
-
-> **Note**
-For Bun versions below v1.0.17, you must add `supabase` as a [trusted dependency](https://bun.sh/guides/install/trusted) before running `bun add -D supabase`.
-
-<details>
-  <summary><b>macOS</b></summary>
-
-  Available via [Homebrew](https://brew.sh). To install:
-
-  ```sh
-  brew install supabase/tap/supabase
-  ```
-
-  To install the beta release channel:
-  
-  ```sh
-  brew install supabase/tap/supabase-beta
-  brew link --overwrite supabase-beta
-  ```
-  
-  To upgrade:
-
-  ```sh
-  brew upgrade supabase
-  ```
-</details>
-
-<details>
-  <summary><b>Windows</b></summary>
-
-  Available via [Scoop](https://scoop.sh). To install:
-
-  ```powershell
-  scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
-  scoop install supabase
-  ```
-
-  To upgrade:
-
-  ```powershell
-  scoop update supabase
-  ```
-</details>
-
-<details>
-  <summary><b>Linux</b></summary>
-
-  Available via [Homebrew](https://brew.sh) and Linux packages.
-
-  #### via Homebrew
-
-  To install:
-
-  ```sh
-  brew install supabase/tap/supabase
-  ```
-
-  To upgrade:
-
-  ```sh
-  brew upgrade supabase
-  ```
-
-  #### via Linux packages
-
-  Linux packages are provided in [Releases](https://github.com/supabase/cli/releases). To install, download the `.apk`/`.deb`/`.rpm`/`.pkg.tar.zst` file depending on your package manager and run the respective commands.
-
-  ```sh
-  sudo apk add --allow-untrusted <...>.apk
-  ```
-
-  ```sh
-  sudo dpkg -i <...>.deb
-  ```
-
-  ```sh
-  sudo rpm -i <...>.rpm
-  ```
-
-  ```sh
-  sudo pacman -U <...>.pkg.tar.zst
-  ```
-</details>
-
-<details>
-  <summary><b>Other Platforms</b></summary>
-
-  You can also install the CLI via [go modules](https://go.dev/ref/mod#go-install) without the help of package managers.
-
-  ```sh
-  go install github.com/supabase/cli@latest
-  ```
-
-  Add a symlink to the binary in `$PATH` for easier access:
-
-  ```sh
-  ln -s "$(go env GOPATH)/bin/cli" /usr/bin/supabase
-  ```
-
-  This works on other non-standard Linux distros.
-</details>
-
-<details>
-  <summary><b>Community Maintained Packages</b></summary>
-
-  Available via [pkgx](https://pkgx.sh/). Package script [here](https://github.com/pkgxdev/pantry/blob/main/projects/supabase.com/cli/package.yml).
-  To install in your working directory:
-
-  ```bash
-  pkgx install supabase
-  ```
-
-  Available via [Nixpkgs](https://nixos.org/). Package script [here](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/tools/supabase-cli/default.nix).
-</details>
-
-### Run the CLI
+### Setup
 
 ```bash
-supabase bootstrap
+# 1. Clone repository
+git clone https://github.com/ecucondorSA/autorenta.git
+cd autorenta
+
+# 2. Install dependencies
+npm run install
+
+# 3. Configure environment
+cp .env.local.example .env.local
+# Edit .env.local with your credentials
+
+# 4. Setup authentication (one-time)
+./tools/setup-auth.sh
+
+# 5. Start development environment
+npm run dev
+
+# 6. Open browser
+# - Web: http://localhost:4200
+# - Worker: http://localhost:8787
 ```
 
-Or using npx:
+### Common Commands
 
 ```bash
-npx supabase bootstrap
+npm run dev              # Start dev environment
+npm run test:quick       # Run tests
+npm run ci               # Full CI pipeline (lint + test + build)
+npm run deploy           # Deploy to production
+npm run status           # Check project health
 ```
 
-The bootstrap command will guide you through the process of setting up a Supabase project using one of the [starter](https://github.com/supabase-community/supabase-samples/blob/main/samples.json) templates.
+**See all commands**: `npm run workflows` or check [CLAUDE_WORKFLOWS.md](./CLAUDE_WORKFLOWS.md)
 
-## Docs
+## 📖 Documentation
 
-Command & config reference can be found [here](https://supabase.com/docs/reference/cli/about).
+### For Developers
+- **[CLAUDE.md](./CLAUDE.md)** - Main guide for AI assistants (start here!)
+- **[CLAUDE_ARCHITECTURE.md](./CLAUDE_ARCHITECTURE.md)** - Technical architecture
+- **[CLAUDE_WORKFLOWS.md](./CLAUDE_WORKFLOWS.md)** - Commands, CI/CD, deployment
+- **[CLAUDE_STORAGE.md](./CLAUDE_STORAGE.md)** - Supabase Storage & RLS
+- **[CLAUDE_PAYMENTS.md](./CLAUDE_PAYMENTS.md)** - Payment system (MercadoPago)
 
-## Breaking changes
+### Operational Runbooks
+- **[Troubleshooting](./docs/runbooks/troubleshooting.md)** - Problem solving guide
+- **[Deployment Guide](./docs/deployment-guide.md)** - Deployment procedures
+- **[Disaster Recovery](./docs/disaster-recovery-plan.md)** - Recovery plan
 
-We follow semantic versioning for changes that directly impact CLI commands, flags, and configurations.
+### Additional Resources
+- **[docs/](./docs/)** - Complete documentation index
+- **[tests/](./tests/)** - E2E test suite (Playwright)
+- **[tools/](./tools/)** - CLI tools and scripts
 
-However, due to dependencies on other service images, we cannot guarantee that schema migrations, seed.sql, and generated types will always work for the same CLI major version. If you need such guarantees, we encourage you to pin a specific version of CLI in package.json.
+## 🏗️ Architecture
 
-## Developing
-
-To run from source:
-
-```sh
-# Go >= 1.22
-go run . help
 ```
+┌─────────────────┐
+│   Angular 17    │  ← Frontend (Standalone Components)
+│  (Cloudflare)   │
+└────────┬────────┘
+         │
+         ↓
+┌─────────────────┐
+│    Supabase     │  ← Backend (PostgreSQL + Edge Functions)
+│  (PostgreSQL)   │
+└────────┬────────┘
+         │
+         ↓
+┌─────────────────┐
+│   MercadoPago   │  ← Payments (Production)
+└─────────────────┘
+```
+
+### Tech Stack
+
+**Frontend:**
+- Angular 17 (standalone components)
+- Tailwind CSS + PrimeNG
+- Mapbox GL JS (maps)
+- Signals & RxJS (state)
+
+**Backend:**
+- Supabase (PostgreSQL + Auth + Storage)
+- Edge Functions (Deno)
+- Row Level Security (RLS)
+
+**Infrastructure:**
+- Cloudflare Pages (hosting)
+- Cloudflare Workers (webhooks)
+- GitHub Actions (CI/CD)
+
+**Payments:**
+- MercadoPago (production)
+- Mock webhooks (development)
+
+## 🧪 Testing
+
+```bash
+# Unit tests
+npm run test             # All tests with coverage
+npm run test:quick       # Fast tests (no coverage)
+
+# E2E tests (Playwright)
+npm run test:e2e         # Headless mode
+npm run test:e2e:ui      # UI mode (recommended)
+npm run test:e2e:headed  # Headed mode
+
+# Specific test suites
+npm run test:e2e:booking     # Booking flow
+npm run test:e2e:wallet      # Wallet tests
+npm run test:e2e:calendar    # Google Calendar OAuth
+```
+
+**Test Coverage Goal**: 80%+ per module
+
+## 🚀 Deployment
+
+### Automatic (Recommended)
+
+Merges to `main` trigger automatic deployment via GitHub Actions.
+
+### Manual
+
+```bash
+# Deploy everything
+npm run deploy
+
+# Deploy specific targets
+npm run deploy:web       # Angular app to Cloudflare Pages
+npm run deploy:worker    # Workers to Cloudflare
+```
+
+**Production URLs:**
+- Web: https://autorenta-web.pages.dev
+- API: https://obxvffplochgeiclibng.supabase.co
+
+## 🔒 Security
+
+- **Authentication**: Supabase Auth with JWT tokens
+- **Authorization**: Row Level Security (RLS) on all tables
+- **Secrets**: GitHub Secrets + Cloudflare env vars
+- **Compliance**: OWASP Top 10 checks in CI
+
+**Report security issues**: Open an issue with `[SECURITY]` prefix
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/amazing-feature`
+3. Make changes and test: `npm run ci`
+4. Commit: `git commit -m 'feat: add amazing feature'`
+5. Push: `git push origin feature/amazing-feature`
+6. Open Pull Request
+
+**See**: [CONTRIBUTING.md](./CONTRIBUTING.md) and [PR_PROCESS.md](./docs/PR_PROCESS.md)
+
+## 📊 Project Status
+
+**Production Readiness**: 67% (as of Nov 2025)
+
+**Recent Milestones:**
+- ✅ Documentation cleanup (62 obsolete docs archived)
+- ✅ E2E test suite (54 comprehensive tests)
+- ✅ UI v2 (WhatsApp-style messaging, toast notifications)
+- ✅ Brand colors applied (azul celeste, marfil, neutros)
+- ✅ Real-time messaging with file uploads
+
+**Next Up:**
+- [ ] Dynamic pricing system
+- [ ] Referral program
+- [ ] Enhanced monitoring & alerting
+- [ ] FIPE integration for car valuations
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: Start with [CLAUDE.md](./CLAUDE.md)
+- **Issues**: [GitHub Issues](https://github.com/ecucondorSA/autorenta/issues)
+- **Troubleshooting**: [docs/runbooks/troubleshooting.md](./docs/runbooks/troubleshooting.md)
+
+## 🙏 Acknowledgments
+
+Built with:
+- [Angular](https://angular.io/)
+- [Supabase](https://supabase.com/)
+- [Cloudflare](https://www.cloudflare.com/)
+- [MercadoPago](https://www.mercadopago.com.ar/)
+- [Mapbox](https://www.mapbox.com/)
+- [PrimeNG](https://primeng.org/)
+
+---
+
+**Made with ❤️ in Argentina**
