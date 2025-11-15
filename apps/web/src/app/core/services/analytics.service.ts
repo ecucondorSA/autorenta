@@ -160,11 +160,18 @@ export class AnalyticsService {
 
   /**
    * Track de evento en Supabase
+   * DISABLED: RLS policy missing on conversion_events table
+   * Error: "new row violates row-level security policy for table conversion_events"
+   * TODO: Create RLS policy in Supabase for conversion_events table
    */
   private async trackSupabaseEvent(
     eventType: ConversionEventType,
     data: ConversionEventData,
   ): Promise<void> {
+    // Temporarily disabled due to RLS policy error (401 Unauthorized)
+    return;
+    
+    /* COMMENTED UNTIL RLS POLICY IS CREATED
     try {
       const userId = data.user_id ?? (await this.getCurrentUserId());
 
@@ -182,6 +189,7 @@ export class AnalyticsService {
     } catch (error) {
       console.error('Error in trackSupabaseEvent:', error);
     }
+    */
   }
 
   /**

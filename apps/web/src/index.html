@@ -104,50 +104,12 @@
     <noscript>Please enable JavaScript to continue using this application.</noscript>
 
     <!-- Service Worker Registration -->
+    <!-- DISABLED: Angular ngsw-worker.js not being generated in build -->
+    <!-- TODO: Enable Angular Service Worker in angular.json if offline support needed -->
     <script>
-      // Register service worker for offline support
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker
-            .register('/service-worker.js')
-            .then((registration) => {
-              console.log('✅ Service Worker registered:', registration.scope);
-
-              // Check for updates every 60 seconds
-              setInterval(() => {
-                registration.update();
-              }, 60000);
-
-              // Listen for updates
-              registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                if (newWorker) {
-                  newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                      // New version available
-                      if (confirm('Nueva versión disponible. ¿Actualizar ahora?')) {
-                        newWorker.postMessage({ type: 'SKIP_WAITING' });
-                        window.location.reload();
-                      }
-                    }
-                  });
-                }
-              });
-            })
-            .catch((error) => {
-              console.error('❌ Service Worker registration failed:', error);
-            });
-
-          // Reload page when new SW takes control
-          let refreshing = false;
-          navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (!refreshing) {
-              refreshing = true;
-              window.location.reload();
-            }
-          });
-        });
-      }
+      // Service Worker temporarily disabled due to build configuration
+      console.log('⚠️ Service Worker disabled - enable in angular.json if needed');
+    
 
       // Install prompt for PWA
       let deferredPrompt;
