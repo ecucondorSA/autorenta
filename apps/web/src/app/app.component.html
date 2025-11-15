@@ -17,10 +17,10 @@
   [class.pointer-events-none]="showSplash()"
   class="min-h-dvh grid grid-rows-[auto_1fr_auto] bg-surface-base dark:bg-surface-base transition-opacity duration-500"
 >
-  <!-- Header (oculto en móvil, visible en desktop) -->
+  <!-- Header Responsive -->
   <header
     id="main-header"
-    class="hidden md:block sticky top-0 z-sticky border-b border-border-default dark:border-slate-700/50 backdrop-blur-md bg-surface-raised dark:bg-slate-900/95 shadow-sm dark:shadow-slate-950/50"
+    class="sticky top-0 z-sticky border-b border-border-default/70 dark:border-slate-700/50 backdrop-blur-md bg-surface-raised/95 supports-[backdrop-filter]:bg-surface-raised/80 dark:bg-slate-900/90 shadow-sm dark:shadow-slate-950/50"
   >
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 px-3 py-2 rounded-lg bg-surface-secondary dark:bg-surface-secondary"
@@ -29,109 +29,112 @@
       {{ 'common.skipToContent' | translate }}
     </a>
 
-    <div class="container-page px-container h-16 sm:h-16 flex items-center gap-5 lg:gap-8">
-      <!-- Menu Toggle (mobile) -->
-      <button
-        (click)="toggleSidebar()"
-        class="lg:hidden icon-button"
-        [attr.aria-label]="'nav.openMenu' | translate"
-        aria-controls="mobile-sidebar"
-        [attr.aria-expanded]="sidebarOpen()"
-        #menuButton
-      >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
+    <div class="container-page px-container h-16 sm:h-16 flex items-center gap-3 sm:gap-5">
+      <div class="flex flex-1 items-center gap-2 sm:gap-4 min-w-0">
+        <!-- Menu Toggle (mobile) -->
+        <button
+          type="button"
+          (click)="toggleSidebar()"
+          class="icon-button lg:hidden shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cta-default"
+          [attr.aria-label]="'nav.openMenu' | translate"
+          aria-haspopup="dialog"
+          aria-controls="mobile-sidebar"
+          [attr.aria-expanded]="sidebarOpen()"
+          #menuButton
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-      </button>
-
-      <!-- Logo -->
-      <a
-        routerLink="/"
-        data-tour-step="welcome-hero"
-        class="group flex items-center gap-3 hover:opacity-100 transition-base"
-      >
-        <img
-          ngSrc="/assets/images/autorentar-logo.png"
-          alt="Autorentar"
-          width="500"
-          height="500"
-          priority
-          class="h-12 md:h-14 w-auto object-contain drop-shadow-lg transition-transform duration-200 group-hover:scale-[1.04] dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] dark:brightness-0 dark:invert"
-        />
-        <span class="flex flex-col leading-tight">
-          <span
-            class="text-[1.05rem] font-semibold text-text-primary dark:text-white group-hover:text-cta-default dark:group-hover:text-cyan-400 transition-colors"
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
           >
-            Autorentar
-          </span>
-          <span
-            class="text-[0.68rem] uppercase tracking-[0.22em] text-text-muted dark:text-gray-300"
-          >
-            Car Sharing
-          </span>
-        </span>
-      </a>
-
-      <!-- Desktop Navigation -->
-      <nav
-        id="main-nav"
-        data-tour-step="welcome-nav"
-        class="hidden lg:flex items-center gap-3 xl:gap-4 ml-8"
-        role="navigation"
-        aria-label="Principal"
-      >
-        <a
-          routerLink="/cars"
-          routerLinkActive="nav-link-active"
-          [routerLinkActiveOptions]="{ exact: false }"
-          class="nav-link nav-link-primary"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="m21 21-4.35-4.35m1.35-4.65a6 6 0 1 1-12 0 6 6 0 0 1 12 0z"
+              d="M4 6h16M4 12h16M4 18h16"
             />
           </svg>
-          <span>{{ 'nav.cars' | translate }}</span>
-        </a>
+        </button>
+
+        <!-- Logo -->
         <a
-          *ngIf="isAuthenticatedSig()"
-          routerLink="/cars/publish"
-          routerLinkActive="nav-link-active"
-          class="nav-link"
+          routerLink="/"
+          data-tour-step="welcome-hero"
+          class="group flex items-center gap-3 hover:opacity-100 transition-base"
         >
-          {{ 'nav.publish' | translate }}
+          <img
+            ngSrc="/assets/images/autorentar-logo.png"
+            alt="Autorentar"
+            width="500"
+            height="500"
+            priority
+            class="h-12 md:h-14 w-auto object-contain drop-shadow-lg transition-transform duration-200 group-hover:scale-[1.04] dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] dark:brightness-0 dark:invert"
+          />
+          <span class="flex flex-col leading-tight">
+            <span
+              class="text-[1.05rem] font-semibold text-text-primary dark:text-white group-hover:text-cta-default dark:group-hover:text-cyan-400 transition-colors"
+            >
+              Autorentar
+            </span>
+            <span
+              class="text-[0.68rem] uppercase tracking-[0.22em] text-text-muted dark:text-gray-300"
+            >
+              Car Sharing
+            </span>
+          </span>
         </a>
-        <a
-          *ngIf="isAuthenticatedSig()"
-          routerLink="/bookings"
-          routerLinkActive="nav-link-active"
-          class="nav-link"
+
+        <!-- Desktop Navigation -->
+        <nav
+          id="main-nav"
+          data-tour-step="welcome-nav"
+          class="hidden lg:flex items-center gap-3 xl:gap-4 ml-2 xl:ml-6"
+          role="navigation"
+          aria-label="Principal"
         >
-          {{ 'nav.bookings' | translate }}
-        </a>
-        <a
-          *ngIf="isAuthenticatedSig()"
-          routerLink="/wallet"
-          routerLinkActive="nav-link-active"
-          class="nav-link"
-        >
-          {{ 'nav.wallet' | translate }}
-        </a>
-      </nav>
+          <a
+            routerLink="/cars"
+            routerLinkActive="nav-link-active"
+            [routerLinkActiveOptions]="{ exact: false }"
+            class="nav-link nav-link-primary"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m21 21-4.35-4.35m1.35-4.65a6 6 0 1 1-12 0 6 6 0 0 1 12 0z"
+              />
+            </svg>
+            <span>{{ 'nav.cars' | translate }}</span>
+          </a>
+          <a
+            routerLink="/cars/publish"
+            routerLinkActive="nav-link-active"
+            class="nav-link nav-link-highlight"
+          >
+            Publicar auto
+          </a>
+          <a
+            *ngIf="isAuthenticatedSig()"
+            routerLink="/bookings"
+            routerLinkActive="nav-link-active"
+            class="nav-link"
+          >
+            {{ 'nav.bookings' | translate }}
+          </a>
+          <a
+            *ngIf="isAuthenticatedSig()"
+            routerLink="/wallet"
+            routerLinkActive="nav-link-active"
+            class="nav-link"
+          >
+            {{ 'nav.wallet' | translate }}
+          </a>
+        </nav>
+      </div>
 
       <!-- Actions -->
       <div class="ml-auto flex items-center gap-3 lg:gap-4">
@@ -199,7 +202,6 @@
         >
           {{ 'auth.login.button' | translate }}
         </a>
-
         <!-- Profile Menu Dropdown -->
         <div *ngIf="isAuthenticatedSig()" class="relative" data-profile-button>
           <button
