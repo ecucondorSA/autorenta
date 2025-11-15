@@ -72,7 +72,7 @@
 
 ### 4. Componentes Legacy sin uso
 
-#### Según `docs/guides/features/BOOKING_SYSTEM_PANORAMA_AUDIT.md`:
+#### Según `docs/archived/old/audits/BOOKING_SYSTEM_PANORAMA_AUDIT.md` (archivado):
 
 - ❌ `card-hold-panel.component.ts` → Reemplazar con `checkout` components
 - ❌ `credit-security-panel.component.ts` → Reemplazar con `checkout` components

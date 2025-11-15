@@ -24,8 +24,11 @@
 
 ### 🏗️ Roadmap de Producción
 
-- **[Resumen Ejecutivo](./production-roadmap/00-RESUMEN-EJECUTIVO.md)** - Estado general
-- **[Fases de Implementación](./production-roadmap/)** - Fases 1-7 del roadmap
+- **[Estado Actual](./production-roadmap/README.md)** - 67% production-ready, 2-3 semanas para lanzamiento
+- **[Checklist de Producción](./production-roadmap/07-CHECKLIST-PRODUCCION.md)** - Lista de verificación completa
+- **[Análisis de Código Real](./analysis/CODE_VS_DOCUMENTATION_ANALYSIS.md)** - Comparación código vs documentación
+- **[Estado de Producción Real](./analysis/PRODUCTION_READINESS_REAL_STATUS.md)** - Análisis detallado de progreso
+- **[Roadmap Archivado (Oct 2025)](./archived/old/production-roadmap/)** - Documentación obsoleta (40% vs 67% real)
 
 ### 📋 Especificaciones Técnicas
 
@@ -84,8 +87,9 @@
 
 ### Para Management
 
-1. **Estado**: [Roadmap de Producción](./production-roadmap/00-RESUMEN-EJECUTIVO.md)
-2. **Contabilidad**: [Política Contable](./accounting/POLITICA_CONTABLE_AUTORENTA.md)
+1. **Estado**: [Production Roadmap](./production-roadmap/README.md) - 67% completo, 2-3 semanas para lanzamiento
+2. **Análisis Técnico**: [Estado Real de Producción](./analysis/PRODUCTION_READINESS_REAL_STATUS.md)
+3. **Contabilidad**: [Política Contable](./accounting/POLITICA_CONTABLE_AUTORENTA.md)
 
 ---
 
