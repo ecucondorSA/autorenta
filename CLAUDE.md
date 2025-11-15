@@ -131,7 +131,13 @@ autorenta/
     src/app/
       core/                      # Services, guards, interceptors
       features/                  # Feature modules (lazy-loaded)
-      shared/                    # Shared components
+        home-v2/                 # V2 modern home page
+        v2-preview/              # V2 UI showcase
+      shared/
+        components/              # Shared components (v1)
+        components-v2/           # V2 UI component library
+          layout/                # Bottom nav, sidebar, FAB
+          ui/                    # Buttons, cards, inputs, etc.
   functions/workers/             # Cloudflare Workers
     payments_webhook/            # Mock payment webhook (dev only)
     ai-car-generator/            # AI car generator
@@ -143,6 +149,7 @@ autorenta/
   docs/                          # Documentation
     runbooks/                    # Operational runbooks
     guides/                      # Feature guides
+    testing/                     # Testing plans & reports
   tools/                         # CLI tools y scripts
 ```
 
@@ -202,6 +209,19 @@ autorenta/
 
 **Guía de Storage**: [CLAUDE_STORAGE.md](./CLAUDE_STORAGE.md)
 
+### 6. V2 UI Component Library (NEW)
+- **Modern Mobile-First Design**: WhatsApp/Facebook-inspired components
+- **Layout Components**: Bottom nav with badges, sidebar, floating action button (FAB)
+- **UI Components**: Professional buttons, cards, inputs with animations
+- **Design System**: Brand colors (azul celeste, marfil, neutros)
+- **Location**: `apps/web/src/app/shared/components-v2/`
+- **Preview**: `/v2-preview` route to see all components
+
+**V2 Features**:
+- Home V2: Hero swiper, quick search, featured cars
+- Messages: WhatsApp-style inbox with real-time updates
+- Toast notifications: Professional feedback system
+
 ## Common Commands Reference
 
 ### Development
@@ -216,7 +236,10 @@ npm run dev:worker       # Solo payment webhook
 npm run test             # All tests
 npm run test:quick       # Quick tests (no coverage)
 npm run test:e2e         # Playwright E2E tests
+npm run test:e2e:ui      # E2E with UI mode
 ```
+
+**E2E Test Plan**: [docs/testing/TESTING_PLAN.md](./docs/testing/TESTING_PLAN.md) - 54 tests para journey completo
 
 ### Building & Deployment
 ```bash
@@ -565,20 +588,38 @@ npm run status
 cat docs/runbooks/troubleshooting.md
 ```
 
+## Recent Changes (2025-11-06 → 2025-11-15)
+
+### V2 UI System
+- **Complete UI Library**: 10+ new components in `shared/components-v2/`
+- **Home V2**: Modern mobile-first landing with hero swiper, quick search, featured cars carousel
+- **Mobile Bottom Nav**: Professional animations, real-time unread badges, gesture support
+- **Facebook-style Sidebar**: 6-button navigation + dashboard access
+- **Brand Colors**: Azul celeste, marfil, neutros aplicados consistentemente
+
+### Messaging & Communication
+- **WhatsApp-style Inbox**: Professional animations, typing indicators, read receipts
+- **Real-time Unread Counts**: Integrated with bottom nav badges
+- **File Upload FAB**: Documents, photos, camera support via Supabase Storage
+- **Toast Notifications**: Replaced browser alerts with professional toasts
+
+### Testing & Quality
+- **E2E Test Plan**: Comprehensive 54-test suite for complete renter journey
+- **TypeScript Compilation**: Fixed critical compilation errors
+- **Linting**: Resolved 8 files with critical linting errors
+- **Repository Cleanup**: Removed 80+ temporary files
+
+### See Full Changelog
+```bash
+git log --oneline --since="2025-11-06" -20
+```
+
 ## Last Updated
 
-- **Date**: 2025-11-06
-- **Version**: v1.0 (modularizado)
-- **Changelog**: Dividido en archivos específicos para mejor performance de Claude Code
+- **Date**: 2025-11-15
+- **Version**: v1.1 (V2 UI + messaging features)
+- **Changelog**: Added V2 UI system, WhatsApp-style messaging, E2E test plan
 
 ---
 
-**Nota**: Este archivo es ahora ~8k caracteres (vs 41k original), mejorando significativamente el performance de Claude Code. Para información detallada, consulta los archivos modulares correspondientes.
-- ultrathink     Ejecutar el test
-npx playwright test tests/e2e/complete-porsche-publication-flow.spec.ts
-
-# Con UI (recomendad
-- ehecutar el comando  ultrathink     Ejecutar el test
-npx playwright test tests/e2e/complete-porsche-publication-flow.spec.ts
-
-# Con UI (recomendad
+**Nota**: Este archivo es ahora ~9k caracteres (vs 41k original), mejorando significativamente el performance de Claude Code. Para información detallada, consulta los archivos modulares correspondientes.
