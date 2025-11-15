@@ -232,11 +232,7 @@ export class UnreadMessagesService {
       const carId = message.car_id;
       if (carId && type === 'car') {
         // Mostrar notificación de forma asíncrona sin bloquear
-        this.showCarMessageNotification(
-          carId,
-          message.sender_id,
-          message.body,
-        ).catch(() => {
+        this.showCarMessageNotification(carId, message.sender_id, message.body).catch(() => {
           // Silently fail - notification is optional enhancement
         });
       }

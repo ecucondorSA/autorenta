@@ -605,7 +605,7 @@ export class WizardComponent {
    */
   handleCancel(): void {
     if (this.isProcessing()) return;
-  this.cancelRequested.emit();
+    this.cancelRequested.emit();
   }
 
   /**
@@ -615,6 +615,6 @@ export class WizardComponent {
     if (!this.canComplete()) return;
     if (this.isProcessing()) return;
 
-  this.completed.emit();
+    this.completed.emit();
   }
 }

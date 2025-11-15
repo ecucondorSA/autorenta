@@ -5,11 +5,11 @@ import { FormsModule } from '@angular/forms';
 /**
  * Input Component V2
  * Mobile-optimized form input with validation states
- * 
+ *
  * Types:
  * - text, email, password, tel, url, number, search
  * - textarea for multi-line
- * 
+ *
  * Features:
  * - Label with optional indicator
  * - Helper text
@@ -83,7 +83,7 @@ import { FormsModule } from '@angular/forms';
             aria-label="Limpiar"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round"/>
+              <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round" />
             </svg>
           </button>
         } @else if (iconTrailing()) {
@@ -102,161 +102,163 @@ import { FormsModule } from '@angular/forms';
         }
 
         @if (maxLength() && showCounter()) {
-          <span class="char-counter">
-            {{ internalValue().length }} / {{ maxLength() }}
-          </span>
+          <span class="char-counter"> {{ internalValue().length }} / {{ maxLength() }} </span>
         }
       </div>
     </div>
   `,
-  styles: [`
-    .input-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+  styles: [
+    `
+      .input-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
 
-    .label {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #374151;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
+      .label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
 
-    .required {
-      color: #EF4444;
-    }
+      .required {
+        color: #ef4444;
+      }
 
-    .input-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-      background: white;
-      border: 2px solid #E5E7EB;
-      border-radius: 12px;
-      transition: all 0.2s ease;
-    }
+      .input-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+      }
 
-    .input-container:focus-within {
-      border-color: #4F46E5;
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    }
+      .input-container:focus-within {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
 
-    .input-wrapper.has-error .input-container {
-      border-color: #EF4444;
-    }
+      .input-wrapper.has-error .input-container {
+        border-color: #ef4444;
+      }
 
-    .input-wrapper.has-error .input-container:focus-within {
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-    }
+      .input-wrapper.has-error .input-container:focus-within {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      }
 
-    .input-wrapper.is-success .input-container {
-      border-color: #10B981;
-    }
+      .input-wrapper.is-success .input-container {
+        border-color: #10b981;
+      }
 
-    .input-wrapper.is-disabled .input-container {
-      background: #F9FAFB;
-      opacity: 0.6;
-    }
+      .input-wrapper.is-disabled .input-container {
+        background: #f9fafb;
+        opacity: 0.6;
+      }
 
-    .input-field {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      font-family: inherit;
-      color: #1F2937;
-      background: transparent;
-      border: none;
-      outline: none;
-      min-height: 44px;
-    }
+      .input-field {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        font-family: inherit;
+        color: #1f2937;
+        background: transparent;
+        border: none;
+        outline: none;
+        min-height: 44px;
+      }
 
-    .input-field::placeholder {
-      color: #9CA3AF;
-    }
+      .input-field::placeholder {
+        color: #9ca3af;
+      }
 
-    .textarea-field {
-      resize: vertical;
-      min-height: 88px;
-      line-height: 1.5;
-    }
+      .textarea-field {
+        resize: vertical;
+        min-height: 88px;
+        line-height: 1.5;
+      }
 
-    .icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      color: #6B7280;
-    }
+      .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        color: #6b7280;
+      }
 
-    .icon-leading {
-      margin-left: 1rem;
-    }
+      .icon-leading {
+        margin-left: 1rem;
+      }
 
-    .icon-trailing {
-      margin-right: 1rem;
-    }
+      .icon-trailing {
+        margin-right: 1rem;
+      }
 
-    .clear-btn {
-      background: transparent;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      transition: color 0.2s ease;
-    }
+      .clear-btn {
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        transition: color 0.2s ease;
+      }
 
-    .clear-btn:hover {
-      color: #EF4444;
-    }
+      .clear-btn:hover {
+        color: #ef4444;
+      }
 
-    .icon :global(svg) {
-      width: 100%;
-      height: 100%;
-    }
+      .icon :global(svg) {
+        width: 100%;
+        height: 100%;
+      }
 
-    .footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      min-height: 1.25rem;
-      font-size: 0.875rem;
-    }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 1.25rem;
+        font-size: 0.875rem;
+      }
 
-    .helper-text {
-      color: #6B7280;
-    }
+      .helper-text {
+        color: #6b7280;
+      }
 
-    .error-text {
-      color: #EF4444;
-      font-weight: 500;
-    }
+      .error-text {
+        color: #ef4444;
+        font-weight: 500;
+      }
 
-    .char-counter {
-      color: #9CA3AF;
-      margin-left: auto;
-    }
+      .char-counter {
+        color: #9ca3af;
+        margin-left: auto;
+      }
 
-    /* Size variants */
-    .input-sm .input-field {
-      padding: 0.5rem 0.75rem;
-      font-size: 0.875rem;
-      min-height: 36px;
-    }
+      /* Size variants */
+      .input-sm .input-field {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        min-height: 36px;
+      }
 
-    .input-lg .input-field {
-      padding: 1rem 1.25rem;
-      font-size: 1.125rem;
-      min-height: 52px;
-    }
-  `]
+      .input-lg .input-field {
+        padding: 1rem 1.25rem;
+        font-size: 1.125rem;
+        min-height: 52px;
+      }
+    `,
+  ],
 })
 export class InputComponent {
   // Props
   inputId = input<string>(`input-${Math.random().toString(36).substr(2, 9)}`);
-  type = input<'text' | 'email' | 'password' | 'tel' | 'url' | 'number' | 'search' | 'textarea'>('text');
+  type = input<'text' | 'email' | 'password' | 'tel' | 'url' | 'number' | 'search' | 'textarea'>(
+    'text',
+  );
   label = input<string | null>(null);
   placeholder = input<string>('');
   helperText = input<string | null>(null);
@@ -296,10 +298,7 @@ export class InputComponent {
   }
 
   wrapperClasses(): string {
-    const classes = [
-      'input-wrapper',
-      `input-${this.size()}`,
-    ];
+    const classes = ['input-wrapper', `input-${this.size()}`];
 
     if (this.error()) classes.push('has-error');
     if (this.success()) classes.push('is-success');

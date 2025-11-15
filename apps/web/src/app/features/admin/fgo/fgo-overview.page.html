@@ -147,7 +147,10 @@
       <p>Cargando movimientos...</p>
     </div>
 
-    <div *ngIf="!loadingMovements && recentMovements.length > 0" class="movements-table-container overflow-x-auto">
+    <div
+      *ngIf="!loadingMovements && recentMovements.length > 0"
+      class="movements-table-container overflow-x-auto"
+    >
       <table class="movements-table min-w-full">
         <thead>
           <tr>

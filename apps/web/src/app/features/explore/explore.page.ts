@@ -117,19 +117,19 @@ export class ExplorePage implements OnInit, AfterViewInit, OnDestroy {
     this.isMobileView = this.breakpoint.isMobile;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadCars();
     this.getUserLocation();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (this.mapContainer?.nativeElement) {
-      // Initialize map after view is ready
+      // Aquí podría inicializarse lógica adicional de mapa si se requiere.
     }
   }
 
-  ngOnDestroy() {
-    // No cleanup needed - BreakpointService maneja los listeners
+  ngOnDestroy(): void {
+    // Punto único para liberar recursos ligados a ExplorePage en el futuro.
   }
 
   async loadCars() {

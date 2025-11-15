@@ -1,0 +1,113 @@
+name: Auto Task Bootstrap
+
+on:
+  issues:
+    types:
+      - labeled
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  prepare-auto-task:
+    if: github.event.label.name == 'auto-task'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git user
+        run: |
+          git config user.name "autorenta-bot"
+          git config user.email "bot@autorenta.local"
+
+      - name: Prepare branch and task brief
+        id: prepare
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          BASE_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          BRANCH="auto/issue-${ISSUE_NUMBER}"
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          git checkout "$BASE_BRANCH"
+          git pull origin "$BASE_BRANCH"
+          if git show-ref --quiet "refs/heads/$BRANCH"; then
+            git switch "$BRANCH"
+          else
+            git checkout -b "$BRANCH"
+          fi
+
+          mkdir -p tasks
+          FILE="tasks/ISSUE-${ISSUE_NUMBER}.md"
+          cat <<EOF > "$FILE"
+          # Auto Task #${ISSUE_NUMBER} - ${ISSUE_TITLE}
+
+          > Issue: #${ISSUE_NUMBER}
+          > Creado automáticamente el $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          ## Resumen
+          Consulta el issue original para el detalle completo:
+
+          ${ISSUE_BODY}
+
+          ## Checklist inicial
+          - [ ] Confirmar alcance con dueño responsable
+          - [ ] Implementar cambios en esta rama (${BRANCH})
+          - [ ] Ejecutar las pruebas declaradas en el issue
+          - [ ] Actualizar este archivo con notas relevantes antes de pedir revisión humana
+          EOF
+
+          git add "$FILE"
+          if git status --short | grep -q .; then
+            git commit -m "chore(auto-task): inicializa ISSUE-${ISSUE_NUMBER}"
+            git push origin "$BRANCH"
+          else
+            echo "Sin cambios nuevos"
+          fi
+
+      - name: Create or update draft PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ steps.prepare.outputs.branch }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          BASE_BRANCH: ${{ github.event.repository.default_branch }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh auth status || gh auth login --with-token <<< "$GH_TOKEN"
+          PR_BODY=$(cat <<EOF
+          ## 🤖 Auto Task bootstrap
+          - Issue: #${ISSUE_NUMBER}
+          - Rama: \\
+            `${BRANCH}`
+          - Checklist inicial en `tasks/ISSUE-${ISSUE_NUMBER}.md`
+
+          > Este PR es *draft* hasta que un humano valide el resultado y quite la etiqueta `needs-scope`.
+          EOF
+          )
+          # Intenta obtener PR existente
+          if gh pr view "$BRANCH" >/dev/null 2>&1; then
+            gh pr edit "$BRANCH" --body "$PR_BODY"
+          else
+            gh pr create \
+              --base "$BASE_BRANCH" \
+              --head "$BRANCH" \
+              --title "[auto] ${ISSUE_TITLE}" \
+              --body "$PR_BODY" \
+              --draft
+          fi
+
+      - name: Comentar en el issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          BRANCH: ${{ steps.prepare.outputs.branch }}
+        run: |
+          gh auth status || gh auth login --with-token <<< "$GH_TOKEN"
+          gh issue comment "$ISSUE_NUMBER" --body "🚀 Auto Task iniciado. Rama: \`${BRANCH}\`. Se abrió/actualizó el PR correspondiente."

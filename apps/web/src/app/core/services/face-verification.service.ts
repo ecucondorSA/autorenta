@@ -164,12 +164,10 @@ export class FaceVerificationService {
       // Upload to identity-documents bucket (or documents bucket if identity-documents doesn't exist)
       const bucketName = 'identity-documents'; // Fallback to 'documents' if needed
 
-      const { error } = await this.supabase.storage
-        .from(bucketName)
-        .upload(filePath, videoFile, {
-          cacheControl: '3600',
-          upsert: false,
-        });
+      const { error } = await this.supabase.storage.from(bucketName).upload(filePath, videoFile, {
+        cacheControl: '3600',
+        upsert: false,
+      });
 
       if (error) {
         // Fallback to documents bucket

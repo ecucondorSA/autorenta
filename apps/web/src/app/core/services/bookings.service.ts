@@ -918,6 +918,6 @@ export class BookingsService {
   }
 
   private getBookingPricePerDay(booking: BookingWithMetadata): number {
-    return typeof booking.price_per_day === 'number' ? booking.price_per_day ?? 0 : 0;
+    return typeof booking.price_per_day === 'number' ? (booking.price_per_day ?? 0) : 0;
   }
 }

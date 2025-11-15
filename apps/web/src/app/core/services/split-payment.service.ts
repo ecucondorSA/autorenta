@@ -188,17 +188,8 @@ export class SplitPaymentService {
   }> {
     return from(
       Promise.all([
-        this.supabase
-          .getClient()
-          .from('payments')
-          .select('*')
-          .eq('id', paymentId)
-          .single(),
-        this.supabase
-          .getClient()
-          .from('payment_splits')
-          .select('*')
-          .eq('payment_id', paymentId),
+        this.supabase.getClient().from('payments').select('*').eq('id', paymentId).single(),
+        this.supabase.getClient().from('payment_splits').select('*').eq('payment_id', paymentId),
       ]),
     ).pipe(
       map(([paymentResponse, splitsResponse]) => {

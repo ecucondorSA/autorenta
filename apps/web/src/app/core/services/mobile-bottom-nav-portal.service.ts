@@ -1,4 +1,10 @@
-import { ApplicationRef, EnvironmentInjector, Injectable, createComponent, ComponentRef } from '@angular/core';
+import {
+  ApplicationRef,
+  EnvironmentInjector,
+  Injectable,
+  createComponent,
+  ComponentRef,
+} from '@angular/core';
 import { MobileBottomNavComponent } from '../../shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
 
 @Injectable({ providedIn: 'root' })

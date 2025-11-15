@@ -216,146 +216,146 @@
             <thead class="bg-surface-base">
               <tr>
                 <th
-                class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
-              >
-                Usuario
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
-              >
-                Tipo
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
-              >
-                Fecha Envío
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
-              >
-                AI Score
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
-              >
-                Estado
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
-              >
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-surface-raised divide-y divide-gray-200">
-            @for (verification of verifications(); track verification.user_id) {
-              <tr class="hover:bg-surface-base transition-colors">
-                <!-- User -->
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <div>
-                      <div class="text-sm font-medium text-text-primary">
-                        {{ verification.full_name }}
-                      </div>
-                      <div class="text-sm text-text-secondary">
-                        {{ verification.email }}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-
-                <!-- Type -->
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span
-                    class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
-                    [ngClass]="{
-                      'bg-cta-default/20 text-cta-default':
-                        getVerificationLevel(verification) === 2,
-                      'bg-purple-100 text-purple-800': getVerificationLevel(verification) === 3,
-                    }"
-                  >
-                    {{ getVerificationLevelName(verification) }}
-                  </span>
-                  @if (isSuspicious(verification)) {
-                    <span
-                      class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-error-bg-hover text-error-strong"
-                    >
-                      🚩 Sospechoso
-                    </span>
-                  }
-                  @if (needsAdditionalDocs(verification)) {
-                    <span
-                      class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-warning-bg-hover text-warning-strong"
-                    >
-                      📄 Docs Requeridos
-                    </span>
-                  }
-                </td>
-
-                <!-- Date -->
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
-                  {{ formatDate(verification.updated_at) }}
-                </td>
-
-                <!-- AI Score -->
-                <td class="px-6 py-4 whitespace-nowrap">
-                  @if (verification.document_ai_score !== undefined) {
-                    <span
-                      class="text-sm font-medium"
-                      [ngClass]="getScoreColor(verification.document_ai_score)"
-                    >
-                      📄 {{ getScoreBadge(verification.document_ai_score) }}
-                    </span>
-                  }
-                  @if (verification.face_match_score !== undefined) {
-                    <div
-                      class="text-sm font-medium"
-                      [ngClass]="getScoreColor(verification.face_match_score)"
-                    >
-                      🤳 {{ getScoreBadge(verification.face_match_score) }}
-                    </div>
-                  }
-                  @if (!verification.document_ai_score && !verification.face_match_score) {
-                    <span class="text-sm text-text-muted">N/A</span>
-                  }
-                </td>
-
-                <!-- Status -->
-                <td class="px-6 py-4 whitespace-nowrap">
-                  @if (verification.manual_review_decision === 'APPROVED') {
-                    <span
-                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-success-light/20 text-success-light"
-                    >
-                      ✅ Aprobada
-                    </span>
-                  } @else if (verification.manual_review_decision === 'REJECTED') {
-                    <span
-                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-error-bg-hover text-error-strong"
-                    >
-                      ❌ Rechazada
-                    </span>
-                  } @else {
-                    <span
-                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-warning-bg-hover text-warning-strong"
-                    >
-                      ⏳ Pendiente
-                    </span>
-                  }
-                </td>
-
-                <!-- Actions -->
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button
-                    (click)="selectVerification(verification)"
-                    class="text-cta-default hover:text-cta-default transition-colors"
-                  >
-                    Ver Detalles
-                  </button>
-                </td>
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  Usuario
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  Tipo
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  Fecha Envío
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  AI Score
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  Estado
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  Acciones
+                </th>
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody class="bg-surface-raised divide-y divide-gray-200">
+              @for (verification of verifications(); track verification.user_id) {
+                <tr class="hover:bg-surface-base transition-colors">
+                  <!-- User -->
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div>
+                        <div class="text-sm font-medium text-text-primary">
+                          {{ verification.full_name }}
+                        </div>
+                        <div class="text-sm text-text-secondary">
+                          {{ verification.email }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Type -->
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                      [ngClass]="{
+                        'bg-cta-default/20 text-cta-default':
+                          getVerificationLevel(verification) === 2,
+                        'bg-purple-100 text-purple-800': getVerificationLevel(verification) === 3,
+                      }"
+                    >
+                      {{ getVerificationLevelName(verification) }}
+                    </span>
+                    @if (isSuspicious(verification)) {
+                      <span
+                        class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-error-bg-hover text-error-strong"
+                      >
+                        🚩 Sospechoso
+                      </span>
+                    }
+                    @if (needsAdditionalDocs(verification)) {
+                      <span
+                        class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-warning-bg-hover text-warning-strong"
+                      >
+                        📄 Docs Requeridos
+                      </span>
+                    }
+                  </td>
+
+                  <!-- Date -->
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
+                    {{ formatDate(verification.updated_at) }}
+                  </td>
+
+                  <!-- AI Score -->
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    @if (verification.document_ai_score !== undefined) {
+                      <span
+                        class="text-sm font-medium"
+                        [ngClass]="getScoreColor(verification.document_ai_score)"
+                      >
+                        📄 {{ getScoreBadge(verification.document_ai_score) }}
+                      </span>
+                    }
+                    @if (verification.face_match_score !== undefined) {
+                      <div
+                        class="text-sm font-medium"
+                        [ngClass]="getScoreColor(verification.face_match_score)"
+                      >
+                        🤳 {{ getScoreBadge(verification.face_match_score) }}
+                      </div>
+                    }
+                    @if (!verification.document_ai_score && !verification.face_match_score) {
+                      <span class="text-sm text-text-muted">N/A</span>
+                    }
+                  </td>
+
+                  <!-- Status -->
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    @if (verification.manual_review_decision === 'APPROVED') {
+                      <span
+                        class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-success-light/20 text-success-light"
+                      >
+                        ✅ Aprobada
+                      </span>
+                    } @else if (verification.manual_review_decision === 'REJECTED') {
+                      <span
+                        class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-error-bg-hover text-error-strong"
+                      >
+                        ❌ Rechazada
+                      </span>
+                    } @else {
+                      <span
+                        class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-warning-bg-hover text-warning-strong"
+                      >
+                        ⏳ Pendiente
+                      </span>
+                    }
+                  </td>
+
+                  <!-- Actions -->
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button
+                      (click)="selectVerification(verification)"
+                      class="text-cta-default hover:text-cta-default transition-colors"
+                    >
+                      Ver Detalles
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
         </div>
 
         <!-- Load More Button -->

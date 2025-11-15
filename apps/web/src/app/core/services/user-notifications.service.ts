@@ -253,7 +253,7 @@ export class NotificationsService implements OnDestroy {
       title: notification.title,
       message: notification.body,
       type: this.mapNotificationType(notification.type),
-      read: preserveReadState ? notification.is_read ?? false : false,
+      read: preserveReadState ? (notification.is_read ?? false) : false,
       createdAt: new Date(notification.created_at),
       actionUrl: notification.cta_link ?? undefined,
       actionText: 'Ver detalles',
@@ -261,9 +261,7 @@ export class NotificationsService implements OnDestroy {
     };
   }
 
-  private mapNotificationWithDbType(
-    notification: NotificationRow,
-  ): NotificationListItem {
+  private mapNotificationWithDbType(notification: NotificationRow): NotificationListItem {
     return {
       ...this.mapNotification(notification),
       dbType: notification.type,

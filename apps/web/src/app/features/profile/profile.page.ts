@@ -61,12 +61,7 @@ const DOC_DEEP_LINKS: Record<
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    CalendarManagementComponent,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, CalendarManagementComponent],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -151,20 +146,18 @@ export class ProfilePage implements OnInit {
 
   ngOnInit(): void {
     // Handle document prefill from query params
-    this.route.queryParamMap
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        const docId = params.get('doc');
-        if (docId) {
-          this.handleDocPrefill(docId);
-          void this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { doc: null },
-            queryParamsHandling: 'merge',
-            replaceUrl: true,
-          });
-        }
-      });
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const docId = params.get('doc');
+      if (docId) {
+        this.handleDocPrefill(docId);
+        void this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { doc: null },
+          queryParamsHandling: 'merge',
+          replaceUrl: true,
+        });
+      }
+    });
 
     void this.loadProfile();
     void this.checkCalendarConnection();
@@ -179,17 +172,17 @@ export class ProfilePage implements OnInit {
       if (params['calendar_connected'] === 'true') {
         this.calendarSuccessMessage.set(true);
         this.message.set('✅ Google Calendar conectado exitosamente');
-        
+
         // Refresh calendar connection status
         void this.checkCalendarConnection();
-        
+
         // Clear the query parameter from URL
         void this.router.navigate([], {
           relativeTo: this.route,
           queryParams: {},
           queryParamsHandling: 'merge',
         });
-        
+
         // Clear message after 5 seconds
         setTimeout(() => {
           this.calendarSuccessMessage.set(false);

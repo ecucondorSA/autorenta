@@ -16,7 +16,7 @@
               : 'Saludable'
         }}</small>
       </div>
-  <button type="button" class="kpi-action" (click)="walletClick.emit()" routerLink="/wallet">
+      <button type="button" class="kpi-action" (click)="walletClick.emit()" routerLink="/wallet">
         Gestionar
       </button>
     </header>
@@ -45,7 +45,7 @@
       <button
         type="button"
         class="kpi-action"
-  (click)="bookingsClick.emit()"
+        (click)="bookingsClick.emit()"
         routerLink="/bookings"
       >
         Ver agenda
@@ -79,7 +79,7 @@
           carsStatus() === 'high' ? 'Flota destacada' : 'Puedes sumar más unidades'
         }}</small>
       </div>
-  <button type="button" class="kpi-action" (click)="carsClick.emit()" routerLink="/cars/mine">
+      <button type="button" class="kpi-action" (click)="carsClick.emit()" routerLink="/cars/mine">
         Gestionar
       </button>
     </header>
@@ -102,7 +102,7 @@
           reviewsStatus() === 'none' ? 'Aún sin reseñas' : 'Reputación en crecimiento'
         }}</small>
       </div>
-  <button type="button" class="kpi-action" (click)="reviewsClick.emit()">Ver feedback</button>
+      <button type="button" class="kpi-action" (click)="reviewsClick.emit()">Ver feedback</button>
     </header>
     <div class="kpi-body">
       <div class="kpi-value">{{ reviewsCount() }}</div>

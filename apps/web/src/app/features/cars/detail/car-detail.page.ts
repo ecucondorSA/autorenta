@@ -512,7 +512,7 @@ export class CarDetailPage implements OnInit {
         this.expressMode.set(true);
         void this.setupExpressMode();
       }
-      
+
       // ✅ NEW: Check if returning from calendar connection
       if (params['calendar_connected'] === 'true') {
         // Refresh calendar data after a short delay to allow backend processing

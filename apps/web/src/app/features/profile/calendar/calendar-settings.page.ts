@@ -190,9 +190,7 @@ interface CarCalendarInfo {
                         </div>
 
                         <div class="text-xs text-text-muted space-y-1">
-                          <p>
-                            <strong>Nombre:</strong> {{ car.calendarName }}
-                          </p>
+                          <p><strong>Nombre:</strong> {{ car.calendarName }}</p>
                           <p>
                             <strong>ID:</strong>
                             <code
@@ -201,7 +199,10 @@ interface CarCalendarInfo {
                             >
                           </p>
                           @if (car.lastSynced) {
-                            <p><strong>Última sincronización:</strong> {{ formatDate(car.lastSynced) }}</p>
+                            <p>
+                              <strong>Última sincronización:</strong>
+                              {{ formatDate(car.lastSynced) }}
+                            </p>
                           }
                         </div>
                       </div>
@@ -220,9 +221,7 @@ interface CarCalendarInfo {
                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                           />
                         </svg>
-                        <span class="text-sm text-amber-600">
-                          Calendario no configurado aún
-                        </span>
+                        <span class="text-sm text-amber-600"> Calendario no configurado aún </span>
                       </div>
                     }
                   </div>
@@ -274,7 +273,11 @@ interface CarCalendarInfo {
           </h3>
           <ul class="space-y-2 text-sm text-blue-800 dark:text-blue-400">
             <li class="flex items-start">
-              <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -286,7 +289,11 @@ interface CarCalendarInfo {
               </span>
             </li>
             <li class="flex items-start">
-              <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -296,7 +303,11 @@ interface CarCalendarInfo {
               <span>Las reservas se sincronizan automáticamente cuando son confirmadas</span>
             </li>
             <li class="flex items-start">
-              <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -306,7 +317,11 @@ interface CarCalendarInfo {
               <span>Los calendarios son públicos para que los usuarios vean tu disponibilidad</span>
             </li>
             <li class="flex items-start">
-              <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -402,7 +417,7 @@ export class CalendarSettingsPage implements OnInit {
 
       this.notificationService.success(
         'Calendario conectado',
-        'Google Calendar se ha conectado exitosamente. Cargando calendarios...'
+        'Google Calendar se ha conectado exitosamente. Cargando calendarios...',
       );
 
       // Wait a bit for backend to create calendars
@@ -414,13 +429,13 @@ export class CalendarSettingsPage implements OnInit {
 
       this.notificationService.success(
         'Calendarios creados',
-        'Los calendarios de tus autos están listos y visibles en las páginas de detalle.'
+        'Los calendarios de tus autos están listos y visibles en las páginas de detalle.',
       );
     } catch (error) {
       console.error('Error connecting calendar:', error);
       this.notificationService.error(
         'Error al conectar',
-        'No se pudo conectar Google Calendar. Intenta nuevamente.'
+        'No se pudo conectar Google Calendar. Intenta nuevamente.',
       );
     } finally {
       this.loading.set(false);
@@ -442,13 +457,13 @@ export class CalendarSettingsPage implements OnInit {
 
       this.notificationService.success(
         'Calendario desconectado',
-        'Google Calendar ha sido desconectado exitosamente'
+        'Google Calendar ha sido desconectado exitosamente',
       );
     } catch (error) {
       console.error('Error disconnecting calendar:', error);
       this.notificationService.error(
         'Error al desconectar',
-        'No se pudo desconectar Google Calendar. Intenta nuevamente.'
+        'No se pudo desconectar Google Calendar. Intenta nuevamente.',
       );
     } finally {
       this.loading.set(false);

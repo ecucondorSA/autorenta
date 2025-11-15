@@ -463,12 +463,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         console.error('[CarsMap] Map error:', event);
 
         const errorStatus =
-          (event.error && 'status' in event.error ? event.error.status : undefined) ??
-          event.status;
+          (event.error && 'status' in event.error ? event.error.status : undefined) ?? event.status;
         const errorMessage =
           (event.error && event.error.message) || ('message' in event ? event.message : '');
 
-        if (errorStatus === 401 || (typeof errorMessage === 'string' && errorMessage.includes('401'))) {
+        if (
+          errorStatus === 401 ||
+          (typeof errorMessage === 'string' && errorMessage.includes('401'))
+        ) {
           this.error.set(
             'Token de Mapbox inválido o expirado. Por favor, verifica tu NG_APP_MAPBOX_ACCESS_TOKEN en .env.local',
           );
@@ -518,9 +520,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }));
 
     // Add source with Mapbox-recommended optimizations
-    const existingClusterSource = this.map.getSource(
-      this.clusterSourceId,
-    ) as MapboxGeoJSONSource | undefined;
+    const existingClusterSource = this.map.getSource(this.clusterSourceId) as
+      | MapboxGeoJSONSource
+      | undefined;
 
     if (existingClusterSource) {
       existingClusterSource.setData({

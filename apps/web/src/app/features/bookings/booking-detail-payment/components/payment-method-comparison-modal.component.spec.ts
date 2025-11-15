@@ -80,7 +80,7 @@ describe('PaymentMethodComparisonModalComponent - Escenario 4', () => {
 
     it('debería emitir evento close cuando se hace click en el botón cerrar', () => {
       // Arrange
-      spyOn(component.close, 'emit');
+      spyOn(component.closeModal, 'emit');
       fixture.detectChanges();
 
       // Act
@@ -88,12 +88,12 @@ describe('PaymentMethodComparisonModalComponent - Escenario 4', () => {
       closeButton.click();
 
       // Assert
-      expect(component.close.emit).toHaveBeenCalled();
+      expect(component.closeModal.emit).toHaveBeenCalled();
     });
 
     it('debería emitir evento close cuando se hace click en el backdrop', () => {
       // Arrange
-      spyOn(component.close, 'emit');
+      spyOn(component.closeModal, 'emit');
       fixture.detectChanges();
 
       // Act
@@ -101,12 +101,12 @@ describe('PaymentMethodComparisonModalComponent - Escenario 4', () => {
       backdrop.click();
 
       // Assert
-      expect(component.close.emit).toHaveBeenCalled();
+      expect(component.closeModal.emit).toHaveBeenCalled();
     });
 
     it('NO debería cerrar cuando se hace click dentro del modal', () => {
       // Arrange
-      spyOn(component.close, 'emit');
+      spyOn(component.closeModal, 'emit');
       fixture.detectChanges();
 
       // Act
@@ -115,7 +115,7 @@ describe('PaymentMethodComparisonModalComponent - Escenario 4', () => {
       modalContent.dispatchEvent(clickEvent);
 
       // Assert
-      expect(component.close.emit).not.toHaveBeenCalled();
+      expect(component.closeModal.emit).not.toHaveBeenCalled();
     });
   });
 

@@ -1,9 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import type { AdminAuditLog } from '../models';
-import type {
-  AdminRole,
-  AdminUser,
-} from '../types/admin.types';
+import type { AdminRole, AdminUser } from '../types/admin.types';
 import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
 

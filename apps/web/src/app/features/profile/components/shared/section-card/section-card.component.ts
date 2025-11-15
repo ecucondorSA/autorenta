@@ -118,21 +118,21 @@ export class SectionCardComponent {
       (this.isEditing as WritableSignal<boolean>).set(true);
     }
 
-  this.editRequested.emit();
+    this.editRequested.emit();
   }
 
   /**
    * Handle save action
    */
   handleSave(): void {
-  this.saveRequested.emit();
+    this.saveRequested.emit();
   }
 
   /**
    * Handle cancel action
    */
   handleCancel(): void {
-  this.cancelRequested.emit();
+    this.cancelRequested.emit();
   }
 
   /**

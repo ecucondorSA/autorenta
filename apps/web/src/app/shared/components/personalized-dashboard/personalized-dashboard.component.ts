@@ -232,8 +232,8 @@ export class PersonalizedDashboardComponent implements OnInit {
         }));
 
         // Reservas pendientes para owner
-  const ownerBookings = await this.bookingsService.getOwnerBookings();
-  const pendingBookings = ownerBookings.filter((b: Booking) => b.status === 'pending').length;
+        const ownerBookings = await this.bookingsService.getOwnerBookings();
+        const pendingBookings = ownerBookings.filter((b: Booking) => b.status === 'pending').length;
 
         this.stats.update((stats) => ({
           ...stats,

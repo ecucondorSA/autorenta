@@ -3,14 +3,14 @@ import { Injectable, signal, effect } from '@angular/core';
 /**
  * Gesture Service V2
  * Handles touch gestures for mobile interactions
- * 
+ *
  * Supported Gestures:
  * - Swipe (up, down, left, right)
  * - Long Press
  * - Pinch Zoom
  * - Double Tap
  * - Pan
- * 
+ *
  * Features:
  * - Touch and mouse support
  * - Configurable thresholds
@@ -57,7 +57,7 @@ export interface LongPressEvent {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GestureService {
   // Configuration
@@ -101,7 +101,7 @@ export class GestureService {
   onSwipe(
     element: HTMLElement,
     callback: (event: SwipeEvent) => void,
-    options?: { preventScroll?: boolean }
+    options?: { preventScroll?: boolean },
   ): () => void {
     const handleTouchStart = (e: TouchEvent) => {
       if (options?.preventScroll) {
@@ -174,8 +174,12 @@ export class GestureService {
       if (distance > this.config.swipeThreshold) {
         const isHorizontal = Math.abs(deltaX) > Math.abs(deltaY);
         const direction = isHorizontal
-          ? (deltaX > 0 ? 'right' : 'left')
-          : (deltaY > 0 ? 'down' : 'up');
+          ? deltaX > 0
+            ? 'right'
+            : 'left'
+          : deltaY > 0
+            ? 'down'
+            : 'up';
 
         callback({
           direction,
@@ -205,10 +209,7 @@ export class GestureService {
   /**
    * Setup long press gesture detection
    */
-  onLongPress(
-    element: HTMLElement,
-    callback: (event: LongPressEvent) => void
-  ): () => void {
+  onLongPress(element: HTMLElement, callback: (event: LongPressEvent) => void): () => void {
     const handleStart = (x: number, y: number) => {
       this.longPressTimer = setTimeout(() => {
         this.currentGesture.set('longpress');
@@ -260,10 +261,7 @@ export class GestureService {
   /**
    * Setup pinch-zoom gesture detection
    */
-  onPinch(
-    element: HTMLElement,
-    callback: (event: PinchEvent) => void
-  ): () => void {
+  onPinch(element: HTMLElement, callback: (event: PinchEvent) => void): () => void {
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 2) {
         const touch1 = e.touches[0];
@@ -311,10 +309,7 @@ export class GestureService {
   /**
    * Setup double tap gesture detection
    */
-  onDoubleTap(
-    element: HTMLElement,
-    callback: (x: number, y: number) => void
-  ): () => void {
+  onDoubleTap(element: HTMLElement, callback: (x: number, y: number) => void): () => void {
     const handleTap = (x: number, y: number) => {
       const now = Date.now();
       const timeSinceLastTap = now - this.lastTapTime;
@@ -332,7 +327,7 @@ export class GestureService {
       } else {
         this.lastTapTime = now;
       }
-      
+
       this.currentGesture.set(null);
     };
 
@@ -357,10 +352,7 @@ export class GestureService {
   /**
    * Setup pan gesture detection
    */
-  onPan(
-    element: HTMLElement,
-    callback: (event: PanEvent) => void
-  ): () => void {
+  onPan(element: HTMLElement, callback: (event: PanEvent) => void): () => void {
     let lastX = 0;
     let lastY = 0;
     let lastTime = 0;

@@ -31,7 +31,8 @@ export const routes: Routes = [
   {
     path: 'v2',
     data: { layout: 'full-bleed' },
-    loadComponent: () => import('./features/v2-preview/v2-preview.page').then((m) => m.V2PreviewPage),
+    loadComponent: () =>
+      import('./features/v2-preview/v2-preview.page').then((m) => m.V2PreviewPage),
   },
   {
     path: 'home-v2',
@@ -41,7 +42,8 @@ export const routes: Routes = [
   {
     path: 'ui-showcase',
     data: { layout: 'full-bleed' },
-    loadComponent: () => import('./features/ui-showcase/ui-showcase.page').then((m) => m.UIShowcasePage),
+    loadComponent: () =>
+      import('./features/ui-showcase/ui-showcase.page').then((m) => m.UIShowcasePage),
   },
   {
     path: 'referrals',

@@ -5,7 +5,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 /**
  * Toast Component V2
  * Temporary notification message
- * 
+ *
  * Features:
  * - Auto-dismiss with configurable duration
  * - Swipe to dismiss gesture
@@ -23,16 +23,22 @@ import { animate, style, transition, trigger } from '@angular/animations';
     trigger('slideIn', [
       transition(':enter', [
         style({ transform: 'translateY(var(--enter-transform))', opacity: 0 }),
-        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)', style({ 
-          transform: 'translateY(0)', 
-          opacity: 1 
-        })),
+        animate(
+          '300ms cubic-bezier(0.4, 0, 0.2, 1)',
+          style({
+            transform: 'translateY(0)',
+            opacity: 1,
+          }),
+        ),
       ]),
       transition(':leave', [
-        animate('200ms cubic-bezier(0.4, 0, 1, 1)', style({ 
-          transform: 'translateY(var(--leave-transform))', 
-          opacity: 0 
-        })),
+        animate(
+          '200ms cubic-bezier(0.4, 0, 1, 1)',
+          style({
+            transform: 'translateY(var(--leave-transform))',
+            opacity: 0,
+          }),
+        ),
       ]),
     ]),
   ],
@@ -42,7 +48,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
   },
   template: `
     @if (isVisible()) {
-      <div 
+      <div
         [class]="toastClasses()"
         [@slideIn]
         (touchstart)="onTouchStart($event)"
@@ -55,23 +61,38 @@ import { animate, style, transition, trigger } from '@angular/animations';
           @switch (variant()) {
             @case ('success') {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path
+                  d="M20 6L9 17l-5-5"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             }
             @case ('error') {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round"/>
+                <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round" />
               </svg>
             }
             @case ('warning') {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             }
             @case ('info') {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 16v-4m0-4h.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="10" stroke-width="2" />
+                <path
+                  d="M12 16v-4m0-4h.01"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             }
           }
@@ -87,25 +108,16 @@ import { animate, style, transition, trigger } from '@angular/animations';
 
         <!-- Action Button -->
         @if (actionLabel()) {
-          <button 
-            type="button"
-            class="toast-action"
-            (click)="handleAction()"
-          >
+          <button type="button" class="toast-action" (click)="handleAction()">
             {{ actionLabel() }}
           </button>
         }
 
         <!-- Close Button -->
         @if (closable()) {
-          <button 
-            type="button"
-            class="toast-close"
-            (click)="close()"
-            aria-label="Cerrar"
-          >
+          <button type="button" class="toast-close" (click)="close()" aria-label="Cerrar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round"/>
+              <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round" />
             </svg>
           </button>
         }
@@ -117,186 +129,188 @@ import { animate, style, transition, trigger } from '@angular/animations';
       </div>
     }
   `,
-  styles: [`
-    .toast {
-      position: fixed;
-      left: 1rem;
-      right: 1rem;
-      max-width: 480px;
-      margin: 0 auto;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      padding: 1rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-      z-index: 10000;
-      transition: transform 0.1s linear;
-      will-change: transform;
-    }
+  styles: [
+    `
+      .toast {
+        position: fixed;
+        left: 1rem;
+        right: 1rem;
+        max-width: 480px;
+        margin: 0 auto;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        z-index: 10000;
+        transition: transform 0.1s linear;
+        will-change: transform;
+      }
 
-    /* Position */
-    .toast-top {
-      top: calc(1rem + env(safe-area-inset-top));
-    }
+      /* Position */
+      .toast-top {
+        top: calc(1rem + env(safe-area-inset-top));
+      }
 
-    .toast-bottom {
-      bottom: calc(1rem + env(safe-area-inset-bottom));
-    }
+      .toast-bottom {
+        bottom: calc(1rem + env(safe-area-inset-bottom));
+      }
 
-    /* Variants */
-    .toast-success {
-      border-left: 4px solid #10B981;
-    }
+      /* Variants */
+      .toast-success {
+        border-left: 4px solid #10b981;
+      }
 
-    .toast-error {
-      border-left: 4px solid #EF4444;
-    }
+      .toast-error {
+        border-left: 4px solid #ef4444;
+      }
 
-    .toast-warning {
-      border-left: 4px solid #F59E0B;
-    }
+      .toast-warning {
+        border-left: 4px solid #f59e0b;
+      }
 
-    .toast-info {
-      border-left: 4px solid #3B82F6;
-    }
+      .toast-info {
+        border-left: 4px solid #3b82f6;
+      }
 
-    /* Icon */
-    .toast-icon {
-      flex-shrink: 0;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      padding: 4px;
-    }
+      /* Icon */
+      .toast-icon {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        padding: 4px;
+      }
 
-    .toast-success .toast-icon {
-      background: rgba(16, 185, 129, 0.1);
-      color: #10B981;
-    }
+      .toast-success .toast-icon {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
 
-    .toast-error .toast-icon {
-      background: rgba(239, 68, 68, 0.1);
-      color: #EF4444;
-    }
+      .toast-error .toast-icon {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
 
-    .toast-warning .toast-icon {
-      background: rgba(245, 158, 11, 0.1);
-      color: #F59E0B;
-    }
+      .toast-warning .toast-icon {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+      }
 
-    .toast-info .toast-icon {
-      background: rgba(59, 130, 246, 0.1);
-      color: #3B82F6;
-    }
+      .toast-info .toast-icon {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+      }
 
-    .toast-icon svg {
-      width: 16px;
-      height: 16px;
-    }
+      .toast-icon svg {
+        width: 16px;
+        height: 16px;
+      }
 
-    /* Content */
-    .toast-content {
-      flex: 1;
-      min-width: 0;
-    }
+      /* Content */
+      .toast-content {
+        flex: 1;
+        min-width: 0;
+      }
 
-    .toast-title {
-      margin: 0;
-      font-size: 0.9375rem;
-      font-weight: 600;
-      color: #1F2937;
-      line-height: 1.4;
-    }
+      .toast-title {
+        margin: 0;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: #1f2937;
+        line-height: 1.4;
+      }
 
-    .toast-message {
-      margin: 0.25rem 0 0;
-      font-size: 0.875rem;
-      color: #6B7280;
-      line-height: 1.4;
-    }
+      .toast-message {
+        margin: 0.25rem 0 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+        line-height: 1.4;
+      }
 
-    /* Action Button */
-    .toast-action {
-      flex-shrink: 0;
-      padding: 0.5rem 0.75rem;
-      background: transparent;
-      border: none;
-      color: #4F46E5;
-      font-size: 0.875rem;
-      font-weight: 600;
-      font-family: inherit;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
+      /* Action Button */
+      .toast-action {
+        flex-shrink: 0;
+        padding: 0.5rem 0.75rem;
+        background: transparent;
+        border: none;
+        color: #4f46e5;
+        font-size: 0.875rem;
+        font-weight: 600;
+        font-family: inherit;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
 
-    .toast-action:hover {
-      background: rgba(79, 70, 229, 0.08);
-    }
+      .toast-action:hover {
+        background: rgba(79, 70, 229, 0.08);
+      }
 
-    /* Close Button */
-    .toast-close {
-      flex-shrink: 0;
-      width: 20px;
-      height: 20px;
-      padding: 0;
-      background: transparent;
-      border: none;
-      color: #9CA3AF;
-      cursor: pointer;
-      transition: color 0.2s ease;
-    }
+      /* Close Button */
+      .toast-close {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        background: transparent;
+        border: none;
+        color: #9ca3af;
+        cursor: pointer;
+        transition: color 0.2s ease;
+      }
 
-    .toast-close:hover {
-      color: #6B7280;
-    }
+      .toast-close:hover {
+        color: #6b7280;
+      }
 
-    .toast-close svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Progress Bar */
-    .toast-progress {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 3px;
-      background: currentColor;
-      border-radius: 0 0 0 12px;
-      animation: progress linear forwards;
-    }
-
-    @keyframes progress {
-      from {
+      .toast-close svg {
         width: 100%;
+        height: 100%;
       }
-      to {
-        width: 0%;
+
+      /* Progress Bar */
+      .toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: currentColor;
+        border-radius: 0 0 0 12px;
+        animation: progress linear forwards;
       }
-    }
 
-    .toast-success .toast-progress {
-      color: #10B981;
-    }
+      @keyframes progress {
+        from {
+          width: 100%;
+        }
+        to {
+          width: 0%;
+        }
+      }
 
-    .toast-error .toast-progress {
-      color: #EF4444;
-    }
+      .toast-success .toast-progress {
+        color: #10b981;
+      }
 
-    .toast-warning .toast-progress {
-      color: #F59E0B;
-    }
+      .toast-error .toast-progress {
+        color: #ef4444;
+      }
 
-    .toast-info .toast-progress {
-      color: #3B82F6;
-    }
-  `]
+      .toast-warning .toast-progress {
+        color: #f59e0b;
+      }
+
+      .toast-info .toast-progress {
+        color: #3b82f6;
+      }
+    `,
+  ],
 })
 export class ToastComponent {
   // Props

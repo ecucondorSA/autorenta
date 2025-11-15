@@ -5,7 +5,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 /**
  * Bottom Sheet Component V2
  * Mobile bottom sheet with drag-to-dismiss gesture
- * 
+ *
  * Features:
  * - Swipe down to dismiss
  * - Snap points (collapsed, half, expanded)
@@ -25,9 +25,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         style({ opacity: 0 }),
         animate('250ms ease-out', style({ opacity: 1 })),
       ]),
-      transition(':leave', [
-        animate('200ms ease-in', style({ opacity: 0 })),
-      ]),
+      transition(':leave', [animate('200ms ease-in', style({ opacity: 0 }))]),
     ]),
     trigger('sheet', [
       transition(':enter', [
@@ -42,14 +40,10 @@ import { animate, style, transition, trigger } from '@angular/animations';
   template: `
     @if (isOpen()) {
       <!-- Backdrop -->
-      <div 
-        class="sheet-backdrop"
-        [@backdrop]
-        (click)="handleBackdropClick()"
-      ></div>
+      <div class="sheet-backdrop" [@backdrop] (click)="handleBackdropClick()"></div>
 
       <!-- Bottom Sheet -->
-      <div 
+      <div
         class="sheet-container"
         [class]="sheetClasses()"
         [style.transform]="'translateY(' + dragOffset() + 'px)'"
@@ -57,7 +51,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         #sheetElement
       >
         <!-- Header with Handle -->
-        <div 
+        <div
           class="sheet-header"
           (touchstart)="onTouchStart($event)"
           (touchmove)="onTouchMove($event)"
@@ -71,11 +65,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         </div>
 
         <!-- Content -->
-        <div 
-          class="sheet-content"
-          [class.is-scrollable]="scrollable()"
-          #contentElement
-        >
+        <div class="sheet-content" [class.is-scrollable]="scrollable()" #contentElement>
           <ng-content />
         </div>
 
@@ -88,117 +78,119 @@ import { animate, style, transition, trigger } from '@angular/animations';
       </div>
     }
   `,
-  styles: [`
-    .sheet-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-      z-index: 9998;
-    }
-
-    .sheet-container {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      border-radius: 24px 24px 0 0;
-      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      max-height: 90vh;
-      transition: transform 0.1s linear;
-      will-change: transform;
-    }
-
-    /* Snap heights */
-    .sheet-collapsed {
-      max-height: 30vh;
-    }
-
-    .sheet-half {
-      max-height: 50vh;
-    }
-
-    .sheet-expanded {
-      max-height: 90vh;
-    }
-
-    /* Desktop centered */
-    @media (min-width: 768px) {
-      .sheet-container {
-        left: 50%;
-        right: auto;
-        bottom: 2rem;
-        transform: translateX(-50%);
-        max-width: 480px;
-        width: 90%;
-        border-radius: 24px;
+  styles: [
+    `
+      .sheet-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 9998;
       }
-    }
 
-    .sheet-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0.75rem 1.5rem 0.5rem;
-      cursor: grab;
-      user-select: none;
-      touch-action: none;
-      flex-shrink: 0;
-    }
+      .sheet-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 24px 24px 0 0;
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        max-height: 90vh;
+        transition: transform 0.1s linear;
+        will-change: transform;
+      }
 
-    .sheet-header:active {
-      cursor: grabbing;
-    }
+      /* Snap heights */
+      .sheet-collapsed {
+        max-height: 30vh;
+      }
 
-    .sheet-handle {
-      width: 40px;
-      height: 4px;
-      background: #D1D5DB;
-      border-radius: 2px;
-      margin-bottom: 0.75rem;
-    }
+      .sheet-half {
+        max-height: 50vh;
+      }
 
-    .sheet-title {
-      font-size: 1.125rem;
-      font-weight: 700;
-      color: #1F2937;
-      margin: 0;
-      align-self: flex-start;
-    }
+      .sheet-expanded {
+        max-height: 90vh;
+      }
 
-    .sheet-content {
-      flex: 1;
-      padding: 1rem 1.5rem;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
+      /* Desktop centered */
+      @media (min-width: 768px) {
+        .sheet-container {
+          left: 50%;
+          right: auto;
+          bottom: 2rem;
+          transform: translateX(-50%);
+          max-width: 480px;
+          width: 90%;
+          border-radius: 24px;
+        }
+      }
 
-    .sheet-content.is-scrollable {
-      overscroll-behavior: contain;
-    }
+      .sheet-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.75rem 1.5rem 0.5rem;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+        flex-shrink: 0;
+      }
 
-    .sheet-footer {
-      padding: 1rem 1.5rem;
-      padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-      border-top: 1px solid #F3F4F6;
-      display: flex;
-      gap: 0.75rem;
-      flex-shrink: 0;
-    }
+      .sheet-header:active {
+        cursor: grabbing;
+      }
 
-    .sheet-footer:empty {
-      display: none;
-    }
+      .sheet-handle {
+        width: 40px;
+        height: 4px;
+        background: #d1d5db;
+        border-radius: 2px;
+        margin-bottom: 0.75rem;
+      }
 
-    /* Dragging state */
-    .is-dragging {
-      transition: none !important;
-    }
-  `]
+      .sheet-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+        align-self: flex-start;
+      }
+
+      .sheet-content {
+        flex: 1;
+        padding: 1rem 1.5rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .sheet-content.is-scrollable {
+        overscroll-behavior: contain;
+      }
+
+      .sheet-footer {
+        padding: 1rem 1.5rem;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+        border-top: 1px solid #f3f4f6;
+        display: flex;
+        gap: 0.75rem;
+        flex-shrink: 0;
+      }
+
+      .sheet-footer:empty {
+        display: none;
+      }
+
+      /* Dragging state */
+      .is-dragging {
+        transition: none !important;
+      }
+    `,
+  ],
 })
 export class BottomSheetComponent {
   @ViewChild('sheetElement') sheetElement!: ElementRef<HTMLDivElement>;

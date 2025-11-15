@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 /**
  * Button Component V2
  * Flexible button with multiple variants and sizes
- * 
+ *
  * Variants: primary, secondary, ghost, danger, success
  * Sizes: sm, md, lg
  * States: loading, disabled
@@ -26,160 +26,162 @@ type ButtonSize = 'sm' | 'md' | 'lg';
     >
       @if (loading()) {
         <svg class="spinner" viewBox="0 0 24 24">
-          <circle class="spinner-track" cx="12" cy="12" r="10" fill="none" stroke-width="3"/>
-          <circle class="spinner-fill" cx="12" cy="12" r="10" fill="none" stroke-width="3"/>
+          <circle class="spinner-track" cx="12" cy="12" r="10" fill="none" stroke-width="3" />
+          <circle class="spinner-fill" cx="12" cy="12" r="10" fill="none" stroke-width="3" />
         </svg>
       }
-      
+
       @if (icon() && !loading()) {
         <span class="icon" [innerHTML]="icon()"></span>
       }
-      
+
       <span class="label">
         <ng-content />
       </span>
-      
+
       @if (iconRight()) {
         <span class="icon-right" [innerHTML]="iconRight()"></span>
       }
     </button>
   `,
-  styles: [`
-    button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      font-family: inherit;
-      font-weight: 600;
-      border-radius: 0.75rem;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    button:active:not(:disabled) {
-      transform: scale(0.98);
-    }
-
-    /* Sizes */
-    button.size-sm {
-      padding: 0.5rem 1rem;
-      font-size: 0.875rem;
-      min-height: 36px;
-    }
-
-    button.size-md {
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      min-height: 44px;
-    }
-
-    button.size-lg {
-      padding: 1rem 2rem;
-      font-size: 1.125rem;
-      min-height: 52px;
-    }
-
-    /* Variants */
-    button.variant-primary {
-      background: #4F46E5;
-      color: white;
-    }
-
-    button.variant-primary:hover:not(:disabled) {
-      background: #4338ca;
-    }
-
-    button.variant-secondary {
-      background: #f3f4f6;
-      color: #374151;
-    }
-
-    button.variant-secondary:hover:not(:disabled) {
-      background: #e5e7eb;
-    }
-
-    button.variant-ghost {
-      background: transparent;
-      color: #374151;
-    }
-
-    button.variant-ghost:hover:not(:disabled) {
-      background: #f3f4f6;
-    }
-
-    button.variant-danger {
-      background: #ef4444;
-      color: white;
-    }
-
-    button.variant-danger:hover:not(:disabled) {
-      background: #dc2626;
-    }
-
-    button.variant-success {
-      background: #10b981;
-      color: white;
-    }
-
-    button.variant-success:hover:not(:disabled) {
-      background: #059669;
-    }
-
-    /* Full width */
-    button.full-width {
-      width: 100%;
-    }
-
-    /* Loading spinner */
-    .spinner {
-      width: 20px;
-      height: 20px;
-      animation: spin 1s linear infinite;
-    }
-
-    .spinner-track {
-      stroke: currentColor;
-      opacity: 0.2;
-    }
-
-    .spinner-fill {
-      stroke: currentColor;
-      stroke-dasharray: 63;
-      stroke-dashoffset: 47;
-      transform-origin: center;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
+  styles: [
+    `
+      button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-family: inherit;
+        font-weight: 600;
+        border-radius: 0.75rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
       }
-    }
 
-    /* Icons */
-    .icon,
-    .icon-right {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-    }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
 
-    .label {
-      line-height: 1;
-    }
-  `]
+      button:active:not(:disabled) {
+        transform: scale(0.98);
+      }
+
+      /* Sizes */
+      button.size-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        min-height: 36px;
+      }
+
+      button.size-md {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        min-height: 44px;
+      }
+
+      button.size-lg {
+        padding: 1rem 2rem;
+        font-size: 1.125rem;
+        min-height: 52px;
+      }
+
+      /* Variants */
+      button.variant-primary {
+        background: #4f46e5;
+        color: white;
+      }
+
+      button.variant-primary:hover:not(:disabled) {
+        background: #4338ca;
+      }
+
+      button.variant-secondary {
+        background: #f3f4f6;
+        color: #374151;
+      }
+
+      button.variant-secondary:hover:not(:disabled) {
+        background: #e5e7eb;
+      }
+
+      button.variant-ghost {
+        background: transparent;
+        color: #374151;
+      }
+
+      button.variant-ghost:hover:not(:disabled) {
+        background: #f3f4f6;
+      }
+
+      button.variant-danger {
+        background: #ef4444;
+        color: white;
+      }
+
+      button.variant-danger:hover:not(:disabled) {
+        background: #dc2626;
+      }
+
+      button.variant-success {
+        background: #10b981;
+        color: white;
+      }
+
+      button.variant-success:hover:not(:disabled) {
+        background: #059669;
+      }
+
+      /* Full width */
+      button.full-width {
+        width: 100%;
+      }
+
+      /* Loading spinner */
+      .spinner {
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+      }
+
+      .spinner-track {
+        stroke: currentColor;
+        opacity: 0.2;
+      }
+
+      .spinner-fill {
+        stroke: currentColor;
+        stroke-dasharray: 63;
+        stroke-dashoffset: 47;
+        transform-origin: center;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Icons */
+      .icon,
+      .icon-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+      }
+
+      .label {
+        line-height: 1;
+      }
+    `,
+  ],
 })
 export class ButtonV2Component {
   // Inputs
@@ -196,10 +198,7 @@ export class ButtonV2Component {
   clicked = output<MouseEvent>();
 
   getButtonClasses(): string {
-    const classes = [
-      `variant-${this.variant()}`,
-      `size-${this.size()}`,
-    ];
+    const classes = [`variant-${this.variant()}`, `size-${this.size()}`];
 
     if (this.fullWidth()) {
       classes.push('full-width');

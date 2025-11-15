@@ -1,7 +1,7 @@
 /**
  * UI Component Library V2
  * Barrel export file for all UI components
- * 
+ *
  * Usage:
  * import { ButtonComponent, CardComponent, InputComponent } from '@shared-v2/ui';
  */

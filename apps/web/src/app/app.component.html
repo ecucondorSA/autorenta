@@ -245,7 +245,9 @@
             aria-orientation="vertical"
           >
             <!-- User Info Header (sticky cuando hay scroll) -->
-            <div class="sticky top-0 z-10 px-4 py-4 border-b border-border-subtle dark:border-border-subtle bg-gradient-to-br from-surface-raised to-surface-secondary/30 dark:from-surface-raised dark:to-surface-secondary/20 backdrop-blur-sm">
+            <div
+              class="sticky top-0 z-10 px-4 py-4 border-b border-border-subtle dark:border-border-subtle bg-gradient-to-br from-surface-raised to-surface-secondary/30 dark:from-surface-raised dark:to-surface-secondary/20 backdrop-blur-sm"
+            >
               <p class="text-sm font-semibold text-text-primary dark:text-text-primary mb-0.5">
                 {{ userProfile()?.full_name || 'Usuario' }}
               </p>
@@ -262,7 +264,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/10 group-hover:bg-primary/20 dark:group-hover:bg-primary/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/10 group-hover:bg-primary/20 dark:group-hover:bg-primary/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-primary dark:text-primary"
                     fill="none"
@@ -278,8 +282,18 @@
                   </svg>
                 </div>
                 <span class="flex-1">Mi Perfil</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
@@ -289,7 +303,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 dark:bg-blue-400/10 group-hover:bg-blue-500/20 dark:group-hover:bg-blue-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 dark:bg-blue-400/10 group-hover:bg-blue-500/20 dark:group-hover:bg-blue-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-blue-600 dark:text-blue-400"
                     fill="none"
@@ -305,8 +321,18 @@
                   </svg>
                 </div>
                 <span class="flex-1">Mis Carros</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
@@ -316,7 +342,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-green-500/10 dark:bg-green-400/10 group-hover:bg-green-500/20 dark:group-hover:bg-green-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-green-500/10 dark:bg-green-400/10 group-hover:bg-green-500/20 dark:group-hover:bg-green-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-green-600 dark:text-green-400"
                     fill="none"
@@ -332,12 +360,24 @@
                   </svg>
                 </div>
                 <span class="flex-1">Mi Wallet</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
-              <div class="my-2 mx-1.5 border-t border-border-subtle dark:border-border-subtle"></div>
+              <div
+                class="my-2 mx-1.5 border-t border-border-subtle dark:border-border-subtle"
+              ></div>
 
               <!-- Verificación y Conductor (críticos) -->
               <a
@@ -346,7 +386,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-amber-50/80 dark:hover:bg-amber-900/20 active:bg-amber-100 dark:active:bg-amber-900/30 transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10 dark:bg-amber-400/10 group-hover:bg-amber-500/20 dark:group-hover:bg-amber-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10 dark:bg-amber-400/10 group-hover:bg-amber-500/20 dark:group-hover:bg-amber-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-amber-600 dark:text-amber-400"
                     fill="none"
@@ -362,8 +404,18 @@
                   </svg>
                 </div>
                 <span class="flex-1">Verificación</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
@@ -373,7 +425,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-500/10 dark:bg-purple-400/10 group-hover:bg-purple-500/20 dark:group-hover:bg-purple-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-500/10 dark:bg-purple-400/10 group-hover:bg-purple-500/20 dark:group-hover:bg-purple-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-purple-600 dark:text-purple-400"
                     fill="none"
@@ -389,8 +443,18 @@
                   </svg>
                 </div>
                 <span class="flex-1">Conductor</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
@@ -400,7 +464,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 dark:bg-indigo-400/10 group-hover:bg-indigo-500/20 dark:group-hover:bg-indigo-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 dark:bg-indigo-400/10 group-hover:bg-indigo-500/20 dark:group-hover:bg-indigo-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-indigo-600 dark:text-indigo-400"
                     fill="none"
@@ -416,8 +482,18 @@
                   </svg>
                 </div>
                 <span class="flex-1">Mis Reservas</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
@@ -444,7 +520,9 @@
                 Mis Autos
               </a>
 
-              <div class="my-2 mx-1.5 border-t border-border-subtle dark:border-border-subtle"></div>
+              <div
+                class="my-2 mx-1.5 border-t border-border-subtle dark:border-border-subtle"
+              ></div>
 
               <!-- Configuración -->
               <a
@@ -453,7 +531,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-500/10 dark:bg-slate-400/10 group-hover:bg-slate-500/20 dark:group-hover:bg-slate-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-500/10 dark:bg-slate-400/10 group-hover:bg-slate-500/20 dark:group-hover:bg-slate-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-slate-600 dark:text-slate-400"
                     fill="none"
@@ -469,8 +549,18 @@
                   </svg>
                 </div>
                 <span class="flex-1">Contacto</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
@@ -480,7 +570,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-500/10 dark:bg-red-400/10 group-hover:bg-red-500/20 dark:group-hover:bg-red-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-500/10 dark:bg-red-400/10 group-hover:bg-red-500/20 dark:group-hover:bg-red-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-red-600 dark:text-red-400"
                     fill="none"
@@ -502,8 +594,18 @@
                   </svg>
                 </div>
                 <span class="flex-1">Dirección</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
@@ -513,7 +615,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 group-hover:bg-yellow-500/20 dark:group-hover:bg-yellow-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-500/10 dark:bg-yellow-400/10 group-hover:bg-yellow-500/20 dark:group-hover:bg-yellow-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-yellow-600 dark:text-yellow-400"
                     fill="none"
@@ -529,8 +633,18 @@
                   </svg>
                 </div>
                 <span class="flex-1">Notificaciones</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
@@ -540,7 +654,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-500/10 dark:bg-gray-400/10 group-hover:bg-gray-500/20 dark:group-hover:bg-gray-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-500/10 dark:bg-gray-400/10 group-hover:bg-gray-500/20 dark:group-hover:bg-gray-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-gray-600 dark:text-gray-400"
                     fill="none"
@@ -562,8 +678,18 @@
                   </svg>
                 </div>
                 <span class="flex-1">Preferencias</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
@@ -573,7 +699,9 @@
                 class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-500/10 dark:bg-cyan-400/10 group-hover:bg-cyan-500/20 dark:group-hover:bg-cyan-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-500/10 dark:bg-cyan-400/10 group-hover:bg-cyan-500/20 dark:group-hover:bg-cyan-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-cyan-600 dark:text-cyan-400"
                     fill="none"
@@ -589,8 +717,18 @@
                   </svg>
                 </div>
                 <span class="flex-1">Seguridad</span>
-                <svg class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
 
@@ -602,7 +740,9 @@
                 role="menuitem"
                 type="button"
               >
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-500/10 dark:bg-red-400/10 group-hover:bg-red-500/20 dark:group-hover:bg-red-400/20 transition-colors">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-500/10 dark:bg-red-400/10 group-hover:bg-red-500/20 dark:group-hover:bg-red-400/20 transition-colors"
+                >
                   <svg
                     class="h-5 w-5 text-error-text"
                     fill="none"

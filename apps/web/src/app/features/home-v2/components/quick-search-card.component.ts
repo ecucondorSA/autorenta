@@ -13,7 +13,7 @@ export interface SearchCriteria {
 /**
  * Quick Search Card Component V2
  * Floating search widget for home page
- * 
+ *
  * Features:
  * - Location input with geolocation
  * - Date/time pickers
@@ -31,8 +31,13 @@ export interface SearchCriteria {
       <div class="search-header">
         <h2 class="search-title">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
+            <path
+              d="M21 21L16.65 16.65"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
           </svg>
           Buscar vehículo
         </h2>
@@ -45,8 +50,16 @@ export interface SearchCriteria {
         <div class="form-group">
           <label class="form-label">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M10 10C11.1046 10 12 9.10457 12 8C12 6.89543 11.1046 6 10 6C8.89543 6 8 6.89543 8 8C8 9.10457 8.89543 10 10 10Z" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M10 18C10 18 16 13 16 8C16 4.68629 13.3137 2 10 2C6.68629 2 4 4.68629 4 8C4 13 10 18 10 18Z" stroke="currentColor" stroke-width="1.5"/>
+              <path
+                d="M10 10C11.1046 10 12 9.10457 12 8C12 6.89543 11.1046 6 10 6C8.89543 6 8 6.89543 8 8C8 9.10457 8.89543 10 10 10Z"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+              <path
+                d="M10 18C10 18 16 13 16 8C16 4.68629 13.3137 2 10 2C6.68629 2 4 4.68629 4 8C4 13 10 18 10 18Z"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
             </svg>
             Ubicación
           </label>
@@ -68,12 +81,31 @@ export interface SearchCriteria {
             >
               @if (isLoadingLocation()) {
                 <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
-                  <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
-                  <path d="M10 2C14.4183 2 18 5.58172 18 10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <circle
+                    cx="10"
+                    cy="10"
+                    r="8"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                    opacity="0.3"
+                  />
+                  <path
+                    d="M10 2C14.4183 2 18 5.58172 18 10"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                    stroke-linecap="round"
+                  />
                 </svg>
               } @else {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M10 2V4M10 16V18M4 10H2M18 10H16M10 10L14.5 5.5M10 10C11.1046 10 12 9.10457 12 8C12 6.89543 11.1046 6 10 6C8.89543 6 8 6.89543 8 8C8 9.10457 8.89543 10 10 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path
+                    d="M10 2V4M10 16V18M4 10H2M18 10H16M10 10L14.5 5.5M10 10C11.1046 10 12 9.10457 12 8C12 6.89543 11.1046 6 10 6C8.89543 6 8 6.89543 8 8C8 9.10457 8.89543 10 10 10Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
                 </svg>
               }
             </button>
@@ -85,8 +117,21 @@ export interface SearchCriteria {
           <div class="form-group">
             <label class="form-label">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M3 8H17M7 2V5M13 2V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <rect
+                  x="3"
+                  y="4"
+                  width="14"
+                  height="14"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M3 8H17M7 2V5M13 2V5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
               </svg>
               Inicio
             </label>
@@ -103,8 +148,21 @@ export interface SearchCriteria {
           <div class="form-group">
             <label class="form-label">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M3 8H17M7 2V5M13 2V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <rect
+                  x="3"
+                  y="4"
+                  width="14"
+                  height="14"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M3 8H17M7 2V5M13 2V5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
               </svg>
               Fin
             </label>
@@ -124,8 +182,13 @@ export interface SearchCriteria {
           <div class="form-group">
             <label class="form-label">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M10 6V10L13 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5" />
+                <path
+                  d="M10 6V10L13 12"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
               </svg>
               Hora inicio
             </label>
@@ -141,26 +204,30 @@ export interface SearchCriteria {
           <div class="form-group">
             <label class="form-label">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M10 6V10L13 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5" />
+                <path
+                  d="M10 6V10L13 12"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
               </svg>
               Hora fin
             </label>
-            <input
-              type="time"
-              class="form-input"
-              [(ngModel)]="endTime"
-              name="endTime"
-              required
-            />
+            <input type="time" class="form-input" [(ngModel)]="endTime" name="endTime" required />
           </div>
         </div>
 
         <!-- Submit Button -->
         <button type="submit" class="search-btn">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2"/>
-            <path d="M18 18L13.5 13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2" />
+            <path
+              d="M18 18L13.5 13.5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
           </svg>
           Buscar vehículos disponibles
         </button>
@@ -183,237 +250,243 @@ export interface SearchCriteria {
       </div>
     </div>
   `,
-  styles: [`
-    .quick-search-card {
-      background: white;
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 
-        0 10px 40px rgba(0, 0, 0, 0.1),
-        0 2px 8px rgba(0, 0, 0, 0.06);
-      margin: -60px 20px 32px;
-      position: relative;
-      z-index: 10;
-      animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .search-header {
-      margin-bottom: 24px;
-    }
-
-    .search-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #050505;
-      margin: 0 0 8px 0;
-    }
-
-    .search-title svg {
-      color: #A7D8F4;
-    }
-
-    .search-subtitle {
-      font-size: 0.875rem;
-      color: #4E4E4E;
-      margin: 0;
-    }
-
-    .search-form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .form-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #374151;
-    }
-
-    .form-label svg {
-      color: #4E4E4E;
-    }
-
-    .input-wrapper {
-      position: relative;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 1rem;
-      color: #050505;
-      background: #f9fafb;
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      transition: all 0.2s ease;
-    }
-
-    .input-wrapper .form-input {
-      padding-right: 48px;
-    }
-
-    .form-input:focus {
-      outline: none;
-      background: white;
-      border-color: #A7D8F4;
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    }
-
-    .form-input::placeholder {
-      color: #9ca3af;
-    }
-
-    .location-btn {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #A7D8F4;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .location-btn:hover:not(:disabled) {
-      background: #4338ca;
-    }
-
-    .location-btn:active:not(:disabled) {
-      transform: translateY(-50%) scale(0.95);
-    }
-
-    .location-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .spinner {
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .search-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      width: 100%;
-      padding: 16px 24px;
-      font-size: 1rem;
-      font-weight: 600;
-      color: white;
-      background: linear-gradient(135deg, #A7D8F4 0%, #8EC9EC 100%);
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .search-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
-    }
-
-    .search-btn:active {
-      transform: translateY(0);
-    }
-
-    .quick-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid #e5e7eb;
-    }
-
-    .stat {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .stat-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #A7D8F4;
-      margin-bottom: 4px;
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      color: #4E4E4E;
-    }
-
-    /* Tablet & Desktop */
-    @media (min-width: 768px) {
+  styles: [
+    `
       .quick-search-card {
-        max-width: 600px;
-        margin: -80px auto 48px;
-        padding: 32px;
+        background: white;
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow:
+          0 10px 40px rgba(0, 0, 0, 0.1),
+          0 2px 8px rgba(0, 0, 0, 0.06);
+        margin: -60px 20px 32px;
+        position: relative;
+        z-index: 10;
+        animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .search-header {
+        margin-bottom: 24px;
       }
 
       .search-title {
-        font-size: 1.75rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #050505;
+        margin: 0 0 8px 0;
+      }
+
+      .search-title svg {
+        color: #a7d8f4;
+      }
+
+      .search-subtitle {
+        font-size: 0.875rem;
+        color: #4e4e4e;
+        margin: 0;
+      }
+
+      .search-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .form-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+      }
+
+      .form-label svg {
+        color: #4e4e4e;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 1rem;
+        color: #050505;
+        background: #f9fafb;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+      }
+
+      .input-wrapper .form-input {
+        padding-right: 48px;
+      }
+
+      .form-input:focus {
+        outline: none;
+        background: white;
+        border-color: #a7d8f4;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      .form-input::placeholder {
+        color: #9ca3af;
+      }
+
+      .location-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #a7d8f4;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .location-btn:hover:not(:disabled) {
+        background: #4338ca;
+      }
+
+      .location-btn:active:not(:disabled) {
+        transform: translateY(-50%) scale(0.95);
+      }
+
+      .location-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       .form-row {
-        gap: 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
       }
 
       .search-btn {
-        padding: 18px 32px;
-        font-size: 1.125rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+        padding: 16px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(135deg, #a7d8f4 0%, #8ec9ec 100%);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
-    }
-  `]
+
+      .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
+      }
+
+      .search-btn:active {
+        transform: translateY(0);
+      }
+
+      .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #a7d8f4;
+        margin-bottom: 4px;
+      }
+
+      .stat-label {
+        font-size: 0.75rem;
+        color: #4e4e4e;
+      }
+
+      /* Tablet & Desktop */
+      @media (min-width: 768px) {
+        .quick-search-card {
+          max-width: 600px;
+          margin: -80px auto 48px;
+          padding: 32px;
+        }
+
+        .search-title {
+          font-size: 1.75rem;
+        }
+
+        .form-row {
+          gap: 16px;
+        }
+
+        .search-btn {
+          padding: 18px 32px;
+          font-size: 1.125rem;
+        }
+      }
+    `,
+  ],
 })
 export class QuickSearchCardComponent {
-  // Outputs
-  search = output<SearchCriteria>();
+  // Outputs (avoid native event names to satisfy Angular ESLint rules)
+  search = output<SearchCriteria>({ alias: 'quickSearch' });
 
   // State
   location = signal('');
@@ -468,7 +541,7 @@ export class QuickSearchCardComponent {
         enableHighAccuracy: true,
         timeout: 5000,
         maximumAge: 0,
-      }
+      },
     );
   }
 }

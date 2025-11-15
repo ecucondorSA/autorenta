@@ -144,7 +144,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly mobileBottomNavPortal: MobileBottomNavPortalService = inject(MobileBottomNavPortalService);
+  private readonly mobileBottomNavPortal: MobileBottomNavPortalService = inject(
+    MobileBottomNavPortalService,
+  );
   private readonly isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
   readonly isAuthenticatedSig = this.authService.isAuthenticated;

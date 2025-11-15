@@ -1,4 +1,11 @@
-import { Component, OnInit, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  computed,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GoogleCalendarService } from '../../../core/services/google-calendar.service';
 
@@ -131,9 +138,7 @@ interface CarCalendar {
 
       <!-- Error State -->
       @if (error()) {
-        <div class="error-message">
-          ⚠️ {{ error() }}
-        </div>
+        <div class="error-message">⚠️ {{ error() }}</div>
       }
     </div>
   `,
@@ -407,9 +412,7 @@ export class CalendarManagementComponent implements OnInit {
   readonly isLoading = signal(true);
   readonly error = signal<string | null>(null);
 
-  readonly activeCalendars = computed(
-    () => this.calendars().filter((c) => c.sync_enabled).length,
-  );
+  readonly activeCalendars = computed(() => this.calendars().filter((c) => c.sync_enabled).length);
 
   readonly recentlySynced = computed(() => {
     const today = new Date();

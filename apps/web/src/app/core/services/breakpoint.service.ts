@@ -76,7 +76,7 @@ export class BreakpointService {
     const resize$ = fromEvent(window, 'resize').pipe(
       throttleTime(150, undefined, { leading: true, trailing: true }),
       map(() => window.innerWidth),
-      startWith(window.innerWidth)
+      startWith(window.innerWidth),
     );
 
     // Convertir a signal

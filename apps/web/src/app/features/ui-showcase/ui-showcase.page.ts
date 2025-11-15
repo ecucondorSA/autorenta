@@ -44,7 +44,7 @@ import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.compon
         <section class="section">
           <h2>🔘 Buttons</h2>
           <div class="subtitle">6 variantes, 3 tamaños, estados loading/disabled</div>
-          
+
           <div class="grid">
             <app-button-v2 variant="primary">Primary</app-button-v2>
             <app-button-v2 variant="secondary">Secondary</app-button-v2>
@@ -72,7 +72,7 @@ import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.compon
         <section class="section">
           <h2>🃏 Cards</h2>
           <div class="subtitle">4 elevaciones, clickable, image support</div>
-          
+
           <div class="cards-grid">
             <app-card elevation="flat">
               <div>
@@ -108,7 +108,7 @@ import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.compon
         <section class="section">
           <h2>✏️ Inputs</h2>
           <div class="subtitle">8 tipos, validation, clear button</div>
-          
+
           <div class="input-grid">
             <app-input
               label="Email"
@@ -150,7 +150,7 @@ import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.compon
         <section class="section">
           <h2>🏷️ Chips</h2>
           <div class="subtitle">Filtros interactivos, removable, avatars</div>
-          
+
           <div class="flex-wrap">
             <app-chip label="Automático" variant="filled" [active]="true" [clickable]="true" />
             <app-chip label="Manual" variant="outlined" [clickable]="true" />
@@ -166,7 +166,7 @@ import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.compon
         <section class="section">
           <h2>🔔 Badges</h2>
           <div class="subtitle">Notificaciones, status, anchored positioning</div>
-          
+
           <div class="flex-wrap">
             <div class="badge-demo">
               <button class="demo-button">Inbox</button>
@@ -189,7 +189,7 @@ import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.compon
         <section class="section">
           <h2>💀 Skeleton Loaders</h2>
           <div class="subtitle">6 variantes, 3 animaciones (shimmer/pulse/wave)</div>
-          
+
           <div class="skeleton-grid">
             <div>
               <strong>Text:</strong>
@@ -224,7 +224,7 @@ import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.compon
         <section class="section">
           <h2>⚡ Demos Interactivos</h2>
           <div class="subtitle">Modal, Bottom Sheet, Toast, FAB</div>
-          
+
           <div class="grid">
             <app-button-v2 variant="primary" (clicked)="openModal()">
               🪟 Abrir Modal
@@ -289,12 +289,8 @@ import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.compon
         </div>
 
         <div modalFooter>
-          <app-button-v2 variant="ghost" (clicked)="closeModal()">
-            Cancelar
-          </app-button-v2>
-          <app-button-v2 variant="primary" (clicked)="closeModal()">
-            Aceptar
-          </app-button-v2>
+          <app-button-v2 variant="ghost" (clicked)="closeModal()"> Cancelar </app-button-v2>
+          <app-button-v2 variant="primary" (clicked)="closeModal()"> Aceptar </app-button-v2>
         </div>
       </app-modal>
 
@@ -356,205 +352,213 @@ import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.compon
         color="primary"
         (clicked)="handleFabClick()"
       >
-        <svg fabIcon viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 24px; height: 24px;">
-          <path d="M12 5v14m-7-7h14" stroke-width="2" stroke-linecap="round"/>
+        <svg
+          fabIcon
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          style="width: 24px; height: 24px;"
+        >
+          <path d="M12 5v14m-7-7h14" stroke-width="2" stroke-linecap="round" />
         </svg>
       </app-fab>
     </div>
   `,
-  styles: [`
-    .showcase {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 2rem 1rem 6rem;
-    }
-
-    .showcase-header {
-      text-align: center;
-      color: white;
-      margin-bottom: 3rem;
-      animation: fadeInDown 0.6s ease;
-    }
-
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .showcase-header h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin: 0 0 0.5rem;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .showcase-header p {
-      font-size: 1.125rem;
-      opacity: 0.95;
-      margin: 0;
-    }
-
-    .showcase-content {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section {
-      background: white;
-      border-radius: 20px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      animation: fadeInUp 0.6s ease;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .section h2 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin: 0 0 0.5rem;
-      color: #1F2937;
-    }
-
-    .subtitle {
-      color: #6B7280;
-      margin-bottom: 1.5rem;
-      font-size: 0.9375rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .grid:last-child {
-      margin-bottom: 0;
-    }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .input-grid {
-      display: grid;
-      gap: 1.5rem;
-    }
-
-    .flex-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    .badge-demo {
-      position: relative;
-      display: inline-block;
-    }
-
-    .demo-button {
-      padding: 0.75rem 1.5rem;
-      background: #4F46E5;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background 0.2s;
-    }
-
-    .demo-button:hover {
-      background: #4338CA;
-    }
-
-    .skeleton-grid {
-      display: grid;
-      gap: 2rem;
-    }
-
-    .skeleton-grid > div {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .stats-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-
-    .stats-section h2 {
-      color: white;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-
-    .stat-card {
-      text-align: center;
-      padding: 1.5rem;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      backdrop-filter: blur(10px);
-    }
-
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 0.5rem;
-    }
-
-    .stat-label {
-      font-size: 0.875rem;
-      opacity: 0.9;
-    }
-
-    /* Mobile adjustments */
-    @media (max-width: 640px) {
+  styles: [
+    `
       .showcase {
-        padding: 1rem 0.5rem 5rem;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem 1rem 6rem;
       }
 
-      .section {
-        padding: 1.5rem 1rem;
-        border-radius: 16px;
+      .showcase-header {
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+        animation: fadeInDown 0.6s ease;
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .showcase-header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0 0 0.5rem;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .showcase-header p {
+        font-size: 1.125rem;
+        opacity: 0.95;
+        margin: 0;
+      }
+
+      .showcase-content {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 0.6s ease;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section h2 {
         font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem;
+        color: #1f2937;
+      }
+
+      .subtitle {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+        font-size: 0.9375rem;
       }
 
       .grid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
       }
-    }
-  `]
+
+      .grid:last-child {
+        margin-bottom: 0;
+      }
+
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .input-grid {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .flex-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      .badge-demo {
+        position: relative;
+        display: inline-block;
+      }
+
+      .demo-button {
+        padding: 0.75rem 1.5rem;
+        background: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.2s;
+      }
+
+      .demo-button:hover {
+        background: #4338ca;
+      }
+
+      .skeleton-grid {
+        display: grid;
+        gap: 2rem;
+      }
+
+      .skeleton-grid > div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .stats-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .stats-section h2 {
+        color: white;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .stat-card {
+        text-align: center;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        opacity: 0.9;
+      }
+
+      /* Mobile adjustments */
+      @media (max-width: 640px) {
+        .showcase {
+          padding: 1rem 0.5rem 5rem;
+        }
+
+        .section {
+          padding: 1.5rem 1rem;
+          border-radius: 16px;
+        }
+
+        .showcase-header h1 {
+          font-size: 1.75rem;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    `,
+  ],
 })
 export class UIShowcasePage {
   // State

@@ -92,7 +92,7 @@
       type="video/mp4"
     />
     <link rel="prefetch" href="/assets/images/volvo-c-recharge-splash-poster.jpg" as="image" />
-    
+
     <!-- PWA Manifests -->
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="manifest" href="manifest-v2.webmanifest" />
@@ -110,9 +110,9 @@
         window.addEventListener('load', () => {
           navigator.serviceWorker
             .register('/service-worker.js')
-            .then(registration => {
+            .then((registration) => {
               console.log('✅ Service Worker registered:', registration.scope);
-              
+
               // Check for updates every 60 seconds
               setInterval(() => {
                 registration.update();
@@ -134,7 +134,7 @@
                 }
               });
             })
-            .catch(error => {
+            .catch((error) => {
               console.error('❌ Service Worker registration failed:', error);
             });
 
@@ -155,7 +155,7 @@
         e.preventDefault();
         deferredPrompt = e;
         console.log('💡 PWA install prompt ready');
-        
+
         // Dispatch custom event for app to show install button
         window.dispatchEvent(new CustomEvent('pwa-install-available', { detail: e }));
       });
@@ -168,7 +168,7 @@
 
       // Show PWA install banner on iOS Safari
       if (
-        /iPhone|iPad|iPod/.test(navigator.userAgent) && 
+        /iPhone|iPad|iPod/.test(navigator.userAgent) &&
         !window.navigator.standalone &&
         !window.matchMedia('(display-mode: standalone)').matches
       ) {
@@ -181,16 +181,20 @@
     <script>
       window.addEventListener('online', () => {
         console.log('🌐 Online');
-        window.dispatchEvent(new CustomEvent('network-status-change', { 
-          detail: { online: true } 
-        }));
+        window.dispatchEvent(
+          new CustomEvent('network-status-change', {
+            detail: { online: true },
+          }),
+        );
       });
 
       window.addEventListener('offline', () => {
         console.log('📴 Offline');
-        window.dispatchEvent(new CustomEvent('network-status-change', { 
-          detail: { online: false } 
-        }));
+        window.dispatchEvent(
+          new CustomEvent('network-status-change', {
+            detail: { online: false },
+          }),
+        );
       });
     </script>
   </body>

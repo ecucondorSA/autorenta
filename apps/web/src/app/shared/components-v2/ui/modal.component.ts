@@ -5,7 +5,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 /**
  * Modal Component V2
  * Full-screen mobile modal with backdrop and animations
- * 
+ *
  * Features:
  * - Slide-up animation from bottom
  * - Backdrop with blur effect
@@ -27,37 +27,37 @@ import { animate, style, transition, trigger } from '@angular/animations';
         style({ opacity: 0 }),
         animate('300ms ease-out', style({ opacity: 1 })),
       ]),
-      transition(':leave', [
-        animate('200ms ease-in', style({ opacity: 0 })),
-      ]),
+      transition(':leave', [animate('200ms ease-in', style({ opacity: 0 }))]),
     ]),
     trigger('modal', [
       transition(':enter', [
         style({ transform: 'translateY(100%)', opacity: 0 }),
-        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)', style({ 
-          transform: 'translateY(0)', 
-          opacity: 1 
-        })),
+        animate(
+          '300ms cubic-bezier(0.4, 0, 0.2, 1)',
+          style({
+            transform: 'translateY(0)',
+            opacity: 1,
+          }),
+        ),
       ]),
       transition(':leave', [
-        animate('200ms cubic-bezier(0.4, 0, 1, 1)', style({ 
-          transform: 'translateY(100%)', 
-          opacity: 0 
-        })),
+        animate(
+          '200ms cubic-bezier(0.4, 0, 1, 1)',
+          style({
+            transform: 'translateY(100%)',
+            opacity: 0,
+          }),
+        ),
       ]),
     ]),
   ],
   template: `
     @if (isOpen()) {
       <!-- Backdrop -->
-      <div 
-        class="modal-backdrop"
-        [@backdrop]
-        (click)="handleBackdropClick()"
-      ></div>
+      <div class="modal-backdrop" [@backdrop] (click)="handleBackdropClick()"></div>
 
       <!-- Modal Container -->
-      <div 
+      <div
         class="modal-container"
         [class]="modalClasses()"
         [@modal]
@@ -78,14 +78,9 @@ import { animate, style, transition, trigger } from '@angular/animations';
               {{ title() }}
             </h2>
             @if (showCloseButton()) {
-              <button 
-                type="button"
-                class="close-btn"
-                (click)="close()"
-                aria-label="Cerrar"
-              >
+              <button type="button" class="close-btn" (click)="close()" aria-label="Cerrar">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round" />
                 </svg>
               </button>
             }
@@ -106,147 +101,149 @@ import { animate, style, transition, trigger } from '@angular/animations';
       </div>
     }
   `,
-  styles: [`
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-      z-index: 9998;
-    }
-
-    .modal-container {
-      position: fixed;
-      background: white;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Size variants */
-    .modal-full {
-      inset: 0;
-      border-radius: 0;
-    }
-
-    .modal-large {
-      bottom: 0;
-      left: 0;
-      right: 0;
-      top: 10%;
-      border-radius: 24px 24px 0 0;
-    }
-
-    .modal-medium {
-      bottom: 0;
-      left: 0;
-      right: 0;
-      max-height: 70%;
-      border-radius: 24px 24px 0 0;
-    }
-
-    .modal-small {
-      bottom: 0;
-      left: 0;
-      right: 0;
-      max-height: 50%;
-      border-radius: 24px 24px 0 0;
-    }
-
-    /* Desktop centered modal */
-    @media (min-width: 768px) {
-      .modal-container:not(.modal-full) {
-        left: 50%;
-        right: auto;
-        bottom: auto;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        max-width: 480px;
-        width: 90%;
-        border-radius: 24px;
+  styles: [
+    `
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 9998;
       }
-    }
 
-    /* Handle */
-    .modal-handle {
-      width: 40px;
-      height: 4px;
-      background: #D1D5DB;
-      border-radius: 2px;
-      margin: 0.75rem auto 0;
-      flex-shrink: 0;
-    }
+      .modal-container {
+        position: fixed;
+        background: white;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.2);
+      }
 
-    /* Header */
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.5rem;
-      border-bottom: 1px solid #F3F4F6;
-      flex-shrink: 0;
-    }
+      /* Size variants */
+      .modal-full {
+        inset: 0;
+        border-radius: 0;
+      }
 
-    .modal-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #1F2937;
-      margin: 0;
-    }
+      .modal-large {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 10%;
+        border-radius: 24px 24px 0 0;
+      }
 
-    .close-btn {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
-      border: none;
-      color: #6B7280;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-    }
+      .modal-medium {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 70%;
+        border-radius: 24px 24px 0 0;
+      }
 
-    .close-btn:hover {
-      background: #F3F4F6;
-      color: #1F2937;
-    }
+      .modal-small {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 50%;
+        border-radius: 24px 24px 0 0;
+      }
 
-    .close-btn svg {
-      width: 20px;
-      height: 20px;
-    }
+      /* Desktop centered modal */
+      @media (min-width: 768px) {
+        .modal-container:not(.modal-full) {
+          left: 50%;
+          right: auto;
+          bottom: auto;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          max-width: 480px;
+          width: 90%;
+          border-radius: 24px;
+        }
+      }
 
-    /* Content */
-    .modal-content {
-      flex: 1;
-      padding: 1.5rem;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
+      /* Handle */
+      .modal-handle {
+        width: 40px;
+        height: 4px;
+        background: #d1d5db;
+        border-radius: 2px;
+        margin: 0.75rem auto 0;
+        flex-shrink: 0;
+      }
 
-    .modal-full .modal-content {
-      padding-top: calc(1.5rem + env(safe-area-inset-top));
-      padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
-    }
+      /* Header */
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem;
+        border-bottom: 1px solid #f3f4f6;
+        flex-shrink: 0;
+      }
 
-    /* Footer */
-    .modal-footer {
-      padding: 1rem 1.5rem;
-      padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-      border-top: 1px solid #F3F4F6;
-      display: flex;
-      gap: 0.75rem;
-      flex-shrink: 0;
-    }
+      .modal-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+      }
 
-    .modal-footer:empty {
-      display: none;
-    }
-  `]
+      .close-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: #6b7280;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .close-btn:hover {
+        background: #f3f4f6;
+        color: #1f2937;
+      }
+
+      .close-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      /* Content */
+      .modal-content {
+        flex: 1;
+        padding: 1.5rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .modal-full .modal-content {
+        padding-top: calc(1.5rem + env(safe-area-inset-top));
+        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+      }
+
+      /* Footer */
+      .modal-footer {
+        padding: 1rem 1.5rem;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+        border-top: 1px solid #f3f4f6;
+        display: flex;
+        gap: 0.75rem;
+        flex-shrink: 0;
+      }
+
+      .modal-footer:empty {
+        display: none;
+      }
+    `,
+  ],
 })
 export class ModalComponent {
   @ViewChild('modalElement') modalElement!: ElementRef<HTMLDivElement>;

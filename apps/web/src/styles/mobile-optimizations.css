@@ -794,7 +794,6 @@
   }
 }
 
-
 @supports (height: 100svh) {
   @media (max-width: 768px) {
     .app-main {

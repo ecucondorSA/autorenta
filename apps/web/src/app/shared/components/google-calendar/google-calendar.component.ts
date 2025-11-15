@@ -117,7 +117,7 @@ export class GoogleCalendarComponent implements OnInit, OnChanges {
       // Calendar ID - usar 'cid' para calendarios secundarios públicos
       // Si el ID contiene '@group.calendar.google.com', es un calendario secundario
       const isSecondaryCalendar = config.calendarId.includes('@group.calendar.google.com');
-      
+
       if (isSecondaryCalendar) {
         // Para calendarios secundarios, usar 'cid' que funciona mejor con calendarios públicos
         params.set('cid', config.calendarId);
@@ -164,7 +164,7 @@ export class GoogleCalendarComponent implements OnInit, OnChanges {
       console.log('📅 Calendar URL:', fullUrl);
       console.log('📅 Calendar ID:', config.calendarId);
       console.log('📅 Is secondary calendar:', isSecondaryCalendar);
-      
+
       this.calendarUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl));
       this.hasError.set(false);
       this.errorMessage.set('');

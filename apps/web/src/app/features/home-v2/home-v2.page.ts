@@ -1,13 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeroSwiperComponent } from './components/hero-swiper.component';
-import { QuickSearchCardComponent, type SearchCriteria } from './components/quick-search-card.component';
-import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/featured-cars-carousel.component';
+import {
+  QuickSearchCardComponent,
+  type SearchCriteria,
+} from './components/quick-search-card.component';
+import {
+  FeaturedCarsCarouselComponent,
+  type FeaturedCar,
+} from './components/featured-cars-carousel.component';
 
 /**
  * Home Page V2
  * Modern mobile-first home page
- * 
+ *
  * Features:
  * - Full-screen hero swiper
  * - Floating quick search
@@ -31,9 +37,7 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
       <app-hero-swiper />
 
       <!-- Quick Search Card (floating over hero) -->
-      <app-quick-search-card 
-        (search)="handleSearch($event)"
-      />
+      <app-quick-search-card (quickSearch)="handleSearch($event)" />
 
       <!-- Featured Cars -->
       <section class="section">
@@ -54,13 +58,10 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
           <h2 class="section-title">Explora por categoría</h2>
           <p class="section-subtitle">Encuentra el auto perfecto para tu viaje</p>
         </div>
-        
+
         <div class="categories-grid">
           @for (category of categories; track category.id) {
-            <button 
-              class="category-card"
-              (click)="handleCategoryClick(category)"
-            >
+            <button class="category-card" (click)="handleCategoryClick(category)">
               <div class="category-icon" [style.background]="category.gradient">
                 <span class="icon-emoji">{{ category.emoji }}</span>
               </div>
@@ -122,7 +123,13 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
           <button class="cta-button">
             Publicar mi auto
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M7 5L12 10L7 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path
+                d="M7 5L12 10L7 15"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </button>
           <p class="cta-stats">+3,500 propietarios ganando en promedio $850/mes</p>
@@ -130,232 +137,234 @@ import { FeaturedCarsCarouselComponent, type FeaturedCar } from './components/fe
       </section>
     </div>
   `,
-  styles: [`
-    .home-v2 {
-      min-height: 100vh;
-      background: #F8F4EC; /* Marfil Autorenta */
-      padding-bottom: 80px; /* Space for bottom nav */
-    }
-
-    .section {
-      padding: 0 0 48px 0;
-    }
-
-    .section-header {
-      padding: 0 20px 20px;
-    }
-
-    .section-header.centered {
-      text-align: center;
-    }
-
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #050505;
-      margin: 0 0 8px 0;
-    }
-
-    .section-subtitle {
-      font-size: 0.875rem;
-      color: #4E4E4E;
-      margin: 0;
-    }
-
-    /* Categories */
-    .categories-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      padding: 0 20px;
-    }
-
-    .category-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 24px 16px;
-      background: white;
-      border: 1px solid #BCBCBC; /* G20 Autorenta */
-      border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .category-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    }
-
-    .category-card:active {
-      transform: translateY(-2px);
-    }
-
-    .category-icon {
-      width: 64px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 16px;
-      margin-bottom: 12px;
-    }
-
-    .icon-emoji {
-      font-size: 2rem;
-    }
-
-    .category-name {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #050505;
-      margin: 0 0 4px 0;
-    }
-
-    .category-count {
-      font-size: 0.875rem;
-      color: #4E4E4E;
-      margin: 0;
-    }
-
-    /* Trust Section */
-    .trust-section {
-      background: white;
-      padding-top: 48px;
-    }
-
-    .trust-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-      padding: 0 20px;
-    }
-
-    .trust-card {
-      text-align: center;
-      padding: 24px;
-      background: #DFD2BF; /* Beige Autorenta */
-      border-radius: 16px;
-    }
-
-    .trust-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-    }
-
-    .trust-title {
-      font-size: 1.125rem;
-      font-weight: 700;
-      color: #050505;
-      margin: 0 0 8px 0;
-    }
-
-    .trust-text {
-      font-size: 0.875rem;
-      color: #4E4E4E;
-      line-height: 1.5;
-      margin: 0;
-    }
-
-    /* CTA Section */
-    .cta-section {
-      padding: 48px 20px;
-    }
-
-    .cta-card {
-      background: linear-gradient(135deg, #A7D8F4 0%, #8EC9EC 100%);
-      padding: 48px 32px;
-      border-radius: 24px;
-      text-align: center;
-      color: white;
-    }
-
-    .cta-title {
-      font-size: 2rem;
-      font-weight: 800;
-      margin: 0 0 12px 0;
-    }
-
-    .cta-text {
-      font-size: 1.125rem;
-      margin: 0 0 32px 0;
-      opacity: 0.95;
-    }
-
-    .cta-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 16px 32px;
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: #A7D8F4;
-      background: white;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .cta-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
-    }
-
-    .cta-button:active {
-      transform: translateY(0);
-    }
-
-    .cta-stats {
-      font-size: 0.875rem;
-      margin: 24px 0 0 0;
-      opacity: 0.9;
-    }
-
-    /* Responsive */
-    @media (min-width: 768px) {
-      .section-header {
-        padding: 0 32px 24px;
+  styles: [
+    `
+      .home-v2 {
+        min-height: 100vh;
+        background: #f8f4ec; /* Marfil Autorenta */
+        padding-bottom: 80px; /* Space for bottom nav */
       }
 
+      .section {
+        padding: 0 0 48px 0;
+      }
+
+      .section-header {
+        padding: 0 20px 20px;
+      }
+
+      .section-header.centered {
+        text-align: center;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #050505;
+        margin: 0 0 8px 0;
+      }
+
+      .section-subtitle {
+        font-size: 0.875rem;
+        color: #4e4e4e;
+        margin: 0;
+      }
+
+      /* Categories */
       .categories-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        padding: 0 32px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 0 20px;
+      }
+
+      .category-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 24px 16px;
+        background: white;
+        border: 1px solid #bcbcbc; /* G20 Autorenta */
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .category-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      .category-card:active {
+        transform: translateY(-2px);
+      }
+
+      .category-icon {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        margin-bottom: 12px;
+      }
+
+      .icon-emoji {
+        font-size: 2rem;
+      }
+
+      .category-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #050505;
+        margin: 0 0 4px 0;
+      }
+
+      .category-count {
+        font-size: 0.875rem;
+        color: #4e4e4e;
+        margin: 0;
+      }
+
+      /* Trust Section */
+      .trust-section {
+        background: white;
+        padding-top: 48px;
       }
 
       .trust-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 32px;
-        padding: 0 32px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 0 20px;
       }
 
+      .trust-card {
+        text-align: center;
+        padding: 24px;
+        background: #dfd2bf; /* Beige Autorenta */
+        border-radius: 16px;
+      }
+
+      .trust-icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+      }
+
+      .trust-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #050505;
+        margin: 0 0 8px 0;
+      }
+
+      .trust-text {
+        font-size: 0.875rem;
+        color: #4e4e4e;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      /* CTA Section */
       .cta-section {
-        padding: 64px 32px;
+        padding: 48px 20px;
       }
 
       .cta-card {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 64px 48px;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .categories-grid {
-        max-width: 1200px;
-        margin: 0 auto;
+        background: linear-gradient(135deg, #a7d8f4 0%, #8ec9ec 100%);
+        padding: 48px 32px;
+        border-radius: 24px;
+        text-align: center;
+        color: white;
       }
 
-      .trust-grid {
-        grid-template-columns: repeat(4, 1fr);
-        max-width: 1200px;
-        margin: 0 auto;
+      .cta-title {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0 0 12px 0;
       }
-    }
-  `]
+
+      .cta-text {
+        font-size: 1.125rem;
+        margin: 0 0 32px 0;
+        opacity: 0.95;
+      }
+
+      .cta-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 32px;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #a7d8f4;
+        background: white;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .cta-button:active {
+        transform: translateY(0);
+      }
+
+      .cta-stats {
+        font-size: 0.875rem;
+        margin: 24px 0 0 0;
+        opacity: 0.9;
+      }
+
+      /* Responsive */
+      @media (min-width: 768px) {
+        .section-header {
+          padding: 0 32px 24px;
+        }
+
+        .categories-grid {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+          padding: 0 32px;
+        }
+
+        .trust-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 32px;
+          padding: 0 32px;
+        }
+
+        .cta-section {
+          padding: 64px 32px;
+        }
+
+        .cta-card {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 64px 48px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .categories-grid {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .trust-grid {
+          grid-template-columns: repeat(4, 1fr);
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+      }
+    `,
+  ],
 })
 export class HomeV2Page implements OnInit {
   isLoadingCars = false;
@@ -367,7 +376,8 @@ export class HomeV2Page implements OnInit {
       model: 'Corolla',
       year: 2023,
       price: 45,
-      image: 'https://images.unsplash.com/photo-1623869675781-80aa31012a5a?w=600&auto=format&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1623869675781-80aa31012a5a?w=600&auto=format&fit=crop',
       rating: 4.9,
       trips: 127,
       location: 'Quito, Pichincha',
@@ -380,7 +390,8 @@ export class HomeV2Page implements OnInit {
       model: 'CX-5',
       year: 2022,
       price: 65,
-      image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=600&auto=format&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=600&auto=format&fit=crop',
       rating: 4.8,
       trips: 89,
       location: 'Guayaquil, Guayas',
@@ -394,7 +405,8 @@ export class HomeV2Page implements OnInit {
       model: 'Sail',
       year: 2021,
       price: 35,
-      image: 'https://images.unsplash.com/photo-1583267746897-2cf415887f51?w=600&auto=format&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1583267746897-2cf415887f51?w=600&auto=format&fit=crop',
       rating: 4.7,
       trips: 156,
       location: 'Cuenca, Azuay',
@@ -422,7 +434,8 @@ export class HomeV2Page implements OnInit {
       model: 'Tucson',
       year: 2022,
       price: 70,
-      image: 'https://images.unsplash.com/photo-1606016159991-62e6d9e4f5e4?w=600&auto=format&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1606016159991-62e6d9e4f5e4?w=600&auto=format&fit=crop',
       rating: 4.8,
       trips: 134,
       location: 'Quito, Pichincha',
@@ -432,10 +445,34 @@ export class HomeV2Page implements OnInit {
   ];
 
   categories = [
-    { id: '1', name: 'Económicos', count: 340, emoji: '🚗', gradient: 'linear-gradient(135deg, #A7D8F4 0%, #75BAE4 100%)' },
-    { id: '2', name: 'SUVs', count: 180, emoji: '🚙', gradient: 'linear-gradient(135deg, #DFD2BF 0%, #8B7355 100%)' },
-    { id: '3', name: 'Camionetas', count: 95, emoji: '🚚', gradient: 'linear-gradient(135deg, #E0F3FB 0%, #A7D8F4 100%)' },
-    { id: '4', name: 'Lujo', count: 42, emoji: '✨', gradient: 'linear-gradient(135deg, #F8F4EC 0%, #DFD2BF 100%)' },
+    {
+      id: '1',
+      name: 'Económicos',
+      count: 340,
+      emoji: '🚗',
+      gradient: 'linear-gradient(135deg, #A7D8F4 0%, #75BAE4 100%)',
+    },
+    {
+      id: '2',
+      name: 'SUVs',
+      count: 180,
+      emoji: '🚙',
+      gradient: 'linear-gradient(135deg, #DFD2BF 0%, #8B7355 100%)',
+    },
+    {
+      id: '3',
+      name: 'Camionetas',
+      count: 95,
+      emoji: '🚚',
+      gradient: 'linear-gradient(135deg, #E0F3FB 0%, #A7D8F4 100%)',
+    },
+    {
+      id: '4',
+      name: 'Lujo',
+      count: 42,
+      emoji: '✨',
+      gradient: 'linear-gradient(135deg, #F8F4EC 0%, #DFD2BF 100%)',
+    },
   ];
 
   ngOnInit(): void {

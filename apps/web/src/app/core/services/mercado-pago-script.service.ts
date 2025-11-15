@@ -78,7 +78,9 @@ export class MercadoPagoScriptService {
       return this.mercadoPagoInstance;
     } catch (error: unknown) {
       const normalizedError =
-        error instanceof Error ? error : new Error(typeof error === 'string' ? error : 'Unknown error');
+        error instanceof Error
+          ? error
+          : new Error(typeof error === 'string' ? error : 'Unknown error');
 
       console.error(
         'Detailed error object in getMercadoPago:',

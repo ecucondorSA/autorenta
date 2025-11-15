@@ -35,7 +35,6 @@ import { ProfileStore } from '../../../core/stores/profile.store';
 
     <ion-content class="bg-surface-base dark:bg-surface-base ion-padding" fullscreen="true">
       <div class="py-6 px-4 max-w-4xl mx-auto">
-
         <!-- Header -->
         <div class="mb-6 block">
           <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2 block">
@@ -230,8 +229,6 @@ import { ProfileStore } from '../../../core/stores/profile.store';
         --padding-bottom: 24px;
         min-height: 100vh;
       }
-
-
     `,
   ],
 })

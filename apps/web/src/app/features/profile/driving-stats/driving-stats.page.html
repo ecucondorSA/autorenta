@@ -152,10 +152,10 @@
 
       <div class="insights-card">
         <div class="insight-item">
-          <div class="insight-icon">{{ getMainIssueIcon(insights()!.main_issue) }}</div>
+          <div class="insight-icon">{{ getMainIssueIcon(insights()?.main_issue || '') }}</div>
           <div class="insight-content">
             <div class="insight-label">Principal área de mejora</div>
-            <div class="insight-value">{{ insights()!.main_issue }}</div>
+            <div class="insight-value">{{ insights()?.main_issue || 'N/A' }}</div>
           </div>
         </div>
 

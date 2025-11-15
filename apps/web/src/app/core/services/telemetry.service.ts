@@ -1,6 +1,9 @@
 import { Injectable, computed, signal, inject } from '@angular/core';
 import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
+import { LoggerService } from './logger.service';
+import { from, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 /**
  * TelemetryService
@@ -35,8 +38,22 @@ export interface TelemetryData {
   };
 }
 
-export interface TelemetryHistory {
-  telemetry_id: string;
+export interface TelemetrySummary {
+  total_trips: number;
+  total_km: number;
+  avg_driver_score: number;
+  current_driver_score: number;
+  hard_brakes_total: number;
+  speed_violations_total: number;
+  night_driving_hours_total: number;
+  risk_zones_visited_total: number;
+  best_score: number;
+  worst_score: number;
+  score_trend: 'improving' | 'declining' | 'stable' | 'insufficient_data';
+}
+
+export interface TelemetryHistoryEntry {
+  id: string;
   booking_id: string;
   trip_date: string;
   total_km: number;
@@ -45,29 +62,47 @@ export interface TelemetryHistory {
   speed_violations: number;
   night_driving_hours: number;
   risk_zones_visited: number;
-  car_title: string;
-  car_brand: string;
-  car_model: string;
+  // Compatibility properties for car info
+  car_brand?: string;
+  car_model?: string;
 }
 
+// Alias for backward compatibility
+export type TelemetryHistory = TelemetryHistoryEntry;
+
 export interface TelemetryAverage {
-  avg_score: number;
-  total_trips: number;
-  total_km: number;
-  total_hard_brakes: number;
-  total_speed_violations: number;
-  total_night_hours: number;
-  total_risk_zones: number;
-  period_start: string;
-  period_end: string;
+  avg_total_km: number;
+  avg_driver_score: number;
+  avg_hard_brakes: number;
+  avg_speed_violations: number;
+  avg_night_driving_hours: number;
+  avg_risk_zones_visited: number;
+  // Compatibility properties (totals and others)
+  total_trips?: number;
+  total_km?: number;
+  total_hard_brakes?: number;
+  total_speed_violations?: number;
+  total_night_hours?: number;
+  total_risk_zones?: number;
+  avg_score?: number;
 }
 
 export interface TelemetryInsights {
-  current_score: number;
-  score_trend: string;
-  main_issue: string;
-  recommendation: string;
-  trips_analyzed: number;
+  recommendations: string[];
+  risk_level: 'low' | 'medium' | 'high';
+  improvement_areas: string[];
+  strengths: string[];
+  // Compatibility properties
+  main_issue?: string;
+  recommendation?: string;
+  score_trend?: 'improving' | 'declining' | 'stable';
+}
+
+export interface RecordTelemetryResult {
+  success: boolean;
+  message: string;
+  telemetry_id: string;
+  driver_score: number;
 }
 
 interface TelemetryState {
@@ -82,6 +117,7 @@ interface TelemetryState {
 export class TelemetryService {
   private readonly supabase = injectSupabase();
   private readonly authService = inject(AuthService);
+  private readonly logger = inject(LoggerService);
 
   private readonly state = signal<TelemetryState>({
     isCollecting: false,
@@ -89,10 +125,40 @@ export class TelemetryService {
     sessionData: {},
   });
 
-  // Computed signals
+  // Core reactive state
   readonly isCollecting = computed(() => this.state().isCollecting);
   readonly currentBookingId = computed(() => this.state().currentBookingId);
   readonly sessionData = computed(() => this.state().sessionData);
+
+  // Extended state for dashboards
+  readonly loading = signal(false);
+  readonly error = signal<{ message: string } | null>(null);
+  readonly summary = signal<TelemetrySummary | null>(null);
+  readonly history = signal<TelemetryHistoryEntry[]>([]);
+
+  readonly currentDriverScore = computed(() => this.summary()?.current_driver_score ?? 50);
+  readonly avgDriverScore = computed(() => this.summary()?.avg_driver_score ?? 50);
+  readonly totalTrips = computed(() => this.summary()?.total_trips ?? 0);
+  readonly totalKm = computed(() => this.summary()?.total_km ?? 0);
+  readonly scoreTrend = computed(
+    () => this.summary()?.score_trend ?? ('insufficient_data' as const),
+  );
+  readonly isImproving = computed(() => this.scoreTrend() === 'improving');
+  readonly isDeclining = computed(() => this.scoreTrend() === 'declining');
+
+  readonly trendDisplay = computed(() => {
+    const trend = this.scoreTrend();
+    switch (trend) {
+      case 'improving':
+        return { icon: '↗', label: 'Mejorando', color: 'green' };
+      case 'declining':
+        return { icon: '↘', label: 'Bajando', color: 'red' };
+      case 'stable':
+        return { icon: '→', label: 'Estable', color: 'blue' };
+      default:
+        return { icon: '?', label: 'Sin datos', color: 'gray' };
+    }
+  });
 
   /**
    * Inicia la recolección de datos telemáticos para un booking
@@ -275,9 +341,9 @@ export class TelemetryService {
   }
 
   /**
-   * Envía datos telemáticos al backend
+   * Envía datos telemáticos al backend (baja nivel, usado por stopCollection)
    */
-  private async recordTelemetry(data: TelemetryData): Promise<string> {
+  async recordTelemetry(data: TelemetryData): Promise<string> {
     const { data: result, error } = await this.supabase.rpc('record_telemetry', {
       p_booking_id: data.booking_id,
       p_telemetry_data: {
@@ -295,6 +361,79 @@ export class TelemetryService {
     }
 
     return result;
+  }
+
+  /**
+   * Obtiene el resumen activo de telemetría del usuario
+   */
+  activeSummary(userId?: string): Observable<TelemetrySummary | null> {
+    const summaryPromise = (async () => {
+      const user = userId ? { id: userId } : await this.authService.getCurrentUser();
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      const { data, error } = await this.supabase.rpc('get_telemetry_summary', {
+        p_user_id: user.id,
+      });
+
+      if (error) {
+        this.logger.error('[TelemetryService] Error al obtener resumen', error.message);
+        throw error;
+      }
+
+      const summary = (data?.[0] || null) as TelemetrySummary | null;
+      this.summary.set(summary);
+      return summary;
+    })();
+
+    return from(summaryPromise);
+  }
+
+  /**
+   * API de alto nivel usada por dashboards/tests para registrar telemetría
+   * y refrescar el resumen activo.
+   */
+  recordTelemetryForUser(params: {
+    userId: string | null;
+    bookingId: string;
+    telemetryData: TelemetryData;
+  }): Observable<RecordTelemetryResult> {
+    const { userId, bookingId, telemetryData } = params;
+    this.loading.set(true);
+    this.error.set(null);
+
+    const recordPromise = (async () => {
+      const { data, error } = await this.supabase.rpc('record_telemetry_for_user', {
+        p_user_id: userId,
+        p_booking_id: bookingId,
+        p_telemetry_data: telemetryData,
+      });
+
+      if (error) {
+        this.error.set({ message: 'Error al registrar telemetría' });
+        this.logger.error('[TelemetryService] Error al registrar telemetría', error.message);
+        throw error;
+      }
+
+      const result = (data?.[0] || null) as RecordTelemetryResult | null;
+
+      // Refrescar resumen activo en background (no esperamos el resultado)
+      this.activeSummary(userId ?? undefined).subscribe({
+        error: (err: unknown) =>
+          this.logger.error('[TelemetryService] Error al refrescar summary', String(err)),
+      });
+
+      return result!;
+    })();
+
+    return from(recordPromise).pipe(
+      tap({
+        next: () => this.loading.set(false),
+        error: () => this.loading.set(false),
+        complete: () => this.loading.set(false),
+      }),
+    );
   }
 
   /**

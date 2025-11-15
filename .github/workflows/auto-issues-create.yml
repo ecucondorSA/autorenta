@@ -1,0 +1,48 @@
+name: Auto Issues Create
+
+on:
+  workflow_dispatch:
+    inputs:
+      create:
+        description: 'Set to true to actually create issues (otherwise dry-run).'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python3 -m pip install --upgrade pip
+
+      - name: Authenticate GH CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GITHUB_TOKEN" | gh auth login --with-token
+
+      - name: Run issue creator (dry-run)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/create_issues_from_docs.py --dry-run true
+
+      - name: Run issue creator (create)
+        if: github.event.inputs.create == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/create_issues_from_docs.py --dry-run false
