@@ -32,6 +32,7 @@ import {
 } from '../map-layers-control/map-layers-control.component';
 import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
 import { MapboxDirectionsService } from '../../../core/services/mapbox-directions.service';
+import { MapGeometryService } from '../../../core/services/map-geometry.service';
 
 type MapboxGL = typeof import('mapbox-gl').default;
 type MapboxMap = import('mapbox-gl').Map;
@@ -222,6 +223,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private readonly applicationRef = inject(ApplicationRef);
   private readonly injector = inject(EnvironmentInjector);
   private readonly directionsService = inject(MapboxDirectionsService);
+  private readonly geometryService = inject(MapGeometryService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -1066,8 +1068,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     if (zoom > 12) {
       const center = this.map.getCenter();
       visibleCars.sort((a, b) => {
-        const distA = this.calculateDistance(center.lat, center.lng, a.lat, a.lng);
-        const distB = this.calculateDistance(center.lat, center.lng, b.lat, b.lng);
+        const distA = this.geometryService.calculateDistance(center.lat, center.lng, a.lat, a.lng);
+        const distB = this.geometryService.calculateDistance(center.lat, center.lng, b.lat, b.lng);
         return distA - distB;
       });
     }
@@ -1360,7 +1362,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Animate marker movement if location changed
     if (previousLocation) {
-      const distance = this.calculateDistance(
+      const distance = this.geometryService.calculateDistance(
         previousLocation.lat,
         previousLocation.lng,
         this.userLocation.lat,
@@ -1535,23 +1537,6 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }
   }
 
-  /**
-   * Calculate distance between two coordinates (Haversine formula)
-   */
-  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-    const R = 6371e3; // Earth radius in meters
-    const φ1 = (lat1 * Math.PI) / 180;
-    const φ2 = (lat2 * Math.PI) / 180;
-    const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-    const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-    const a =
-      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return R * c;
-  }
 
   /**
    * Update marker styles based on mode and theme
@@ -1589,7 +1574,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const radiusMeters = this.searchRadiusKm * 1000;
 
     // Create circle geometry
-    const circle = this.createCircleGeometry(
+    const circle = this.geometryService.createCircleGeometry(
       this.userLocation.lat,
       this.userLocation.lng,
       radiusMeters,
@@ -1636,56 +1621,6 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }
   }
 
-  /**
-   * Create circle geometry for search radius
-   */
-  private createCircleGeometry(lat: number, lng: number, radiusMeters: number): GeoJSON.Polygon {
-    const points = 64;
-    const coordinates: [number, number][] = [];
-
-    for (let i = 0; i <= points; i++) {
-      const angle = (i * 360) / points;
-      const point = this.destinationPoint(lat, lng, radiusMeters, angle);
-      coordinates.push([point.lng, point.lat]);
-    }
-
-    return {
-      type: 'Polygon',
-      coordinates: [coordinates],
-    };
-  }
-
-  /**
-   * Calculate destination point given start point, distance and bearing
-   */
-  private destinationPoint(
-    lat: number,
-    lng: number,
-    distanceMeters: number,
-    bearingDegrees: number,
-  ): { lat: number; lng: number } {
-    const R = 6371e3; // Earth radius in meters
-    const bearing = (bearingDegrees * Math.PI) / 180;
-    const lat1 = (lat * Math.PI) / 180;
-    const lng1 = (lng * Math.PI) / 180;
-
-    const lat2 = Math.asin(
-      Math.sin(lat1) * Math.cos(distanceMeters / R) +
-        Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
-    );
-
-    const lng2 =
-      lng1 +
-      Math.atan2(
-        Math.sin(bearing) * Math.sin(distanceMeters / R) * Math.cos(lat1),
-        Math.cos(distanceMeters / R) - Math.sin(lat1) * Math.sin(lat2),
-      );
-
-    return {
-      lat: (lat2 * 180) / Math.PI,
-      lng: (lng2 * 180) / Math.PI,
-    };
-  }
 
   /**
    * Setup follow user location functionality
