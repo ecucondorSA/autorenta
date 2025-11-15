@@ -4,6 +4,7 @@ import type { UpdateProfileData } from '../services/profile.service';
 import { ProfileService } from '../services/profile.service';
 import { WalletService } from '../services/wallet.service';
 import { AuthService } from '../services/auth.service';
+import { AnalyticsService } from '../services/analytics.service';
 
 /**
  * ProfileStore - Centralized state management for user profile
@@ -35,6 +36,7 @@ export class ProfileStore {
   private readonly profileService = inject(ProfileService);
   private readonly walletService = inject(WalletService);
   private readonly authService = inject(AuthService);
+  private readonly analytics = inject(AnalyticsService);
 
   // ==================== CORE STATE ====================
 
@@ -253,11 +255,11 @@ export class ProfileStore {
     this.loading.set(true);
     this.error.set(null);
 
-    // TODO: Send analytics event for section update
-    // this.analytics.track('profile_section_updating', {
-    //   section_id: sectionId,
-    //   fields: Object.keys(updates),
-    // });
+    // Send analytics event for section update
+    this.analytics.trackEvent('profile_section_updating', {
+      section_id: sectionId,
+      fields: Object.keys(updates),
+    });
 
     // Optimistic update
     const currentProfile = this.profile();
@@ -273,11 +275,11 @@ export class ProfileStore {
       this.profile.set(updatedProfile);
       this.cacheTimestamp = Date.now();
 
-      // TODO: Send analytics event
-      // this.analytics.track('profile_section_updated', {
-      //   section_id: sectionId,
-      //   fields_updated: Object.keys(updates),
-      // });
+      // Send analytics event
+      this.analytics.trackEvent('profile_section_updated', {
+        section_id: sectionId,
+        fields_updated: Object.keys(updates),
+      });
 
       return updatedProfile;
     } catch (err) {
@@ -291,11 +293,11 @@ export class ProfileStore {
 
       this.error.set(errorMessage);
 
-      // TODO: Send analytics event for error
-      // this.analytics.track('profile_section_update_failed', {
-      //   section_id: sectionId,
-      //   error: errorMessage,
-      // });
+      // Send analytics event for error
+      this.analytics.trackEvent('profile_section_update_failed', {
+        section_id: sectionId,
+        error_message: errorMessage,
+      });
 
       throw err;
     } finally {

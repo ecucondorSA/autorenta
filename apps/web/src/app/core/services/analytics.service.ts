@@ -53,7 +53,11 @@ export type ConversionEventType =
   | 'onboarding_step_completed'
   | 'onboarding_modal_dismissed'
   // Price Transparency Events
-  | 'price_transparency_modal_viewed';
+  | 'price_transparency_modal_viewed'
+  // Profile Events
+  | 'profile_section_updating'
+  | 'profile_section_updated'
+  | 'profile_section_update_failed';
 
 export interface ConversionEventData {
   // Common fields
@@ -96,6 +100,11 @@ export interface ConversionEventData {
   // Price Transparency specific
   context?: string;
   timestamp?: string;
+
+  // Profile specific
+  section_id?: string;
+  fields?: string[];
+  fields_updated?: string[];
 
   // Additional metadata
   [key: string]: unknown;
@@ -245,6 +254,11 @@ export class AnalyticsService {
 
       // Price Transparency
       price_transparency_modal_viewed: 'view_promotion',
+
+      // Profile
+      profile_section_updating: 'select_content',
+      profile_section_updated: 'save',
+      profile_section_update_failed: 'exception',
     };
 
     return mapping[eventType] || eventType;
