@@ -403,5 +403,18 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'reviews',
+    canMatch: [AuthGuard],
+    children: [
+      {
+        path: 'pending',
+        loadComponent: () =>
+          import('./features/reviews/pending-reviews/pending-reviews.page').then(
+            (m) => m.PendingReviewsPage,
+          ),
+      },
+    ],
+  },
   { path: '**', redirectTo: '' },
 ];

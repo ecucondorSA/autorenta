@@ -512,7 +512,8 @@ export class ReviewsService {
       `,
       )
       .eq('reviewee_id', ownerId)
-      .eq('reviewee_role', 'owner')
+      .eq('review_type', 'renter_to_owner')
+      .eq('is_visible', true)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -539,7 +540,8 @@ export class ReviewsService {
       `,
       )
       .eq('reviewee_id', renterId)
-      .eq('reviewee_role', 'renter')
+      .eq('review_type', 'owner_to_renter')
+      .eq('is_visible', true)
       .order('created_at', { ascending: false });
 
     if (error) {
