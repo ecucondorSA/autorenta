@@ -54,6 +54,13 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        pathMatch: 'full',
+        data: { layout: 'full-bleed' },
+        loadComponent: () =>
+          import('./features/cars/conversion/cars-conversion.page').then((m) => m.CarsConversionPage),
+      },
+      {
+        path: 'list',
         data: { layout: 'full-bleed' },
         loadComponent: () =>
           import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
@@ -157,10 +164,8 @@ export const routes: Routes = [
       },
       {
         path: 'accounting',
-        loadComponent: () =>
-          import('./features/admin/accounting/accounting-admin.page').then(
-            (m) => m.AccountingAdminPage,
-          ),
+        loadChildren: () =>
+          import('./features/admin/accounting/accounting.routes').then((m) => m.ACCOUNTING_ROUTES),
       },
       {
         path: 'claims',
@@ -360,6 +365,11 @@ export const routes: Routes = [
     canMatch: [AuthGuard, onboardingGuard],
     loadComponent: () =>
       import('./features/dashboard/owner-dashboard.page').then((m) => m.OwnerDashboardPage),
+  },
+  {
+    path: 'calendar-demo',
+    canMatch: [AuthGuard],
+    loadComponent: () => import('./features/calendar/calendar.page').then((m) => m.CalendarPage),
   },
   {
     path: 'payouts',

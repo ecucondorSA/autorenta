@@ -28,7 +28,7 @@ export class MobileBottomNavComponent {
       id: 'rent',
       label: 'Alquilar',
       icon: 'search',
-      route: '/explore',
+      route: '/cars',
     },
     {
       id: 'publish',

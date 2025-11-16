@@ -1,0 +1,97 @@
+<section class="conversion-hero">
+  <div class="conversion-hero__content">
+    <p class="conversion-eyebrow">Reserva en 3 pasos</p>
+    <h1>Elegí tu auto, fechas y hora de retiro desde un mismo lugar</h1>
+    <p class="conversion-lead">
+      Configurá tu viaje ideal antes de comparar autos: bloqueá el rango de fechas, definí horarios
+      exactos y recibí opciones compatibles sin perder tiempo.
+    </p>
+    <div class="conversion-actions">
+      <a routerLink="/cars/list" class="btn-primary">Ver autos disponibles</a>
+      <a routerLink="/calendar-demo" class="btn-secondary">Abrir calendario completo</a>
+    </div>
+    <ul class="conversion-perks">
+      <li *ngFor="let perk of perks">
+        <span class="perk-icon" aria-hidden="true">{{ perk.icon }}</span>
+        <div>
+          <p class="perk-title">{{ perk.title }}</p>
+          <p class="perk-description">{{ perk.description }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="conversion-hero__visual" aria-hidden="true">
+    <div class="conversion-hero__card">
+      <p class="conversion-hero__status">Tiempo estimado</p>
+      <p class="conversion-hero__value">02 min</p>
+      <p class="conversion-hero__status">Confirmación promedio</p>
+      <p class="conversion-hero__value">&lt; 15 min</p>
+    </div>
+  </div>
+</section>
+
+<section class="conversion-grid" id="selector">
+  <article class="conversion-card">
+    <header>
+      <p class="card-eyebrow">Calendario inteligente</p>
+      <h2>Bloqueá fechas antes de elegir el auto</h2>
+      <p>Interactuá con el calendario para marcar los días tentativos y detectar conflictos.</p>
+    </header>
+    <app-calendar></app-calendar>
+  </article>
+
+  <article class="conversion-card">
+    <header>
+      <p class="card-eyebrow">Backup manual</p>
+      <h2>Selector rápido de rango</h2>
+      <p>Si preferís inputs tradicionales o necesitás ajustar horas puntuales, usá el picker liviano.</p>
+    </header>
+    <app-booking-picker></app-booking-picker>
+  </article>
+
+  <article class="conversion-card conversion-card--cta">
+    <header>
+      <p class="card-eyebrow">¿Listo?</p>
+      <h2>Continuá con el inventario filtrado</h2>
+      <p>
+        Con las fechas definidas, abrí el mapa y filtramos automáticamente por disponibilidad para
+        que sólo veas autos compatibles.
+      </p>
+    </header>
+    <ul class="steps">
+      <li>
+        <span>1</span>
+        <div>
+          <p>Elegí fechas y horarios arriba</p>
+          <small>Podés editarlo luego desde el resumen de reserva.</small>
+        </div>
+      </li>
+      <li>
+        <span>2</span>
+        <div>
+          <p>Compará autos disponibles</p>
+          <small>Te llevamos al mapa/lista con filtros aplicados.</small>
+        </div>
+      </li>
+      <li>
+        <span>3</span>
+        <div>
+          <p>Confirmá en minutos</p>
+          <small>Pago seguro, seguro incluido y soporte 24/7.</small>
+        </div>
+      </li>
+    </ul>
+    <a routerLink="/cars/list" class="btn-primary btn-primary--full">Ver inventario filtrado</a>
+  </article>
+</section>
+
+<section class="conversion-footer">
+  <div>
+    <h3>¿Ya sabés qué auto querés?</h3>
+    <p>
+      Accedé directo al mapa avanzado. Siempre podés volver a este paso desde el botón
+      "Definir fechas" en el header.
+    </p>
+  </div>
+  <a routerLink="/cars/list" class="btn-secondary">Ir al mapa tradicional</a>
+</section>
