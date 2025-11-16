@@ -43,7 +43,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
         <!-- Menu dropdown -->
         <div
-          class="absolute right-0 mt-2 w-80 card-premium shadow-elevated p-4 z-50 animate-fade-in"
+          class="help-dropdown absolute right-0 mt-2 w-80 card-premium shadow-elevated p-4 z-50 animate-fade-in"
           role="menu"
           aria-labelledby="help-center"
         >
@@ -188,6 +188,22 @@ import { AuthService } from '../../../core/services/auth.service';
     `
       :host {
         display: inline-block;
+      }
+
+      .help-dropdown {
+        border-radius: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        .help-dropdown {
+          position: fixed;
+          left: 1rem;
+          right: 1rem;
+          top: 4.25rem;
+          width: auto;
+          max-height: calc(100vh - 5.5rem);
+          overflow-y: auto;
+        }
       }
     `,
   ],
