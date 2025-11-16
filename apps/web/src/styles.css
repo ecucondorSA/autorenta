@@ -3,7 +3,7 @@
 /* ============================================ */
 
 /* 🎚️ Responsive Tokens - CSS custom properties */
-@import ./styles/responsive-tokens.css;
+@import './styles/responsive-tokens.css';
 
 /* Ionic CSS - Required for Ionic components to render */
 @import '@ionic/angular/css/core.css';
