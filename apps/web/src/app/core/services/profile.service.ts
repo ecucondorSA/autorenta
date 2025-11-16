@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import {
   UserProfile,
@@ -44,39 +44,99 @@ export interface UpdateProfileData {
 export class ProfileService {
   private readonly supabase = inject(SupabaseClientService).getClient();
 
-  async getCurrentProfile(): Promise<UserProfile | null> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
+  // ============================================================================
+  // SIGNAL-BASED STATE MANAGEMENT
+  // ============================================================================
 
-    if (!user) {
-      throw new Error('Usuario no autenticado - getUser() retornó null');
+  // Cache for current user's profile
+  readonly currentProfile = signal<UserProfile | null>(null);
+  readonly currentProfileLoading = signal(false);
+  readonly currentProfileError = signal<string | null>(null);
+
+  // Cache for profiles by ID (other users)
+  private readonly profileCacheMap = signal<Map<string, UserProfile>>(new Map());
+  readonly profileCache = computed(() => this.profileCacheMap());
+
+  // Cache for current user's documents
+  readonly myDocuments = signal<UserDocument[]>([]);
+  readonly myDocumentsLoading = signal(false);
+  readonly myDocumentsError = signal<string | null>(null);
+
+  // Computed values
+  readonly currentUserRole = computed(() => this.currentProfile()?.role ?? 'renter');
+  readonly canPublish = computed(() => {
+    const role = this.currentUserRole();
+    return role === 'owner' || role === 'both';
+  });
+  readonly canBook = computed(() => {
+    const role = this.currentUserRole();
+    return role === 'renter' || role === 'both';
+  });
+
+  async getCurrentProfile(options: { forceRefresh?: boolean } = {}): Promise<UserProfile | null> {
+    // Return cached profile if available and not forcing refresh
+    if (!options.forceRefresh && this.currentProfile()) {
+      return this.currentProfile();
     }
 
-    const { data, error } = await this.supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+    this.currentProfileLoading.set(true);
+    this.currentProfileError.set(null);
 
-    if (error) {
-      if (error.code === 'PGRST116') {
-        return this.createProfile(user.id, user.email ?? '');
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error('Usuario no autenticado - getUser() retornó null');
       }
 
-      if (error.code === '42501') {
-        throw new Error(
-          `RLS Policy violation: Usuario ${user.id} no tiene acceso a su propio perfil. Error: ${error.message}`,
-        );
+      const { data, error } = await this.supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          const newProfile = await this.createProfile(user.id, user.email ?? '');
+          this.currentProfile.set(newProfile);
+          return newProfile;
+        }
+
+        if (error.code === '42501') {
+          throw new Error(
+            `RLS Policy violation: Usuario ${user.id} no tiene acceso a su propio perfil. Error: ${error.message}`,
+          );
+        }
+
+        throw new Error(`Error cargando perfil (${error.code}): ${error.message}`);
       }
 
-      throw new Error(`Error cargando perfil (${error.code}): ${error.message}`);
+      const profile = data as UserProfile;
+      this.currentProfile.set(profile);
+      return profile;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error al cargar perfil';
+      this.currentProfileError.set(errorMessage);
+      throw error;
+    } finally {
+      this.currentProfileLoading.set(false);
     }
-
-    return data as UserProfile;
   }
 
-  async getProfileById(userId: string): Promise<UserProfile | null> {
+  async getProfileById(
+    userId: string,
+    options: { forceRefresh?: boolean } = {},
+  ): Promise<UserProfile | null> {
+    // Check cache first
+    if (!options.forceRefresh) {
+      const cached = this.profileCacheMap().get(userId);
+      if (cached) {
+        return cached;
+      }
+    }
+
     const { data, error } = await this.supabase
       .from('profiles')
       .select('*')
@@ -88,7 +148,16 @@ export class ProfileService {
       throw error;
     }
 
-    return data as UserProfile;
+    const profile = data as UserProfile;
+
+    // Update cache
+    this.profileCacheMap.update((cache) => {
+      const newCache = new Map(cache);
+      newCache.set(userId, profile);
+      return newCache;
+    });
+
+    return profile;
   }
 
   async updateProfile(updates: UpdateProfileData): Promise<UserProfile> {
@@ -119,7 +188,17 @@ export class ProfileService {
       throw error;
     }
 
-    return data as UserProfile;
+    const updatedProfile = data as UserProfile;
+
+    // Update cache
+    this.currentProfile.set(updatedProfile);
+    this.profileCacheMap.update((cache) => {
+      const newCache = new Map(cache);
+      newCache.set(user.id, updatedProfile);
+      return newCache;
+    });
+
+    return updatedProfile;
   }
 
   async uploadAvatar(file: File): Promise<string> {
@@ -302,29 +381,53 @@ export class ProfileService {
       console.warn('Document verification failed (non-blocking):', verificationError);
     }
 
-    return data as UserDocument;
+    const newDocument = data as UserDocument;
+
+    // Update cache
+    this.myDocuments.update((docs) => [newDocument, ...docs]);
+
+    return newDocument;
   }
 
-  async getMyDocuments(): Promise<UserDocument[]> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('Usuario no autenticado');
+  async getMyDocuments(options: { forceRefresh?: boolean } = {}): Promise<UserDocument[]> {
+    // Return cached data if available and not forcing refresh
+    if (!options.forceRefresh && this.myDocuments().length > 0) {
+      return this.myDocuments();
     }
 
-    const { data, error } = await this.supabase
-      .from('user_documents')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+    this.myDocumentsLoading.set(true);
+    this.myDocumentsError.set(null);
 
-    if (error) {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      const { data, error } = await this.supabase
+        .from('user_documents')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      const documents = (data as UserDocument[]) ?? [];
+      this.myDocuments.set(documents);
+      return documents;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Error al cargar documentos';
+      this.myDocumentsError.set(errorMessage);
       throw error;
+    } finally {
+      this.myDocumentsLoading.set(false);
     }
-
-    return (data as UserDocument[]) ?? [];
   }
 
   async getDocument(documentId: string): Promise<UserDocument | null> {
@@ -356,6 +459,9 @@ export class ProfileService {
     if (error) {
       throw error;
     }
+
+    // Update cache
+    this.myDocuments.update((docs) => docs.filter((doc) => doc.id !== documentId));
   }
 
   async getDocumentSignedUrl(storagePath: string): Promise<string> {

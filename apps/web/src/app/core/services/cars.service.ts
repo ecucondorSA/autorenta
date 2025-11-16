@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { firstValueFrom } from 'rxjs';
 import { Car, CarFilters, CarPhoto } from '../models';
@@ -27,6 +27,31 @@ export class CarsService {
   private readonly defaultValuationConfig = {
     averageRentalDays: 300,
   };
+
+  // ============================================================================
+  // SIGNAL-BASED STATE MANAGEMENT
+  // ============================================================================
+
+  // Cache for user's cars
+  readonly myCars = signal<Car[]>([]);
+  readonly myCarsLoading = signal(false);
+  readonly myCarsError = signal<string | null>(null);
+
+  // Cache for active cars listing
+  readonly activeCars = signal<Car[]>([]);
+  readonly activeCarsLoading = signal(false);
+  readonly activeCarsError = signal<string | null>(null);
+  readonly activeCarsFilters = signal<CarFilters | null>(null);
+
+  // Cache for individual car details (by ID)
+  private readonly carCacheMap = signal<Map<string, Car>>(new Map());
+  readonly carCache = computed(() => this.carCacheMap());
+
+  // Computed: Total number of user's cars
+  readonly myCarsCount = computed(() => this.myCars().length);
+
+  // Computed: Active cars count
+  readonly activeCarsCount = computed(() => this.activeCars().length);
 
   async createCar(input: Partial<Car>): Promise<Car> {
     const userId = (await this.supabase.auth.getUser()).data.user?.id;
@@ -113,10 +138,15 @@ export class CarsService {
 
     console.log('✅ Car created successfully:', data.id);
 
-    return {
+    const newCar = {
       ...data,
       photos: data.car_photos || [],
     } as Car;
+
+    // Update cache: add new car to myCars
+    this.myCars.update((cars) => [newCar, ...cars]);
+
+    return newCar;
   }
 
   async uploadPhoto(file: File, carId: string, position = 0): Promise<CarPhoto> {
@@ -219,11 +249,30 @@ export class CarsService {
     });
   }
 
-  async listActiveCars(filters: CarFilters): Promise<Car[]> {
-    let query = this.supabase
-      .from('cars')
-      .select(
-        `
+  async listActiveCars(
+    filters: CarFilters,
+    options: { forceRefresh?: boolean } = {},
+  ): Promise<Car[]> {
+    // Check if we have cached data with same filters
+    const cachedFilters = this.activeCarsFilters();
+    const hasMatchingCache =
+      !options.forceRefresh &&
+      cachedFilters &&
+      JSON.stringify(cachedFilters) === JSON.stringify(filters) &&
+      this.activeCars().length > 0;
+
+    if (hasMatchingCache) {
+      return this.activeCars();
+    }
+
+    this.activeCarsLoading.set(true);
+    this.activeCarsError.set(null);
+
+    try {
+      let query = this.supabase
+        .from('cars')
+        .select(
+          `
         *,
         car_photos(*),
         owner:profiles!cars_owner_id_fkey(
@@ -235,42 +284,54 @@ export class CarsService {
           created_at
         )
       `,
-      )
-      .eq('status', 'active')
-      .order('created_at', { ascending: false });
+        )
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
 
-    if (filters.city) {
-      query = query.ilike('location_city', `%${filters.city}%`);
+      if (filters.city) {
+        query = query.ilike('location_city', `%${filters.city}%`);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+
+      // ✅ FIX P0.2: Filtrar por disponibilidad si hay fechas
+      let cars: Car[];
+      if (filters.from && filters.to && data) {
+        const availableCars = await this.filterByAvailability(
+          data as Car[],
+          filters.from,
+          filters.to,
+          filters.blockedCarIds || [],
+        );
+        cars = (availableCars as unknown[]).map((car) => {
+          const typedCar = car as CarWithPhotosRaw;
+          return {
+            ...typedCar,
+            photos: typedCar.car_photos || [],
+            owner: Array.isArray(typedCar.owner) ? typedCar.owner[0] : typedCar.owner,
+          };
+        }) as Car[];
+      } else {
+        cars = (data ?? []).map((car: CarWithPhotosRaw) => ({
+          ...car,
+          photos: car.car_photos || [],
+          owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
+        })) as Car[];
+      }
+
+      // Update cache
+      this.activeCars.set(cars);
+      this.activeCarsFilters.set(filters);
+
+      return cars;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error al cargar autos activos';
+      this.activeCarsError.set(errorMessage);
+      throw error;
+    } finally {
+      this.activeCarsLoading.set(false);
     }
-
-    const { data, error } = await query;
-    if (error) throw error;
-
-    // Data loaded successfully
-
-    // ✅ FIX P0.2: Filtrar por disponibilidad si hay fechas
-    if (filters.from && filters.to && data) {
-      const availableCars = await this.filterByAvailability(
-        data as Car[],
-        filters.from,
-        filters.to,
-        filters.blockedCarIds || [],
-      );
-      return (availableCars as unknown[]).map((car) => {
-        const typedCar = car as CarWithPhotosRaw;
-        return {
-          ...typedCar,
-          photos: typedCar.car_photos || [],
-          owner: Array.isArray(typedCar.owner) ? typedCar.owner[0] : typedCar.owner,
-        };
-      }) as Car[];
-    }
-
-    return (data ?? []).map((car: CarWithPhotosRaw) => ({
-      ...car,
-      photos: car.car_photos || [],
-      owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
-    })) as Car[];
   }
 
   /**
@@ -309,7 +370,15 @@ export class CarsService {
     return cars.filter((car) => !blockedIds.has(car.id));
   }
 
-  async getCarById(id: string): Promise<Car | null> {
+  async getCarById(id: string, options: { forceRefresh?: boolean } = {}): Promise<Car | null> {
+    // Check cache first
+    if (!options.forceRefresh) {
+      const cachedCar = this.carCacheMap().get(id);
+      if (cachedCar) {
+        return cachedCar;
+      }
+    }
+
     const { data, error } = await this.supabase
       .from('cars')
       .select(
@@ -328,31 +397,63 @@ export class CarsService {
       )
       .eq('id', id)
       .single();
+
     if (error) {
       if (error.code === 'PGRST116') return null;
       throw error;
     }
 
-    return {
+    const car = {
       ...data,
       photos: data.car_photos || [],
     } as Car;
+
+    // Update cache
+    this.carCacheMap.update((cache) => {
+      const newCache = new Map(cache);
+      newCache.set(id, car);
+      return newCache;
+    });
+
+    return car;
   }
 
-  async listMyCars(): Promise<Car[]> {
-    const userId = (await this.supabase.auth.getUser()).data.user?.id;
-    if (!userId) throw new Error('Usuario no autenticado');
-    const { data, error } = await this.supabase
-      .from('cars')
-      .select('*, car_photos(*)')
-      .eq('owner_id', userId)
-      .order('created_at', { ascending: false });
-    if (error) throw error;
+  async listMyCars(options: { forceRefresh?: boolean } = {}): Promise<Car[]> {
+    // Return cached data if available and not forcing refresh
+    if (!options.forceRefresh && this.myCars().length > 0) {
+      return this.myCars();
+    }
 
-    return (data ?? []).map((car: CarWithPhotosRaw) => ({
-      ...car,
-      photos: car.car_photos || [],
-    })) as Car[];
+    this.myCarsLoading.set(true);
+    this.myCarsError.set(null);
+
+    try {
+      const userId = (await this.supabase.auth.getUser()).data.user?.id;
+      if (!userId) throw new Error('Usuario no autenticado');
+
+      const { data, error } = await this.supabase
+        .from('cars')
+        .select('*, car_photos(*)')
+        .eq('owner_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const cars = (data ?? []).map((car: CarWithPhotosRaw) => ({
+        ...car,
+        photos: car.car_photos || [],
+      })) as Car[];
+
+      // Update cache
+      this.myCars.set(cars);
+      return cars;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error al cargar mis autos';
+      this.myCarsError.set(errorMessage);
+      throw error;
+    } finally {
+      this.myCarsLoading.set(false);
+    }
   }
 
   /**
@@ -433,6 +534,15 @@ export class CarsService {
       .eq('id', carId)
       .eq('owner_id', userId);
     if (error) throw error;
+
+    // Invalidate caches
+    this.myCars.update((cars) => cars.filter((car) => car.id !== carId));
+    this.activeCars.update((cars) => cars.filter((car) => car.id !== carId));
+    this.carCacheMap.update((cache) => {
+      const newCache = new Map(cache);
+      newCache.delete(carId);
+      return newCache;
+    });
   }
 
   /**
@@ -449,6 +559,25 @@ export class CarsService {
       .eq('owner_id', userId);
 
     if (error) throw error;
+
+    // Update caches
+    const updateFn = (cars: Car[]) =>
+      cars.map((car) =>
+        car.id === carId ? { ...car, status, updated_at: new Date().toISOString() } : car,
+      );
+
+    this.myCars.update(updateFn);
+    this.activeCars.update(updateFn);
+
+    // Update individual car cache
+    this.carCacheMap.update((cache) => {
+      const newCache = new Map(cache);
+      const car = newCache.get(carId);
+      if (car) {
+        newCache.set(carId, { ...car, status, updated_at: new Date().toISOString() });
+      }
+      return newCache;
+    });
   }
 
   async updateCar(carId: string, input: Partial<Car>): Promise<Car> {
@@ -484,10 +613,24 @@ export class CarsService {
 
     if (error) throw error;
 
-    return {
+    const updatedCar = {
       ...data,
       photos: data.car_photos || [],
     } as Car;
+
+    // Update caches
+    const updateFn = (cars: Car[]) =>
+      cars.map((car) => (car.id === carId ? updatedCar : car));
+
+    this.myCars.update(updateFn);
+    this.activeCars.update(updateFn);
+    this.carCacheMap.update((cache) => {
+      const newCache = new Map(cache);
+      newCache.set(carId, updatedCar);
+      return newCache;
+    });
+
+    return updatedCar;
   }
 
   async listPendingCars(): Promise<Car[]> {
