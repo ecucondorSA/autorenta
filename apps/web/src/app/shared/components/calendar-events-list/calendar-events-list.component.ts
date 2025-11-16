@@ -9,10 +9,10 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GoogleCalendarService } from '../../../core/services/google-calendar.service';
+import { CarAvailabilityService } from '../../../core/services/car-availability.service';
 
 interface CalendarEvent {
-  date: string;
+  dateLabel: string;
   title: string;
   description?: string;
 }
@@ -45,10 +45,10 @@ interface CalendarEvent {
       @if (!loading() && !error() && events().length > 0) {
         <div class="space-y-3">
           <h3 class="text-sm font-semibold text-text-primary mb-3">
-            📅 Fechas Bloqueadas ({{ events().length }})
+            📅 Fechas bloqueadas ({{ events().length }})
           </h3>
 
-          @for (event of events(); track event.date) {
+          @for (event of events(); track event.dateLabel) {
             <div
               class="flex items-start space-x-3 p-3 bg-surface-secondary rounded-lg border border-border-default"
             >
@@ -71,7 +71,7 @@ interface CalendarEvent {
               </div>
               <div class="flex-1 min-w-0">
                 <p class="text-sm font-medium text-text-primary">
-                  {{ formatDate(event.date) }}
+                  {{ event.dateLabel }}
                 </p>
                 <p class="text-xs text-text-secondary mt-1">
                   {{ event.title }}
@@ -117,7 +117,7 @@ interface CalendarEvent {
   ],
 })
 export class CalendarEventsListComponent implements OnInit, OnChanges {
-  private readonly googleCalendarService = inject(GoogleCalendarService);
+  private readonly availabilityService = inject(CarAvailabilityService);
 
   @Input({ required: true }) carId!: string;
   @Input() fromDate: string = new Date().toISOString().split('T')[0];
@@ -146,13 +146,33 @@ export class CalendarEventsListComponent implements OnInit, OnChanges {
     this.error.set(null);
 
     try {
-      const availability = await this.googleCalendarService
-        .getCarCalendarAvailability(this.carId, this.fromDate, this.toDate)
-        .toPromise();
+      // Usar CarAvailabilityService para obtener fechas bloqueadas
+      const blockedRanges = await this.availabilityService.getBlockedRangesWithDetails(
+        this.carId,
+        this.fromDate,
+        this.toDate,
+      );
 
-      if (availability) {
-        this.events.set(availability.events);
-      }
+      // Convertir DetailedBlockedRange[] a CalendarEvent[]
+      const events: CalendarEvent[] = blockedRanges.map((range) => {
+        // Si es un rango de un solo día
+        if (range.from === range.to) {
+          return {
+            dateLabel: this.formatDate(range.from),
+            title: range.type === 'booking' ? 'Reserva confirmada' : 'Bloqueado manualmente',
+            description: range.notes || range.reason || undefined,
+          };
+        }
+
+        // Si es un rango de múltiples días
+        return {
+          dateLabel: `${this.formatDate(range.from)} - ${this.formatDate(range.to)}`,
+          title: range.type === 'booking' ? 'Reserva confirmada' : 'Bloqueado manualmente',
+          description: range.notes || range.reason || undefined,
+        };
+      });
+
+      this.events.set(events);
     } catch (err) {
       console.error('Error loading calendar events:', err);
       this.error.set('No se pudieron cargar los eventos del calendario');
@@ -161,7 +181,19 @@ export class CalendarEventsListComponent implements OnInit, OnChanges {
     }
   }
 
-  formatDate(dateStr: string): string {
+  private formatRange(from: string, to: string): string {
+    if (!from) {
+      return 'Sin fecha';
+    }
+
+    if (from === to || !to) {
+      return this.formatDate(from);
+    }
+
+    return `${this.formatDate(from)} al ${this.formatDate(to)}`;
+  }
+
+  private formatDate(dateStr: string): string {
     const date = new Date(dateStr);
     return new Intl.DateTimeFormat('es-AR', {
       weekday: 'short',
