@@ -20,7 +20,7 @@
   <!-- Header Responsive -->
   <header
     id="main-header"
-    class="sticky top-0 z-sticky border-b border-border-default/70 dark:border-slate-700/50 backdrop-blur-md bg-surface-raised/95 supports-[backdrop-filter]:bg-surface-raised/80 dark:bg-slate-900/90 shadow-sm dark:shadow-slate-950/50"
+    class="sticky top-0 z-sticky border-b border-border-default/70 dark:border-slate-700/50 backdrop-blur-md bg-surface-raised dark:bg-slate-900 supports-[backdrop-filter]:bg-surface-raised shadow-sm dark:shadow-slate-950/50"
   >
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 px-3 py-2 rounded-lg bg-surface-secondary dark:bg-surface-secondary"
@@ -29,7 +29,7 @@
       {{ 'common.skipToContent' | translate }}
     </a>
 
-    <div class="container-page px-container h-16 sm:h-16 flex items-center gap-3 sm:gap-5">
+    <div class="container-page px-container h-14 sm:h-14 flex items-center gap-3 sm:gap-5 py-1">
       <div class="flex flex-1 items-center gap-2 sm:gap-4 min-w-0">
         <!-- Menu Toggle (mobile) -->
         <button
@@ -137,7 +137,7 @@
       </div>
 
       <!-- Actions -->
-      <div class="ml-auto flex items-center gap-3 lg:gap-4">
+      <div class="ml-auto flex items-center gap-2 sm:gap-3 lg:gap-4">
         <app-verification-badge
           *ngIf="isAuthenticatedSig()"
           class="hidden lg:inline-flex"
