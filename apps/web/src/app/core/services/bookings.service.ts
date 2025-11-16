@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { Booking } from '../models';
 import { getErrorMessage } from '../utils/type-guards';
 import { injectSupabase } from './supabase-client.service';
@@ -48,6 +48,33 @@ export class BookingsService {
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
   private readonly carsService = inject(CarsService);
   private readonly profileService = inject(ProfileService);
+
+  // ============================================================================
+  // SIGNAL-BASED STATE MANAGEMENT
+  // ============================================================================
+
+  // Cache for user's bookings (as renter)
+  readonly myBookings = signal<Booking[]>([]);
+  readonly myBookingsLoading = signal(false);
+  readonly myBookingsError = signal<string | null>(null);
+
+  // Cache for owner's bookings (as owner)
+  readonly ownerBookings = signal<Booking[]>([]);
+  readonly ownerBookingsLoading = signal(false);
+  readonly ownerBookingsError = signal<string | null>(null);
+
+  // Cache for individual booking details (by ID)
+  private readonly bookingCacheMap = signal<Map<string, Booking>>(new Map());
+  readonly bookingCache = computed(() => this.bookingCacheMap());
+
+  // Cache for pending approvals
+  readonly pendingApprovals = signal<Record<string, unknown>[]>([]);
+  readonly pendingApprovalsLoading = signal(false);
+
+  // Computed values
+  readonly myBookingsCount = computed(() => this.myBookings().length);
+  readonly ownerBookingsCount = computed(() => this.ownerBookings().length);
+  readonly pendingApprovalsCount = computed(() => this.pendingApprovals().length);
 
   // ============================================================================
   // CORE CRUD OPERATIONS
@@ -247,37 +274,89 @@ export class BookingsService {
   /**
    * Get bookings for current user using the my_bookings view
    */
-  async getMyBookings(): Promise<Booking[]> {
-    const { data, error } = await this.supabase
-      .from('my_bookings')
-      .select('*')
-      .order('created_at', { ascending: false });
+  async getMyBookings(options: { forceRefresh?: boolean } = {}): Promise<Booking[]> {
+    // Return cached data if available and not forcing refresh
+    if (!options.forceRefresh && this.myBookings().length > 0) {
+      return this.myBookings();
+    }
 
-    if (error) throw error;
+    this.myBookingsLoading.set(true);
+    this.myBookingsError.set(null);
 
-    const bookings = (data ?? []) as Booking[];
-    await this.updateAppBadge(bookings);
+    try {
+      const { data, error } = await this.supabase
+        .from('my_bookings')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    return bookings;
+      if (error) throw error;
+
+      const bookings = (data ?? []) as Booking[];
+      await this.updateAppBadge(bookings);
+
+      // Update cache
+      this.myBookings.set(bookings);
+      return bookings;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Error al cargar mis reservas';
+      this.myBookingsError.set(errorMessage);
+      throw error;
+    } finally {
+      this.myBookingsLoading.set(false);
+    }
   }
 
   /**
    * Get bookings for cars owned by current user
    */
-  async getOwnerBookings(): Promise<Booking[]> {
-    const { data, error } = await this.supabase
-      .from('owner_bookings')
-      .select('*')
-      .order('created_at', { ascending: false });
+  async getOwnerBookings(options: { forceRefresh?: boolean } = {}): Promise<Booking[]> {
+    // Return cached data if available and not forcing refresh
+    if (!options.forceRefresh && this.ownerBookings().length > 0) {
+      return this.ownerBookings();
+    }
 
-    if (error) throw error;
-    return (data ?? []) as Booking[];
+    this.ownerBookingsLoading.set(true);
+    this.ownerBookingsError.set(null);
+
+    try {
+      const { data, error } = await this.supabase
+        .from('owner_bookings')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const bookings = (data ?? []) as Booking[];
+
+      // Update cache
+      this.ownerBookings.set(bookings);
+      return bookings;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Error al cargar reservas del propietario';
+      this.ownerBookingsError.set(errorMessage);
+      throw error;
+    } finally {
+      this.ownerBookingsLoading.set(false);
+    }
   }
 
   /**
    * Get booking by ID with full details
    */
-  async getBookingById(bookingId: string): Promise<Booking | null> {
+  async getBookingById(
+    bookingId: string,
+    options: { forceRefresh?: boolean } = {},
+  ): Promise<Booking | null> {
+    // Check cache first
+    if (!options.forceRefresh) {
+      const cached = this.bookingCacheMap().get(bookingId);
+      if (cached) {
+        return cached;
+      }
+    }
+
     const { data, error } = await this.supabase
       .from('my_bookings')
       .select('*')
@@ -300,6 +379,13 @@ export class BookingsService {
     if (booking?.insurance_coverage_id) {
       await this.loadInsuranceCoverage(booking);
     }
+
+    // Update cache
+    this.bookingCacheMap.update((cache) => {
+      const newCache = new Map(cache);
+      newCache.set(bookingId, booking);
+      return newCache;
+    });
 
     return booking;
   }
