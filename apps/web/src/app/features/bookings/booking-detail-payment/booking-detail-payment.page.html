@@ -254,9 +254,9 @@
           </div>
         </div>
       </section>
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
         <!-- LEFT COLUMN (8-9 cols) -->
-        <div class="lg:col-span-8 space-y-6">
+        <div class="space-y-6 w-full lg:flex-[0_0_65%]">
           <!-- ✅ NUEVO: Payment Summary Panel -->
           <app-payment-summary-panel
             [priceBreakdown]="priceBreakdown()!"
@@ -632,7 +632,7 @@
         </div>
 
         <!-- RIGHT COLUMN (3-4 cols) - Sticky Summary -->
-        <div class="lg:col-span-4">
+        <div class="w-full lg:flex-[0_0_35%] lg:sticky lg:top-6">
           <app-booking-summary-card
             [carName]="car()?.model || 'Vehículo'"
             [carImage]="car()?.photos?.[0]?.url || car()?.car_photos?.[0]?.url || ''"
