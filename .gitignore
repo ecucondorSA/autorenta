@@ -122,3 +122,4 @@ docs/archived/screenshots/
 /DECISION_*.txt
 /PHASE*.sh
 /review.txt
+apps/web/app_start.log
