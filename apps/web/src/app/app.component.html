@@ -29,8 +29,10 @@
       {{ 'common.skipToContent' | translate }}
     </a>
 
-    <div class="container-page px-container flex flex-wrap items-start gap-3 sm:gap-5 py-1 min-h-[3.5rem]">
-      <div class="flex flex-1 items-center gap-2 sm:gap-4 min-w-0">
+    <div
+      class="container-page px-container flex flex-col md:flex-row md:flex-wrap md:items-center gap-3 sm:gap-5 py-1 min-h-[3.5rem]"
+    >
+      <div class="flex w-full md:flex-1 items-center gap-2 sm:gap-4 min-w-0">
         <!-- Menu Toggle (mobile) -->
         <button
           type="button"
@@ -137,7 +139,9 @@
       </div>
 
       <!-- Actions -->
-      <div class="flex w-full md:w-auto md:ml-auto items-center gap-2 sm:gap-3 lg:gap-4 justify-between md:justify-end">
+      <div
+        class="flex w-full flex-wrap lg:flex-nowrap items-center gap-2 gap-y-3 sm:gap-3 lg:gap-4 justify-between md:justify-end md:w-auto md:ml-auto border-t border-border-default/60 dark:border-slate-700/60 pt-2 md:border-none md:pt-0"
+      >
         <app-verification-badge
           *ngIf="isAuthenticatedSig()"
           class="hidden lg:inline-flex"
