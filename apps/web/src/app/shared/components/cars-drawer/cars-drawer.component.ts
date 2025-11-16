@@ -78,10 +78,10 @@ export interface CarWithDistance extends Car {
         </div>
 
         <!-- Car cards list -->
-        <div *ngIf="cars().length > 0" class="drawer-cards">
+        <div *ngIf="cars().length > 0" class="drawer-cards grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-3">
           <div
             *ngFor="let car of cars(); trackBy: trackByCarId"
-            class="drawer-card-wrapper"
+            class="drawer-card-wrapper flex flex-col gap-2 h-full"
             [class.drawer-card-wrapper--selected]="selectedCarId() === car.id"
           >
             <app-car-card
@@ -189,13 +189,33 @@ export interface CarWithDistance extends Car {
       }
 
       .drawer-cards {
-        display: flex;
-        flex-direction: column;
+        display: grid;
         gap: 1rem;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+
+      @media (min-width: 640px) {
+        .drawer-cards {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (min-width: 1280px) {
+        .drawer-cards {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
       }
 
       .drawer-card-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        height: 100%;
         transition: all 0.2s ease;
+      }
+
+      .drawer-card-wrapper app-car-card {
+        flex: 1 1 auto;
       }
 
       .drawer-card-wrapper--selected {
