@@ -35,9 +35,13 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { createChildLogger } from '../_shared/logger.ts';
-import { enforceRateLimit, RateLimitError, getClientIp } from '../_shared/rate-limiter.ts';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { createChildLogger } from '../_shared/logger.ts';
+import {
+  createMercadoPagoClient,
+  getPaymentClient,
+} from '../_shared/mercadopago-sdk.ts';
+import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
 
 // Logger con contexto fijo
 const log = createChildLogger('MercadoPagoWebhook');
@@ -95,6 +99,30 @@ function isMercadoPagoIP(clientIP: string): boolean {
 
   // Verificar si está en algún rango
   return MERCADOPAGO_IP_RANGES.some(range => ipNum >= range.start && ipNum <= range.end);
+}
+
+// Comparación en tiempo constante para evitar ataques por timing
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return result === 0;
+}
+
+// Helper: wrap a promise with a timeout (rejects after ms)
+function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Timeout after ' + ms + 'ms')), ms);
+    p.then((v) => {
+      clearTimeout(timer);
+      resolve(v);
+    }).catch((err) => {
+      clearTimeout(timer);
+      reject(err);
+    });
+  });
 }
 
 /**
@@ -166,13 +194,13 @@ serve(async (req) => {
     // En producción, rechazar IPs no autorizadas
     // (en desarrollo, permitir si HMAC es válido)
     const isProduction = Deno.env.get('ENVIRONMENT') === 'production' || !Deno.env.get('ENVIRONMENT');
-    
+
     if (!isAuthorizedIP && isProduction) {
       console.warn('⚠️ Unauthorized IP attempt:', {
         ip: clientIP,
         userAgent: req.headers.get('user-agent'),
       });
-      
+
       return new Response(
         JSON.stringify({
           error: 'Unauthorized IP address',
@@ -208,7 +236,7 @@ serve(async (req) => {
     }
 
     // OLD: Rate limit headers (now handled by RateLimitError.toResponse())
-    // const rateLimitHeaders = { ... };
+    const rateLimitHeaders = {};
 
     // ========================================
     // VALIDACIÓN DE FIRMA HMAC (CRÍTICA)
@@ -217,7 +245,7 @@ serve(async (req) => {
 
     const xSignature = req.headers.get('x-signature');
     const xRequestId = req.headers.get('x-request-id');
-    
+
     console.log('Webhook validation:', {
       ip: clientIP,
       isAuthorizedIP,
@@ -302,15 +330,15 @@ serve(async (req) => {
             cryptoKey,
             encoder.encode(manifest)
           );
-
-          // Convertir a hex
+          // Convertir a hex (hex lowercase)
           const hashArray = Array.from(new Uint8Array(signature));
-          const calculatedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
+          const calculatedHash = hashArray
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('')
+            .toLowerCase();
           console.log('HMAC calculated:', calculatedHash.substring(0, 20) + '...');
-
-          // Comparar hashes
-          if (calculatedHash !== hash) {
+          // Comparar hashes en tiempo constante
+          if (!timingSafeEqual(calculatedHash, (hash || '').toLowerCase())) {
             console.error('HMAC validation FAILED', {
               expected: hash.substring(0, 20) + '...',
               calculated: calculatedHash.substring(0, 20) + '...',
@@ -407,65 +435,28 @@ serve(async (req) => {
     }
 
     // ========================================
-    // LLAMADA DIRECTA A MERCADOPAGO REST API
-    // FIX: SDK tiene bug con Deno (f.headers.raw is not a function)
+    // OBTENER DATOS DEL PAGO USANDO SDK
     // ========================================
 
     const paymentId = webhookPayload.data.id;
-    console.log(`Fetching payment ${paymentId} using MercadoPago REST API...`);
+    console.log(`Fetching payment ${paymentId} using MercadoPago SDK...`);
 
-    // Llamar directamente a la REST API (sin SDK)
+    // Obtener datos del pago usando SDK
     let paymentData;
     try {
-      const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const mpConfig = createMercadoPagoClient(MP_ACCESS_TOKEN);
+      const paymentClient = getPaymentClient(mpConfig);
 
-      if (!mpResponse.ok) {
-        const errorText = await mpResponse.text();
-        console.error('MercadoPago API Error:', {
-          status: mpResponse.status,
-          statusText: mpResponse.statusText,
-          body: errorText,
-        });
-
-        // Si MP API está caída (500, 502, 503)
-        if (mpResponse.status >= 500) {
-          return new Response(
-            JSON.stringify({
-              success: false,
-              error: 'MercadoPago API temporarily unavailable',
-              retry_after: 300,
-              payment_id: paymentId,
-            }),
-            {
-              status: 503,
-              headers: {
-                ...corsHeaders,
-                'Content-Type': 'application/json',
-                'Retry-After': '300',
-              },
-            }
-          );
-        }
-
-        // Payment not found o unauthorized
-        throw new Error(`MercadoPago API error: ${mpResponse.status} ${errorText}`);
-      }
-
-      paymentData = await mpResponse.json();
+  // Enforce a 3s timeout when fetching payment data from MercadoPago
+  paymentData = await withTimeout(paymentClient.get({ id: paymentId }), 3000);
 
       // Validar que la respuesta contiene datos válidos
       if (!paymentData || !paymentData.id) {
-        console.error('Invalid payment data received from MercadoPago API:', paymentData);
+        console.error('Invalid payment data received from MercadoPago SDK:', paymentData);
         return new Response(
           JSON.stringify({
             success: false,
-            error: 'Invalid payment data from MercadoPago API',
+            error: 'Invalid payment data from MercadoPago SDK',
             payment_id: paymentId,
           }),
           {
@@ -476,7 +467,7 @@ serve(async (req) => {
       }
 
       // ✅ SECURITY: Log sin exponer datos sensibles completos
-      log.info('Payment Data from REST API', {
+      log.info('Payment Data from SDK', {
         id: paymentData.id,
         status: paymentData.status,
         status_detail: paymentData.status_detail,
@@ -486,13 +477,33 @@ serve(async (req) => {
         operation_type: paymentData.operation_type,
       });
 
-    } catch (apiError) {
+    } catch (apiError: any) {
       // ✅ CRITICAL FIX: Retornar 500 para que MercadoPago reintente
-      log.error('❌ MercadoPago API error - webhook will be retried', {
-        error: apiError,
+      log.error('❌ MercadoPago SDK error - webhook will be retried', {
+        error: apiError?.message || apiError,
         payment_id: paymentId,
         timestamp: new Date().toISOString(),
       });
+
+      // Si es un error 5xx, retornar 503 para retry
+      if (apiError?.status >= 500 || apiError?.statusCode >= 500) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'MercadoPago API temporarily unavailable',
+            retry_after: 300,
+            payment_id: paymentId,
+          }),
+          {
+            status: 503,
+            headers: {
+              ...corsHeaders,
+              'Content-Type': 'application/json',
+              'Retry-After': '300',
+            },
+          }
+        );
+      }
 
       // MercadoPago reintenta automáticamente con 500/502/503
       // Reintentos: inmediato, +1h, +2h, +4h, +8h (máx 12 en 24h)
@@ -504,7 +515,7 @@ serve(async (req) => {
         }),
         {
           status: 500,
-          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -756,7 +767,7 @@ serve(async (req) => {
 
       // Variables para tracking de validación (scope compartido)
       let validationPassed = true;
-      const validationIssues: Array<{type: string; [key: string]: any}> = [];
+      const validationIssues: Array<{ type: string;[key: string]: any }> = [];
 
       if (isMarketplaceSplit) {
         console.log('💰 Processing marketplace split payment...');
@@ -934,19 +945,19 @@ serve(async (req) => {
 
       console.log('✅ Booking payment confirmed successfully:', reference_id);
 
-        return new Response(
-          JSON.stringify({
-            success: true,
-            message: 'Booking payment processed successfully',
-            booking_id: reference_id,
-            payment_id: paymentData.id,
-            marketplace_split: isMarketplaceSplit,
-          }),
-          {
-            status: 200,
-            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Booking payment processed successfully',
+          booking_id: reference_id,
+          payment_id: paymentData.id,
+          marketplace_split: isMarketplaceSplit,
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Si no es un booking, verificar si es un wallet deposit
