@@ -82,6 +82,11 @@ Supabase is used as the backend. Database schema changes and migrations are mana
 
 **Type Generation:**
 TypeScript types for the Supabase database schema can be generated using the `types:db:gen` script.
+
+## Responsive Design
+
+For detailed information on the project's responsive design strategy, including tools, breakpoints, and guidelines, please refer to the [Responsive Design Documentation](docs/RESPONSIVE_DESIGN.md).
+
 ```bash
 npm run types:db:gen
 ```
