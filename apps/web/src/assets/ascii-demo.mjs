@@ -129,11 +129,47 @@ async function main(){
   camera.position.set(0,0,5)
 
   // A simple textured plane to visualize the effect
-  const tex = new THREE.TextureLoader().load('https://picsum.photos/800/600')
+  // Use local asset by default to avoid CORS issues
+  const texUrl = './avatar-placeholder.png'
+  const texLoader = new THREE.TextureLoader()
+  let tex = null
+  const statusEl = document.createElement('div')
+  statusEl.style.position = 'absolute'
+  statusEl.style.left = '12px'
+  statusEl.style.top = '12px'
+  statusEl.style.padding = '6px 8px'
+  statusEl.style.background = 'rgba(0,0,0,0.6)'
+  statusEl.style.color = '#fff'
+  statusEl.style.zIndex = '9999'
+  statusEl.style.fontSize = '12px'
+  statusEl.innerText = 'Cargando textura...'
+  document.body.appendChild(statusEl)
+
+  try {
+    tex = await new Promise((resolve, reject) => {
+      texLoader.load(texUrl, resolve, undefined, reject)
+    })
+    statusEl.innerText = 'Textura cargada: ' + texUrl
+  } catch (err) {
+    console.error('Error cargando textura local, intentando picsum...', err)
+    statusEl.innerText = 'Error cargando textura local, intentando picsum...'
+    try {
+      tex = await new Promise((resolve, reject) => {
+        texLoader.load('https://picsum.photos/800/600', resolve, undefined, reject)
+      })
+      statusEl.innerText = 'Textura cargada desde picsum'
+    } catch (err2) {
+      console.error('Fallo al cargar textura remota', err2)
+      statusEl.innerText = 'Falló cargar textura.'
+    }
+  }
   const geo = new THREE.PlaneGeometry(4,3)
   const mat = new THREE.MeshBasicMaterial({ map: tex })
   const quad = new THREE.Mesh(geo, mat)
   scene.add(quad)
+
+  // Debug: ensure background visible
+  renderer.setClearColor(0x222222)
 
   const composer = new EffectComposer(renderer)
   composer.addPass(new RenderPass(scene, camera))
@@ -141,6 +177,17 @@ async function main(){
   const ascii = new AsciiEffect({ cellSize: 6, invert: true, colorMode: true, resolution: new THREE.Vector2(w,h) })
   const effectPass = new EffectPass(camera, ascii)
   composer.addPass(effectPass)
+
+  // Add a download button (if not already present)
+  if (!document.getElementById('downloadBtn')) {
+    const btn = document.createElement('button')
+    btn.id = 'downloadBtn'
+    btn.innerText = 'Descargar PNG'
+    btn.style.display = 'block'
+    btn.style.marginTop = '8px'
+    btn.onclick = () => exportPNG({ width: 1600, height: 1200 })
+    document.getElementById('controls').appendChild(btn)
+  }
 
   // Controls
   const cellEl = document.getElementById('cellSize')
@@ -160,8 +207,15 @@ async function main(){
   const clock = new THREE.Clock()
   function frame(){
     const dt = clock.getDelta()
-    ascii.addTime(dt)
-    try{ composer.render(dt) } catch(e){ composer.render() }
+    try {
+      ascii.addTime(dt)
+      composer.render(dt)
+    } catch (err) {
+      // If composer or effect fails, fallback to simple renderer so page is not blank
+      console.error('Error during composer.render:', err)
+      statusEl.innerText = 'Error en compositor, rendering fallback';
+      renderer.render(scene, camera)
+    }
     requestAnimationFrame(frame)
   }
   frame()
