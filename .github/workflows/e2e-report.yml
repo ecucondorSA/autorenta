@@ -1,0 +1,82 @@
+name: E2E Report
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Target base URL for E2E (example: https://staging.autorenta.example)'
+        required: true
+      project:
+        description: 'Playwright project to run (optional)'
+        required: false
+        default: 'chromium:visitor'
+      prod_allow:
+        description: 'Set true to allow running against production URL (must be explicitly true)'
+        required: false
+        default: 'false'
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Determine target
+        id: target
+        run: |
+          # pick target from dispatch input or PR body (if PR)
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Using default staging target"
+            echo "target_url=${{ inputs.target_url || 'https://staging.autorenta.example' }}" >> $GITHUB_OUTPUT
+          else
+            echo "target_url=${{ github.event.inputs.target_url }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Protect production
+        run: |
+          TARGET=${{ github.event.inputs.target_url || 'https://staging.autorenta.example' }}
+          if echo "$TARGET" | grep -qi "production"; then
+            if [ "${{ github.event.inputs.prod_allow }}" != "true" ] && [ "${{ env.PROD_ALLOW }}" != "true" ]; then
+              echo "Refusing to run against production target. Set prod_allow=true to allow." >&2
+              exit 1
+            fi
+          fi
+
+      - name: Run E2E tests
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ github.event.inputs.target_url || 'https://staging.autorenta.example' }}
+        run: |
+          # forward optional project flag
+          if [ -n "${{ github.event.inputs.project }}" ]; then
+            pnpm run e2e:target -- --project=${{ github.event.inputs.project }}
+          else
+            pnpm run e2e:target
+          fi
+
+      - name: Generate summary
+        run: node scripts/summary-report.mjs test-results/results.json
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: test-results
+
+      - name: Post PR comment with summary
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR=${{ github.event.pull_request.number }}
+          node ./scripts/github-comment.mjs $PR

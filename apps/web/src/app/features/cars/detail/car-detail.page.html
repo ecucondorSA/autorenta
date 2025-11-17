@@ -3,9 +3,8 @@
     <div class="space-y-4 sm:space-y-6">
       <div
         class="card-premium rounded-2xl border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 shadow-soft"
-      >
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <h2 class="h4">Chat con el anfitrión</h2>
+              'bg-gradient-to-r from-cta-default to-cta-default/80 hover:from-cta-default/90 hover:to-cta-default': !expressMode() && canBook(),
+              'text-white': !expressMode() && canBook(),
           <div
             class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-secondary/70"
           >

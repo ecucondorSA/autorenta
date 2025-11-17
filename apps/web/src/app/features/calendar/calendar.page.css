@@ -1,0 +1,8 @@
+.p-4 {
+  padding: 1rem;
+}
+
+/* Minimal styles to keep FullCalendar readable with Tailwind-like spacing */
+:root {
+  --fc-bg-event: #2563eb;
+}

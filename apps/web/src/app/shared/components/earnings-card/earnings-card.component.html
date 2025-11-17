@@ -1,0 +1,126 @@
+<div
+  class="rounded-2xl border border-border-default dark:border-border-muted bg-gradient-to-br from-surface-raised to-surface-secondary dark:from-surface-secondary dark:to-surface-raised p-6 shadow-lg transition-all duration-300 hover:shadow-xl"
+>
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h3
+        class="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-secondary/70"
+      >
+        Ganancias
+      </h3>
+      <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-1">
+        Split: 85% para ti, 15% plataforma
+      </p>
+    </div>
+    <div
+      class="flex h-12 w-12 items-center justify-center rounded-full bg-success-light/20 dark:bg-success-light/30"
+    >
+      <svg class="h-6 w-6 text-success-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Main Earnings Display -->
+  <div class="space-y-4">
+    <!-- This Month -->
+    <div
+      class="rounded-xl bg-cta-default/10 dark:bg-cta-default/20 p-4 border border-cta-default/30"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/70">
+            Este Mes
+          </p>
+          <p class="text-2xl font-bold text-text-primary dark:text-text-primary mt-1">
+            ${{ thisMonthEarnings() | number: '1.0-0' }}
+          </p>
+        </div>
+        <div
+          class="flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold"
+          [ngClass]="{
+            'bg-success-light/20 text-success-strong dark:bg-success-light/30 dark:text-success-light':
+              growthPercentage() >= 0,
+            'bg-error-bg text-error-strong dark:bg-error-900/30 dark:text-error-200':
+              growthPercentage() < 0,
+          }"
+        >
+          <svg
+            *ngIf="growthPercentage() >= 0"
+            class="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
+          </svg>
+          <svg
+            *ngIf="growthPercentage() < 0"
+            class="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 17l5-5m0 0l-5-5m5 5H6"
+            />
+          </svg>
+          <span>{{ growthPercentage() | number: '1.0-0' }}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Cards -->
+    <div class="grid grid-cols-2 gap-3">
+      <!-- Last Month -->
+      <div
+        class="rounded-lg bg-surface-base dark:bg-surface-raised p-3 border border-border-default dark:border-border-muted"
+      >
+        <p class="text-xs text-text-secondary dark:text-text-secondary/70">Mes Anterior</p>
+        <p class="text-lg font-semibold text-text-primary dark:text-text-primary mt-1">
+          ${{ lastMonthEarnings() | number: '1.0-0' }}
+        </p>
+      </div>
+
+      <!-- Total -->
+      <div
+        class="rounded-lg bg-surface-base dark:bg-surface-raised p-3 border border-border-default dark:border-border-muted"
+      >
+        <p class="text-xs text-text-secondary dark:text-text-secondary/70">Total Histórico</p>
+        <p class="text-lg font-semibold text-text-primary dark:text-text-primary mt-1">
+          ${{ totalEarnings() | number: '1.0-0' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Progress Bar (Visual) -->
+    <div class="pt-2">
+      <div
+        class="flex items-center justify-between text-xs text-text-secondary dark:text-text-secondary/70 mb-1"
+      >
+        <span>Progreso del mes</span>
+        <span>{{ monthProgress() }}%</span>
+      </div>
+      <div class="h-2 w-full rounded-full bg-surface-base dark:bg-surface-raised overflow-hidden">
+        <div
+          class="h-full bg-gradient-to-r from-cta-default to-primary-600 transition-all duration-500 ease-out"
+          [style.width.%]="monthProgress()"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

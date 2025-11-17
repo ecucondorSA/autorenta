@@ -1,0 +1,154 @@
+<div
+  class="calendar-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+>
+  <!-- Header -->
+  <div
+    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+  >
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary">📆 Calendario</h1>
+          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+            Visualiza todas tus reservas y disponibilidad
+          </p>
+        </div>
+        <a
+          routerLink="/bookings"
+          class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-text-inverse font-medium rounded-lg transition-colors"
+        >
+          Ver Reservas
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Loading -->
+    @if (loading()) {
+      <div class="flex items-center justify-center py-16">
+        <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error(); as errorMsg) {
+      <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-6">
+        <p class="text-sm text-error-strong">{{ errorMsg }}</p>
+        <button (click)="loadBookings()" class="mt-2 text-sm font-medium text-error-text underline">
+          Reintentar
+        </button>
+      </div>
+    }
+
+    @if (!loading() && !error()) {
+      <!-- Calendar Legend -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-4 mb-6"
+      >
+        <div class="flex flex-wrap items-center gap-4">
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 rounded bg-success-light"></div>
+            <span class="text-sm text-text-secondary dark:text-text-secondary/70">Activa</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 rounded bg-warning-light"></div>
+            <span class="text-sm text-text-secondary dark:text-text-secondary/70">Pendiente</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 rounded bg-primary-600"></div>
+            <span class="text-sm text-text-secondary dark:text-text-secondary/70">Completada</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 rounded bg-gray-500"></div>
+            <span class="text-sm text-text-secondary dark:text-text-secondary/70">Cancelada</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendar -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+      >
+        <full-calendar [options]="calendarOptions"></full-calendar>
+      </div>
+
+      <!-- Quick Actions -->
+      <div
+        class="mt-6 bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+      >
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+          ⚡ Acciones Rápidas
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <a
+            routerLink="/bookings"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">📋</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Mis Reservas</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                Ver todas las reservas
+              </p>
+            </div>
+          </a>
+
+          <a
+            routerLink="/cars/my-cars"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">🚗</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Mis Autos</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                Gestionar disponibilidad
+              </p>
+            </div>
+          </a>
+
+          <a
+            routerLink="/dashboard"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">📊</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Dashboard</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                Ver resumen completo
+              </p>
+            </div>
+          </a>
+
+          <a
+            routerLink="/cars/publish"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">➕</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Publicar Auto</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                Añade un nuevo vehículo
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+    }
+  </div>
+</div>

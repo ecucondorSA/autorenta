@@ -1,0 +1,229 @@
+<div
+  class="reviews-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+>
+  <!-- Header -->
+  <div
+    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+  >
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary">⭐ Reseñas</h1>
+          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+            Todas tus calificaciones y comentarios
+          </p>
+        </div>
+        <a
+          routerLink="/dashboard"
+          class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-text-inverse font-medium rounded-lg transition-colors"
+        >
+          Volver al Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Loading -->
+    @if (loading()) {
+      <div class="flex items-center justify-center py-16">
+        <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error(); as errorMsg) {
+      <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-6">
+        <p class="text-sm text-error-strong">{{ errorMsg }}</p>
+        <button (click)="loadReviews()" class="mt-2 text-sm font-medium text-error-text underline">
+          Reintentar
+        </button>
+      </div>
+    }
+
+    @if (!loading() && !error()) {
+      <!-- Tabs -->
+      @if (userRole() === 'both') {
+        <div
+          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-1 mb-6 flex gap-2"
+        >
+          <button
+            (click)="setActiveTab('owner')"
+            class="flex-1 px-4 py-2 rounded-lg font-medium transition-colors"
+            [class.bg-primary-600]="activeTab() === 'owner'"
+            [class.text-text-inverse]="activeTab() === 'owner'"
+            [class.text-text-primary]="activeTab() !== 'owner'"
+            [class.dark:text-text-primary]="activeTab() !== 'owner'"
+          >
+            Como Locador ({{ ownerReviewsCount() }})
+          </button>
+          <button
+            (click)="setActiveTab('renter')"
+            class="flex-1 px-4 py-2 rounded-lg font-medium transition-colors"
+            [class.bg-primary-600]="activeTab() === 'renter'"
+            [class.text-text-inverse]="activeTab() === 'renter'"
+            [class.text-text-primary]="activeTab() !== 'renter'"
+            [class.dark:text-text-primary]="activeTab() !== 'renter'"
+          >
+            Como Locatario ({{ renterReviewsCount() }})
+          </button>
+        </div>
+      }
+
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Owner Reviews Summary -->
+        @if (userRole() === 'owner' || userRole() === 'both') {
+          <div
+            class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          >
+            <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">
+              Reseñas como Locador
+            </h2>
+            <div class="flex items-center gap-4">
+              <div class="text-center">
+                <p class="text-4xl font-bold text-text-primary dark:text-text-primary">
+                  {{ ownerAverageRating().toFixed(1) }}
+                </p>
+                <p class="text-sm text-text-secondary dark:text-text-secondary/70">Promedio</p>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-1 mb-2">
+                  @for (star of getStarRating(ownerAverageRating()); track $index) {
+                    <svg
+                      class="w-5 h-5"
+                      [class.text-warning-400]="star === 'filled'"
+                      [class.text-gray-300]="star === 'empty'"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+                  }
+                </div>
+                <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+                  {{ ownerReviewsCount() }}
+                  {{ ownerReviewsCount() === 1 ? 'reseña' : 'reseñas' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Renter Reviews Summary -->
+        @if (userRole() === 'renter' || userRole() === 'both') {
+          <div
+            class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          >
+            <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">
+              Reseñas como Locatario
+            </h2>
+            <div class="flex items-center gap-4">
+              <div class="text-center">
+                <p class="text-4xl font-bold text-text-primary dark:text-text-primary">
+                  {{ renterAverageRating().toFixed(1) }}
+                </p>
+                <p class="text-sm text-text-secondary dark:text-text-secondary/70">Promedio</p>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-1 mb-2">
+                  @for (star of getStarRating(renterAverageRating()); track $index) {
+                    <svg
+                      class="w-5 h-5"
+                      [class.text-warning-400]="star === 'filled'"
+                      [class.text-gray-300]="star === 'empty'"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+                  }
+                </div>
+                <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+                  {{ renterReviewsCount() }}
+                  {{ renterReviewsCount() === 1 ? 'reseña' : 'reseñas' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Reviews List -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+      >
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+          @if (activeTab() === 'owner' || userRole() === 'owner') {
+            Reseñas como Locador
+          } @else {
+            Reseñas como Locatario
+          }
+        </h2>
+
+        @if (
+          (activeTab() === 'owner' && ownerReviewsCount() === 0) ||
+          (activeTab() === 'renter' && renterReviewsCount() === 0)
+        ) {
+          <div class="text-center py-12">
+            <p class="text-text-secondary dark:text-text-secondary/70">
+              Aún no tenés reseñas
+              @if (activeTab() === 'owner' || userRole() === 'owner') {
+                como locador
+              } @else {
+                como locatario
+              }
+            </p>
+          </div>
+        } @else {
+          <div class="space-y-4">
+            @if (activeTab() === 'owner' || userRole() === 'owner') {
+              @if (ownerReviews().length === 0) {
+                <div class="text-center py-12">
+                  <p class="text-text-secondary dark:text-text-secondary/70">
+                    Aún no tenés reseñas como locador
+                  </p>
+                </div>
+              } @else {
+                @for (review of ownerReviews(); track review.id) {
+                  <app-review-card [review]="review" [showCarTitle]="true"></app-review-card>
+                }
+              }
+            } @else {
+              @if (renterReviews().length === 0) {
+                <div class="text-center py-12">
+                  <p class="text-text-secondary dark:text-text-secondary/70">
+                    Aún no tenés reseñas como locatario
+                  </p>
+                </div>
+              } @else {
+                @for (review of renterReviews(); track review.id) {
+                  <app-review-card [review]="review" [showCarTitle]="true"></app-review-card>
+                }
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
