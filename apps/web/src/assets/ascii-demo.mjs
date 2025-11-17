@@ -145,11 +145,27 @@ async function main(){
   statusEl.innerText = 'Cargando textura...'
   document.body.appendChild(statusEl)
 
+  // Fallback image element (visible while WebGL texture/compositor not ready)
+  const fallbackImg = document.createElement('img')
+  fallbackImg.id = 'fallbackImg'
+  fallbackImg.src = texUrl
+  fallbackImg.style.position = 'absolute'
+  fallbackImg.style.left = '0'
+  fallbackImg.style.top = '0'
+  fallbackImg.style.width = '100%'
+  fallbackImg.style.height = '100%'
+  fallbackImg.style.objectFit = 'contain'
+  fallbackImg.style.background = '#222'
+  fallbackImg.style.zIndex = '1'
+  document.body.appendChild(fallbackImg)
+
   try {
     tex = await new Promise((resolve, reject) => {
       texLoader.load(texUrl, resolve, undefined, reject)
     })
-    statusEl.innerText = 'Textura cargada: ' + texUrl
+  statusEl.innerText = 'Textura cargada: ' + texUrl
+  // Hide fallback image when texture loaded
+  fallbackImg.style.display = 'none'
   } catch (err) {
     console.error('Error cargando textura local, intentando picsum...', err)
     statusEl.innerText = 'Error cargando textura local, intentando picsum...'
@@ -157,7 +173,8 @@ async function main(){
       tex = await new Promise((resolve, reject) => {
         texLoader.load('https://picsum.photos/800/600', resolve, undefined, reject)
       })
-      statusEl.innerText = 'Textura cargada desde picsum'
+  statusEl.innerText = 'Textura cargada desde picsum'
+  fallbackImg.style.display = 'none'
     } catch (err2) {
       console.error('Fallo al cargar textura remota', err2)
       statusEl.innerText = 'Falló cargar textura.'
@@ -210,11 +227,15 @@ async function main(){
     try {
       ascii.addTime(dt)
       composer.render(dt)
+      // If we render successfully, hide fallback
+      fallbackImg.style.display = 'none'
     } catch (err) {
       // If composer or effect fails, fallback to simple renderer so page is not blank
       console.error('Error during composer.render:', err)
       statusEl.innerText = 'Error en compositor, rendering fallback';
-      renderer.render(scene, camera)
+      // show fallback image (so user sees something) and also render scene directly
+      fallbackImg.style.display = 'block'
+      try { renderer.render(scene, camera) } catch (e) { console.error('renderer fallback failed', e) }
     }
     requestAnimationFrame(frame)
   }
