@@ -6,11 +6,17 @@ import {
   ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
+import { encode } from '@toon-format/toon';
 
 export class MCPServer {
   private server: Server;
   private resources: Map<string, { handler: (params?: any) => Promise<any>; metadata: any }> = new Map();
   private tools: Map<string, { handler: (args: any) => Promise<any>; metadata: any }> = new Map();
+  private toonOptimization = {
+    enabled: true,
+    minArrayLength: 3,
+    minReductionPercent: 15,
+  };
 
   constructor(
     private name: string,
@@ -30,6 +36,44 @@ export class MCPServer {
     );
 
     this.setupHandlers();
+  }
+
+  private shouldConvertToToon(data: any): boolean {
+    if (!this.toonOptimization.enabled) return false;
+    if (!Array.isArray(data)) return false;
+    if (data.length < this.toonOptimization.minArrayLength) return false;
+    if (typeof data[0] !== 'object' || data[0] === null) return false;
+    return true;
+  }
+
+  private tryConvertToToon(data: any): { text: string; mimeType: string } {
+    if (!this.shouldConvertToToon(data)) {
+      return {
+        text: JSON.stringify(data, null, 2),
+        mimeType: 'application/json',
+      };
+    }
+
+    try {
+      const jsonString = JSON.stringify(data);
+      const toonString = encode(data);
+      const reduction = ((1 - toonString.length / jsonString.length) * 100);
+
+      if (reduction >= this.toonOptimization.minReductionPercent) {
+        return {
+          text: toonString,
+          mimeType: 'text/x-toon',
+        };
+      }
+    } catch (error) {
+      // Si falla conversión, fallback a JSON
+      console.error('TOON conversion failed:', error);
+    }
+
+    return {
+      text: JSON.stringify(data, null, 2),
+      mimeType: 'application/json',
+    };
   }
 
   private setupHandlers() {
@@ -53,13 +97,17 @@ export class MCPServer {
       }
 
       const contents = await resource.handler(request.params);
-      const text = typeof contents === 'string' ? contents : JSON.stringify(contents, null, 2);
+
+      // Try TOON conversion for array data
+      const { text, mimeType } = typeof contents === 'string'
+        ? { text: contents, mimeType: 'text/plain' }
+        : this.tryConvertToToon(contents);
 
       return {
         contents: [
           {
             uri,
-            mimeType: resource.metadata.mimeType || 'application/json',
+            mimeType,
             text,
           },
         ],
@@ -86,7 +134,14 @@ export class MCPServer {
       }
 
       const result = await tool.handler(args || {});
-      const text = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+
+      // Try TOON conversion for array data
+      const { text, mimeType } = typeof result === 'string'
+        ? { text: result, mimeType: 'text/plain' }
+        : (() => {
+            const converted = this.tryConvertToToon(result);
+            return converted;
+          })();
 
       return {
         content: [
