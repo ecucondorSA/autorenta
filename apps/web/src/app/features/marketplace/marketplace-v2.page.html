@@ -70,9 +70,9 @@
           <img
             src="assets/images/MB.png"
             alt="Auto"
-            width="24"
-            height="24"
-            class="h-6 w-6 object-contain"
+            width="48"
+            height="48"
+            class="h-12 w-12 object-contain"
             loading="eager"
             decoding="async"
           />
@@ -269,17 +269,33 @@
             </div>
           </div>
 
-          <!-- Date Range -->
-          <app-date-search
-            [label]="'Fechas'"
-            [placeholder]="'¿Cuándo lo necesitas?'"
-            [initialFrom]="dateRange().from"
-            [initialTo]="dateRange().to"
-            [googleCalendarId]="googleCalendarId()"
-            [showGoogleCalendar]="true"
-            (searchClick)="openDatePicker()"
-            (dateChange)="onDateRangeChange($event)"
-          ></app-date-search>
+          <!-- Date Range Calendar -->
+          <div class="relative group">
+            <label
+              class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
+            >
+              <svg
+                class="w-5 h-5 text-cyan-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              Fechas
+            </label>
+            <app-date-range-picker
+              [initialFrom]="dateRange().from"
+              [initialTo]="dateRange().to"
+              (rangeChange)="onDateRangeChange($event)"
+              (calendarClick)="openDatePicker()"
+            />
+          </div>
 
           <!-- Search Button -->
           <div class="flex items-end">

@@ -63,6 +63,7 @@ export class DateRangePickerComponent implements OnInit {
   @Input() blockedRanges: BlockedDateRange[] = []; // ✅ NEW: Rangos de fechas bloqueadas (bookings confirmados)
   @Output() readonly rangeChange = new EventEmitter<DateRange>();
   @Output() readonly availabilityChange = new EventEmitter<boolean>();
+  @Output() readonly calendarClick = new EventEmitter<void>();
 
   readonly from = signal<string | null>(this.initialFrom);
   readonly to = signal<string | null>(this.initialTo);
@@ -413,6 +414,9 @@ export class DateRangePickerComponent implements OnInit {
    */
   openCalendarModal(): void {
     this.isCalendarModalOpen.set(true);
+
+    // Emit event for parent component to open external modal
+    this.calendarClick.emit();
 
     // Track: Calendar modal opened
     this.analytics.trackEvent('date_range_selected', {

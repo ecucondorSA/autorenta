@@ -51,3 +51,4 @@ Si solo quieres configurar lo esencial, copia estos 3:
 
 **Nota**: Los Team Commands se aplican automáticamente a todos los miembros del equipo sin necesidad de archivos locales.
 
+

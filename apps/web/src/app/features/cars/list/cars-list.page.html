@@ -1,28 +1,128 @@
-<section class="cars-map-page bg-surface-base dark:bg-surface-base transition-colors duration-300">
+<section class="cars-marketplace bg-surface-base dark:bg-surface-base transition-colors duration-300 min-h-screen">
   <!-- Barra superior fija -->
   <app-pwa-titlebar />
 
-  <!-- Layout principal 70/30 (desktop) o full-width (mobile) -->
-  <div class="map-page-layout">
-    <!-- Región del mapa (70% desktop, full mobile) -->
-    <div class="map-section">
-      <div id="map-container" class="w-full h-full relative">
-        <app-cars-map
-          [cars]="carMapLocations()"
-          [selectedCarId]="selectedCarId()"
-          [userLocation]="userLocation()"
-          (carSelected)="onMapCarSelected($event)"
-          (userLocationChange)="onUserLocationChange($event)"
-        ></app-cars-map>
-
-        <!-- Filtros flotantes sobre el mapa -->
-        <div class="map-filters-overlay pointer-events-none">
-          <div class="pointer-events-auto">
+  <!-- Layout Airbnb: Grid + Map -->
+  <div class="marketplace-container">
+    <!-- MAIN: Grid de autos (izquierda en desktop, arriba en mobile) -->
+    <div class="grid-section">
+      <!-- Header con filtros y controles -->
+      <div class="marketplace-header">
+        <div class="header-content">
+          <div class="header-left">
+            <h1 class="marketplace-title">Alquila tu próximo auto</h1>
+            <p class="marketplace-subtitle">{{ premiumCars().length }} vehículos disponibles</p>
+          </div>
+          <div class="header-right">
             <app-map-filters (filterChange)="onFiltersChange($event)" />
           </div>
         </div>
+      </div>
 
-        <!-- Urgent Rental Banner (si hay auto seleccionado) -->
+      <!-- Grid principal de autos (Airbnb style) -->
+      <div class="cars-grid-wrapper">
+        <div class="cars-grid">
+          <!-- Car Card Grid (4 cols desktop, 2 tablet, 1 mobile) -->
+          <div *ngFor="let car of premiumCars(); trackBy: trackByCar" class="car-grid-item">
+            <div
+              class="car-card-container cursor-pointer transition-all hover:shadow-lg"
+              (click)="onCarSelected(car.id)"
+              [class.selected]="selectedCarId() === car.id"
+            >
+              <!-- Car Image with Badge -->
+              <div class="car-image-wrapper">
+                <img
+                  *ngIf="car.photos?.[0]?.url"
+                  [src]="car.photos?.[0]?.url || ''"
+                  [alt]="car.title"
+                  class="car-image"
+                />
+                <div *ngIf="!car.photos?.[0]?.url" class="car-image-placeholder">
+                  <span>🚗</span>
+                </div>
+
+                <!-- Badge: Distancia -->
+                <div *ngIf="car.distance" class="distance-badge">
+                  📍 {{ car.distanceText || car.distance?.toFixed(1) }}km
+                </div>
+
+                <!-- Badge: Disponible hoy -->
+                <div class="available-badge">Disponible hoy</div>
+              </div>
+
+              <!-- Car Info -->
+              <div class="car-info">
+                <!-- Title y Rating -->
+                <div class="car-header">
+                  <h3 class="car-title">{{ car.title }}</h3>
+                  <div class="car-rating" *ngIf="car.rating_count && car.rating_count > 0">
+                    <span class="rating-stars">⭐ {{ car.rating_avg?.toFixed(1) }}</span>
+                    <span class="rating-count">({{ car.rating_count }})</span>
+                  </div>
+                </div>
+
+                <!-- Location -->
+                <p class="car-location">📍 {{ car.location_city }}, {{ car.location_state }}</p>
+
+                <!-- Specs: Seats, Transmission, Fuel -->
+                <div class="car-specs">
+                  <span class="spec-item">👥 {{ car.seats }} asientos</span>
+                  <span class="spec-separator">•</span>
+                  <span class="spec-item">⚙️ {{ car.transmission }}</span>
+                  <span class="spec-separator">•</span>
+                  <span class="spec-item">⛽ {{ car.fuel_type }}</span>
+                </div>
+
+                <!-- Features Tags -->
+                <div class="car-features" *ngIf="car.features">
+                  <span
+                    *ngFor="let feature of getFeatureTags(car.features)"
+                    class="feature-tag"
+                  >
+                    {{ feature }}
+                  </span>
+                </div>
+
+                <!-- Price (sticky bottom) -->
+                <div class="car-footer">
+                  <div class="price-section">
+                    <span class="price-value">${{ car.price_per_day | number: '1.0-0' }}</span>
+                    <span class="price-label">/día</span>
+                  </div>
+
+                  <button
+                    class="cta-button"
+                    (click)="onReserveClick(car.id); $event.stopPropagation()"
+                  >
+                    Rentar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div *ngIf="premiumCars().length === 0" class="empty-state">
+          <p>No hay autos disponibles con esos filtros</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR: Mapa (derecha en desktop, abajo en mobile) -->
+    <aside class="map-sidebar" *ngIf="selectedCarId()">
+      <div class="map-sidebar-content">
+        <div id="map-container" class="w-full h-full">
+          <app-cars-map
+            [cars]="carMapLocations()"
+            [selectedCarId]="selectedCarId()"
+            [userLocation]="userLocation()"
+            (carSelected)="onMapCarSelected($event)"
+            (userLocationChange)="onUserLocationChange($event)"
+          ></app-cars-map>
+        </div>
+
+        <!-- Urgent Banner over map -->
         <div
           *ngIf="selectedCarId() && urgentAvailability()?.available"
           class="urgent-banner-overlay pointer-events-none"
@@ -36,17 +136,7 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Drawer lateral (30% desktop, tabs mobile) -->
-    <app-cars-drawer
-      [carsInput]="premiumCars()"
-      [isOpenInput]="drawerOpen()"
-      [selectedCarIdInput]="selectedCarId()"
-      (carSelected)="onCarSelected($event)"
-      (closeDrawer)="onDrawerClose()"
-      (reserveClick)="onReserveClick($event)"
-    />
+    </aside>
   </div>
 
   <!-- Sticky CTA Mobile -->
@@ -59,7 +149,6 @@
   />
 
   <!-- WhatsApp FAB -->
-  <!-- Note: ownerPhone will be loaded via getOwnerContact when needed -->
   <app-whatsapp-fab
     *ngIf="selectedCar()"
     [car]="selectedCar()!"

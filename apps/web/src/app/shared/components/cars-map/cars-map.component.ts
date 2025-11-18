@@ -194,6 +194,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input() cars: CarMapLocation[] = [];
   @Input() selectedCarId: string | null = null;
   @Input() userLocation: { lat: number; lng: number } | null = null;
+  @Input() userAvatarUrl: string | null = null; // URL del avatar del usuario para el marcador de ubicación
   @Input() locationMode: 'searching' | 'booking-confirmed' | 'default' = 'default';
   @Input() searchRadiusKm: number = 5;
   @Input() showSearchRadius: boolean = true;
@@ -331,19 +332,32 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
-   * Update map theme based on dark mode and marker variant
+   * Get light preset based on current time of day
+   * Returns: 'dawn', 'day', 'dusk', or 'night'
+   */
+  private getTimeBasedLightPreset(): 'dawn' | 'day' | 'dusk' | 'night' {
+    const hour = new Date().getHours();
+
+    if (hour >= 6 && hour < 11) return 'dawn'; // 6am - 11am: Amanecer
+    if (hour >= 11 && hour < 18) return 'day'; // 11am - 6pm: Día
+    if (hour >= 18 && hour < 21) return 'dusk'; // 6pm - 9pm: Atardecer
+    return 'night'; // 9pm - 6am: Noche
+  }
+
+  /**
+   * Update map theme based on time of day and marker variant
    * Uses Mapbox Standard style configuration for native theme support
    */
   private updateMapTheme(): void {
     if (!this.isBrowser) return;
 
-    const isDark = this.isDarkMode();
+    const lightPreset = this.getTimeBasedLightPreset();
     const variant = this.markerVariant;
 
     // Update Mapbox Standard style theme
     if (this.map && this.map.isStyleLoaded()) {
       try {
-        this.map.setConfigProperty('basemap', 'lightPreset', isDark ? 'dusk' : 'day');
+        this.map.setConfigProperty('basemap', 'lightPreset', lightPreset);
 
         // No need for canvas filters with Standard style - it handles theming natively
       } catch (error) {
@@ -351,6 +365,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         // Fallback for older Mapbox versions or non-Standard styles
         const canvas = this.map.getCanvas();
         if (canvas) {
+          const isDark = lightPreset === 'night' || lightPreset === 'dusk';
           const brightness = isDark ? '0.95' : '1';
           const contrast = isDark ? '1.1' : '1';
           const saturate = isDark ? '0.95' : '1';
@@ -367,7 +382,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       // Add current variant class
       container.classList.add(`map-variant-${variant}`);
 
-      // Apply dark mode class if needed
+      // Apply dark mode class for night/dusk themes
+      const isDark = lightPreset === 'night' || lightPreset === 'dusk';
       if (isDark) {
         container.classList.add('dark');
       } else {
@@ -419,29 +435,41 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
       this.mapboxgl.accessToken = environment.mapboxAccessToken;
 
+      // Get initial light preset based on current time
+      const initialLightPreset = this.getTimeBasedLightPreset();
+
       // Initialize map with Mapbox Standard style (v12+ with theme support)
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
         style: 'mapbox://styles/mapbox/standard', // Modern Standard style with theme support
         center: [-58.3816, -34.6037], // Buenos Aires center
-        zoom: 11,
+        zoom: 15.5, // Higher zoom to show 3D buildings immediately
         maxBounds: [
           [-58.8, -34.9], // Southwest
           [-57.9, -34.3], // Northeast
         ],
-        // Mapbox Standard configuration
+        // Mapbox Standard configuration - OPTIMIZED for car marketplace
         config: {
           basemap: {
-            lightPreset: 'day', // Options: 'day', 'dusk', 'dawn', 'night'
-            showPointOfInterestLabels: true,
+            lightPreset: initialLightPreset, // Auto-detect based on time: 'day', 'dusk', 'dawn', 'night'
+            showPointOfInterestLabels: false, // Hide restaurants, hotels, shops (performance + cleaner)
             showTransitLabels: false, // Hide transit for cleaner car-focused map
-            showPlaceLabels: true,
-            showRoadLabels: true,
+            showPlaceLabels: true, // Keep neighborhood/area names
+            showRoadLabels: true, // Keep street names (essential for car location)
+            show3dObjects: true, // Enable 3D buildings for immersive marketplace view
           },
         },
+        // 3D View Configuration - User controlled
+        pitch: 60, // Deep 3D perspective view (60° angle for immersive effect)
+        bearing: 0, // North-up orientation (user can rotate)
+        antialias: true, // Enable antialiasing for smooth 3D buildings
+        // Enable 3D interactions - full user control
+        dragRotate: true, // Enable rotation drag
+        pitchWithRotate: true, // Enable pitch on rotate
+        touchPitch: true, // Enable touch pitch gestures
       });
 
-      // Add navigation controls
+      // Add navigation controls (zoom + compass for full 3D control)
       this.map.addControl(new this.mapboxgl.NavigationControl(), 'top-right');
 
       // Wait for map to load
@@ -1347,9 +1375,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const circleSize = 20 * this.circleSizeMultiplier();
     el.style.setProperty('--circle-size', `${circleSize}px`);
 
+    // Use user avatar if available, otherwise fallback to default icon
+    const avatarUrl = this.userAvatarUrl || 'assets/images/default-avatar.svg';
     el.innerHTML = `
       <div class="user-marker-halo"></div>
-      <div class="user-marker-circle"></div>
+      <img src="${avatarUrl}"
+           class="user-marker-avatar"
+           alt="Tu ubicación"
+           onerror="this.src='assets/images/default-avatar.svg'; this.onerror=null;" />
     `;
 
     // Create marker
@@ -1707,11 +1740,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     this.followUserLocation = true;
     this.followLocationToggle.emit(true);
 
-    // Fly to user location initially
+    // Fly to user location initially with reduced zoom and padding
     this.map.flyTo({
       center: [this.userLocation.lng, this.userLocation.lat],
-      zoom: 14,
+      zoom: 13, // Reduced from 14 to prevent marker overlap/duplication
       duration: 1000,
+      padding: { top: 50, bottom: 50, left: 50, right: 50 }, // Add padding for better positioning
     });
 
     // Update position periodically
@@ -2080,7 +2114,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         });
       }
 
-      // Add outline layer (casing) for better visibility
+      // Add outline layer (casing) - THICK 3D styling to occupy street
       if (!this.map.getLayer(this.routeOutlineLayerId)) {
         this.map.addLayer({
           id: this.routeOutlineLayerId,
@@ -2088,13 +2122,17 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           source: this.routeSourceId,
           paint: {
             'line-color': '#ffffff',
-            'line-width': 8,
-            'line-opacity': 0.8,
+            'line-width': 20, // THICK outline to occupy whole street
+            'line-opacity': 0.8, // High visibility for 3D effect
+          },
+          layout: {
+            'line-cap': 'round', // Rounded ends for smooth appearance
+            'line-join': 'round', // Rounded corners for smooth turns
           },
         });
       }
 
-      // Add main route layer
+      // Add main route layer - THICK 3D styling to occupy street
       const routeColor = '#805ad5'; // AutoRenta brand color
       if (!this.map.getLayer(this.routeLayerId)) {
         this.map.addLayer({
@@ -2103,8 +2141,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           source: this.routeSourceId,
           paint: {
             'line-color': routeColor,
-            'line-width': 5,
-            'line-opacity': 0.9,
+            'line-width': 16, // THICK main line to occupy whole street
+            'line-opacity': 0.9, // High visibility for 3D effect
+          },
+          layout: {
+            'line-cap': 'round', // Rounded ends for smooth appearance
+            'line-join': 'round', // Rounded corners for smooth turns
           },
         });
       } else {
@@ -2124,6 +2166,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         padding: { top: 100, bottom: 100, left: 100, right: 100 },
         maxZoom: 15,
         duration: 1000,
+        pitch: 60, // Maintain 3D perspective while showing route
       });
 
       console.log('[CarsMap] Directions route added:', {

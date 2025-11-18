@@ -849,16 +849,17 @@ img.car-popup-image {
   transition: all 0.3s ease;
 }
 
-.user-marker-circle {
-  width: var(--circle-size, 20px);
-  height: var(--circle-size, 20px);
+.user-marker-avatar {
+  width: var(--circle-size, 40px);
+  height: var(--circle-size, 40px);
   border-radius: 50%;
-  background: var(--cta-default); /* Azul pastel del sistema */
   border: 3px solid white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   position: relative;
   z-index: 2;
   transition: all 0.3s ease;
+  object-fit: cover; /* Asegura que la imagen se vea bien */
+  background: var(--cta-default); /* Fallback color si no carga la imagen */
 }
 
 .user-marker-halo {
@@ -874,8 +875,8 @@ img.car-popup-image {
 }
 
 /* Estados contextuales */
-.user-location-marker--searching .user-marker-circle {
-  background: #10b981; /* Verde para búsqueda activa */
+.user-location-marker--searching .user-marker-avatar {
+  border-color: #10b981; /* Verde para búsqueda activa */
   box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);
 }
 
@@ -883,8 +884,8 @@ img.car-popup-image {
   background: rgba(16, 185, 129, 0.25);
 }
 
-.user-location-marker--booking-confirmed .user-marker-circle {
-  background: #f59e0b; /* Naranja para reserva confirmada */
+.user-location-marker--booking-confirmed .user-marker-avatar {
+  border-color: #f59e0b; /* Naranja para reserva confirmada */
   box-shadow: 0 2px 12px rgba(245, 158, 11, 0.4);
 }
 
@@ -893,21 +894,21 @@ img.car-popup-image {
 }
 
 /* Modo oscuro */
-.user-location-marker--dark .user-marker-circle {
+.user-location-marker--dark .user-marker-avatar {
   border-color: #1e293b;
   box-shadow: 0 2px 12px rgba(167, 216, 244, 0.5);
 }
 
-.user-location-marker--dark.user-location-marker--searching .user-marker-circle {
+.user-location-marker--dark.user-location-marker--searching .user-marker-avatar {
   box-shadow: 0 2px 12px rgba(16, 185, 129, 0.6);
 }
 
-.user-location-marker--dark.user-location-marker--booking-confirmed .user-marker-circle {
+.user-location-marker--dark.user-location-marker--booking-confirmed .user-marker-avatar {
   box-shadow: 0 2px 12px rgba(245, 158, 11, 0.6);
 }
 
 /* Animación de pulso al actualizar */
-.user-location-marker--pulse .user-marker-circle {
+.user-location-marker--pulse .user-marker-avatar {
   animation: location-pulse-update 1s ease-out;
 }
 

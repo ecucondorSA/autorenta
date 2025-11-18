@@ -205,3 +205,4 @@ test('MercadoPago CardForm selectors', async ({ page }) => {
 extractSelectors().catch(console.error);
 
 
+
