@@ -65,7 +65,7 @@ export class MapboxDirectionsService {
   ): Promise<DirectionsResponse | null> {
     try {
       const coordinates = `${origin[0]},${origin[1]};${destination[0]},${destination[1]}`;
-      const url = `${this.baseUrl}/${profile}/${coordinates}?geometries=geojson&steps=true&access_token=${environment.mapboxAccessToken}`;
+      const url = `${this.baseUrl}/${profile}/${coordinates}?geometries=geojson&steps=true&approaches=unrestricted;curb&access_token=${environment.mapboxAccessToken}`;
 
       const response = await fetch(url);
       if (!response.ok) {

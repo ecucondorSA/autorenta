@@ -1,186 +1,93 @@
-# AutoRenta Tools Directory
+# Tools - Scripts de Utilidad
 
-This directory contains operational scripts and utilities for the AutoRenta project.
+## Scripts Activos
 
-## 📦 Consolidated Script Runner (PRIMARY)
+### fix-eslint.js
 
-**All common operations have been consolidated into a single, unified CLI:**
-
-```bash
-./tools/run.sh [command]
-```
-
-### Quick Reference
+**Script oficial para fixes automáticos de ESLint**
 
 ```bash
-# Development
-./tools/run.sh dev              # Start full environment
-./tools/run.sh dev:web          # Web only
-./tools/run.sh dev:worker       # Worker only
-./tools/run.sh dev:stop         # Stop all
-
-# CI/CD
-./tools/run.sh ci               # Full pipeline
-./tools/run.sh test:quick       # Quick tests
-./tools/run.sh build            # Build all
-./tools/run.sh deploy           # Deploy (with confirmation)
-
-# Utilities
-./tools/run.sh status           # Project status
-./tools/run.sh help             # Full help
+node tools/fix-eslint.js
 ```
 
-**Or use npm shortcuts from project root:**
-```bash
-npm run dev
-npm run ci
-npm run deploy
-npm run status
-```
+**Qué hace**:
+- Parsea output de `npm run lint`
+- Aplica fixes automáticos para errores comunes:
+  - `no-unused-vars` → Prefija con `_`
+  - `no-explicit-any` → Cambia a `unknown`
+  - `no-empty-object-type` → Cambia `{}` a `object`
+  - `import/order` → Reorganiza imports
 
-See `CLAUDE.md` for complete documentation.
+**Cuándo usarlo**:
+- ⚠️ **SOLO en emergencias** - No es reemplazo de `eslint --fix`
+- Después de merges grandes con muchos conflictos
+- Cuando ESLint tiene > 100 errores acumulados
+
+**NO usar**:
+- ❌ En desarrollo normal (usar `npm run lint:fix`)
+- ❌ Antes de entender los errores
+- ❌ Sin backup previo (`git commit` primero)
+
+**Tests**: Ejecutar `npm test tools/fix-eslint.spec.js` para verificar
 
 ---
 
-## 🔧 Individual Scripts (SPECIALIZED)
+## Scripts Deprecados
 
-The following scripts handle specific operations not covered by the consolidated runner:
+**Ubicación**: `tools/deprecated/`
 
-### Setup & Configuration
+### ⛔ comprehensive-fix.py
+### ⛔ smart-fix.py
+### ⛔ final-fix.sh
 
-- **`setup-auth.sh`** - One-time CLI authentication setup (GitHub, Supabase, Cloudflare)
-- **`setup-production.sh`** - Production environment configuration
-- **`quick-production-setup.sh`** - Fast production setup wizard
-- **`setup-custom-domain.sh`** - Custom domain configuration for Cloudflare
+**Estado**: DEPRECADOS (2025-11-18)
 
-### Monitoring & Health
+**Razón**: Lógica duplicada, sin tests, modificaban código sin verificación
 
-- **`monitor-health.sh`** - System health checks and alerts
-- **`monitor-wallet-deposits.sh`** - Real-time wallet deposit monitoring
-- **`monitoring-setup.sh`** - Initial monitoring infrastructure setup
-- **`diagnose-supabase.sh`** - Supabase connectivity and configuration diagnostics
+**NO USAR** - Mantenerlos solo como referencia histórica
 
-### Maintenance & Cron Jobs
-
-- **`cleanup-old-deposits-cron.sh`** - Clean up stale deposit records (cron job)
-- **`wallet-reconciliation-cron.sh`** - Wallet balance reconciliation (cron job)
-
-### Utilities
-
-- **`check-auth.sh`** - Check authentication status of all CLIs
-- **`check-skills.sh`** - Verify Claude Code skills configuration
-- **`sync-types.sh`** - Sync TypeScript types from Supabase schema
-- **`organize-docs.sh`** - Organize project documentation
-
-### Deployment (Advanced)
-
-- **`deploy-pages.sh`** - Advanced Cloudflare Pages deployment with smoke tests
-- **`deploy-worker.sh`** - Advanced Cloudflare Worker deployment with validation
-
-### Accounting
-
-- **`accounting/export-ledger.mjs`** - Export accounting ledger data
-
-### Legacy/Reference
-
-- **`claude-workflows.sh`** - ⚠️ Legacy workflow functions (now integrated into `run.sh`)
-- **`dev.sh`** - ⚠️ Legacy dev wrapper (now use `./run.sh dev`)
-- **`claude-automation.sh`** - Claude Code automation helpers
-- **`copilot-autonomous.sh`** - GitHub Copilot experiments
+Si necesitas fix-eslint automático, usar `tools/fix-eslint.js`
 
 ---
 
-## 🎯 When to Use What
+## Mejores Prácticas
 
-### Use `./tools/run.sh` for:
-- ✅ Daily development tasks
-- ✅ Testing (unit, integration, E2E)
-- ✅ Building and deploying
-- ✅ CI/CD pipelines
-- ✅ Quick status checks
+### Orden de preferencia para arreglar ESLint:
 
-### Use individual scripts for:
-- ✅ One-time setup tasks
-- ✅ Production environment configuration
-- ✅ Advanced deployment with custom options
-- ✅ Monitoring and diagnostics
-- ✅ Cron jobs and scheduled tasks
+1. **Manual** - Entender y arreglar cada error
+2. **eslint --fix** - Usar herramienta oficial: `npm run lint:fix`
+3. **fix-eslint.js** - Solo en emergencias (> 100 errores)
 
----
+### Antes de usar cualquier script:
 
-## 📝 Adding New Commands
-
-To add a new command to the consolidated runner:
-
-1. Edit `tools/run.sh`
-2. Add a new function: `cmd_your_command() { ... }`
-3. Add case to router: `your:command) cmd_your_command "$@" ;;`
-4. Update help text in `cmd_help()`
-5. Add npm shortcut in root `package.json` (optional)
-
-**Example:**
 ```bash
-# In tools/run.sh
-cmd_backup() {
-    header "💾 Creating Backup"
-    # Your backup logic here
-    success "Backup completed"
-}
+# 1. Commit actual
+git add -A
+git commit -m "wip: before running fix script"
 
-# In router section
-case "$COMMAND" in
-    # ... other commands
-    backup) cmd_backup "$@" ;;
-    # ...
-esac
+# 2. Ejecutar script
+node tools/fix-eslint.js
+
+# 3. Verificar cambios
+git diff
+
+# 4. Verificar que lint mejoró
+npm run lint
+
+# 5. Verificar que tests pasan
+npm run test:quick
 ```
 
 ---
 
-## 🔄 Migration Notes (Nov 2025)
+## Agregar Nuevo Script
 
-Previously, the project had **42+ npm scripts** and **20+ bash scripts** scattered across:
-- Root `package.json`
-- `apps/web/package.json`
-- `functions/workers/*/package.json`
-- Various bash scripts in `tools/`
-
-**Problems:**
-- ❌ Duplicated logic across multiple scripts
-- ❌ Inconsistent command patterns
-- ❌ Hard to maintain and discover commands
-- ❌ No single source of truth
-
-**Solution:**
-- ✅ Single consolidated runner (`tools/run.sh`)
-- ✅ Consistent command structure
-- ✅ Better error handling and logging
-- ✅ Parallel execution support
-- ✅ Clear categorization
-
-**Backward Compatibility:**
-All existing npm shortcuts still work - they now delegate to `run.sh`.
+1. Crear archivo en `tools/` con nombre descriptivo
+2. Agregar shebang si es ejecutable: `#!/usr/bin/env node`
+3. Documentar en este README
+4. Agregar tests en `tools/*.spec.js`
+5. No hardcodear paths (usar `path.join(__dirname, ...)`)
 
 ---
 
-## 📚 Documentation
-
-- **Main docs:** `/CLAUDE.md` - Complete project guide
-- **This file:** Quick reference for tools directory
-- **Help command:** `./tools/run.sh help` - Interactive help
-
----
-
-## 🤝 Contributing
-
-When adding new tools:
-1. Prefer adding to `run.sh` for general operations
-2. Create separate scripts only for specialized/one-time tasks
-3. Use consistent logging functions (log, success, error, warn)
-4. Add documentation to this README
-5. Test on clean environment
-
----
-
-**Last updated:** November 2025
-**Maintained by:** AutoRenta Team
+**Última actualización**: 2025-11-18 (Tech Debt Remediation)

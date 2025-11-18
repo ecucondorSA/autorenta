@@ -41,7 +41,6 @@ import {
   DateRange,
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
-import { DateSearchComponent } from '../../shared/components/date-search/date-search.component';
 import {
   QuickBookingModalComponent,
   QuickBookingData,
@@ -79,7 +78,6 @@ type ToastType = 'success' | 'info' | 'warning' | 'error';
     StatsStripComponent,
     TooltipComponent,
     DateRangePickerComponent,
-    DateSearchComponent,
     DynamicPricingBadgeComponent,
     MapFiltersComponent,
     PriceTransparencyModalComponent,
@@ -91,7 +89,6 @@ type ToastType = 'success' | 'info' | 'warning' | 'error';
 export class MarketplaceV2Page implements OnInit, OnDestroy {
   @ViewChild(CarsMapComponent) carsMapComponent!: CarsMapComponent;
   @ViewChild('drawerContent', { read: ElementRef }) drawerContent?: ElementRef<HTMLDivElement>;
-  @ViewChild(DateSearchComponent) dateSearchComponent?: DateSearchComponent;
 
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -669,11 +666,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
    */
   onDateRangeChange(range: DateRange): void {
     this.dateRange.set(range);
-
-    // Actualizar el componente date-search si está disponible
-    if (this.dateSearchComponent) {
-      this.dateSearchComponent.updateDates(range.from, range.to);
-    }
 
     if (range.from && range.to) {
       this.showToast(`Fechas: ${range.from} - ${range.to}`, 'success');

@@ -51,3 +51,4 @@ echo "✅ Validación rápida completada - Todos los checks críticos pasaron"
 
 
 
+

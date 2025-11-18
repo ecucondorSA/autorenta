@@ -32,7 +32,6 @@ import {
   MapFiltersComponent,
   FilterState,
 } from '../../../shared/components/map-filters/map-filters.component';
-import { CarsDrawerComponent } from '../../../shared/components/cars-drawer/cars-drawer.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/whatsapp-fab.component';
@@ -64,7 +63,6 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     CommonModule,
     CarsMapComponent,
     MapFiltersComponent,
-    CarsDrawerComponent,
     StickyCtaMobileComponent,
     UrgentRentalBannerComponent,
     WhatsappFabComponent,
@@ -927,6 +925,61 @@ export class CarsListPage implements OnInit, OnDestroy {
 
   trackByCarId(_index: number, car: CarWithDistance): string {
     return car.id;
+  }
+
+  /**
+   * TrackBy function for ngFor with proper naming
+   * Returns unique identifier for each car in the list
+   */
+  trackByCar(_index: number, car: CarWithDistance): string {
+    return car.id;
+  }
+
+  /**
+   * Extract feature tags from car features object
+   * Converts feature flags to display-friendly strings
+   * @param features Feature flags object (e.g., { ac: true, gps: true })
+   * @returns Array of feature tag strings
+   */
+  getFeatureTags(features: Record<string, boolean> | undefined): string[] {
+    if (!features || typeof features !== 'object') {
+      return [];
+    }
+
+    // Map feature keys to display labels
+    const featureLabels: Record<string, string> = {
+      ac: '❄️ AC',
+      air_conditioning: '❄️ AC',
+      gps: '🗺️ GPS',
+      navigation: '🗺️ GPS',
+      bluetooth: '🔵 Bluetooth',
+      leather_seats: '🪑 Cuero',
+      sunroof: '☀️ Techo',
+      roof: '☀️ Techo',
+      backup_camera: '📷 Cámara',
+      camera: '📷 Cámara',
+      usb_charging: '🔌 USB',
+      usb: '🔌 USB',
+      apple_carplay: '🍎 CarPlay',
+      android_auto: '🤖 Android',
+      cruise_control: '⚙️ Cruise',
+      automatic_transmission: '⚙️ Automático',
+      transmission: '⚙️ Automático',
+      wifi: '📡 WiFi',
+      heated_seats: '🔥 Calefacción',
+      parking_sensors: '📡 Sensores',
+      sensors: '📡 Sensores',
+      all_wheel_drive: '🏔️ AWD',
+      four_wheel_drive: '🏔️ 4WD',
+      traction_control: '🛡️ Control',
+      lane_departure: '⚠️ LDW',
+      adaptive_cruise: '🎯 Adaptive',
+    };
+
+    return Object.entries(features)
+      .filter(([, value]) => value === true)
+      .map(([key]) => featureLabels[key.toLowerCase()] || key)
+      .filter((label, index, array) => array.indexOf(label) === index); // Remove duplicates
   }
 
   private getSortLabel(
