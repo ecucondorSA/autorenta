@@ -1,5 +1,7 @@
 import type { MCPServer } from '../lib/server.js';
 import type { SupabaseClient } from '../lib/supabase.js';
+import type { AuditClient } from '../lib/audit-client.js';
+import { registerAuditResources } from './audit.js';
 
 export function registerResources(server: MCPServer, supabase: SupabaseClient) {
   // Recurso: Estado general de la plataforma

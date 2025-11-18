@@ -1,5 +1,10 @@
+import { registerAuditTools } from './audit.js';
 import { z } from 'zod';
-export function registerTools(server, supabase) {
+export function registerTools(server, supabase, audit) {
+    // Register audit tools if audit client is provided
+    if (audit) {
+        registerAuditTools(server, audit);
+    }
     // Tool: Aprobar una reserva pendiente
     server.registerTool('approve_booking', async (args) => {
         const schema = z.object({

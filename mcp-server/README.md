@@ -58,6 +58,27 @@ El servidor ya está configurado en `.claude/config.json`:
 }
 ```
 
+## 🔍 Módulo de Auditoría Especializado
+
+El servidor MCP ahora incluye un **módulo de auditoría especializado** para análisis de seguridad y performance:
+
+- **Security Definer Functions Audit**: Identifica funciones con riesgo de privilege escalation
+- **RLS Policies Audit**: Verifica cobertura de políticas Row Level Security
+- **Performance Analysis**: Detecta sequential scans altos y sugiere índices
+- **Comprehensive Reports**: Reporte integrado con acciones prioritarias
+
+**Ver documentación completa**: [AUDIT_MODULE.md](./AUDIT_MODULE.md)
+
+### Ejemplo de uso:
+```
+@autorenta-platform Genera un reporte de auditoría completo
+@autorenta-platform ¿Qué funciones tienen SECURITY DEFINER crítico?
+@autorenta-platform Crea RLS policies para la tabla bookings
+@autorenta-platform Genera índices para optimizar performance
+```
+
+---
+
 ## 📚 Recursos Disponibles
 
 ### 1. Estado de la Plataforma

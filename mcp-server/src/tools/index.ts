@@ -1,8 +1,14 @@
 import type { MCPServer } from '../lib/server.js';
 import type { SupabaseClient } from '../lib/supabase.js';
+import type { AuditClient } from '../lib/audit-client.js';
+import { registerAuditTools } from './audit.js';
 import { z } from 'zod';
 
-export function registerTools(server: MCPServer, supabase: SupabaseClient) {
+export function registerTools(server: MCPServer, supabase: SupabaseClient, audit?: AuditClient) {
+  // Register audit tools if audit client is provided
+  if (audit) {
+    registerAuditTools(server, audit);
+  }
   // Tool: Aprobar una reserva pendiente
   server.registerTool(
     'approve_booking',

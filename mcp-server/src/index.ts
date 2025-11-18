@@ -2,22 +2,26 @@
 
 import { createServer } from './lib/server.js';
 import { SupabaseClient } from './lib/supabase.js';
+import { AuditClient } from './lib/audit-client.js';
 import { registerResources } from './resources/index.js';
+import { registerAuditResources } from './resources/audit.js';
 import { registerTools } from './tools/index.js';
 
 async function main() {
   try {
-    // Inicializar cliente de Supabase
+    // Inicializar clientes
     const supabase = new SupabaseClient();
+    const audit = new AuditClient();
 
     // Crear servidor MCP
     const server = createServer('autorenta-platform', '1.0.0');
 
     // Registrar recursos (lectura de datos)
     registerResources(server, supabase);
+    registerAuditResources(server, audit);
 
     // Registrar herramientas (acciones)
-    registerTools(server, supabase);
+    registerTools(server, supabase, audit);
 
     // Iniciar servidor
     await server.start();
