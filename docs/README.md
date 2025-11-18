@@ -1,6 +1,6 @@
 # 📚 Documentación AutoRenta
 
-**Última actualización**: 2025-11-05
+**Última actualización**: 2025-11-18
 
 ## Índice
 
@@ -10,9 +10,16 @@
 - **[Disaster Recovery Plan](./disaster-recovery-plan.md)** - Plan de recuperación ante desastres
 - **[Runbooks](./runbooks/)** - Procedimientos operativos específicos
 
+### 🔒 Seguridad (NUEVO - 2025-11-18)
+
+- **[Auditoría de Seguridad Wallet/Bookings](../SECURITY_AUDIT_WALLET_BOOKINGS.md)** - ⚠️ P0 Vulnerabilities (CVSS 8.2)
+- **[Tech Debt Baseline](../TECH_DEBT_BASELINE.md)** - Estado inicial antes de remediación
+- **[Runbook: Aplicar Migraciones de Seguridad](./runbooks/apply-security-migrations.md)** - ⚠️ CRÍTICO
+
 ### 🔧 Runbooks
 
 - **[Troubleshooting General](./runbooks/troubleshooting.md)** - Solución de problemas comunes
+- **[Apply Security Migrations](./runbooks/apply-security-migrations.md)** - ⚠️ P0 Security fixes
 - **[Split Payment Failure](./runbooks/split-payment-failure.md)** - Problemas con pagos divididos
 - **[Database Backup & Restore](./runbooks/database-backup-restore.md)** - Backup y restauración de DB
 - **[Secret Rotation](./runbooks/secret-rotation.md)** - Rotación de secrets
@@ -109,8 +116,8 @@ docs/
 ├── archived/                      # Archivos históricos organizados
 │   ├── sessions/                  # Resúmenes de sesiones
 │   ├── sprints/                   # Resúmenes de sprints
-│   ├── summaries/                 # Resúmenes ejecutivos
-│   └── old/                       # Archivos antiguos
+│   └── summaries/                 # Resúmenes ejecutivos
+│   (old/ eliminado 2025-11-18: 298 archivos obsoletos, 3.7MB)
 ├── implementation/                # Documentación de implementación
 │   ├── TESTSPRITE_MCP_INTEGRATION_SPEC.md  # Spec de integración TestSprite
 │   ├── features/                  # Features implementadas
@@ -158,6 +165,33 @@ Según [CLAUDE.md](../CLAUDE.md):
 - Incluir fecha de última actualización
 - Incluir índice para documentos largos
 - Incluir referencias a código relevante
+
+---
+
+## 🔧 Tech Debt Remediation (2025-11-18)
+
+**Status**: En progreso (Branch: `tech-debt-remediation`)
+**Progreso**: 17/25 tareas (68%)
+
+### Logros Recientes
+
+- ✅ **Scripts consolidados**: 5 → 1 script ESLint (-80%)
+- ✅ **Tests habilitados**: +11 archivos críticos
+- ✅ **Docs limpiados**: -298 archivos obsoletos (-3.7MB)
+- ✅ **Security P0 fixes**: RLS + Constraints + Admin validation
+- ✅ **CI/CD mejorado**: Coverage bloqueante + E2E automático
+
+### Documentos Clave
+
+- [Tech Debt Baseline](../TECH_DEBT_BASELINE.md) - Estado inicial
+- [Security Audit](../SECURITY_AUDIT_WALLET_BOOKINGS.md) - Vulnerabilidades P0
+- [Apply Security Migrations](./runbooks/apply-security-migrations.md) - Runbook crítico
+
+### Próximos Pasos
+
+1. Aplicar migraciones SQL en staging
+2. Tests de validación (10 tests SQL)
+3. Merge a `main`
 
 ---
 
