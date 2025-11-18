@@ -47,7 +47,9 @@ export class DrivingStatsPage implements OnInit {
     return avg && (avg.total_trips ?? 0) > 0;
   });
 
-  readonly currentScore = computed(() => this.summary()?.avg_score ?? this.summary()?.avg_driver_score ?? 0);
+  readonly currentScore = computed(
+    () => this.summary()?.avg_score ?? this.summary()?.avg_driver_score ?? 0,
+  );
 
   readonly scoreColor = computed(() => {
     const score = this.currentScore();

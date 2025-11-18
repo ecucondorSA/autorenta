@@ -1,5 +1,5 @@
-import { Effect, BlendFunction } from 'postprocessing'
-import { Uniform, Vector2 } from 'three'
+import { Effect, BlendFunction } from 'postprocessing';
+import { Uniform, Vector2 } from 'three';
 
 const fragmentShader = `
 // Basic uniforms
@@ -222,17 +222,17 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 
   outputColor = vec4(finalColor, cellColor.a);
 }
-`
+`;
 
 export type AsciiEffectOptions = {
-  cellSize?: number
-  invert?: boolean
-  colorMode?: boolean
-  style?: number
-  resolution?: Vector2
-  mousePos?: Vector2
-  postfx?: Record<string, any>
-}
+  cellSize?: number;
+  invert?: boolean;
+  colorMode?: boolean;
+  style?: number;
+  resolution?: Vector2;
+  mousePos?: Vector2;
+  postfx?: Record<string, any>;
+};
 
 export class AsciiEffect extends Effect {
   constructor(opts: AsciiEffectOptions = {}) {
@@ -244,7 +244,7 @@ export class AsciiEffect extends Effect {
       resolution = new Vector2(1920, 1080),
       mousePos = new Vector2(0, 0),
       postfx = {},
-    } = opts
+    } = opts;
 
     super('AsciiEffect', fragmentShader, {
       blendFunction: BlendFunction.NORMAL,
@@ -280,17 +280,31 @@ export class AsciiEffect extends Effect {
         ['brightnessAdjust', new Uniform(postfx.brightnessAdjust || 0)],
         ['contrastAdjust', new Uniform(postfx.contrastAdjust || 1)],
       ]),
-    })
+    });
   }
 
   // Helpers to update uniforms from the host app
-  setResolution(v: Vector2) { this.uniforms.get('resolution').value = v }
-  setMousePos(v: Vector2) { this.uniforms.get('mousePos').value = v }
-  setCellSize(n: number) { this.uniforms.get('cellSize').value = n }
-  setInvert(b: boolean) { this.uniforms.get('invert').value = b }
-  setColorMode(b: boolean) { this.uniforms.get('colorMode').value = b }
-  setAsciiStyle(i: number) { this.uniforms.get('asciiStyle').value = i }
-  addTime(dt: number) { this.uniforms.get('time').value += dt }
+  setResolution(v: Vector2) {
+    this.uniforms.get('resolution').value = v;
+  }
+  setMousePos(v: Vector2) {
+    this.uniforms.get('mousePos').value = v;
+  }
+  setCellSize(n: number) {
+    this.uniforms.get('cellSize').value = n;
+  }
+  setInvert(b: boolean) {
+    this.uniforms.get('invert').value = b;
+  }
+  setColorMode(b: boolean) {
+    this.uniforms.get('colorMode').value = b;
+  }
+  setAsciiStyle(i: number) {
+    this.uniforms.get('asciiStyle').value = i;
+  }
+  addTime(dt: number) {
+    this.uniforms.get('time').value += dt;
+  }
 }
 
-export default AsciiEffect
+export default AsciiEffect;

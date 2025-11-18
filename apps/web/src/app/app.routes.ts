@@ -57,7 +57,9 @@ export const routes: Routes = [
         pathMatch: 'full',
         data: { layout: 'full-bleed' },
         loadComponent: () =>
-          import('./features/cars/conversion/cars-conversion.page').then((m) => m.CarsConversionPage),
+          import('./features/cars/conversion/cars-conversion.page').then(
+            (m) => m.CarsConversionPage,
+          ),
       },
       {
         path: 'list',

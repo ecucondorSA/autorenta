@@ -78,7 +78,10 @@ export interface CarWithDistance extends Car {
         </div>
 
         <!-- Car cards list -->
-        <div *ngIf="cars().length > 0" class="drawer-cards grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          *ngIf="cars().length > 0"
+          class="drawer-cards grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        >
           <div
             *ngFor="let car of cars(); trackBy: trackByCarId"
             class="drawer-card-wrapper flex flex-col gap-2 h-full"

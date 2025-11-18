@@ -45,10 +45,18 @@ Closes #<!-- número de issue -->
 - [ ] **SQLs documentados**: Si hay migrations, SQLs incluidos y explicados
 - [ ] **Docs actualizadas**: Documentación actualizada si es necesario
 
-### Seguridad
+### Seguridad & Auditoría
 - [ ] **Sin secrets**: No hay secrets, tokens o credenciales en el código
 - [ ] **Validación de input**: Input de usuario validado apropiadamente
 - [ ] **RLS policies**: Si hay cambios de DB, RLS policies verificadas
+- [ ] **MCP Audit**: Ejecutar auditoría de tablas modificadas
+  ```bash
+  ./tools/audit-before-code.sh [nombre_tabla]
+  ```
+  _O en Claude Code:_
+  ```
+  @autorenta-platform Audita RLS para [nombre_tabla]
+  ```
 
 ### Database
 - [ ] **Migrations revisadas**: Migrations revisadas y probadas en staging

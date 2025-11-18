@@ -8,6 +8,7 @@ Guía principal para Claude Code trabajando en AutoRenta.
 > - [CLAUDE_STORAGE.md](./CLAUDE_STORAGE.md) - Supabase Storage, buckets y RLS
 > - [CLAUDE_PAYMENTS.md](./CLAUDE_PAYMENTS.md) - Sistema de pagos MercadoPago y Wallet
 > - [CLAUDE_MCP.md](./CLAUDE_MCP.md) - Model Context Protocol integration
+> - **[AUDIT_MCP_INDEX.md](./AUDIT_MCP_INDEX.md) - 🔍 MCP Auditor: Security & Performance** ⭐ **VER PRIMERO**
 
 ## Project Overview
 
@@ -60,6 +61,28 @@ npm run dev              # Angular + Payment webhook
 # - Web: http://localhost:4200
 # - Worker: http://localhost:8787
 ```
+
+### ⭐ Workflow de Auditoría PRE-CÓDIGO (NUEVA)
+
+**ANTES de escribir código, verifica seguridad y RLS:**
+
+```bash
+# Opción 1: Script interactivo
+./tools/audit-before-code.sh [nombre_tabla]
+
+# Opción 2: En Claude Code
+@autorenta-platform Audita RLS para [nombre_tabla]
+```
+
+**Flujo completo:**
+1. `./tools/audit-before-code.sh wallet_transactions` → Ver qué auditar
+2. `@autorenta-platform Audita RLS para wallet_transactions` → Revisar políticas
+3. Si no tiene RLS: `@autorenta-platform Genera RLS policies para wallet_transactions`
+4. Aplicar SQL generado en Supabase
+5. `npm run sync:types` → Sincronizar tipos
+6. Ahora SÍ escribir código ✅
+
+**Ver guía completa**: [AUDIT_MCP_INDEX.md](./AUDIT_MCP_INDEX.md)
 
 ### Supabase Local (Docker)
 

@@ -57,9 +57,7 @@ describe('AdminService', () => {
     });
 
     it('should return false when user is not admin', async () => {
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: false, error: null }) as any,
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: false, error: null }) as any);
 
       const result = await service.isAdmin();
 
@@ -160,9 +158,7 @@ describe('AdminService', () => {
   describe('getAdminRoles', () => {
     it('should return admin roles from RPC', async () => {
       const mockRoles: AdminRole[] = ['super_admin', 'operations'];
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: mockRoles, error: null }) as any,
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: mockRoles, error: null }) as any);
 
       const result = await service.getAdminRoles();
 
@@ -174,9 +170,7 @@ describe('AdminService', () => {
 
     it('should cache roles for same user', async () => {
       const mockRoles: AdminRole[] = ['super_admin'];
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: mockRoles, error: null }) as any,
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: mockRoles, error: null }) as any);
 
       // First call
       await service.getAdminRoles();
@@ -190,9 +184,7 @@ describe('AdminService', () => {
 
     it('should clear cache and refetch for different user', async () => {
       const mockRoles: AdminRole[] = ['super_admin'];
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: mockRoles, error: null }) as any,
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: mockRoles, error: null }) as any);
 
       // First call with user 1
       await service.getAdminRoles();
@@ -234,9 +226,7 @@ describe('AdminService', () => {
   describe('clearCache', () => {
     it('should clear roles cache', async () => {
       const mockRoles: AdminRole[] = ['super_admin'];
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: mockRoles, error: null }) as any,
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: mockRoles, error: null }) as any);
 
       // Populate cache
       await service.getAdminRoles();
@@ -254,9 +244,7 @@ describe('AdminService', () => {
   describe('logAction', () => {
     it('should log admin action successfully', async () => {
       const mockLogId = 'log-entry-id';
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: mockLogId, error: null }) as any,
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: mockLogId, error: null }) as any);
 
       const result = await service.logAction({
         action: 'approve_verification',
@@ -277,9 +265,7 @@ describe('AdminService', () => {
     });
 
     it('should include IP and user agent if provided', async () => {
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve({ data: 'log-id', error: null }) as any,
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve({ data: 'log-id', error: null }) as any);
 
       await service.logAction({
         action: 'test_action',

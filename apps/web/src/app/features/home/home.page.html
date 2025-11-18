@@ -74,7 +74,10 @@
     </div>
 
     <!-- Featured Cars Grid -->
-    <div class="cars-grid grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" *ngIf="!loading && featuredCars.length > 0">
+    <div
+      class="cars-grid grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      *ngIf="!loading && featuredCars.length > 0"
+    >
       <app-car-card
         *ngFor="let car of featuredCars"
         [car]="car"

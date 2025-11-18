@@ -93,7 +93,11 @@ export class MakeCalendarPublicButtonComponent {
           success: boolean;
           message: string;
           calendar_id: string;
-        }>(`${environment.supabaseUrl}/functions/v1/make-calendar-public`, { car_id: this.carId }, { headers })
+        }>(
+          `${environment.supabaseUrl}/functions/v1/make-calendar-public`,
+          { car_id: this.carId },
+          { headers },
+        )
         .toPromise();
 
       if (response?.success) {

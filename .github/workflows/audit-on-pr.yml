@@ -1,0 +1,120 @@
+name: Database Audit on PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'supabase/**'
+      - 'database/**'
+      - 'apps/web/src/**'
+      - '.github/workflows/audit-on-pr.yml'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    name: Audit Database Changes
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v41
+        with:
+          files: |
+            supabase/**
+            database/**
+
+      - name: Comment PR with audit reminder
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const changedFiles = `${{ steps.changed-files.outputs.all_changed_files }}`.split('\n');
+            const dbFiles = changedFiles.filter(f => f.includes('supabase') || f.includes('database'));
+
+            if (dbFiles.length > 0) {
+              const comment = `## 🔍 Database Audit Reminder
+
+              This PR modifies database files. Please run an audit before merge:
+
+              ### Option 1: In Claude Code
+              \`\`\`
+              @autorenta-platform Genera reporte de auditoría completo
+              @autorenta-platform Audita RLS para [tabla_modificada]
+              @autorenta-platform Analiza performance
+              \`\`\`
+
+              ### Option 2: Local Script
+              \`\`\`bash
+              ./tools/audit-before-code.sh [tabla_modificada]
+              \`\`\`
+
+              **Checklist:**
+              - [ ] RLS policies verified
+              - [ ] SECURITY_DEFINER functions audited (if modified)
+              - [ ] Performance analysis done
+              - [ ] Index suggestions reviewed
+              - [ ] All audit findings addressed
+
+              See: [AUDIT_MCP_INDEX.md](../../AUDIT_MCP_INDEX.md)`;
+
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+
+      - name: Validate PR description includes audit notes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+
+            // Check if DB files were modified
+            const hasDBChanges = pr.changed_files > 0;
+
+            if (hasDBChanges) {
+              const body = pr.body || '';
+              const hasAuditNotes = body.toLowerCase().includes('audit') ||
+                                   body.toLowerCase().includes('rls') ||
+                                   body.toLowerCase().includes('security') ||
+                                   body.toLowerCase().includes('performance');
+
+              if (!hasAuditNotes) {
+                core.warning('⚠️ PR description should mention audit findings or security considerations for DB changes');
+              }
+            }
+
+  lint-migrations:
+    runs-on: ubuntu-latest
+    name: Validate SQL Migrations
+    if: contains(github.event.pull_request.changed_files, 'supabase')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate migration files exist
+        run: |
+          if [ -d "supabase/migrations" ]; then
+            echo "✓ Migrations directory exists"
+            ls -la supabase/migrations/ || true
+          else
+            echo "✗ No migrations directory found"
+          fi
+
+      - name: Check SQL syntax (if sqlfluff available)
+        continue-on-error: true
+        run: |
+          if command -v sqlfluff &> /dev/null; then
+            echo "✓ Running SQL linting..."
+            sqlfluff lint supabase/migrations/ --dialect postgres || true
+          else
+            echo "⚠️ sqlfluff not installed, skipping SQL syntax check"
+          fi

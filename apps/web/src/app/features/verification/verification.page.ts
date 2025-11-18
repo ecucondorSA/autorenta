@@ -249,9 +249,7 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
                     <div
                       class="rounded-full bg-surface-base dark:bg-graphite-dark px-4 py-1 text-sm font-semibold text-text-secondary"
                     >
-                      {{ getCategoryStats(category.docs).completed }}/{{
-                        category.docs.length
-                      }}
+                      {{ getCategoryStats(category.docs).completed }}/{{ category.docs.length }}
                       completado
                     </div>
                   </div>
