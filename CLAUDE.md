@@ -574,11 +574,3 @@ cat docs/runbooks/troubleshooting.md
 ---
 
 **Nota**: Este archivo es ahora ~8k caracteres (vs 41k original), mejorando significativamente el performance de Claude Code. Para información detallada, consulta los archivos modulares correspondientes.
-- ultrathink     Ejecutar el test
-npx playwright test tests/e2e/complete-porsche-publication-flow.spec.ts
-
-# Con UI (recomendad
-- ehecutar el comando  ultrathink     Ejecutar el test
-npx playwright test tests/e2e/complete-porsche-publication-flow.spec.ts
-
-# Con UI (recomendad

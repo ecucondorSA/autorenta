@@ -50,7 +50,15 @@
   },
   "hooks": {
     "onPromptSubmit": [
-      ".claude/hooks/json-to-toon.mjs"
+      {
+        "matcher": {},
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/json-to-toon.mjs"
+          }
+        ]
+      }
     ]
   },
   "toonOptimization": {
