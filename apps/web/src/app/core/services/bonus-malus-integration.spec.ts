@@ -19,7 +19,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
 import { firstValueFrom } from 'rxjs';
-import { DriverProfileService, ClassUpdateResult } from './driver-profile.service';
+import { DriverProfileService } from './driver-profile.service';
 import { AutorentarCreditService } from './autorentar-credit.service';
 import { BonusProtectorService } from './bonus-protector.service';
 import { TelemetryService } from './telemetry.service';
@@ -75,7 +75,7 @@ describe('Bonus-Malus Integration Tests', () => {
     try {
       await supabaseClient.auth.admin.deleteUser(testUserId);
     } catch (_error) {
-      console.error('Cleanup error:', error);
+      console.error('Cleanup error:', _error);
     }
   });
 
