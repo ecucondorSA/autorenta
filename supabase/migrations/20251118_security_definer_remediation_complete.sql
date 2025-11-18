@@ -39,17 +39,17 @@ COMMENT ON FUNCTION public.complete_payment_split(uuid, text, jsonb) IS
 SECURITY HARDENED 2025-11-18: Added search_path to prevent privilege escalation.
 Audit: Week 1 - Found 6 issues, implemented fixes in Phase 1-2.';
 
--- 1.4: register_payment_split (multi-provider version)
-ALTER FUNCTION public.register_payment_split(uuid, payment_provider, text, integer, varchar)
-  SET search_path = public, pg_temp;
-
--- 1.5: register_payment_split (MercadoPago compatibility wrapper)
+-- 1.4: register_payment_split (MercadoPago compatibility wrapper)
 ALTER FUNCTION public.register_payment_split(uuid, varchar, integer, varchar)
   SET search_path = public, pg_temp;
 
-COMMENT ON FUNCTION public.register_payment_split(uuid, payment_provider, text, integer, varchar) IS
-'Registers payment split for multiple payment providers (MercadoPago, PayPal).
-SECURITY HARDENED 2025-11-18: Added search_path and amount validation.
+-- 1.5: register_payment_split (extended version with amounts)
+ALTER FUNCTION public.register_payment_split(uuid, text, numeric, numeric, numeric, text, text)
+  SET search_path = public, pg_temp;
+
+COMMENT ON FUNCTION public.register_payment_split(uuid, varchar, integer, varchar) IS
+'Registers payment split for MercadoPago (compatibility wrapper).
+SECURITY HARDENED 2025-11-18: Added search_path to prevent privilege escalation.
 Audit: Week 1 - Found 5 issues, 4 resolved in Phase 1-3.';
 
 -- 1.6: update_payment_intent_status

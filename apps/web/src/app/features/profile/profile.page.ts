@@ -14,12 +14,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
 import { WalletService } from '../../core/services/wallet.service';
-import { GoogleCalendarService } from '../../core/services/google-calendar.service';
 import { ProfileStore } from '../../core/stores/profile.store';
 import { UserProfile, Role } from '../../core/models';
 import type { UpdateProfileData } from '../../core/services/profile.service';
 import { DOCUMENT_TYPES } from '../../core/config/document-types.config';
-import { CalendarManagementComponent } from '../../shared/components/calendar-management/calendar-management.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const SECTION_ANCHORS = {
@@ -61,7 +59,7 @@ const DOC_DEEP_LINKS: Record<
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, CalendarManagementComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -70,7 +68,6 @@ export class ProfilePage implements OnInit {
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
   private readonly walletService = inject(WalletService);
-  private readonly googleCalendarService = inject(GoogleCalendarService);
   private readonly profileStore = inject(ProfileStore);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -89,10 +86,7 @@ export class ProfilePage implements OnInit {
   readonly editMode = signal(false);
   readonly useWizard = signal(true); // Toggle between wizard and old form
   readonly copiedWAN = signal(false);
-  readonly calendarConnected = signal(false);
-  readonly calendarLoading = signal(false);
   readonly highlightedSection = signal<ProfileSection | null>(null);
-  readonly calendarSuccessMessage = signal(false);
 
   // Use ProfileStore computed values
   readonly userEmail = this.profileStore.userEmail;
@@ -160,38 +154,6 @@ export class ProfilePage implements OnInit {
     });
 
     void this.loadProfile();
-    void this.checkCalendarConnection();
-    this.checkCalendarConnectionSuccess();
-  }
-
-  /**
-   * Check if user was redirected from Google Calendar OAuth callback
-   */
-  private checkCalendarConnectionSuccess(): void {
-    this.route.queryParams.subscribe((params) => {
-      if (params['calendar_connected'] === 'true') {
-        this.calendarSuccessMessage.set(true);
-        this.message.set('✅ Google Calendar conectado exitosamente');
-
-        // Refresh calendar connection status
-        void this.checkCalendarConnection();
-
-        // Clear the query parameter from URL
-        void this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: {},
-          queryParamsHandling: 'merge',
-        });
-
-        // Clear message after 5 seconds
-        setTimeout(() => {
-          this.calendarSuccessMessage.set(false);
-          if (this.message() === '✅ Google Calendar conectado exitosamente') {
-            this.message.set(null);
-          }
-        }, 5000);
-      }
-    });
   }
 
   async loadProfile(): Promise<void> {
@@ -419,96 +381,5 @@ export class ProfilePage implements OnInit {
         block: 'start',
       });
     });
-  }
-
-  /**
-   * Check Google Calendar connection status
-   */
-  async checkCalendarConnection(): Promise<void> {
-    // Only check if user is authenticated
-    if (!this.authService.isAuthenticated()) {
-      this.calendarConnected.set(false);
-      return;
-    }
-
-    try {
-      this.calendarLoading.set(true);
-      const status = await this.googleCalendarService.getConnectionStatus().toPromise();
-      this.calendarConnected.set(status?.connected ?? false);
-    } catch (err) {
-      console.error('Error checking calendar connection:', err);
-      this.calendarConnected.set(false);
-      // Don't show error if it's just "not connected" - that's expected
-      if (err instanceof Error && !err.message.includes('No active session')) {
-        // Only log, don't show to user for status checks
-      }
-    } finally {
-      this.calendarLoading.set(false);
-    }
-  }
-
-  /**
-   * Connect Google Calendar
-   */
-  async connectGoogleCalendar(): Promise<void> {
-    // Verify user is authenticated
-    if (!this.authService.isAuthenticated()) {
-      this.error.set('Debes iniciar sesión para conectar Google Calendar.');
-      return;
-    }
-
-    try {
-      this.calendarLoading.set(true);
-      this.message.set(null);
-      this.error.set(null);
-
-      await this.googleCalendarService.connectGoogleCalendar().toPromise();
-
-      // Check connection status after popup closes
-      await this.checkCalendarConnection();
-
-      if (this.calendarConnected()) {
-        this.message.set('Google Calendar conectado exitosamente');
-        setTimeout(() => this.message.set(null), 3000);
-      }
-    } catch (err) {
-      console.error('Error connecting calendar:', err);
-      const errorMessage =
-        err instanceof Error
-          ? err.message.includes('No active session')
-            ? 'Debes iniciar sesión para conectar Google Calendar.'
-            : err.message
-          : 'No pudimos conectar tu Google Calendar. Por favor, intenta nuevamente.';
-      this.error.set(errorMessage);
-    } finally {
-      this.calendarLoading.set(false);
-    }
-  }
-
-  /**
-   * Disconnect Google Calendar
-   */
-  async disconnectGoogleCalendar(): Promise<void> {
-    if (!confirm('¿Estás seguro de desconectar tu Google Calendar?')) {
-      return;
-    }
-
-    try {
-      this.calendarLoading.set(true);
-      this.message.set(null);
-
-      await this.googleCalendarService.disconnectCalendar().toPromise();
-      this.calendarConnected.set(false);
-
-      this.message.set('Google Calendar desconectado');
-      setTimeout(() => this.message.set(null), 3000);
-    } catch (err) {
-      console.error('Error disconnecting calendar:', err);
-      this.error.set(
-        err instanceof Error ? err.message : 'No pudimos desconectar tu Google Calendar.',
-      );
-    } finally {
-      this.calendarLoading.set(false);
-    }
   }
 }

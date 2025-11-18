@@ -54,13 +54,11 @@ export class EarningsPage implements OnInit {
     let total = 0;
 
     for (const car of userCars) {
-      const valueUsd = car.value_usd || car.estimated_value_usd || 0;
+      const valueUsd = car.value_usd || 0;
       if (valueUsd > 0) {
         // Obtener tasa de depreciación de la categoría o usar default
         let depreciationRate = 0.15; // 15% anual (default)
-        if (car.category_id && categories.has(car.category_id)) {
-          depreciationRate = categories.get(car.category_id)!.depreciation_rate_annual;
-        }
+        // Note: category_id is not part of Car interface, using default depreciation rate
         const annualDepreciation = valueUsd * depreciationRate;
         total += annualDepreciation * this.exchangeRate(); // Convert to ARS
       }
@@ -192,42 +190,12 @@ export class EarningsPage implements OnInit {
       const cars = await this.carsService.listMyCars();
       this.cars.set(cars);
 
-      // Cargar categorías de vehículos para obtener tasas de depreciación
-      await this.loadCarCategories(cars);
-
-      // Actualizar gráficos después de cargar autos y categorías
+      // Actualizar gráficos después de cargar autos
       setTimeout(() => {
         this.updateCharts();
       }, 100);
     } catch (error) {
       console.error('Error loading cars:', error);
-    }
-  }
-
-  async loadCarCategories(cars: Car[]): Promise<void> {
-    // Extraer category_id de los autos (puede estar en el objeto car o necesitar consulta adicional)
-    const categoryIds = cars
-      .map((car) => (car as any).category_id)
-      .filter((id): id is string => !!id);
-
-    if (categoryIds.length === 0) return;
-
-    try {
-      const supabase = this.supabaseService.getClient();
-      const { data: categories } = await supabase
-        .from('vehicle_categories')
-        .select('id, depreciation_rate_annual')
-        .in('id', [...new Set(categoryIds)]);
-
-      if (categories) {
-        const categoryMap = new Map<string, { depreciation_rate_annual: number }>();
-        for (const cat of categories) {
-          categoryMap.set(cat.id, { depreciation_rate_annual: cat.depreciation_rate_annual });
-        }
-        this.carCategories.set(categoryMap);
-      }
-    } catch (error) {
-      console.error('Error loading car categories:', error);
     }
   }
 

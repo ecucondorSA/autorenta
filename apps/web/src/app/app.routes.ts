@@ -286,13 +286,6 @@ export const routes: Routes = [
           import('./features/profile/location-settings.page').then((m) => m.LocationSettingsPage),
       },
       {
-        path: 'calendar',
-        loadComponent: () =>
-          import('./features/profile/calendar/calendar-settings.page').then(
-            (m) => m.CalendarSettingsPage,
-          ),
-      },
-      {
         path: 'contact',
         loadComponent: () =>
           import('./features/profile/contact/profile-contact.page').then(

@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { GoogleCalendarComponent } from '../google-calendar/google-calendar.component';
 import { DateRange } from '../date-range-picker/date-range-picker.component';
 
 export interface DateSearchQuery {
@@ -30,7 +29,7 @@ export interface DateSearchQuery {
 @Component({
   selector: 'app-date-search',
   standalone: true,
-  imports: [CommonModule, TranslateModule, GoogleCalendarComponent],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './date-search.component.html',
   styleUrls: ['./date-search.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,15 +44,11 @@ export class DateSearchComponent {
     | ((carId: string, from: string, to: string) => Promise<boolean>)
     | null = null;
   @Input() blockedDates: string[] = [];
-  @Input() googleCalendarId: string | null = null; // ID del calendario de Google
-  @Input() showGoogleCalendar: boolean = false; // Mostrar Google Calendar en lugar del inline
   @Output() readonly searchClick = new EventEmitter<void>();
   @Output() readonly dateChange = new EventEmitter<DateSearchQuery>();
 
   readonly from = signal<string | null>(this.initialFrom);
   readonly to = signal<string | null>(this.initialTo);
-  // showCalendar removido - componente de Ionic eliminado
-  readonly showGoogleCalendarModal = signal(false);
 
   /**
    * Duración del rango en días
@@ -132,10 +127,6 @@ export class DateSearchComponent {
    * Emite evento de click para abrir selector de fechas
    */
   onDateInputClick(): void {
-    if (this.showGoogleCalendar && this.googleCalendarId) {
-      this.showGoogleCalendarModal.set(true);
-    }
-    // Calendario inline de Ionic eliminado - usar Google Calendar o date-range-picker
     this.searchClick.emit();
   }
 
@@ -155,12 +146,5 @@ export class DateSearchComponent {
    */
   closeCalendar(): void {
     // Método mantenido para compatibilidad, pero el calendario ya no existe
-  }
-
-  /**
-   * Cierra el modal de Google Calendar
-   */
-  closeGoogleCalendar(): void {
-    this.showGoogleCalendarModal.set(false);
   }
 }

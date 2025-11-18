@@ -1,17 +1,20 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
 import { BookingsService } from '../../../core/services/bookings.service';
+
+interface BookingEvent {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  status: string;
+}
 
 @Component({
   selector: 'app-dashboard-calendar-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, FullCalendarModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './calendar.page.html',
   styleUrls: ['./calendar.page.css'],
 })
@@ -20,26 +23,53 @@ export class DashboardCalendarPage implements OnInit {
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+  readonly bookingEvents = signal<BookingEvent[]>([]);
+  readonly currentDate = signal(new Date());
 
-  calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-    initialView: 'dayGridMonth',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay',
-    },
-    locale: 'es',
-    events: [],
-    dateClick: (arg) => {
-      // Navigate to booking picker or show booking modal
-      console.log('Date clicked:', arg.dateStr);
-    },
-    eventClick: (arg) => {
-      // Navigate to booking detail
-      console.log('Event clicked:', arg.event.id);
-    },
-  };
+  get monthName(): string {
+    return this.currentDate().toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
+  }
+
+  get daysInMonth(): number {
+    return new Date(
+      this.currentDate().getFullYear(),
+      this.currentDate().getMonth() + 1,
+      0
+    ).getDate();
+  }
+
+  get firstDayOfMonth(): number {
+    return new Date(
+      this.currentDate().getFullYear(),
+      this.currentDate().getMonth(),
+      1
+    ).getDay();
+  }
+
+  get calendarDays(): (number | null)[] {
+    const days: (number | null)[] = [];
+    for (let i = 0; i < this.firstDayOfMonth; i++) {
+      days.push(null);
+    }
+    for (let i = 1; i <= this.daysInMonth; i++) {
+      days.push(i);
+    }
+    return days;
+  }
+
+  getEventsForDay(day: number | null): BookingEvent[] {
+    if (!day) return [];
+    const date = new Date(
+      this.currentDate().getFullYear(),
+      this.currentDate().getMonth(),
+      day
+    );
+    const dateStr = date.toISOString().split('T')[0];
+    return this.bookingEvents().filter(
+      (event) =>
+        dateStr >= event.start.split('T')[0] && dateStr <= event.end.split('T')[0]
+    );
+  }
 
   async ngOnInit(): Promise<void> {
     await this.loadBookings();
@@ -50,48 +80,36 @@ export class DashboardCalendarPage implements OnInit {
     this.error.set(null);
 
     try {
-      // Load bookings as owner
       const ownerBookings = await this.bookingsService.getOwnerBookings();
-
-      // Load bookings as renter
       const myBookings = await this.bookingsService.getMyBookings();
-
-      // Combine and format for calendar
       const allBookings = [...ownerBookings, ...myBookings];
 
-      const events = allBookings.map((booking) => ({
+      const events: BookingEvent[] = allBookings.map((booking) => ({
         id: booking.id,
         title: `${booking.car?.brand} ${booking.car?.model}`,
         start: booking.start_at,
         end: booking.end_at,
-        backgroundColor:
-          booking.status === 'in_progress'
-            ? '#10b981'
-            : booking.status === 'pending' || booking.status === 'pending_payment'
-              ? '#f59e0b'
-              : booking.status === 'confirmed'
-                ? '#3b82f6'
-                : booking.status === 'completed'
-                  ? '#10b981'
-                  : '#6b7280',
-        borderColor:
-          booking.status === 'in_progress'
-            ? '#059669'
-            : booking.status === 'pending' || booking.status === 'pending_payment'
-              ? '#d97706'
-              : booking.status === 'confirmed'
-                ? '#2563eb'
-                : booking.status === 'completed'
-                  ? '#059669'
-                  : '#4b5563',
+        status: booking.status,
       }));
 
-      this.calendarOptions.events = events;
+      this.bookingEvents.set(events);
     } catch (err) {
       this.error.set('No pudimos cargar las reservas. Intentá de nuevo.');
       console.error('Error loading bookings:', err);
     } finally {
       this.loading.set(false);
     }
+  }
+
+  previousMonth(): void {
+    this.currentDate.set(
+      new Date(this.currentDate().getFullYear(), this.currentDate().getMonth() - 1)
+    );
+  }
+
+  nextMonth(): void {
+    this.currentDate.set(
+      new Date(this.currentDate().getFullYear(), this.currentDate().getMonth() + 1)
+    );
   }
 }

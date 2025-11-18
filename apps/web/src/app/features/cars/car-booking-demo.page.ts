@@ -110,8 +110,7 @@ export class CarBookingDemoPage {
     if (!id) return;
 
     try {
-      // Preload cache and fetch blocked ranges for UI
-      await this.carAvailability.preloadBlockedRanges(id, 3);
+      // Fetch blocked ranges for UI
       const ranges = await this.carAvailability.getBlockedDates(id);
       this.blockedRanges = ranges;
       this.availabilityChecker = this.carAvailability.createChecker(id);

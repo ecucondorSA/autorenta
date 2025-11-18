@@ -25,7 +25,6 @@ import { FxService } from '../../../core/services/fx.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { LocationService } from '../../../core/services/location.service';
-import { GoogleCalendarService } from '../../../core/services/google-calendar.service';
 
 // Models
 import { Car, Review, CarStats, CarPhoto } from '../../../core/models';
@@ -61,9 +60,6 @@ import {
   PickupLocationSelectorComponent,
   PickupLocationSelection,
 } from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
-import { GoogleCalendarComponent } from '../../../shared/components/google-calendar/google-calendar.component';
-import { CalendarEventsListComponent } from '../../../shared/components/calendar-events-list/calendar-events-list.component';
-import { MakeCalendarPublicButtonComponent } from '../../../shared/components/make-calendar-public-button/make-calendar-public-button.component';
 
 // Services
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
@@ -100,9 +96,6 @@ interface CarDetailState {
     PaymentMethodButtonsComponent,
     BookingLocationFormComponent,
     PickupLocationSelectorComponent,
-    GoogleCalendarComponent,
-    CalendarEventsListComponent,
-    MakeCalendarPublicButtonComponent,
   ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -126,7 +119,6 @@ export class CarDetailPage implements OnInit {
   private readonly waitlistService = inject(WaitlistService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly tiktokEvents = inject(TikTokEventsService);
-  private readonly googleCalendarService = inject(GoogleCalendarService);
 
   readonly expressMode = signal(false);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -171,14 +163,6 @@ export class CarDetailPage implements OnInit {
   readonly priceLoading = signal(false);
   readonly hourlyRateLoading = signal(false);
 
-  // ✅ NEW: Google Calendar integration
-  readonly calendarId = signal<string | null>(null);
-  readonly showCalendarSection = signal(false);
-  readonly calendarAvailability = signal<{
-    blocked_dates: string[];
-    events: Array<{ date: string; title: string }>;
-    google_calendar_checked: boolean;
-  } | null>(null);
   readonly isCarOwner = signal<boolean>(false);
 
   private readonly carId$ = this.route.paramMap.pipe(map((params) => params.get('id')));
@@ -513,13 +497,6 @@ export class CarDetailPage implements OnInit {
         void this.setupExpressMode();
       }
 
-      // ✅ NEW: Check if returning from calendar connection
-      if (params['calendar_connected'] === 'true') {
-        // Refresh calendar data after a short delay to allow backend processing
-        setTimeout(() => {
-          this.refreshCalendarData();
-        }, 2000);
-      }
     });
 
     // Cargar fechas bloqueadas cuando el auto esté disponible
@@ -532,9 +509,6 @@ export class CarDetailPage implements OnInit {
         }
         // ✅ NEW: Inicializar ubicación y calcular distancia
         void this.initializeUserLocationAndDistance(state.car);
-
-        // ✅ NEW: Load Google Calendar ID for this car
-        void this.loadCarCalendarId(state.car.id);
 
         // ✅ NEW: Check if current user is the owner
         void this.checkOwnership(state.car.owner_id);
@@ -1125,9 +1099,6 @@ export class CarDetailPage implements OnInit {
   }
 
   /**
-   * ✅ NEW: Load Google Calendar ID for this car
-   */
-  /**
    * Check if the current user is the owner of the car
    */
   private async checkOwnership(ownerId: string): Promise<void> {
@@ -1137,84 +1108,6 @@ export class CarDetailPage implements OnInit {
     } catch (error) {
       console.error('Error checking ownership:', error);
       this.isCarOwner.set(false);
-    }
-  }
-
-  /**
-   * Open Google Calendar settings (navigate to profile/calendar)
-   */
-  openGoogleCalendarSettings(): void {
-    void this.router.navigate(['/profile/calendar']);
-  }
-
-  /**
-   * ✅ NEW: Refresh calendar data after connection
-   * This is called when the user returns from /profile/calendar
-   */
-  refreshCalendarData(): void {
-    const carId = this.car()?.id;
-    if (carId) {
-      void this.loadCarCalendarId(carId);
-    }
-  }
-
-  /**
-   * Helper: Get today's date in YYYY-MM-DD format
-   */
-  today(): string {
-    return new Date().toISOString().split('T')[0];
-  }
-
-  /**
-   * Helper: Get date 30 days from now in YYYY-MM-DD format
-   */
-  thirtyDaysFromNow(): string {
-    const date = new Date();
-    date.setDate(date.getDate() + 30);
-    return date.toISOString().split('T')[0];
-  }
-
-  private async loadCarCalendarId(carId: string): Promise<void> {
-    try {
-      this.googleCalendarService.getCarCalendarId(carId).subscribe({
-        next: (calendarId) => {
-          this.calendarId.set(calendarId);
-          this.showCalendarSection.set(!!calendarId);
-
-          // If there's a calendar, load availability data
-          if (calendarId && this.dateRange().from && this.dateRange().to) {
-            void this.loadCalendarAvailability(carId, this.dateRange().from!, this.dateRange().to!);
-          }
-        },
-        error: (error) => {
-          console.error('Error loading calendar ID:', error);
-          this.showCalendarSection.set(false);
-        },
-      });
-    } catch (error) {
-      console.error('Error in loadCarCalendarId:', error);
-    }
-  }
-
-  /**
-   * ✅ NEW: Load calendar availability data
-   */
-  private async loadCalendarAvailability(carId: string, from: string, to: string): Promise<void> {
-    try {
-      this.googleCalendarService.getCarCalendarAvailability(carId, from, to).subscribe({
-        next: (availability) => {
-          this.calendarAvailability.set({
-            blocked_dates: availability.blocked_dates,
-            events: availability.events.map((e) => ({ date: e.date, title: e.title })),
-            google_calendar_checked: availability.google_calendar_checked,
-          });
-        },
-        error: (error) => {
-          console.error('Error loading calendar availability:', error);
-        },
-      });
-    } catch (error) {
-      console.error('Error in loadCalendarAvailability:', error);
     }
   }
 

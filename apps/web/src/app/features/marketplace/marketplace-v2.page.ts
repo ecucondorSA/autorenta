@@ -21,6 +21,7 @@ import { DistanceCalculatorService } from '../../core/services/distance-calculat
 import { GeocodingService, GeocodingResult } from '../../core/services/geocoding.service';
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { Car } from '../../core/models';
+import { CarMapLocation } from '../../core/services/car-locations.service';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
 import { SocialProofIndicatorsComponent } from '../../shared/components/social-proof-indicators/social-proof-indicators.component';
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
@@ -245,6 +246,14 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly availableNowCount = computed(() => {
     return this.carsWithDistance().filter((c) => c.distance && c.distance < 5).length;
   });
+
+  readonly visibleCars = computed(() => {
+    // Return cars that match current filters
+    // For now, return all carsWithDistance
+    return this.carsWithDistance();
+  });
+
+  readonly sortOrder = signal<string>('relevance');
 
   /**
    * Contextual marker variant:
@@ -868,5 +877,59 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       context: 'marketplace_first_visit',
       timestamp: new Date().toISOString(),
     });
+  }
+
+  /**
+   * Handle quick book from hero section
+   */
+  handleHeroQuickBook(): void {
+    const firstCar = this.visibleCars()[0];
+    if (firstCar) {
+      this.onQuickBook(firstCar.id);
+    } else {
+      this.showToast('No hay autos disponibles para reservar', 'warning');
+    }
+  }
+
+  /**
+   * Check if a quick filter is active
+   */
+  isQuickFilterActive(filterId: string): boolean {
+    // TODO: Implement actual filter state checking
+    return false;
+  }
+
+  /**
+   * Handle sort order change
+   */
+  onSortOrderChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const value = select.value;
+    this.sortOrder.set(value);
+    this.showToast(`Ordenado por: ${value}`, 'info');
+    // TODO: Implement actual sorting logic
+  }
+
+  /**
+   * Clear all quick filters
+   */
+  clearQuickFilters(): void {
+    // Reset filters to default
+    this.mapFilters.set({
+      dateRange: null,
+      priceRange: null,
+      vehicleTypes: null,
+      immediateOnly: false,
+      transmission: null,
+    });
+    void this.loadCars();
+    this.showToast('Filtros limpiados', 'success');
+  }
+
+  /**
+   * Map filter source locations for the map component
+   */
+  mapFilterSourceLocations(): CarMapLocation[] {
+    return this.carMapLocations();
   }
 }
