@@ -1,0 +1,30 @@
+mcpServers:
+  "cloudflare-builds":
+    url: "https://builds.mcp.cloudflare.com/mcp"
+    transport: streamble-http
+    description: Deploy and manage Cloudflare Pages and Workers builds
+  "cloudflare-docs":
+    url: "https://docs.mcp.cloudflare.com/mcp"
+    transport: streamble-http
+    description: Quick reference for Cloudflare documentation
+  "cloudflare-bindings":
+    url: "https://bindings.mcp.cloudflare.com/mcp"
+    transport: streamble-http
+    description: "Manage Workers bindings (R2, KV, D1, AI, etc.)"
+  "mercadopago-mcp-server-prod":
+    url: "https://mcp.mercadopago.com/mcp"
+    transport: streamble-http
+    headers:
+      Authorization: Bearer APP_USR-4340262352975191-101722-3fc884850841f34c6f83bd4e29b3134c-2302679571
+    description: "MercadoPago MCP Server - Integraciones con IA, documentación y optimización de pagos"
+  supabase:
+    url: "https://mcp.supabase.com/mcp?project_ref=pisqjmoklivzpwufhscx"
+    transport: streamble-http
+    description: "Supabase MCP Server - Database queries, schema management, TypeScript generation, Edge Functions deployment for AutoRenta FIPE+Binance integration"
+  "autorenta-platform":
+    command: node
+    args[1]: /home/edu/autorenta/mcp-server/dist/index.js
+    env:
+      NODE_ENV: production
+    description: "AutoRenta Platform MCP - Real-time access to cars, bookings, users, and platform operations"
+allowedTools[1]: All

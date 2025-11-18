@@ -150,8 +150,18 @@
       </div>
     </div>
 
+    <div class="car-specs-condensed text-xs font-medium text-text-secondary dark:text-text-secondary/80 flex items-center flex-wrap gap-2">
+      <span>{{ car.seats }} asientos</span>
+      <span class="divider-dot w-1.5 h-1.5 rounded-full bg-border-default/70 dark:bg-white/20"></span>
+      <span>{{ car.doors }} puertas</span>
+      <span class="divider-dot w-1.5 h-1.5 rounded-full bg-border-default/70 dark:bg-white/20"></span>
+      <span>{{ car.transmission | titlecase }}</span>
+      <span class="divider-dot w-1.5 h-1.5 rounded-full bg-border-default/70 dark:bg-white/20"></span>
+      <span>{{ car.fuel_type | titlecase }}</span>
+    </div>
+
     <!-- Ubicación con icono minimalista -->
-    <div class="flex items-start gap-2 text-text-secondary dark:text-text-secondary">
+    <div class="location-detailed flex items-start gap-2 text-text-secondary dark:text-text-secondary">
       <svg
         class="w-5 h-5 mt-0.5 flex-shrink-0"
         fill="none"
@@ -173,12 +183,23 @@
         />
       </svg>
       <p class="text-sm font-medium leading-relaxed line-clamp-2 flex-1 min-w-0">
-        <ng-container *ngIf="car.location_formatted_address; else oldLocation">
-          {{ car.location_formatted_address }}
-        </ng-container>
-        <ng-template #oldLocation>{{ car.location_city }}, {{ car.location_state }}</ng-template>
+        <ng-container *ngTemplateOutlet="locationText"></ng-container>
       </p>
     </div>
+
+    <div class="location-condensed flex items-center gap-2 text-sm text-text-secondary dark:text-text-secondary">
+      <span class="text-base" aria-hidden="true">📍</span>
+      <span class="line-clamp-2 leading-relaxed flex-1 min-w-0">
+        <ng-container *ngTemplateOutlet="locationText"></ng-container>
+      </span>
+    </div>
+
+    <ng-template #locationText>
+      <ng-container *ngIf="car.location_formatted_address; else oldLocation">
+        {{ car.location_formatted_address }}
+      </ng-container>
+    </ng-template>
+    <ng-template #oldLocation>{{ car.location_city }}, {{ car.location_state }}</ng-template>
 
     <!-- Badge de distancia (cuando está disponible) -->
     <div *ngIf="distance" class="flex items-center gap-1.5 text-cta-default mt-1">

@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rediseño de Detalle & Pago - Autorenta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/heroicons/2.1.1/24/solid/heroicons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .card {
+        background-color: white;
+        border-radius: 1rem;
+        box-shadow:
+          0 10px 15px -3px rgb(0 0 0 / 0.05),
+          0 4px 6px -4px rgb(0 0 0 / 0.05);
+        border: 1px solid #e5e7eb;
+      }
+      .btn-primary {
+        background-color: #007bff;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+      .progress-bar-fill {
+        background-color: #007bff;
+      }
+      .form-input {
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        width: 100%;
+      }
+      .form-input:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mx-auto p-4 sm:p-8">
+      <!-- Header -->
+      <header class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-sm text-gray-500">
+            <a href="#" class="hover:text-gray-800">Vehículos</a> &gt;
+            <span class="font-medium text-gray-800">Detalle & Pago</span>
+          </div>
+          <div class="text-sm font-semibold text-gray-600">Paso 3 de 3</div>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div class="bg-blue-600 h-2 rounded-full" style="width: 100%"></div>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mt-4">
+          ¡Último paso para tu viaje!
+        </h1>
+        <p class="text-gray-600 mt-1">Revisá los detalles y completá tu reserva de forma segura.</p>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Columna Izquierda: Acciones Principales -->
+        <main class="lg:col-span-2 space-y-8">
+          <!-- Resumen del Vehículo -->
+          <div class="card p-6 flex items-center space-x-6">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Ducato"
+              class="w-32 h-24 object-cover rounded-lg"
+            />
+            <div>
+              <h2 class="text-xl font-bold text-gray-900">Ducato</h2>
+              <p class="text-gray-600">BUENOS AIRES</p>
+              <div class="mt-2 text-sm text-gray-700">
+                <p><strong>Fechas:</strong> 19/11 12:00 → 26/11 12:00 (7 días)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Selección de Método de Pago -->
+          <div class="card p-6">
+            <h3 class="text-lg font-semibold mb-4">1. Método de Pago y Garantía</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="border-2 border-blue-600 rounded-lg p-4 cursor-pointer">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-semibold">Tarjeta de crédito</h4>
+                  <div
+                    class="w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center"
+                  >
+                    <div class="w-2.5 h-2.5 bg-blue-600 rounded-full"></div>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-1">
+                  Preautorización reembolsable en tu tarjeta.
+                </p>
+              </div>
+              <div
+                class="border border-gray-300 rounded-lg p-4 cursor-pointer hover:border-gray-400"
+              >
+                <h4 class="font-semibold text-gray-700">Wallet AutoRenta</h4>
+                <p class="text-sm text-gray-600 mt-1">Usa tu saldo para bloquear el crédito.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Selección de Cobertura -->
+          <div class="card p-6">
+            <h3 class="text-lg font-semibold mb-4">2. Cobertura Adicional (Opcional)</h3>
+            <p class="text-sm text-gray-600 mb-4">
+              Reducí tu responsabilidad en caso de daños y viajá con más tranquilidad.
+            </p>
+            <div class="space-y-4">
+              <div
+                class="border-2 border-blue-600 rounded-lg p-4 flex items-center justify-between"
+              >
+                <div>
+                  <h4 class="font-semibold">Protección Estándar</h4>
+                  <p class="text-sm text-gray-600">Protección básica incluida con tu reserva.</p>
+                </div>
+                <span class="font-semibold text-blue-600">Incluido</span>
+              </div>
+              <div
+                class="border border-gray-300 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:border-gray-400"
+              >
+                <div>
+                  <h4 class="font-semibold text-gray-700">Cobertura Premium</h4>
+                  <p class="text-sm text-gray-600">Reduce a la mitad tu franquicia por daños.</p>
+                </div>
+                <span class="font-semibold text-gray-800">+10%</span>
+              </div>
+              <div
+                class="border border-gray-300 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:border-gray-400"
+              >
+                <div>
+                  <h4 class="font-semibold text-gray-700">Máxima Protección</h4>
+                  <p class="text-sm text-gray-600">
+                    Cero responsabilidad por daños. ¡Nosotros nos encargamos!
+                  </p>
+                </div>
+                <span class="font-semibold text-gray-800">+20%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulario de Pago -->
+          <div class="card p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold">3. Información de Pago</h3>
+              <div class="flex items-center space-x-2">
+                <img src="https://via.placeholder.com/40x25" alt="Visa" />
+                <img src="https://via.placeholder.com/40x25" alt="Mastercard" />
+                <img src="https://via.placeholder.com/40x25" alt="Amex" />
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label for="card-number" class="block text-sm font-medium text-gray-700 mb-1"
+                  >Número de Tarjeta</label
+                >
+                <input
+                  type="text"
+                  id="card-number"
+                  class="form-input"
+                  placeholder="•••• •••• •••• ••••"
+                />
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label for="expiration" class="block text-sm font-medium text-gray-700 mb-1"
+                    >Vencimiento</label
+                  >
+                  <input type="text" id="expiration" class="form-input" placeholder="MM/AA" />
+                </div>
+                <div>
+                  <label for="cvv" class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                  <input type="text" id="cvv" class="form-input" placeholder="•••" />
+                </div>
+              </div>
+              <div>
+                <label for="card-holder" class="block text-sm font-medium text-gray-700 mb-1"
+                  >Titular de la Tarjeta</label
+                >
+                <input
+                  type="text"
+                  id="card-holder"
+                  class="form-input"
+                  placeholder="Nombre como aparece en la tarjeta"
+                />
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label for="doc-type" class="block text-sm font-medium text-gray-700 mb-1"
+                    >Tipo de Documento</label
+                  >
+                  <select id="doc-type" class="form-input">
+                    <option>Seleccionar...</option>
+                    <option>DNI</option>
+                    <option>Pasaporte</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="doc-number" class="block text-sm font-medium text-gray-700 mb-1"
+                    >Número de Documento</label
+                  >
+                  <input
+                    type="text"
+                    id="doc-number"
+                    class="form-input"
+                    placeholder="Tu número de documento"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 p-4 bg-red-50 text-red-700 border border-red-200 rounded-lg text-sm">
+              No pudimos inicializar Mercado Pago. Intenta nuevamente más tarde.
+            </div>
+          </div>
+        </main>
+
+        <!-- Columna Derecha: Resumen de Precio y Confianza -->
+        <aside class="lg:col-span-1">
+          <div class="sticky top-8 space-y-8">
+            <!-- Resumen de Precio -->
+            <div class="card p-6">
+              <h3 class="text-lg font-semibold mb-4">Resumen de tu Reserva</h3>
+              <div class="space-y-3 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Alquiler (7 días)</span>
+                  <span class="font-medium text-gray-900">$ 630.000</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Cobertura Estándar</span>
+                  <span class="font-medium text-green-600">Incluida</span>
+                </div>
+                <div class="border-t border-gray-200 my-2"></div>
+                <div class="flex justify-between text-base font-semibold">
+                  <span>Total a Pagar</span>
+                  <span>$ 630.000</span>
+                </div>
+                <p class="text-xs text-gray-500 text-right">≈ US$ 630</p>
+              </div>
+
+              <div class="mt-6 pt-4 border-t border-dashed border-gray-300">
+                <div class="flex justify-between items-center">
+                  <h4 class="font-semibold">Garantía Reembolsable</h4>
+                  <span class="font-semibold text-lg">$ 1.500.000</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-2">
+                  Este es un <strong>bloqueo temporal</strong> en tu tarjeta, no un cobro. Se libera
+                  automáticamente al finalizar el alquiler si no hay inconvenientes.
+                </p>
+              </div>
+            </div>
+
+            <!-- Botón de Confirmación -->
+            <button class="btn-primary w-full text-lg">Confirmar y Pagar $ 630.000</button>
+
+            <!-- Elementos de Confianza -->
+            <div class="card p-6">
+              <ul class="space-y-4 text-sm">
+                <li class="flex items-center space-x-3">
+                  <svg
+                    class="w-5 h-5 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                  <span class="text-gray-700"
+                    ><strong>Cancelación gratuita</strong> hasta 24hs antes.</span
+                  >
+                </li>
+                <li class="flex items-center space-x-3">
+                  <svg
+                    class="w-5 h-5 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    ></path>
+                  </svg>
+                  <span class="text-gray-700"
+                    ><strong>Pago seguro</strong> procesado por Mercado Pago.</span
+                  >
+                </li>
+                <li class="flex items-center space-x-3">
+                  <svg
+                    class="w-5 h-5 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                    ></path>
+                  </svg>
+                  <span class="text-gray-700"
+                    ><strong>Soporte 24/7</strong> para ayudarte en tu viaje.</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </body>
+</html>

@@ -7,6 +7,11 @@
   container-name: car-card;
 }
 
+.car-specs-condensed,
+.location-condensed {
+  display: none;
+}
+
 /* Efectos de hover premium */
 .card-premium {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -61,13 +66,19 @@
 
 @container car-card (max-width: 640px) {
   .car-specs {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    display: none;
   }
 
-  .car-specs .divider-dot {
+  .car-specs-condensed {
+    display: flex;
+  }
+
+  .location-detailed {
     display: none;
+  }
+
+  .location-condensed {
+    display: flex;
   }
 
   .car-features {

@@ -1,12 +1,21 @@
 # CLAUDE_MCP.md
 
-Model Context Protocol (MCP) Integration para AutoRenta.
+Model Context Protocol (MCP) Integration para AutoRenta - Producción (autorentar.com).
 
-## Configured MCP Servers
+## MCP Servers Principales - Producción
 
-AutoRenta usa los servidores MCP oficiales de Cloudflare para workflows mejorados de desarrollo y deployment. La configuración está en `.claude/config.json`.
+AutoRenta cuenta con **4 servidores MCP custom** para acceso real-time a la plataforma en producción:
 
-### Active Servers (Free Tier)
+### Custom MCP Servers (AutoRenta Específicos)
+
+| Server | URL Local | Purpose | Uso en Producción |
+|--------|-----------|---------|-------------------|
+| **AutoRenta Platform** | `/home/edu/autorenta/mcp-server/dist/index.js` | Acceso real-time a cars, bookings, users, operaciones | Aprobar bookings, verificar disponibilidad, generar reportes |
+| **Supabase** | Streaming HTTP | Database queries, schema management, Edge Functions | Ejecutar queries en BD, administrar functions |
+| **MercadoPago** | Streaming HTTP | Integration con IA, documentación, optimización de pagos | Debugging de pagos, análisis de transacciones |
+| **DevTools** | Streaming HTTP | Console, Network, DOM debugging en autorentar.com | Debugging de errores en producción, performance |
+
+### Official Cloudflare Servers (Free Tier)
 
 | Server | URL | Purpose | Use Cases |
 |--------|-----|---------|-----------|
@@ -258,7 +267,52 @@ AutoRenta eligió servidores MCP de Cloudflare sobre alternativas (ej. Vercel) p
 # 4. Sugerir optimizaciones
 ```
 
-### 5. Security Auditing
+### 5. DevTools MCP: Debugging en Producción
+
+**Problem**: Errores en autorentar.com sin logs visibles en consola
+
+**Solution con DevTools MCP**:
+```bash
+> "Inspecciona la consola de autorentar.com y muéstrame los últimos errores"
+
+# DevTools MCP retorna:
+# - Console logs, warnings, errors
+# - Network requests (API calls)
+# - DOM inspector para verificar elementos
+# - Performance metrics (load time, resources)
+# - Application data (storage, cookies, service workers)
+```
+
+**Use Cases en Producción**:
+1. **Console Debugging**: Ver errores de JavaScript en tiempo real
+2. **API Monitoring**: Verificar llamadas a Supabase, MercadoPago
+3. **Performance**: Identificar bottlenecks de carga
+4. **PWA Issues**: Debugging de service worker, offline mode
+5. **Storage Issues**: Verificar localStorage, IndexedDB
+
+**Ejemplo de Flujo**:
+```bash
+# 1. Usuario reporta error en autorentar.com
+> "¿Por qué está fallando el booking en autorentar.com?"
+
+# 2. Claude usa DevTools MCP para:
+#    - Inspeccionar consola
+#    - Ver errores de network
+#    - Analizar stack trace
+
+# 3. Retorna:
+#    - "Error: Supabase connection failed at [timestamp]"
+#    - "Network request a supabase.co retornó 500"
+#    - Stacktrace completo
+#    - Sugerencia de fix
+
+# 4. Luego puedes usar Supabase MCP para:
+#    - Query error logs en la BD
+#    - Verificar Edge Function status
+#    - Implementar fix
+```
+
+### 6. Security Auditing
 
 **Problem**: Necesitamos compliance trail
 
@@ -272,6 +326,130 @@ AutoRenta eligió servidores MCP de Cloudflare sobre alternativas (ej. Vercel) p
 # 3. Identificar cambios críticos
 # 4. Exportar a CSV para compliance
 ```
+
+## TOON Format Optimization
+
+### ¿Qué es TOON?
+
+**TOON** (Token-Oriented Object Notation) es un formato compacto diseñado para optimizar tokens en prompts de LLM. Reduce consumo de tokens **30-60% en arrays uniformes** comparado con JSON.
+
+**Ejemplo**:
+```json
+// JSON (11 tokens por fila)
+{"cars": [
+  {"id": "1", "brand": "Toyota", "status": "active"},
+  {"id": "2", "brand": "Honda", "status": "active"}
+]}
+
+// TOON (3-4 tokens por fila)
+cars[2]{id,brand,status}:
+ 1,Toyota,active
+ 2,Honda,active
+```
+
+### Implementación en AutoRenta
+
+AutoRenta usa TOON en **3 áreas específicas**:
+
+#### 1. MCP Config Optimization
+
+**Archivo**: `.claude/config.json` → `.claude/config.toon`
+
+```bash
+# Conversión automática
+node tools/toon-convert.mjs .claude/config.json > .claude/config.toon
+```
+
+**Beneficio**: 14.6% reducción (1633 → 1394 bytes)
+
+#### 2. Automatic Hook Conversion
+
+**Ubicación**: `.claude/hooks/json-to-toon.mjs`
+
+Automáticamente convierte JSON arrays grandes en prompts a TOON formato. Activado por defecto en `.claude/settings.json`.
+
+```bash
+# Configuración
+toonOptimization:
+  enabled: true
+  minArrayLength: 5          # Solo arrays con 5+ items
+  minReductionPercent: 20    # Solo si > 20% ahorro
+  debug: false
+```
+
+#### 3. Reference Data File
+
+**Ubicación**: `docs/REFERENCE_DATA.toon`
+
+Contiene datos estructurados optimizados:
+- Ambientes de deployment
+- MCP Servers configurados
+- Tablas de BD principales
+- Flujos de pago
+- Estados de objetos
+- Endpoints críticos
+- Errores comunes
+- SLA targets
+
+**Beneficio**: Documentación más compacta, reutilizable en prompts
+
+### Cómo Usar TOON
+
+#### Opción 1: Automático (Recomendado)
+
+No requiere acción:
+```bash
+# El hook convierte automáticamente en prompts
+> "Dame la lista de cars activos"
+# Claude recibe TOON automáticamente
+```
+
+#### Opción 2: Manual
+
+```bash
+# Convertir JSON a TOON
+node tools/toon-convert.mjs input.json output.toon
+
+# Validar conversión (roundtrip)
+node tools/toon-convert.mjs input.json output.toon --validate
+
+# Ver estadísticas
+node tools/toon-convert.mjs input.json output.toon --stats
+```
+
+#### Opción 3: En Documentación
+
+Usar `docs/REFERENCE_DATA.toon` en lugar de duplicar tablas:
+
+```markdown
+# Ambientes de Deployment
+
+Ver configuración en [docs/REFERENCE_DATA.toon](./docs/REFERENCE_DATA.toon#ambientes-y-configuración)
+```
+
+### Beneficios para AutoRenta
+
+| Caso | Tokens Ahorrados | ROI |
+|------|------------------|-----|
+| **MCP Config** | 300/session | Bajo |
+| **DB Query Results** | 5,000-15,000/session | Alto |
+| **Documentation** | 2,000-3,000/session | Medio |
+| **Total Potential** | 7,300-18,300/session | 3+ meses |
+
+### Limitaciones
+
+- ❌ No ideal para datos no-uniformes (JSON mejor)
+- ❌ Overhead pequeño en parsing/conversión
+- ❌ Curva de aprendizaje para nuevo formato
+
+### Recursos
+
+- **Herramienta**: `tools/toon-convert.mjs`
+- **Configuración**: `.claude/settings.json::toonOptimization`
+- **Hook**: `.claude/hooks/json-to-toon.mjs`
+- **Referencia**: [docs/REFERENCE_DATA.toon](./docs/REFERENCE_DATA.toon)
+- **Oficial**: https://github.com/toon-format/toon
+- **Cheat Sheet**: [docs/DEVTOOLS_MCP_CHEAT_SHEET.md](./docs/DEVTOOLS_MCP_CHEAT_SHEET.md#toon-format-optimization)
 
 ## Future MCP Usage
 
@@ -400,14 +578,22 @@ wrangler pages deploy dist/
 
 ## Resources
 
+- **DevTools MCP Cheat Sheet**: [docs/DEVTOOLS_MCP_CHEAT_SHEET.md](./docs/DEVTOOLS_MCP_CHEAT_SHEET.md) - Quick reference para on-call
 - **GitHub**: [cloudflare/mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare)
 - **Documentation**: [Cloudflare MCP Docs](https://developers.cloudflare.com/agents/model-context-protocol/)
 - **All Servers**: 15 servidores disponibles, 3 configurados para free tier
 - **Configuration**: `.claude/config.json` en root del proyecto
-- **Last Updated**: November 2025
+- **Last Updated**: 2025-11-18 (Production-focused, DevTools MCP agregado)
 
 ## Related Documentation
 
 - **Architecture**: [CLAUDE_ARCHITECTURE.md](./CLAUDE_ARCHITECTURE.md)
 - **Payments**: [CLAUDE_PAYMENTS.md](./CLAUDE_PAYMENTS.md) - Webhook debugging con MCP
 - **Workflows**: [CLAUDE_WORKFLOWS.md](./CLAUDE_WORKFLOWS.md) - Deployment automation
+
+## Runbooks que usan DevTools MCP
+
+- **Troubleshooting General**: [docs/runbooks/troubleshooting.md](./docs/runbooks/troubleshooting.md#5-debugging-en-producción-con-devtools-mcp)
+- **Split Payment Failure**: [docs/runbooks/split-payment-failure.md](./docs/runbooks/split-payment-failure.md#debugging-con-devtools-mcp)
+- **On-Call Rotation**: [docs/runbooks/on-call-rotation.md](./docs/runbooks/on-call-rotation.md#debugging-rápido-con-devtools-mcp-on-call)
+- **Auth Callback 404**: [docs/runbooks/fix-auth-callback-404.md](./docs/runbooks/fix-auth-callback-404.md#debugging-con-devtools-mcp)

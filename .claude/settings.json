@@ -5,7 +5,8 @@
       "All"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "permissionMode": "whitelist"
   },
   "ignorePatterns": [
     "**/node_modules/**",
@@ -40,5 +41,22 @@
   "verbose": false,
   "cleanupPeriodDays": 30,
   "alwaysThinkingEnabled": false,
-  "description": "Configuración de autonomía total para AutoRenta - LATAM optimizado con timeouts de 10/20 min"
+  "description": "Configuración de autonomía total para AutoRenta - LATAM optimizado con timeouts de 10/20 min",
+  "toolUseTracking": true,
+  "trackingFeatures": {
+    "logToolUseId": true,
+    "trackExecutionTime": true,
+    "enableErrorTracking": true
+  },
+  "hooks": {
+    "onPromptSubmit": [
+      ".claude/hooks/json-to-toon.mjs"
+    ]
+  },
+  "toonOptimization": {
+    "enabled": true,
+    "minArrayLength": 5,
+    "minReductionPercent": 20,
+    "debug": false
+  }
 }

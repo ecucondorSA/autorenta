@@ -1,0 +1,43 @@
+schema,table_name,comment
+auth,audit_log_entries,Auth: Audit trail for user actions.
+auth,flow_state,stores metadata for pkce logins
+auth,identities,Auth: Stores identities associated to a user.
+auth,instances,Auth: Manages users across multiple sites.
+auth,mfa_amr_claims,auth: stores authenticator method reference claims for multi factor authentication
+auth,mfa_challenges,auth: stores metadata about challenge requests made
+auth,mfa_factors,auth: stores metadata about factors
+auth,one_time_tokens,
+auth,refresh_tokens,Auth: Store of tokens used to refresh JWT tokens once they expire.
+auth,saml_providers,Auth: Manages SAML Identity Provider connections.
+auth,saml_relay_states,Auth: Contains SAML Relay State information for each Service Provider initiated login.
+auth,schema_migrations,Auth: Manages updates to the auth system.
+auth,sessions,Auth: Stores session data associated to a user.
+auth,sso_domains,Auth: Manages SSO email address domain mapping to an SSO Identity Provider.
+auth,sso_providers,Auth: Manages SSO identity provider information; see saml_providers for SAML.
+auth,users,Auth: Stores user login data within a secure schema.
+public,accounting_accounts,Plan de cuentas contable según NIIF
+public,accounting_audit_log,
+public,accounting_chart_of_accounts,"Plan de cuentas contable. Incluye cuentas 4103, 4104, 4203 para Crédito Protección."
+public,accounting_period_balances,
+public,accounting_period_closures,
+public,accounting_provisions,Provisiones según NIIF 37 para FGO y siniestros futuros.
+public,accounting_revenue_recognition,Reconocimiento de ingresos SOLO por comisiones (rol de agente según NIIF 15).
+public,driver_score_snapshots,Weekly snapshots of driver score distribution for monitoring
+public,encryption_audit_log,
+public,fgo_metrics,"Métricas calculadas del FGO (RC, LR, estado)"
+public,fgo_subfunds,"Subfondos del FGO: Liquidez, Capitalización, Rentabilidad"
+public,monitoring_alerts,
+public,monitoring_performance_metrics,
+public,mp_webhook_logs,Logs de todos los webhooks de Mercado Pago para debugging
+public,pricing_class_factors,Multiplier factors for fees and guarantees by driver class. Applied in pricing calculations.
+public,system_flags,
+public,vehicle_pricing_models,Reference valuations for vehicle make/model/year combinations
+public,wallet_transaction_backups,
+storage,buckets,
+storage,buckets_analytics,
+storage,buckets_vectors,
+storage,migrations,
+storage,prefixes,
+storage,s3_multipart_uploads,
+storage,s3_multipart_uploads_parts,
+storage,vector_indexes,

@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Contable Completo - AutoRenta</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Asegurar que Supabase esté disponible globalmente
+        window.supabase = window.supabase || {};
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .config-section {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .config-section h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #92400e;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .config-section input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #fbbf24;
+            border-radius: 6px;
+        }
+
+        .config-section button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            background: #f3f4f6;
+            color: #6b7280;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            background: #e5e7eb;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .kpi-card.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .kpi-card.warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .kpi-card.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .kpi-card h3 {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-card .value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-top: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: #f9fafb;
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        th.text-right {
+            text-align: right;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .amount {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        .amount.positive {
+            color: #16a34a;
+        }
+
+        .amount.negative {
+            color: #dc2626;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+
+        .error {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Dashboard Contable Completo - AutoRenta</h1>
+            <p>Sistema Contable Automatizado | NIIF 15 y NIIF 37</p>
+        </div>
+
+        <div class="config-section">
+            <h3>⚙️ Configuración de Conexión</h3>
+            <div class="config-grid">
+                <input type="text" id="supabaseUrl" placeholder="URL de Supabase" />
+                <input type="text" id="supabaseKey" placeholder="Anon Key de Supabase" />
+            </div>
+            <button type="button" onclick="connectSupabase()">Conectar</button>
+            <div id="configStatus" style="margin-top: 8px; font-size: 12px;"></div>
+        </div>
+
+        <div id="errorMessage"></div>
+
+        <div id="mainContent" style="display: none;">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('dashboard')">📈 Dashboard</button>
+                <button class="tab" onclick="showTab('balance')">💰 Balance General</button>
+                <button class="tab" onclick="showTab('income')">💵 Estado de Resultados</button>
+                <button class="tab" onclick="showTab('ledger')">📖 Libro Mayor</button>
+                <button class="tab" onclick="showTab('journal')">📝 Libro Diario</button>
+                <button class="tab" onclick="showTab('revenue')">💸 Ventas/Ingresos</button>
+                <button class="tab" onclick="showTab('cashflow')">💳 Flujo de Caja</button>
+                <button class="tab" onclick="showTab('provisions')">🛡️ Provisiones</button>
+                <button class="tab" onclick="showTab('audit')">🔍 Auditoría</button>
+                <button class="tab" onclick="showTab('reconciliation')">🔄 Reconciliación</button>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <h2 class="section-title">Dashboard Ejecutivo</h2>
+                <div class="kpi-grid" id="dashboardKPIs"></div>
+                <div id="dashboardTable"></div>
+            </div>
+
+            <!-- Balance General Tab -->
+            <div id="balance" class="tab-content">
+                <h2 class="section-title">Balance General</h2>
+                <div id="balanceSheet"></div>
+            </div>
+
+            <!-- Estado de Resultados Tab -->
+            <div id="income" class="tab-content">
+                <h2 class="section-title">Estado de Resultados (P&L)</h2>
+                <div id="incomeStatement"></div>
+            </div>
+
+            <!-- Libro Mayor Tab -->
+            <div id="ledger" class="tab-content">
+                <h2 class="section-title">Libro Mayor</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Fecha Inicio</label>
+                        <input type="date" id="ledgerStartDate" />
+                    </div>
+                    <div class="filter-group">
+                        <label>Fecha Fin</label>
+                        <input type="date" id="ledgerEndDate" />
+                    </div>
+                    <div class="filter-group">
+                        <label>Código de Cuenta</label>
+                        <input type="text" id="ledgerAccountCode" placeholder="Ej: 2.1.1.01" />
+                    </div>
+                    <div class="filter-group">
+                        <label>Tipo</label>
+                        <select id="ledgerReferenceType">
+                            <option value="">Todos</option>
+                            <option value="booking">Booking</option>
+                            <option value="deposit">Depósito</option>
+                            <option value="withdrawal">Retiro</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" style="align-self: end;">
+                        <button type="button" class="btn btn-primary" onclick="loadLedger()">Buscar</button>
+                    </div>
+                </div>
+                <div id="ledgerTable"></div>
+            </div>
+
+            <!-- Libro Diario Tab -->
+            <div id="journal" class="tab-content">
+                <h2 class="section-title">Libro Diario (Asientos Contables)</h2>
+                <div id="journalEntries"></div>
+            </div>
+
+            <!-- Ventas/Ingresos Tab -->
+            <div id="revenue" class="tab-content">
+                <h2 class="section-title">Reconocimiento de Ingresos (Ventas)</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Fecha Inicio</label>
+                        <input type="date" id="revenueStartDate" />
+                    </div>
+                    <div class="filter-group">
+                        <label>Fecha Fin</label>
+                        <input type="date" id="revenueEndDate" />
+                    </div>
+                    <div class="filter-group" style="align-self: end;">
+                        <button type="button" class="btn btn-primary" onclick="loadRevenue()">Buscar</button>
+                    </div>
+                </div>
+                <div id="revenueTable"></div>
+            </div>
+
+            <!-- Flujo de Caja Tab -->
+            <div id="cashflow" class="tab-content">
+                <h2 class="section-title">Flujo de Caja</h2>
+                <div id="cashFlowTable"></div>
+            </div>
+
+            <!-- Provisiones Tab -->
+            <div id="provisions" class="tab-content">
+                <h2 class="section-title">Provisiones (FGO)</h2>
+                <div id="provisionsTable"></div>
+            </div>
+
+            <!-- Auditoría Tab -->
+            <div id="audit" class="tab-content">
+                <h2 class="section-title">Auditoría y Logs</h2>
+                <div id="auditTable"></div>
+            </div>
+
+            <!-- Reconciliación Tab -->
+            <div id="reconciliation" class="tab-content">
+                <h2 class="section-title">Reconciliación Wallet vs Contabilidad</h2>
+                <div id="reconciliationTable"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let supabase = null;
+
+        // Asegurar que las funciones estén disponibles globalmente
+        window.connectSupabase = async function() {
+            const url = document.getElementById('supabaseUrl').value.trim();
+            const key = document.getElementById('supabaseKey').value.trim();
+
+            if (!url || !key) {
+                showError('Por favor, ingresa la URL y la clave de Supabase');
+                return;
+            }
+
+            try {
+                supabase = window.supabase.createClient(url, key);
+
+                // Verificar conexión con una consulta simple
+                const { data: test, error: testError } = await supabase
+                    .from('accounting_ledger')
+                    .select('id')
+                    .limit(1);
+
+                if (testError && testError.code !== 'PGRST116') { // PGRST116 = no rows returned, es OK
+                    throw new Error('Error de conexión: ' + testError.message + '. Verifica que las credenciales sean correctas y que tengas permisos.');
+                }
+
+                document.getElementById('mainContent').style.display = 'block';
+                document.getElementById('configStatus').innerHTML = '<span style="color: green;">✅ Conectado correctamente</span>';
+                localStorage.setItem('supabaseUrl', url);
+                localStorage.setItem('supabaseKey', key);
+                await loadDashboard();
+            } catch (error) {
+                console.error('Error de conexión:', error);
+                showError('Error al conectar: ' + (error.message || 'Error desconocido. Verifica las credenciales.'));
+            }
+        };
+
+        window.showTab = async function(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+
+            // Cargar datos según la pestaña
+            switch(tabName) {
+                case 'dashboard':
+                    await loadDashboard();
+                    break;
+                case 'balance':
+                    await loadBalanceSheet();
+                    break;
+                case 'income':
+                    await loadIncomeStatement();
+                    break;
+                case 'ledger':
+                    await loadLedger();
+                    break;
+                case 'journal':
+                    await loadJournalEntries();
+                    break;
+                case 'revenue':
+                    await loadRevenue();
+                    break;
+                case 'cashflow':
+                    await loadCashFlow();
+                    break;
+                case 'provisions':
+                    await loadProvisions();
+                    break;
+                case 'audit':
+                    await loadAuditLogs();
+                    break;
+                case 'reconciliation':
+                    await loadReconciliation();
+                    break;
+            }
+        };
+
+        window.loadDashboard = async function() {
+            if (!supabase) return;
+
+            try {
+                // Intentar obtener dashboard desde vista o función
+                let data = null;
+                let error = null;
+
+                // Primero intentar desde vista
+                const viewResult = await supabase
+                    .from('accounting_dashboard')
+                    .select('*')
+                    .single();
+
+                if (viewResult.error) {
+                    // Si falla, intentar desde función RPC
+                    const rpcResult = await supabase.rpc('accounting_executive_dashboard');
+                    if (rpcResult.error) {
+                        // Si ambas fallan, calcular manualmente
+                        data = await calculateDashboardManually();
+                    } else {
+                        data = Array.isArray(rpcResult.data) ? rpcResult.data[0] : rpcResult.data;
+                    }
+                } else {
+                    data = viewResult.data;
+                }
+
+                if (!data) {
+                    throw new Error('No se pudieron obtener los datos del dashboard');
+                }
+
+                const kpis = document.getElementById('dashboardKPIs');
+                kpis.innerHTML = `
+                    <div class="kpi-card">
+                        <h3>Total Activos</h3>
+                        <div class="value">${formatCurrency(data.total_assets || 0)}</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>Total Pasivos</h3>
+                        <div class="value">${formatCurrency(data.total_liabilities || 0)}</div>
+                    </div>
+                    <div class="kpi-card success">
+                        <h3>Patrimonio</h3>
+                        <div class="value">${formatCurrency(data.total_equity || 0)}</div>
+                    </div>
+                    <div class="kpi-card success">
+                        <h3>Ingresos Período</h3>
+                        <div class="value">${formatCurrency(data.monthly_revenue || data.total_revenue || 0)}</div>
+                    </div>
+                    <div class="kpi-card warning">
+                        <h3>Gastos Período</h3>
+                        <div class="value">${formatCurrency(data.monthly_expenses || data.total_expenses || 0)}</div>
+                    </div>
+                    <div class="kpi-card ${(data.monthly_net_income || data.net_income || 0) >= 0 ? 'success' : 'danger'}">
+                        <h3>Utilidad Neta</h3>
+                        <div class="value">${formatCurrency(data.monthly_net_income || data.net_income || 0)}</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>Pasivo Billeteras</h3>
+                        <div class="value">${formatCurrency(data.wallet_liability || 0)}</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>FGO Disponible</h3>
+                        <div class="value">${formatCurrency(data.fgo_provision || data.fgo_available || 0)}</div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error detallado:', error);
+                showError('Error al cargar dashboard: ' + (error.message || 'Error desconocido. Verifica la consola del navegador (F12) para más detalles.'));
+            }
+        };
+
+        window.calculateDashboardManually = async function() {
+            // Calcular dashboard manualmente desde accounting_ledger
+            const { data: ledger, error } = await supabase
+                .from('accounting_ledger')
+                .select(`
+                    debit,
+                    credit,
+                    account_code,
+                    accounting_chart_of_accounts!accounting_ledger_account_code_fkey (
+                        account_type
+                    )
+                `);
+
+            if (error) throw error;
+
+            let totalAssets = 0;
+            let totalLiabilities = 0;
+            let totalEquity = 0;
+            let monthlyRevenue = 0;
+            let monthlyExpenses = 0;
+
+            const currentMonth = new Date().toISOString().substring(0, 7);
+
+            ledger.forEach(entry => {
+                const accountType = entry.accounting_chart_of_accounts?.account_type;
+                const debit = entry.debit || 0;
+                const credit = entry.credit || 0;
+                const entryMonth = entry.entry_date?.substring(0, 7);
+                const isCurrentMonth = entryMonth === currentMonth;
+
+                if (accountType === 'ASSET') {
+                    totalAssets += (debit - credit);
+                } else if (accountType === 'LIABILITY') {
+                    totalLiabilities += (credit - debit);
+                } else if (accountType === 'EQUITY') {
+                    totalEquity += (credit - debit);
+                } else if (accountType === 'INCOME' && isCurrentMonth) {
+                    monthlyRevenue += (credit - debit);
+                } else if (accountType === 'EXPENSE' && isCurrentMonth) {
+                    monthlyExpenses += (debit - credit);
+                }
+            });
+
+            return {
+                total_assets: totalAssets,
+                total_liabilities: totalLiabilities,
+                total_equity: totalEquity,
+                monthly_revenue: monthlyRevenue,
+                monthly_expenses: monthlyExpenses,
+                monthly_net_income: monthlyRevenue - monthlyExpenses,
+                wallet_liability: 0,
+                fgo_provision: 0
+            };
+        }
+
+        window.loadBalanceSheet = async function() {
+            if (!supabase) return;
+
+            try {
+                // Intentar desde vista materializada o función
+                let data = null;
+                let error = null;
+
+                const viewResult = await supabase
+                    .from('accounting_balance_sheet')
+                    .select('*');
+
+                if (viewResult.error) {
+                    // Intentar desde función RPC
+                    const rpcResult = await supabase.rpc('accounting_balance_sheet');
+                    if (rpcResult.error) {
+                        throw rpcResult.error;
+                    }
+                    data = rpcResult.data;
+                } else {
+                    data = viewResult.data;
+                }
+
+                if (!data || data.length === 0) {
+                    throw new Error('No hay datos disponibles en el balance general');
+                }
+
+                const container = document.getElementById('balanceSheet');
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No hay datos disponibles</div>';
+                    return;
+                }
+
+                let html = '<div class="table-container"><table><thead><tr><th>Código</th><th>Cuenta</th><th>Tipo</th><th class="text-right">Saldo</th></tr></thead><tbody>';
+
+                data.forEach(row => {
+                    html += `<tr>
+                        <td><code>${row.code || row.account_code || '-'}</code></td>
+                        <td>${row.name || row.account_name || '-'}</td>
+                        <td><span class="badge badge-info">${row.account_type || row.type || '-'}</span></td>
+                        <td class="amount">${formatCurrency(row.balance || 0)}</td>
+                    </tr>`;
+                });
+
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error detallado:', error);
+                showError('Error al cargar balance general: ' + (error.message || 'Error desconocido. Verifica la consola (F12).'));
+            }
+        };
+
+        window.loadIncomeStatement = async function() {
+            if (!supabase) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('accounting_income_statement')
+                    .select('*');
+
+                if (error) throw error;
+
+                const container = document.getElementById('incomeStatement');
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No hay datos disponibles</div>';
+                    return;
+                }
+
+                let html = '<div class="table-container"><table><thead><tr><th>Categoría</th><th>Cuenta</th><th class="text-right">Monto</th></tr></thead><tbody>';
+
+                data.forEach(row => {
+                    const isPositive = (row.amount || 0) >= 0;
+                    html += `<tr>
+                        <td>${row.category || '-'}</td>
+                        <td>${row.account_name || '-'}</td>
+                        <td class="amount ${isPositive ? 'positive' : 'negative'}">${formatCurrency(row.amount || 0)}</td>
+                    </tr>`;
+                });
+
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (error) {
+                showError('Error al cargar estado de resultados: ' + error.message);
+            }
+        };
+
+        window.loadLedger = async function() {
+            if (!supabase) {
+                showError('No hay conexión a Supabase. Por favor, conecta primero.');
+                return;
+            }
+
+            const container = document.getElementById('ledgerTable');
+            container.innerHTML = '<div class="loading">Cargando libro mayor...</div>';
+
+            try {
+                let query = supabase
+                    .from('accounting_ledger')
+                    .select(`
+                        *,
+                        accounting_chart_of_accounts!accounting_ledger_account_code_fkey (
+                            code,
+                            name,
+                            account_type
+                        )
+                    `)
+                    .order('entry_date', { ascending: false })
+                    .limit(100);
+
+                const startDate = document.getElementById('ledgerStartDate').value;
+                const endDate = document.getElementById('ledgerEndDate').value;
+                const accountCode = document.getElementById('ledgerAccountCode').value.trim();
+                const referenceType = document.getElementById('ledgerReferenceType').value;
+
+                if (startDate) query = query.gte('entry_date', startDate);
+                if (endDate) query = query.lte('entry_date', endDate);
+                if (accountCode) query = query.eq('account_code', accountCode);
+                if (referenceType) query = query.eq('reference_type', referenceType);
+
+                const { data, error } = await query;
+
+                if (error) {
+                    console.error('Error de Supabase:', error);
+                    // Si es error de relación, intentar sin la relación
+                    if (error.code === 'PGRST301' || error.message?.includes('foreign key')) {
+                        const simpleQuery = supabase
+                            .from('accounting_ledger')
+                            .select('*')
+                            .order('entry_date', { ascending: false })
+                            .limit(100);
+
+                        const startDate = document.getElementById('ledgerStartDate').value;
+                        const endDate = document.getElementById('ledgerEndDate').value;
+                        const accountCode = document.getElementById('ledgerAccountCode').value.trim();
+                        const referenceType = document.getElementById('ledgerReferenceType').value;
+
+                        if (startDate) simpleQuery.gte('entry_date', startDate);
+                        if (endDate) simpleQuery.lte('entry_date', endDate);
+                        if (accountCode) simpleQuery.eq('account_code', accountCode);
+                        if (referenceType) simpleQuery.eq('reference_type', referenceType);
+
+                        const { data: simpleData, error: simpleError } = await simpleQuery;
+                        if (simpleError) throw simpleError;
+
+                        if (!simpleData || simpleData.length === 0) {
+                            container.innerHTML = '<div class="empty-state">No hay entradas en el libro mayor para los filtros seleccionados</div>';
+                            return;
+                        }
+
+                        displayLedgerSimple(simpleData, container);
+                        return;
+                    }
+                    throw error;
+                }
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No hay entradas en el libro mayor para los filtros seleccionados</div>';
+                    return;
+                }
+
+                let html = '<div class="table-container"><table><thead><tr><th>Fecha</th><th>Cuenta</th><th class="text-right">Débito</th><th class="text-right">Crédito</th><th>Descripción</th><th>Tipo</th></tr></thead><tbody>';
+
+                data.forEach(entry => {
+                    const date = new Date(entry.entry_date);
+                    const accountName = entry.accounting_chart_of_accounts?.name || '';
+                    html += `<tr>
+                        <td>${date.toLocaleDateString('es-AR')}</td>
+                        <td><strong>${entry.account_code}</strong><br><small>${accountName}</small></td>
+                        <td class="amount">${entry.debit > 0 ? formatCurrency(entry.debit) : '-'}</td>
+                        <td class="amount">${entry.credit > 0 ? formatCurrency(entry.credit) : '-'}</td>
+                        <td>${entry.description || '-'}</td>
+                        <td>${entry.reference_type ? `<span class="badge badge-info">${entry.reference_type}</span>` : '-'}</td>
+                    </tr>`;
+                });
+
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error detallado al cargar libro mayor:', error);
+                container.innerHTML = `<div class="error">
+                    <strong>Error al cargar libro mayor:</strong><br>
+                    ${error.message || 'Error desconocido'}<br>
+                    <small>Verifica la consola (F12) para más detalles.</small>
+                </div>`;
+            }
+        }
+
+        function displayLedgerSimple(data, container) {
+            let html = '<div class="table-container"><table><thead><tr><th>Fecha</th><th>Código Cuenta</th><th class="text-right">Débito</th><th class="text-right">Crédito</th><th>Descripción</th><th>Tipo</th></tr></thead><tbody>';
+
+            data.forEach(entry => {
+                const date = new Date(entry.entry_date);
+                html += `<tr>
+                    <td>${date.toLocaleDateString('es-AR')}</td>
+                    <td><code>${entry.account_code || '-'}</code></td>
+                    <td class="amount">${entry.debit > 0 ? formatCurrency(entry.debit) : '-'}</td>
+                    <td class="amount">${entry.credit > 0 ? formatCurrency(entry.credit) : '-'}</td>
+                    <td>${entry.description || '-'}</td>
+                    <td>${entry.reference_type ? `<span class="badge badge-info">${entry.reference_type}</span>` : '-'}</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        };
+
+        window.loadJournalEntries = async function() {
+            if (!supabase) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('accounting_journal_entries')
+                    .select('*')
+                    .order('entry_date', { ascending: false })
+                    .limit(50);
+
+                if (error) throw error;
+
+                const container = document.getElementById('journalEntries');
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No hay asientos contables</div>';
+                    return;
+                }
+
+                let html = '<div class="table-container"><table><thead><tr><th>Número</th><th>Fecha</th><th>Descripción</th><th class="text-right">Débito</th><th class="text-right">Crédito</th><th>Estado</th></tr></thead><tbody>';
+
+                data.forEach(entry => {
+                    const date = new Date(entry.entry_date);
+                    html += `<tr>
+                        <td><strong>${entry.entry_number || '-'}</strong></td>
+                        <td>${date.toLocaleDateString('es-AR')}</td>
+                        <td>${entry.description || '-'}</td>
+                        <td class="amount">${formatCurrency(entry.total_debit || 0)}</td>
+                        <td class="amount">${formatCurrency(entry.total_credit || 0)}</td>
+                        <td><span class="badge ${entry.status === 'POSTED' ? 'badge-success' : 'badge-warning'}">${entry.status || '-'}</span></td>
+                    </tr>`;
+                });
+
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (error) {
+                showError('Error al cargar libro diario: ' + error.message);
+            }
+        };
+
+        window.loadRevenue = async function() {
+            if (!supabase) return;
+
+            try {
+                let query = supabase
+                    .from('accounting_revenue_recognition')
+                    .select('*')
+                    .order('recognition_date', { ascending: false })
+                    .limit(100);
+
+                const startDate = document.getElementById('revenueStartDate').value;
+                const endDate = document.getElementById('revenueEndDate').value;
+
+                if (startDate) query = query.gte('recognition_date', startDate);
+                if (endDate) query = query.lte('recognition_date', endDate);
+
+                const { data, error } = await query;
+                if (error) throw error;
+
+                const container = document.getElementById('revenueTable');
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No hay ingresos reconocidos</div>';
+                    return;
+                }
+
+                let html = '<div class="table-container"><table><thead><tr><th>Fecha</th><th>Booking ID</th><th>Monto Total</th><th class="text-right">Comisión (15%)</th><th>Estado</th></tr></thead><tbody>';
+
+                data.forEach(entry => {
+                    const date = new Date(entry.recognition_date);
+                    html += `<tr>
+                        <td>${date.toLocaleDateString('es-AR')}</td>
+                        <td><code>${entry.booking_id?.substring(0, 8) || '-'}...</code></td>
+                        <td class="amount">${formatCurrency(entry.total_amount || 0)}</td>
+                        <td class="amount positive">${formatCurrency(entry.commission_amount || 0)}</td>
+                        <td><span class="badge badge-success">Reconocido</span></td>
+                    </tr>`;
+                });
+
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (error) {
+                showError('Error al cargar ingresos: ' + error.message);
+            }
+        };
+
+        window.loadCashFlow = async function() {
+            if (!supabase) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('accounting_cash_flow')
+                    .select('*')
+                    .order('transaction_date', { ascending: false })
+                    .limit(100);
+
+                if (error) throw error;
+
+                const container = document.getElementById('cashFlowTable');
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No hay datos de flujo de caja</div>';
+                    return;
+                }
+
+                let html = '<div class="table-container"><table><thead><tr><th>Fecha</th><th>Descripción</th><th class="text-right">Entrada</th><th class="text-right">Salida</th><th class="text-right">Saldo</th></tr></thead><tbody>';
+
+                data.forEach(entry => {
+                    const date = new Date(entry.transaction_date);
+                    html += `<tr>
+                        <td>${date.toLocaleDateString('es-AR')}</td>
+                        <td>${entry.description || '-'}</td>
+                        <td class="amount positive">${entry.inflow > 0 ? formatCurrency(entry.inflow) : '-'}</td>
+                        <td class="amount negative">${entry.outflow > 0 ? formatCurrency(entry.outflow) : '-'}</td>
+                        <td class="amount">${formatCurrency(entry.balance || 0)}</td>
+                    </tr>`;
+                });
+
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (error) {
+                showError('Error al cargar flujo de caja: ' + error.message);
+            }
+        };
+
+        window.loadProvisions = async function() {
+            if (!supabase) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('accounting_provisions')
+                    .select('*')
+                    .order('provision_date', { ascending: false })
+                    .limit(100);
+
+                if (error) throw error;
+
+                const container = document.getElementById('provisionsTable');
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No hay provisiones registradas</div>';
+                    return;
+                }
+
+                let html = '<div class="table-container"><table><thead><tr><th>Fecha</th><th>Tipo</th><th class="text-right">Monto</th><th class="text-right">Utilizado</th><th class="text-right">Disponible</th><th>Estado</th></tr></thead><tbody>';
+
+                data.forEach(entry => {
+                    const date = new Date(entry.provision_date);
+                    html += `<tr>
+                        <td>${date.toLocaleDateString('es-AR')}</td>
+                        <td>${entry.provision_type || '-'}</td>
+                        <td class="amount">${formatCurrency(entry.provision_amount || 0)}</td>
+                        <td class="amount negative">${formatCurrency(entry.utilized_amount || 0)}</td>
+                        <td class="amount positive">${formatCurrency(entry.current_balance || 0)}</td>
+                        <td><span class="badge ${entry.status === 'ACTIVE' ? 'badge-success' : 'badge-warning'}">${entry.status || '-'}</span></td>
+                    </tr>`;
+                });
+
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (error) {
+                showError('Error al cargar provisiones: ' + error.message);
+            }
+        };
+
+        window.loadAuditLogs = async function() {
+            if (!supabase) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('accounting_audit_log')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(100);
+
+                if (error) throw error;
+
+                const container = document.getElementById('auditTable');
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No hay logs de auditoría</div>';
+                    return;
+                }
+
+                let html = '<div class="table-container"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Severidad</th><th>Descripción</th><th>Estado</th></tr></thead><tbody>';
+
+                data.forEach(entry => {
+                    const date = new Date(entry.created_at);
+                    const severityClass = entry.severity === 'ERROR' ? 'badge-danger' : entry.severity === 'WARNING' ? 'badge-warning' : 'badge-info';
+                    html += `<tr>
+                        <td>${date.toLocaleDateString('es-AR')} ${date.toLocaleTimeString('es-AR')}</td>
+                        <td>${entry.audit_type || '-'}</td>
+                        <td><span class="badge ${severityClass}">${entry.severity || '-'}</span></td>
+                        <td>${entry.description || '-'}</td>
+                        <td><span class="badge ${entry.resolution_status === 'RESOLVED' ? 'badge-success' : 'badge-warning'}">${entry.resolution_status || 'PENDING'}</span></td>
+                    </tr>`;
+                });
+
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (error) {
+                showError('Error al cargar auditoría: ' + error.message);
+            }
+        };
+
+        window.loadReconciliation = async function() {
+            if (!supabase) return;
+
+            try {
+                const { data, error } = await supabase.rpc('accounting_wallet_reconciliation');
+
+                if (error) throw error;
+
+                const container = document.getElementById('reconciliationTable');
+                if (!data) {
+                    container.innerHTML = '<div class="empty-state">No hay datos de reconciliación</div>';
+                    return;
+                }
+
+                const result = Array.isArray(data) ? data[0] : data;
+                const status = result.status === 'balanced' ? 'success' : 'danger';
+                const statusText = result.status === 'balanced' ? '✅ Balanceado' : '⚠️ Descuadrado';
+
+                container.innerHTML = `
+                    <div class="kpi-grid">
+                        <div class="kpi-card ${status === 'success' ? 'success' : 'danger'}">
+                            <h3>Estado</h3>
+                            <div class="value">${statusText}</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Saldo Contable</h3>
+                            <div class="value">${formatCurrency(result.accounting_balance || 0)}</div>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>Saldo Wallet</h3>
+                            <div class="value">${formatCurrency(result.wallet_balance || 0)}</div>
+                        </div>
+                        <div class="kpi-card ${Math.abs(result.difference || 0) > 0.01 ? 'danger' : 'success'}">
+                            <h3>Diferencia</h3>
+                            <div class="value">${formatCurrency(result.difference || 0)}</div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                showError('Error al cargar reconciliación: ' + error.message);
+            }
+        };
+
+        window.formatCurrency = function(amount) {
+            return new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+                minimumFractionDigits: 2
+            }).format(amount);
+        };
+
+        window.showError = function(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = `<div class="error">
+                <strong>⚠️ Error:</strong> ${message}<br>
+                <small>Tip: Abre la consola del navegador (F12) para ver más detalles del error.</small>
+            </div>`;
+            console.error('Error en dashboard:', message);
+        };
+
+        window.changePage = function(delta) {
+            // Esta función se implementará cuando se agregue paginación
+            console.log('changePage:', delta);
+        };
+
+        // Cargar configuración guardada
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUrl = localStorage.getItem('supabaseUrl');
+            const savedKey = localStorage.getItem('supabaseKey');
+
+            if (savedUrl && savedKey) {
+                document.getElementById('supabaseUrl').value = savedUrl;
+                document.getElementById('supabaseKey').value = savedKey;
+            }
+        });
+    </script>
+</body>
+</html>
+

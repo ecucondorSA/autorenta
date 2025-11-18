@@ -1,59 +1,63 @@
-# Cursor Configuration - AutoRenta
+# Cursor Configuration para AutoRenta
 
-Este directorio contiene la configuración automática para Cursor IDE.
+Esta carpeta contiene configuraciones específicas para Cursor Editor.
 
-## Archivos de Configuración
+## 📁 Archivos
 
-### 1. `runtime-config.json`
-Configuración de Runtime para Cloud Agents:
-- **Install Script**: `npm run install`
-- **Start Script**: `npm run dev`
-- **Default Terminals**: (vacío)
+- **team-commands.md**: Comandos completos para configurar en Cursor Dashboard
+- **team-commands-quick-setup.md**: Guía rápida de setup
+- **runtime-config.json**: Configuración de runtime (si existe)
+- **secrets-config.json**: Configuración de secrets (si existe)
 
-Cursor debería detectar automáticamente este archivo.
+## 🚀 Setup Rápido
 
-### 2. `secrets-config.json`
-Referencia de todos los secrets necesarios:
-- `NG_APP_SUPABASE_URL`: URL del proyecto Supabase
-- `NG_APP_SUPABASE_ANON_KEY`: Clave anónima de Supabase
-- `NG_APP_MAPBOX_ACCESS_TOKEN`: Token de Mapbox (requerido)
-- `NG_APP_PAYPAL_CLIENT_ID`: Client ID de PayPal (opcional)
+### Paso 1: Accede al Dashboard
+1. Ve a https://cursor.sh/dashboard
+2. Inicia sesión con tu cuenta
+3. Selecciona tu equipo (si aplica)
 
-### 3. `.env.local` (en raíz del proyecto)
-Variables de entorno que Cursor puede leer automáticamente.
+### Paso 2: Configura Team Commands
+1. Ve a **Team Settings** → **Commands**
+2. Haz clic en **"New Command"**
+3. Copia el contenido de cada sección desde `team-commands.md`
+4. Pega y guarda cada command
 
-## Configuración Automática
+### Paso 3: Verifica
+1. Abre Cursor
+2. Inicia un nuevo chat con Agent
+3. Pregunta algo relacionado con Angular o Supabase
+4. El agente debería seguir automáticamente los patrones definidos
 
-### Opción 1: Variables de Entorno (Recomendado)
-Cursor puede leer automáticamente desde `.env.local`:
-```bash
-# El archivo .env.local ya está configurado
-# Cursor debería detectarlo automáticamente
-```
+## 📋 Comandos Disponibles
 
-### Opción 2: Secrets en Cursor UI
-Si las variables de entorno no se detectan automáticamente:
-1. Abre la sección "Secrets" en Cursor
-2. Ejecuta: `./tools/show-cursor-config.sh`
-3. Copia cada secret y pégalo en la interfaz
+### Esenciales (Mínimo)
+1. **autorenta-angular-patterns**: Patrones Angular (standalone, signals)
+2. **autorenta-supabase-patterns**: Patrones Supabase (RLS, Storage, Auth)
+3. **autorenta-testing-standards**: Estándares de testing
 
-## Scripts Útiles
+### Completos (Recomendado)
+4. **autorenta-code-style**: Estilo de código (Prettier, ESLint, Tailwind)
+5. **autorenta-security-performance**: Seguridad y performance
+6. **autorenta-payment-system**: Sistema de pagos (CRÍTICO)
+7. **autorenta-architecture**: Resumen de arquitectura
 
-- `./tools/show-cursor-config.sh` - Muestra todos los valores para copiar/pegar
-- `./tools/configure-cursor-auto.sh` - Regenera la configuración
-- `./tools/setup-cursor-env-auto.sh` - Configura .env.local
+## 🔄 Actualización
 
-## Verificación
+Cuando actualices los comandos:
+1. Edita `team-commands.md` localmente
+2. Copia el contenido actualizado al Dashboard
+3. Notifica al equipo sobre cambios importantes
 
-Para verificar que todo está configurado:
-```bash
-./tools/show-cursor-config.sh
-```
+## 📚 Documentación Relacionada
 
-## Notas
+- `.cursorrules`: Reglas locales del proyecto (solo para este workspace)
+- `CLAUDE.md`: Documentación completa del proyecto
+- `CLAUDE_ARCHITECTURE.md`: Arquitectura técnica detallada
 
-- Los archivos `.env.local` y `.cursor/` están en `.gitignore`
-- Los secrets nunca se commitean al repositorio
-- Cursor puede requerir reinicio para detectar cambios en `.env.local`
+## ⚠️ Nota Importante
 
+Los **Team Commands** se aplican automáticamente a todos los miembros del equipo y se gestionan desde el Dashboard web. No necesitas archivos locales para que funcionen, pero estos archivos sirven como documentación y referencia.
 
+---
+
+**Última actualización**: 2025-01-XX

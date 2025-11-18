@@ -1,0 +1,128 @@
+# AutoRenta Reference Data (TOON Format)
+# Optimized data structures for Claude Code and documentation
+# See: CLAUDE_MCP.md#toon-format-optimization
+
+## Ambientes y Configuración
+
+environments[3]{name,payment_system,webhook_url,token_required,status_page}:
+  Production,MercadoPago Real,Supabase Edge Function,true,https://status.mercadopago.com
+  Staging,MercadoPago Sandbox,Supabase Edge Function,true,https://status.supabase.com
+  Development,Mock Payment,Cloudflare Worker (local),false,N/A
+
+## MCP Servers Configurados
+
+mcp_servers[4]{name,type,url,transport,status}:
+  cloudflare-builds,HTTP,https://builds.mcp.cloudflare.com/mcp,streamble-http,active
+  cloudflare-docs,HTTP,https://docs.mcp.cloudflare.com/mcp,streamble-http,active
+  cloudflare-bindings,HTTP,https://bindings.mcp.cloudflare.com/mcp,streamble-http,active
+  autorenta-platform,Stdio,/home/edu/autorenta/mcp-server/dist/index.js,stdio,active
+
+## Base de Datos Tablas Principales
+
+database_tables[5]{table,purpose,rows_avg,rls_enabled,backup_freq}:
+  users,Autenticación y perfiles,5000,true,daily
+  cars,Listado de autos,2000,true,daily
+  bookings,Reservas de autos,10000,true,daily
+  payments,Historial de pagos,15000,true,daily
+  wallet_ledger,Movimientos de billetera,50000,true,daily
+
+## Flujos de Pago
+
+payment_flows[4]{name,actor,start_state,end_state,duration}:
+  Depósito en Wallet,Locatario,pending,approved,5-10min
+  Reserva con pago,Locatario,pending_payment,payment_approved,3-5min
+  Split payment,Sistema,payment_approved,payout_completed,1-2min
+  Retiro de fondos,Locador,approved_balance,transferred,24-48h
+
+## Estados de Objetos
+
+booking_statuses[6]{status,description,duration,user_type,next_states}:
+  pending,Esperando aprobación,undefined,renter,approved|cancelled
+  approved,Pago aprobado,undefined,renter,active|cancelled
+  active,En progreso,variable,both,completed|cancelled
+  completed,Finalizado,N/A,both,N/A
+  cancelled,Cancelado,N/A,both,N/A
+  failed,Falló el pago,undefined,renter,pending|cancelled
+
+car_statuses[5]{status,meaning,visibility,can_book,owner_action}:
+  draft,Incompleto,hidden,false,finish_setup
+  pending,Esperando verificación,hidden,false,wait_verification
+  active,Publicado,public,true,manage_bookings
+  suspended,Suspendido,hidden,false,contact_support
+  deleted,Eliminado,hidden,false,N/A
+
+## Endpoints Críticos
+
+critical_endpoints[6]{method,path,service,timeout_ms,fallback,priority}:
+  GET,/api/cars,Supabase,5000,cached_list,high
+  POST,/api/bookings,Supabase,10000,queue_locally,critical
+  POST,/payments/webhook,Edge Function,30000,retry_5x,critical
+  GET,/map/tiles,Mapbox,3000,blank_map,high
+  POST,/auth/callback,Supabase,5000,error_page,critical
+  POST,/api/wallet,Supabase,5000,error_page,high
+
+## Errores Comunes y Soluciones
+
+common_errors[5]{error_type,symptom,root_cause,solution_priority,runbook}:
+  RLS_violation,403 Forbidden,Storage path mismatch,critical,CLAUDE_STORAGE.md
+  Payment_timeout,Failed payment,MercadoPago slow,high,split-payment-failure.md
+  Auth_404,/auth/callback 404,_redirects missing,critical,fix-auth-callback-404.md
+  API_degradation,Slow responses,DB overload,medium,api-degradation.md
+  CORS_error,Browser console error,Supabase config,high,troubleshooting.md
+
+## Comandos Productivos
+
+key_commands[8]{command,description,env,frequency,output}:
+  npm run dev,Desarrollo local,development,daily,Angular + Mock webhook
+  npm run build,Compilar,development,pre-deploy,dist/ folder
+  npm run deploy,Deploy a producción,production,weekly,Cloudflare Pages
+  npm run status,Verificar estado,production,hourly,Health checks
+  supabase functions deploy,Deploy Edge Functions,production,as-needed,Supabase logs
+  supabase db push,Aplicar migrations,development,as-needed,Migration status
+  npm run test:e2e,Tests end-to-end,testing,pre-deploy,Playwright report
+  npm run sync:types,Sync BD types,development,as-needed,TypeScript types
+
+## Performance Targets
+
+performance_targets[5]{metric,target,yellow_threshold,red_threshold,measurement}:
+  LCP (Largest Contentful Paint),< 2.5s,> 4s,> 5s,Core Web Vitals
+  FID (First Input Delay),< 100ms,> 300ms,> 500ms,Core Web Vitals
+  CLS (Cumulative Layout Shift),< 0.1,> 0.25,> 0.5,Core Web Vitals
+  API Response Time,< 500ms,> 1000ms,> 2000ms,CloudFlare analytics
+  Database Query,< 100ms,> 500ms,> 1000ms,Supabase logs
+
+## SLA Targets
+
+sla_metrics[4]{metric,target,critical,alert_threshold,owner}:
+  MTTD (Detection),< 5 min,P0,5 min,Platform Engineering
+  MTTR (Resolution),< 30 min,P0,15 min,On-Call Engineer
+  Availability,99.9%,P0,99.8%,Infrastructure
+  Error Rate,< 0.5%,P0,1%,Developers
+
+## Configuración de Secretos
+
+required_secrets[8]{name,service,example_format,rotation_freq,used_in}:
+  NG_APP_SUPABASE_ANON_KEY,Supabase,eyJhb...,never,.env.local
+  SUPABASE_SERVICE_ROLE_KEY,Supabase,eyJhb...,90days,wrangler.toml
+  MERCADOPAGO_ACCESS_TOKEN,MercadoPago,APP_USR-...,180days,wrangler.toml
+  CF_ACCOUNT_ID,Cloudflare,5b448...,never,wrangler.toml
+  CF_API_TOKEN,Cloudflare,v1.0a...,90days,wrangler.toml
+  NG_APP_MAPBOX_ACCESS_TOKEN,Mapbox,pk.eyJ...,180days,.env.local
+  GITHUB_TOKEN,GitHub,ghp_...,90days,CI/CD
+  SENTRY_AUTH_TOKEN,Sentry,sntrys_...,180days,CI/CD
+
+## Archivos Críticos a Proteger
+
+protected_files[6]{path,purpose,backup_freq,disaster_recovery,owner}:
+  database/,Schema + migrations,daily,restore_from_backup,Infrastructure
+  .env.local,Local secrets,excluded_from_git,manual_backup,Developer
+  supabase/functions/,Edge Functions,daily,redeploy_from_git,Backend
+  .github/workflows/,CI/CD pipeline,git_tracked,restore_from_git,DevOps
+  apps/web/src/,Source code,git_tracked,restore_from_git,Frontend
+  mcp-server/src/,MCP Server code,git_tracked,rebuild_from_source,Platform
+
+# Metadata
+generated_at: 2025-11-18
+format: TOON v1.0
+schema: https://json.schemastore.org/autorenta-reference.json
+compression: 45% vs JSON (estimated)

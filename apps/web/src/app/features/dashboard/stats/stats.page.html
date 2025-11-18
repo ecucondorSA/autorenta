@@ -1,0 +1,243 @@
+<div
+  class="stats-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+>
+  <!-- Header -->
+  <div
+    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+  >
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary">
+            📊 Estadísticas
+          </h1>
+          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+            Resumen completo de tu actividad
+          </p>
+        </div>
+        <a
+          routerLink="/dashboard"
+          class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-text-inverse font-medium rounded-lg transition-colors"
+        >
+          Volver al Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Loading -->
+    @if (loading()) {
+      <div class="flex items-center justify-center py-16">
+        <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error(); as errorMsg) {
+      <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-6">
+        <p class="text-sm text-error-strong">{{ errorMsg }}</p>
+        <button (click)="loadData()" class="mt-2 text-sm font-medium text-error-text underline">
+          Reintentar
+        </button>
+      </div>
+    }
+
+    @if (!loading() && !error()) {
+      <!-- Cars Stats -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+      >
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+          🚗 Estadísticas de Autos
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Total</p>
+            <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
+              {{ totalCars() }}
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Activos</p>
+            <p class="text-3xl font-bold text-success-light">{{ activeCars() }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Pendientes</p>
+            <p class="text-3xl font-bold text-warning-light">{{ pendingCars() }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Suspendidos</p>
+            <p class="text-3xl font-bold text-error-text">{{ suspendedCars() }}</p>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-border-default dark:border-neutral-700">
+          <p class="text-sm text-text-secondary dark:text-text-secondary/70">Tasa de Ocupación</p>
+          <div class="flex items-center gap-2 mt-2">
+            <div
+              class="flex-1 h-2 bg-surface-hover dark:bg-surface-base rounded-full overflow-hidden"
+            >
+              <div
+                class="h-full bg-primary-600 transition-all duration-500"
+                [style.width.%]="occupancyRate()"
+              ></div>
+            </div>
+            <span class="text-lg font-bold text-text-primary dark:text-text-primary">
+              {{ occupancyRate() }}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bookings Stats -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+      >
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+          📅 Estadísticas de Reservas
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Total</p>
+            <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
+              {{ totalBookings() }}
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Próximas</p>
+            <p class="text-3xl font-bold text-cta-default">{{ upcomingBookings() }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Activas</p>
+            <p class="text-3xl font-bold text-warning-light">{{ activeBookings() }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Completadas</p>
+            <p class="text-3xl font-bold text-success-light">{{ completedBookings() }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Earnings Stats -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+      >
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+          💰 Estadísticas de Ganancias
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Este Mes</p>
+            <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+              {{ thisMonthEarnings() | money }}
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Mes Anterior</p>
+            <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+              {{ lastMonthEarnings() | money }}
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Total</p>
+            <p class="text-2xl font-bold text-success-light">{{ totalEarnings() | money }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wallet Stats -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+      >
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+          💵 Estado del Wallet
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">
+              Balance Disponible
+            </p>
+            <p class="text-3xl font-bold text-success-light">{{ availableBalance() | money }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">
+              Balance Pendiente
+            </p>
+            <p class="text-3xl font-bold text-warning-light">{{ pendingBalance() | money }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+      >
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+          ⚡ Acciones Rápidas
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <a
+            routerLink="/dashboard/earnings"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">💵</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Ganancias</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">Ver detalles</p>
+            </div>
+          </a>
+
+          <a
+            routerLink="/dashboard/calendar"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">📆</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Calendario</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">Ver reservas</p>
+            </div>
+          </a>
+
+          <a
+            routerLink="/cars/my-cars"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">🚗</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Mis Autos</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                Gestionar vehículos
+              </p>
+            </div>
+          </a>
+
+          <a
+            routerLink="/bookings"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">📋</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Reservas</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">Ver todas</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    }
+  </div>
+</div>

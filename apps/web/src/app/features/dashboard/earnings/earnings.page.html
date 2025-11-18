@@ -1,0 +1,347 @@
+<div
+  class="earnings-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+>
+  <!-- Header -->
+  <div
+    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+  >
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary">💵 Ganancias</h1>
+          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+            Visualiza tus ingresos y ganancias
+          </p>
+        </div>
+        <a
+          routerLink="/wallet"
+          class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-text-inverse font-medium rounded-lg transition-colors"
+        >
+          💰 Ir a Wallet
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Loading -->
+    @if (loading()) {
+      <div class="flex items-center justify-center py-16">
+        <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error(); as errorMsg) {
+      <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-6">
+        <p class="text-sm text-error-strong">{{ errorMsg }}</p>
+        <button (click)="loadData()" class="mt-2 text-sm font-medium text-error-text underline">
+          Reintentar
+        </button>
+      </div>
+    }
+
+    @if (!loading() && !error()) {
+      <!-- Balance Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Balance Disponible -->
+        <div
+          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70">
+              Balance Disponible
+            </p>
+            <span class="text-2xl">💵</span>
+          </div>
+          <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
+            {{ availableBalance() | money }}
+          </p>
+          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+            Listo para retirar
+          </p>
+        </div>
+
+        <!-- Balance Pendiente -->
+        <div
+          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70">
+              Balance Pendiente
+            </p>
+            <span class="text-2xl">⏳</span>
+          </div>
+          <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
+            {{ pendingBalance() | money }}
+          </p>
+          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+            De reservas en curso
+          </p>
+        </div>
+
+        <!-- Total Ganado -->
+        <div
+          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70">
+              Total Ganado
+            </p>
+            <span class="text-2xl">💰</span>
+          </div>
+          <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
+            {{ totalEarnings() | money }}
+          </p>
+          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+            Histórico total
+          </p>
+        </div>
+      </div>
+
+      <!-- Earnings by Month -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+      >
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+          📊 Ganancias Mensuales
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Este Mes</p>
+            <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+              {{ thisMonthEarnings() | money }}
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Mes Anterior</p>
+            <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+              {{ lastMonthEarnings() | money }}
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Crecimiento</p>
+            <p
+              class="text-2xl font-bold"
+              [class.text-success-light]="isGrowthPositive()"
+              [class.text-error-text]="!isGrowthPositive()"
+            >
+              {{ isGrowthPositive() ? '+' : '' }}{{ growthPercentage() }}%
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Depreciation & Income Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Depreciation Chart -->
+        <div
+          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        >
+          <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+            📉 Depreciación Anual del Auto
+          </h2>
+          <div class="h-64 relative">
+            @if (totalAnnualDepreciation() > 0) {
+              <canvas baseChart [data]="depreciationChartData" [options]="chartOptions" type="line">
+              </canvas>
+            } @else {
+              <div
+                class="flex items-center justify-center h-full text-text-secondary dark:text-text-secondary/70"
+              >
+                <p class="text-sm">No hay datos de depreciación disponibles</p>
+              </div>
+            }
+          </div>
+          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-4">
+            Depreciación acumulada estimada durante el año
+          </p>
+        </div>
+
+        <!-- Income Chart -->
+        <div
+          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        >
+          <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+            📈 Ingresos Proyectados
+          </h2>
+          <div class="h-64 relative">
+            @if (thisMonthEarnings() > 0 || totalAnnualIncome() > 0) {
+              <canvas baseChart [data]="incomeChartData" [options]="chartOptions" type="line">
+              </canvas>
+            } @else {
+              <div
+                class="flex items-center justify-center h-full text-text-secondary dark:text-text-secondary/70"
+              >
+                <p class="text-sm">No hay datos de ingresos disponibles</p>
+              </div>
+            }
+          </div>
+          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-4">
+            Ingresos acumulados estimados durante el año
+          </p>
+        </div>
+      </div>
+
+      <!-- Breakeven Metrics -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+      >
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-6">
+          🎯 Análisis de Breakeven
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Depreciación Anual -->
+          <div
+            class="p-4 bg-error-bg/10 dark:bg-error-bg/20 rounded-lg border border-error-border/30"
+          >
+            <p class="text-sm font-medium text-error-text dark:text-error-text mb-2">
+              Depreciación Anual
+            </p>
+            <p class="text-2xl font-bold text-error-text dark:text-error-text">
+              {{ totalAnnualDepreciation() | money }}
+            </p>
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+              Pérdida de valor estimada
+            </p>
+          </div>
+
+          <!-- Días para Breakeven -->
+          <div
+            class="p-4 bg-warning-bg/10 dark:bg-warning-bg/20 rounded-lg border border-warning-border/30"
+          >
+            <p class="text-sm font-medium text-warning-text dark:text-warning-text mb-2">
+              Días para Breakeven
+            </p>
+            <p class="text-2xl font-bold text-warning-text dark:text-warning-text">
+              {{ breakevenDays() }}
+            </p>
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+              Días de alquiler necesarios
+            </p>
+          </div>
+
+          <!-- Fecha de Ganancia -->
+          <div
+            class="p-4 bg-success-bg/10 dark:bg-success-bg/20 rounded-lg border border-success-border/30"
+          >
+            <p class="text-sm font-medium text-success-text dark:text-success-text mb-2">
+              Inicio de Ganancia Real
+            </p>
+            @if (profitStartDate()) {
+              <p class="text-2xl font-bold text-success-text dark:text-success-text">
+                {{ profitStartDate()! | date: 'dd/MM/yyyy' }}
+              </p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+                Después de cubrir depreciación
+              </p>
+            } @else {
+              <p class="text-lg text-text-secondary dark:text-text-secondary/70">No disponible</p>
+            }
+          </div>
+        </div>
+
+        <!-- Explanation -->
+        <div
+          class="mt-6 p-4 bg-surface-base dark:bg-surface-base rounded-lg border border-border-default dark:border-neutral-700"
+        >
+          <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-2">
+            💡 ¿Qué significa esto?
+          </h3>
+          <ul class="text-sm text-text-secondary dark:text-text-secondary/70 space-y-1">
+            <li>
+              • <strong>Depreciación Anual:</strong> Es la pérdida de valor que sufre tu auto
+              durante un año.
+            </li>
+            <li>
+              • <strong>Días para Breakeven:</strong> Es la cantidad de días que necesitas alquilar
+              tu auto para cubrir la depreciación anual.
+            </li>
+            <li>
+              • <strong>Inicio de Ganancia Real:</strong> Después de esta fecha, cada día de
+              alquiler genera ganancia neta (ingresos - depreciación).
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div
+        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+      >
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+          ⚡ Acciones Rápidas
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <a
+            routerLink="/wallet"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">💸</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Retirar Dinero</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                Solicitar retiro
+              </p>
+            </div>
+          </a>
+
+          <a
+            routerLink="/payouts"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">📊</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">
+                Historial de Payouts
+              </p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                Ver transacciones
+              </p>
+            </div>
+          </a>
+
+          <a
+            routerLink="/dashboard"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">📈</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Dashboard</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                Ver resumen completo
+              </p>
+            </div>
+          </a>
+
+          <a
+            routerLink="/wallet/history"
+            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+          >
+            <span class="text-2xl">📋</span>
+            <div>
+              <p class="font-medium text-text-primary dark:text-text-primary">Historial Wallet</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">Ver movimientos</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    }
+  </div>
+</div>
