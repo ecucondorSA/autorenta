@@ -122,3 +122,10 @@ docs/archived/screenshots/
 /DECISION_*.txt
 /PHASE*.sh
 /review.txt
+
+# TOON Format (Token-Oriented Object Notation)
+# Generated .toon files should be regenerated with tools/toon-convert.mjs
+# Exception: Keep these for version control
+**/*.toon
+!.claude/config.toon
+!docs/REFERENCE_DATA.toon
