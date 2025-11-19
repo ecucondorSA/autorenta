@@ -1,59 +1,57 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectionStrategy,
-  signal,
-  computed,
-  inject,
-  PLATFORM_ID,
-  ViewChild,
-  ElementRef,
-  effect,
-} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
-import { CarsService } from '../../core/services/cars.service';
-import { LocationService } from '../../core/services/location.service';
-import { UrgentRentalService } from '../../core/services/urgent-rental.service';
-import { DistanceCalculatorService } from '../../core/services/distance-calculator.service';
-import { GeocodingService, GeocodingResult } from '../../core/services/geocoding.service';
-import { injectSupabase } from '../../core/services/supabase-client.service';
 import { Car } from '../../core/models';
 import { CarMapLocation } from '../../core/services/car-locations.service';
+import { CarsService } from '../../core/services/cars.service';
+import { DistanceCalculatorService } from '../../core/services/distance-calculator.service';
+import { GeocodingResult, GeocodingService } from '../../core/services/geocoding.service';
+import { LocationService } from '../../core/services/location.service';
+import { injectSupabase } from '../../core/services/supabase-client.service';
+import { UrgentRentalService } from '../../core/services/urgent-rental.service';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
-import { SocialProofIndicatorsComponent } from '../../shared/components/social-proof-indicators/social-proof-indicators.component';
-import { FilterState } from '../../shared/components/map-filters/map-filters.component';
-import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
-import { QuickFilter } from '../../shared/components/utility-bar/utility-bar.component';
 import {
-  FloatingActionFabComponent,
   FabAction,
+  FloatingActionFabComponent,
 } from '../../shared/components/floating-action-fab/floating-action-fab.component';
-import {
-  StatsStripComponent,
-  Stat,
-} from '../../shared/components/stats-strip/stats-strip.component';
+import { FilterState } from '../../shared/components/map-filters/map-filters.component';
+
+import { QuickFilter } from '../../shared/components/utility-bar/utility-bar.component';
+import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
+
+import { AnalyticsService } from '../../core/services/analytics.service';
+import { BookingsService } from '../../core/services/bookings.service';
+import { BreakpointService } from '../../core/services/breakpoint.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { TikTokEventsService } from '../../core/services/tiktok-events.service';
+import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.component';
 import {
   DateRange,
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
-import {
-  QuickBookingModalComponent,
-  QuickBookingData,
-} from '../../shared/components/quick-booking-modal/quick-booking-modal.component';
-import { TooltipComponent } from '../../shared/components/tooltip/tooltip.component';
-import { BookingsService } from '../../core/services/bookings.service';
-import { AnalyticsService } from '../../core/services/analytics.service';
-import { BreakpointService } from '../../core/services/breakpoint.service';
 import { DynamicPricingBadgeComponent } from '../../shared/components/dynamic-pricing-badge/dynamic-pricing-badge.component';
 import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
-import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.component';
-import { FiltersDrawerComponent } from '../../shared/components/marketplace/filters-drawer/filters-drawer.component';
+import {
+  QuickBookingData,
+  QuickBookingModalComponent,
+} from '../../shared/components/quick-booking-modal/quick-booking-modal.component';
+import { TooltipComponent } from '../../shared/components/tooltip/tooltip.component';
+// import { FiltersDrawerComponent } from '../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 import { environment } from '../../../environments/environment';
+import { MapControlsComponent, MapControlsEvent } from '../../shared/components/map-controls/map-controls.component';
 
 export interface CarWithDistance extends Car {
   distance?: number;
@@ -65,22 +63,29 @@ export type ViewMode = 'grid' | 'list' | 'map';
 // Type alias for backward compatibility
 type ToastType = 'success' | 'info' | 'warning' | 'error';
 
+export interface Stat {
+  label: string;
+  value: string | number;
+  icon: string;
+}
+
 @Component({
   selector: 'app-marketplace-v2-page',
   standalone: true,
   imports: [
     CommonModule,
     CarsMapComponent,
-    SocialProofIndicatorsComponent,
+
     WhatsappFabComponent,
     QuickBookingModalComponent,
     FloatingActionFabComponent,
     // NotificationToastComponent, // REMOVED: Using PrimeNG Toast now
-    StatsStripComponent,
+
     TooltipComponent,
     DateRangePickerComponent,
     DynamicPricingBadgeComponent,
-    FiltersDrawerComponent,
+    // FiltersDrawerComponent,
+    MapControlsComponent,
     PriceTransparencyModalComponent,
     SkeletonComponent,
   ],
@@ -570,6 +575,60 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   /**
+   * Handle map controls events
+   */
+  onMapControlEvent(event: MapControlsEvent): void {
+    if (!this.carsMapComponent) {
+      console.warn('Map component not initialized');
+      return;
+    }
+
+    switch (event.type) {
+      case 'zoom-in':
+        // TODO: Implement zoom in on map
+        break;
+      case 'zoom-out':
+        // TODO: Implement zoom out on map
+        break;
+      case 'center':
+        if (this.userLocation()) {
+          // TODO: Implement center on user
+        } else {
+          this.showToast('Ubicación no disponible', 'warning');
+        }
+        break;
+      case 'fullscreen':
+        this.toggleFullscreen();
+        break;
+      case '3d-toggle':
+        // TODO: Implement 3D view toggle
+        break;
+      case 'layer-toggle':
+        // TODO: Implement layer toggle (satellite, traffic, etc.)
+        break;
+      case 'search-area':
+        void this.loadCars();
+        this.showToast('Buscando en esta área...', 'info');
+        break;
+    }
+  }
+
+  /**
+   * Toggle fullscreen mode for map
+   */
+  private toggleFullscreen(): void {
+    const elem = document.documentElement;
+    if (!document.fullscreenElement) {
+      elem.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        this.showToast('No se pudo activar pantalla completa', 'error');
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  /**
    * Extract photo gallery from car
    */
   extractPhotoGallery(car: Car): string[] {
@@ -610,7 +669,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   onQuickFilterClick(filterId: string): void {
-    console.log('Quick filter clicked:', filterId);
     this.showToast(`Filtro "${filterId}" aplicado`, 'info');
     // TODO: Apply quick filter
   }
