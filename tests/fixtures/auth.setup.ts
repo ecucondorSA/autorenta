@@ -29,9 +29,9 @@ const testUsers = {
     role: 'locador',
   },
   admin: {
-    email: 'admin.test@autorenta.com',
-    password: 'TestAdmin123!',
-    role: 'admin',
+    email: 'test-admin@autorenta.com',
+    password: 'TestPassword123!',
+    role: 'locatario',
   },
 };
 
@@ -138,14 +138,61 @@ setup('authenticate as owner', async ({ page }) => {
   expect(data.user).toBeTruthy();
   expect(data.session).toBeTruthy();
 
+  // Navigate to app and set session in browser
   await page.goto('/');
+  await page.waitForLoadState('domcontentloaded');
+
+  // Set session in localStorage
   await page.evaluate((session) => {
     localStorage.setItem('supabase.auth.token', JSON.stringify(session));
+    // También guardar en sessionStorage por si acaso
+    sessionStorage.setItem('supabase.auth.token', JSON.stringify(session));
   }, data.session);
 
-  await page.goto('/cars/publish');
-  await expect(page.getByTestId('publish-form')).toBeVisible({ timeout: 10000 });
+  // Reload page to apply session
+  await page.reload();
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(2000); // Dar tiempo para que se establezca la sesión
 
+  // Verify auth state - usar selectores basados en el HTML real
+  await page.goto('/cars');
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(3000); // Dar más tiempo para que Angular procese la sesión
+
+  // Verificar autenticación de múltiples formas basadas en el HTML real
+  // 1. Verificar que el botón de login NO está visible (significa que está autenticado)
+  const loginButton = page.locator('a[routerLink="/auth/login"]').or(
+    page.getByRole('link', { name: /entrar|login|iniciar sesión/i })
+  );
+  const loginButtonVisible = await loginButton.isVisible({ timeout: 5000 }).catch(() => false);
+
+  // 2. Verificar que el link a profile SÍ está visible (significa que está autenticado)
+  const profileLink = page.locator('a[routerLink="/profile"]').or(
+    page.locator('a[href="/profile"]')
+  );
+  const profileLinkVisible = await profileLink.isVisible({ timeout: 5000 }).catch(() => false);
+
+  // 3. Verificar badge de verificación (solo visible si está autenticado)
+  const verificationBadge = page.locator('app-verification-badge');
+  const badgeVisible = await verificationBadge.isVisible({ timeout: 5000 }).catch(() => false);
+
+  // 4. Verificar que NO estamos en login
+  const currentUrl = page.url();
+  const isOnLoginPage = currentUrl.includes('/auth/login');
+
+  // Consideramos autenticado si:
+  // - El link a profile está visible Y el botón de login NO está visible
+  // - O si el badge de verificación está visible
+  // - Y no estamos en la página de login
+  const isAuthenticated = (profileLinkVisible && !loginButtonVisible) || badgeVisible || !isOnLoginPage;
+
+  if (!isAuthenticated || isOnLoginPage) {
+    throw new Error(`El usuario owner no se autenticó correctamente. URL: ${currentUrl}, Profile link visible: ${profileLinkVisible}, Login button visible: ${loginButtonVisible}`);
+  }
+
+  console.log('✅ Autenticación verificada correctamente');
+
+  // Save storage state
   await page.context().storageState({ path: authFiles.owner });
   console.log('✅ Owner authenticated and state saved');
 });

@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, from, map, catchError, of } from 'rxjs';
+import { Observable, catchError, from, map, of } from 'rxjs';
 import {
-  FxSnapshot,
   CurrencyCode,
+  FxSnapshot,
   isFxExpired,
   isFxVariationExceeded,
 } from '../models/booking-detail-payment.model';
-import { SupabaseClientService } from './supabase-client.service';
 import { ExchangeRateService } from './exchange-rate.service';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * Servicio para gestionar tipos de cambio (FX)
@@ -29,7 +29,7 @@ export class FxService {
     _fromCurrency: CurrencyCode = 'USD',
     toCurrency: CurrencyCode = 'ARS',
   ): Observable<FxSnapshot | null> {
-    const pair = `USDT${toCurrency}`;
+    const pair = `${_fromCurrency}${toCurrency}`;
 
     return from(
       this.supabaseClient
@@ -52,7 +52,7 @@ export class FxService {
         expiresAt.setDate(expiresAt.getDate() + 7);
 
         const snapshot: FxSnapshot = {
-          rate: data.platform_rate,
+          rate: data.rate * 1.1,
           timestamp,
           fromCurrency: 'USD',
           toCurrency: toCurrency as CurrencyCode,
@@ -62,7 +62,7 @@ export class FxService {
         };
 
         console.log(
-          `💱 FX Snapshot (Binance): 1 USD = ${snapshot.rate} ARS (Binance: ${data.binance_rate}, Margen: ${data.margin_percent}%)`,
+          `💱 FX Snapshot (Binance): 1 USD = ${snapshot.rate} ARS (Base: ${data.rate}, Margen: 10%)`,
         );
 
         return snapshot;
@@ -178,14 +178,14 @@ export class FxService {
     _toCurrency: CurrencyCode = 'ARS',
   ): Promise<number> {
     try {
-      const rate = await this.exchangeRateService.getPlatformRate('USDTARS');
+      const rate = await this.exchangeRateService.getPlatformRate('USDARS');
       return rate;
     } catch (error) {
       console.error('Error obteniendo tasa desde exchange_rates:', error);
 
       try {
         const binanceRate = await this.exchangeRateService.getBinanceRate();
-        return binanceRate * 1.2;
+        return binanceRate * 1.1;
       } catch (binanceError) {
         console.error('Error obteniendo tasa de Binance:', binanceError);
         throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');

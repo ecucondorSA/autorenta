@@ -13,8 +13,11 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TrackingSession } from '@core/services/location-tracking.service';
-import mapboxgl from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
+
+// Lazy load mapbox-gl at runtime to reduce initial bundle size
+type MapboxGL = typeof import('mapbox-gl');
+let mapboxgl: MapboxGL['default'];
 
 interface MarkerData {
   marker: mapboxgl.Marker;
@@ -270,6 +273,12 @@ export class LiveTrackingMapComponent implements OnInit, OnChanges, OnDestroy {
 
   private async initializeMap(): Promise<void> {
     try {
+      // Lazy load Mapbox GL to reduce initial bundle size
+      if (!mapboxgl) {
+        const mapboxModule = await import('mapbox-gl');
+        mapboxgl = mapboxModule.default;
+      }
+
       if (!environment.mapboxAccessToken) {
         throw new Error('Mapbox access token is missing');
       }

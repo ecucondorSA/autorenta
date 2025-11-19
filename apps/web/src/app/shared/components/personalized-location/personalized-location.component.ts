@@ -199,11 +199,21 @@ export class PersonalizedLocationComponent implements OnInit, OnDestroy {
       el.style.cursor = 'grabbing';
     });
 
+    // Throttle mousemove to 16ms (60fps max) to reduce calculation frequency
+    let lastMoveTime = 0;
+    const moveThrottleMs = 16; // ~60fps
     document.addEventListener('mousemove', (e) => {
       if (!isDragging || !this.map) return;
+
+      const now = Date.now();
+      if (now - lastMoveTime < moveThrottleMs) {
+        return; // Skip if within throttle window
+      }
+      lastMoveTime = now;
+
       const lngLat = this.map.unproject([e.clientX, e.clientY]);
       this.userLocation = { lat: lngLat.lat, lng: lngLat.lng };
-      this.addCircleToMap(this.userLocation, this.radiusKm());
+      // Only emit changes during drag, don't update circle here (heavy calculation)
       this.emitLocationChange();
     });
 

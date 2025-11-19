@@ -584,12 +584,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     }
 
     switch (event.type) {
-      case 'zoom-in':
-        // TODO: Implement zoom in on map
-        break;
-      case 'zoom-out':
-        // TODO: Implement zoom out on map
-        break;
       case 'center':
         if (this.userLocation()) {
           // TODO: Implement center on user
@@ -602,9 +596,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         break;
       case '3d-toggle':
         // TODO: Implement 3D view toggle
-        break;
-      case 'layer-toggle':
-        // TODO: Implement layer toggle (satellite, traffic, etc.)
         break;
       case 'search-area':
         void this.loadCars();

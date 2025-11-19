@@ -13,6 +13,7 @@
 
 /* Mapbox GL JS CSS - Required for markers and controls */
 @import 'mapbox-gl/dist/mapbox-gl.css';
+@import 'flatpickr/dist/flatpickr.css';
 
 /* 🗺️ Map Tokens - Sistema Centralizado de Tokens */
 @import './styles/map-tokens.css';

@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
@@ -8,7 +8,7 @@ interface ExchangeRate {
   pair: string;
   source: string;
   binance_rate: number;
-  platform_rate: number;
+  rate: number;
   margin_percent: number;
   margin_absolute: number;
   volatility_24h: number | null;
@@ -61,7 +61,7 @@ export class ExchangeRatesPage implements OnInit {
   constructor(
     private supabase: SupabaseClientService,
     private router: Router,
-  ) {}
+  ) { }
 
   async ngOnInit(): Promise<void> {
     await this.loadData();
@@ -122,10 +122,10 @@ export class ExchangeRatesPage implements OnInit {
     const lastSync =
       rates.length > 0
         ? rates.reduce((latest, r) => {
-            const rateDate = new Date(r.last_updated);
-            const latestDate = latest ? new Date(latest) : new Date(0);
-            return rateDate > latestDate ? r.last_updated : latest;
-          }, '')
+          const rateDate = new Date(r.last_updated);
+          const latestDate = latest ? new Date(latest) : new Date(0);
+          return rateDate > latestDate ? r.last_updated : latest;
+        }, '')
         : null;
 
     this.stats.set({
@@ -229,8 +229,8 @@ export class ExchangeRatesPage implements OnInit {
   }
 
   calculateMarginVisualization(rate: ExchangeRate): number {
-    // Calculate percentage for visual representation (20% margin = 100% of bar)
-    return (rate.margin_percent / 20) * 100;
+    // Calculate percentage for visual representation (10% margin = 100% of bar)
+    return (10 / 10) * 100;
   }
 
   closeHistoryModal(): void {

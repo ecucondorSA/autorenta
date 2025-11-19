@@ -1,0 +1,632 @@
+import { Component, OnInit, signal, computed, ViewChild, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CarsService } from '../../../core/services/cars.service';
+import { FavoriteButtonComponent } from '../../../shared/components/favorite-button/favorite-button.component';
+
+interface CarDetails {
+  id: string;
+  brand: string;
+  model: string;
+  year: number;
+  mainImage: string;
+  images: string[];
+  images360?: string[]; // 360-degree photos
+  virtualTourUrl?: string; // Matterport or similar
+
+  // Pricing
+  dailyRate: number;
+  weeklyRate?: number;
+  monthlyRate?: number;
+  securityDeposit: number;
+
+  // Specifications
+  specs: {
+    transmission: string;
+    fuelType: string;
+    seats: number;
+    doors: number;
+    luggage: number;
+    mileage: string;
+    engine: string;
+    horsePower: string;
+    acceleration?: string;
+    topSpeed?: string;
+  };
+
+  // Features
+  features: {
+    category: string;
+    items: string[];
+  }[];
+
+  // Location & Availability
+  location: {
+    city: string;
+    neighborhood: string;
+    address?: string;
+    lat: number;
+    lng: number;
+  };
+  availabilityCalendar: Date[];
+
+  // Owner
+  owner: {
+    id: string;
+    name: string;
+    avatar?: string;
+    rating: number;
+    reviewsCount: number;
+    responseTime: string;
+    responseRate: number;
+    memberSince: Date;
+    verified: boolean;
+  };
+
+  // Reviews
+  rating: number;
+  reviewsCount: number;
+  reviews: Review[];
+
+  // Insurance
+  insuranceOptions: {
+    basic: { name: string; coverage: string; dailyRate: number };
+    standard: { name: string; coverage: string; dailyRate: number };
+    premium: { name: string; coverage: string; dailyRate: number };
+  };
+
+  // Rules
+  rules: string[];
+  cancellationPolicy: string;
+
+  // Stats
+  tripCount: number;
+  responseRate: number;
+}
+
+interface Review {
+  id: string;
+  userName: string;
+  userAvatar?: string;
+  rating: number;
+  comment: string;
+  date: Date;
+  tripDuration: string;
+  helpful: number;
+}
+
+@Component({
+  selector: 'app-car-detail-v3',
+  standalone: true,
+  imports: [CommonModule, IonicModule, FavoriteButtonComponent],
+  template: `
+    <ion-header class="transparent-header" [class.scrolled]="isScrolled()">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="/marketplace" color="light"></ion-back-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button (click)="sharecar()">
+            <ion-icon name="share-social-outline" slot="icon-only" color="light"></ion-icon>
+          </ion-button>
+          <app-favorite-button [carId]="carId()" />
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)">
+      @if (isLoading()) {
+        <div class="loading-state">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+      } @else if (car()) {
+        <div class="car-detail-container">
+          <!-- Hero Image Gallery -->
+          <div class="hero-gallery">
+            <div class="main-image-container" #mainImageContainer>
+              <img [src]="currentImage()" [alt]="car()!.brand + ' ' + car()!.model" class="main-image" />
+
+              <!-- 360° View Button -->
+              @if (car()!.images360 && car()!.images360.length > 0) {
+                <button class="view-360-btn" (click)="open360View()">
+                  <ion-icon name="scan-outline"></ion-icon>
+                  Vista 360°
+                </button>
+              }
+
+              <!-- Virtual Tour Button -->
+              @if (car()!.virtualTourUrl) {
+                <button class="virtual-tour-btn" (click)="openVirtualTour()">
+                  <ion-icon name="cube-outline"></ion-icon>
+                  Tour Virtual
+                </button>
+              }
+
+              <!-- Image Counter -->
+              <div class="image-counter">
+                {{ currentImageIndex() + 1 }} / {{ car()!.images.length }}
+              </div>
+
+              <!-- Navigation Arrows -->
+              <button class="nav-arrow prev" (click)="previousImage()">
+                <ion-icon name="chevron-back"></ion-icon>
+              </button>
+              <button class="nav-arrow next" (click)="nextImage()">
+                <ion-icon name="chevron-forward"></ion-icon>
+              </button>
+            </div>
+
+            <!-- Thumbnail Strip -->
+            <div class="thumbnail-strip">
+              @for (image of car()!.images; track $index) {
+                <img
+                  [src]="image"
+                  [alt]="'Vista ' + ($index + 1)"
+                  [class.active]="$index === currentImageIndex()"
+                  (click)="selectImage($index)"
+                  class="thumbnail"
+                />
+              }
+            </div>
+          </div>
+
+          <!-- Quick Stats Bar -->
+          <div class="quick-stats">
+            <div class="stat-item">
+              <ion-icon name="star"></ion-icon>
+              <strong>{{ car()!.rating }}</strong>
+              <span>({{ car()!.reviewsCount }})</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <ion-icon name="car-sport-outline"></ion-icon>
+              <strong>{{ car()!.tripCount }}</strong>
+              <span>viajes</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>{{ car()!.location.city }}</span>
+            </div>
+          </div>
+
+          <!-- Car Title & Price -->
+          <div class="car-header">
+            <div class="car-title">
+              <h1>{{ car()!.brand }} {{ car()!.model }}</h1>
+              <p class="car-year">{{ car()!.year }}</p>
+            </div>
+            <div class="pricing">
+              <div class="daily-rate">
+                <span class="price">${{ car()!.dailyRate }}</span>
+                <span class="period">/día</span>
+              </div>
+              @if (car()!.weeklyRate) {
+                <div class="alternative-rate">
+                  <span>${{ car()!.weeklyRate }}/semana</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="tabs-container">
+            <ion-segment [(ngModel)]="activeTab">
+              <ion-segment-button value="overview">
+                <ion-label>Visión General</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="specs">
+                <ion-label>Especificaciones</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="reviews">
+                <ion-label>Reseñas</ion-label>
+                <ion-badge>{{ car()!.reviewsCount }}</ion-badge>
+              </ion-segment-button>
+              <ion-segment-button value="owner">
+                <ion-label>Propietario</ion-label>
+              </ion-segment-button>
+            </ion-segment>
+          </div>
+
+          <!-- Tab Content -->
+          <div class="tab-content">
+            @switch (activeTab()) {
+              @case ('overview') {
+                <div class="overview-tab">
+                  <!-- Key Specs -->
+                  <section class="section">
+                    <h2>Características Principales</h2>
+                    <div class="key-specs-grid">
+                      <div class="spec-card">
+                        <ion-icon name="speedometer-outline"></ion-icon>
+                        <strong>{{ car()!.specs.transmission }}</strong>
+                        <span>Transmisión</span>
+                      </div>
+                      <div class="spec-card">
+                        <ion-icon name="water-outline"></ion-icon>
+                        <strong>{{ car()!.specs.fuelType }}</strong>
+                        <span>Combustible</span>
+                      </div>
+                      <div class="spec-card">
+                        <ion-icon name="people-outline"></ion-icon>
+                        <strong>{{ car()!.specs.seats }}</strong>
+                        <span>Asientos</span>
+                      </div>
+                      <div class="spec-card">
+                        <ion-icon name="briefcase-outline"></ion-icon>
+                        <strong>{{ car()!.specs.luggage }}</strong>
+                        <span>Equipaje</span>
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- Features -->
+                  <section class="section">
+                    <h2>Comodidades y Extras</h2>
+                    @for (featureGroup of car()!.features; track featureGroup.category) {
+                      <div class="feature-group">
+                        <h3>{{ featureGroup.category }}</h3>
+                        <div class="feature-list">
+                          @for (feature of featureGroup.items; track feature) {
+                            <div class="feature-item">
+                              <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                              <span>{{ feature }}</span>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </section>
+
+                  <!-- Insurance Options -->
+                  <section class="section">
+                    <h2>Opciones de Seguro</h2>
+                    <div class="insurance-grid">
+                      <div class="insurance-card">
+                        <div class="insurance-header">
+                          <h4>Básico</h4>
+                          <span class="insurance-price">+$\{{ car()!.insuranceOptions.basic.dailyRate }}/día</span>
+                        </div>
+                        <p>{{ car()!.insuranceOptions.basic.coverage }}</p>
+                      </div>
+                      <div class="insurance-card recommended">
+                        <ion-badge color="primary" class="recommended-badge">Recomendado</ion-badge>
+                        <div class="insurance-header">
+                          <h4>Estándar</h4>
+                          <span class="insurance-price">+${{ car()!.insuranceOptions.standard.dailyRate }}/día</span>
+                        </div>
+                        <p>{{ car()!.insuranceOptions.standard.coverage }}</p>
+                      </div>
+                      <div class="insurance-card">
+                        <div class="insurance-header">
+                          <h4>Premium</h4>
+                          <span class="insurance-price">+${{ car()!.insuranceOptions.premium.dailyRate }}/día</span>
+                        </div>
+                        <p>{{ car()!.insuranceOptions.premium.coverage }}</p>
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- Rules -->
+                  <section class="section">
+                    <h2>Reglas y Políticas</h2>
+                    <div class="rules-list">
+                      @for (rule of car()!.rules; track rule) {
+                        <div class="rule-item">
+                          <ion-icon name="alert-circle-outline"></ion-icon>
+                          <span>{{ rule }}</span>
+                        </div>
+                      }
+                    </div>
+                    <div class="cancellation-policy">
+                      <strong>Política de Cancelación:</strong>
+                      <p>{{ car()!.cancellationPolicy }}</p>
+                    </div>
+                  </section>
+
+                  <!-- Map -->
+                  <section class="section">
+                    <h2>Ubicación</h2>
+                    <div class="location-card">
+                      <div class="location-info">
+                        <h4>{{ car()!.location.neighborhood }}</h4>
+                        <p>{{ car()!.location.city }}</p>
+                      </div>
+                      <div class="map-placeholder">
+                        <!-- TODO: Integrate actual map -->
+                        <ion-icon name="map-outline"></ion-icon>
+                        <p>Ver en mapa</p>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              }
+
+              @case ('specs') {
+                <div class="specs-tab">
+                  <section class="section">
+                    <h2>Especificaciones Completas</h2>
+                    <div class="specs-table">
+                      <div class="spec-row">
+                        <span class="spec-label">Motor</span>
+                        <span class="spec-value">{{ car()!.specs.engine }}</span>
+                      </div>
+                      <div class="spec-row">
+                        <span class="spec-label">Potencia</span>
+                        <span class="spec-value">{{ car()!.specs.horsePower }}</span>
+                      </div>
+                      <div class="spec-row">
+                        <span class="spec-label">Transmisión</span>
+                        <span class="spec-value">{{ car()!.specs.transmission }}</span>
+                      </div>
+                      <div class="spec-row">
+                        <span class="spec-label">Combustible</span>
+                        <span class="spec-value">{{ car()!.specs.fuelType }}</span>
+                      </div>
+                      <div class="spec-row">
+                        <span class="spec-label">Kilometraje</span>
+                        <span class="spec-value">{{ car()!.specs.mileage }}</span>
+                      </div>
+                      <div class="spec-row">
+                        <span class="spec-label">Asientos</span>
+                        <span class="spec-value">{{ car()!.specs.seats }}</span>
+                      </div>
+                      <div class="spec-row">
+                        <span class="spec-label">Puertas</span>
+                        <span class="spec-value">{{ car()!.specs.doors }}</span>
+                      </div>
+                      <div class="spec-row">
+                        <span class="spec-label">Capacidad de Equipaje</span>
+                        <span class="spec-value">{{ car()!.specs.luggage }} maletas</span>
+                      </div>
+                      @if (car()!.specs.acceleration) {
+                        <div class="spec-row">
+                          <span class="spec-label">0-100 km/h</span>
+                          <span class="spec-value">{{ car()!.specs.acceleration }}</span>
+                        </div>
+                      }
+                      @if (car()!.specs.topSpeed) {
+                        <div class="spec-row">
+                          <span class="spec-label">Velocidad Máxima</span>
+                          <span class="spec-value">{{ car()!.specs.topSpeed }}</span>
+                        </div>
+                      }
+                    </div>
+                  </section>
+                </div>
+              }
+
+              @case ('reviews') {
+                <div class="reviews-tab">
+                  <section class="section">
+                    <div class="reviews-header">
+                      <div class="rating-summary">
+                        <div class="overall-rating">
+                          <h2>{{ car()!.rating }}</h2>
+                          <div class="stars">
+                            @for (star of [1,2,3,4,5]; track star) {
+                              <ion-icon
+                                [name]="star <= car()!.rating ? 'star' : 'star-outline'"
+                                [color]="star <= car()!.rating ? 'warning' : 'medium'"
+                              ></ion-icon>
+                            }
+                          </div>
+                          <p>{{ car()!.reviewsCount }} reseñas</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="reviews-list">
+                      @for (review of car()!.reviews; track review.id) {
+                        <div class="review-card">
+                          <div class="review-header">
+                            <img
+                              [src]="review.userAvatar || '/assets/default-avatar.png'"
+                              [alt]="review.userName"
+                              class="reviewer-avatar"
+                            />
+                            <div class="reviewer-info">
+                              <h4>{{ review.userName }}</h4>
+                              <div class="review-meta">
+                                <div class="stars-small">
+                                  @for (star of [1,2,3,4,5]; track star) {
+                                    <ion-icon
+                                      [name]="star <= review.rating ? 'star' : 'star-outline'"
+                                      [color]="star <= review.rating ? 'warning' : 'medium'"
+                                    ></ion-icon>
+                                  }
+                                </div>
+                                <span>•</span>
+                                <span class="review-date">{{ formatDate(review.date) }}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <p class="review-comment">{{ review.comment }}</p>
+                          <div class="review-footer">
+                            <span class="trip-duration">
+                              <ion-icon name="calendar-outline"></ion-icon>
+                              {{ review.tripDuration }}
+                            </span>
+                            <button class="helpful-btn">
+                              <ion-icon name="thumbs-up-outline"></ion-icon>
+                              Útil ({{ review.helpful }})
+                            </button>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </section>
+                </div>
+              }
+
+              @case ('owner') {
+                <div class="owner-tab">
+                  <section class="section">
+                    <div class="owner-card">
+                      <div class="owner-header">
+                        <img
+                          [src]="car()!.owner.avatar || '/assets/default-avatar.png'"
+                          [alt]="car()!.owner.name"
+                          class="owner-avatar"
+                        />
+                        <div class="owner-info">
+                          <h3>
+                            {{ car()!.owner.name }}
+                            @if (car()!.owner.verified) {
+                              <ion-icon name="checkmark-circle" color="primary"></ion-icon>
+                            }
+                          </h3>
+                          <div class="owner-stats">
+                            <div class="owner-stat">
+                              <ion-icon name="star"></ion-icon>
+                              <strong>{{ car()!.owner.rating }}</strong>
+                              <span>({{ car()!.owner.reviewsCount }})</span>
+                            </div>
+                            <span>•</span>
+                            <span>Miembro desde {{ formatYear(car()!.owner.memberSince) }}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="owner-metrics">
+                        <div class="metric">
+                          <strong>{{ car()!.owner.responseRate }}%</strong>
+                          <span>Tasa de respuesta</span>
+                        </div>
+                        <div class="metric">
+                          <strong>{{ car()!.owner.responseTime }}</strong>
+                          <span>Tiempo de respuesta</span>
+                        </div>
+                      </div>
+
+                      <ion-button expand="block" (click)="contactOwner()">
+                        <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
+                        Contactar Propietario
+                      </ion-button>
+                    </div>
+                  </section>
+                </div>
+              }
+            }
+          </div>
+
+          <!-- Similar Cars -->
+          <section class="section similar-cars">
+            <h2>Autos Similares</h2>
+            <div class="similar-cars-scroll">
+              <!-- TODO: Implement similar cars carousel -->
+              <p class="placeholder-text">Cargando autos similares...</p>
+            </div>
+          </section>
+        </div>
+      }
+    </ion-content>
+
+    <!-- Booking Footer -->
+    <ion-footer>
+      <ion-toolbar>
+        <div class="booking-footer">
+          <div class="footer-pricing">
+            <span class="price-label">Total estimado</span>
+            <span class="price-value">${{ car()?.dailyRate || 0 }}/día</span>
+          </div>
+          <ion-button
+            expand="block"
+            size="large"
+            (click)="startBooking()"
+            class="book-now-btn"
+          >
+            Reservar Ahora
+          </ion-button>
+        </div>
+      </ion-toolbar>
+    </ion-footer>
+  `,
+  styles: [`
+    /* Continue in next message due to length */
+  `]
+})
+export class CarDetailV3Page implements OnInit {
+  carId = signal<string>('');
+  car = signal<CarDetails | null>(null);
+  isLoading = signal(true);
+  isScrolled = signal(false);
+
+  currentImageIndex = signal(0);
+  currentImage = computed(() => {
+    const images = this.car()?.images || [];
+    return images[this.currentImageIndex()] || '';
+  });
+
+  activeTab = signal<'overview' | 'specs' | 'reviews' | 'owner'>('overview');
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private carsService: CarsService
+  ) {}
+
+  async ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.carId.set(id);
+      await this.loadCarDetails();
+    }
+  }
+
+  async loadCarDetails() {
+    // TODO: Load from service
+    // For now, mock data
+    this.isLoading.set(false);
+  }
+
+  onScroll(event: any) {
+    const scrollTop = event.detail.scrollTop;
+    this.isScrolled.set(scrollTop > 100);
+  }
+
+  selectImage(index: number) {
+    this.currentImageIndex.set(index);
+  }
+
+  nextImage() {
+    const total = this.car()?.images.length || 0;
+    this.currentImageIndex.update(i => (i + 1) % total);
+  }
+
+  previousImage() {
+    const total = this.car()?.images.length || 0;
+    this.currentImageIndex.update(i => (i - 1 + total) % total);
+  }
+
+  open360View() {
+    // TODO: Open 360° viewer modal
+  }
+
+  openVirtualTour() {
+    // TODO: Open virtual tour in iframe or new window
+  }
+
+  sharecar() {
+    // TODO: Implement share functionality
+  }
+
+  contactOwner() {
+    // TODO: Navigate to chat
+  }
+
+  startBooking() {
+    this.router.navigate(['/bookings/wizard'], {
+      queryParams: { carId: this.carId() }
+    });
+  }
+
+  formatDate(date: Date): string {
+    return new Intl.DateTimeFormat('es-AR', { month: 'short', year: 'numeric' }).format(new Date(date));
+  }
+
+  formatYear(date: Date): string {
+    return new Date(date).getFullYear().toString();
+  }
+}

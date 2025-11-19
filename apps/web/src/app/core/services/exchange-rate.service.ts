@@ -6,8 +6,7 @@ interface ExchangeRate {
   id: string;
   pair: string;
   source: string;
-  binance_rate: number;
-  platform_rate: number;
+  rate: number; // Changed from platform_rate
   margin_percent: number;
   margin_absolute: number;
   volatility_24h: number | null;
@@ -48,15 +47,15 @@ export class ExchangeRateService {
   /**
    * Obtiene la tasa de cambio platform_rate (incluye margen del 20%) desde la base de datos
    */
-  async getPlatformRate(pair = 'USDTARS'): Promise<number> {
+  async getPlatformRate(pair = 'USDARS'): Promise<number> {
     const now = Date.now();
     const cacheAge = now - this.lastFetch();
 
     if (this.lastRate() !== null && cacheAge < this.CACHE_TTL_MS) {
       console.log(
-        `💱 Usando cotización cacheada: 1 USD = ${this.lastRate()!.platform_rate} ARS (age: ${Math.round(cacheAge / 1000)}s)`,
+        `💱 Usando cotización cacheada: 1 USD = ${this.lastRate()!.rate * 1.1} ARS (age: ${Math.round(cacheAge / 1000)}s)`,
       );
-      return this.lastRate()!.platform_rate;
+      return this.lastRate()!.rate * 1.1;
     }
 
     try {
@@ -80,11 +79,13 @@ export class ExchangeRateService {
       this.lastRate.set(data as ExchangeRate);
       this.lastFetch.set(now);
 
+      const rateWithMargin = data.rate * 1.1;
+
       console.log(
-        `✅ Cotización de plataforma (con margen ${data.margin_percent}%): 1 USD = ${data.platform_rate} ARS (Binance: ${data.binance_rate})`,
+        `✅ Cotización de plataforma (con margen 10%): 1 USD = ${rateWithMargin} ARS (Base: ${data.rate})`,
       );
 
-      return data.platform_rate;
+      return rateWithMargin;
     } catch (error) {
       console.error('Error obteniendo tasa de DB:', error);
 
@@ -120,14 +121,14 @@ export class ExchangeRateService {
   async getBinanceRate(): Promise<number> {
     const rate = this.lastRate();
     if (rate && Date.now() - this.lastFetch() < this.CACHE_TTL_MS) {
-      return rate.binance_rate;
+      return rate.rate;
     }
 
     await this.getPlatformRate();
     const updatedRate = this.lastRate();
 
     if (updatedRate) {
-      return updatedRate.binance_rate;
+      return updatedRate.rate;
     }
 
     throw new Error('No se pudo obtener tasa de Binance');
@@ -162,7 +163,8 @@ export class ExchangeRateService {
    * Obtiene solo el platform_rate de la última tasa conocida
    */
   getLastKnownPlatformRate(): number | null {
-    return this.lastRate()?.platform_rate || null;
+    const rate = this.lastRate()?.rate;
+    return rate ? rate * 1.1 : null;
   }
 
   /**
@@ -196,7 +198,7 @@ export class ExchangeRateService {
     const binanceRate = await this.getBinanceRate();
     const usd = Math.round((ars / platformRate) * 100) / 100;
     const margin = platformRate - binanceRate;
-    const marginPercent = this.lastRate()?.margin_percent || 20;
+    const marginPercent = 10;
 
     return {
       ars,

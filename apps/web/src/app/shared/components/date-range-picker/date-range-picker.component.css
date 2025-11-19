@@ -1,4 +1,4 @@
-@import 'flatpickr/dist/flatpickr.css';
+/* @import 'flatpickr/dist/flatpickr.css'; - Moved to global styles.css */
 
 :host {
   display: block;
@@ -513,6 +513,13 @@
 ::ng-deep .flatpickr-next-month:hover {
   color: var(--cta-default) !important;
   fill: var(--cta-default) !important;
+}
+
+::ng-deep .flatpickr-prev-month svg,
+::ng-deep .flatpickr-next-month svg {
+  width: 14px !important;
+  height: 14px !important;
+  fill: inherit !important;
 }
 
 /* Weekdays */

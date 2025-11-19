@@ -1,21 +1,21 @@
-import { Component, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, computed, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 // Step Components (to be created)
-import { BookingStepIndicatorComponent } from '../../components/booking-step-indicator/booking-step-indicator.component';
 import { BookingDatesStepComponent } from '../../components/booking-dates-step/booking-dates-step.component';
-import { BookingInsuranceStepComponent } from '../../components/booking-insurance-step/booking-insurance-step.component';
-import { BookingExtrasStepComponent } from '../../components/booking-extras-step/booking-extras-step.component';
 import { BookingDriverStepComponent } from '../../components/booking-driver-step/booking-driver-step.component';
+import { BookingExtrasStepComponent } from '../../components/booking-extras-step/booking-extras-step.component';
+import { BookingInsuranceStepComponent } from '../../components/booking-insurance-step/booking-insurance-step.component';
 import { BookingPaymentStepComponent } from '../../components/booking-payment-step/booking-payment-step.component';
 import { BookingReviewStepComponent } from '../../components/booking-review-step/booking-review-step.component';
+import { BookingStepIndicatorComponent } from '../../components/booking-step-indicator/booking-step-indicator.component';
 
 // Services
-import { CarsService } from '../../../../core/services/cars.service';
 import { BookingsService } from '../../../../core/services/bookings.service';
+import { CarsService } from '../../../../core/services/cars.service';
 
 export interface BookingWizardData {
   // Step 1: Dates & Location
@@ -142,7 +142,7 @@ export class BookingWizardPage implements OnInit {
     private route: ActivatedRoute,
     private carsService: CarsService,
     private bookingsService: BookingsService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     // Get car ID from route params
@@ -184,7 +184,6 @@ export class BookingWizardPage implements OnInit {
       if (savedDraft) {
         const draft = JSON.parse(savedDraft);
         this.wizardData.set(draft);
-        console.log('Draft loaded successfully');
       }
     } catch (error) {
       console.error('Error loading draft:', error);
@@ -197,7 +196,6 @@ export class BookingWizardPage implements OnInit {
       const carId = this.wizardData().carId;
       const draftKey = `booking_draft_${carId}`;
       localStorage.setItem(draftKey, JSON.stringify(this.wizardData()));
-      console.log('Draft saved successfully');
     } catch (error) {
       console.error('Error saving draft:', error);
     } finally {
@@ -240,7 +238,28 @@ export class BookingWizardPage implements OnInit {
     this.isLoading.set(true);
     try {
       const bookingData = this.prepareBookingData();
-      const booking = await this.bookingsService.createBooking(bookingData);
+      // TODO: Fix createBooking method call - method doesn't exist in BookingsService
+      const result = await this.bookingsService.createBookingWithValidation(
+        bookingData.car_id,
+        bookingData.start_date.toISOString(),
+        bookingData.end_date.toISOString(),
+        {
+          pickupLat: bookingData.pickup_location.lat,
+          pickupLng: bookingData.pickup_location.lng,
+          dropoffLat: bookingData.dropoff_location.lat,
+          dropoffLng: bookingData.dropoff_location.lng,
+          deliveryRequired: false, // TODO: Calculate from distance
+          distanceKm: 0, // TODO: Calculate from distance
+          deliveryFeeCents: 0, // TODO: Calculate from distance
+          distanceTier: 'local', // TODO: Calculate from distance
+        }
+      );
+
+      if (!result.success || !result.booking) {
+        throw new Error(result.error || 'Error creating booking');
+      }
+
+      const booking = result.booking;
 
       // Clear draft
       const carId = this.wizardData().carId;

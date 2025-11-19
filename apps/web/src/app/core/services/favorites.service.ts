@@ -69,7 +69,8 @@ export class FavoritesService {
 
     // If not logged in, just save locally
     if (!user) {
-      this.notifications.show(
+      this.notifications.info(
+        'Favoritos',
         isFavorite ? 'Eliminado de favoritos' : 'Agregado a favoritos'
       );
       return !isFavorite;
@@ -86,7 +87,7 @@ export class FavoritesService {
 
         if (error) throw error;
 
-        this.notifications.show('Eliminado de favoritos');
+        this.notifications.info('Favoritos', 'Eliminado de favoritos');
         return false;
       } else {
         const { error } = await this.supabase
@@ -95,7 +96,7 @@ export class FavoritesService {
 
         if (error) throw error;
 
-        this.notifications.show('Agregado a favoritos ❤️');
+        this.notifications.success('Favoritos', 'Agregado a favoritos ❤️');
         return true;
       }
     } catch (error) {
@@ -105,7 +106,7 @@ export class FavoritesService {
       this.favorites.set(currentFavorites);
       this.saveLocalFavorites(currentFavorites);
 
-      this.notifications.show('Error al actualizar favoritos');
+      this.notifications.error('Error', 'No se pudo actualizar favoritos');
       return isFavorite;
     }
   }

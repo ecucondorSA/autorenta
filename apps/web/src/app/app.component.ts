@@ -44,14 +44,15 @@ import { MobileBottomNavPortalService } from './core/services/mobile-bottom-nav-
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
-import { BottomNavBarComponent } from './shared/components/bottom-nav-bar/bottom-nav-bar.component';
-import { fadeAnimation } from './core/animations/route-animations';
+// TODO: Re-add when components are created
+// import { BottomNavBarComponent } from './shared/components/bottom-nav-bar/bottom-nav-bar.component';
+// import { fadeAnimation } from './core/animations/route-animations';
 import { ChildrenOutletContexts } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  animations: [fadeAnimation],
+  // animations: [fadeAnimation], // TODO: Re-add when route-animations is created
   imports: [
     CommonModule,
     NgOptimizedImage,
@@ -72,7 +73,7 @@ import { ChildrenOutletContexts } from '@angular/router';
     NotificationsComponent,
     ShareButtonComponent,
     FooterComponent,
-    BottomNavBarComponent,
+    // BottomNavBarComponent, // TODO: Re-add when component is created
     Toast,
   ],
   templateUrl: './app.component.html',

@@ -5,7 +5,8 @@
   <app-pwa-titlebar />
 
   <!-- Breadcrumbs navigation -->
-  <app-breadcrumbs [items]="breadcrumbItems()" />
+  <!-- TODO: Re-add when breadcrumbs component is created -->
+  <!-- <app-breadcrumbs [items]="breadcrumbItems()" /> -->
 
   <!-- Layout Airbnb: Grid + Map -->
   <div class="marketplace-container">
@@ -34,10 +35,12 @@
             (click)="onCarSelected(car.id)"
             [class.selected]="selectedCarId() === car.id"
           >
-            <app-car-card-v3
+            <!-- TODO: Re-add when car-card-v3 component is created -->
+            <!--<app-car-card-v3
               [car]="carToCardFormat(car)"
               (onReserve)="onReserveClick($event)"
-            />
+            />-->
+            <p style="padding: 1rem;">{{ car.brand }} {{ car.model }}</p>
           </div>
         </div>
 
@@ -107,10 +110,11 @@
   </button>
 
   <!-- Filters Drawer (Mobile Bottom Sheet) -->
-  <app-filters-drawer
+  <!-- TODO: Re-add when filters-drawer component is created -->
+  <!-- <app-filters-drawer
     [availableCars]="carMapLocations()"
     [isOpenInput]="drawerOpen()"
     (filterChange)="onFiltersChange($event)"
     (onClose)="closeFiltersDrawer()"
-  />
+  /> -->
 </section>

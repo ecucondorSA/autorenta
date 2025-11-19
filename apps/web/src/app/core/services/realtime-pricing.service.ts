@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
+import { computed, effect, Injectable, signal } from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
@@ -34,7 +34,7 @@ export interface ExchangeRateUpdate {
   pair: string;
   source: string;
   binance_rate: number;
-  platform_rate: number;
+  rate: number;
   margin_percent: number;
   last_updated: string;
   is_active: boolean;
@@ -91,7 +91,7 @@ export class RealtimePricingService {
 
   constructor() {
     // Effect para log de debug (opcional)
-    effect(() => {});
+    effect(() => { });
   }
 
   /**
@@ -241,7 +241,8 @@ export class RealtimePricingService {
    * 💱 Obtener la tasa de cambio actual (platform_rate)
    */
   getCurrentPlatformRate(): number {
-    return this.latestExchangeRate()?.platform_rate ?? 1015.0; // Fallback
+    const rate = this.latestExchangeRate()?.rate;
+    return rate ? rate * 1.1 : 1015.0; // Fallback
   }
 
   /**

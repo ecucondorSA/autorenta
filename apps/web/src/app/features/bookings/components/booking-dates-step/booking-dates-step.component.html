@@ -37,10 +37,11 @@
       Fechas del viaje
     </h3>
     <app-date-range-picker
-      [startDate]="startDate()"
-      [endDate]="endDate()"
-      [minDate]="new Date()"
-      (dateRangeChange)="onDateRangeChange($event)"
+      [initialFrom]="startDate() ? startDate()!.toISOString().split('T')[0] : null"
+      [initialTo]="endDate() ? endDate()!.toISOString().split('T')[0] : null"
+      [dailyPrice]="car?.price_per_day"
+      [carId]="car?.id"
+      (rangeChange)="onDateRangeChange($event)"
     />
 
     @if (totalDays() > 0) {

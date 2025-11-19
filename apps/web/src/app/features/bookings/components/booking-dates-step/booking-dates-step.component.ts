@@ -48,6 +48,9 @@ export class BookingDatesStepComponent implements OnInit {
     return days * (this.car.price_per_day || 0);
   });
 
+  // Minimum date for date picker (today)
+  readonly minDate = new Date();
+
   canProceed = computed(() => {
     return this.startDate() !== null &&
            this.endDate() !== null &&
@@ -71,9 +74,9 @@ export class BookingDatesStepComponent implements OnInit {
     }
   }
 
-  onDateRangeChange(dateRange: { startDate: Date | null; endDate: Date | null }) {
-    this.startDate.set(dateRange.startDate);
-    this.endDate.set(dateRange.endDate);
+  onDateRangeChange(dateRange: { from: string | null; to: string | null }) {
+    this.startDate.set(dateRange.from ? new Date(dateRange.from) : null);
+    this.endDate.set(dateRange.to ? new Date(dateRange.to) : null);
     this.emitChanges();
   }
 

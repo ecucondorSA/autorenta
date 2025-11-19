@@ -23,3 +23,34 @@
 .animate-slide-down {
   animation: slide-down 0.3s ease-out;
 }
+
+/* ==================== PRINT STYLES ==================== */
+@media print {
+  :host {
+    display: block !important;
+    background: white !important;
+    color: black !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide header, footer, and sidebar if they exist outside */
+  /* Note: Since this is component CSS, we can't easily reach outside.
+     We rely on global print styles or the fact that we are printing this specific view.
+     However, we can ensure our component looks right. */
+
+  /* Ensure the main container is full width */
+  .container {
+    max-width: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Force white background */
+  body,
+  html {
+    background: white !important;
+  }
+}
