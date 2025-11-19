@@ -528,6 +528,11 @@
   display: none !important;
 }
 
+/* Hide empty divs inside flatpickr-days container */
+::ng-deep .flatpickr-days > div:empty {
+  display: none !important;
+}
+
 /* Weekdays */
 ::ng-deep .flatpickr-weekdays {
   background: transparent !important;
