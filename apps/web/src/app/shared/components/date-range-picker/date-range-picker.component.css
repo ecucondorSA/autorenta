@@ -533,6 +533,11 @@
   display: none !important;
 }
 
+/* Hide span elements inside flatpickr-days divs (week separators) */
+::ng-deep .flatpickr-days > div > span {
+  display: none !important;
+}
+
 /* Weekdays */
 ::ng-deep .flatpickr-weekdays {
   background: transparent !important;
