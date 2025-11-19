@@ -661,7 +661,7 @@ export class FacebookSidebarComponent {
       id: 'home',
       label: 'Inicio',
       icon: '🏠',
-      route: '/home-v2',
+      route: '/',
       color: 'linear-gradient(135deg, #A7D8F4 0%, #75BAE4 100%)',
     },
     {

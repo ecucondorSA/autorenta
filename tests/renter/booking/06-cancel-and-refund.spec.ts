@@ -1,5 +1,4 @@
-import { test, expect } from '@playwright/test';
-import { AuthFixture } from '../../fixtures/auth.setup';
+import { expect, test } from '@playwright/test';
 import { createClient } from '@supabase/supabase-js';
 
 /**
@@ -18,16 +17,19 @@ const supabaseAnonKey = process.env.NG_APP_SUPABASE_ANON_KEY || '';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
 test.describe('Cancelación y Refund de Bookings', () => {
-  let authFixture: AuthFixture;
+  // Use renter auth state
+  test.use({ storageState: 'tests/.auth/renter.json' });
+
   let supabase: ReturnType<typeof createClient>;
   let testBookingId: string | null = null;
 
   test.beforeEach(async ({ page }) => {
-    authFixture = new AuthFixture(page);
-    await authFixture.loadSession('renter');
-    
     // Crear cliente Supabase para queries directos
     supabase = createClient(supabaseUrl, supabaseServiceKey || supabaseAnonKey);
+
+    // Verify auth state
+    await page.goto('/');
+    await expect(page.getByTestId('user-menu').or(page.locator('[data-testid="user-menu"]'))).toBeVisible({ timeout: 10000 });
   });
 
   test.afterEach(async () => {
@@ -43,7 +45,7 @@ test.describe('Cancelación y Refund de Bookings', () => {
     // Usar API directamente para crear booking de test
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + 7); // 7 días en el futuro
-    
+
     const endDate = new Date(futureDate);
     endDate.setDate(endDate.getDate() + 3); // 3 días de duración
 
@@ -113,13 +115,13 @@ test.describe('Cancelación y Refund de Bookings', () => {
     // PASO 5: Confirmar en modal/alert
     // Esperar a que aparezca el diálogo de confirmación
     await page.waitForTimeout(1000); // Dar tiempo para que aparezca el alert
-    
+
     // Confirmar cancelación (puede ser confirm() o modal de Ionic)
     // En Ionic, buscar el botón de confirmar en el alert
     const confirmButton = page.locator('ion-alert button:has-text("Confirmar")')
       .or(page.locator('button:has-text("Sí, cancelar")'))
       .or(page.locator('button:has-text("Confirmar cancelación")'));
-    
+
     if (await confirmButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await confirmButton.click();
     } else {
@@ -136,10 +138,10 @@ test.describe('Cancelación y Refund de Bookings', () => {
     // Refrescar página o verificar en la UI
     await page.reload();
     await page.waitForLoadState('networkidle');
-    
+
     const bookingStatus = page.locator('[data-testid="booking-status"]')
       .or(page.getByText(/estado|status/i).locator('..'));
-    
+
     await expect(bookingStatus).toContainText(/cancelado|cancelled/i, { timeout: 10000 });
 
     // PASO 8: Verificar en BD que el status cambió
@@ -171,7 +173,7 @@ test.describe('Cancelación y Refund de Bookings', () => {
     // PASO 1: Crear booking con start_date muy cercano (ej: T-6h)
     const nearDate = new Date();
     nearDate.setHours(nearDate.getHours() + 6); // 6 horas en el futuro
-    
+
     const endDate = new Date(nearDate);
     endDate.setDate(endDate.getDate() + 2);
 
@@ -224,22 +226,22 @@ test.describe('Cancelación y Refund de Bookings', () => {
 
     // PASO 3: Intentar cancelar
     const cancelButton = page.getByRole('button', { name: /cancelar/i });
-    
+
     // Puede que el botón esté deshabilitado o no visible
     const isVisible = await cancelButton.isVisible({ timeout: 5000 }).catch(() => false);
-    
+
     if (isVisible) {
       await cancelButton.click();
-      
+
       // PASO 4: Verificar mensaje de advertencia
       await expect(
         page.getByText(/fuera de la ventana|no recibirás reembolso|sin reembolso/i)
       ).toBeVisible({ timeout: 10000 });
-      
+
       // Confirmar cancelación de todas formas
       const confirmButton = page.locator('ion-alert button:has-text("Confirmar")')
         .or(page.locator('button:has-text("Continuar")'));
-      
+
       if (await confirmButton.isVisible({ timeout: 3000 }).catch(() => false)) {
         await confirmButton.click();
       }
@@ -270,7 +272,7 @@ test.describe('Cancelación y Refund de Bookings', () => {
     // 30% bloqueado en wallet, 70% pagado con MP
 
     test.skip('Pendiente de implementación de payment_method parcial');
-    
+
     // Este test requiere:
     // 1. Soporte para payment_method='partial_wallet' en la BD
     // 2. Lógica de refund parcial
@@ -281,7 +283,7 @@ test.describe('Cancelación y Refund de Bookings', () => {
     // PASO 1: Crear booking con start_date en el pasado (ya empezó)
     const pastDate = new Date();
     pastDate.setDate(pastDate.getDate() - 1); // Ayer
-    
+
     const endDate = new Date(pastDate);
     endDate.setDate(endDate.getDate() + 3);
 
@@ -334,9 +336,9 @@ test.describe('Cancelación y Refund de Bookings', () => {
 
     // PASO 3: Verificar que botón "Cancelar" NO está visible o está disabled
     const cancelButton = page.getByRole('button', { name: /cancelar/i });
-    
+
     const isVisible = await cancelButton.isVisible({ timeout: 5000 }).catch(() => false);
-    
+
     if (isVisible) {
       // Si está visible, debe estar disabled
       await expect(cancelButton).toBeDisabled();
@@ -380,7 +382,7 @@ test.describe('Validación de Ledger después de Cancelación', () => {
     // Por ahora, solo verificamos la estructura
 
     test.skip('Pendiente de implementación de ledger system');
-    
+
     // Objetivo: Verificar que después de crear booking + cancelar,
     // el ledger mantiene balance (debe = haber)
     //
@@ -395,7 +397,7 @@ test.describe('Validación de Ledger después de Cancelación', () => {
   test('Conciliación de wallet después de múltiples cancelaciones', async ({ page }) => {
     // TODO: Test de stress de wallet
     test.skip('Pendiente de implementación');
-    
+
     // Escenario:
     // - Usuario crea 3 bookings
     // - Cancela 2 de ellos

@@ -19,16 +19,12 @@ export class CalendarPage {
     return new Date(
       this.currentDate().getFullYear(),
       this.currentDate().getMonth() + 1,
-      0
+      0,
     ).getDate();
   }
 
   get firstDayOfMonth(): number {
-    return new Date(
-      this.currentDate().getFullYear(),
-      this.currentDate().getMonth(),
-      1
-    ).getDay();
+    return new Date(this.currentDate().getFullYear(), this.currentDate().getMonth(), 1).getDay();
   }
 
   get calendarDays(): (number | null)[] {
@@ -49,7 +45,7 @@ export class CalendarPage {
       const selectedDate = new Date(
         this.currentDate().getFullYear(),
         this.currentDate().getMonth(),
-        day
+        day,
       );
       alert(`Seleccionaste la fecha: ${selectedDate.toISOString().split('T')[0]}`);
     }
@@ -57,13 +53,13 @@ export class CalendarPage {
 
   previousMonth(): void {
     this.currentDate.set(
-      new Date(this.currentDate().getFullYear(), this.currentDate().getMonth() - 1)
+      new Date(this.currentDate().getFullYear(), this.currentDate().getMonth() - 1),
     );
   }
 
   nextMonth(): void {
     this.currentDate.set(
-      new Date(this.currentDate().getFullYear(), this.currentDate().getMonth() + 1)
+      new Date(this.currentDate().getFullYear(), this.currentDate().getMonth() + 1),
     );
   }
 }

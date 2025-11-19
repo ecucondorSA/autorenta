@@ -10,11 +10,6 @@ export const routes: Routes = [
       import('./features/marketplace/marketplace-v2.page').then((m) => m.MarketplaceV2Page),
   },
   {
-    path: 'marketplace',
-    redirectTo: '',
-    pathMatch: 'full',
-  },
-  {
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
@@ -27,17 +22,6 @@ export const routes: Routes = [
     path: 'become-renter',
     loadComponent: () =>
       import('./features/become-renter/become-renter.page').then((m) => m.BecomeRenterPage),
-  },
-  {
-    path: 'home-v2',
-    data: { layout: 'full-bleed' },
-    loadComponent: () => import('./features/home-v2/home-v2.page').then((m) => m.HomeV2Page),
-  },
-  {
-    path: 'ui-showcase',
-    data: { layout: 'full-bleed' },
-    loadComponent: () =>
-      import('./features/ui-showcase/ui-showcase.page').then((m) => m.UIShowcasePage),
   },
   {
     path: 'referrals',
@@ -55,7 +39,7 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        data: { layout: 'full-bleed' },
+        data: { layout: 'full-bleed', animation: 'CarsConversionPage' },
         loadComponent: () =>
           import('./features/cars/conversion/cars-conversion.page').then(
             (m) => m.CarsConversionPage,
@@ -63,7 +47,7 @@ export const routes: Routes = [
       },
       {
         path: 'list',
-        data: { layout: 'full-bleed' },
+        data: { layout: 'full-bleed', animation: 'CarsListPage' },
         loadComponent: () =>
           import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
       },
@@ -111,6 +95,7 @@ export const routes: Routes = [
       },
       {
         path: ':id',
+        data: { animation: 'CarDetailPage' },
         loadComponent: () =>
           import('./features/cars/detail/car-detail.page').then((m) => m.CarDetailPage),
       },
@@ -340,18 +325,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/wallet/wallet.page').then((m) => m.WalletPage),
       },
       {
-        path: 'history',
-        loadComponent: () =>
-          import('./features/wallet/components/ledger-history.component').then(
-            (m) => m.LedgerHistoryComponent,
-          ),
-      },
-      {
-        path: 'transfer',
-        loadComponent: () =>
-          import('./features/wallet/components/transfer-funds.component').then(
-            (m) => m.TransferFundsComponent,
-          ),
+        path: '',
+        loadChildren: () => import('./features/wallet/wallet.routes').then((m) => m.WALLET_ROUTES),
       },
     ],
   },

@@ -1,32 +1,27 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { CalendarPage } from '../../calendar/calendar.page';
-import { BookingPickerPage } from '../../booking-picker/booking-picker.page';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { HeroSearchComponent } from '../../../shared/components/marketplace/hero-search/hero-search.component';
+import { TrustBadgesComponent } from '../../../shared/components/marketplace/trust-badges/trust-badges.component';
+
+interface SearchQuery {
+  location: string;
+  from: string | null;
+  to: string | null;
+}
 
 @Component({
   selector: 'app-cars-conversion',
   standalone: true,
-  imports: [CommonModule, RouterLink, CalendarPage, BookingPickerPage],
+  imports: [RouterLink, HeroSearchComponent, TrustBadgesComponent],
   templateUrl: './cars-conversion.page.html',
   styleUrls: ['./cars-conversion.page.css'],
 })
 export class CarsConversionPage {
-  readonly perks = [
-    {
-      icon: '🕐',
-      title: 'Horarios',
-      description: 'Elegí la hora exacta de retiro y devolución',
-    },
-    {
-      icon: '📅',
-      title: 'Disponibilidad en tiempo real',
-      description: 'Vemos conflictos automáticamente antes de reservar',
-    },
-    {
-      icon: '⚡',
-      title: 'Confirmación rápida',
-      description: 'Reserva confirmada en menos de 15 minutos',
-    },
-  ];
+  private readonly router = inject(Router);
+
+  onSearch(query: SearchQuery): void {
+    // HeroSearchComponent already handles navigation internally
+    // This is a backup handler
+    console.log('Search query:', query);
+  }
 }

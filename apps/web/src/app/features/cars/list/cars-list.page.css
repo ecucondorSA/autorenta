@@ -149,7 +149,9 @@
 
 .car-card-container.selected {
   border-color: #0066cc;
-  box-shadow: 0 0 0 2px #e6f0ff, 0 16px 32px rgba(0, 102, 204, 0.16);
+  box-shadow:
+    0 0 0 2px #e6f0ff,
+    0 16px 32px rgba(0, 102, 204, 0.16);
 }
 
 /* Car Image */
@@ -515,4 +517,57 @@
 :host-context(.dark) .available-badge {
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
+}
+
+/* Filters FAB (Mobile only) */
+.filters-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #a7d8f4 0%, #75bae4 100%);
+  color: white;
+  border: none;
+  border-radius: 28px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 16px rgba(167, 216, 244, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.filters-fab:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(167, 216, 244, 0.5);
+}
+
+.filters-fab:active {
+  transform: translateX(-50%) translateY(0);
+}
+
+.filters-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.filters-label {
+  line-height: 1;
+}
+
+/* Hide filters FAB on desktop (1024px+) */
+@media (min-width: 1024px) {
+  .filters-fab {
+    display: none;
+  }
+}
+
+/* Dark mode for filters FAB */
+:host-context(.dark) .filters-fab {
+  background: linear-gradient(135deg, #75bae4 0%, #5aa8d4 100%);
+  box-shadow: 0 4px 16px rgba(117, 186, 228, 0.4);
 }

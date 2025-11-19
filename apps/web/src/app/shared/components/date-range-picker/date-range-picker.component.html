@@ -26,9 +26,17 @@
     </button>
   </div>
 
-
   <!-- Date Selection Input -->
-  <div class="date-input-wrapper" (click)="handleDateInputClick()">
+  <div class="date-input-wrapper relative">
+    <!-- Hidden Flatpickr Input (Covers the entire wrapper) -->
+    <input
+      type="text"
+      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+      placeholder="Fecha inicio  →  Fecha fin"
+      readonly
+      #dateRangeInput
+    />
+
     <div class="date-display">
       <div class="date-placeholder" *ngIf="!from() && !to()">
         <span class="placeholder-text">¿Cuándo lo necesitas?</span>
@@ -61,33 +69,6 @@
           {{ selectedDays() }} día{{ (selectedDays() ?? 0) > 1 ? 's' : '' }}
         </span>
       </div>
-    </div>
-  </div>
-
-  <!-- Date Inputs (Native HTML5 Calendar) -->
-  <div class="date-inputs-grid grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-    <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-        Fecha inicio
-      </label>
-      <input
-        type="date"
-        [value]="from() || ''"
-        (change)="onFromChange($any($event.target).value)"
-        class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 focus:border-transparent text-gray-900 dark:text-white transition-all duration-200"
-      />
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-        Fecha fin
-      </label>
-      <input
-        type="date"
-        [value]="to() || ''"
-        (change)="onToChange($any($event.target).value)"
-        [min]="from() || undefined"
-        class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 focus:border-transparent text-gray-900 dark:text-white transition-all duration-200"
-      />
     </div>
   </div>
 

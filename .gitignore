@@ -43,6 +43,11 @@ docs/archived/logs/
 docs/archived/screenshots/
 .migration-backups/
 
+# Database backups (may contain sensitive data)
+logs/
+logs/**
+**/logs/db-backups/**
+
 # Temporary root-level files
 /test-*.sh
 /test-*.js

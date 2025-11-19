@@ -1,6 +1,11 @@
-<section class="cars-marketplace bg-surface-base dark:bg-surface-base transition-colors duration-300 min-h-screen">
+<section
+  class="cars-marketplace bg-surface-base dark:bg-surface-base transition-colors duration-300 min-h-screen"
+>
   <!-- Barra superior fija -->
   <app-pwa-titlebar />
+
+  <!-- Breadcrumbs navigation -->
+  <app-breadcrumbs [items]="breadcrumbItems()" />
 
   <!-- Layout Airbnb: Grid + Map -->
   <div class="marketplace-container">
@@ -22,83 +27,17 @@
       <!-- Grid principal de autos (Airbnb style) -->
       <div class="cars-grid-wrapper">
         <div class="cars-grid">
-          <!-- Car Card Grid (4 cols desktop, 2 tablet, 1 mobile) -->
-          <div *ngFor="let car of premiumCars(); trackBy: trackByCar" class="car-grid-item">
-            <div
-              class="car-card-container cursor-pointer transition-all hover:shadow-lg"
-              (click)="onCarSelected(car.id)"
-              [class.selected]="selectedCarId() === car.id"
-            >
-              <!-- Car Image with Badge -->
-              <div class="car-image-wrapper">
-                <img
-                  *ngIf="car.photos?.[0]?.url"
-                  [src]="car.photos?.[0]?.url || ''"
-                  [alt]="car.title"
-                  class="car-image"
-                />
-                <div *ngIf="!car.photos?.[0]?.url" class="car-image-placeholder">
-                  <span>🚗</span>
-                </div>
-
-                <!-- Badge: Distancia -->
-                <div *ngIf="car.distance" class="distance-badge">
-                  📍 {{ car.distanceText || car.distance?.toFixed(1) }}km
-                </div>
-
-                <!-- Badge: Disponible hoy -->
-                <div class="available-badge">Disponible hoy</div>
-              </div>
-
-              <!-- Car Info -->
-              <div class="car-info">
-                <!-- Title y Rating -->
-                <div class="car-header">
-                  <h3 class="car-title">{{ car.title }}</h3>
-                  <div class="car-rating" *ngIf="car.rating_count && car.rating_count > 0">
-                    <span class="rating-stars">⭐ {{ car.rating_avg?.toFixed(1) }}</span>
-                    <span class="rating-count">({{ car.rating_count }})</span>
-                  </div>
-                </div>
-
-                <!-- Location -->
-                <p class="car-location">📍 {{ car.location_city }}, {{ car.location_state }}</p>
-
-                <!-- Specs: Seats, Transmission, Fuel -->
-                <div class="car-specs">
-                  <span class="spec-item">👥 {{ car.seats }} asientos</span>
-                  <span class="spec-separator">•</span>
-                  <span class="spec-item">⚙️ {{ car.transmission }}</span>
-                  <span class="spec-separator">•</span>
-                  <span class="spec-item">⛽ {{ car.fuel_type }}</span>
-                </div>
-
-                <!-- Features Tags -->
-                <div class="car-features" *ngIf="car.features">
-                  <span
-                    *ngFor="let feature of getFeatureTags(car.features)"
-                    class="feature-tag"
-                  >
-                    {{ feature }}
-                  </span>
-                </div>
-
-                <!-- Price (sticky bottom) -->
-                <div class="car-footer">
-                  <div class="price-section">
-                    <span class="price-value">${{ car.price_per_day | number: '1.0-0' }}</span>
-                    <span class="price-label">/día</span>
-                  </div>
-
-                  <button
-                    class="cta-button"
-                    (click)="onReserveClick(car.id); $event.stopPropagation()"
-                  >
-                    Rentar
-                  </button>
-                </div>
-              </div>
-            </div>
+          <!-- Car Card V3 (Professional Airbnb-style cards) -->
+          <div
+            *ngFor="let car of premiumCars(); trackBy: trackByCar"
+            class="car-grid-item"
+            (click)="onCarSelected(car.id)"
+            [class.selected]="selectedCarId() === car.id"
+          >
+            <app-car-card-v3
+              [car]="carToCardFormat(car)"
+              (onReserve)="onReserveClick($event)"
+            />
           </div>
         </div>
 
@@ -154,5 +93,24 @@
     [car]="selectedCar()!"
     [ownerPhone]="null"
     [ownerName]="selectedCar()?.owner?.full_name || null"
+  />
+
+  <!-- Filters FAB (Mobile only) -->
+  <button
+    type="button"
+    class="filters-fab"
+    (click)="toggleFiltersDrawer()"
+    aria-label="Abrir filtros"
+  >
+    <span class="filters-icon">🔍</span>
+    <span class="filters-label">Filtros</span>
+  </button>
+
+  <!-- Filters Drawer (Mobile Bottom Sheet) -->
+  <app-filters-drawer
+    [availableCars]="carMapLocations()"
+    [isOpenInput]="drawerOpen()"
+    (filterChange)="onFiltersChange($event)"
+    (onClose)="closeFiltersDrawer()"
   />
 </section>

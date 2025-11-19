@@ -27,19 +27,17 @@ xdescribe('CarAvailabilityService', () => {
 
     // Mock CarBlockingService
     mockCarBlocking = {
-      getBlockedDates: jasmine
-        .createSpy('getBlockedDates')
-        .and.callFake((id: string) =>
-          Promise.resolve([
-            {
-              id: 'block1',
-              blocked_from: '2025-11-20',
-              blocked_to: '2025-11-21',
-              reason: 'test',
-              notes: '',
-            },
-          ]),
-        ),
+      getBlockedDates: jasmine.createSpy('getBlockedDates').and.callFake((id: string) =>
+        Promise.resolve([
+          {
+            id: 'block1',
+            blocked_from: '2025-11-20',
+            blocked_to: '2025-11-21',
+            reason: 'test',
+            notes: '',
+          },
+        ]),
+      ),
     };
 
     TestBed.configureTestingModule({

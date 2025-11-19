@@ -44,11 +44,14 @@ import { MobileBottomNavPortalService } from './core/services/mobile-bottom-nav-
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
-import { BottomNavBarComponent } from './features/home-v2/components/bottom-nav-bar.component';
+import { BottomNavBarComponent } from './shared/components/bottom-nav-bar/bottom-nav-bar.component';
+import { fadeAnimation } from './core/animations/route-animations';
+import { ChildrenOutletContexts } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
+  animations: [fadeAnimation],
   imports: [
     CommonModule,
     NgOptimizedImage,
@@ -147,6 +150,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   private readonly mobileBottomNavPortal: MobileBottomNavPortalService = inject(
     MobileBottomNavPortalService,
   );
+  private readonly contexts = inject(ChildrenOutletContexts);
   private readonly isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
   readonly isAuthenticatedSig = this.authService.isAuthenticated;
@@ -306,6 +310,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.closeProfileMenu();
     await this.authService.signOut();
     await this.router.navigate(['/']);
+  }
+
+  /**
+   * Get route animation data for route transitions
+   */
+  getRouteAnimationData(): string {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'] || '';
   }
 
   private initializeSplash(): void {

@@ -264,13 +264,16 @@ describe('ReviewsService', () => {
 
       await service.createReview(params);
 
-      expect(supabaseMock.rpc).toHaveBeenCalledWith('create_review_v2', jasmine.objectContaining({
-        p_booking_id: 'booking-1',
-        p_reviewer_id: 'user-1',
-        p_reviewee_id: 'user-2',
-        p_car_id: 'car-1',
-        p_review_type: 'renter_to_owner',
-      }));
+      expect(supabaseMock.rpc).toHaveBeenCalledWith(
+        'create_review_v2',
+        jasmine.objectContaining({
+          p_booking_id: 'booking-1',
+          p_reviewer_id: 'user-1',
+          p_reviewee_id: 'user-2',
+          p_car_id: 'car-1',
+          p_review_type: 'renter_to_owner',
+        }),
+      );
     });
 
     it('should return success result with review_id', async () => {

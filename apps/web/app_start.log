@@ -1,2 +1,1172 @@
- [1mPort 4200 is already in use.
-Would you like to use a different port?[22m [2m(Y/n)[22m[47G
+[33m❯[39m Building...
+[32m✔[39m Building...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m                      [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                       [2m | [22m[36m537.36 kB[39m[2m | [22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m                     [2m | [22m[36m335.49 kB[39m[2m | [22m
+[32mchunk-3TWUUJNK.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m23.26 kB[39m[2m | [22m
+[32mchunk-2ZQJMGXQ.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m22.36 kB[39m[2m | [22m
+[32mchunk-KAJK5L7T.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m20.65 kB[39m[2m | [22m
+[32mchunk-NSVC4QOC.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m20.25 kB[39m[2m | [22m
+[32mchunk-K6MURRI2.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m18.27 kB[39m[2m | [22m
+[32mchunk-GK5RGDFO.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m17.45 kB[39m[2m | [22m
+[32mchunk-F56CQQS4.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m14.95 kB[39m[2m | [22m
+[32mchunk-L2UR5RNI.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m11.59 kB[39m[2m | [22m
+[32mchunk-WDL3ORV6.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m10.14 kB[39m[2m | [22m
+[32mchunk-HXNIV2FB.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m7.90 kB[39m[2m | [22m
+[32mchunk-5XQG5BAK.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m7.50 kB[39m[2m | [22m
+[32mchunk-Z5IRMS2S.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m7.43 kB[39m[2m | [22m
+[32mchunk-PH5DUENX.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m7.31 kB[39m[2m | [22m
+[32mchunk-UJ63DBXO.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m5.15 kB[39m[2m | [22m
+[32mchunk-JVYSPPTT.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m4.79 kB[39m[2m | [22m
+[32mchunk-GDRTT4Z2.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m4.02 kB[39m[2m | [22m
+[32mchunk-76BCIBBY.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m3.18 kB[39m[2m | [22m
+[32mchunk-XWLXMCJQ.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m2.07 kB[39m[2m | [22m
+[32mchunk-BO676AYE.js[39m  [2m | [22m[2m-[22m                          [2m | [22m[36m568 bytes[39m[2m | [22m
+[32mpolyfills.js[39m       [2m | [22m[2mpolyfills[22m                  [2m | [22m [36m95 bytes[39m[2m | [22m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m              [2m | [22m  [1m1.08 MB[22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m                      [2m | [22m [1mRaw size[22m
+[32mchunk-ZIN35N4L.js[39m  [2m | [22m[2mbooking-detail-payment-page[22m[2m | [22m[36m590.78 kB[39m[2m | [22m
+[32mchunk-MR6V56ZC.js[39m  [2m | [22m[2mbooking-detail-page[22m        [2m | [22m[36m479.45 kB[39m[2m | [22m
+[32mchunk-F5CX34MN.js[39m  [2m | [22m[2mwallet-page[22m                [2m | [22m[36m477.06 kB[39m[2m | [22m
+[32mchunk-FLO7W3TQ.js[39m  [2m | [22m[2mcar-detail-page[22m            [2m | [22m[36m412.47 kB[39m[2m | [22m
+[32mchunk-UWQJLAOR.js[39m  [2m | [22m[2m-[22m                          [2m | [22m[36m369.15 kB[39m[2m | [22m
+[32mchunk-5AYOTAK2.js[39m  [2m | [22m[2mpublish-car-v2-page[22m        [2m | [22m[36m359.36 kB[39m[2m | [22m
+[32mchunk-YLP5ISNW.js[39m  [2m | [22m[2mmarketplace-v2-page[22m        [2m | [22m[36m281.68 kB[39m[2m | [22m
+[32mchunk-F426IJWJ.js[39m  [2m | [22m[2mprofile-verification-page[22m  [2m | [22m[36m187.06 kB[39m[2m | [22m
+[32mchunk-ZZXN4PRO.js[39m  [2m | [22m[2mmy-cars-page[22m               [2m | [22m[36m178.72 kB[39m[2m | [22m
+[32mchunk-RTCLCWAE.js[39m  [2m | [22m[2mcars-list-page[22m             [2m | [22m[36m177.93 kB[39m[2m | [22m
+[32mchunk-DGHQWLGR.js[39m  [2m | [22m[2mbooking-checkout-page[22m      [2m | [22m[36m162.92 kB[39m[2m | [22m
+[32mchunk-6IPR5NSQ.js[39m  [2m | [22m[2mprofile-contact-page[22m       [2m | [22m[36m149.85 kB[39m[2m | [22m
+[32mchunk-OP3ALDD6.js[39m  [2m | [22m[2mdriver-profile-page[22m        [2m | [22m[36m137.21 kB[39m[2m | [22m
+[32mchunk-GQAE5JOG.js[39m  [2m | [22m[2mowner-dashboard-page[22m       [2m | [22m[36m132.90 kB[39m[2m | [22m
+[32mchunk-FBNMDRVS.js[39m  [2m | [22m[2mpayouts-page[22m               [2m | [22m[36m130.88 kB[39m[2m | [22m
+[2m...and 132 more lazy chunks files. Use "--verbose" to show all the files.[22m
+
+Application bundle generation complete. [58.031 seconds] - 2025-11-19T06:18:49.410Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4200[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m              [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m               [2m | [22m[36m537.36 kB[39m[2m | [22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m             [2m | [22m[36m343.03 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m              [2m | [22m [1mRaw size[22m
+[32mchunk-M2R23QH7.js[39m  [2m | [22m[2mmarketplace-v2-page[22m[2m | [22m[36m289.13 kB[39m[2m | [22m
+
+Application bundle generation complete. [47.220 seconds] - 2025-11-19T06:26:48.188Z
+
+Stylesheet update sent to client(s).
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m              [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m               [2m | [22m[36m537.36 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m              [2m | [22m [1mRaw size[22m
+[32mchunk-NHDRKQO2.js[39m  [2m | [22m[2mmarketplace-v2-page[22m[2m | [22m[36m289.79 kB[39m[2m | [22m
+
+Application bundle generation complete. [4.833 seconds] - 2025-11-19T06:26:53.051Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m              [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m               [2m | [22m[36m537.36 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m              [2m | [22m [1mRaw size[22m
+[32mchunk-KT6BEXHR.js[39m  [2m | [22m[2mmarketplace-v2-page[22m[2m | [22m[36m289.69 kB[39m[2m | [22m
+
+Application bundle generation complete. [11.243 seconds] - 2025-11-19T06:31:12.752Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m              [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m               [2m | [22m[36m537.36 kB[39m[2m | [22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m             [2m | [22m[36m345.01 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m              [2m | [22m [1mRaw size[22m
+[32mchunk-6PCLE5Y3.js[39m  [2m | [22m[2mmarketplace-v2-page[22m[2m | [22m[36m299.39 kB[39m[2m | [22m
+
+Application bundle generation complete. [7.991 seconds] - 2025-11-19T06:51:22.383Z
+
+Stylesheet update sent to client(s).
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+Application bundle generation failed. [3.530 seconds] - 2025-11-19T06:59:24.637Z
+
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: CarsMapComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:4:
+[37m      73 │     [32mCarsMapComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SocialProofIndicatorsComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:74:4:
+[37m      74 │     [32mSocialProofIndicatorsComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: WhatsappFabComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:75:4:
+[37m      75 │     [32mWhatsappFabComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: QuickBookingModalComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:76:4:
+[37m      76 │     [32mQuickBookingModalComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: FloatingActionFabComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:77:4:
+[37m      77 │     [32mFloatingActionFabComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: StatsStripComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:79:4:
+[37m      79 │     [32mStatsStripComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: TooltipComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:80:4:
+[37m      80 │     [32mTooltipComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DateRangePickerComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:81:4:
+[37m      81 │     [32mDateRangePickerComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DynamicPricingBadgeComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:82:4:
+[37m      82 │     [32mDynamicPricingBadgeComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: FiltersDrawerComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:83:4:
+[37m      83 │     [32mFiltersDrawerComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PriceTransparencyModalComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:84:4:
+[37m      84 │     [32mPriceTransparencyModalComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SkeletonComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:85:4:
+[37m      85 │     [32mSkeletonComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1042:12:
+[37m      1042 │             [32m</div>[37m
+           ╵             [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1058:10:
+[37m      1058 │           [32m</div>[37m
+           ╵           [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1059:8:
+[37m      1059 │         [32m</div>[37m
+           ╵         [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1060:6:
+[37m      1060 │       [32m</div>[37m
+           ╵       [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1061:4:
+[37m      1061 │     [32m</div>[37m
+           ╵     [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1082:2:
+[37m      1082 │   [32m</div>[37m
+           ╵   [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1083:0:
+[37m      1083 │ [32m</div>[37m
+           ╵ [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.098 seconds] - 2025-11-19T07:01:33.396Z
+
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: CarsMapComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:4:
+[37m      73 │     [32mCarsMapComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SocialProofIndicatorsComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:74:4:
+[37m      74 │     [32mSocialProofIndicatorsComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: WhatsappFabComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:75:4:
+[37m      75 │     [32mWhatsappFabComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: QuickBookingModalComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:76:4:
+[37m      76 │     [32mQuickBookingModalComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: FloatingActionFabComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:77:4:
+[37m      77 │     [32mFloatingActionFabComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: StatsStripComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:79:4:
+[37m      79 │     [32mStatsStripComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: TooltipComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:80:4:
+[37m      80 │     [32mTooltipComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DateRangePickerComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:81:4:
+[37m      81 │     [32mDateRangePickerComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DynamicPricingBadgeComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:82:4:
+[37m      82 │     [32mDynamicPricingBadgeComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: FiltersDrawerComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:83:4:
+[37m      83 │     [32mFiltersDrawerComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PriceTransparencyModalComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:84:4:
+[37m      84 │     [32mPriceTransparencyModalComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SkeletonComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:85:4:
+[37m      85 │     [32mSkeletonComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1042:12:
+[37m      1042 │             [32m</div>[37m
+           ╵             [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1058:10:
+[37m      1058 │           [32m</div>[37m
+           ╵           [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1059:8:
+[37m      1059 │         [32m</div>[37m
+           ╵         [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1060:6:
+[37m      1060 │       [32m</div>[37m
+           ╵       [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1061:4:
+[37m      1061 │     [32m</div>[37m
+           ╵     [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1082:2:
+[37m      1082 │   [32m</div>[37m
+           ╵   [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1083:0:
+[37m      1083 │ [32m</div>[37m
+           ╵ [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.099 seconds] - 2025-11-19T07:03:17.208Z
+
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: CarsMapComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:4:
+[37m      73 │     [32mCarsMapComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SocialProofIndicatorsComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:74:4:
+[37m      74 │     [32mSocialProofIndicatorsComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: WhatsappFabComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:75:4:
+[37m      75 │     [32mWhatsappFabComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: QuickBookingModalComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:76:4:
+[37m      76 │     [32mQuickBookingModalComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: FloatingActionFabComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:77:4:
+[37m      77 │     [32mFloatingActionFabComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: StatsStripComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:79:4:
+[37m      79 │     [32mStatsStripComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: TooltipComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:80:4:
+[37m      80 │     [32mTooltipComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DateRangePickerComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:81:4:
+[37m      81 │     [32mDateRangePickerComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DynamicPricingBadgeComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:82:4:
+[37m      82 │     [32mDynamicPricingBadgeComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: FiltersDrawerComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:83:4:
+[37m      83 │     [32mFiltersDrawerComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PriceTransparencyModalComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:84:4:
+[37m      84 │     [32mPriceTransparencyModalComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SkeletonComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:85:4:
+[37m      85 │     [32mSkeletonComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1042:12:
+[37m      1042 │             [32m</div>[37m
+           ╵             [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1058:10:
+[37m      1058 │           [32m</div>[37m
+           ╵           [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1059:8:
+[37m      1059 │         [32m</div>[37m
+           ╵         [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1060:6:
+[37m      1060 │       [32m</div>[37m
+           ╵       [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1061:4:
+[37m      1061 │     [32m</div>[37m
+           ╵     [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1082:2:
+[37m      1082 │   [32m</div>[37m
+           ╵   [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1083:0:
+[37m      1083 │ [32m</div>[37m
+           ╵ [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.072 seconds] - 2025-11-19T07:04:38.770Z
+
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: CarsMapComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:4:
+[37m      73 │     [32mCarsMapComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SocialProofIndicatorsComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:74:4:
+[37m      74 │     [32mSocialProofIndicatorsComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: WhatsappFabComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:75:4:
+[37m      75 │     [32mWhatsappFabComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: QuickBookingModalComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:76:4:
+[37m      76 │     [32mQuickBookingModalComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: FloatingActionFabComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:77:4:
+[37m      77 │     [32mFloatingActionFabComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: StatsStripComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:79:4:
+[37m      79 │     [32mStatsStripComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: TooltipComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:80:4:
+[37m      80 │     [32mTooltipComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DateRangePickerComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:81:4:
+[37m      81 │     [32mDateRangePickerComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DynamicPricingBadgeComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:82:4:
+[37m      82 │     [32mDynamicPricingBadgeComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: FiltersDrawerComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:83:4:
+[37m      83 │     [32mFiltersDrawerComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PriceTransparencyModalComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:84:4:
+[37m      84 │     [32mPriceTransparencyModalComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SkeletonComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:85:4:
+[37m      85 │     [32mSkeletonComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1042:12:
+[37m      1042 │             [32m</div>[37m
+           ╵             [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1058:10:
+[37m      1058 │           [32m</div>[37m
+           ╵           [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1059:8:
+[37m      1059 │         [32m</div>[37m
+           ╵         [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1060:6:
+[37m      1060 │       [32m</div>[37m
+           ╵       [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1061:4:
+[37m      1061 │     [32m</div>[37m
+           ╵     [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1082:2:
+[37m      1082 │   [32m</div>[37m
+           ╵   [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1083:0:
+[37m      1083 │ [32m</div>[37m
+           ╵ [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+Application bundle generation failed. [3.697 seconds] - 2025-11-19T07:09:24.153Z
+
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: CarsMapComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:73:4:
+[37m      73 │     [32mCarsMapComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SocialProofIndicatorsComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:74:4:
+[37m      74 │     [32mSocialProofIndicatorsComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: WhatsappFabComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:75:4:
+[37m      75 │     [32mWhatsappFabComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: QuickBookingModalComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:76:4:
+[37m      76 │     [32mQuickBookingModalComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: FloatingActionFabComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:77:4:
+[37m      77 │     [32mFloatingActionFabComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: StatsStripComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:79:4:
+[37m      79 │     [32mStatsStripComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: TooltipComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:80:4:
+[37m      80 │     [32mTooltipComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DateRangePickerComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:81:4:
+[37m      81 │     [32mDateRangePickerComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DynamicPricingBadgeComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:82:4:
+[37m      82 │     [32mDynamicPricingBadgeComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: FiltersDrawerComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:83:4:
+[37m      83 │     [32mFiltersDrawerComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PriceTransparencyModalComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:84:4:
+[37m      84 │     [32mPriceTransparencyModalComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: SkeletonComponent is not used within the template of MarketplaceV2Page[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.ts:85:4:
+[37m      85 │     [32mSkeletonComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1042:12:
+[37m      1042 │             [32m</div>[37m
+           ╵             [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1058:10:
+[37m      1058 │           [32m</div>[37m
+           ╵           [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1059:8:
+[37m      1059 │         [32m</div>[37m
+           ╵         [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1060:6:
+[37m      1060 │       [32m</div>[37m
+           ╵       [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1061:4:
+[37m      1061 │     [32m</div>[37m
+           ╵     [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1082:2:
+[37m      1082 │   [32m</div>[37m
+           ╵   [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/marketplace/marketplace-v2.page.html:1083:0:
+[37m      1083 │ [32m</div>[37m
+           ╵ [32m~~~~~~[0m
+
+  Error occurs in the template of component MarketplaceV2Page.
+
+    src/app/features/marketplace/marketplace-v2.page.ts:87:15:
+[37m      87 │   templateUrl: [32m'./marketplace-v2.page.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m                      [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                       [2m | [22m[36m537.36 kB[39m[2m | [22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m                     [2m | [22m[36m345.41 kB[39m[2m | [22m
+[32mchunk-3TWUUJNK.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m23.26 kB[39m[2m | [22m
+[32mchunk-2ZQJMGXQ.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m22.36 kB[39m[2m | [22m
+[32mchunk-KAJK5L7T.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m20.65 kB[39m[2m | [22m
+[32mchunk-NSVC4QOC.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m20.25 kB[39m[2m | [22m
+[32mchunk-K6MURRI2.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m18.27 kB[39m[2m | [22m
+[32mchunk-GK5RGDFO.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m17.45 kB[39m[2m | [22m
+[32mchunk-F56CQQS4.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m14.95 kB[39m[2m | [22m
+[32mchunk-L2UR5RNI.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m11.59 kB[39m[2m | [22m
+[32mchunk-WDL3ORV6.js[39m  [2m | [22m[2m-[22m                          [2m | [22m [36m10.14 kB[39m[2m | [22m
+[32mchunk-HXNIV2FB.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m7.90 kB[39m[2m | [22m
+[32mchunk-5XQG5BAK.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m7.50 kB[39m[2m | [22m
+[32mchunk-Z5IRMS2S.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m7.43 kB[39m[2m | [22m
+[32mchunk-PH5DUENX.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m7.31 kB[39m[2m | [22m
+[32mchunk-UJ63DBXO.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m5.15 kB[39m[2m | [22m
+[32mchunk-JVYSPPTT.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m4.79 kB[39m[2m | [22m
+[32mchunk-GDRTT4Z2.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m4.02 kB[39m[2m | [22m
+[32mchunk-76BCIBBY.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m3.18 kB[39m[2m | [22m
+[32mchunk-XWLXMCJQ.js[39m  [2m | [22m[2m-[22m                          [2m | [22m  [36m2.07 kB[39m[2m | [22m
+[32mchunk-BO676AYE.js[39m  [2m | [22m[2m-[22m                          [2m | [22m[36m568 bytes[39m[2m | [22m
+[32mpolyfills.js[39m       [2m | [22m[2mpolyfills[22m                  [2m | [22m [36m95 bytes[39m[2m | [22m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m              [2m | [22m  [1m1.09 MB[22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m                      [2m | [22m [1mRaw size[22m
+[32mchunk-ZIN35N4L.js[39m  [2m | [22m[2mbooking-detail-payment-page[22m[2m | [22m[36m590.78 kB[39m[2m | [22m
+[32mchunk-MR6V56ZC.js[39m  [2m | [22m[2mbooking-detail-page[22m        [2m | [22m[36m479.45 kB[39m[2m | [22m
+[32mchunk-F5CX34MN.js[39m  [2m | [22m[2mwallet-page[22m                [2m | [22m[36m477.06 kB[39m[2m | [22m
+[32mchunk-5XJNMJ6N.js[39m  [2m | [22m[2mcar-detail-page[22m            [2m | [22m[36m412.47 kB[39m[2m | [22m
+[32mchunk-F3VGNY6L.js[39m  [2m | [22m[2m-[22m                          [2m | [22m[36m369.15 kB[39m[2m | [22m
+[32mchunk-5AYOTAK2.js[39m  [2m | [22m[2mpublish-car-v2-page[22m        [2m | [22m[36m359.36 kB[39m[2m | [22m
+[32mchunk-ISXPUO64.js[39m  [2m | [22m[2mmarketplace-v2-page[22m        [2m | [22m[36m304.63 kB[39m[2m | [22m
+[32mchunk-F426IJWJ.js[39m  [2m | [22m[2mprofile-verification-page[22m  [2m | [22m[36m187.06 kB[39m[2m | [22m
+[32mchunk-ZZXN4PRO.js[39m  [2m | [22m[2mmy-cars-page[22m               [2m | [22m[36m178.72 kB[39m[2m | [22m
+[32mchunk-7OGWUASW.js[39m  [2m | [22m[2mcars-list-page[22m             [2m | [22m[36m177.93 kB[39m[2m | [22m
+[32mchunk-DGHQWLGR.js[39m  [2m | [22m[2mbooking-checkout-page[22m      [2m | [22m[36m162.92 kB[39m[2m | [22m
+[32mchunk-6IPR5NSQ.js[39m  [2m | [22m[2mprofile-contact-page[22m       [2m | [22m[36m149.85 kB[39m[2m | [22m
+[32mchunk-OP3ALDD6.js[39m  [2m | [22m[2mdriver-profile-page[22m        [2m | [22m[36m137.21 kB[39m[2m | [22m
+[32mchunk-GQAE5JOG.js[39m  [2m | [22m[2mowner-dashboard-page[22m       [2m | [22m[36m132.90 kB[39m[2m | [22m
+[32mchunk-FBNMDRVS.js[39m  [2m | [22m[2mpayouts-page[22m               [2m | [22m[36m130.88 kB[39m[2m | [22m
+[2m...and 132 more lazy chunks files. Use "--verbose" to show all the files.[22m
+
+Application bundle generation complete. [6.465 seconds] - 2025-11-19T07:11:05.744Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.323 seconds] - 2025-11-19T07:11:06.109Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m               [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                [2m | [22m[36m537.36 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m               [2m | [22m [1mRaw size[22m
+[32mchunk-46SYVS62.js[39m  [2m | [22m[2mcar-detail-page[22m     [2m | [22m[36m412.47 kB[39m[2m | [22m
+[32mchunk-MJNCM73B.js[39m  [2m | [22m[2m-[22m                   [2m | [22m[36m369.15 kB[39m[2m | [22m
+[32mchunk-TBPHJYX4.js[39m  [2m | [22m[2mmarketplace-v2-page[22m [2m | [22m[36m304.63 kB[39m[2m | [22m
+[32mchunk-UD7QRIK4.js[39m  [2m | [22m[2mcars-list-page[22m      [2m | [22m[36m177.93 kB[39m[2m | [22m
+[32mchunk-EJNHEDT7.js[39m  [2m | [22m[2m-[22m                   [2m | [22m [36m64.53 kB[39m[2m | [22m
+[32mchunk-RF7F4ZHH.js[39m  [2m | [22m[2mcars-conversion-page[22m[2m | [22m [36m58.35 kB[39m[2m | [22m
+
+Application bundle generation complete. [37.156 seconds] - 2025-11-19T07:12:48.524Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.116 seconds] - 2025-11-19T07:12:48.933Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m               [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                [2m | [22m[36m537.36 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m               [2m | [22m [1mRaw size[22m
+[32mchunk-I3TT3QFQ.js[39m  [2m | [22m[2mcar-detail-page[22m     [2m | [22m[36m412.47 kB[39m[2m | [22m
+[32mchunk-JVZJ773J.js[39m  [2m | [22m[2m-[22m                   [2m | [22m[36m369.15 kB[39m[2m | [22m
+[32mchunk-4JHX4WV5.js[39m  [2m | [22m[2mmarketplace-v2-page[22m [2m | [22m[36m304.63 kB[39m[2m | [22m
+[32mchunk-NIST2V77.js[39m  [2m | [22m[2mcars-list-page[22m      [2m | [22m[36m177.93 kB[39m[2m | [22m
+[32mchunk-L7CIIBDR.js[39m  [2m | [22m[2m-[22m                   [2m | [22m[36m109.21 kB[39m[2m | [22m
+[32mchunk-2VD5YHKA.js[39m  [2m | [22m[2mcars-conversion-page[22m[2m | [22m [36m58.35 kB[39m[2m | [22m
+
+Application bundle generation complete. [23.360 seconds] - 2025-11-19T07:13:30.767Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.037 seconds] - 2025-11-19T07:13:30.858Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m               [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                [2m | [22m[36m537.36 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m               [2m | [22m [1mRaw size[22m
+[32mchunk-GTQEOZXF.js[39m  [2m | [22m[2mcar-detail-page[22m     [2m | [22m[36m412.47 kB[39m[2m | [22m
+[32mchunk-TQLTCTVB.js[39m  [2m | [22m[2m-[22m                   [2m | [22m[36m369.15 kB[39m[2m | [22m
+[32mchunk-K7ZQ5JV2.js[39m  [2m | [22m[2mmarketplace-v2-page[22m [2m | [22m[36m304.63 kB[39m[2m | [22m
+[32mchunk-DT3YKJ7B.js[39m  [2m | [22m[2mcars-list-page[22m      [2m | [22m[36m177.93 kB[39m[2m | [22m
+[32mchunk-KICIRKYK.js[39m  [2m | [22m[2m-[22m                   [2m | [22m[36m116.74 kB[39m[2m | [22m
+[32mchunk-7S7PV6UQ.js[39m  [2m | [22m[2mcars-conversion-page[22m[2m | [22m [36m58.35 kB[39m[2m | [22m
+
+Application bundle generation complete. [8.567 seconds] - 2025-11-19T07:31:35.130Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.108 seconds] - 2025-11-19T07:31:39.113Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.219 seconds] - 2025-11-19T07:33:03.855Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m               [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                [2m | [22m[36m537.36 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m               [2m | [22m [1mRaw size[22m
+[32mchunk-4KQR76PN.js[39m  [2m | [22m[2mcar-detail-page[22m     [2m | [22m[36m412.47 kB[39m[2m | [22m
+[32mchunk-Z3EYHD7J.js[39m  [2m | [22m[2m-[22m                   [2m | [22m[36m369.15 kB[39m[2m | [22m
+[32mchunk-Y5ICM3J2.js[39m  [2m | [22m[2mmarketplace-v2-page[22m [2m | [22m[36m304.63 kB[39m[2m | [22m
+[32mchunk-JCE6PJQU.js[39m  [2m | [22m[2mcars-list-page[22m      [2m | [22m[36m177.93 kB[39m[2m | [22m
+[32mchunk-N5T6KLMX.js[39m  [2m | [22m[2m-[22m                   [2m | [22m[36m114.59 kB[39m[2m | [22m
+[32mchunk-MHQ6CKIW.js[39m  [2m | [22m[2mcars-conversion-page[22m[2m | [22m [36m58.35 kB[39m[2m | [22m
+
+Application bundle generation complete. [5.777 seconds] - 2025-11-19T07:39:16.504Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m               [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m                [2m | [22m[36m537.36 kB[39m[2m | [22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m               [2m | [22m [1mRaw size[22m
+[32mchunk-7QQ3QPLR.js[39m  [2m | [22m[2mcar-detail-page[22m     [2m | [22m[36m412.47 kB[39m[2m | [22m
+[32mchunk-77HK6K5S.js[39m  [2m | [22m[2m-[22m                   [2m | [22m[36m369.15 kB[39m[2m | [22m
+[32mchunk-2QKGWTAX.js[39m  [2m | [22m[2mmarketplace-v2-page[22m [2m | [22m[36m304.63 kB[39m[2m | [22m
+[32mchunk-KXCUURVV.js[39m  [2m | [22m[2mcars-list-page[22m      [2m | [22m[36m177.93 kB[39m[2m | [22m
+[32mchunk-UIGG4E2X.js[39m  [2m | [22m[2m-[22m                   [2m | [22m[36m114.81 kB[39m[2m | [22m
+[32mchunk-QVWBIGQZ.js[39m  [2m | [22m[2mcars-conversion-page[22m[2m | [22m [36m58.35 kB[39m[2m | [22m
+
+Application bundle generation complete. [10.991 seconds] - 2025-11-19T07:39:49.036Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.104 seconds] - 2025-11-19T07:40:41.221Z
+
+Page reload sent to client(s).

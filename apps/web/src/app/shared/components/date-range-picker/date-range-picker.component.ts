@@ -1,16 +1,22 @@
+import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  computed,
+  ElementRef,
   EventEmitter,
+  inject,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
   signal,
-  inject,
-  computed,
-  OnInit,
+  ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import flatpickr from 'flatpickr';
+import { Spanish } from 'flatpickr/dist/l10n/es';
 import { AnalyticsService } from '../../../core/services/analytics.service';
 
 export interface DateRange {
@@ -48,28 +54,31 @@ export interface AlternativeDateSuggestion {
   styleUrls: ['./date-range-picker.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DateRangePickerComponent implements OnInit {
+export class DateRangePickerComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly analytics = inject(AnalyticsService);
 
   @Input() label = 'Fechas';
   @Input() initialFrom: string | null = null;
   @Input() initialTo: string | null = null;
-  @Input() dailyPrice: number | null | undefined = null; // Precio por día para calcular total en presets
-  @Input() showPrices = true; // Mostrar precios en los presets
-  @Input() carId: string | null = null; // ID del auto para validar disponibilidad
+  @Input() dailyPrice: number | null | undefined = null;
+  @Input() showPrices = true;
+  @Input() carId: string | null = null;
   @Input() availabilityChecker:
     | ((carId: string, from: string, to: string) => Promise<boolean>)
     | null = null;
-  @Input() blockedRanges: BlockedDateRange[] = []; // ✅ NEW: Rangos de fechas bloqueadas (bookings confirmados)
+  @Input() blockedRanges: BlockedDateRange[] = [];
   @Output() readonly rangeChange = new EventEmitter<DateRange>();
   @Output() readonly availabilityChange = new EventEmitter<boolean>();
   @Output() readonly calendarClick = new EventEmitter<void>();
+
+  @ViewChild('dateRangeInput') dateRangeInput!: ElementRef<HTMLInputElement>;
+  private fpInstance: flatpickr.Instance | null = null;
 
   readonly from = signal<string | null>(this.initialFrom);
   readonly to = signal<string | null>(this.initialTo);
   readonly isCheckingAvailability = signal(false);
   readonly isAvailable = signal<boolean | null>(null);
-  readonly availabilityError = signal(false); // Para animación shake
+  readonly availabilityError = signal(false);
   readonly availabilityHint = signal<string | null>(null);
   readonly isCalendarModalOpen = signal(false);
   readonly alternativeSuggestions = signal<AlternativeDateSuggestion[]>([]);
@@ -95,51 +104,87 @@ export class DateRangePickerComponent implements OnInit {
     { label: '1 mes', days: 30, icon: '📆' },
   ];
 
-  onFromChange(value: string): void {
-    // Convert empty string to null
-    const newValue = value && value.trim() !== '' ? value : null;
-    this.from.set(newValue);
-    this.emit();
+  ngOnInit(): void {
+    // Initialization if needed
   }
 
-  onToChange(value: string): void {
-    // Convert empty string to null
-    const newValue = value && value.trim() !== '' ? value : null;
-    this.to.set(newValue);
-    this.emit();
+  ngAfterViewInit(): void {
+    this.initFlatpickr();
+  }
+
+  ngOnDestroy(): void {
+    if (this.fpInstance) {
+      this.fpInstance.destroy();
+      this.fpInstance = null;
+    }
+  }
+
+  private initFlatpickr(): void {
+    if (!this.dateRangeInput) return;
+
+    const blockedDates = this.blockedDatesArray;
+
+    this.fpInstance = flatpickr(this.dateRangeInput.nativeElement, {
+      mode: 'range',
+      locale: Spanish,
+      dateFormat: 'Y-m-d',
+      minDate: 'today',
+      disable: blockedDates,
+      defaultDate:
+        this.from() && this.to() ? [this.from()!, this.to()!] : undefined,
+      onChange: (selectedDates, dateStr) => {
+        if (selectedDates.length === 2) {
+          const from = selectedDates[0].toISOString().split('T')[0];
+          const to = selectedDates[1].toISOString().split('T')[0];
+
+          this.from.set(from);
+          this.to.set(to);
+          void this.emit();
+        }
+      },
+    });
   }
 
   async applyPreset(preset: DatePreset): Promise<void> {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time to midnight
+    today.setHours(0, 0, 0, 0);
 
     let fromDate: Date;
     let toDate: Date;
 
     if (preset.days === 'weekend') {
-      // Calcular próximo fin de semana (sábado a domingo)
-      const dayOfWeek = today.getDay(); // 0 = domingo, 6 = sábado
+      const dayOfWeek = today.getDay();
       const daysUntilSaturday = dayOfWeek === 6 ? 0 : (6 - dayOfWeek + 7) % 7;
 
       fromDate = new Date(today);
       fromDate.setDate(today.getDate() + daysUntilSaturday);
 
       toDate = new Date(fromDate);
-      toDate.setDate(fromDate.getDate() + 1); // Domingo
+      toDate.setDate(fromDate.getDate() + 1);
     } else {
       fromDate = new Date(today);
-      fromDate.setDate(today.getDate() + 1); // Empezar mañana
+      fromDate.setDate(today.getDate() + 1);
 
       toDate = new Date(fromDate);
       toDate.setDate(fromDate.getDate() + (preset.days as number));
     }
 
-    // Convertir a formato YYYY-MM-DD
     const fromStr = fromDate.toISOString().split('T')[0];
     const toStr = toDate.toISOString().split('T')[0];
 
-    // Track evento: preset clicked
-    const presetType: 'weekend' | '1week' | '2weeks' | '1month' =
+    // Update signals
+    this.from.set(fromStr);
+    this.to.set(toStr);
+
+    // Update flatpickr
+    if (this.fpInstance) {
+      this.fpInstance.setDate([fromDate, toDate], true);
+    } else {
+      await this.emit();
+    }
+
+    // Track event
+    const presetType =
       preset.days === 'weekend'
         ? 'weekend'
         : preset.days === 7
@@ -154,21 +199,15 @@ export class DateRangePickerComponent implements OnInit {
       days_count: preset.days === 'weekend' ? 2 : preset.days,
       total_price: this.getDiscountedPrice(preset) ?? undefined,
     });
-
-    this.from.set(fromStr);
-    this.to.set(toStr);
-    await this.emit();
   }
 
   private async emit(): Promise<void> {
     const from = this.from();
     const to = this.to();
 
-    // Emitir cambio de rango inmediatamente
     this.rangeChange.emit({ from, to });
     this.availabilityHint.set(null);
 
-    // Track: date range selected
     if (from && to) {
       const daysCount = Math.ceil(
         (new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24),
@@ -181,16 +220,11 @@ export class DateRangePickerComponent implements OnInit {
       });
     }
 
-    // Validar disponibilidad si se proporcionó checker y hay fechas completas
     if (this.availabilityChecker && this.carId && from && to) {
       await this.checkAvailability(from, to);
     }
   }
 
-  /**
-   * ✅ UPDATED: Valida disponibilidad del auto para las fechas seleccionadas
-   * Auto-suggestion removida - calendar blocking previene selección de fechas no disponibles
-   */
   private async checkAvailability(from: string, to: string): Promise<void> {
     if (!this.availabilityChecker || !this.carId) return;
 
@@ -203,7 +237,6 @@ export class DateRangePickerComponent implements OnInit {
       this.availabilityHint.set(null);
       this.availabilityChange.emit(available);
 
-      // Track: availability checked
       this.analytics.trackEvent('date_availability_checked', {
         car_id: this.carId,
         is_available: available,
@@ -213,22 +246,17 @@ export class DateRangePickerComponent implements OnInit {
       });
 
       if (!available) {
-        // Track: unavailable error
         this.analytics.trackEvent('date_unavailable_error', {
           car_id: this.carId,
           from_date: from,
           to_date: to,
         });
 
-        // Activar animación shake si no está disponible
         this.availabilityError.set(true);
-        // Desactivar shake después de la animación
         setTimeout(() => this.availabilityError.set(false), 600);
 
-        // Generar sugerencias de fechas alternativas
         await this.generateAlternativeSuggestions(from, to);
       } else {
-        // Limpiar sugerencias si está disponible
         this.alternativeSuggestions.set([]);
         this.showingSuggestions.set(false);
       }
@@ -240,9 +268,6 @@ export class DateRangePickerComponent implements OnInit {
     }
   }
 
-  /**
-   * Genera sugerencias de fechas alternativas cuando el rango seleccionado no está disponible
-   */
   private async generateAlternativeSuggestions(
     requestedFrom: string,
     requestedTo: string,
@@ -255,12 +280,10 @@ export class DateRangePickerComponent implements OnInit {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Buscar hasta 30 días en el futuro
     const maxSearchDays = 60;
     let searchDate = new Date(today);
-    searchDate.setDate(today.getDate() + 1); // Empezar mañana
+    searchDate.setDate(today.getDate() + 1);
 
-    // Intentar encontrar 5 sugerencias
     while (
       suggestions.length < 5 &&
       searchDate <= new Date(today.getTime() + maxSearchDays * 24 * 60 * 60 * 1000)
@@ -272,7 +295,6 @@ export class DateRangePickerComponent implements OnInit {
       const fromStr = fromDate.toISOString().split('T')[0];
       const toStr = toDate.toISOString().split('T')[0];
 
-      // Verificar si está disponible
       try {
         if (this.availabilityChecker && this.carId) {
           const available = await this.availabilityChecker(this.carId, fromStr, toStr);
@@ -302,14 +324,12 @@ export class DateRangePickerComponent implements OnInit {
         console.error('Error checking alternative date:', error);
       }
 
-      // Avanzar 1 día
       searchDate.setDate(searchDate.getDate() + 1);
     }
 
     this.alternativeSuggestions.set(suggestions);
     this.showingSuggestions.set(suggestions.length > 0);
 
-    // Track: alternative suggestions generated
     if (suggestions.length > 0) {
       this.analytics.trackEvent('alternative_dates_suggested', {
         car_id: this.carId ?? undefined,
@@ -319,9 +339,6 @@ export class DateRangePickerComponent implements OnInit {
     }
   }
 
-  /**
-   * Calcula el descuento basado en la duración
-   */
   private calculateDiscountForDays(days: number): number {
     if (days >= 30) return 20;
     if (days >= 14) return 15;
@@ -329,35 +346,30 @@ export class DateRangePickerComponent implements OnInit {
     return 0;
   }
 
-  /**
-   * Aplica una sugerencia alternativa
-   */
   applySuggestion(suggestion: AlternativeDateSuggestion): void {
     this.from.set(suggestion.from);
     this.to.set(suggestion.to);
     this.alternativeSuggestions.set([]);
     this.showingSuggestions.set(false);
 
-    // Track: alternative date applied
+    // Update flatpickr
+    if (this.fpInstance) {
+      this.fpInstance.setDate([suggestion.from, suggestion.to], true);
+    } else {
+      void this.emit();
+    }
+
     this.analytics.trackEvent('alternative_date_applied', {
       car_id: this.carId ?? undefined,
       days_count: suggestion.days,
       total_price: suggestion.totalPrice ?? undefined,
     });
-
-    void this.emit();
   }
 
-  /**
-   * Muestra más sugerencias (expande la lista)
-   */
   showMoreSuggestions(): void {
     this.showingSuggestions.set(true);
   }
 
-  /**
-   * Calcula el precio total para un preset dado
-   */
   getPresetPrice(preset: DatePreset): number | null {
     if (!this.dailyPrice || !this.showPrices) return null;
 
@@ -365,10 +377,6 @@ export class DateRangePickerComponent implements OnInit {
     return days * this.dailyPrice;
   }
 
-  /**
-   * Calcula el descuento porcentual para duraciones largas
-   * Ejemplo: 7+ días = 10%, 14+ días = 15%, 30+ días = 20%
-   */
   getPresetDiscount(preset: DatePreset): number {
     const days = preset.days === 'weekend' ? 2 : (preset.days as number);
 
@@ -378,9 +386,6 @@ export class DateRangePickerComponent implements OnInit {
     return 0;
   }
 
-  /**
-   * Obtiene el precio con descuento aplicado
-   */
   getDiscountedPrice(preset: DatePreset): number | null {
     const basePrice = this.getPresetPrice(preset);
     if (!basePrice) return null;
@@ -391,9 +396,6 @@ export class DateRangePickerComponent implements OnInit {
     return basePrice * (1 - discount / 100);
   }
 
-  /**
-   * Calcula el ahorro en pesos
-   */
   getSavingsAmount(preset: DatePreset): number | null {
     const basePrice = this.getPresetPrice(preset);
     const discountedPrice = this.getDiscountedPrice(preset);
@@ -402,32 +404,13 @@ export class DateRangePickerComponent implements OnInit {
     return basePrice - discountedPrice;
   }
 
-  /**
-   * Maneja el click en el input de fechas
-   */
   handleDateInputClick(): void {
-    this.openCalendarModal();
+    // Flatpickr handles the click automatically
+    if (this.fpInstance) {
+      this.fpInstance.open();
+    }
   }
 
-  /**
-   * Abre el calendario inline
-   */
-  openCalendarModal(): void {
-    this.isCalendarModalOpen.set(true);
-
-    // Emit event for parent component to open external modal
-    this.calendarClick.emit();
-
-    // Track: Calendar modal opened
-    this.analytics.trackEvent('date_range_selected', {
-      car_id: this.carId ?? undefined,
-      source: 'calendar_button_clicked',
-    });
-  }
-
-  /**
-   * Limpia las fechas seleccionadas y resetea el estado de disponibilidad
-   */
   clearRange(): void {
     if (!this.from() && !this.to()) {
       return;
@@ -435,6 +418,11 @@ export class DateRangePickerComponent implements OnInit {
 
     this.from.set(null);
     this.to.set(null);
+
+    if (this.fpInstance) {
+      this.fpInstance.clear();
+    }
+
     this.isAvailable.set(null);
     this.availabilityHint.set(null);
     this.availabilityError.set(false);
@@ -442,19 +430,6 @@ export class DateRangePickerComponent implements OnInit {
     void this.emit();
   }
 
-  /**
-   * Handler cuando se selecciona un rango en el calendario
-   */
-  onCalendarRangeSelected(range: DateRange): void {
-    this.from.set(range.from);
-    this.to.set(range.to);
-    void this.emit();
-  }
-
-  /**
-   * Convierte los rangos bloqueados a un array de fechas individuales
-   * para pasarlo al componente de calendario
-   */
   get blockedDatesArray(): string[] {
     const blockedDates: string[] = [];
 
@@ -462,7 +437,6 @@ export class DateRangePickerComponent implements OnInit {
       const start = new Date(range.from);
       const end = new Date(range.to);
 
-      // Iterar desde start hasta end (inclusive)
       const currentDate = new Date(start);
       while (currentDate <= end) {
         blockedDates.push(currentDate.toISOString().split('T')[0]);
@@ -471,9 +445,5 @@ export class DateRangePickerComponent implements OnInit {
     }
 
     return blockedDates;
-  }
-
-  ngOnInit(): void {
-    // Initialization if needed in the future
   }
 }

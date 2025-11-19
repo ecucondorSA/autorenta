@@ -1,3 +1,5 @@
+@import 'flatpickr/dist/flatpickr.css';
+
 :host {
   display: block;
   height: 100%;
@@ -462,4 +464,135 @@
 
 .google-calendar-connected-banner .text-green-600 {
   color: #1e8e3e;
+}
+
+/* ==================== FLATPICKR CUSTOMIZATION ==================== */
+
+/* Base Theme Overrides */
+::ng-deep .flatpickr-calendar {
+  background: var(--surface-raised) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-lg) !important;
+  font-family: inherit !important;
+}
+
+::ng-deep .flatpickr-calendar.arrowTop:before,
+::ng-deep .flatpickr-calendar.arrowTop:after {
+  border-bottom-color: var(--surface-raised) !important;
+}
+
+::ng-deep .flatpickr-calendar.arrowBottom:before,
+::ng-deep .flatpickr-calendar.arrowBottom:after {
+  border-top-color: var(--surface-raised) !important;
+}
+
+/* Header */
+::ng-deep .flatpickr-months {
+  background: transparent !important;
+  margin-bottom: 0.5rem !important;
+}
+
+::ng-deep .flatpickr-months .flatpickr-month {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+  fill: var(--text-primary) !important;
+}
+
+::ng-deep .flatpickr-current-month .flatpickr-monthDropdown-months,
+::ng-deep .flatpickr-current-month input.cur-year {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+
+::ng-deep .flatpickr-current-month .flatpickr-monthDropdown-months:hover,
+::ng-deep .flatpickr-current-month input.cur-year:hover {
+  background: var(--surface-hover) !important;
+}
+
+::ng-deep .flatpickr-prev-month,
+::ng-deep .flatpickr-next-month {
+  color: var(--text-secondary) !important;
+  fill: var(--text-secondary) !important;
+}
+
+::ng-deep .flatpickr-prev-month:hover,
+::ng-deep .flatpickr-next-month:hover {
+  color: var(--cta-default) !important;
+  fill: var(--cta-default) !important;
+}
+
+/* Weekdays */
+::ng-deep .flatpickr-weekdays {
+  background: transparent !important;
+}
+
+::ng-deep span.flatpickr-weekday {
+  color: var(--text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+/* Days */
+::ng-deep .flatpickr-day {
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-md) !important;
+  border: 1px solid transparent !important;
+}
+
+::ng-deep .flatpickr-day:hover,
+::ng-deep .flatpickr-day.prevMonthDay:hover,
+::ng-deep .flatpickr-day.nextMonthDay:hover,
+::ng-deep .flatpickr-day:focus {
+  background: var(--surface-hover) !important;
+  border-color: var(--border-default) !important;
+}
+
+::ng-deep .flatpickr-day.today {
+  border-color: var(--cta-default) !important;
+}
+
+::ng-deep .flatpickr-day.selected,
+::ng-deep .flatpickr-day.startRange,
+::ng-deep .flatpickr-day.endRange,
+::ng-deep .flatpickr-day.selected.inRange,
+::ng-deep .flatpickr-day.startRange.inRange,
+::ng-deep .flatpickr-day.endRange.inRange,
+::ng-deep .flatpickr-day.selected:focus,
+::ng-deep .flatpickr-day.startRange:focus,
+::ng-deep .flatpickr-day.endRange:focus,
+::ng-deep .flatpickr-day.selected:hover,
+::ng-deep .flatpickr-day.startRange:hover,
+::ng-deep .flatpickr-day.endRange:hover,
+::ng-deep .flatpickr-day.selected.prevMonthDay,
+::ng-deep .flatpickr-day.startRange.prevMonthDay,
+::ng-deep .flatpickr-day.endRange.prevMonthDay,
+::ng-deep .flatpickr-day.selected.nextMonthDay,
+::ng-deep .flatpickr-day.startRange.nextMonthDay,
+::ng-deep .flatpickr-day.endRange.nextMonthDay {
+  background: linear-gradient(135deg, #00d9e1 0%, #00b8d4 100%) !important;
+  border-color: transparent !important;
+  color: white !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 217, 225, 0.3) !important;
+}
+
+::ng-deep .flatpickr-day.inRange {
+  background: rgba(0, 217, 225, 0.15) !important; /* Cyan with low opacity */
+  border-color: transparent !important;
+  box-shadow: -5px 0 0 rgba(0, 217, 225, 0.15), 5px 0 0 rgba(0, 217, 225, 0.15) !important;
+}
+
+/* Disabled days */
+::ng-deep .flatpickr-day.flatpickr-disabled,
+::ng-deep .flatpickr-day.flatpickr-disabled:hover {
+  color: var(--text-disabled) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  cursor: not-allowed !important;
+}
+
+/* Dark Mode Specifics (if not covered by variables) */
+@media (prefers-color-scheme: dark) {
+  ::ng-deep .flatpickr-calendar {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+  }
 }

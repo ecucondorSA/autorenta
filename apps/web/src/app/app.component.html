@@ -913,7 +913,9 @@
     [class.py-0]="fullBleedLayout()"
     [class.full-bleed-safe]="fullBleedLayout()"
   >
-    <router-outlet></router-outlet>
+    <div [@fadeAnimation]="getRouteAnimationData()">
+      <router-outlet></router-outlet>
+    </div>
   </main>
 
   <!-- Floating Comparison Badge (ajustado para no chocar con bottom nav) -->

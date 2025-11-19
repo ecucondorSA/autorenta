@@ -791,3 +791,10 @@ button.px-6.py-3:hover {
     display: none !important;
   }
 }
+
+/* Mask for scrollable containers */
+.mask-linear-fade {
+  mask-image: linear-gradient(to right, black calc(100% - 60px), transparent);
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 60px), transparent);
+  padding-right: 60px; /* Ensure last item is visible under mask */
+}

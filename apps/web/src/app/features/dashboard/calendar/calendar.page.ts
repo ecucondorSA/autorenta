@@ -34,16 +34,12 @@ export class DashboardCalendarPage implements OnInit {
     return new Date(
       this.currentDate().getFullYear(),
       this.currentDate().getMonth() + 1,
-      0
+      0,
     ).getDate();
   }
 
   get firstDayOfMonth(): number {
-    return new Date(
-      this.currentDate().getFullYear(),
-      this.currentDate().getMonth(),
-      1
-    ).getDay();
+    return new Date(this.currentDate().getFullYear(), this.currentDate().getMonth(), 1).getDay();
   }
 
   get calendarDays(): (number | null)[] {
@@ -59,15 +55,10 @@ export class DashboardCalendarPage implements OnInit {
 
   getEventsForDay(day: number | null): BookingEvent[] {
     if (!day) return [];
-    const date = new Date(
-      this.currentDate().getFullYear(),
-      this.currentDate().getMonth(),
-      day
-    );
+    const date = new Date(this.currentDate().getFullYear(), this.currentDate().getMonth(), day);
     const dateStr = date.toISOString().split('T')[0];
     return this.bookingEvents().filter(
-      (event) =>
-        dateStr >= event.start.split('T')[0] && dateStr <= event.end.split('T')[0]
+      (event) => dateStr >= event.start.split('T')[0] && dateStr <= event.end.split('T')[0],
     );
   }
 
@@ -103,13 +94,13 @@ export class DashboardCalendarPage implements OnInit {
 
   previousMonth(): void {
     this.currentDate.set(
-      new Date(this.currentDate().getFullYear(), this.currentDate().getMonth() - 1)
+      new Date(this.currentDate().getFullYear(), this.currentDate().getMonth() - 1),
     );
   }
 
   nextMonth(): void {
     this.currentDate.set(
-      new Date(this.currentDate().getFullYear(), this.currentDate().getMonth() + 1)
+      new Date(this.currentDate().getFullYear(), this.currentDate().getMonth() + 1),
     );
   }
 }

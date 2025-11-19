@@ -50,8 +50,9 @@ import { BookingsService } from '../../core/services/bookings.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import { DynamicPricingBadgeComponent } from '../../shared/components/dynamic-pricing-badge/dynamic-pricing-badge.component';
-import { MapFiltersComponent } from '../../shared/components/map-filters/map-filters.component';
 import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
+import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.component';
+import { FiltersDrawerComponent } from '../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 import { environment } from '../../../environments/environment';
 
 export interface CarWithDistance extends Car {
@@ -79,8 +80,9 @@ type ToastType = 'success' | 'info' | 'warning' | 'error';
     TooltipComponent,
     DateRangePickerComponent,
     DynamicPricingBadgeComponent,
-    MapFiltersComponent,
+    FiltersDrawerComponent,
     PriceTransparencyModalComponent,
+    SkeletonComponent,
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -108,6 +110,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   // State
   readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
   readonly cars = signal<Car[]>([]);
   readonly selectedCarId = signal<string | null>(null);
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
@@ -339,6 +342,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
    */
   async loadCars(): Promise<void> {
     this.loading.set(true);
+    this.error.set(null);
     try {
       const dateRange = this.dateRange();
       const filters = this.mapFilters();
@@ -362,6 +366,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       }
     } catch (err) {
       console.error('Error loading cars:', err);
+      this.error.set('No se pudieron cargar los autos. Por favor, intenta de nuevo más tarde.');
       this.showToast('Error al cargar los autos. Por favor intenta de nuevo.', 'error');
     } finally {
       this.loading.set(false);

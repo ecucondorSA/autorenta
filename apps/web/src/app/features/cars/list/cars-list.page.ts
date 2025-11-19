@@ -36,6 +36,9 @@ import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { PwaTitlebarComponent } from '../../../shared/components/pwa-titlebar/pwa-titlebar.component';
+import { CarCardV3Component } from '../../../shared/components/marketplace/car-card-v3/car-card-v3.component';
+import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
+import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
 import { getErrorMessage } from '../../../core/utils/type-guards';
 
 // Interface para auto con distancia
@@ -67,6 +70,9 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     UrgentRentalBannerComponent,
     WhatsappFabComponent,
     PwaTitlebarComponent,
+    CarCardV3Component,
+    FiltersDrawerComponent,
+    BreadcrumbsComponent,
     TranslateModule,
   ],
   templateUrl: './cars-list.page.html',
@@ -152,6 +158,13 @@ export class CarsListPage implements OnInit, OnDestroy {
 
   // Contadores para badge de resultados
   readonly totalCount = computed(() => this.cars().length);
+
+  // Breadcrumbs navigation
+  readonly breadcrumbItems = computed<BreadcrumbItem[]>(() => [
+    { label: 'Inicio', url: '/', icon: '🏠' },
+    { label: 'Explorar Autos', url: '/cars', icon: '🚗' },
+    { label: `${this.premiumCars().length} Autos Disponibles` },
+  ]);
 
   private readonly persistSortEffect = effect(() => {
     if (!this.isBrowser || !this.sortInitialized) {
@@ -914,6 +927,19 @@ export class CarsListPage implements OnInit, OnDestroy {
     }
   }
 
+  // Filters drawer management (mobile)
+  openFiltersDrawer(): void {
+    this.drawerOpen.set(true);
+  }
+
+  closeFiltersDrawer(): void {
+    this.drawerOpen.set(false);
+  }
+
+  toggleFiltersDrawer(): void {
+    this.drawerOpen.update(open => !open);
+  }
+
   // Cálculo de distancia usando DistanceCalculatorService
   private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     return this.distanceCalculator.calculateDistance(lat1, lon1, lat2, lon2);
@@ -933,6 +959,43 @@ export class CarsListPage implements OnInit, OnDestroy {
    */
   trackByCar(_index: number, car: CarWithDistance): string {
     return car.id;
+  }
+
+  /**
+   * Convierte CarWithDistance al formato esperado por CarCardV3Component
+   * Mapea los campos del modelo Car al formato simplificado de la card
+   */
+  carToCardFormat(car: CarWithDistance): {
+    id: string;
+    title: string;
+    brand: string;
+    model: string;
+    images: string[];
+    pricePerDay: number;
+    rating: number;
+    ratingCount: number;
+    location: string;
+    distanceKm?: number;
+    instantBook?: boolean;
+  } {
+    // Extraer brand y model del title si no están disponibles
+    const titleParts = car.title.split(' ');
+    const brand = titleParts[0] || '';
+    const model = titleParts.slice(1).join(' ') || '';
+
+    return {
+      id: car.id,
+      title: car.title,
+      brand,
+      model,
+      images: car.photos?.map(photo => photo.url) || [],
+      pricePerDay: car.price_per_day,
+      rating: car.rating_avg || 0,
+      ratingCount: car.rating_count || 0,
+      location: `${car.location_city}, ${car.location_state}`,
+      distanceKm: car.distance,
+      instantBook: false, // TODO: Add instant_booking field to Car model
+    };
   }
 
   /**

@@ -15,13 +15,6 @@ export const TABS_ROUTES: Routes = [
         path: 'explore',
         loadComponent: () => import('../features/explore/explore.page').then((m) => m.ExplorePage),
       },
-      // TODO: Publish page needs to be implemented
-      // {
-      //   path: 'publish',
-      //   canMatch: [AuthGuard],
-      //   loadComponent: () =>
-      //     import('../features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
-      // },
       {
         path: 'bookings',
         canMatch: [AuthGuard],

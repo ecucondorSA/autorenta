@@ -60,6 +60,11 @@ import {
   PickupLocationSelectorComponent,
   PickupLocationSelection,
 } from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
+import {
+  PhotoGalleryComponent,
+  Photo,
+} from '../../../shared/components/marketplace/photo-gallery/photo-gallery.component';
+import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
 
 // Services
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
@@ -96,6 +101,8 @@ interface CarDetailState {
     PaymentMethodButtonsComponent,
     BookingLocationFormComponent,
     PickupLocationSelectorComponent,
+    PhotoGalleryComponent,
+    BreadcrumbsComponent,
   ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -254,6 +261,16 @@ export class CarDetailPage implements OnInit {
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
 
+  // Breadcrumbs navigation
+  readonly breadcrumbItems = computed<BreadcrumbItem[]>(() => {
+    const car = this.car();
+    return [
+      { label: 'Inicio', url: '/', icon: '🏠' },
+      { label: 'Explorar Autos', url: '/cars/list', icon: '🚗' },
+      { label: car?.title || 'Cargando...' },
+    ];
+  });
+
   /**
    * Obtiene la mejor review de 5 estrellas para mostrar en el sidebar
    */
@@ -315,6 +332,21 @@ export class CarDetailPage implements OnInit {
       return true;
     });
   });
+
+  // Convert CarPhoto[] to Photo[] for PhotoGalleryComponent
+  readonly galleryPhotos = computed<Photo[]>(() => {
+    const photos = this.allPhotos();
+    const car = this.car();
+
+    return photos.map((photo, index) => ({
+      id: (photo as any).photo_id || `photo-${index}`,
+      url: photo.url,
+      thumbnailUrl: photo.url, // Use same URL, component will handle optimization
+      alt: (photo as any).description || `${car?.title || 'Auto'} - Foto ${index + 1}`,
+      caption: (photo as any).description,
+    }));
+  });
+
   readonly currentPhoto = computed(() => this.allPhotos()[this.currentPhotoIndex()]);
   readonly hasMultiplePhotos = computed(() => this.allPhotos().length > 1);
 
@@ -496,7 +528,6 @@ export class CarDetailPage implements OnInit {
         this.expressMode.set(true);
         void this.setupExpressMode();
       }
-
     });
 
     // Cargar fechas bloqueadas cuando el auto esté disponible
@@ -1203,5 +1234,48 @@ export class CarDetailPage implements OnInit {
       day: '2-digit',
       month: 'short',
     }).format(date);
+  }
+
+  /**
+   * Handle photo share from gallery
+   */
+  onPhotoShare(photo: Photo): void {
+    const car = this.car();
+    if (!car) return;
+
+    // Track: Photo shared - using generic 'cta_clicked' event
+    this.analytics.trackEvent('cta_clicked', {
+      car_id: car.id,
+      cta_type: 'photo_share',
+      photo_id: photo.id,
+      photo_index: this.galleryPhotos().findIndex((p) => p.id === photo.id),
+    });
+
+    // Share API if available
+    if (navigator.share) {
+      void navigator.share({
+        title: car.title,
+        text: `Mirá este ${car.title} disponible para alquilar`,
+        url: window.location.href,
+      });
+    }
+  }
+
+  /**
+   * Handle photo change from gallery
+   */
+  onPhotoChange(event: { photo: Photo; index: number }): void {
+    const car = this.car();
+    if (!car) return;
+
+    // Track: Photo viewed - using 'cta_clicked' event with photo context
+    this.analytics.trackEvent('cta_clicked', {
+      car_id: car.id,
+      source: 'photo_gallery_navigation',
+      // Additional context stored in source field
+    });
+
+    // Update current photo index for any other components that might need it
+    this.currentPhotoIndex.set(event.index);
   }
 }

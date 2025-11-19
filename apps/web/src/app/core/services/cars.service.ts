@@ -641,7 +641,6 @@ export class CarsService {
     return carsWithPhotos;
   }
 
-
   /**
    * ✅ SPRINT 2 FIX: Verificar si un auto específico está disponible
    * Útil antes de crear una reserva

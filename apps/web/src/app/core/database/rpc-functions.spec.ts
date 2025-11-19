@@ -64,9 +64,7 @@ describe('Database RPC Functions', () => {
         error: null,
       };
 
-      mockSupabase.rpc.and.returnValue(
-        Promise.resolve(mockCarsData) as any,
-      );
+      mockSupabase.rpc.and.returnValue(Promise.resolve(mockCarsData) as any);
 
       const result = await mockSupabase.rpc('get_available_cars', {
         p_start_date: '2025-11-01T10:00:00Z',
