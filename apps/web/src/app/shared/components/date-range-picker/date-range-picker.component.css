@@ -3,6 +3,7 @@
 :host {
   display: block;
   height: 100%;
+  overflow: visible;
 }
 
 /* ==================== CONTAINER ==================== */
@@ -15,6 +16,7 @@
   padding: 1.25rem;
   background: var(--surface-base);
   border-radius: var(--radius-lg);
+  overflow: visible;
 }
 
 /* ==================== HEADER ==================== */
@@ -475,6 +477,8 @@
   border: 1px solid var(--border-default) !important;
   border-radius: var(--radius-lg) !important;
   font-family: inherit !important;
+  z-index: 9999 !important;
+  position: absolute !important;
 }
 
 ::ng-deep .flatpickr-calendar.arrowTop:before,
@@ -499,17 +503,6 @@
   fill: var(--text-primary) !important;
 }
 
-/* Hide month and year selectors entirely */
-::ng-deep .flatpickr-current-month .flatpickr-monthDropdown-months,
-::ng-deep .flatpickr-current-month input.cur-year {
-  display: none !important;
-}
-
-/* Hide select elements in flatpickr months */
-::ng-deep .flatpickr-months > div > div > select {
-  display: none !important;
-}
-
 ::ng-deep .flatpickr-prev-month,
 ::ng-deep .flatpickr-next-month {
   color: var(--text-secondary) !important;
@@ -522,22 +515,6 @@
   fill: var(--cta-default) !important;
 }
 
-/* Hide SVG inside prev/next buttons entirely */
-::ng-deep .flatpickr-prev-month svg,
-::ng-deep .flatpickr-next-month svg {
-  display: none !important;
-}
-
-/* Hide empty divs inside flatpickr-days container */
-::ng-deep .flatpickr-days > div:empty {
-  display: none !important;
-}
-
-/* Hide span elements inside flatpickr-days divs (week separators) */
-::ng-deep .flatpickr-days > div > span {
-  display: none !important;
-}
-
 /* Weekdays */
 ::ng-deep .flatpickr-weekdays {
   background: transparent !important;
@@ -546,11 +523,6 @@
 ::ng-deep span.flatpickr-weekday {
   color: var(--text-secondary) !important;
   font-weight: 600 !important;
-}
-
-/* Hide span elements inside flatpickr-weekdays (week separators) */
-::ng-deep .flatpickr-weekdays > div > span {
-  display: none !important;
 }
 
 /* Days */
