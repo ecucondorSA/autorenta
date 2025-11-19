@@ -548,6 +548,11 @@
   font-weight: 600 !important;
 }
 
+/* Hide span elements inside flatpickr-weekdays (week separators) */
+::ng-deep .flatpickr-weekdays > div > span {
+  display: none !important;
+}
+
 /* Days */
 ::ng-deep .flatpickr-day {
   color: var(--text-primary) !important;
