@@ -113,139 +113,139 @@ body.no-scroll {
     --safe-area-left: env(safe-area-inset-left, 0px);
     --safe-area-right: env(safe-area-inset-right, 0px);
 
-    /* ─── Superficies (Surfaces) ─── */
-    --surface-base: #f3e8d8; /* Marfil cálido - Fondo principal */
-    --surface-raised: #fffcf8; /* Blanco cálido - Tarjetas, modales */
-    --surface-secondary: #e3d2be; /* Beige tostado - Paneles secundarios */
-    --surface-elevated: #faf3ea; /* Superficies elevadas */
-    --surface-hover: #e8dcc8; /* Hover sobre elementos interactivos */
-    --surface-pressed: #d9cdb9; /* Estado pressed */
+    /* ─── Superficies (Surfaces) - Azul Celeste Claro Pastel ─── */
+    --surface-base: #e8f6f9; /* Azul celeste muy claro - Fondo principal */
+    --surface-raised: #f5fbfc; /* Azul celeste casi blanco - Tarjetas, modales */
+    --surface-secondary: #d9eef3; /* Azul celeste suave - Paneles secundarios */
+    --surface-elevated: #f5fbfc; /* Superficies elevadas */
+    --surface-hover: #d0e9f0; /* Azul celeste hover */
+    --surface-pressed: #c1dfea; /* Azul celeste pressed */
 
-    /* ─── Textos ─── */
-    --text-primary: #2b1d14; /* Espresso - Texto principal */
-    --text-secondary: #5c4736; /* Cacao - Texto secundario */
-    --text-muted: #8c7765; /* Arena ahumada - Texto deshabilitado */
-    --text-inverse: #fffbf5; /* Marfil puro - Texto sobre fondos oscuros */
-    --text-link: #3b6e8f; /* Links */
-    --text-link-hover: #2e5670; /* Links hover */
-    --text-placeholder: #a89784; /* Placeholders en inputs */
+    /* ─── Textos - High Contrast ─── */
+    --text-primary: #0a3d52; /* Azul celeste muy oscuro - Máxima legibilidad */
+    --text-secondary: #2b5f72; /* Azul celeste oscuro - Texto secundario legible */
+    --text-muted: #5a7f8a; /* Azul celeste medio - Texto deshabilitado pero visible */
+    --text-inverse: #ffffff; /* Blanco puro - Texto sobre fondos oscuros */
+    --text-link: #0d7fa8; /* Azul celeste más profundo - Links */
+    --text-link-hover: #05536b; /* Azul celeste hover */
+    --text-placeholder: #7a96a1; /* Placeholders azul celeste */
 
     /* ─── Bordes ─── */
-    --border-default: #d7c4b2; /* Bordes por defecto */
-    --border-muted: #e9ded0; /* Bordes sutiles */
-    --border-focus: #3b6e8f; /* Borde de focus (accesibilidad) */
-    --border-hover: #c4b3a0; /* Hover sobre elementos con borde */
+    --border-default: #b3dce6; /* Borde azul celeste sutil pero visible */
+    --border-muted: #c7e9f0; /* Borde azul celeste muy sutil */
+    --border-focus: #0d7fa8; /* Borde de focus azul celeste */
+    --border-hover: #a4d3dd; /* Hover sobre elementos con borde */
 
     /* ─── CTAs y Acciones ─── */
-    --cta-default: #a7d8f4; /* Azul pastel principal */
-    --cta-hover: #8ec9ec; /* Azul pastel hover */
-    --cta-pressed: #75bae4; /* Azul pastel pressed */
-    --cta-text: #050505; /* Negro - Texto sobre CTAs */
-    --cta-secondary: #e3d2be; /* Beige tostado - CTA secundario */
-    --cta-secondary-hover: #d9cdb9; /* CTA secundario hover */
-    --cta-secondary-text: #2b1d14; /* Texto sobre CTA secundario */
+    --cta-default: #7dd3e0; /* Azul celeste claro pastel principal */
+    --cta-hover: #5ec7d6; /* Azul celeste hover */
+    --cta-pressed: #3fbac9; /* Azul celeste pressed */
+    --cta-text: #0a3d52; /* Azul celeste muy oscuro - Texto sobre CTAs */
+    --cta-secondary: #c8e6ee; /* Azul celeste suave - CTA secundario */
+    --cta-secondary-hover: #b3dce6; /* CTA secundario hover */
+    --cta-secondary-text: #0a3d52; /* Texto sobre CTA secundario */
 
-    /* ─── Success (Verde Oliva) ─── */
-    --success-50: #f0f4ed;
-    --success-100: #d9e5cf;
-    --success-200: #b8cda8;
-    --success-300: #9db38b;
-    --success-400: #88a076;
-    --success-500: #6f8860;
-    --success-600: #5a6f4d;
-    --success-700: #495941;
-    --success-800: #3a4634;
-    --success-900: #2c3428;
+    /* ─── Success (Verde Oliva Refinado) ─── */
+    --success-50: #f2f7f0;
+    --success-100: #e3ebd3;
+    --success-200: #c5dcb5;
+    --success-300: #a4c48e;
+    --success-400: #85ac68;
+    --success-500: #699248;
+    --success-600: #527436;
+    --success-700: #3e582a;
+    --success-800: #2d3f1f;
+    --success-900: #1e2a15;
 
-    /* ─── Warning (Beige Cálido) ─── */
-    --warning-50: #fef9f0;
-    --warning-100: #fcefd9;
-    --warning-200: #f7deb3;
-    --warning-300: #f0ca8d;
-    --warning-400: #e8b76b;
-    --warning-500: #c4a882;
-    --warning-600: #a58f6f;
-    --warning-700: #8a7659;
-    --warning-800: #6e5e47;
-    --warning-900: #544736;
+    /* ─── Warning (Ámbar Refinado) ─── */
+    --warning-50: #fffbeb;
+    --warning-100: #fef3c7;
+    --warning-200: #fde68a;
+    --warning-300: #fcd34d;
+    --warning-400: #fbbf24;
+    --warning-500: #f59e0b;
+    --warning-600: #d97706;
+    --warning-700: #b45309;
+    --warning-800: #92400e;
+    --warning-900: #78350f;
 
-    /* ─── Error (Rojo Óxido) ─── */
-    --error-50: #fdf2f2;
-    --error-100: #f9e0e0;
-    --error-200: #f2c1c1;
-    --error-300: #ea9d9d;
-    --error-400: #d97878;
-    --error-500: #b25e5e;
-    --error-600: #984d4d;
-    --error-700: #7d3f3f;
-    --error-800: #633232;
-    --error-900: #4d2626;
+    /* ─── Error (Rojo Refinado) ─── */
+    --error-50: #fef2f2;
+    --error-100: #fee2e2;
+    --error-200: #fecaca;
+    --error-300: #fca5a5;
+    --error-400: #f87171;
+    --error-500: #ef4444;
+    --error-600: #dc2626;
+    --error-700: #b91c1c;
+    --error-800: #991b1b;
+    --error-900: #7f1d1d;
 
-    /* ─── Info (Azul Pastel) ─── */
-    --info-50: #f0f8fc;
-    --info-100: #d9edf7;
-    --info-200: #b3ddf0;
-    --info-300: #8dcce8;
-    --info-400: #a7d8f4;
-    --info-500: #6ba8d4;
-    --info-600: #5a8fb8;
-    --info-700: #4a789c;
-    --info-800: #3b6080;
-    --info-900: #2d4a63;
+    /* ─── Info (Azul Refinado) ─── */
+    --info-50: #f0f9ff;
+    --info-100: #e0f2fe;
+    --info-200: #bae6fd;
+    --info-300: #7dd3fc;
+    --info-400: #38bdf8;
+    --info-500: #0ea5e9;
+    --info-600: #0284c7;
+    --info-700: #0369a1;
+    --info-800: #075985;
+    --info-900: #0c4a6e;
 
     /* ─── Semantic Border Colors ─── */
     --border-error: var(--error-500);
     --border-success: var(--success-500);
     --border-warning: var(--warning-500);
 
-    /* ─── Semantic Error/Warning/Success Tokens (Phase 3 Addition) ─── */
-    /* Error states - Consistent usage across components */
-    --error-text: var(--error-600); /* Text on light backgrounds */
-    --error-text-strong: var(--error-700); /* Strong emphasis text */
-    --error-bg: var(--error-50); /* Background for error panels */
-    --error-bg-hover: var(--error-100); /* Hover state for error elements */
-    --error-border: var(--error-500); /* Borders for error elements */
-    --error-icon: var(--error-600); /* Icon color */
+    /* ─── Semantic Error/Warning/Success Tokens ─── */
+    /* Error states */
+    --error-text: var(--error-700);
+    --error-text-strong: var(--error-800);
+    --error-bg: var(--error-50);
+    --error-bg-hover: var(--error-100);
+    --error-border: var(--error-200);
+    --error-icon: var(--error-600);
 
-    /* Warning states - Consistent usage across components */
-    --warning-text: var(--warning-600); /* Text on light backgrounds */
-    --warning-text-strong: var(--warning-700); /* Strong emphasis text */
-    --warning-bg: var(--warning-50); /* Background for warning panels */
-    --warning-bg-hover: var(--warning-100); /* Hover state for warning elements */
-    --warning-border: var(--warning-500); /* Borders for warning elements */
-    --warning-icon: var(--warning-600); /* Icon color */
+    /* Warning states */
+    --warning-text: var(--warning-800);
+    --warning-text-strong: var(--warning-900);
+    --warning-bg: var(--warning-50);
+    --warning-bg-hover: var(--warning-100);
+    --warning-border: var(--warning-200);
+    --warning-icon: var(--warning-600);
 
-    /* Success states - Consistent usage across components */
-    --success-text: var(--success-600); /* Text on light backgrounds */
-    --success-text-strong: var(--success-700); /* Strong emphasis text */
-    --success-bg: var(--success-50); /* Background for success panels */
-    --success-bg-hover: var(--success-100); /* Hover state for success elements */
-    --success-border: var(--success-500); /* Borders for success elements */
-    --success-icon: var(--success-600); /* Icon color */
+    /* Success states */
+    --success-text: var(--success-700);
+    --success-text-strong: var(--success-800);
+    --success-bg: var(--success-50);
+    --success-bg-hover: var(--success-100);
+    --success-border: var(--success-200);
+    --success-icon: var(--success-600);
 
-    /* Info states - Consistent usage across components */
-    --info-text: var(--info-600); /* Text on light backgrounds */
-    --info-text-strong: var(--info-700); /* Strong emphasis text */
-    --info-bg: var(--info-50); /* Background for info panels */
-    --info-bg-hover: var(--info-100); /* Hover state for info elements */
-    --info-border: var(--info-500); /* Borders for info elements */
-    --info-icon: var(--info-600); /* Icon color */
+    /* Info states */
+    --info-text: var(--info-700);
+    --info-text-strong: var(--info-800);
+    --info-bg: var(--info-50);
+    --info-bg-hover: var(--info-100);
+    --info-border: var(--info-200);
+    --info-icon: var(--info-600);
 
     /* ─── Overlays ─── */
-    --overlay-dark: rgba(43, 29, 20, 0.75); /* Overlay oscuro tonal */
-    --overlay-light: rgba(252, 247, 240, 0.92); /* Overlay claro */
-    --surface-overlay: rgba(43, 29, 20, 0.75); /* Overlay para modales */
+    --overlay-dark: rgba(0, 0, 0, 0.6); /* Standard dark overlay */
+    --overlay-light: rgba(255, 255, 255, 0.8); /* Standard light overlay */
+    --surface-overlay: rgba(0, 0, 0, 0.6);
 
     /* ─── Elevation System (Sombras) ─── */
-    --elevation-1: 0 1px 2px 0 rgba(43, 29, 20, 0.05);
-    --elevation-2: 0 2px 4px 0 rgba(43, 29, 20, 0.08);
-    --elevation-3: 0 4px 8px 0 rgba(43, 29, 20, 0.12);
-    --elevation-4: 0 8px 16px 0 rgba(43, 29, 20, 0.16);
-    --elevation-5: 0 16px 32px 0 rgba(43, 29, 20, 0.2);
+    --elevation-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --elevation-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --elevation-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --elevation-4: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --elevation-5: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 
     /* ─── Focus Rings (Accesibilidad) ─── */
     --ring-focus: 0 0 0 3px rgba(59, 110, 143, 0.3);
-    --ring-error: 0 0 0 3px rgba(178, 94, 94, 0.3);
+    --ring-error: 0 0 0 3px rgba(239, 68, 68, 0.3);
 
     /* ─── Typography Tokens ─── */
     /* Font sizes, weights, and line-heights are defined in tailwind.config.js
@@ -321,112 +321,92 @@ body.no-scroll {
     --footer-height: 280px;
   }
 
-  /* ─── Dark Mode Variables ─── */
+  /* ─── Dark Mode Variables - Refined ─── */
   .dark {
     /* ─── Superficies (Surfaces) ─── */
-    --surface-base: #1a1410; /* Fondo principal oscuro */
-    --surface-raised: #2b1d14; /* Tarjetas, modales */
-    --surface-secondary: #3d2a1e; /* Paneles secundarios */
-    --surface-elevated: #4a3628; /* Superficies elevadas */
-    --surface-hover: #5c4736; /* Hover sobre elementos */
-    --surface-pressed: #6e5845; /* Estado pressed */
+    --surface-base: #0f0f0f; /* Negro profundo neutro - Moderno */
+    --surface-raised: #1c1c1c; /* Gris muy oscuro - Tarjetas */
+    --surface-secondary: #161616; /* Gris oscuro - Paneles */
+    --surface-elevated: #262626; /* Superficies elevadas */
+    --surface-hover: #2a2a2a; /* Hover */
+    --surface-pressed: #333333; /* Pressed */
 
     /* ─── Textos ─── */
-    --text-primary: #fffbf5; /* Marfil - Texto principal */
-    --text-secondary: #e5d2c1; /* Texto secundario */
-    --text-muted: #b08968; /* Texto deshabilitado */
-    --text-inverse: #2b1d14; /* Negro - Texto sobre fondos claros */
-    --text-link: #a7d8f4; /* Links en dark mode */
-    --text-link-hover: #c1e3f7; /* Links hover en dark mode */
-    --text-placeholder: #8c7765; /* Placeholders en inputs */
+    --text-primary: #ffffff; /* Blanco puro - Máximo contraste */
+    --text-secondary: #a3a3a3; /* Gris claro - Secundario */
+    --text-muted: #737373; /* Gris medio - Deshabilitado */
+    --text-inverse: #0f0f0f; /* Negro - Texto sobre fondos claros */
+    --text-link: #38bdf8; /* Azul brillante accesible en dark */
+    --text-link-hover: #7dd3fc; /* Azul más claro hover */
+    --text-placeholder: #525252; /* Placeholders */
 
     /* ─── Bordes ─── */
-    --border-default: #5c4736; /* Bordes por defecto */
-    --border-muted: #4a3628; /* Bordes sutiles */
-    --border-focus: #a7d8f4; /* Borde de focus en dark mode */
-    --border-hover: #6e5845; /* Hover sobre elementos con borde */
+    --border-default: #333333; /* Borde sutil oscuro */
+    --border-muted: #262626; /* Borde muy sutil */
+    --border-focus: #38bdf8; /* Focus */
+    --border-hover: #404040; /* Hover */
 
     /* ─── CTAs y Acciones ─── */
-    --cta-default: #a7d8f4; /* Azul pastel (same as light) */
-    --cta-hover: #8ec9ec; /* Azul pastel hover */
-    --cta-pressed: #75bae4; /* Azul pastel pressed */
-    --cta-text: #050505; /* Negro para contraste */
-    --cta-secondary: #5c4736; /* CTA secundario en dark */
-    --cta-secondary-hover: #6e5845; /* CTA secundario hover */
-    --cta-secondary-text: #fffbf5; /* Texto sobre CTA secundario */
+    --cta-default: #a7d8f4; /* Azul pastel (Brand) */
+    --cta-hover: #bae6fd; /* Más claro en hover */
+    --cta-pressed: #7dd3fc; /* Pressed */
+    --cta-text: #0f172a; /* Negro para contraste */
+    --cta-secondary: #262626; /* Gris oscuro - CTA secundario */
+    --cta-secondary-hover: #333333; /* Hover */
+    --cta-secondary-text: #ffffff; /* Texto blanco */
 
-    /* ─── Success (Verde Oliva) ─── */
-    --success-50: rgba(157, 179, 139, 0.1);
-    --success-100: rgba(157, 179, 139, 0.15);
-    --success-500: #9db38b; /* Same as light */
-    --success-900: #f0f4ed; /* Inverted */
-
-    /* ─── Warning (Beige Cálido) ─── */
-    --warning-50: rgba(196, 168, 130, 0.1);
-    --warning-100: rgba(196, 168, 130, 0.15);
-    --warning-500: #f0ca8d; /* Más claro en dark */
-    --warning-900: #fef9f0; /* Inverted */
-
-    /* ─── Error (Rojo Óxido) ─── */
-    --error-50: rgba(178, 94, 94, 0.1);
-    --error-100: rgba(178, 94, 94, 0.15);
-    --error-500: #ea9d9d; /* Más claro en dark */
-    --error-900: #fdf2f2; /* Inverted */
-
-    /* ─── Info (Azul Pastel) ─── */
-    --info-50: rgba(167, 216, 244, 0.1);
-    --info-100: rgba(167, 216, 244, 0.15);
-    --info-500: #a7d8f4; /* Same as light */
-    --info-900: #f0f8fc; /* Inverted */
+    /* ─── Semantic Colors (Dark Mode) ─── */
+    /* Usamos colores más claros/brillantes para dark mode */
 
     /* ─── Overlays ─── */
-    --overlay-dark: rgba(5, 5, 5, 0.85); /* Overlay más oscuro */
-    --overlay-light: rgba(15, 15, 15, 0.9); /* Overlay claro en dark mode */
-    --surface-overlay: rgba(252, 247, 240, 0.1); /* Overlay para modales en dark */
+    --overlay-dark: rgba(0, 0, 0, 0.8);
+    --overlay-light: rgba(255, 255, 255, 0.1);
+    --surface-overlay: rgba(0, 0, 0, 0.8);
 
     /* ─── Elevation System (Sombras en dark mode) ─── */
-    --elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --elevation-2: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
-    --elevation-3: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
-    --elevation-4: 0 8px 16px 0 rgba(0, 0, 0, 0.6);
-    --elevation-5: 0 16px 32px 0 rgba(0, 0, 0, 0.7);
+    /* En dark mode, las sombras son menos visibles, usamos bordes sutiles o fondos más claros */
+    --elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    --elevation-2: 0 2px 4px 0 rgba(0, 0, 0, 0.6);
+    --elevation-3: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+    --elevation-4: 0 8px 16px 0 rgba(0, 0, 0, 0.8);
+    --elevation-5: 0 16px 32px 0 rgba(0, 0, 0, 0.9);
 
     /* ─── Focus Rings en dark mode ─── */
-    --ring-focus: 0 0 0 3px rgba(167, 216, 244, 0.4);
-    --ring-error: 0 0 0 3px rgba(234, 157, 157, 0.4);
+    --ring-focus: 0 0 0 3px rgba(56, 189, 248, 0.4);
+    --ring-error: 0 0 0 3px rgba(239, 68, 68, 0.4);
 
     /* ─── Semantic Error/Warning/Success Tokens - Dark Mode ─── */
-    /* Error states in dark mode */
-    --error-text: var(--error-500); /* Lighter text for dark backgrounds */
-    --error-text-strong: var(--error-400); /* Strong emphasis */
-    --error-bg: rgba(178, 94, 94, 0.15); /* Subtle background */
-    --error-bg-hover: rgba(178, 94, 94, 0.25); /* Hover state */
-    --error-border: var(--error-500); /* Border color */
-    --error-icon: var(--error-500); /* Icon color */
+    /* Error states */
+    --error-text: #f87171; /* Rojo claro */
+    --error-text-strong: #fca5a5;
+    --error-bg: rgba(127, 29, 29, 0.2);
+    --error-bg-hover: rgba(127, 29, 29, 0.3);
+    --error-border: rgba(248, 113, 113, 0.3);
+    --error-icon: #f87171;
 
-    /* Warning states in dark mode */
-    --warning-text: var(--warning-500); /* Lighter text for dark backgrounds */
-    --warning-text-strong: var(--warning-400); /* Strong emphasis */
-    --warning-bg: rgba(196, 168, 130, 0.15); /* Subtle background */
-    --warning-bg-hover: rgba(196, 168, 130, 0.25); /* Hover state */
-    --warning-border: var(--warning-500); /* Border color */
-    --warning-icon: var(--warning-500); /* Icon color */
+    /* Warning states */
+    --warning-text: #fbbf24; /* Ámbar claro */
+    --warning-text-strong: #fcd34d;
+    --warning-bg: rgba(120, 53, 15, 0.2);
+    --warning-bg-hover: rgba(120, 53, 15, 0.3);
+    --warning-border: rgba(251, 191, 36, 0.3);
+    --warning-icon: #fbbf24;
 
-    /* Success states in dark mode */
-    --success-text: var(--success-500); /* Lighter text for dark backgrounds */
-    --success-text-strong: var(--success-400); /* Strong emphasis */
-    --success-bg: rgba(157, 179, 139, 0.15); /* Subtle background */
-    --success-bg-hover: rgba(157, 179, 139, 0.25); /* Hover state */
-    --success-border: var(--success-500); /* Border color */
-    --success-icon: var(--success-500); /* Icon color */
+    /* Success states */
+    --success-text: #86efac; /* Verde claro */
+    --success-text-strong: #bbf7d0;
+    --success-bg: rgba(20, 83, 45, 0.2);
+    --success-bg-hover: rgba(20, 83, 45, 0.3);
+    --success-border: rgba(134, 239, 172, 0.3);
+    --success-icon: #86efac;
 
-    /* Info states in dark mode */
-    --info-text: var(--info-500); /* Lighter text for dark backgrounds */
-    --info-text-strong: var(--info-400); /* Strong emphasis */
-    --info-bg: rgba(167, 216, 244, 0.15); /* Subtle background */
-    --info-bg-hover: rgba(167, 216, 244, 0.25); /* Hover state */
-    --info-border: var(--info-500); /* Border color */
-    --info-icon: var(--info-500); /* Icon color */
+    /* Info states */
+    --info-text: #38bdf8; /* Azul claro */
+    --info-text-strong: #7dd3fc;
+    --info-bg: rgba(12, 74, 110, 0.2);
+    --info-bg-hover: rgba(12, 74, 110, 0.3);
+    --info-border: rgba(56, 189, 248, 0.3);
+    --info-icon: #38bdf8;
 
     /* ─── Legacy Compatibility ─── */
     --info-light: var(--info-500);
