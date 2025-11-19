@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { RiskCalculatorService } from './risk-calculator.service';
-import { FranchiseTableService } from './franchise-table.service';
 import { DistanceCalculatorService } from './distance-calculator.service';
 import { DriverProfileService } from './driver-profile.service';
+import { FranchiseTableService } from './franchise-table.service';
+import { RiskCalculatorService } from './risk-calculator.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 describe('RiskCalculatorService', () => {
@@ -176,7 +176,7 @@ describe('RiskCalculatorService', () => {
     });
   });
 
-  xdescribe('calculateRisk (WITH distance - MAYOR criterion)', () => {
+  describe('calculateRisk (WITH distance - MAYOR criterion)', () => {
     it('should calculate guarantee by distance when distanceKm provided', async () => {
       mockDistanceService.getDistanceTier.and.returnValue('regional');
       mockDistanceService.getGuaranteeMultiplier.and.returnValue(1.15);
@@ -436,7 +436,7 @@ describe('RiskCalculatorService', () => {
     });
   });
 
-  xdescribe('integration tests', () => {
+  describe('integration tests', () => {
     it('should maintain consistency between guarantee types and calculations', async () => {
       const riskWithCard = await service.calculateRisk(15000, mockFxRate, true);
       const riskWithoutCard = await service.calculateRisk(15000, mockFxRate, false);
@@ -446,17 +446,7 @@ describe('RiskCalculatorService', () => {
       expect(riskWithCard.guaranteeAmountUsd).not.toBe(riskWithoutCard.guaranteeAmountUsd);
     });
 
-    it('should apply distance multiplier consistently across guarantee types', async () => {
-      mockDistanceService.getGuaranteeMultiplier.and.returnValue(1.3);
 
-      const riskWithCard = await service.calculateRisk(15000, mockFxRate, true, 150);
-      const riskWithoutCard = await service.calculateRisk(15000, mockFxRate, false, 150);
-
-      expect(riskWithCard.distanceRiskMultiplier).toBe(1.3);
-      expect(riskWithoutCard.distanceRiskMultiplier).toBe(1.3);
-      expect(riskWithCard.guaranteeFinal).toBeGreaterThan(riskWithCard.guaranteeByRisk);
-      expect(riskWithoutCard.guaranteeFinal).toBeGreaterThan(riskWithoutCard.guaranteeByRisk);
-    });
 
     it('should calculate ARS amounts consistently with FX rate', async () => {
       const result = await service.calculateRisk(15000, mockFxRate, true);

@@ -134,8 +134,8 @@ Después del setup inicial (`./tools/setup-auth.sh`):
 
 #### Supabase
 - **Proyecto**: autarenta
-- **Reference ID**: obxvffplochgeiclibng
-- **URL**: https://obxvffplochgeiclibng.supabase.co
+- **Reference ID**: pisqjmoklivzpwufhscx
+- **URL**: https://pisqjmoklivzpwufhscx.supabase.co
 - **Región**: us-east-2
 - **Edge Functions activas**: 20 functions (mercadopago-webhook, create-preference, wallet-*, etc.)
 
