@@ -250,7 +250,7 @@
     <div class="grid gap-6 lg:grid-cols-5">
       <div class="lg:col-span-3">
         <!-- Main Form -->
-        <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="space-y-6" data-testid="publish-form">
           <!-- 1. Vehículo -->
           <div class="publish-card bg-surface-raised rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">

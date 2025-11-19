@@ -123,7 +123,6 @@ setup('authenticate as renter', async ({ page }) => {
 /**
  * Setup authenticated owner session
  */
-/*
 setup('authenticate as owner', async ({ page }) => {
   console.log('Setting up owner authentication...');
 
@@ -150,9 +149,10 @@ setup('authenticate as owner', async ({ page }) => {
   await page.context().storageState({ path: authFiles.owner });
   console.log('✅ Owner authenticated and state saved');
 });
-*/
 
-/*
+/**
+ * Setup authenticated admin session
+ */
 setup('authenticate as admin', async ({ page }) => {
   console.log('Setting up admin authentication...');
 
@@ -179,4 +179,3 @@ setup('authenticate as admin', async ({ page }) => {
   await page.context().storageState({ path: authFiles.admin });
   console.log('✅ Admin authenticated and state saved');
 });
-*/
