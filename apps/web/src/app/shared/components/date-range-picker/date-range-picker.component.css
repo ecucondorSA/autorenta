@@ -499,15 +499,15 @@
   fill: var(--text-primary) !important;
 }
 
+/* Hide month and year selectors entirely */
 ::ng-deep .flatpickr-current-month .flatpickr-monthDropdown-months,
 ::ng-deep .flatpickr-current-month input.cur-year {
-  color: var(--text-primary) !important;
-  font-weight: 600 !important;
+  display: none !important;
 }
 
-::ng-deep .flatpickr-current-month .flatpickr-monthDropdown-months:hover,
-::ng-deep .flatpickr-current-month input.cur-year:hover {
-  background: var(--surface-hover) !important;
+/* Hide select elements in flatpickr months */
+::ng-deep .flatpickr-months > div > div > select {
+  display: none !important;
 }
 
 ::ng-deep .flatpickr-prev-month,
