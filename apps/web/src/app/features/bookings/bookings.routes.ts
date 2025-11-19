@@ -7,6 +7,12 @@ export const BOOKINGS_ROUTES: Routes = [
     loadComponent: () => import('./my-bookings/my-bookings.page').then((m) => m.MyBookingsPage),
   },
   {
+    path: 'wizard',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./pages/booking-wizard/booking-wizard.page').then((m) => m.BookingWizardPage),
+  },
+  {
     path: 'owner',
     loadComponent: () =>
       import('./owner-bookings/owner-bookings.page').then((m) => m.OwnerBookingsPage),

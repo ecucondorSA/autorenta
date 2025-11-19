@@ -1,0 +1,105 @@
+<div class="insurance-step-container">
+  <!-- Header -->
+  <div class="step-header">
+    <h2>Protege tu viaje</h2>
+    <p>Selecciona el nivel de cobertura que necesitas</p>
+  </div>
+
+  <!-- Insurance Options -->
+  <div class="insurance-options">
+    @for (option of insuranceOptions; track option.level) {
+      <ion-card
+        class="insurance-card"
+        [class.selected]="selectedLevel() === option.level"
+        [class.recommended]="option.recommended"
+        (click)="selectInsurance(option.level)"
+      >
+        @if (option.recommended) {
+          <div class="recommended-badge">
+            <ion-icon name="star"></ion-icon>
+            Recomendado
+          </div>
+        }
+
+        <ion-card-header>
+          <ion-card-title>{{ option.name }}</ion-card-title>
+          <ion-card-subtitle>{{ option.description }}</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          <!-- Price -->
+          <div class="price-section">
+            <span class="price">${{ option.price }}</span>
+            <span class="price-label">/día</span>
+          </div>
+
+          <!-- Coverage Details -->
+          <div class="coverage-details">
+            <div class="coverage-item">
+              <span class="label">Cobertura máxima:</span>
+              <span class="value">${{ option.coverage | number }}</span>
+            </div>
+            <div class="coverage-item">
+              <span class="label">Deducible:</span>
+              <span class="value">
+                @if (option.deductible === 0) {
+                  <strong style="color: var(--ion-color-success)">Sin deducible</strong>
+                } @else {
+                  ${{ option.deductible | number }}
+                }
+              </span>
+            </div>
+          </div>
+
+          <!-- Features List -->
+          <div class="features-list">
+            <h4>Incluye:</h4>
+            <ul>
+              @for (feature of option.features; track feature) {
+                <li>
+                  <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                  {{ feature }}
+                </li>
+              }
+            </ul>
+          </div>
+
+          <!-- Select Button -->
+          <ion-button
+            expand="block"
+            [fill]="selectedLevel() === option.level ? 'solid' : 'outline'"
+            [color]="selectedLevel() === option.level ? 'primary' : 'medium'"
+            class="select-button"
+          >
+            @if (selectedLevel() === option.level) {
+              <ion-icon slot="start" name="checkmark-circle"></ion-icon>
+              Seleccionado
+            } @else {
+              Seleccionar
+            }
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    }
+  </div>
+
+  <!-- Info Section -->
+  <ion-card class="info-card">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+        ¿Por qué necesito seguro?
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        El seguro te protege contra daños imprevistos al vehículo durante tu renta.
+        Es obligatorio contar con al menos la cobertura básica para poder completar la reserva.
+      </p>
+      <p>
+        <strong>Consejo:</strong> Si es tu primer viaje o planeas conducir largas distancias,
+        recomendamos la cobertura Estándar o Premium para mayor tranquilidad.
+      </p>
+    </ion-card-content>
+  </ion-card>
+</div>

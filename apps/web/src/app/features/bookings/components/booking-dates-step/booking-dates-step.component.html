@@ -1,0 +1,140 @@
+<div class="dates-step-container">
+  <!-- Header -->
+  <div class="step-header">
+    <h2>¿Cuándo necesitas el auto?</h2>
+    <p>Selecciona las fechas de tu viaje</p>
+  </div>
+
+  <!-- Car Info Card -->
+  @if (car) {
+    <ion-card class="car-info-card">
+      <ion-card-content>
+        <div class="car-info-content">
+          <img
+            [src]="car.photos?.[0]?.url || '/assets/placeholder-car.jpg'"
+            [alt]="car.brand + ' ' + car.model"
+            class="car-thumbnail"
+          />
+          <div class="car-details">
+            <h3>{{ car.brand }} {{ car.model }}</h3>
+            <p class="car-price">${{ car.price_per_day }}/día</p>
+            @if (car.location) {
+              <p class="car-location">
+                <ion-icon name="location-outline"></ion-icon>
+                {{ car.location.address }}
+              </p>
+            }
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  }
+
+  <!-- Date Range Picker -->
+  <div class="section">
+    <h3 class="section-title">
+      <ion-icon name="calendar-outline"></ion-icon>
+      Fechas del viaje
+    </h3>
+    <app-date-range-picker
+      [startDate]="startDate()"
+      [endDate]="endDate()"
+      [minDate]="new Date()"
+      (dateRangeChange)="onDateRangeChange($event)"
+    />
+
+    @if (totalDays() > 0) {
+      <div class="date-summary">
+        <p>
+          <ion-icon name="time-outline"></ion-icon>
+          {{ totalDays() }} día{{ totalDays() > 1 ? 's' : '' }} de renta
+        </p>
+        <p class="estimated-price">
+          <strong>Precio estimado:</strong> ${{ estimatedPrice() | number:'1.2-2' }}
+        </p>
+      </div>
+    }
+  </div>
+
+  <!-- Pickup Location -->
+  <div class="section">
+    <h3 class="section-title">
+      <ion-icon name="pin-outline"></ion-icon>
+      Lugar de recogida
+    </h3>
+    <app-booking-location-form
+      [initialLocation]="pickupLocation()"
+      [label]="'¿Dónde quieres recoger el auto?'"
+      [placeholder]="'Ej: Aeropuerto, hotel, dirección...'"
+      (locationChange)="onPickupLocationChange($event)"
+    />
+  </div>
+
+  <!-- Same Location Checkbox -->
+  <div class="same-location-toggle">
+    <ion-item lines="none">
+      <ion-checkbox
+        [(ngModel)]="sameLocation"
+        (ionChange)="onSameLocationToggle()"
+        slot="start"
+      ></ion-checkbox>
+      <ion-label>
+        Devolver en el mismo lugar
+      </ion-label>
+    </ion-item>
+  </div>
+
+  <!-- Dropoff Location (if different) -->
+  @if (!sameLocation()) {
+    <div class="section">
+      <h3 class="section-title">
+        <ion-icon name="pin-outline"></ion-icon>
+        Lugar de devolución
+      </h3>
+      <app-booking-location-form
+        [initialLocation]="dropoffLocation()"
+        [label]="'¿Dónde quieres devolver el auto?'"
+        [placeholder]="'Ej: Aeropuerto, hotel, dirección...'"
+        (locationChange)="onDropoffLocationChange($event)"
+      />
+      <ion-note color="warning" class="different-location-note">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        La devolución en un lugar diferente puede tener un costo adicional
+      </ion-note>
+    </div>
+  }
+
+  <!-- Validation Messages -->
+  @if (!canProceed()) {
+    <div class="validation-message">
+      <ion-icon name="alert-circle-outline" color="warning"></ion-icon>
+      <p>
+        @if (!startDate() || !endDate()) {
+          Por favor selecciona las fechas de tu viaje
+        } @else if (!pickupLocation()) {
+          Por favor indica dónde quieres recoger el auto
+        } @else if (!sameLocation() && !dropoffLocation()) {
+          Por favor indica dónde quieres devolver el auto
+        }
+      </p>
+    </div>
+  }
+
+  <!-- Tips Section -->
+  <ion-card class="tips-card">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="bulb-outline"></ion-icon>
+        Consejos
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ul class="tips-list">
+        <li>Las rentas largas (7+ días) pueden tener descuentos</li>
+        <li>Verifica la disponibilidad del propietario antes de reservar</li>
+        <li>Considera tiempo extra para recoger y devolver el auto</li>
+        <li>La devolución tardía puede tener cargos adicionales</li>
+      </ul>
+    </ion-card-content>
+  </ion-card>
+</div>
