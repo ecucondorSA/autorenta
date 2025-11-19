@@ -522,6 +522,12 @@
   fill: var(--cta-default) !important;
 }
 
+/* Hide SVG inside disabled prev/next buttons */
+::ng-deep .flatpickr-prev-month.flatpickr-disabled svg,
+::ng-deep .flatpickr-next-month.flatpickr-disabled svg {
+  display: none !important;
+}
+
 /* Weekdays */
 ::ng-deep .flatpickr-weekdays {
   background: transparent !important;
