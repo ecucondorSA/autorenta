@@ -2,24 +2,13 @@
 
 <!-- Hero Header with Search -->
 <div
-  class="hero-header relative bg-gradient-to-br from-blue-400 via-cyan-300 to-teal-200 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-white overflow-hidden min-h-[600px] flex items-center"
+  class="hero-header relative bg-gradient-to-br from-cyan-400 via-cyan-300 to-blue-300 dark:from-cyan-900 dark:via-cyan-800 dark:to-blue-900 text-white overflow-hidden min-h-[600px] flex items-center"
 >
-  <!-- Animated background pattern -->
-  <div class="absolute inset-0 opacity-10 dark:opacity-5">
-    <div
-      class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')]"
-    ></div>
-  </div>
+  <!-- Clean Gradient Background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-cyan-400 via-cyan-300 to-blue-300"></div>
 
-  <!-- Gradient overlay for better text contrast -->
-  <div
-    class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/10 dark:from-black/40 dark:via-black/10 dark:to-black/30"
-  ></div>
-
-  <!-- Subtle accent gradient for dark mode depth -->
-  <div
-    class="absolute inset-0 bg-gradient-to-tr from-cyan-900/20 via-transparent to-blue-900/20 opacity-0 dark:opacity-100"
-  ></div>
+  <!-- Subtle Pattern Overlay -->
+  <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 32px 32px;"></div>
 
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 w-full">
     <!-- Hero Title Section -->
@@ -52,13 +41,13 @@
 
       <!-- Título principal -->
       <h2
-        class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 drop-shadow-2xl leading-tight"
+        class="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight leading-tight"
       >
         Encuentra tu auto ideal
       </h2>
 
       <!-- Subtítulo descriptivo -->
-      <p class="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto drop-shadow-lg">
+      <p class="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto font-light">
         Miles de vehículos verificados listos para tu próxima aventura
       </p>
 
@@ -98,7 +87,7 @@
     <!-- Quick Actions (replacing old quick stats) -->
     <div class="hidden md:flex items-center justify-center gap-4 mb-8">
       <button
-        class="px-6 py-3 bg-white text-cyan-600 font-semibold rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transform transition-all duration-200"
+        class="px-6 py-3 bg-white text-cyan-700 font-semibold rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transform transition-all duration-200"
         type="button"
         (click)="handleHeroQuickBook()"
       >
@@ -112,47 +101,12 @@
       </button>
     </div>
 
-    <!-- Preserved for compatibility -->
-    <div class="hidden">
-      <div class="flex items-center gap-3">
-        <div
-          class="w-10 h-10 bg-surface-raised/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
-        >
-          <span class="text-2xl">🚗</span>
-        </div>
-        <div>
-          <h1 class="text-xl font-bold text-text-primary dark:text-text-primary drop-shadow-sm">
-            Autorentar
-          </h1>
-          <p class="text-xs text-text-primary dark:text-text-primary drop-shadow-sm">
-            Tu auto ideal te espera
-          </p>
-        </div>
-      </div>
 
-      <div class="flex items-center gap-3">
-        <!-- Quick stats -->
-        <div class="hidden md:flex items-center gap-4 text-sm">
-          <div
-            class="flex items-center gap-2 bg-surface-base/95 dark:bg-surface-raised/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-text-primary dark:text-text-primary shadow-md"
-          >
-            <span class="text-lg">⚡</span>
-            <span class="font-medium">{{ visibleCars().length }} autos disponibles</span>
-          </div>
-          <div
-            class="flex items-center gap-2 bg-surface-base/95 dark:bg-surface-raised/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-text-primary dark:text-text-primary shadow-md"
-          >
-            <span class="text-lg">✓</span>
-            <span class="font-medium">Reserva en 2 minutos</span>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Enhanced Search Card -->
-    <div class="max-w-5xl mx-auto transform translate-y-8">
+    <div class="max-w-5xl mx-auto transform translate-y-8 relative z-20">
       <div
-        class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] p-6 md:p-8 lg:p-10 border border-white/20 dark:border-slate-700/50 transition-all duration-300"
+        class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-6 md:p-8 border border-slate-100 dark:border-slate-700"
       >
         <!-- Search Header -->
         <div class="flex items-center justify-between mb-8">
@@ -203,7 +157,7 @@
                 (focus)="showLocationSuggestions.set(true)"
                 (blur)="onLocationInputBlur()"
                 (keydown.escape)="closeLocationSuggestions()"
-                class="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 dark:focus:border-cyan-400 text-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200 shadow-sm group-hover:border-slate-300 dark:group-hover:border-slate-600"
+                class="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 dark:focus:border-cyan-400 text-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200 shadow-sm group-hover:border-slate-300 dark:group-hover:border-slate-600"
               />
 
               <!-- Loading indicator -->
@@ -325,7 +279,7 @@
         <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700/50">
           <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">Filtros rápidos:</p>
-            <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full scrollbar-hide mask-linear-fade">
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full scrollbar-hide">
               <app-tooltip
                 *ngFor="let filter of quickFilters"
                 [text]="filter.tooltip || 'Filtrar autos por ' + filter.label.toLowerCase()"
@@ -440,16 +394,7 @@
     </div>
   </div>
 
-  <!-- Wave separator -->
-  <div class="absolute bottom-0 left-0 right-0">
-    <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-12">
-      <path
-        d="M0 48H1440V0C1440 0 1080 48 720 48C360 48 0 0 0 0V48Z"
-        fill="currentColor"
-        class="text-text-primary dark:text-text-primary"
-      />
-    </svg>
-  </div>
+  <!-- Wave separator REMOVED -->
 </div>
 
 <!-- Main Content Area -->
@@ -520,317 +465,189 @@
       </div>
     </div>
     <!-- Stats Strip -->
-    <div class="flex flex-col lg:flex-row gap-8 items-start">
-      <!-- LEFT PANEL: List/Grid Content -->
-      <div class="w-full lg:w-[55%] xl:w-[60%]" [class.hidden]="viewMode() === 'map' && !isDesktop()">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative h-[calc(100vh-100px)]">
+      <!-- LEFT PANEL: List/Grid Content (35% width approx) -->
+      <div class="lg:col-span-4 xl:col-span-4 w-full h-full overflow-y-auto pr-2 custom-scrollbar" [class.hidden]="viewMode() === 'map' && !isDesktop()">
 
-        <!-- Stats Strip -->
-        <div class="mb-6">
-          <app-stats-strip [stats]="statsStripData()" />
-        </div>
 
-        <!-- Trust Badges -->
-        <div class="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <app-tooltip
-            text="Todos nuestros locadores pasan por un proceso de verificación exhaustivo con DNI, licencia de conducir y antecedentes"
-            position="top"
-          >
-            <div
-              class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-border-default dark:border-border-default hover:border-success-light dark:hover:border-success-light group"
-            >
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-12 h-12 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
-                >
-                  <span class="text-2xl">✓</span>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p
-                    class="text-sm font-semibold text-text-primary dark:text-text-primary whitespace-nowrap"
-                  >
-                    Verificación 100% Segura
-                  </p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary">
-                    Locadores verificados
-                  </p>
-                </div>
-              </div>
+
+        <!-- Trust Badges Strip -->
+        <div class="mb-12 grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
+            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center text-2xl">
+              ✓
             </div>
-          </app-tooltip>
-
-          <app-tooltip
-            text="Cobertura completa de seguro para daños al vehículo, robo y responsabilidad civil incluida en todas las reservas"
-            position="top"
-          >
-            <div
-              class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-border-default dark:border-border-default hover:border-cta-default dark:hover:border-cta-default group"
-            >
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-12 h-12 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
-                >
-                  <span class="text-2xl">🛡️</span>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p
-                    class="text-sm font-semibold text-text-primary dark:text-text-primary whitespace-nowrap"
-                  >
-                    Seguro Incluido
-                  </p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary">Cobertura completa</p>
-                </div>
-              </div>
+            <div>
+              <h3 class="font-bold text-slate-900 dark:text-white text-sm">Verificación 100%</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Locadores validados</p>
             </div>
-          </app-tooltip>
+          </div>
 
-          <app-tooltip
-            text="Reserva sin necesidad de tarjeta de crédito. Paga en efectivo al recoger el auto o usa otros métodos de pago"
-            position="top"
-          >
-            <div
-              class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-border-default dark:border-border-default hover:border-cta-default dark:hover:border-cta-default group"
-            >
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-12 h-12 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
-                >
-                  <span class="text-2xl">💳</span>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p
-                    class="text-sm font-semibold text-text-primary dark:text-text-primary whitespace-nowrap"
-                  >
-                    Sin Tarjeta Requerida
-                  </p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary">Múltiples métodos</p>
-                </div>
-              </div>
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
+            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
+              🛡️
             </div>
-          </app-tooltip>
+            <div>
+              <h3 class="font-bold text-slate-900 dark:text-white text-sm">Seguro Incluido</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Cobertura total</p>
+            </div>
+          </div>
 
-          <app-tooltip
-            text="Entrega inmediata en la mayoría de las ubicaciones. Recoge tu auto en minutos sin esperas innecesarias"
-            position="top"
-          >
-            <div
-              class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-border-default dark:border-border-default hover:border-warning-light dark:hover:border-warning-light group"
-            >
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-12 h-12 bg-warning-light/20 dark:bg-warning-light/30 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
-                >
-                  <span class="text-2xl">⚡</span>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p
-                    class="text-sm font-semibold text-text-primary dark:text-text-primary whitespace-nowrap"
-                  >
-                    Entrega Inmediata
-                  </p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary">En minutos</p>
-                </div>
-              </div>
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
+            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center text-2xl">
+              💳
             </div>
-          </app-tooltip>
+            <div>
+              <h3 class="font-bold text-slate-900 dark:text-white text-sm">Sin Tarjeta</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Múltiples pagos</p>
+            </div>
+          </div>
+
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
+            <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 rounded-full flex items-center justify-center text-2xl">
+              ⚡
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-900 dark:text-white text-sm">Entrega Rápida</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">En minutos</p>
+            </div>
+          </div>
         </div>
 
         <!-- View Toggle & Sort -->
-        <div class="flex flex-col xs:flex-row xs:items-center xs:justify-between mb-8">
-          <h2 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-4 xs:mb-0">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             Autos cerca de ti
-            <span class="text-base font-normal text-text-secondary ml-2">({{ visibleCars().length }} resultados)</span>
+            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs rounded-full">{{ visibleCars().length }}</span>
           </h2>
 
-          <div class="flex items-center gap-2">
-            <!-- View mode toggle -->
-            <div class="bg-surface-raised dark:bg-surface-raised rounded-lg p-1 shadow-sm flex">
-              <button
-                [class.bg-cta-default]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-                [class.text-cta-text]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-                [class.text-text-primary]="!(viewMode() === 'grid' || (isDesktop() && viewMode() === 'map'))"
-                (click)="viewMode.set('grid')"
-                class="px-3 py-2 rounded-md transition-all duration-200"
-                title="Vista Cuadrícula"
+          <div class="flex items-center gap-3">
+            <!-- Custom Sort Dropdown -->
+            <div class="relative group">
+              <select
+                [value]="sortOrder()"
+                (change)="onSortOrderChange($event)"
+                class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 pr-10 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
               >
-                <span class="text-lg">▦</span>
-              </button>
-              <button
-                [class.bg-cta-default]="viewMode() === 'list'"
-                [class.text-cta-text]="viewMode() === 'list'"
-                [class.text-text-primary]="viewMode() !== 'list'"
-                (click)="viewMode.set('list')"
-                class="px-3 py-2 rounded-md transition-all duration-200"
-                title="Vista Lista"
-              >
-                <span class="text-lg">☰</span>
-              </button>
-              <!-- Map Toggle (Hidden on Desktop) -->
-              <button
-                [class.bg-cta-default]="viewMode() === 'map'"
-                [class.text-cta-text]="viewMode() === 'map'"
-                [class.text-text-primary]="viewMode() !== 'map'"
-                (click)="viewMode.set('map')"
-                class="px-3 py-2 rounded-md transition-all duration-200 lg:hidden"
-                title="Vista Mapa"
-              >
-                <span class="text-lg">🗺️</span>
-              </button>
+                <option value="score">Relevancia</option>
+                <option value="distance">Más cercanos</option>
+                <option value="price_asc">Precio: menor a mayor</option>
+                <option value="price_desc">Precio: mayor a menor</option>
+                <option value="rating">Mejor valorados</option>
+              </select>
+              <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </div>
 
-            <!-- Sort dropdown -->
-            <select
-              [value]="sortOrder()"
-              (change)="onSortOrderChange($event)"
-              class="bg-surface-raised dark:bg-surface-raised border border-border-default dark:border-border-default rounded-lg px-4 py-2 text-sm text-text-primary dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
-            >
-              <option value="score">Relevancia</option>
-              <option value="distance">Más cercanos</option>
-              <option value="price_asc">Precio: menor a mayor</option>
-              <option value="price_desc">Precio: mayor a menor</option>
-              <option value="rating">Mejor valorados</option>
-            </select>
+            <!-- Segmented View Toggle -->
+            <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center">
+              <button
+                [class.bg-white]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+                [class.dark:bg-slate-700]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+                [class.shadow-sm]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+                [class.text-slate-900]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+                [class.dark:text-white]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+                [class.text-slate-500]="!(viewMode() === 'grid' || (isDesktop() && viewMode() === 'map'))"
+                (click)="viewMode.set('grid')"
+                class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                <span class="hidden sm:inline">Cuadrícula</span>
+              </button>
+              <button
+                [class.bg-white]="viewMode() === 'list'"
+                [class.dark:bg-slate-700]="viewMode() === 'list'"
+                [class.shadow-sm]="viewMode() === 'list'"
+                [class.text-slate-900]="viewMode() === 'list'"
+                [class.dark:text-white]="viewMode() === 'list'"
+                [class.text-slate-500]="viewMode() !== 'list'"
+                (click)="viewMode.set('list')"
+                class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                <span class="hidden sm:inline">Lista</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Grid View -->
+        <!-- Grid View - Video Game Style -->
         <div
           *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-          class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8"
+          class="flex flex-col gap-6"
         >
           <div
-            *ngFor="let car of visibleCars(); trackBy: trackByCarId"
-            class="car-card-enhanced group"
+            *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
+            class="car-card-game group relative transition-all duration-300"
+            [class.scale-105]="selectedCarId() === car.id"
+            [class.z-10]="selectedCarId() === car.id"
             (click)="onCarSelected(car.id)"
+            role="button"
+            [attr.aria-label]="'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup"
+            tabindex="0"
+            (keydown.enter)="onCarSelected(car.id)"
+            (keydown.space)="onCarSelected(car.id)"
           >
-            <!-- Enhanced Car Card -->
+            <!-- Game Card -->
             <div
-              class="bg-surface-raised dark:bg-surface-raised text-text-primary rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-[1.02]"
+              class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-lg overflow-hidden cursor-pointer border-2 transition-all duration-300"
+              [class.border-cyan-400]="selectedCarId() === car.id"
+              [class.shadow-cyan-500/50]="selectedCarId() === car.id"
+              [class.border-transparent]="selectedCarId() !== car.id"
             >
-              <!-- Image Container with Badge -->
-              <div class="relative aspect-[4/3] overflow-hidden">
+              <!-- Image Container -->
+              <div class="relative h-48 overflow-hidden">
                 <img
                   [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
                   [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
-                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  loading="lazy"
+                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  [loading]="i < 2 ? 'eager' : 'lazy'"
+                  [attr.fetchpriority]="i < 2 ? 'high' : 'auto'"
                 />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
 
-                <!-- Gradient overlay -->
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
-                ></div>
-
-                <!-- Top badges -->
-                <div class="absolute top-3 left-3 flex flex-col gap-2">
-                  <span
-                    *ngIf="car.distance && car.distance < 5"
-                    class="bg-success-light text-text-primary text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm"
-                  >
-                    ⚡ Cerca de ti
-                  </span>
-                  <span
-                    *ngIf="getCarInstantBooking(car)"
-                    class="bg-warning-light text-text-primary text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm"
-                  >
-                    🔥 Reserva instantánea
-                  </span>
-                </div>
-
-                <!-- Favorite button -->
-                <button
-                  class="absolute top-3 right-3 w-9 h-9 bg-surface-raised/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-surface-raised transition-colors shadow-lg"
-                >
-                  <span class="text-lg">♡</span>
-                </button>
-
-                <!-- Distance badge at bottom -->
-                <div *ngIf="car.distanceText" class="absolute bottom-3 left-3">
-                  <span
-                    class="bg-surface-raised/95 backdrop-blur-sm text-text-primary text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5"
-                  >
-                    <span>📍</span>
-                    <span>{{ car.distanceText }}</span>
-                  </span>
-                </div>
-
-                <!-- Photo counter -->
-                <div class="absolute bottom-3 right-3">
-                  <span
-                    class="bg-surface-overlay/70 backdrop-blur-sm text-text-inverse text-xs px-2 py-1 rounded-full flex items-center gap-1"
-                  >
-                    <span>📷</span>
-                    <span>{{ extractPhotoGallery(car).length }}</span>
-                  </span>
+                <!-- Price Badge (Circular) -->
+                <div class="absolute top-4 right-4 w-16 h-16 bg-cyan-500 rounded-full flex flex-col items-center justify-center text-white shadow-lg border-2 border-white transform group-hover:scale-110 transition-transform">
+                  <span class="text-xs font-bold">USD</span>
+                  <span class="text-lg font-black leading-none">{{ car.price_per_day | number: '1.0-0' }}</span>
                 </div>
               </div>
 
-              <!-- Card Content -->
-              <div class="p-4 text-text-primary">
-                <!-- Title and Rating -->
-                <div class="mb-3">
-                  <div class="flex items-center gap-2 mb-1">
-                    <h3
-                      class="text-lg font-bold text-text-primary dark:text-text-primary truncate flex-1 min-w-0"
-                    >
-                      {{ car.brand_text_backup }} {{ car.model_text_backup }}
-                    </h3>
-                    <!-- ✅ NEW: Dynamic pricing badge -->
-                    @if (car.uses_dynamic_pricing) {
-                      <app-dynamic-pricing-badge />
-                    }
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-1 text-xs text-text-secondary">
-                      <span class="text-warning-500">⭐</span>
-                      <span class="font-semibold">4.8</span>
-                      <span>(124 viajes)</span>
+              <!-- Content -->
+              <div class="p-5">
+                <h3 class="text-xl font-black text-slate-800 dark:text-white mb-3 truncate">
+                  {{ car.brand_text_backup }} {{ car.model_text_backup }}
+                </h3>
+
+                <!-- Circular Specs -->
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg" title="Transmisión" aria-label="Transmisión">
+                      ⚙️
                     </div>
-                    <span class="text-xs text-text-secondary truncate">{{ car.location_city }}</span>
+                    <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg" title="Asientos" aria-label="Asientos">
+                      👥
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg" title="Combustible" aria-label="Combustible">
+                      ⛽
+                    </div>
                   </div>
-                </div>
 
-                <!-- Features -->
-                <div class="flex items-center gap-3 mb-4 text-xs text-text-secondary flex-wrap">
-                  <div class="flex items-center gap-1">
-                    <span>⚙️</span>
-                    <span>{{ car.transmission || 'Manual' }}</span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <span>👥</span>
-                    <span>{{ car.seats || 5 }} asientos</span>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <span>⛽</span>
-                    <span>{{ car.fuel_type || 'Nafta' }}</span>
-                  </div>
-                </div>
-
-                <!-- Price and CTA -->
-                <div
-                  class="flex items-center justify-between pt-3 border-t border-border-default dark:border-border-muted"
-                >
-                  <div>
-                    <p class="text-xs text-text-secondary">Desde</p>
-                    <p class="text-2xl font-bold text-cta-default">
-                      ${{ car.price_per_day | number: '1.0-0' }}
-                      <span class="text-sm font-normal text-text-secondary">/día</span>
-                    </p>
-                  </div>
+                  <!-- Action Button -->
                   <button
-                    (click)="onQuickBook(car.id); $event.stopPropagation()"
-                    class="px-4 py-2 bg-cta-default text-cta-text font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+                    class="w-10 h-10 rounded-full bg-cyan-500 text-white flex items-center justify-center hover:bg-cyan-400 transition-colors"
+                    aria-label="Seleccionar vehículo"
                   >
-                    Reservar
+                    ➜
                   </button>
                 </div>
               </div>
-
-              <!-- Social Proof -->
-              <div class="px-4 pb-4 text-text-primary">
-                <app-social-proof-indicators [car]="car" />
-              </div>
             </div>
           </div>
+
 
           <!-- Loading skeleton -->
           <ng-container *ngIf="loading()">
@@ -995,9 +812,9 @@
         </div>
       </div>
 
-      <!-- RIGHT PANEL: Map (Desktop Sticky) -->
-      <div class="w-full lg:w-[45%] xl:w-[40%] lg:block" [class.hidden]="viewMode() !== 'map' && !isDesktop()">
-        <div class="sticky top-24 h-[calc(100vh-120px)] min-h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700">
+      <!-- RIGHT PANEL: Map (65% width approx) -->
+      <div class="lg:col-span-8 xl:col-span-8 hidden lg:block h-full sticky top-24">
+        <div class="h-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-700 relative">
           <app-cars-map
             [cars]="carMapLocations()"
             [selectedCarId]="selectedCarId()"
@@ -1011,6 +828,7 @@
             (searchRadiusChange)="onSearchRadiusChange($event)"
             class="w-full h-full"
           />
+          <app-map-controls (controlEvent)="onMapControlEvent($event)" />
         </div>
       </div>
     </div>
@@ -1033,6 +851,7 @@
         (searchRadiusChange)="onSearchRadiusChange($event)"
         class="w-full h-full"
       />
+      <app-map-controls (controlEvent)="onMapControlEvent($event)" />
     </div>
   </div>
 </div>
@@ -1048,12 +867,13 @@
 />
 
 <!-- Responsive Filters Drawer (Desktop Sidebar + Mobile Bottom Sheet) -->
-<app-filters-drawer
+<!-- TODO: Re-enable filters drawer -->
+<!-- <app-filters-drawer
   [availableCars]="mapFilterSourceLocations()"
   [isOpenInput]="showFilters()"
   (filterChange)="onFiltersChange($event)"
   (onClose)="closeFiltersPanel()"
-></app-filters-drawer>
+></app-filters-drawer> -->
 
 <!-- Mobile Filters Overlay Backdrop (click to close) -->
 <div
