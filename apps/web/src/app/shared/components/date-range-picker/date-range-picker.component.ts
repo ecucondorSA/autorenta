@@ -133,9 +133,9 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit, OnDestro
         disable: blockedDates,
         defaultDate:
           this.from() && this.to() ? [this.from()!, this.to()!] : undefined,
-        appendTo: this.dateRangeInput.nativeElement.parentElement || undefined,
         position: 'auto',
-        static: false,
+        clickOpens: true,
+        allowInput: false,
         onChange: (selectedDates, dateStr) => {
           if (selectedDates.length === 2) {
             const from = selectedDates[0].toISOString().split('T')[0];
