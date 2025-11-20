@@ -1,15 +1,21 @@
 #!/usr/bin/env node
 
 /**
- * Crea los archivos de configuración para Cloudflare Pages
- * - _redirects: Solo para rutas HTML (SPA)
- * - _headers: Headers de seguridad y cache
+ * Post-build script for Angular + Cloudflare Pages
+ *
+ * Tasks:
+ * 1. Copy browser/* files to dist/web/ root (required by Cloudflare Pages)
+ * 2. Create _redirects for SPA routing
+ * 3. Create _headers for security & cache
  */
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
-const distPath = path.join(__dirname, '../dist/web/browser');
+const distWebPath = path.join(__dirname, '../dist/web');
+const browserPath = path.join(distWebPath, 'browser');
+const distPath = browserPath;
 
 // _redirects - Cloudflare Pages SPA routing
 // IMPORTANTE: Todas las rutas deben redirigir a index.html para que Angular maneje el routing
@@ -98,9 +104,36 @@ const headersContent = `# Headers globales de seguridad
   Cache-Control: public, max-age=0, must-revalidate
 `;
 
-// Escribir archivos
-fs.writeFileSync(path.join(distPath, '_redirects'), redirectsContent);
-fs.writeFileSync(path.join(distPath, '_headers'), headersContent);
+// Step 1: Copy browser/* files to dist/web/ root (required by Cloudflare Pages)
+// Angular 17+ builds to dist/web/browser/, but Cloudflare expects files at dist/web/
+if (fs.existsSync(browserPath)) {
+  try {
+    const files = fs.readdirSync(browserPath);
+    for (const file of files) {
+      const src = path.join(browserPath, file);
+      const dest = path.join(distWebPath, file);
+
+      if (fs.lstatSync(src).isDirectory()) {
+        // Copy directory recursively
+        if (!fs.existsSync(dest)) {
+          fs.mkdirSync(dest, { recursive: true });
+        }
+        execSync(`cp -r "${src}"/* "${dest}"/`);
+      } else {
+        // Copy file
+        fs.copyFileSync(src, dest);
+      }
+    }
+    console.log('✅ Copied browser/ files to dist/web/ root');
+  } catch (error) {
+    console.error('❌ Error copying browser files:', error.message);
+    process.exit(1);
+  }
+}
+
+// Step 2: Escribir archivos de configuración en la raíz
+fs.writeFileSync(path.join(distWebPath, '_redirects'), redirectsContent);
+fs.writeFileSync(path.join(distWebPath, '_headers'), headersContent);
 
 console.log('✅ Archivos de configuración de Cloudflare Pages creados:');
 console.log('   - _redirects (SPA routing)');
