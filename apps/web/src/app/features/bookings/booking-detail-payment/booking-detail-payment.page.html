@@ -93,7 +93,7 @@
               </div>
               <div class="flex justify-between items-center">
                 <span class="text-sm text-text-secondary">En pesos argentinos</span>
-                <span class="font-medium text-text-primary">$ {{ (PRE_AUTH_AMOUNT_USD * fxSnapshot()?.rate!) | number:'1.0-0' }} ARS</span>
+                <span class="font-medium text-text-primary">$ {{ (PRE_AUTH_AMOUNT_USD * fxSnapshot()?.platformRate!) | number:'1.0-0' }} ARS</span>
               </div>
             </div>
 
@@ -112,7 +112,7 @@
             <!-- Exchange Rate Info -->
             <div class="flex justify-between items-center py-2">
               <span class="text-text-secondary text-sm">Tasa de conversión</span>
-              <span class="font-medium text-text-primary text-sm">1 USD = $ {{ fxSnapshot()?.rate | number:'1.2-2' }} ARS</span>
+              <span class="font-medium text-text-primary text-sm">1 USD = $ {{ fxSnapshot()?.platformRate | number:'1.2-2' }} ARS</span>
             </div>
 
             <!-- Total -->

@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, firstValueFrom } from 'rxjs';
+import { Subject } from 'rxjs';
 
 // Services
 import { AuthService } from '../../../core/services/auth.service';
+import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
 import { FxService } from '../../../core/services/fx.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booking.gateway';
@@ -12,6 +13,12 @@ import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booki
 // Models
 import { Car } from '../../../core/models';
 import { FxSnapshot } from '../../../core/models/booking-detail-payment.model';
+
+// Extended FxSnapshot with dual rates
+interface DualRateFxSnapshot extends FxSnapshot {
+  binanceRate: number;  // Raw Binance rate (no margin) - for price conversions
+  platformRate: number; // Binance + 10% margin - for guarantees only
+}
 
 @Component({
   selector: 'app-booking-detail-payment',
@@ -33,7 +40,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
   // State
   readonly car = signal<Car | null>(null);
-  readonly fxSnapshot = signal<FxSnapshot | null>(null);
+  readonly fxSnapshot = signal<DualRateFxSnapshot | null>(null);
   readonly loading = signal(false);
   readonly processingPayment = signal(false);
   readonly error = signal<string | null>(null);
@@ -58,8 +65,24 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     if (!car || !fx || days === 0) return 0;
 
-    // Car price is in ARS (price_per_day)
-    return car.price_per_day * days;
+    const dailyRate = car.price_per_day;
+
+    // Handle different currencies
+    if (car.currency === 'ARS' || !car.currency) {
+      // Already in ARS, just multiply by days
+      return dailyRate * days;
+    } else if (car.currency === 'USD') {
+      // Convert USD to ARS using Binance rate (NO margin)
+      // User explicitly said: "al pasar de pesos a dolares, se utiliza el precio normal de binance SIN LOS 10%"
+      return dailyRate * fx.binanceRate * days;
+    } else if (car.currency === 'BRL' || car.currency === 'UYU') {
+      // For other currencies, convert to USD first, then to ARS
+      // For now, just log warning - proper implementation requires BRL/UYU rates
+      console.warn(`⚠️ Currency ${car.currency} not fully supported yet. Showing as ARS.`);
+      return dailyRate * days;
+    }
+
+    return dailyRate * days;
   });
 
   // Computed - Total guarantee + rental in ARS
@@ -67,7 +90,11 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const fx = this.fxSnapshot();
     if (!fx) return 0;
 
-    const guaranteeArs = this.PRE_AUTH_AMOUNT_USD * fx.rate;
+    // Guarantee uses platform_rate (with 10% margin for volatility protection)
+    const guaranteeArs = this.PRE_AUTH_AMOUNT_USD * fx.platformRate;
+
+    // Rental cost already handles currency conversion correctly
+    // (uses binanceRate for USD cars, direct ARS for ARS cars)
     const rentalArs = this.rentalCostArs();
 
     return guaranteeArs + rentalArs;
@@ -140,30 +167,48 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
   private async loadFxSnapshot(): Promise<void> {
     this.loading.set(true);
-    try {
-      // Try DB first
-      let snapshot = await firstValueFrom(this.fxService.getFxSnapshot('USD', 'ARS'));
 
-      // Fallback if needed
-      if (!snapshot) {
-        const rate = await this.fxService.getCurrentRateAsync('USD', 'ARS');
-        snapshot = {
-          rate,
-          timestamp: new Date(),
-          fromCurrency: 'USD',
-          toCurrency: 'ARS',
-          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-          isExpired: false,
-          variationThreshold: 0.1,
-        };
-      }
+    // Initial load
+    await this.fetchAndSetRate();
+    this.loading.set(false);
+
+    // Poll every 30 seconds
+    const intervalId = setInterval(() => {
+      this.fetchAndSetRate();
+    }, 30000);
+
+    // Cleanup interval on destroy
+    this.destroy$.subscribe(() => clearInterval(intervalId));
+  }
+
+  private async fetchAndSetRate(): Promise<void> {
+    try {
+      // Fetch BOTH rates from exchange service
+      const platformRate = await this.fxService.getCurrentRateAsync('USD', 'ARS'); // With 10% margin (for guarantees)
+      const binanceRate = await this.fxService.getBinanceRateAsync(); // Raw Binance (for price conversions)
+
+      const snapshot: DualRateFxSnapshot = {
+        rate: platformRate, // Keep 'rate' as platform_rate for backward compatibility with template
+        binanceRate,        // Raw Binance rate (no margin)
+        platformRate,       // Binance + 10% margin (guarantees only)
+        timestamp: new Date(),
+        fromCurrency: 'USD',
+        toCurrency: 'ARS',
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        isExpired: false,
+        variationThreshold: 0.1,
+      };
 
       this.fxSnapshot.set(snapshot);
+      console.log(`🔄 Tasas actualizadas en UI:
+        💰 Binance (precios): ${binanceRate.toFixed(2)} ARS/USD
+        🛡️ Platform (garantías): ${platformRate.toFixed(2)} ARS/USD (+10%)`);
     } catch (err) {
-      console.error('Error loading FX:', err);
-      this.error.set('No se pudo obtener la cotización del día.');
-    } finally {
-      this.loading.set(false);
+      console.error('Error updating FX rate:', err);
+      // Don't clear error signal here to avoid flashing error on transient failures if we already have a rate
+      if (!this.fxSnapshot()) {
+        this.error.set('No se pudo obtener la cotización actualizada.');
+      }
     }
   }
 

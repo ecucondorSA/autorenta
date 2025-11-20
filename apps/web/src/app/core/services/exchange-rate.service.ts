@@ -44,28 +44,65 @@ export class ExchangeRateService {
   private readonly BINANCE_API = 'https://api.binance.com/api/v3/ticker/price';
   private readonly CACHE_TTL_MS = 30000; // 30 segundos - precio en tiempo real
 
-  private lastRate = signal<number | null>(null);
+  private lastRates = signal<{
+    binance: number;   // Tasa raw de Binance (sin margen)
+    platform: number;  // Tasa con 10% margen (solo para garantías)
+  } | null>(null);
   private lastFetch = signal<number>(0);
-  private readonly PLATFORM_MARGIN = 1.10; // 10% margen de protección
+  private readonly PLATFORM_MARGIN = 1.10; // 10% margen SOLO para garantías USD→ARS
 
   /**
-   * Obtiene la tasa de cambio EN TIEMPO REAL directamente desde Binance API
-   *
-   * IMPORTANTE: Hace fetch directo a Binance para obtener precio actualizado.
-   * Aplica margen del 10% en el frontend.
-   * Cache de 30 segundos para evitar exceso de requests.
+   * Obtiene tasa Binance RAW (sin margen) para conversiones de precios
+   * Uso: Convertir ARS → USD en listados de autos
+   */
+  async getBinanceRate(pair = 'USDARS'): Promise<number> {
+    await this.fetchRatesIfNeeded(pair);
+    const rates = this.lastRates();
+
+    if (!rates) {
+      throw new Error('No se pudo obtener tasa de Binance');
+    }
+
+    return rates.binance;
+  }
+
+  /**
+   * Obtiene tasa con 10% margen SOLO para garantías USD→ARS
+   * Uso: Convertir garantía de USD 600 a ARS con protección de volatilidad
+   */
+  async getPlatformRate(pair = 'USDARS'): Promise<number> {
+    await this.fetchRatesIfNeeded(pair);
+    const rates = this.lastRates();
+
+    if (!rates) {
+      throw new Error('No se pudo obtener tasa de cambio');
+    }
+
+    return rates.platform;
+  }
+
+  /**
+   * @deprecated Use getPlatformRate() for guarantees or getBinanceRate() for prices
    */
   async getRate(pair = 'USDARS'): Promise<number> {
+    return this.getPlatformRate(pair);
+  }
+
+  /**
+   * Fetch rates from Binance if cache expired
+   * Caches both binance (raw) and platform (with margin) rates
+   */
+  private async fetchRatesIfNeeded(pair = 'USDARS'): Promise<void> {
     const now = Date.now();
     const cacheAge = now - this.lastFetch();
 
     // Check cache (30 segundos)
-    if (this.lastRate() !== null && cacheAge < this.CACHE_TTL_MS) {
-      const cached = this.lastRate()!;
+    if (this.lastRates() !== null && cacheAge < this.CACHE_TTL_MS) {
+      const cached = this.lastRates()!;
       console.log(
-        `💱 Usando cotización cacheada: ${cached} ARS/USD (age: ${Math.round(cacheAge / 1000)}s)`,
+        `💱 Usando cotización cacheada: Binance ${cached.binance.toFixed(2)} | Platform ${cached.platform.toFixed(2)} ARS/USD (age: ${Math.round(cacheAge / 1000)}s)`,
       );
-      return cached;
+      return;
     }
 
     try {
@@ -84,65 +121,67 @@ export class ExchangeRateService {
         throw new Error(`Invalid rate from Binance: ${binanceData.price}`);
       }
 
-      // Aplicar margen del 10% (política de negocio)
+      // Aplicar margen del 10% SOLO para platform_rate (garantías)
       const platformRate = binanceRate * this.PLATFORM_MARGIN;
 
-      // Cachear en memoria
-      this.lastRate.set(platformRate);
+      // Cachear ambas tasas en memoria
+      this.lastRates.set({
+        binance: binanceRate,
+        platform: platformRate,
+      });
       this.lastFetch.set(now);
 
       console.log(
-        `✅ Binance USDT/ARS EN TIEMPO REAL: ${binanceRate.toFixed(2)} → Con margen 10%: ${platformRate.toFixed(2)} ARS/USD`,
+        `✅ Binance USDT/ARS EN TIEMPO REAL: ${binanceRate.toFixed(2)} | Con margen 10% (garantías): ${platformRate.toFixed(2)} ARS/USD`,
       );
-
-      return platformRate;
     } catch (error) {
       console.error('Error obteniendo tasa de Binance:', error);
       throw new Error('No se pudo obtener tasa de cambio de Binance');
     }
   }
 
-  /** @deprecated Use getRate() instead */
-  async getPlatformRate(pair = 'USDARS'): Promise<number> {
-    return this.getRate(pair);
-  }
 
   /**
-   * @deprecated La DB solo guarda 'rate' (ya con margen aplicado). Use getRate() en su lugar.
-   */
-  async getBinanceRate(): Promise<number> {
-    return this.getRate();
-  }
-
-  /**
-   * Convierte pesos argentinos a dólares estadounidenses
+   * Convierte pesos argentinos a dólares usando tasa Binance SIN margen
+   * Uso: Mostrar equivalente en USD de precios en ARS
    */
   async convertArsToUsd(ars: number): Promise<number> {
-    const rate = await this.getRate();
+    const rate = await this.getBinanceRate(); // SIN margen
     const usd = ars / rate;
     return Math.round(usd * 100) / 100;
   }
 
   /**
-   * Convierte dólares estadounidenses a pesos argentinos
+   * Convierte dólares a pesos argentinos usando tasa CON margen (garantías)
+   * Uso: Convertir garantía USD → ARS
    */
-  async convertUsdToArs(usd: number): Promise<number> {
-    const rate = await this.getRate();
+  async convertUsdToArs(usd: number, useMargin = true): Promise<number> {
+    const rate = useMargin
+      ? await this.getPlatformRate()  // Con 10% margen
+      : await this.getBinanceRate();  // Sin margen
     const ars = usd * rate;
     return Math.round(ars * 100) / 100;
   }
 
   /**
-   * Obtiene el valor de la última tasa conocida (cacheada)
-   * NOTA: Ya incluye el margen del 10%, no multiplicar nuevamente
+   * Obtiene las últimas tasas conocidas (cacheadas)
    */
-  getLastKnownRateValue(): number | null {
-    return this.lastRate();
+  getLastKnownRates(): { binance: number; platform: number } | null {
+    return this.lastRates();
   }
 
-  /** @deprecated Use getLastKnownRateValue() instead */
+  /**
+   * Obtiene la tasa platform (con margen) cacheada
+   */
   getLastKnownPlatformRate(): number | null {
-    return this.getLastKnownRateValue();
+    return this.lastRates()?.platform ?? null;
+  }
+
+  /**
+   * Obtiene la tasa Binance (sin margen) cacheada
+   */
+  getLastKnownBinanceRate(): number | null {
+    return this.lastRates()?.binance ?? null;
   }
 
   /**
@@ -150,32 +189,35 @@ export class ExchangeRateService {
    */
   isCacheValid(): boolean {
     const cacheAge = Date.now() - this.lastFetch();
-    return this.lastRate() !== null && cacheAge < this.CACHE_TTL_MS;
+    return this.lastRates() !== null && cacheAge < this.CACHE_TTL_MS;
   }
 
   /**
-   * Limpia el cache de la tasa
+   * Limpia el cache de las tasas
    */
   clearCache(): void {
-    this.lastRate.set(null);
+    this.lastRates.set(null);
     this.lastFetch.set(0);
   }
 
   /**
-   * Retorna objeto con toda la info de conversión para mostrar en UI
+   * Retorna objeto con info de conversión para mostrar en UI
    */
   async getConversionPreview(ars: number): Promise<{
     ars: number;
     usd: number;
-    rate: number;
+    binanceRate: number;
+    platformRate: number;
   }> {
-    const rate = await this.getRate();
-    const usd = Math.round((ars / rate) * 100) / 100;
+    const binanceRate = await this.getBinanceRate();
+    const platformRate = await this.getPlatformRate();
+    const usd = Math.round((ars / binanceRate) * 100) / 100;
 
     return {
       ars,
       usd,
-      rate,
+      binanceRate,
+      platformRate,
     };
   }
 }

@@ -180,18 +180,31 @@ export class FxService {
 
   /**
    * Obtiene la tasa actual de forma asíncrona
-   * Usa ExchangeRateService para consultar la DB
+   * NOTA: Retorna platform_rate (CON margen 10%) para garantías
+   * Para precios, usar exchangeRateService.getBinanceRate() directamente
    */
   async getCurrentRateAsync(
     _fromCurrency: CurrencyCode = 'USD',
     _toCurrency: CurrencyCode = 'ARS',
   ): Promise<number> {
     try {
-      const rate = await this.exchangeRateService.getRate('USDARS');
+      const rate = await this.exchangeRateService.getPlatformRate('USDARS');
       return rate;
     } catch (error) {
       console.error('Error obteniendo tasa desde exchange_rates:', error);
       throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');
+    }
+  }
+
+  /**
+   * Obtiene la tasa Binance SIN margen para conversiones de precio
+   */
+  async getBinanceRateAsync(): Promise<number> {
+    try {
+      return await this.exchangeRateService.getBinanceRate('USDARS');
+    } catch (error) {
+      console.error('Error obteniendo tasa Binance:', error);
+      throw new Error('No se pudo obtener tasa de Binance');
     }
   }
 }
