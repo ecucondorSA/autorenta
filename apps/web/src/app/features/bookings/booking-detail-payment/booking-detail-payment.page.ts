@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
 import { FxService } from '../../../core/services/fx.service';
+import { PdfGeneratorService } from '../../../core/services/pdf-generator.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booking.gateway';
 
@@ -37,6 +38,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private supabaseClient = inject(SupabaseClientService).getClient();
   private mpGateway = inject(MercadoPagoBookingGateway);
+  private pdfGenerator = inject(PdfGeneratorService);
 
   // State
   readonly car = signal<Car | null>(null);
@@ -212,8 +214,35 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     }
   }
 
-  downloadPdf(): void {
-    window.print();
+  async downloadPdf(): Promise<void> {
+    const input = this.bookingInput();
+    const car = this.car();
+
+    if (!input || !car) {
+      console.error('Cannot generate PDF: missing booking or car data');
+      return;
+    }
+
+    try {
+      // Generate filename based on car and date
+      const carName = `${car.brand}-${car.model}`.replace(/\s+/g, '-');
+      const date = new Date().toISOString().split('T')[0];
+      const filename = `reserva-${carName}-${date}.pdf`;
+
+      // Generate PDF from the content element
+      await this.pdfGenerator.generateFromElement('#pdf-content', {
+        filename,
+        format: 'a4',
+        orientation: 'portrait',
+        scale: 2, // High quality
+        quality: 0.95,
+      });
+
+      console.log(`✅ PDF generado: ${filename}`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      this.error.set('No se pudo generar el PDF. Por favor, intente nuevamente.');
+    }
   }
 
   async payWithMercadoPago(): Promise<void> {

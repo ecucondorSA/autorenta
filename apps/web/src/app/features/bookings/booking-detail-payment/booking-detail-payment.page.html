@@ -34,7 +34,7 @@
 
     <!-- Content -->
     @if (!loading() && !error() && car()) {
-      <div class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-lg overflow-hidden border border-border-default dark:border-neutral-800/60 print:shadow-none print:border-none">
+      <div id="pdf-content" class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-lg overflow-hidden border border-border-default dark:border-neutral-800/60 print:shadow-none print:border-none">
 
         <!-- Document Header (Visible mostly in print/PDF) -->
         <div class="p-8 border-b border-border-default dark:border-neutral-800/60">
