@@ -15,14 +15,21 @@ export class BookingService {
   private supabase = injectSupabase();
 
   async requestBooking(params: RequestBookingParams) {
-    const rpcParams = {
+    const rpcParams: {
+      p_car_id: string;
+      p_renter_id: string;
+      p_start: string;
+      p_end: string;
+      p_payment_method: 'card' | 'wallet';
+      p_idempotency_key: string | null;
+    } = {
       p_car_id: params.car_id,
       p_renter_id: params.renter_id,
       p_start: params.start_at,
       p_end: params.end_at,
       p_payment_method: params.payment_method || 'card',
       p_idempotency_key: params.idempotency_key || null,
-    } as any;
+    };
 
     const { data, error } = await this.supabase.rpc('request_booking', rpcParams);
     if (error) throw error;

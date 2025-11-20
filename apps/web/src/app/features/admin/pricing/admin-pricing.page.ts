@@ -11,7 +11,7 @@ interface PricingRule {
   name: string;
   rule_type: 'percentage' | 'fixed' | 'multiplier';
   value: number;
-  conditions: any;
+  conditions: Record<string, unknown>;
   is_active: boolean;
   priority: number;
   created_at: string;
@@ -88,9 +88,11 @@ export class AdminPricingPage implements OnInit {
       if (!configError && config) {
         this.deliveryConfig.set(JSON.parse(config.config_value));
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error loading pricing data:', err);
-      this.error.set(err.message || 'Error al cargar configuración de precios');
+      this.error.set(
+        err instanceof Error ? err.message : 'Error al cargar configuración de precios',
+      );
     } finally {
       this.isLoading.set(false);
     }
@@ -129,9 +131,9 @@ export class AdminPricingPage implements OnInit {
       });
 
       await this.loadPricingData();
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error creating rule:', err);
-      this.error.set(err.message || 'Error al crear regla');
+      this.error.set(err instanceof Error ? err.message : 'Error al crear regla');
     } finally {
       this.isSaving.set(false);
     }
@@ -148,9 +150,9 @@ export class AdminPricingPage implements OnInit {
 
       await this.loadPricingData();
       this.successMessage.set('Regla actualizada');
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error toggling rule:', err);
-      this.error.set(err.message || 'Error al actualizar regla');
+      this.error.set(err instanceof Error ? err.message : 'Error al actualizar regla');
     }
   }
 
@@ -164,9 +166,9 @@ export class AdminPricingPage implements OnInit {
 
       await this.loadPricingData();
       this.successMessage.set('Regla eliminada');
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error deleting rule:', err);
-      this.error.set(err.message || 'Error al eliminar regla');
+      this.error.set(err instanceof Error ? err.message : 'Error al eliminar regla');
     }
   }
 
@@ -187,9 +189,9 @@ export class AdminPricingPage implements OnInit {
       if (error) throw error;
 
       this.successMessage.set('Configuración de delivery guardada');
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error saving delivery config:', err);
-      this.error.set(err.message || 'Error al guardar configuración');
+      this.error.set(err instanceof Error ? err.message : 'Error al guardar configuración');
     } finally {
       this.isSaving.set(false);
     }

@@ -342,9 +342,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       } else {
         throw new Error('No se recibió link de pago');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Payment error:', err);
-      this.error.set(err.message || 'Error al iniciar el pago');
+      this.error.set(err instanceof Error ? err.message : 'Error al iniciar el pago');
     } finally {
       this.processingPayment.set(false);
     }

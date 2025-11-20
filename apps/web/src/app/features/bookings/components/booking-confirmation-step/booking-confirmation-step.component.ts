@@ -394,7 +394,7 @@ export class BookingConfirmationStepComponent {
   /**
    * Booking data from database
    */
-  bookingData = input<any>(null);
+  bookingData = input<Record<string, unknown> | null>(null);
 
   // ==================== COMPUTED ====================
 

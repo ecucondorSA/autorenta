@@ -12,8 +12,9 @@ import type { BookingStatus } from '../models';
 })
 export class BookingFlowLoggerService {
   // import.meta.env may not have type definitions in this TS config used by the Angular
-  // template/type checker plugin. Cast to any to avoid "Property 'env' does not exist on type 'ImportMeta'".
-  private readonly isDevelopment = !(import.meta as any).env?.PROD;
+  // template/type checker plugin. Cast to unknown to avoid "Property 'env' does not exist on type 'ImportMeta'".
+  private readonly isDevelopment = !(import.meta as unknown as { env?: { PROD?: boolean } }).env
+    ?.PROD;
 
   /**
    * Log de transición de estado

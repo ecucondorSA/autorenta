@@ -126,10 +126,10 @@ serve(async (req) => {
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
       .select(`
-        *, 
+        *,
         car:cars(
-          id, 
-          title, 
+          id,
+          title,
           owner_id,
           owner:users!cars_owner_id_fkey(
             id,
@@ -203,14 +203,14 @@ serve(async (req) => {
       // No necesitamos conversión, pero calculamos USD equivalente para metadata
       const { data: exchangeRate } = await supabase
         .from('exchange_rates')
-        .select('platform_rate')
-        .eq('pair', 'USDTARS')
+        .select('rate')
+        .eq('pair', 'USDARS')
         .eq('is_active', true)
         .order('last_updated', { ascending: false })
         .limit(1)
         .single();
 
-      platformRate = exchangeRate?.platform_rate || 1015.0;
+      platformRate = exchangeRate?.rate || 1015.0;
       amountUSD = Math.round((amountARS / platformRate) * 100) / 100;
 
       console.log(`💵 Booking ya en ARS: ${amountARS} ARS = ~${amountUSD} USD (rate: ${platformRate})`);
@@ -220,14 +220,14 @@ serve(async (req) => {
 
       const { data: exchangeRate, error: rateError } = await supabase
         .from('exchange_rates')
-        .select('platform_rate')
-        .eq('pair', 'USDTARS')
+        .select('rate')
+        .eq('pair', 'USDARS')
         .eq('is_active', true)
         .order('last_updated', { ascending: false })
         .limit(1)
         .single();
 
-      platformRate = exchangeRate?.platform_rate || 1015.0;
+      platformRate = exchangeRate?.rate || 1015.0;
 
       if (rateError) {
         console.warn('⚠️ No exchange rate found, using fallback:', platformRate);
@@ -309,7 +309,7 @@ serve(async (req) => {
     // Mejora calidad de integración +5-10 puntos
     // ========================================
     let customerId: string | null = profile?.mercadopago_customer_id || null;
-    
+
     if (!customerId) {
       // Crear customer si no existe (mismo código que en create-preference)
       const fullName = profile?.full_name || authUser?.user?.user_metadata?.full_name || 'Usuario AutoRenta';
@@ -321,8 +321,8 @@ serve(async (req) => {
       let phoneFormatted: { area_code: string; number: string } | undefined;
       if (profile?.phone) {
         const phoneCleaned = profile.phone.replace(/[^0-9]/g, '');
-        const phoneWithoutCountry = phoneCleaned.startsWith('54') 
-          ? phoneCleaned.substring(2) 
+        const phoneWithoutCountry = phoneCleaned.startsWith('54')
+          ? phoneCleaned.substring(2)
           : phoneCleaned;
         const areaCode = phoneWithoutCountry.substring(0, 2) || '11';
         const number = phoneWithoutCountry.substring(2) || '';
@@ -364,13 +364,13 @@ serve(async (req) => {
         if (customerResponse.ok) {
           const customer = await customerResponse.json();
           customerId = customer.id.toString();
-          
+
           // Guardar customer_id en profile
           await supabase
             .from('profiles')
             .update({ mercadopago_customer_id: customerId })
             .eq('id', booking.renter_id);
-          
+
           console.log('✅ Customer creado en MercadoPago:', customerId);
         } else {
           console.warn('⚠️ No se pudo crear customer, continuando sin customer_id');
@@ -409,13 +409,13 @@ serve(async (req) => {
     // 2. Usuario eligió pagar con cuenta MP (use_split_payment)
     // 3. Owner tiene collector_id configurado
     const shouldSplit = ENABLE_SPLIT_PAYMENTS &&
-                       use_split_payment &&
-                       owner?.marketplace_approved &&
-                       owner?.mercadopago_collector_id;
-    
+      use_split_payment &&
+      owner?.marketplace_approved &&
+      owner?.mercadopago_collector_id;
+
     let platformFee = 0;
     let ownerAmount = 0;
-    
+
     if (shouldSplit) {
       // Validar que marketplace esté configurado
       if (!MP_MARKETPLACE_ID) {
@@ -551,8 +551,8 @@ serve(async (req) => {
         if (profile?.phone) {
           const phoneCleaned = profile.phone.replace(/[^0-9]/g, '');
           // Si empieza con 54 (código de Argentina), removerlo
-          const phoneWithoutCountry = phoneCleaned.startsWith('54') 
-            ? phoneCleaned.substring(2) 
+          const phoneWithoutCountry = phoneCleaned.startsWith('54')
+            ? phoneCleaned.substring(2)
             : phoneCleaned;
           // Área code: primeros 2-3 dígitos (ej: 11 para Buenos Aires, 341 para Rosario)
           const areaCode = phoneWithoutCountry.substring(0, 2) || '11';
