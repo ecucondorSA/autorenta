@@ -111,7 +111,7 @@ export class LedgerPage implements OnInit {
     this.downloadCSV(csvContent, `ledger-${new Date().toISOString()}.csv`);
   }
 
-  private convertToCSV(data: any[], fields: string[], headers: string[]): string {
+  private convertToCSV(data: Record<string, unknown>[], fields: string[], headers: string[]): string {
     const csvRows: string[] = [];
     csvRows.push(headers.join(','));
     for (const row of data) {

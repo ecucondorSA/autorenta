@@ -34,7 +34,7 @@ import { AccountingService } from '../../../../core/services/accounting.service'
 })
 export class ProvisionsPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
-  readonly provisions = signal<any[]>([]);
+  readonly provisions = signal<unknown[]>([]);
   readonly loading = signal(false);
 
   async ngOnInit() {

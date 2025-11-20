@@ -112,7 +112,7 @@ import { environment } from '../../../../../environments/environment';
 export class CashFlowPage implements OnInit {
   private readonly accountingService: AccountingService;
 
-  readonly cashFlow = signal<any[]>([]);
+  readonly cashFlow = signal<unknown[]>([]);
   readonly loading = signal(false);
 
   constructor() {

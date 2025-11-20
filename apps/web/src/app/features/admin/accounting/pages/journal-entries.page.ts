@@ -36,7 +36,7 @@ import { AccountingService } from '../../../../core/services/accounting.service'
 })
 export class JournalEntriesPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
-  readonly entries = signal<any[]>([]);
+  readonly entries = signal<unknown[]>([]);
   readonly loading = signal(false);
 
   async ngOnInit() {

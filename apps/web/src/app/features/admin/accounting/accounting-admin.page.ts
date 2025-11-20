@@ -464,7 +464,7 @@ export class AccountingAdminPage implements OnInit {
   }
 
   // Utility methods
-  private convertToCSV(data: any[], fields: string[], headers: string[]): string {
+  private convertToCSV(data: Record<string, unknown>[], fields: string[], headers: string[]): string {
     const csvRows: string[] = [];
 
     // Add headers

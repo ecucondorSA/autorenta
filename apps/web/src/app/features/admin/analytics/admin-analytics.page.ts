@@ -33,7 +33,7 @@ export class AdminAnalyticsPage implements OnInit {
 
   protected readonly overview = signal<AnalyticsOverview | null>(null);
   protected readonly topCars = signal<Array<{ car_id: string; count: number }>>([]);
-  protected readonly recentEvents = signal<any[]>([]);
+  protected readonly recentEvents = signal<unknown[]>([]);
   protected readonly isLoading = signal(true);
   protected readonly error = signal<string | null>(null);
 
@@ -110,9 +110,9 @@ export class AdminAnalyticsPage implements OnInit {
 
       // Recent events
       this.recentEvents.set(events?.slice(0, 50) || []);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error loading analytics:', err);
-      this.error.set(err.message || 'Error al cargar analytics');
+      this.error.set(err instanceof Error ? err.message : 'Error al cargar analytics');
     } finally {
       this.isLoading.set(false);
     }
