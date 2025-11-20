@@ -13,6 +13,15 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PayPalBookingGatewayService } from '../../../core/services/paypal-booking-gateway.service';
 import { environment } from '../../../../environments/environment';
 
+// PayPal SDK types
+interface PayPalWindow extends Window {
+  paypal?: {
+    Buttons: (config: unknown) => { render: (container: string) => void };
+  };
+}
+
+declare const window: PayPalWindow;
+
 /**
  * PayPal Button Component
  *
@@ -89,7 +98,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   loadPayPalSDK(): void {
     // Check if already loaded
-    if ((window as any).paypal) {
+    if (window.paypal) {
       this.sdkLoaded = true;
       this.renderPayPalButton();
       return;
@@ -135,7 +144,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
    * Render PayPal Smart Payment Buttons
    */
   private renderPayPalButton(): void {
-    const paypal = (window as any).paypal;
+    const paypal = window.paypal;
 
     if (!paypal) {
       this.error = 'PayPal SDK not loaded';
@@ -159,7 +168,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
         },
 
         // Handle approval
-        onApprove: async (data: any, actions: any) => {
+        onApprove: async (data: { orderID: string }, _actions: unknown) => {
           return this.handleApproval(data.orderID);
         },
 

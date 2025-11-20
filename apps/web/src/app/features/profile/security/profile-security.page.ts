@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { ProfileStore } from '../../../core/stores/profile.store';
@@ -310,7 +310,7 @@ export class ProfileSecurityPage implements OnInit {
   /**
    * Custom validator to check if passwords match
    */
-  private passwordMatchValidator(form: any): { passwordMismatch: boolean } | null {
+  private passwordMatchValidator(form: FormGroup): { passwordMismatch: boolean } | null {
     const newPassword = form.get('newPassword')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
 
@@ -352,11 +352,12 @@ export class ProfileSecurityPage implements OnInit {
       setTimeout(() => {
         this.passwordChangeSuccess.set(false);
       }, 5000);
-    } catch (err: any) {
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '';
       const message =
-        err?.message === 'New password should be different from the old password'
+        errorMessage === 'New password should be different from the old password'
           ? 'La nueva contraseña debe ser diferente a la actual'
-          : err?.message || 'Error al cambiar la contraseña';
+          : errorMessage || 'Error al cambiar la contraseña';
 
       this.passwordError.set(message);
       console.error('Error changing password:', err);

@@ -352,11 +352,11 @@ export class CarDetailPage implements OnInit {
     const car = this.car();
 
     return photos.map((photo, index) => ({
-      id: (photo as any).photo_id || `photo-${index}`,
+      id: photo.id || `photo-${index}`,
       url: photo.url,
       thumbnailUrl: photo.url, // Use same URL, component will handle optimization
-      alt: (photo as any).description || `${car?.title || 'Auto'} - Foto ${index + 1}`,
-      caption: (photo as any).description,
+      alt: `${car?.title || 'Auto'} - Foto ${index + 1}`,
+      caption: undefined, // CarPhoto doesn't have description field
     }));
   });
 

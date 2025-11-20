@@ -32,7 +32,7 @@ interface WalletHistoryEntry {
   status: string;
   amount_cents: number;
   currency: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   booking_id?: string;
   source_system: string;
   legacy_transaction_id?: string;

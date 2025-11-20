@@ -1,4 +1,7 @@
 {
+  "defaultModel": "haiku",
+  "planModel": "sonnet",
+  "description": "AutoRenta Platform - Configuración personalizada v2.0.47+ con hooks optimizados y MCP integration",
   "mcpServers": {
     "cloudflare-builds": {
       "url": "https://builds.mcp.cloudflare.com/mcp",

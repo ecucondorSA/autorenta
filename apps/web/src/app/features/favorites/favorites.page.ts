@@ -362,7 +362,7 @@ export class FavoritesPage implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  favoriteCars = signal<any[]>([]);
+  favoriteCars = signal<unknown[]>([]);
   isLoading = signal(true);
   favoriteCount = signal(0);
 

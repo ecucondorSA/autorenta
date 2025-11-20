@@ -59,6 +59,18 @@
           }
         ]
       }
+    ],
+    "preCommit": [
+      {
+        "type": "command",
+        "command": ".claude/hooks/pre-commit.sh"
+      }
+    ],
+    "postCode": [
+      {
+        "type": "command",
+        "command": ".claude/hooks/post-code.sh"
+      }
     ]
   },
   "toonOptimization": {
