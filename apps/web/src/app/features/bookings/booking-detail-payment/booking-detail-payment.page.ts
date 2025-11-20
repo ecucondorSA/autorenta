@@ -108,6 +108,56 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     endDate: Date;
   } | null>(null);
 
+  /**
+   * Parse car features from JSONB to displayable array
+   */
+  getCarFeatures(): string[] {
+    const car = this.car();
+    if (!car || !car.features) return [];
+
+    try {
+      const features = typeof car.features === 'string'
+        ? JSON.parse(car.features)
+        : car.features;
+
+      if (typeof features !== 'object' || features === null) return [];
+
+      // Convert object keys with true values to array
+      // Example: { "air_conditioning": true, "bluetooth": true } => ["Aire Acondicionado", "Bluetooth"]
+      const featureMap: Record<string, string> = {
+        air_conditioning: 'Aire Acondicionado',
+        bluetooth: 'Bluetooth',
+        gps: 'GPS',
+        backup_camera: 'Cámara de Retroceso',
+        parking_sensors: 'Sensores de Estacionamiento',
+        cruise_control: 'Control de Crucero',
+        leather_seats: 'Asientos de Cuero',
+        sunroof: 'Techo Solar',
+        heated_seats: 'Asientos Calefaccionados',
+        usb_charger: 'Cargador USB',
+        aux_input: 'Entrada Auxiliar',
+        apple_carplay: 'Apple CarPlay',
+        android_auto: 'Android Auto',
+        abs: 'ABS',
+        airbags: 'Airbags',
+        alarm: 'Alarma',
+        central_locking: 'Cierre Centralizado',
+        power_windows: 'Ventanas Eléctricas',
+        power_mirrors: 'Espejos Eléctricos',
+        fog_lights: 'Luces Antiniebla',
+        alloy_wheels: 'Llantas de Aleación',
+      };
+
+      return Object.entries(features)
+        .filter(([_, value]) => value === true || value === 'true')
+        .map(([key]) => featureMap[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()))
+        .sort();
+    } catch (error) {
+      console.error('Error parsing car features:', error);
+      return [];
+    }
+  }
+
   async ngOnInit(): Promise<void> {
     // 1. Auth check
     const session = await this.authService.ensureSession();
@@ -265,7 +315,8 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           start_at: input.startDate.toISOString(),
           end_at: input.endDate.toISOString(),
           status: 'pending_payment',
-          total_amount_cents: this.PRE_AUTH_AMOUNT_USD * 100, // Store in cents USD
+          total_cents: this.PRE_AUTH_AMOUNT_USD * 100, // Store in cents USD
+          total_amount: this.PRE_AUTH_AMOUNT_USD, // Store decimal amount
           currency: 'USD',
           payment_mode: 'card'
         })

@@ -52,21 +52,84 @@
 
         <div class="p-8 space-y-8">
           <!-- Car Details -->
-          <div class="flex gap-6 items-start">
-            @if (car()?.photos?.[0]?.url) {
-              <img [src]="car()?.photos?.[0]?.url" alt="Car" class="w-32 h-24 object-cover rounded-lg shadow-sm print:hidden">
-            }
-            <div>
-              <h3 class="text-lg font-semibold text-text-primary">{{ car()?.brand }} {{ car()?.model }}</h3>
-              <p class="text-text-secondary">{{ car()?.year }} • {{ car()?.transmission }}</p>
-              <div class="mt-2 flex items-center gap-2 text-sm text-text-secondary">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                {{ car()?.location_city }}
+          <div class="space-y-6">
+            <div class="flex gap-6 items-start">
+              @if (car()?.photos?.[0]?.url) {
+                <img [src]="car()?.photos?.[0]?.url" alt="Car" class="w-32 h-24 object-cover rounded-lg shadow-sm">
+              }
+              <div class="flex-1">
+                <h3 class="text-2xl font-bold text-text-primary mb-2">{{ car()?.brand }} {{ car()?.model }} {{ car()?.year }}</h3>
+                @if (car()?.plate) {
+                  <p class="text-sm text-text-secondary font-mono bg-surface-base px-2 py-1 rounded inline-block mb-2">
+                    Patente: {{ car()?.plate }}
+                  </p>
+                }
+                <div class="mt-2 flex items-center gap-2 text-sm text-text-secondary">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  {{ car()?.location_city }}@if (car()?.location_state) {, {{ car()?.location_state }}}
+                </div>
               </div>
             </div>
+
+            <!-- Vehicle Specifications -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-surface-base rounded-xl">
+              <div class="text-center">
+                <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Transmisión</p>
+                <p class="font-medium text-text-primary">{{ car()?.transmission || 'N/A' }}</p>
+              </div>
+              @if (car()?.fuel_type) {
+                <div class="text-center">
+                  <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Combustible</p>
+                  <p class="font-medium text-text-primary">{{ car()?.fuel_type }}</p>
+                </div>
+              }
+              @if (car()?.color) {
+                <div class="text-center">
+                  <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Color</p>
+                  <p class="font-medium text-text-primary">{{ car()?.color }}</p>
+                </div>
+              }
+              <div class="text-center">
+                <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Pasajeros</p>
+                <p class="font-medium text-text-primary">{{ car()?.seats || 5 }}</p>
+              </div>
+              <div class="text-center">
+                <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Puertas</p>
+                <p class="font-medium text-text-primary">{{ car()?.doors || 4 }}</p>
+              </div>
+              @if (car()?.mileage) {
+                <div class="text-center">
+                  <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Kilometraje</p>
+                  <p class="font-medium text-text-primary">{{ car()?.mileage | number:'1.0-0' }} km</p>
+                </div>
+              }
+              @if (car()?.insurance_included) {
+                <div class="text-center">
+                  <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Seguro</p>
+                  <p class="font-medium text-success-strong">✓ Incluido</p>
+                </div>
+              }
+            </div>
+
+            <!-- Vehicle Features (if available) -->
+            @if (car()?.features && car()?.features !== '{}') {
+              <div class="p-4 bg-surface-base rounded-xl">
+                <h4 class="text-sm font-semibold text-text-primary mb-3">Características y Equipamiento</h4>
+                <div class="grid grid-cols-2 gap-2 text-sm text-text-secondary">
+                  @for (feature of getCarFeatures(); track feature) {
+                    <div class="flex items-center gap-2">
+                      <svg class="w-4 h-4 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>{{ feature }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
           </div>
 
           <!-- Dates -->
@@ -130,6 +193,45 @@
               * Este monto incluye la preautorización (bloqueo temporal) más el alquiler del vehículo.
               La garantía se liberará automáticamente al finalizar el alquiler sin novedades.
             </p>
+          </div>
+
+          <!-- Rental Conditions -->
+          <div class="space-y-4 border-t border-border-default pt-6">
+            <h3 class="text-lg font-semibold text-text-primary">Condiciones de Alquiler</h3>
+
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              @if (car()?.min_rental_days) {
+                <div>
+                  <p class="text-text-secondary">Días mínimos de alquiler</p>
+                  <p class="font-medium text-text-primary">{{ car()?.min_rental_days }} día(s)</p>
+                </div>
+              }
+              @if (car()?.max_rental_days) {
+                <div>
+                  <p class="text-text-secondary">Días máximos de alquiler</p>
+                  <p class="font-medium text-text-primary">{{ car()?.max_rental_days }} día(s)</p>
+                </div>
+              }
+              @if (car()?.deposit_required) {
+                <div>
+                  <p class="text-text-secondary">Depósito requerido</p>
+                  <p class="font-medium text-text-primary">$ {{ car()?.deposit_amount | number:'1.0-0' }}</p>
+                </div>
+              }
+              @if (car()?.security_deposit_usd) {
+                <div>
+                  <p class="text-text-secondary">Depósito de seguridad</p>
+                  <p class="font-medium text-text-primary">USD {{ car()?.security_deposit_usd | number:'1.0-0' }}</p>
+                </div>
+              }
+            </div>
+
+            @if (car()?.terms_and_conditions) {
+              <div class="mt-4 p-4 bg-surface-base rounded-lg">
+                <h4 class="text-sm font-semibold text-text-primary mb-2">Términos y Condiciones</h4>
+                <p class="text-xs text-text-secondary whitespace-pre-line">{{ car()?.terms_and_conditions }}</p>
+              </div>
+            }
           </div>
         </div>
 
