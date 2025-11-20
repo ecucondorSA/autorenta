@@ -228,9 +228,7 @@
                 <span class="text-sm text-text-secondary">En pesos argentinos</span>
                 <span class="font-medium text-text-primary"
                   >$
-                  {{
-                    PRE_AUTH_AMOUNT_USD * fxSnapshot()?.platformRate! | number: '1.0-0'
-                  }}
+                  {{ PRE_AUTH_AMOUNT_USD * fxSnapshot()?.platformRate! | number: '1.0-0' }}
                   ARS</span
                 >
               </div>

@@ -5,7 +5,6 @@ import { Subject } from 'rxjs';
 
 // Services
 import { AuthService } from '../../../core/services/auth.service';
-import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
 import { FxService } from '../../../core/services/fx.service';
 import { PdfGeneratorService } from '../../../core/services/pdf-generator.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
