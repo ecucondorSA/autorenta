@@ -92,6 +92,11 @@ import { ChildrenOutletContexts } from '@angular/router';
         transform: none !important;
       }
 
+      /* Fix: Disable pointer-events for empty PrimeNG Toast to prevent click blocking */
+      p-toast:not(:has(.p-toast-message)) {
+        pointer-events: none !important;
+      }
+
       /* Custom scrollbar para el dropdown del perfil */
       [data-profile-menu]::-webkit-scrollbar {
         width: 6px;
