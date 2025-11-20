@@ -12,7 +12,11 @@ import { SupabaseClientService } from './supabase-client.service';
 /**
  * Servicio para gestionar tipos de cambio (FX)
  * Maneja snapshots, validación de expiración y revalidación
- * USA: ExchangeRateService (Binance con margen del 20%)
+ *
+ * IMPORTANTE: El campo 'rate' en exchange_rates YA contiene el margen del 10%.
+ * NO multiplicar por 1.1 nuevamente.
+ *
+ * Fuente: Binance USDT/ARS (NO es "Dólar Tarjeta" oficial)
  */
 @Injectable({
   providedIn: 'root',
@@ -23,7 +27,9 @@ export class FxService {
 
   /**
    * Obtiene el snapshot actual de FX para USD_ARS desde Binance
-   * Usa exchange_rates table (con margen del 20%)
+   * Usa exchange_rates table (con margen del 10%)
+   *
+   * NOTA: data.rate YA incluye el margen del 10%, no multiplicar nuevamente
    */
   getFxSnapshot(
     _fromCurrency: CurrencyCode = 'USD',
@@ -52,7 +58,7 @@ export class FxService {
         expiresAt.setDate(expiresAt.getDate() + 7);
 
         const snapshot: FxSnapshot = {
-          rate: data.rate * 1.1,
+          rate: data.rate,
           timestamp,
           fromCurrency: 'USD',
           toCurrency: toCurrency as CurrencyCode,
@@ -62,7 +68,7 @@ export class FxService {
         };
 
         console.log(
-          `💱 FX Snapshot (Binance): 1 USD = ${snapshot.rate} ARS (Base: ${data.rate}, Margen: 10%)`,
+          `💱 FX Snapshot (Binance USDT/ARS + 10% margen): 1 USD = ${snapshot.rate} ARS`,
         );
 
         return snapshot;
@@ -185,6 +191,7 @@ export class FxService {
 
       try {
         const binanceRate = await this.exchangeRateService.getBinanceRate();
+        // Aplicar margen del 10% si venimos de Binance (sin DB)
         return binanceRate * 1.1;
       } catch (binanceError) {
         console.error('Error obteniendo tasa de Binance:', binanceError);
