@@ -6,7 +6,8 @@ interface ExchangeRate {
   id: string;
   pair: string;
   source: string;
-  rate: number; // Changed from platform_rate
+  binance_rate: number; // Tasa sin margen desde Binance API
+  platform_rate: number; // Tasa con margen (binance_rate + 10%)
   margin_percent: number;
   margin_absolute: number;
   volatility_24h: number | null;
@@ -51,18 +52,24 @@ export class ExchangeRateService {
   /**
    * Obtiene la tasa de cambio platform_rate (incluye margen del 10%) desde la base de datos
    *
-   * NOTA: El campo 'rate' en la DB YA contiene el margen del 10% aplicado.
-   * Solo se retorna directamente sin multiplicar nuevamente.
+   * NOTA: El campo 'platform_rate' en la DB YA contiene el margen del 10% aplicado.
+   * binance_rate = precio real de Binance USDT/ARS (dinámico)
+   * platform_rate = binance_rate × 1.10 (con margen de protección)
+   *
+   * Ejemplo:
+   * - Binance ahora: 900 ARS/USD
+   * - Platform rate: 900 × 1.10 = 990 ARS/USD
    */
-  async getPlatformRate(pair = 'USDARS'): Promise<number> {
+  async getPlatformRate(pair = 'USDTARS'): Promise<number> {
     const now = Date.now();
     const cacheAge = now - this.lastFetch();
 
     if (this.lastRate() !== null && cacheAge < this.CACHE_TTL_MS) {
+      const cached = this.lastRate()!;
       console.log(
-        `💱 Usando cotización cacheada: 1 USD = ${this.lastRate()!.rate} ARS (age: ${Math.round(cacheAge / 1000)}s)`,
+        `💱 Usando cotización cacheada: Binance ${cached.binance_rate} ARS → Platform ${cached.platform_rate} ARS (age: ${Math.round(cacheAge / 1000)}s)`,
       );
-      return this.lastRate()!.rate;
+      return cached.platform_rate;
     }
 
     try {
@@ -86,12 +93,12 @@ export class ExchangeRateService {
       this.lastRate.set(data as ExchangeRate);
       this.lastFetch.set(now);
 
-      // NOTA: data.rate YA incluye el margen del 10%
+      // Retornar platform_rate que YA tiene el margen del 10%
       console.log(
-        `✅ Cotización de plataforma (Binance + 10% margen): 1 USD = ${data.rate} ARS`,
+        `✅ Binance USDT/ARS dinámico: ${data.binance_rate} → Tasa de plataforma (con margen): ${data.platform_rate} ARS`,
       );
 
-      return data.rate;
+      return data.platform_rate;
     } catch (error) {
       console.error('Error obteniendo tasa de DB:', error);
 
@@ -111,7 +118,7 @@ export class ExchangeRateService {
 
         const platformRate = binanceRate * 1.1;
 
-        console.log(`⚠️ Fallback a Binance: 1 USD = ${platformRate} ARS (+ 10% margen)`);
+        console.log(`⚠️ Fallback a Binance directo: ${binanceRate} ARS → ${platformRate} ARS (+ 10% margen)`);
 
         return platformRate;
       } catch (binanceError) {
@@ -170,8 +177,8 @@ export class ExchangeRateService {
    * NOTA: Ya incluye margen del 10%, no multiplicar nuevamente
    */
   getLastKnownPlatformRate(): number | null {
-    const rate = this.lastRate()?.rate;
-    return rate ? rate : null;
+    const platformRate = this.lastRate()?.platform_rate;
+    return platformRate ? platformRate : null;
   }
 
   /**

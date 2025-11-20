@@ -91,7 +91,7 @@
             </div>
 
             <div class="flex justify-between items-center py-2">
-              <span class="text-text-secondary">Cotización del día (Binance USDT/ARS + 10%)</span>
+              <span class="text-text-secondary">Tasa de conversión</span>
               <span class="font-medium text-text-primary">1 USD = $ {{ fxSnapshot()?.rate | number:'1.2-2' }} ARS</span>
             </div>
 
@@ -104,12 +104,6 @@
               * Este monto es una preautorización (bloqueo temporal) en su tarjeta de crédito. No es un cargo definitivo.
               El monto se liberará automáticamente al finalizar el alquiler sin novedades.
             </p>
-
-            <div class="mt-4 p-3 bg-warning-bg/30 border border-warning-border rounded-lg">
-              <p class="text-xs text-text-secondary">
-                <strong class="text-warning-strong">⚠️ Nota sobre Cotización:</strong> La cotización mostrada se obtiene del mercado USDT/ARS en Binance con un margen operativo del 10%. No refleja el "Dólar Tarjeta" oficial (que incluye impuestos PAIS y Ganancias). El monto a bloquear en su tarjeta será calculado por su banco según su tipo de cambio vigente.
-              </p>
-            </div>
           </div>
         </div>
 

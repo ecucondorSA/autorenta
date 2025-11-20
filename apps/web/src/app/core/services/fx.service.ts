@@ -13,10 +13,14 @@ import { SupabaseClientService } from './supabase-client.service';
  * Servicio para gestionar tipos de cambio (FX)
  * Maneja snapshots, validación de expiración y revalidación
  *
- * IMPORTANTE: El campo 'rate' en exchange_rates YA contiene el margen del 10%.
+ * IMPORTANTE: Usa 'platform_rate' que YA contiene el margen del 10%.
  * NO multiplicar por 1.1 nuevamente.
  *
- * Fuente: Binance USDT/ARS (NO es "Dólar Tarjeta" oficial)
+ * Flujo:
+ * - Binance API actualiza c/30 min (dinámico: USDTARS en tiempo real)
+ * - Edge Function: sync-binance-rates → guarda binance_rate y platform_rate
+ * - Frontend: Consulta platform_rate (con margen) para mostrar al usuario
+ * - Margen del 10%: Protección contra volatilidad del peso argentino
  */
 @Injectable({
   providedIn: 'root',
@@ -27,9 +31,9 @@ export class FxService {
 
   /**
    * Obtiene el snapshot actual de FX para USD_ARS desde Binance
-   * Usa exchange_rates table (con margen del 10%)
+   * Usa exchange_rates table con platform_rate (incluye margen del 10%)
    *
-   * NOTA: data.rate YA incluye el margen del 10%, no multiplicar nuevamente
+   * NOTA: data.platform_rate YA incluye el margen del 10%, no multiplicar nuevamente
    */
   getFxSnapshot(
     _fromCurrency: CurrencyCode = 'USD',
@@ -58,7 +62,7 @@ export class FxService {
         expiresAt.setDate(expiresAt.getDate() + 7);
 
         const snapshot: FxSnapshot = {
-          rate: data.rate,
+          rate: data.platform_rate, // ✅ Usar platform_rate (con margen del 10%)
           timestamp,
           fromCurrency: 'USD',
           toCurrency: toCurrency as CurrencyCode,
@@ -68,7 +72,7 @@ export class FxService {
         };
 
         console.log(
-          `💱 FX Snapshot (Binance USDT/ARS + 10% margen): 1 USD = ${snapshot.rate} ARS`,
+          `💱 FX Snapshot - Binance ${data.binance_rate} ARS → Tasa de plataforma ${snapshot.rate} ARS (margen: ${data.margin_percent}%)`,
         );
 
         return snapshot;
