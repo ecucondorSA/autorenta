@@ -30,7 +30,18 @@ const envVars = {
     process.env.NG_APP_MERCADOPAGO_PUBLIC_KEY ||
     process.env.MERCADOPAGO_PUBLIC_KEY ||
     '',
-  NG_APP_CLOUDFLARE_WORKER_URL: process.env.NG_APP_CLOUDFLARE_WORKER_URL || 'https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev'
+  NG_APP_CLOUDFLARE_WORKER_URL: process.env.NG_APP_CLOUDFLARE_WORKER_URL || 'https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev',
+  // TikTok
+  NG_APP_TIKTOK_CLIENT_ID: process.env.NG_APP_TIKTOK_CLIENT_ID || '',
+  // Google Calendar
+  NG_APP_GOOGLE_CALENDAR_ID: process.env.NG_APP_GOOGLE_CALENDAR_ID || '',
+  NG_APP_GOOGLE_CALENDAR_API_KEY: process.env.NG_APP_GOOGLE_CALENDAR_API_KEY || '',
+  NG_APP_GOOGLE_CALENDAR_CLIENT_ID: process.env.NG_APP_GOOGLE_CALENDAR_CLIENT_ID || '',
+  // PayPal
+  NG_APP_PAYPAL_CLIENT_ID: process.env.NG_APP_PAYPAL_CLIENT_ID || '',
+  // Sentry
+  NG_APP_SENTRY_DSN: process.env.NG_APP_SENTRY_DSN || '',
+  NG_APP_SENTRY_ENVIRONMENT: process.env.NG_APP_SENTRY_ENVIRONMENT || ''
 };
 
 // Use compact JSON to avoid line breaks in long tokens
