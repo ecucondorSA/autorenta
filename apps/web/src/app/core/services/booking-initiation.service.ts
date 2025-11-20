@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { BookingLocationData } from '../../features/bookings/components/booking-location-form/booking-location-form.component';
+import { Booking } from '../models';
 import { AuthService } from './auth.service';
 import { BookingsService } from './bookings.service';
 import { CarsService } from './cars.service';
@@ -29,7 +30,7 @@ export class BookingInitiationService {
     startDate: string,
     endDate: string,
     locationData?: BookingLocationData,
-  ): Promise<{ success: boolean; booking?: any; error?: string; canWaitlist?: boolean }> {
+  ): Promise<{ success: boolean; booking?: Booking; error?: string; canWaitlist?: boolean }> {
     if (this.inProgress) return { success: false, error: 'in_progress' };
     this.inProgress = true;
 
