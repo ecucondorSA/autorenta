@@ -85,24 +85,50 @@
           <div class="space-y-4">
             <h3 class="text-lg font-semibold text-text-primary border-b border-border-default pb-2">Detalle de Preautorización</h3>
 
-            <div class="flex justify-between items-center py-2">
-              <span class="text-text-secondary">Monto a bloquear (Garantía)</span>
-              <span class="font-medium text-text-primary text-lg">USD {{ PRE_AUTH_AMOUNT_USD | number:'1.0-0' }}</span>
+            <!-- Guarantee -->
+            <div class="space-y-3 p-4 bg-surface-base dark:bg-surface-base rounded-lg border border-border-default dark:border-neutral-800/60">
+              <div class="flex justify-between items-center">
+                <span class="text-text-secondary">Garantía (Preautorización)</span>
+                <span class="font-medium text-text-primary">USD {{ PRE_AUTH_AMOUNT_USD | number:'1.0-0' }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-text-secondary">En pesos argentinos</span>
+                <span class="font-medium text-text-primary">$ {{ (PRE_AUTH_AMOUNT_USD * fxSnapshot()?.rate!) | number:'1.0-0' }} ARS</span>
+              </div>
             </div>
 
-            <div class="flex justify-between items-center py-2">
-              <span class="text-text-secondary">Tasa de conversión</span>
-              <span class="font-medium text-text-primary">1 USD = $ {{ fxSnapshot()?.rate | number:'1.2-2' }} ARS</span>
+            <!-- Rental Cost -->
+            <div class="space-y-3 p-4 bg-surface-base dark:bg-surface-base rounded-lg border border-border-default dark:border-neutral-800/60">
+              <div class="flex justify-between items-center">
+                <span class="text-text-secondary">Alquiler del vehículo</span>
+                <span class="font-medium text-text-primary">{{ rentalDays() }} día(s)</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-text-secondary">$ {{ car()?.price_per_day | number:'1.0-0' }} ARS/día</span>
+                <span class="font-medium text-text-primary">$ {{ rentalCostArs() | number:'1.0-0' }} ARS</span>
+              </div>
             </div>
 
-            <div class="mt-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-100 dark:border-primary-800 flex justify-between items-center">
-              <span class="font-semibold text-primary-900 dark:text-primary-100">Total Estimado a Bloquear</span>
-              <span class="font-bold text-2xl text-primary-700 dark:text-primary-300">$ {{ totalArs() | number:'1.0-0' }} ARS</span>
+            <!-- Exchange Rate Info -->
+            <div class="flex justify-between items-center py-2">
+              <span class="text-text-secondary text-sm">Tasa de conversión</span>
+              <span class="font-medium text-text-primary text-sm">1 USD = $ {{ fxSnapshot()?.rate | number:'1.2-2' }} ARS</span>
+            </div>
+
+            <!-- Total -->
+            <div class="mt-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-100 dark:border-primary-800">
+              <div class="flex justify-between items-center">
+                <span class="font-semibold text-primary-900 dark:text-primary-100">Total a Bloquear</span>
+                <span class="font-bold text-2xl text-primary-700 dark:text-primary-300">$ {{ totalArs() | number:'1.0-0' }} ARS</span>
+              </div>
+              <p class="text-xs text-primary-700 dark:text-primary-200 mt-2">
+                Garantía + Alquiler de {{ rentalDays() }} día(s)
+              </p>
             </div>
 
             <p class="text-xs text-text-secondary text-center mt-4">
-              * Este monto es una preautorización (bloqueo temporal) en su tarjeta de crédito. No es un cargo definitivo.
-              El monto se liberará automáticamente al finalizar el alquiler sin novedades.
+              * Este monto incluye la preautorización (bloqueo temporal) más el alquiler del vehículo.
+              La garantía se liberará automáticamente al finalizar el alquiler sin novedades.
             </p>
           </div>
         </div>

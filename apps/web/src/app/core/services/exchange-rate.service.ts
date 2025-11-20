@@ -134,14 +134,14 @@ export class ExchangeRateService {
   async getBinanceRate(): Promise<number> {
     const rate = this.lastRate();
     if (rate && Date.now() - this.lastFetch() < this.CACHE_TTL_MS) {
-      return rate.rate;
+      return rate.binance_rate;
     }
 
     await this.getPlatformRate();
     const updatedRate = this.lastRate();
 
     if (updatedRate) {
-      return updatedRate.rate;
+      return updatedRate.binance_rate;
     }
 
     throw new Error('No se pudo obtener tasa de Binance');

@@ -41,11 +41,36 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   // Constants
   readonly PRE_AUTH_AMOUNT_USD = 600;
 
-  // Computed
+  // Computed - Rental days
+  readonly rentalDays = computed(() => {
+    const input = this.bookingInput();
+    if (!input) return 0;
+    const diffTime = input.endDate.getTime() - input.startDate.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(1, diffDays); // At least 1 day
+  });
+
+  // Computed - Rental cost in ARS
+  readonly rentalCostArs = computed(() => {
+    const car = this.car();
+    const days = this.rentalDays();
+    const fx = this.fxSnapshot();
+
+    if (!car || !fx || days === 0) return 0;
+
+    // Car price is in ARS (price_per_day)
+    return car.price_per_day * days;
+  });
+
+  // Computed - Total guarantee + rental in ARS
   readonly totalArs = computed(() => {
     const fx = this.fxSnapshot();
     if (!fx) return 0;
-    return this.PRE_AUTH_AMOUNT_USD * fx.rate;
+
+    const guaranteeArs = this.PRE_AUTH_AMOUNT_USD * fx.rate;
+    const rentalArs = this.rentalCostArs();
+
+    return guaranteeArs + rentalArs;
   });
 
   readonly bookingInput = signal<{
