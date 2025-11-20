@@ -1,0 +1,153 @@
+.step-indicator-container {
+  background: white;
+  padding: 1.5rem 1rem 1rem;
+  border-bottom: 1px solid var(--ion-color-light-shade);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.progress-bar-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.progress-bar {
+  height: 6px;
+  background: var(--ion-color-light);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ion-color-primary), var(--ion-color-secondary));
+  border-radius: 3px;
+  transition: width 0.3s ease-in-out;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 70px;
+  flex: 1;
+  cursor: default;
+  transition: all 0.2s ease;
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+
+      .step-circle {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+
+  &.active .step-circle {
+    background: var(--ion-color-primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.4);
+    transform: scale(1.1);
+  }
+
+  &.completed .step-circle {
+    background: var(--ion-color-success);
+    color: white;
+  }
+
+  &.active .step-label {
+    color: var(--ion-color-primary);
+    font-weight: 700;
+  }
+
+  &.completed .step-label {
+    color: var(--ion-color-success);
+    font-weight: 600;
+  }
+}
+
+.step-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--ion-color-light);
+  color: var(--ion-color-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .step-icon {
+    font-size: 24px;
+  }
+}
+
+.step-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ion-color-medium);
+  text-align: center;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.step-number {
+  font-size: 0.65rem;
+  color: var(--ion-color-medium-shade);
+  font-weight: 500;
+}
+
+// Mobile optimizations
+@media (max-width: 768px) {
+  .step-indicator-container {
+    padding: 1rem 0.5rem 0.75rem;
+  }
+
+  .step {
+    min-width: 60px;
+    gap: 0.35rem;
+  }
+
+  .step-circle {
+    width: 40px;
+    height: 40px;
+
+    .step-icon {
+      font-size: 20px;
+    }
+  }
+
+  .step-label {
+    font-size: 0.7rem;
+  }
+
+  .step-number {
+    font-size: 0.6rem;
+  }
+}
+
+// Tablet
+@media (min-width: 769px) and (max-width: 1024px) {
+  .step {
+    min-width: 80px;
+  }
+}

@@ -1,18 +1,26 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, from, map, catchError, of } from 'rxjs';
+import { Observable, catchError, from, map, of } from 'rxjs';
 import {
-  FxSnapshot,
   CurrencyCode,
+  FxSnapshot,
   isFxExpired,
   isFxVariationExceeded,
 } from '../models/booking-detail-payment.model';
-import { SupabaseClientService } from './supabase-client.service';
 import { ExchangeRateService } from './exchange-rate.service';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * Servicio para gestionar tipos de cambio (FX)
  * Maneja snapshots, validación de expiración y revalidación
- * USA: ExchangeRateService (Binance con margen del 20%)
+ *
+ * IMPORTANTE: Usa 'platform_rate' que YA contiene el margen del 10%.
+ * NO multiplicar por 1.1 nuevamente.
+ *
+ * Flujo:
+ * - Binance API actualiza c/30 min (dinámico: USDTARS en tiempo real)
+ * - Edge Function: sync-binance-rates → guarda binance_rate y platform_rate
+ * - Frontend: Consulta platform_rate (con margen) para mostrar al usuario
+ * - Margen del 10%: Protección contra volatilidad del peso argentino
  */
 @Injectable({
   providedIn: 'root',
@@ -23,13 +31,15 @@ export class FxService {
 
   /**
    * Obtiene el snapshot actual de FX para USD_ARS desde Binance
-   * Usa exchange_rates table (con margen del 20%)
+   * Usa exchange_rates table con platform_rate (incluye margen del 10%)
+   *
+   * NOTA: data.platform_rate YA incluye el margen del 10%, no multiplicar nuevamente
    */
   getFxSnapshot(
     _fromCurrency: CurrencyCode = 'USD',
     toCurrency: CurrencyCode = 'ARS',
   ): Observable<FxSnapshot | null> {
-    const pair = `USDT${toCurrency}`;
+    const pair = `${_fromCurrency}${toCurrency}`;
 
     return from(
       this.supabaseClient
@@ -52,7 +62,7 @@ export class FxService {
         expiresAt.setDate(expiresAt.getDate() + 7);
 
         const snapshot: FxSnapshot = {
-          rate: data.platform_rate,
+          rate: data.platform_rate, // ✅ Usar platform_rate (con margen del 10%)
           timestamp,
           fromCurrency: 'USD',
           toCurrency: toCurrency as CurrencyCode,
@@ -62,7 +72,7 @@ export class FxService {
         };
 
         console.log(
-          `💱 FX Snapshot (Binance): 1 USD = ${snapshot.rate} ARS (Binance: ${data.binance_rate}, Margen: ${data.margin_percent}%)`,
+          `💱 FX Snapshot - Binance ${data.binance_rate} ARS → Tasa de plataforma ${snapshot.rate} ARS (margen: ${data.margin_percent}%)`,
         );
 
         return snapshot;
@@ -178,14 +188,15 @@ export class FxService {
     _toCurrency: CurrencyCode = 'ARS',
   ): Promise<number> {
     try {
-      const rate = await this.exchangeRateService.getPlatformRate('USDTARS');
+      const rate = await this.exchangeRateService.getPlatformRate('USDARS');
       return rate;
     } catch (error) {
       console.error('Error obteniendo tasa desde exchange_rates:', error);
 
       try {
         const binanceRate = await this.exchangeRateService.getBinanceRate();
-        return binanceRate * 1.2;
+        // Aplicar margen del 10% si venimos de Binance (sin DB)
+        return binanceRate * 1.1;
       } catch (binanceError) {
         console.error('Error obteniendo tasa de Binance:', binanceError);
         throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');

@@ -1,0 +1,387 @@
+import { Injectable, signal } from '@angular/core';
+import { SupabaseService } from './supabase.service';
+import { AuthService } from './auth.service';
+import { NotificationManager } from './notification-manager.service';
+
+export interface ChatMessage {
+  id: string;
+  threadId: string;
+  senderId: string;
+  senderName: string;
+  senderAvatar?: string;
+  content: string;
+  messageType: 'text' | 'image' | 'video' | 'voice' | 'location' | 'file';
+  mediaUrl?: string;
+  mediaMetadata?: {
+    fileName?: string;
+    fileSize?: number;
+    mimeType?: string;
+    duration?: number; // for voice/video
+    thumbnailUrl?: string;
+    location?: { lat: number; lng: number; address?: string };
+  };
+  replyTo?: string; // message ID being replied to
+  status: 'sending' | 'sent' | 'delivered' | 'read' | 'failed';
+  createdAt: Date;
+  readAt?: Date;
+}
+
+export interface ChatThread {
+  id: string;
+  bookingId: string;
+  carName: string;
+  carImage: string;
+  participants: ChatParticipant[];
+  lastMessage?: ChatMessage;
+  unreadCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ChatParticipant {
+  userId: string;
+  name: string;
+  avatar?: string;
+  role: 'locador' | 'locatario';
+  isOnline: boolean;
+  lastSeen?: Date;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ChatV3Service {
+  private currentUserId = signal<string | null>(null);
+  private activeThreads = signal<Map<string, ChatThread>>(new Map());
+  private messageCache = signal<Map<string, ChatMessage[]>>(new Map());
+
+  constructor(
+    private supabase: SupabaseService,
+    private auth: AuthService,
+    private notifications: NotificationManager
+  ) {
+    this.initializeService();
+  }
+
+  private async initializeService() {
+    const user = await this.auth.getCurrentUser();
+    if (user) {
+      this.currentUserId.set(user.id);
+      this.setupRealtimeSubscription();
+    }
+  }
+
+  private setupRealtimeSubscription() {
+    // TODO: Setup Supabase realtime subscription for new messages
+    // this.supabase.client
+    //   .channel('chat_messages')
+    //   .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' },
+    //     payload => this.handleNewMessage(payload.new as any)
+    //   )
+    //   .subscribe();
+  }
+
+  async getThreadsForUser(): Promise<ChatThread[]> {
+    try {
+      // TODO: Query database for user's chat threads
+      // For now, return mock data
+      const mockThreads: ChatThread[] = [
+        {
+          id: 'thread-1',
+          bookingId: 'booking-1',
+          carName: 'Toyota Corolla 2022',
+          carImage: '/assets/cars/toyota-corolla.jpg',
+          participants: [
+            {
+              userId: 'user-1',
+              name: 'Juan Pérez',
+              avatar: '/assets/avatars/juan.jpg',
+              role: 'locador',
+              isOnline: true
+            },
+            {
+              userId: 'user-2',
+              name: 'María González',
+              role: 'locatario',
+              isOnline: false,
+              lastSeen: new Date(Date.now() - 3600000)
+            }
+          ],
+          lastMessage: {
+            id: 'msg-1',
+            threadId: 'thread-1',
+            senderId: 'user-1',
+            senderName: 'Juan Pérez',
+            content: '¿A qué hora pasas a retirar el auto?',
+            messageType: 'text',
+            status: 'read',
+            createdAt: new Date(Date.now() - 1800000)
+          },
+          unreadCount: 2,
+          createdAt: new Date(Date.now() - 86400000),
+          updatedAt: new Date(Date.now() - 1800000)
+        }
+      ];
+
+      return mockThreads;
+    } catch (error) {
+      console.error('Error loading chat threads:', error);
+      return [];
+    }
+  }
+
+  async getMessagesForThread(threadId: string): Promise<ChatMessage[]> {
+    try {
+      // Check cache first
+      const cached = this.messageCache().get(threadId);
+      if (cached) {
+        return cached;
+      }
+
+      // TODO: Query database for messages
+      // For now, return mock data
+      const mockMessages: ChatMessage[] = [
+        {
+          id: 'msg-1',
+          threadId,
+          senderId: 'user-1',
+          senderName: 'Juan Pérez',
+          content: 'Hola! Vi que reservaste mi auto para el fin de semana',
+          messageType: 'text',
+          status: 'read',
+          createdAt: new Date(Date.now() - 7200000)
+        },
+        {
+          id: 'msg-2',
+          threadId,
+          senderId: 'user-2',
+          senderName: 'María González',
+          content: 'Sí! Estoy muy emocionada. ¿Puedo pasar a retirarlo el viernes a las 18hs?',
+          messageType: 'text',
+          status: 'read',
+          createdAt: new Date(Date.now() - 7000000)
+        },
+        {
+          id: 'msg-3',
+          threadId,
+          senderId: 'user-1',
+          senderName: 'Juan Pérez',
+          content: 'Perfecto! Te envío la ubicación exacta',
+          messageType: 'text',
+          status: 'read',
+          createdAt: new Date(Date.now() - 6900000)
+        },
+        {
+          id: 'msg-4',
+          threadId,
+          senderId: 'user-1',
+          senderName: 'Juan Pérez',
+          content: '',
+          messageType: 'location',
+          mediaMetadata: {
+            location: {
+              lat: -34.6037,
+              lng: -58.3816,
+              address: 'Av. Corrientes 1234, CABA'
+            }
+          },
+          status: 'read',
+          createdAt: new Date(Date.now() - 6800000)
+        }
+      ];
+
+      this.messageCache().set(threadId, mockMessages);
+      return mockMessages;
+    } catch (error) {
+      console.error('Error loading messages:', error);
+      return [];
+    }
+  }
+
+  async sendTextMessage(threadId: string, content: string, replyTo?: string): Promise<ChatMessage> {
+    const user = await this.auth.getCurrentUser();
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+
+    const message: ChatMessage = {
+      id: `msg-${Date.now()}`,
+      threadId,
+      senderId: user.id,
+      senderName: user.email || 'Usuario',
+      content,
+      messageType: 'text',
+      replyTo,
+      status: 'sending',
+      createdAt: new Date()
+    };
+
+    // Optimistic update
+    this.addMessageToCache(threadId, message);
+
+    try {
+      // TODO: Insert into database
+      // const { data, error } = await this.supabase.client
+      //   .from('chat_messages')
+      //   .insert({...})
+      //   .select()
+      //   .single();
+
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      message.status = 'sent';
+      this.updateMessageInCache(threadId, message);
+
+      return message;
+    } catch (error) {
+      console.error('Error sending message:', error);
+      message.status = 'failed';
+      this.updateMessageInCache(threadId, message);
+      throw error;
+    }
+  }
+
+  async sendMediaMessage(
+    threadId: string,
+    file: File,
+    messageType: 'image' | 'video' | 'voice' | 'file'
+  ): Promise<ChatMessage> {
+    const user = await this.auth.getCurrentUser();
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+
+    const message: ChatMessage = {
+      id: `msg-${Date.now()}`,
+      threadId,
+      senderId: user.id,
+      senderName: user.email || 'Usuario',
+      content: '',
+      messageType,
+      mediaMetadata: {
+        fileName: file.name,
+        fileSize: file.size,
+        mimeType: file.type
+      },
+      status: 'sending',
+      createdAt: new Date()
+    };
+
+    this.addMessageToCache(threadId, message);
+
+    try {
+      // TODO: Upload file to storage
+      // const filePath = `chat/${threadId}/${message.id}/${file.name}`;
+      // const { data: uploadData } = await this.supabase.client.storage
+      //   .from('chat-media')
+      //   .upload(filePath, file);
+
+      // const { data: { publicUrl } } = this.supabase.client.storage
+      //   .from('chat-media')
+      //   .getPublicUrl(filePath);
+
+      // message.mediaUrl = publicUrl;
+
+      // Simulate upload
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      message.mediaUrl = URL.createObjectURL(file);
+
+      // TODO: Insert message into database
+      message.status = 'sent';
+      this.updateMessageInCache(threadId, message);
+
+      return message;
+    } catch (error) {
+      console.error('Error sending media message:', error);
+      message.status = 'failed';
+      this.updateMessageInCache(threadId, message);
+      throw error;
+    }
+  }
+
+  async sendLocationMessage(
+    threadId: string,
+    location: { lat: number; lng: number; address?: string }
+  ): Promise<ChatMessage> {
+    const user = await this.auth.getCurrentUser();
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+
+    const message: ChatMessage = {
+      id: `msg-${Date.now()}`,
+      threadId,
+      senderId: user.id,
+      senderName: user.email || 'Usuario',
+      content: '',
+      messageType: 'location',
+      mediaMetadata: { location },
+      status: 'sending',
+      createdAt: new Date()
+    };
+
+    this.addMessageToCache(threadId, message);
+
+    try {
+      // TODO: Insert into database
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      message.status = 'sent';
+      this.updateMessageInCache(threadId, message);
+
+      return message;
+    } catch (error) {
+      console.error('Error sending location:', error);
+      message.status = 'failed';
+      this.updateMessageInCache(threadId, message);
+      throw error;
+    }
+  }
+
+  async markAsRead(threadId: string, messageId: string) {
+    try {
+      // TODO: Update database
+      // await this.supabase.client
+      //   .from('chat_messages')
+      //   .update({ read_at: new Date().toISOString(), status: 'read' })
+      //   .eq('id', messageId);
+
+      const messages = this.messageCache().get(threadId);
+      if (messages) {
+        const updated = messages.map(m =>
+          m.id === messageId ? { ...m, status: 'read' as const, readAt: new Date() } : m
+        );
+        this.messageCache().set(threadId, updated);
+      }
+    } catch (error) {
+      console.error('Error marking message as read:', error);
+    }
+  }
+
+  private addMessageToCache(threadId: string, message: ChatMessage) {
+    const messages = this.messageCache().get(threadId) || [];
+    this.messageCache().set(threadId, [...messages, message]);
+  }
+
+  private updateMessageInCache(threadId: string, updatedMessage: ChatMessage) {
+    const messages = this.messageCache().get(threadId);
+    if (messages) {
+      const updated = messages.map(m => m.id === updatedMessage.id ? updatedMessage : m);
+      this.messageCache().set(threadId, updated);
+    }
+  }
+
+  async startVideoCall(threadId: string): Promise<string> {
+    // TODO: Implement WebRTC video call
+    // For now, return a placeholder room ID
+    const roomId = `call-${threadId}-${Date.now()}`;
+    this.notifications.show('Iniciando videollamada...');
+    return roomId;
+  }
+
+  async recordVoiceMessage(): Promise<Blob> {
+    // TODO: Implement voice recording using MediaRecorder API
+    throw new Error('Voice recording not implemented');
+  }
+}

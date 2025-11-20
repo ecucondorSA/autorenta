@@ -913,7 +913,7 @@
     [class.py-0]="fullBleedLayout()"
     [class.full-bleed-safe]="fullBleedLayout()"
   >
-    <div [@fadeAnimation]="getRouteAnimationData()">
+    <div>
       <router-outlet></router-outlet>
     </div>
   </main>
@@ -942,7 +942,8 @@
 
 <!-- Bottom Navigation Bar (V2) - Visible solo en móvil -->
 <!-- IMPORTANTE: Debe estar fuera del contenedor principal para que position:fixed funcione -->
-<app-bottom-nav-bar class="md:hidden"></app-bottom-nav-bar>
+<!-- TODO: Re-add when bottom-nav-bar component is created -->
+<!-- <app-bottom-nav-bar class="md:hidden"></app-bottom-nav-bar> -->
 
 <!-- Mobile Bottom Navigation (solo móvil) - Renderizado via Portal Service directamente en body -->
 <!-- El componente se crea dinámicamente en app.component.ts usando MobileBottomNavPortalService -->

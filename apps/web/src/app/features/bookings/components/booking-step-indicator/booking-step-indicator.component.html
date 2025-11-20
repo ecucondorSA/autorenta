@@ -1,0 +1,34 @@
+<div class="step-indicator-container">
+  <!-- Progress Bar -->
+  <div class="progress-bar-wrapper">
+    <div class="progress-bar">
+      <div
+        class="progress-fill"
+        [style.width.%]="progressPercentage"
+      ></div>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps-container">
+    @for (step of steps; track step.number) {
+      <div
+        class="step"
+        [class.active]="step.isActive"
+        [class.completed]="step.isCompleted"
+        [class.clickable]="step.isClickable"
+        (click)="onStepClick(step)"
+      >
+        <div class="step-circle">
+          @if (step.isCompleted) {
+            <ion-icon name="checkmark" class="step-icon"></ion-icon>
+          } @else {
+            <ion-icon [name]="step.icon" class="step-icon"></ion-icon>
+          }
+        </div>
+        <span class="step-label">{{ step.label }}</span>
+        <span class="step-number">{{ step.number }}/{{ totalSteps }}</span>
+      </div>
+    }
+  </div>
+</div>

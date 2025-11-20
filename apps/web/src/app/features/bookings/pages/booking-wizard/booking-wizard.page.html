@@ -1,0 +1,118 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Reservar {{ car()?.brand }} {{ car()?.model }}</ion-title>
+    <ion-buttons slot="end">
+      @if (isSavingDraft()) {
+        <ion-spinner name="dots"></ion-spinner>
+      }
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="booking-wizard-content">
+  @if (isLoading()) {
+    <div class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando detalles del auto...</p>
+    </div>
+  } @else {
+    <!-- Step Indicator -->
+    <app-booking-step-indicator
+      [currentStep]="currentStep()"
+      [totalSteps]="totalSteps"
+      (stepClick)="goToStep($event)"
+    />
+
+    <!-- Step Content -->
+    <div class="step-content">
+      @switch (currentStep()) {
+        @case (1) {
+          <app-booking-dates-step
+            [car]="car()"
+            [data]="wizardData()"
+            (dataChange)="onStepDataChange($event)"
+          />
+        }
+        @case (2) {
+          <app-booking-insurance-step
+            [car]="car()"
+            [data]="wizardData()"
+            (dataChange)="onStepDataChange($event)"
+          />
+        }
+        @case (3) {
+          <app-booking-extras-step
+            [car]="car()"
+            [data]="wizardData()"
+            (dataChange)="onStepDataChange($event)"
+          />
+        }
+        @case (4) {
+          <app-booking-driver-step
+            [data]="wizardData()"
+            (dataChange)="onStepDataChange($event)"
+          />
+        }
+        @case (5) {
+          <app-booking-payment-step
+            [car]="car()"
+            [data]="wizardData()"
+            (dataChange)="onStepDataChange($event)"
+          />
+        }
+        @case (6) {
+          <app-booking-review-step
+            [car]="car()"
+            [data]="wizardData()"
+            (dataChange)="onStepDataChange($event)"
+          />
+        }
+      }
+    </div>
+  }
+</ion-content>
+
+<!-- Navigation Buttons -->
+<ion-footer class="booking-wizard-footer">
+  <div class="navigation-buttons">
+    <ion-button
+      *ngIf="canGoBack()"
+      fill="outline"
+      (click)="previousStep()"
+      class="nav-button back-button"
+    >
+      <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+      Anterior
+    </ion-button>
+
+    @if (isLastStep()) {
+      <ion-button
+        [disabled]="!canProceed() || isLoading()"
+        (click)="submitBooking()"
+        class="nav-button submit-button"
+        color="success"
+      >
+        @if (isLoading()) {
+          <ion-spinner name="dots"></ion-spinner>
+        } @else {
+          Confirmar Reserva
+          <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+        }
+      </ion-button>
+    } @else {
+      <ion-button
+        [disabled]="!canProceed()"
+        (click)="nextStep()"
+        class="nav-button next-button"
+      >
+        Siguiente
+        <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+    }
+  </div>
+</ion-footer>

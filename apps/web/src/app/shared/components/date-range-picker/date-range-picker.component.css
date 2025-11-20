@@ -1,8 +1,9 @@
-@import 'flatpickr/dist/flatpickr.css';
+/* @import 'flatpickr/dist/flatpickr.css'; - Moved to global styles.css */
 
 :host {
   display: block;
   height: 100%;
+  overflow: visible;
 }
 
 /* ==================== CONTAINER ==================== */
@@ -15,6 +16,7 @@
   padding: 1.25rem;
   background: var(--surface-base);
   border-radius: var(--radius-lg);
+  overflow: visible;
 }
 
 /* ==================== HEADER ==================== */
@@ -475,6 +477,8 @@
   border: 1px solid var(--border-default) !important;
   border-radius: var(--radius-lg) !important;
   font-family: inherit !important;
+  z-index: 9999 !important;
+  position: absolute !important;
 }
 
 ::ng-deep .flatpickr-calendar.arrowTop:before,
@@ -499,17 +503,6 @@
   fill: var(--text-primary) !important;
 }
 
-::ng-deep .flatpickr-current-month .flatpickr-monthDropdown-months,
-::ng-deep .flatpickr-current-month input.cur-year {
-  color: var(--text-primary) !important;
-  font-weight: 600 !important;
-}
-
-::ng-deep .flatpickr-current-month .flatpickr-monthDropdown-months:hover,
-::ng-deep .flatpickr-current-month input.cur-year:hover {
-  background: var(--surface-hover) !important;
-}
-
 ::ng-deep .flatpickr-prev-month,
 ::ng-deep .flatpickr-next-month {
   color: var(--text-secondary) !important;
@@ -520,6 +513,13 @@
 ::ng-deep .flatpickr-next-month:hover {
   color: var(--cta-default) !important;
   fill: var(--cta-default) !important;
+}
+
+::ng-deep .flatpickr-prev-month svg,
+::ng-deep .flatpickr-next-month svg {
+  width: 14px !important;
+  height: 14px !important;
+  fill: inherit !important;
 }
 
 /* Weekdays */

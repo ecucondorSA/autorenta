@@ -484,6 +484,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         }
         this.setupFollowLocation();
         this.setupLockControls();
+
+        // Pre-warm component pool during idle time for better performance
+        this.preWarmComponentPoolDuringIdle();
       });
 
       // Handle map errors
@@ -821,6 +824,62 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
+   * Pre-warm component pool during idle time using requestIdleCallback
+   * Creates 50 components progressively to avoid blocking main thread
+   */
+  private preWarmComponentPoolDuringIdle(): void {
+    // Only pre-warm if pool is small
+    if (this.markerComponentPool.length > 50) {
+      return;
+    }
+
+    const targetPoolSize = 100;
+    const componentsPerBatch = 5; // Create 5 at a time
+
+    const createBatch = () => {
+      if (this.markerComponentPool.length >= targetPoolSize) {
+        return; // Done warming
+      }
+
+      // Create a batch during idle time
+      for (let i = 0; i < componentsPerBatch && this.markerComponentPool.length < targetPoolSize; i++) {
+        const newComponentRef = createComponent(MapMarkerComponent, {
+          environmentInjector: this.injector,
+        });
+
+        this.applicationRef.attachView(newComponentRef.hostView);
+
+        // Hide the element
+        const element = newComponentRef.location.nativeElement as HTMLElement;
+        if (element) {
+          element.style.display = 'none';
+        }
+
+        this.markerComponentPool.push(newComponentRef);
+      }
+
+      // Schedule next batch if needed
+      if (this.markerComponentPool.length < targetPoolSize) {
+        if ('requestIdleCallback' in window) {
+          // Modern browsers with requestIdleCallback
+          requestIdleCallback(() => createBatch(), { timeout: 2000 });
+        } else {
+          // Fallback for older browsers
+          setTimeout(() => createBatch(), 100);
+        }
+      }
+    };
+
+    // Start warming with requestIdleCallback if available
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => createBatch(), { timeout: 1000 });
+    } else {
+      // Fallback for older browsers
+      setTimeout(() => createBatch(), 500);
+    }
+  }
+
+  /**
    * Get a marker component from pool or create new one
    */
   private getMarkerComponentFromPool(): ComponentRef<MapMarkerComponent> {
@@ -942,15 +1001,24 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private setupViewportChangeListener(): void {
     if (!this.map) return;
 
-    // Use requestAnimationFrame for smoother viewport updates
+    // Use requestAnimationFrame with cooldown to prevent excessive updates
     let animationFrameId: number;
+    let lastUpdateTime = 0;
+    const cooldownMs = 300; // Wait at least 300ms between updates
     const throttledUpdate = () => {
+      const now = Date.now();
+      if (now - lastUpdateTime < cooldownMs) {
+        // Skip if within cooldown period
+        return;
+      }
+
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
 
       animationFrameId = requestAnimationFrame(() => {
         if (this.cars.length > this.virtualizationThreshold && !this.useClustering) {
+          lastUpdateTime = Date.now();
           this.updateVirtualizedMarkers();
         }
         animationFrameId = 0;
@@ -1748,15 +1816,22 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       padding: { top: 50, bottom: 50, left: 50, right: 50 }, // Add padding for better positioning
     });
 
-    // Update position periodically
+    // Update position periodically with debounce to prevent animation overlap
+    let lastEaseToTime = 0;
+    const easeToDebounceMs = 1000; // Prevent animations from stacking
     this.followLocationInterval = setInterval(() => {
       if (this.userLocation && this.map) {
-        this.map.easeTo({
-          center: [this.userLocation.lng, this.userLocation.lat],
-          duration: 500,
-        });
+        const now = Date.now();
+        // Only execute if enough time has passed since last animation
+        if (now - lastEaseToTime > easeToDebounceMs) {
+          lastEaseToTime = now;
+          this.map.easeTo({
+            center: [this.userLocation.lng, this.userLocation.lat],
+            duration: 500,
+          });
+        }
       }
-    }, 2000); // Update every 2 seconds
+    }, 3000); // Update every 3 seconds (increased from 2s to reduce animation frequency)
   }
 
   /**

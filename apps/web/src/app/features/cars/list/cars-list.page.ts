@@ -36,10 +36,17 @@ import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { PwaTitlebarComponent } from '../../../shared/components/pwa-titlebar/pwa-titlebar.component';
-import { CarCardV3Component } from '../../../shared/components/marketplace/car-card-v3/car-card-v3.component';
-import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
-import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
+// import { CarCardV3Component } from '../../../shared/components/marketplace/car-card-v3/car-card-v3.component';
+// import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
+// import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
 import { getErrorMessage } from '../../../core/utils/type-guards';
+
+// Temporary BreadcrumbItem interface
+interface BreadcrumbItem {
+  label: string;
+  url?: string;
+  icon?: string;
+}
 
 // Interface para auto con distancia
 export interface CarWithDistance extends Car {
@@ -70,9 +77,9 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     UrgentRentalBannerComponent,
     WhatsappFabComponent,
     PwaTitlebarComponent,
-    CarCardV3Component,
-    FiltersDrawerComponent,
-    BreadcrumbsComponent,
+    // CarCardV3Component,
+    // FiltersDrawerComponent,
+    // BreadcrumbsComponent,
     TranslateModule,
   ],
   templateUrl: './cars-list.page.html',

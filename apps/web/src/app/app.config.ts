@@ -1,31 +1,30 @@
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
+  APP_INITIALIZER,
   ApplicationConfig,
-  LOCALE_ID,
   ErrorHandler,
   importProvidersFrom,
   isDevMode,
+  LOCALE_ID,
   provideZoneChangeDetection,
-  APP_INITIALIZER,
 } from '@angular/core';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   provideRouter,
   withEnabledBlockingInitialNavigation,
   withInMemoryScrolling,
 } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MessageService } from 'primeng/api';
-import { environment } from '../environments/environment';
 import { routes } from './app.routes';
-import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
-import { SupabaseClientService } from './core/services/supabase-client.service';
+import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
+import { GlobalErrorHandler } from './core/services/global-error-handler';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
-import { SentryErrorHandler } from './core/services/sentry.service';
+import { SupabaseClientService } from './core/services/supabase-client.service';
 
 /**
  * Inicializa el servicio de monitoreo de performance
@@ -68,16 +67,16 @@ export const appConfig: ApplicationConfig = {
     }),
     // ✅ PrimeNG MessageService for notifications
     MessageService,
-    // ✅ Sentry Error Handler (production only)
-    ...(environment.sentryDsn ? [{ provide: ErrorHandler, useClass: SentryErrorHandler }] : []),
+    // ✅ Global Error Handler (handles Sentry internally)
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode()
       ? {
-          provide: APP_INITIALIZER,
-          useFactory: initializePerformanceMonitoring,
-          deps: [PerformanceMonitoringService],
-          multi: true,
-        }
+        provide: APP_INITIALIZER,
+        useFactory: initializePerformanceMonitoring,
+        deps: [PerformanceMonitoringService],
+        multi: true,
+      }
       : [],
   ],
 };

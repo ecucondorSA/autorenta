@@ -1,5 +1,6 @@
 <!-- Breadcrumbs navigation -->
-<app-breadcrumbs [items]="breadcrumbItems()" />
+<!-- TODO: Re-add when breadcrumbs component is created -->
+<!-- <app-breadcrumbs [items]="breadcrumbItems()" /> -->
 
 <ng-container *ngIf="car(); else loadingOrError">
   <section class="grid gap-4 sm:gap-6 lg:gap-8 lg:grid-cols-[2fr_1fr]">
@@ -66,6 +67,8 @@
         </div>
       </ng-template>
       <!-- Photo Gallery Component -->
+      <!-- TODO: Re-add when photo-gallery component is created -->
+      <!--
       <div
         class="card-premium rounded-2xl border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised shadow-soft overflow-hidden"
       >
@@ -75,6 +78,7 @@
           (sharePhoto)="onPhotoShare($event)"
         ></app-photo-gallery>
       </div>
+      -->
 
       <div class="space-y-3">
         <div class="flex flex-wrap items-start justify-between gap-4">

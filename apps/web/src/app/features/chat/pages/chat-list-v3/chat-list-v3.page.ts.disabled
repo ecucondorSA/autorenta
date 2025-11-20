@@ -1,0 +1,485 @@
+import { Component, OnInit, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { ChatV3Service, ChatThread } from '../../../../core/services/chat-v3.service';
+
+@Component({
+  selector: 'app-chat-list-v3',
+  standalone: true,
+  imports: [CommonModule, FormsModule, IonicModule],
+  template: `
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Mensajes</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="openSearch()">
+            <ion-icon name="search-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+
+      <!-- Filter Tabs -->
+      <ion-toolbar>
+        <ion-segment [(ngModel)]="selectedFilter" (ionChange)="onFilterChange()">
+          <ion-segment-button value="all">
+            <ion-label>Todos</ion-label>
+            @if (totalThreads() > 0) {
+              <ion-badge>{{ totalThreads() }}</ion-badge>
+            }
+          </ion-segment-button>
+          <ion-segment-button value="unread">
+            <ion-label>No leídos</ion-label>
+            @if (unreadCount() > 0) {
+              <ion-badge color="danger">{{ unreadCount() }}</ion-badge>
+            }
+          </ion-segment-button>
+          <ion-segment-button value="locador">
+            <ion-label>Como Locador</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="locatario">
+            <ion-label>Como Locatario</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <div class="chat-list-container">
+        @if (isLoading()) {
+          <div class="loading-state">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando conversaciones...</p>
+          </div>
+        } @else if (filteredThreads().length === 0) {
+          <div class="empty-state">
+            <ion-icon name="chatbubbles-outline"></ion-icon>
+            <h3>No hay conversaciones</h3>
+            <p>
+              @if (selectedFilter() === 'unread') {
+                No tienes mensajes sin leer
+              } @else {
+                Tus conversaciones aparecerán aquí cuando tengas reservas activas
+              }
+            </p>
+          </div>
+        } @else {
+          <ion-list class="threads-list">
+            @for (thread of filteredThreads(); track thread.id) {
+              <ion-item
+                button
+                detail
+                (click)="openThread(thread.id)"
+                class="thread-item"
+                [class.has-unread]="thread.unreadCount > 0"
+              >
+                <!-- Car Image -->
+                <ion-avatar slot="start" class="car-avatar">
+                  <img [src]="thread.carImage" [alt]="thread.carName" />
+                  @if (isParticipantOnline(thread)) {
+                    <span class="online-badge"></span>
+                  }
+                </ion-avatar>
+
+                <!-- Thread Details -->
+                <ion-label>
+                  <h2 class="thread-title">
+                    {{ thread.carName }}
+                    @if (thread.unreadCount > 0) {
+                      <ion-badge color="danger" class="unread-badge">
+                        {{ thread.unreadCount }}
+                      </ion-badge>
+                    }
+                  </h2>
+
+                  <h3 class="participants-list">
+                    @for (participant of thread.participants; track participant.userId) {
+                      <span class="participant-name">
+                        {{ participant.name }}
+                        <span class="participant-role">({{ participant.role }})</span>
+                      </span>
+                    }
+                  </h3>
+
+                  @if (thread.lastMessage) {
+                    <p class="last-message">
+                      @if (thread.lastMessage.senderId === currentUserId()) {
+                        <span class="message-prefix">Tú: </span>
+                      }
+
+                      @switch (thread.lastMessage.messageType) {
+                        @case ('text') {
+                          {{ thread.lastMessage.content }}
+                        }
+                        @case ('image') {
+                          <ion-icon name="image-outline"></ion-icon>
+                          Foto
+                        }
+                        @case ('video') {
+                          <ion-icon name="videocam-outline"></ion-icon>
+                          Video
+                        }
+                        @case ('voice') {
+                          <ion-icon name="mic-outline"></ion-icon>
+                          Mensaje de voz
+                        }
+                        @case ('location') {
+                          <ion-icon name="location-outline"></ion-icon>
+                          Ubicación
+                        }
+                        @case ('file') {
+                          <ion-icon name="document-outline"></ion-icon>
+                          Archivo
+                        }
+                      }
+                    </p>
+                  }
+                </ion-label>
+
+                <!-- Time & Status -->
+                <div slot="end" class="thread-meta">
+                  @if (thread.lastMessage) {
+                    <span class="message-time">
+                      {{ formatMessageTime(thread.lastMessage.createdAt) }}
+                    </span>
+                  }
+
+                  <!-- Actions -->
+                  <div class="thread-actions">
+                    <ion-button
+                      fill="clear"
+                      size="small"
+                      (click)="startVideoCall(thread.id, $event)"
+                    >
+                      <ion-icon name="videocam-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
+                    <ion-button
+                      fill="clear"
+                      size="small"
+                      (click)="muteThread(thread.id, $event)"
+                    >
+                      <ion-icon name="notifications-off-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </div>
+                </div>
+              </ion-item>
+            }
+          </ion-list>
+        }
+      </div>
+
+      <!-- Floating Action Button -->
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="createNewChat()">
+          <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-content>
+  `,
+  styles: [`
+    .chat-list-container {
+      min-height: 100%;
+    }
+
+    ion-segment {
+      padding: 0.5rem 1rem;
+    }
+
+    ion-segment-button {
+      font-size: 0.875rem;
+      min-width: auto;
+
+      ion-badge {
+        margin-left: 0.5rem;
+      }
+    }
+
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      text-align: center;
+
+      ion-spinner {
+        margin-bottom: 1rem;
+      }
+
+      p {
+        color: #6b7280;
+      }
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+
+      ion-icon {
+        font-size: 4rem;
+        color: #9ca3af;
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: #6b7280;
+        font-size: 0.875rem;
+        max-width: 300px;
+      }
+    }
+
+    .threads-list {
+      padding: 0;
+    }
+
+    .thread-item {
+      --padding-start: 1rem;
+      --padding-end: 1rem;
+      --padding-top: 0.75rem;
+      --padding-bottom: 0.75rem;
+      --inner-padding-end: 0;
+
+      &.has-unread {
+        --background: #eff6ff;
+      }
+
+      &::part(native) {
+        border-bottom: 1px solid #f3f4f6;
+      }
+    }
+
+    .car-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      position: relative;
+
+      img {
+        border-radius: 12px;
+        object-fit: cover;
+      }
+    }
+
+    .online-badge {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 12px;
+      height: 12px;
+      background: #10b981;
+      border: 2px solid white;
+      border-radius: 50%;
+    }
+
+    .thread-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .unread-badge {
+      font-size: 0.7rem;
+      padding: 0.125rem 0.375rem;
+    }
+
+    .participants-list {
+      font-size: 0.75rem;
+      color: #6b7280;
+      font-weight: 400;
+      margin-bottom: 0.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .participant-role {
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+
+    .last-message {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      .has-unread & {
+        font-weight: 600;
+        color: #1f2937;
+      }
+
+      ion-icon {
+        font-size: 1rem;
+        vertical-align: middle;
+      }
+    }
+
+    .message-prefix {
+      font-weight: 500;
+    }
+
+    .thread-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      align-self: flex-start;
+    }
+
+    .message-time {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      white-space: nowrap;
+    }
+
+    .thread-actions {
+      display: flex;
+      gap: 0.25rem;
+
+      ion-button {
+        --padding-start: 0.5rem;
+        --padding-end: 0.5rem;
+
+        ion-icon {
+          font-size: 1.25rem;
+          color: #6b7280;
+        }
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .thread-actions {
+        display: none;
+      }
+
+      ion-segment-button {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.25rem;
+      }
+    }
+  `]
+})
+export class ChatListV3Page implements OnInit {
+  threads = signal<ChatThread[]>([]);
+  isLoading = signal(true);
+  selectedFilter = signal<'all' | 'unread' | 'locador' | 'locatario'>('all');
+  currentUserId = signal<string | null>(null);
+
+  filteredThreads = computed(() => {
+    const all = this.threads();
+    const filter = this.selectedFilter();
+
+    switch (filter) {
+      case 'unread':
+        return all.filter(t => t.unreadCount > 0);
+      case 'locador':
+        // TODO: Filter by user role in booking
+        return all;
+      case 'locatario':
+        // TODO: Filter by user role in booking
+        return all;
+      default:
+        return all;
+    }
+  });
+
+  totalThreads = computed(() => this.threads().length);
+  unreadCount = computed(() =>
+    this.threads().reduce((sum, t) => sum + t.unreadCount, 0)
+  );
+
+  constructor(
+    private chatService: ChatV3Service,
+    private router: Router
+  ) {}
+
+  async ngOnInit() {
+    await this.loadThreads();
+  }
+
+  async loadThreads() {
+    this.isLoading.set(true);
+    try {
+      const threads = await this.chatService.getThreadsForUser();
+      this.threads.set(threads);
+    } catch (error) {
+      console.error('Error loading threads:', error);
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  onFilterChange() {
+    // Threads are automatically filtered via computed signal
+  }
+
+  openThread(threadId: string) {
+    this.router.navigate(['/chat', threadId]);
+  }
+
+  isParticipantOnline(thread: ChatThread): boolean {
+    return thread.participants.some(p => p.isOnline);
+  }
+
+  formatMessageTime(date: Date): string {
+    const now = new Date();
+    const messageDate = new Date(date);
+    const diffMs = now.getTime() - messageDate.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+
+    if (diffMins < 1) return 'Ahora';
+    if (diffMins < 60) return `${diffMins}m`;
+
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours}h`;
+
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 7) return `${diffDays}d`;
+
+    return new Intl.DateTimeFormat('es-AR', {
+      day: '2-digit',
+      month: 'short'
+    }).format(messageDate);
+  }
+
+  startVideoCall(threadId: string, event: Event) {
+    event.stopPropagation();
+    // TODO: Start video call
+    console.log('Start video call for thread:', threadId);
+  }
+
+  muteThread(threadId: string, event: Event) {
+    event.stopPropagation();
+    // TODO: Mute thread notifications
+    console.log('Mute thread:', threadId);
+  }
+
+  openSearch() {
+    // TODO: Implement search
+  }
+
+  createNewChat() {
+    // TODO: Navigate to booking selection or direct message creation
+    this.router.navigate(['/bookings']);
+  }
+}

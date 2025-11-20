@@ -1,6 +1,6 @@
 /**
  * Test Credentials for E2E Testing
- * 
+ *
  * These credentials should match users created in your Supabase test environment.
  * Never commit real production credentials!
  */
@@ -12,7 +12,7 @@ export const TEST_CREDENTIALS = {
   renter: {
     email: 'test-renter@autorenta.com',
     password: 'TestPassword123!',
-    role: 'renter'
+    role: 'locatario' as const
   },
 
   /**
@@ -21,7 +21,7 @@ export const TEST_CREDENTIALS = {
   owner: {
     email: 'test-owner@autorenta.com',
     password: 'TestPassword123!',
-    role: 'owner'
+    role: 'locador' as const
   },
 
   /**
@@ -30,7 +30,8 @@ export const TEST_CREDENTIALS = {
   admin: {
     email: 'test-admin@autorenta.com',
     password: 'TestPassword123!',
-    role: 'admin'
+    role: 'locatario' as const,
+    isAdmin: true
   }
 };
 
@@ -104,7 +105,7 @@ export const TEST_BOOKING = {
    * Sample car for testing (should exist in test DB)
    */
   carId: 'test-car-001',
-  
+
   /**
    * Test booking dates (always in the future)
    */

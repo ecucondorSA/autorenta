@@ -141,6 +141,101 @@ wrangler secret put SUPABASE_SERVICE_ROLE_KEY
 - Production guards previenen uso accidental
 - Developers pueden testear flujos de pago offline
 
+## Exchange Rate System (USD/ARS Conversion)
+
+### Overview
+
+AutoRenta obtiene cotizaciones de USD a ARS desde **Binance API (USDT/ARS)**, NO del "Dólar Tarjeta" oficial.
+
+**Importante**: La cotización mostrada al usuario es:
+```
+Binance USDT/ARS + 10% margen operativo
+```
+
+**NO es el "Dólar Tarjeta" oficial** (que incluye:)
+- Dólar Oficial de BCRA + 30% impuesto PAIS + 45% impuesto ganancias
+- Aproximadamente **75% más caro** que USDT/ARS
+
+### Fuente de Datos
+
+**API Endpoint**: `https://api.binance.com/api/v3/ticker/price?symbol=USDTARS`
+
+**Par**: USDT/ARS (Tether a Peso Argentino)
+
+**Actualización**: Cada 15 minutos (triple sistema redundante):
+1. GitHub Actions → Edge Function `sync-binance-rates`
+2. PostgreSQL Cron → Edge Function `update-exchange-rates`
+3. PostgreSQL Cron Direct → Llamada directa a Binance API
+
+### Cálculo de Cotización
+
+```
+1. Obtener tasa base de Binance: 875.50 ARS/USD
+2. Aplicar margen plataforma (10%): 875.50 × 1.10 = 963.05 ARS/USD
+3. Guardar en DB como 'rate' (YA con margen)
+4. Retornar sin multiplicar nuevamente
+```
+
+**⚠️ IMPORTANTE**: El campo `rate` en tabla `exchange_rates` YA contiene el margen del 10%.
+**NO multiplicar por 1.1 nuevamente** en el frontend.
+
+### Database Table
+
+```sql
+CREATE TABLE exchange_rates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  pair VARCHAR(20),              -- 'USDTARS', 'USDTBRL', etc
+  source VARCHAR(50),            -- 'binance', 'manual_seed'
+  binance_rate DECIMAL(10,2),    -- Tasa sin margen (Binance puro)
+  margin_percent DECIMAL(5,2),   -- Margen aplicado (10)
+  margin_absolute DECIMAL(10,2), -- Margen en ARS (963.05 - 875.50)
+  rate DECIMAL(10,2),            -- Tasa final (binance + margen) ⭐
+  volatility_24h DECIMAL(5,2),   -- Volatilidad (informativo)
+  is_active BOOLEAN DEFAULT true,
+  last_updated TIMESTAMP,
+  created_at TIMESTAMP
+);
+```
+
+### Services
+
+**ExchangeRateService** (`apps/web/src/app/core/services/exchange-rate.service.ts`):
+- `getPlatformRate(pair)`: Retorna rate con margen (ya incluido en DB)
+- `getBinanceRate()`: Retorna tasa base de Binance (sin margen)
+- `convertUsdToArs(amount)`: Convierte USD → ARS
+- `convertArsToUsd(amount)`: Convierte ARS → USD
+- Cache: 60 segundos
+
+**FxService** (`apps/web/src/app/core/services/fx.service.ts`):
+- `getFxSnapshot()`: Obtiene snapshot para UI (7 días TTL)
+- `revalidateFxSnapshot()`: Valida si necesita actualización
+- `convert()`: Convierte usando snapshot
+
+### UI Disclosure
+
+**Booking Detail Payment** muestra:
+```
+Cotización del día (Binance USDT/ARS + 10%)
+1 USD = $ 963.05 ARS
+```
+
+**Legal Disclaimer** (agregado al componente):
+```
+⚠️ Nota sobre Cotización: La cotización mostrada se obtiene del mercado
+USDT/ARS en Binance con un margen operativo del 10%. No refleja el "Dólar
+Tarjeta" oficial (que incluye impuestos PAIS y Ganancias). El monto a
+bloquear en su tarjeta será calculado por su banco según su tipo de cambio vigente.
+```
+
+### Validation & Testing
+
+**Bug Fix (Nov 2025)**: Se removió doble margen en:
+- `ExchangeRateService.getPlatformRate()` - Línea 58
+- `ExchangeRateService.getLastKnownPlatformRate()` - Línea 167
+- `FxService.getFxSnapshot()` - Línea 55
+
+El código estaba multiplicando por 1.1 dos veces resultando en 21% margen en lugar de 10%.
+
 ## Wallet System
 
 ### Database Tables

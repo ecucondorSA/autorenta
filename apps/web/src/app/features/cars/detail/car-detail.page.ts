@@ -60,11 +60,26 @@ import {
   PickupLocationSelectorComponent,
   PickupLocationSelection,
 } from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
-import {
-  PhotoGalleryComponent,
-  Photo,
-} from '../../../shared/components/marketplace/photo-gallery/photo-gallery.component';
-import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
+// TODO: Re-add when photo-gallery component is created
+// import {
+//   PhotoGalleryComponent,
+//   Photo,
+// } from '../../../shared/components/marketplace/photo-gallery/photo-gallery.component';
+// import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
+
+// Temporary interfaces until components are created
+export interface Photo {
+  id: string;
+  url: string;
+  alt: string;
+  thumbnail?: string;
+}
+
+export interface BreadcrumbItem {
+  label: string;
+  url?: string;
+  icon?: string;
+}
 
 // Services
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
@@ -101,8 +116,9 @@ interface CarDetailState {
     PaymentMethodButtonsComponent,
     BookingLocationFormComponent,
     PickupLocationSelectorComponent,
-    PhotoGalleryComponent,
-    BreadcrumbsComponent,
+    // TODO: Re-add when components are created
+    // PhotoGalleryComponent,
+    // BreadcrumbsComponent,
   ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

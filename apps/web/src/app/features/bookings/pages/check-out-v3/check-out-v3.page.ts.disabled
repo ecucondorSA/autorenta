@@ -1,0 +1,734 @@
+import { Component, OnInit, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { Router, ActivatedRoute } from '@angular/router';
+import { VehicleInspectionV3Component, InspectionData, InspectionPhoto } from '../../components/vehicle-inspection-v3/vehicle-inspection-v3.component';
+import { BookingsService } from '../../../../core/services/bookings.service';
+import { CarsService } from '../../../../core/services/cars.service';
+import { NotificationManager } from '../../../../core/services/notification-manager.service';
+
+interface BookingDetails {
+  id: string;
+  carId: string;
+  carName: string;
+  carImage: string;
+  locadorName: string;
+  startDate: Date;
+  endDate: Date;
+  dropoffLocation: string;
+  status: string;
+  checkInData?: InspectionData;
+}
+
+interface PhotoComparison {
+  angle: string;
+  label: string;
+  before: string | null;
+  after: string | null;
+  hasNewDamage: boolean;
+}
+
+@Component({
+  selector: 'app-check-out-v3',
+  standalone: true,
+  imports: [CommonModule, IonicModule, VehicleInspectionV3Component],
+  template: `
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="/bookings"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Check-out Digital</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="toggleComparisonMode()">
+            <ion-icon [name]="showComparison() ? 'camera-outline' : 'git-compare-outline'"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <div class="check-out-container">
+        @if (isLoading()) {
+          <div class="loading-state">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando información de la reserva...</p>
+          </div>
+        } @else if (booking()) {
+          <!-- Booking Info Card -->
+          <div class="booking-info-card">
+            <div class="car-header">
+              <img [src]="booking()!.carImage" [alt]="booking()!.carName" class="car-image" />
+              <div class="car-details">
+                <h2>{{ booking()!.carName }}</h2>
+                <p class="locador-name">
+                  <ion-icon name="person-outline"></ion-icon>
+                  {{ booking()!.locadorName }}
+                </p>
+              </div>
+              <div class="trip-badge">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                <span>Viaje Completado</span>
+              </div>
+            </div>
+
+            <div class="booking-dates">
+              <div class="date-item">
+                <ion-icon name="calendar-outline" class="date-icon"></ion-icon>
+                <div>
+                  <p class="date-label">Fin del viaje</p>
+                  <p class="date-value">{{ formatDate(booking()!.endDate) }}</p>
+                </div>
+              </div>
+              <div class="date-item">
+                <ion-icon name="location-outline" class="date-icon"></ion-icon>
+                <div>
+                  <p class="date-label">Punto de entrega</p>
+                  <p class="date-value">{{ booking()!.dropoffLocation }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Important Notice -->
+            <div class="notice-banner">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <div>
+                <strong>Inspección Post-Viaje</strong>
+                <p>Documenta el estado final del vehículo. Se comparará con las fotos del check-in para determinar si hay daños nuevos.</p>
+              </div>
+            </div>
+          </div>
+
+          @if (showComparison()) {
+            <!-- Photo Comparison View -->
+            <div class="comparison-section">
+              <h3>
+                <ion-icon name="git-compare-outline"></ion-icon>
+                Comparación de Fotos
+              </h3>
+
+              <div class="comparison-grid">
+                @for (comparison of photoComparisons(); track comparison.angle) {
+                  <div class="comparison-card" [class.has-damage]="comparison.hasNewDamage">
+                    <h4>{{ comparison.label }}</h4>
+                    <div class="photo-pair">
+                      <div class="photo-column">
+                        <p class="photo-label">Check-in</p>
+                        @if (comparison.before) {
+                          <img [src]="comparison.before" alt="Antes" class="comparison-photo" />
+                        } @else {
+                          <div class="no-photo">Sin foto</div>
+                        }
+                      </div>
+                      <div class="photo-column">
+                        <p class="photo-label">Check-out</p>
+                        @if (comparison.after) {
+                          <img [src]="comparison.after" alt="Después" class="comparison-photo" />
+                        } @else {
+                          <div class="no-photo">Pendiente</div>
+                        }
+                      </div>
+                    </div>
+                    @if (comparison.hasNewDamage) {
+                      <div class="damage-alert">
+                        <ion-icon name="alert-circle"></ion-icon>
+                        <span>Posible daño nuevo detectado</span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+
+              @if (newDamagesCount() > 0) {
+                <div class="damages-summary">
+                  <ion-icon name="warning"></ion-icon>
+                  <div>
+                    <strong>{{ newDamagesCount() }} posible(s) daño(s) nuevo(s)</strong>
+                    <p>El locador revisará y determinará si corresponde un cargo adicional.</p>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <!-- Vehicle Inspection Component -->
+            <app-vehicle-inspection-v3
+              mode="check-out"
+              [existingData]="booking()!.checkInData"
+              (dataChange)="onInspectionDataChange($event)"
+              (complete)="onInspectionComplete($event)"
+            ></app-vehicle-inspection-v3>
+          }
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            @if (showComparison()) {
+              <ion-button
+                expand="block"
+                fill="outline"
+                (click)="toggleComparisonMode()"
+              >
+                <ion-icon name="camera-outline" slot="start"></ion-icon>
+                Volver a Inspección
+              </ion-button>
+            }
+
+            <ion-button
+              expand="block"
+              size="large"
+              [disabled]="!isInspectionComplete() || isSaving()"
+              (click)="submitCheckOut()"
+              class="submit-btn"
+            >
+              @if (isSaving()) {
+                <ion-spinner name="crescent"></ion-spinner>
+                <span>Finalizando...</span>
+              } @else {
+                <ion-icon name="checkmark-done-outline" slot="start"></ion-icon>
+                <span>Finalizar Check-out</span>
+              }
+            </ion-button>
+
+            <ion-button
+              expand="block"
+              fill="outline"
+              (click)="saveDraft()"
+              [disabled]="isSaving()"
+            >
+              <ion-icon name="save-outline" slot="start"></ion-icon>
+              Guardar Borrador
+            </ion-button>
+          </div>
+        } @else {
+          <div class="error-state">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <h3>No se pudo cargar la reserva</h3>
+            <p>Por favor, intenta nuevamente o contacta soporte.</p>
+            <ion-button (click)="loadBooking()">
+              <ion-icon name="refresh-outline" slot="start"></ion-icon>
+              Reintentar
+            </ion-button>
+          </div>
+        }
+      </div>
+    </ion-content>
+  `,
+  styles: [`
+    .check-out-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .loading-state,
+    .error-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      text-align: center;
+
+      ion-spinner {
+        margin-bottom: 1rem;
+      }
+
+      ion-icon {
+        font-size: 4rem;
+        color: #ef4444;
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: #6b7280;
+        margin-bottom: 2rem;
+      }
+    }
+
+    .booking-info-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .car-header {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: flex-start;
+    }
+
+    .car-image {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .car-details {
+      flex: 1;
+
+      h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    .trip-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #d1fae5;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #065f46;
+      white-space: nowrap;
+
+      ion-icon {
+        font-size: 1rem;
+      }
+    }
+
+    .locador-name {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6b7280;
+      font-size: 0.875rem;
+
+      ion-icon {
+        font-size: 1rem;
+      }
+    }
+
+    .booking-dates {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .date-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .date-icon {
+      font-size: 1.5rem;
+      color: #3b82f6;
+    }
+
+    .date-label {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-bottom: 0.25rem;
+    }
+
+    .date-value {
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .notice-banner {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      border-radius: 8px;
+
+      ion-icon {
+        font-size: 1.5rem;
+        color: #f59e0b;
+        flex-shrink: 0;
+        margin-top: 0.25rem;
+      }
+
+      strong {
+        display: block;
+        margin-bottom: 0.25rem;
+        color: #92400e;
+      }
+
+      p {
+        font-size: 0.875rem;
+        color: #78350f;
+        margin: 0;
+        line-height: 1.5;
+      }
+    }
+
+    .comparison-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      h3 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+
+        ion-icon {
+          font-size: 1.5rem;
+          color: #3b82f6;
+        }
+      }
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .comparison-card {
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1rem;
+      background: #f9fafb;
+
+      &.has-damage {
+        border-color: #ef4444;
+        background: #fef2f2;
+      }
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+    }
+
+    .photo-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .photo-column {
+      .photo-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
+        text-align: center;
+      }
+    }
+
+    .comparison-photo {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #e5e7eb;
+    }
+
+    .no-photo {
+      width: 100%;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3f4f6;
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .damage-alert {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: white;
+      border-radius: 6px;
+      color: #dc2626;
+      font-size: 0.875rem;
+      font-weight: 600;
+
+      ion-icon {
+        font-size: 1rem;
+      }
+    }
+
+    .damages-summary {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: #fef2f2;
+      border-left: 4px solid #ef4444;
+      border-radius: 8px;
+
+      ion-icon {
+        font-size: 1.5rem;
+        color: #ef4444;
+        flex-shrink: 0;
+        margin-top: 0.25rem;
+      }
+
+      strong {
+        display: block;
+        margin-bottom: 0.25rem;
+        color: #7f1d1d;
+      }
+
+      p {
+        font-size: 0.875rem;
+        color: #991b1b;
+        margin: 0;
+        line-height: 1.5;
+      }
+    }
+
+    .action-buttons {
+      position: sticky;
+      bottom: 0;
+      background: white;
+      padding: 1rem;
+      border-top: 1px solid #e5e7eb;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+      margin: 2rem -1rem -1rem;
+    }
+
+    .submit-btn {
+      --background: linear-gradient(135deg, #10b981, #3b82f6);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .car-header {
+        flex-direction: column;
+      }
+
+      .car-image {
+        width: 100%;
+        height: 200px;
+      }
+
+      .trip-badge {
+        align-self: flex-start;
+      }
+
+      .booking-dates {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-pair {
+        grid-template-columns: 1fr;
+      }
+    }
+  `]
+})
+export class CheckOutV3Page implements OnInit {
+  bookingId = signal<string>('');
+  booking = signal<BookingDetails | null>(null);
+  isLoading = signal(true);
+  isSaving = signal(false);
+  inspectionData = signal<InspectionData | null>(null);
+  isInspectionComplete = signal(false);
+  showComparison = signal(false);
+
+  photoComparisons = computed(() => {
+    const booking = this.booking();
+    const currentData = this.inspectionData();
+
+    if (!booking?.checkInData || !currentData) {
+      return [];
+    }
+
+    const comparisons: PhotoComparison[] = [];
+
+    booking.checkInData.photos.forEach(beforePhoto => {
+      const afterPhoto = currentData.photos.find(p => p.angle === beforePhoto.angle);
+
+      comparisons.push({
+        angle: beforePhoto.angle,
+        label: beforePhoto.label,
+        before: beforePhoto.photo,
+        after: afterPhoto?.photo || null,
+        hasNewDamage: this.detectNewDamage(beforePhoto, afterPhoto)
+      });
+    });
+
+    return comparisons;
+  });
+
+  newDamagesCount = computed(() => {
+    return this.photoComparisons().filter(c => c.hasNewDamage).length;
+  });
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private bookingsService: BookingsService,
+    private carsService: CarsService,
+    private notifications: NotificationManager
+  ) {}
+
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.bookingId.set(id);
+      this.loadBooking();
+      this.loadDraft();
+    }
+  }
+
+  async loadBooking() {
+    this.isLoading.set(true);
+    try {
+      const booking = await this.bookingsService.getBookingById(this.bookingId());
+      if (booking) {
+        const car = await this.carsService.getCarById(booking.car_id);
+
+        // Load check-in data
+        const checkInData = await this.loadCheckInData();
+
+        this.booking.set({
+          id: booking.id,
+          carId: booking.car_id,
+          carName: car?.brand + ' ' + car?.model || 'Vehículo',
+          carImage: car?.main_image_url || '/assets/placeholder-car.jpg',
+          locadorName: 'Propietario',
+          startDate: new Date(booking.start_date),
+          endDate: new Date(booking.end_date),
+          dropoffLocation: booking.dropoff_location || booking.pickup_location || 'Por confirmar',
+          status: booking.status,
+          checkInData
+        });
+      }
+    } catch (error) {
+      console.error('Error loading booking:', error);
+      this.notifications.show('Error al cargar la reserva');
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  async loadCheckInData(): Promise<InspectionData | undefined> {
+    // TODO: Load from database
+    // For now, load from localStorage as fallback
+    const checkInKey = `check_in_data_${this.bookingId()}`;
+    const saved = localStorage.getItem(checkInKey);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (error) {
+        console.error('Error loading check-in data:', error);
+      }
+    }
+    return undefined;
+  }
+
+  loadDraft() {
+    const draftKey = `check_out_draft_${this.bookingId()}`;
+    const saved = localStorage.getItem(draftKey);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        this.inspectionData.set(data);
+      } catch (error) {
+        console.error('Error loading draft:', error);
+      }
+    }
+  }
+
+  saveDraft() {
+    const draftKey = `check_out_draft_${this.bookingId()}`;
+    if (this.inspectionData()) {
+      localStorage.setItem(draftKey, JSON.stringify(this.inspectionData()));
+      this.notifications.show('Borrador guardado');
+    }
+  }
+
+  onInspectionDataChange(data: InspectionData) {
+    this.inspectionData.set(data);
+  }
+
+  onInspectionComplete(data: InspectionData) {
+    this.inspectionData.set(data);
+    this.isInspectionComplete.set(true);
+  }
+
+  toggleComparisonMode() {
+    this.showComparison.update(v => !v);
+  }
+
+  detectNewDamage(before: InspectionPhoto, after: InspectionPhoto | undefined): boolean {
+    // TODO: Implement AI-based damage detection
+    // For now, simple heuristic: if there's an after photo but visual difference
+    // This would ideally use computer vision to compare images
+    return false;
+  }
+
+  async submitCheckOut() {
+    if (!this.inspectionData() || !this.isInspectionComplete()) {
+      this.notifications.show('Por favor completa la inspección');
+      return;
+    }
+
+    this.isSaving.set(true);
+    try {
+      // TODO: Upload photos to storage
+      // TODO: Save inspection data to database
+      // TODO: Compare with check-in data
+      // TODO: Generate damage report if needed
+      // TODO: Update booking status to 'completed'
+      // TODO: Trigger payment release to locador
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Clear drafts
+      const draftKey = `check_out_draft_${this.bookingId()}`;
+      localStorage.removeItem(draftKey);
+
+      this.notifications.show('Check-out completado exitosamente');
+      this.router.navigate(['/bookings', this.bookingId(), 'summary']);
+    } catch (error) {
+      console.error('Error submitting check-out:', error);
+      this.notifications.show('Error al guardar el check-out');
+    } finally {
+      this.isSaving.set(false);
+    }
+  }
+
+  formatDate(date: Date): string {
+    return new Intl.DateTimeFormat('es-AR', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
+  }
+}

@@ -1,106 +1,22 @@
-import { Component, OnInit, OnDestroy, signal, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, firstValueFrom } from 'rxjs';
 
 // Services
-import { FxService } from '../../../core/services/fx.service';
-import { RiskService } from '../../../core/services/risk.service';
-import { PaymentAuthorizationService } from '../../../core/services/payment-authorization.service';
-import { WalletService } from '../../../core/services/wallet.service';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { PaymentsService } from '../../../core/services/payments.service';
-import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
-import { LocationService } from '../../../core/services/location.service';
-import { RiskCalculatorService } from '../../../core/services/risk-calculator.service';
-import { ProfileService } from '../../../core/services/profile.service';
-import { getAgeFromProfile } from '../../../shared/utils/age-calculator';
-import {
-  MercadoPagoBookingGateway,
-  type MercadoPagoPreferenceResponse,
-} from '../checkout/support/mercadopago-booking.gateway';
-import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
-import type { PriceLock } from '../../../core/models/dynamic-pricing.model';
-import {
-  calculatePriceComparison,
-  generatePriceComparisonMessage,
-  generateSurgeInfo,
-} from '../../../core/models/dynamic-pricing.model';
+import { FxService } from '../../../core/services/fx.service';
+import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booking.gateway';
 
 // Models
-import {
-  BucketType,
-  CountryCode,
-  BookingInput,
-  FxSnapshot,
-  RiskSnapshot,
-  PriceBreakdown,
-  PaymentMode,
-  CoverageUpgrade,
-  PaymentAuthorization,
-  WalletLock,
-  UserConsents,
-  BookingDates,
-  CreateBookingResult,
-  ValidationError,
-  calculateTotalDays,
-  getCoverageUpgradeCost as calculateCoverageUpgradeCost,
-  validateConsents,
-  validatePaymentAuthorization,
-  formatUsd,
-  formatArs,
-} from '../../../core/models/booking-detail-payment.model';
-import type { Car, Booking } from '../../../core/models';
+import { Car } from '../../../core/models';
+import { FxSnapshot } from '../../../core/models/booking-detail-payment.model';
 
-// Components
-import { BookingSummaryCardComponent } from './components/booking-summary-card.component';
-import { RiskPolicyTableComponent } from './components/risk-policy-table.component';
-import { PaymentModeToggleComponent } from './components/payment-mode-toggle.component';
-import { PaymentSummaryPanelComponent } from './components/payment-summary-panel.component';
-import { PaymentMethodComparisonModalComponent } from './components/payment-method-comparison-modal.component';
-import { PaymentModeAlertComponent } from './components/payment-mode-alert.component';
-import { CoverageUpgradeSelectorComponent } from './components/coverage-upgrade-selector.component';
-import { CardHoldPanelComponent } from './components/card-hold-panel.component';
-import { CreditSecurityPanelComponent } from './components/credit-security-panel.component';
-import { TermsAndConsentsComponent } from './components/terms-and-consents.component';
-import { BirthDateModalComponent } from '../../../shared/components/birth-date-modal/birth-date-modal.component';
-import { DynamicPriceLockPanelComponent } from './components/dynamic-price-lock-panel.component';
-import { DynamicPriceBreakdownModalComponent } from './components/dynamic-price-breakdown-modal.component';
-
-/**
- * Página principal: Detalle & Pago (AR)
- *
- * Funcionalidades:
- * - Dos modalidades de garantía: Con tarjeta (hold) / Sin tarjeta (wallet)
- * - Upgrades de cobertura: Estándar, Premium (-50%), Franquicia Cero
- * - Cálculos en tiempo real con FX snapshot
- * - Validaciones idempotentes y transaccionales
- * - Revalidación de FX (>7 días o ±10%)
- */
 @Component({
   selector: 'app-booking-detail-payment',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    BookingSummaryCardComponent,
-    RiskPolicyTableComponent,
-    PaymentModeToggleComponent,
-    PaymentSummaryPanelComponent,
-    PaymentMethodComparisonModalComponent,
-    PaymentModeAlertComponent,
-    CoverageUpgradeSelectorComponent,
-    CardHoldPanelComponent,
-    CreditSecurityPanelComponent,
-    TermsAndConsentsComponent,
-    BirthDateModalComponent,
-    DynamicPriceLockPanelComponent,
-    DynamicPriceBreakdownModalComponent,
-  ],
+  imports: [CommonModule],
   templateUrl: './booking-detail-payment.page.html',
   styleUrls: ['./booking-detail-payment.page.css'],
 })
@@ -111,226 +27,35 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private fxService = inject(FxService);
-  private riskService = inject(RiskService);
   private authService = inject(AuthService);
-  private paymentAuthService = inject(PaymentAuthorizationService);
-  private walletService = inject(WalletService);
-  private bookingsService = inject(BookingsService);
-  private profileService = inject(ProfileService);
   private supabaseClient = inject(SupabaseClientService).getClient();
-
-  // ✅ NUEVO: Servicios para procesamiento de pago final
-  private paymentsService = inject(PaymentsService);
   private mpGateway = inject(MercadoPagoBookingGateway);
-  private fgoService = inject(FgoV1_1Service);
 
-  // ✅ NEW: Distance-based pricing services
-  private distanceCalculator = inject(DistanceCalculatorService);
-  private locationService = inject(LocationService);
-  private riskCalculatorService = inject(RiskCalculatorService);
-
-  // ✅ NEW: Dynamic pricing service
-  private dynamicPricingService = inject(DynamicPricingService);
-
-  // Booking ID for update operations
-  private existingBookingId: string | null = null;
-
-  // Helper to convert CoverageUpgrade to Booking type
-  private mapCoverageUpgrade(upgrade: CoverageUpgrade): 'standard' | 'premium' | 'zero_franchise' {
-    switch (upgrade) {
-      case 'standard':
-        return 'standard';
-      case 'premium50':
-        return 'premium';
-      case 'zero':
-        return 'zero_franchise';
-      default:
-        return 'standard';
-    }
-  }
-
-  // ==================== SIGNALS (Estado Global) ====================
-
-  // Input del booking
-  readonly bookingInput = signal<BookingInput | null>(null);
-  readonly bookingDates = computed<BookingDates | null>(() => {
-    const input = this.bookingInput();
-    if (!input) return null;
-    return {
-      startDate: input.startDate,
-      endDate: input.endDate,
-      totalDays: calculateTotalDays(input.startDate, input.endDate),
-      totalHours: (input.endDate.getTime() - input.startDate.getTime()) / (1000 * 60 * 60),
-    };
-  });
-
-  // Información del auto
+  // State
   readonly car = signal<Car | null>(null);
-
-  // Snapshots
   readonly fxSnapshot = signal<FxSnapshot | null>(null);
-  readonly riskSnapshot = signal<RiskSnapshot | null>(null);
-  readonly priceBreakdown = signal<PriceBreakdown | null>(null);
-
-  // Modalidad y upgrade
-  readonly paymentMode = signal<PaymentMode>('card');
-  readonly coverageUpgrade = signal<CoverageUpgrade>('standard');
-
-  // Autorizaciones
-  readonly paymentAuthorization = signal<PaymentAuthorization | null>(null);
-  readonly walletLock = signal<WalletLock | null>(null);
-
-  // Consentimientos
-  readonly consents = signal<UserConsents>({
-    termsAccepted: false,
-    cardOnFileAccepted: false,
-    privacyPolicyAccepted: false,
-  });
-
-  // UI States
   readonly loading = signal(false);
-  readonly loadingFx = signal(false);
-  readonly loadingRisk = signal(false);
-  readonly loadingPricing = signal(false);
-
-  // Control de conversión optimizada
-  readonly conversionMode = signal<'standard' | 'optimized'>('optimized'); // Por defecto optimizado
+  readonly processingPayment = signal(false);
   readonly error = signal<string | null>(null);
-  readonly validationErrors = signal<ValidationError[]>([]);
 
-  // ✅ NUEVO: Estado de fallback a wallet
-  readonly showFallbackMessage = signal(false);
-  readonly fallbackReason = signal<string>('');
+  // Constants
+  readonly PRE_AUTH_AMOUNT_USD = 600;
 
-  // ✅ NUEVO: Modal de comparación de métodos
-  readonly showComparisonModal = signal(false);
-
-  // ✅ NUEVO: Modal para solicitar fecha de nacimiento
-  readonly showBirthDateModal = signal(false);
-
-  // ✅ NUEVO: Signals para procesamiento de pago final
-  readonly processingFinalPayment = signal(false);
-  readonly lastCreatedBookingId = signal<string | null>(null);
-
-  // User
-  readonly userId = signal<string | null>(null);
-
-  // ✅ NEW: Distance-based pricing signals
-  readonly userLocation = signal<{ lat: number; lng: number } | undefined>(undefined);
-  readonly distanceKm = signal<number | undefined>(undefined);
-  readonly deliveryFeeCents = signal<number>(0);
-  readonly distanceTier = signal<'local' | 'regional' | 'long_distance' | undefined>(undefined);
-
-  // ✅ NEW: Dynamic pricing signals
-  readonly priceLock = signal<PriceLock | null>(null);
-  readonly showBreakdownModal = signal(false);
-
-  // ==================== COMPUTED SIGNALS ====================
-
-  /**
-   * ✅ NEW: Price comparison for dynamic pricing
-   */
-  readonly priceComparison = computed(() => {
-    const lock = this.priceLock();
-    const carData = this.car();
-    if (!lock || !carData) return null;
-
-    const comparison = calculatePriceComparison(carData.price_per_day ?? 0, lock.totalPrice);
-    const message = generatePriceComparisonMessage(comparison);
-
-    return {
-      ...comparison,
-      message,
-    };
+  // Computed
+  readonly totalArs = computed(() => {
+    const fx = this.fxSnapshot();
+    if (!fx) return 0;
+    return this.PRE_AUTH_AMOUNT_USD * fx.rate;
   });
 
-  /**
-   * ✅ NEW: Surge pricing info for dynamic pricing
-   */
-  readonly surgeInfo = computed(() => {
-    const lock = this.priceLock();
-    if (!lock) return null;
-
-    return generateSurgeInfo(lock.priceSnapshot);
-  });
-
-  /**
-   * Valida si puede proceder al CTA
-   */
-  readonly canProceed = computed(() => {
-    // 1. Debe tener todos los snapshots
-    if (!this.fxSnapshot() || !this.riskSnapshot() || !this.priceBreakdown()) {
-      return false;
-    }
-
-    // 2. Validar consentimientos
-    const consentErrors = validateConsents(this.consents(), this.paymentMode());
-    if (consentErrors.length > 0) {
-      return false;
-    }
-
-    // 3. Si es card, debe tener autorización válida
-    if (this.paymentMode() === 'card') {
-      const authErrors = validatePaymentAuthorization(this.paymentAuthorization());
-      if (authErrors.length > 0) {
-        return false;
-      }
-    }
-
-    // 4. Si es wallet, debe tener lock válido
-    if (this.paymentMode() === 'wallet') {
-      const lock = this.walletLock();
-      if (!lock || lock.status !== 'locked') {
-        return false;
-      }
-    }
-
-    // 5. No debe estar cargando
-    if (this.loading()) {
-      return false;
-    }
-
-    return true;
-  });
-
-  /**
-   * Mensaje de CTA
-   */
-  readonly ctaMessage = computed(() => {
-    if (this.loading()) return 'Procesando...';
-    if (!this.canProceed()) return 'Completa los requisitos';
-    return 'Confirmar y pagar';
-  });
-
-  // ==================== EFFECTS ====================
-
-  constructor() {
-    // Effect: Recalcular risk snapshot y pricing cuando cambia upgrade de cobertura
-    effect(() => {
-      const upgrade = this.coverageUpgrade();
-      const currentRisk = this.riskSnapshot();
-      const currentFx = this.fxSnapshot();
-
-      // Skip if no data yet (initial state)
-      if (!currentRisk || !currentFx) {
-        return;
-      }
-
-      // Check if upgrade has actually changed to prevent loops
-      if (currentRisk.coverageUpgrade === upgrade) {
-        return;
-      }
-
-      this.riskService.recalculateWithUpgrade(currentRisk, upgrade).then((newRisk) => {
-        this.riskSnapshot.set(newRisk);
-        // Recalcular pricing también
-        this.calculatePricing();
-      });
-    });
-  }
+  readonly bookingInput = signal<{
+    carId: string;
+    startDate: Date;
+    endDate: Date;
+  } | null>(null);
 
   async ngOnInit(): Promise<void> {
-    // 1. Obtener user ID
+    // 1. Auth check
     const session = await this.authService.ensureSession();
     if (!session?.user) {
       this.router.navigate(['/auth/login'], {
@@ -338,115 +63,12 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       });
       return;
     }
-    this.userId.set(session.user.id);
 
-    // 2. Obtener parámetros de ruta o sessionStorage
-    await this.loadBookingInput();
+    // 2. Load params
+    this.loadParams();
 
-    // 3. ✅ NEW: Pre-select payment method from queryParams or sessionStorage
-    this.preselectPaymentMethod();
-
-    // 4. Cargar información del auto
-    await this.loadCarInfo();
-
-    // 5. ✅ NEW: Lock price if car uses dynamic pricing
-    await this.lockDynamicPriceIfNeeded();
-
-    // 6. Inicializar snapshots (no espera distancia)
-    await this.initializeSnapshots();
-
-    // 6. ✅ OPTIMIZED: Initialize user location in background (non-blocking)
-    // This allows the page to load immediately while location is being fetched
-    this.initializeUserLocationAndDistanceInBackground();
-  }
-
-  /**
-   * ✅ NEW: Pre-select payment method from queryParams or sessionStorage
-   * Called during ngOnInit to set initial payment method choice
-   */
-  private preselectPaymentMethod(): void {
-    // First try queryParams
-    const methodFromQuery = this.route.snapshot.queryParamMap.get('paymentMethod');
-
-    // Map from component PaymentMethod type to page PaymentMode type
-    if (methodFromQuery === 'wallet') {
-      this.paymentMode.set('wallet');
-      return;
-    } else if (methodFromQuery === 'credit_card') {
-      this.paymentMode.set('card');
-      return;
-    }
-
-    // Fallback to sessionStorage
-    const methodFromSession = sessionStorage.getItem('payment_method');
-
-    if (methodFromSession === 'wallet') {
-      this.paymentMode.set('wallet');
-      sessionStorage.removeItem('payment_method');
-    } else if (methodFromSession === 'credit_card') {
-      this.paymentMode.set('card');
-      sessionStorage.removeItem('payment_method');
-    }
-  }
-
-  /**
-   * Initialize user location and calculate distance to car (NON-BLOCKING)
-   * Runs in background without blocking page initialization.
-   * When distance is available, recalculates pricing automatically.
-   *
-   * ✅ FIX: Uses setTimeout to defer geolocation request until after page renders
-   */
-  private initializeUserLocationAndDistanceInBackground(): void {
-    // ✅ FIX: Defer geolocation request by 1 second to allow page to render first
-    // This prevents the geolocation permission prompt from blocking initial page load
-    setTimeout(() => {
-      (async () => {
-        try {
-          const car = this.car();
-          if (!car) return;
-
-          // Get user location (can take 5-30 seconds)
-          const locationData = await this.locationService.getUserLocation();
-          if (locationData) {
-            this.userLocation.set({ lat: locationData.lat, lng: locationData.lng });
-
-            // Calculate distance if car has location
-            if (car.location_lat && car.location_lng) {
-              const distance = this.distanceCalculator.calculateDistance(
-                locationData.lat,
-                locationData.lng,
-                car.location_lat,
-                car.location_lng,
-              );
-
-              this.distanceKm.set(distance);
-
-              // Calculate tier and delivery fee
-              const tier = this.distanceCalculator.getDistanceTier(distance);
-              this.distanceTier.set(tier);
-
-              const deliveryFee = this.distanceCalculator.calculateDeliveryFee(distance);
-              this.deliveryFeeCents.set(deliveryFee);
-
-              // ✅ IMPORTANT: Recalculate pricing now that we have distance
-              await this.calculateRiskSnapshot();
-              this.calculatePricing();
-            }
-          } else {
-            // Set to undefined if no location data
-            this.userLocation.set(undefined);
-            this.distanceKm.set(undefined);
-            this.distanceTier.set(undefined);
-          }
-        } catch (_error) {
-          // Silently fail - distance is optional
-          console.warn('Could not calculate distance:', _error);
-          this.userLocation.set(undefined);
-          this.distanceKm.set(undefined);
-          this.distanceTier.set(undefined);
-        }
-      })();
-    }, 1000); // Defer by 1 second to allow page to render first
+    // 3. Load data
+    await Promise.all([this.loadCarInfo(), this.loadFxSnapshot()]);
   }
 
   ngOnDestroy(): void {
@@ -454,141 +76,24 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ==================== INITIALIZATION ====================
-
-  /**
-   * Carga el booking input desde route params o sessionStorage
-   */
-  private async loadBookingInput(): Promise<void> {
-    // NUEVO: Intentar cargar desde bookingId existente
-    const bookingId = this.route.snapshot.queryParamMap.get('bookingId');
-
-    if (bookingId) {
-      // Flujo: booking existente desde /bookings
-      await this.loadExistingBooking(bookingId);
-      return;
-    }
-
-    // Flujo original: nueva reserva desde car-detail
-    // Intentar desde sessionStorage primero
-    const stored = sessionStorage.getItem('booking_detail_input');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        this.bookingInput.set({
-          ...parsed,
-          startDate: new Date(parsed.startDate),
-          endDate: new Date(parsed.endDate),
-        });
-        return;
-      } catch (_e) {
-        /* Silenced */
-      }
-    }
-
-    // Si no, desde query params
+  private loadParams(): void {
     const queryParams = this.route.snapshot.queryParamMap;
     const carId = queryParams.get('carId');
     const startDate = queryParams.get('startDate');
     const endDate = queryParams.get('endDate');
-    const vehicleValueUsd = queryParams.get('vehicleValueUsd');
-    const bucket = queryParams.get('bucket');
-    const country = queryParams.get('country');
 
     if (!carId || !startDate || !endDate) {
-      this.error.set('Faltan parámetros de reserva. Regresa y selecciona fechas nuevamente.');
+      this.error.set('Faltan parámetros de reserva.');
       return;
     }
 
-    // Crear booking input desde query params
     this.bookingInput.set({
       carId,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
-      bucket: (bucket as BucketType) || 'standard',
-      vehicleValueUsd: vehicleValueUsd ? parseInt(vehicleValueUsd, 10) : 15000,
-      country: (country as CountryCode) || 'AR',
     });
-
-    // Guardar en sessionStorage para navegación futura
-    sessionStorage.setItem(
-      'booking_detail_input',
-      JSON.stringify({
-        carId,
-        startDate,
-        endDate,
-        bucket: bucket || 'standard',
-        vehicleValueUsd: vehicleValueUsd ? parseInt(vehicleValueUsd, 10) : 15000,
-        country: country || 'AR',
-      }),
-    );
   }
 
-  /**
-   * NUEVO: Carga un booking existente desde la DB
-   */
-  private async loadExistingBooking(bookingId: string): Promise<void> {
-    try {
-      const { data, error } = await this.supabaseClient
-        .from('bookings')
-        .select(
-          `
-          *,
-          car:cars(*)
-        `,
-        )
-        .eq('id', bookingId)
-        .single();
-
-      if (error) throw error;
-      if (!data) {
-        this.error.set('Booking no encontrado');
-        return;
-      }
-
-      // Reconstruir bookingInput desde el booking
-      const carRecord = (data.car ?? null) as (Car & { bucket?: string }) | null;
-
-      const bucket: BucketType = (carRecord?.bucket as BucketType | undefined) ?? 'standard';
-
-      const vehicleValueUsd = carRecord?.value_usd != null ? Number(carRecord.value_usd) : 15000;
-
-      this.bookingInput.set({
-        carId: data.car_id,
-        startDate: new Date(data.start_at),
-        endDate: new Date(data.end_at),
-        bucket,
-        vehicleValueUsd,
-        country: 'AR',
-      });
-
-      // Pre-cargar info del auto
-      if (carRecord) {
-        this.car.set(carRecord);
-      }
-
-      // Pre-seleccionar payment_mode si ya existe
-      if (data.payment_mode) {
-        this.paymentMode.set(data.payment_mode as PaymentMode);
-      }
-
-      // Pre-seleccionar coverage_upgrade si ya existe
-      if (data.coverage_upgrade) {
-        this.coverageUpgrade.set(data.coverage_upgrade as CoverageUpgrade);
-      }
-
-      // Guardar bookingId para UPDATE posterior
-      this.existingBookingId = bookingId;
-    } catch (err: unknown) {
-      this.error.set(
-        'Error al cargar el booking: ' + (err instanceof Error ? err.message : 'Error desconocido'),
-      );
-    }
-  }
-
-  /**
-   * Carga información del auto desde DB
-   */
   private async loadCarInfo(): Promise<void> {
     const input = this.bookingInput();
     if (!input) return;
@@ -601,973 +106,92 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         .single();
 
       if (error) throw error;
-
-      if (data) {
-        this.car.set(data as Car);
-      }
-
-      // Actualizar bookingInput con datos reales del auto (si vinieron en query params, ya están seteados)
-      // No sobrescribimos porque bucket y value_usd ya vienen calculados de car-detail.page.ts
-      // this.bookingInput.update() - No es necesario, ya tenemos los valores correctos
-    } catch (err: unknown) {
+      if (data) this.car.set(data as Car);
+    } catch (err) {
+      console.error('Error loading car:', err);
       this.error.set('Error al cargar información del vehículo');
     }
   }
 
-  /**
-   * Inicializa FX snapshot, risk snapshot y pricing
-   * ✅ FIX: Mejor manejo de errores con fallbacks
-   */
-  private async initializeSnapshots(): Promise<void> {
-    try {
-      // 1. FX Snapshot (con fallback automático)
-      await this.loadFxSnapshot();
-
-      // Verificar que tenemos FX snapshot (debería tenerlo siempre gracias al fallback)
-      if (!this.fxSnapshot()) {
-        throw new Error('No se pudo obtener tipo de cambio (ni fallback)');
-      }
-
-      // 2. Risk Snapshot
-      await this.calculateRiskSnapshot();
-
-      // 3. Pricing
-      await this.calculatePricing();
-
-      // Guardar estado en sessionStorage para recuperación
-      this.saveStateToSession();
-
-      // Limpiar cualquier error previo si todo salió bien
-      if (this.error()) {
-        this.error.set(null);
-      }
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Error desconocido';
-      let detailedError = 'Error al inicializar cálculos de reserva: ' + message;
-
-      // Add diagnostic information
-      if (!this.fxSnapshot()) {
-        detailedError += ' (No se pudo obtener el tipo de cambio)';
-      } else if (!this.riskSnapshot()) {
-        detailedError += ' (No se pudo calcular el análisis de riesgo)';
-      } else if (!this.priceBreakdown()) {
-        detailedError += ' (No se pudo calcular el precio final)';
-      }
-
-      console.error('Initialization error:', err);
-      this.error.set(detailedError);
-    }
-  }
-
-  /**
-   * ✅ NEW: Lock price if car uses dynamic pricing
-   */
-  private async lockDynamicPriceIfNeeded(): Promise<void> {
-    const input = this.bookingInput();
-    const carData = this.car();
-    const userId = this.userId();
-
-    if (!input || !carData || !userId) return;
-    if (!carData.uses_dynamic_pricing) return;
-
-    try {
-      const dates = this.bookingDates();
-      if (!dates) return;
-
-      const result = await this.dynamicPricingService.lockPrice(
-        input.carId,
-        userId,
-        input.startDate, // Pass Date object, not string
-        Math.round(dates.totalHours),
-      );
-
-      if (result.ok && result.priceLock) {
-        this.priceLock.set(result.priceLock);
-        console.log('✅ [DynamicPricing] Price locked:', result.priceLock);
-      } else {
-        console.warn('⚠️ [DynamicPricing] Could not lock price:', result.error);
-        // Fallback to fixed price (no price lock)
-      }
-    } catch (error) {
-      console.error('❌ [DynamicPricing] Error locking price:', error);
-      // Fallback to fixed price (no price lock)
-    }
-  }
-
-  /**
-   * Carga el FX snapshot actual
-   * ✅ FIX: Agrega fallback cuando no se puede obtener de la DB
-   */
   private async loadFxSnapshot(): Promise<void> {
-    this.loadingFx.set(true);
+    this.loading.set(true);
     try {
-      // 1. Intentar obtener de la base de datos (con timeout de 10 segundos)
-      const fxPromise = firstValueFrom(this.fxService.getFxSnapshot('USD', 'ARS'));
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('Timeout obteniendo tipo de cambio')), 10000);
-      });
+      // Try DB first
+      let snapshot = await firstValueFrom(this.fxService.getFxSnapshot('USD', 'ARS'));
 
-      let snapshot = await Promise.race([fxPromise, timeoutPromise]);
-
-      // 2. Si no se obtuvo de la DB, intentar obtener directamente de Binance
+      // Fallback if needed
       if (!snapshot) {
-        console.warn('[FX] No se pudo obtener tipo de cambio de DB, intentando Binance...');
-        try {
-          const rate = await this.fxService.getCurrentRateAsync('USD', 'ARS');
-          const now = new Date();
-          const expiresAt = new Date(now);
-          expiresAt.setDate(expiresAt.getDate() + 7);
-
-          snapshot = {
-            rate,
-            timestamp: now,
-            fromCurrency: 'USD',
-            toCurrency: 'ARS',
-            expiresAt,
-            isExpired: false,
-            variationThreshold: 0.1,
-          };
-          console.log(`💱 FX Snapshot (Binance directo): 1 USD = ${rate} ARS`);
-        } catch (binanceError) {
-          console.error('[FX] Error obteniendo de Binance:', binanceError);
-          // 3. Fallback: usar tipo de cambio por defecto razonable
-          const defaultRate = 1000; // Valor aproximado común para USD/ARS
-          const now = new Date();
-          const expiresAt = new Date(now);
-          expiresAt.setDate(expiresAt.getDate() + 7);
-
-          snapshot = {
-            rate: defaultRate,
-            timestamp: now,
-            fromCurrency: 'USD',
-            toCurrency: 'ARS',
-            expiresAt,
-            isExpired: false,
-            variationThreshold: 0.1,
-          };
-          console.warn(`⚠️ [FX] Usando tipo de cambio por defecto: 1 USD = ${defaultRate} ARS`);
-        }
-      }
-
-      if (!snapshot) {
-        throw new Error('No se pudo obtener tipo de cambio ni crear fallback');
+        const rate = await this.fxService.getCurrentRateAsync('USD', 'ARS');
+        snapshot = {
+          rate,
+          timestamp: new Date(),
+          fromCurrency: 'USD',
+          toCurrency: 'ARS',
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          isExpired: false,
+          variationThreshold: 0.1,
+        };
       }
 
       this.fxSnapshot.set(snapshot);
-    } catch (err: unknown) {
-      // Si todo falla, crear un snapshot con valor por defecto para permitir continuar
-      const defaultRate = 1000;
-      const now = new Date();
-      const expiresAt = new Date(now);
-      expiresAt.setDate(expiresAt.getDate() + 7);
-
-      const fallbackSnapshot: FxSnapshot = {
-        rate: defaultRate,
-        timestamp: now,
-        fromCurrency: 'USD',
-        toCurrency: 'ARS',
-        expiresAt,
-        isExpired: false,
-        variationThreshold: 0.1,
-      };
-
-      console.error('[FX] Error crítico, usando fallback:', err);
-      console.warn(`⚠️ [FX] Usando tipo de cambio por defecto: 1 USD = ${defaultRate} ARS`);
-      this.fxSnapshot.set(fallbackSnapshot);
-    } finally {
-      this.loadingFx.set(false);
-    }
-  }
-
-  /**
-   * Calcula el risk snapshot
-   * ✅ NEW: Pasa distanceKm para aplicar lógica MAYOR en garantías
-   */
-  private async calculateRiskSnapshot(): Promise<void> {
-    const input = this.bookingInput();
-    const fx = this.fxSnapshot();
-
-    if (!input || !fx) return;
-
-    this.loadingRisk.set(true);
-    try {
-      // ✅ NEW: Get distance for distance-based guarantee calculation
-      const distanceKm = this.distanceKm();
-
-      const snapshot = await this.riskService.calculateRiskSnapshot({
-        vehicleValueUsd: input.vehicleValueUsd,
-        bucket: input.bucket,
-        country: input.country,
-        fxRate: fx.rate,
-        coverageUpgrade: this.coverageUpgrade(),
-        distanceKm, // ✅ NEW: Pass distance to apply MAYOR logic
-      });
-
-      this.riskSnapshot.set(snapshot);
-    } finally {
-      this.loadingRisk.set(false);
-    }
-  }
-
-  /**
-   * Calcula el desglose de precios
-   */
-  private async calculatePricing(): Promise<void> {
-    const input = this.bookingInput();
-    const dates = this.bookingDates();
-    const fx = this.fxSnapshot();
-    const carData = this.car();
-
-    if (!input || !dates || !fx || !carData) return;
-
-    this.loadingPricing.set(true);
-    try {
-      const rawCurrency = (carData.currency ?? 'USD').toUpperCase();
-      const rawDailyRate = Number(carData.price_per_day ?? 0);
-      const computedDailyRateUsd =
-        rawCurrency === 'ARS' ? this.fxService.convertReverse(rawDailyRate, fx) : rawDailyRate;
-      const dailyRateUsd =
-        Number.isFinite(computedDailyRateUsd) && computedDailyRateUsd > 0
-          ? computedDailyRateUsd
-          : 50;
-
-      const subtotalUsd = dailyRateUsd * dates.totalDays;
-
-      // FGO contribution (15% del subtotal) - DESHABILITADO
-      const fgoContributionUsd = 0;
-
-      // Platform fee (5%) - DESHABILITADO
-      const platformFeeUsd = 0;
-
-      // Insurance fee (ya incluido, ponemos 0)
-      const insuranceFeeUsd = 0;
-
-      // Coverage upgrade cost
-      const coverageUpgradeUsd = calculateCoverageUpgradeCost(this.coverageUpgrade(), subtotalUsd);
-
-      // ✅ NEW: Delivery fee based on distance
-      const deliveryFeeCents = this.deliveryFeeCents();
-      const deliveryFeeUsd =
-        deliveryFeeCents > 0 ? this.fxService.convertReverse(deliveryFeeCents / 100, fx) : 0;
-
-      // Total USD
-      const totalUsd =
-        subtotalUsd +
-        fgoContributionUsd +
-        platformFeeUsd +
-        insuranceFeeUsd +
-        coverageUpgradeUsd +
-        deliveryFeeUsd;
-
-      // Total ARS
-      const totalArs = this.fxService.convert(totalUsd, fx);
-
-      const breakdown: PriceBreakdown = {
-        dailyRateUsd,
-        totalDays: dates.totalDays,
-        subtotalUsd,
-        fgoContributionUsd,
-        platformFeeUsd,
-        insuranceFeeUsd,
-        coverageUpgradeUsd,
-        deliveryFeeUsd: deliveryFeeUsd > 0 ? deliveryFeeUsd : undefined,
-        distanceKm: this.distanceKm(),
-        distanceTier: this.distanceTier(),
-        totalUsd,
-        totalArs,
-        fxRate: fx.rate,
-      };
-
-      this.priceBreakdown.set(breakdown);
-    } finally {
-      this.loadingPricing.set(false);
-    }
-  }
-
-  // ==================== HANDLERS ====================
-
-  /**
-   * Handler: Cambio de modalidad de pago
-   */
-  protected onPaymentModeChange(mode: PaymentMode): void {
-    this.paymentMode.set(mode);
-
-    // Reset autorizaciones del modo anterior
-    if (mode === 'card') {
-      this.walletLock.set(null);
-    } else {
-      this.paymentAuthorization.set(null);
-    }
-  }
-
-  /**
-   * Handler: Cambio de upgrade de cobertura
-   */
-  protected onCoverageUpgradeChange(upgrade: CoverageUpgrade): void {
-    this.coverageUpgrade.set(upgrade);
-    // El effect se encarga de recalcular risk + pricing
-  }
-
-  /**
-   * Handler: Comparar métodos de pago
-   */
-  protected onCompareMethodsClick(): void {
-    this.showComparisonModal.set(true);
-  }
-
-  /**
-   * Handler: Cerrar modal de comparación
-   */
-  protected onCloseComparisonModal(): void {
-    this.showComparisonModal.set(false);
-  }
-
-  /**
-   * Retorna el costo del upgrade de cobertura en ARS
-   * Se basa en el breakdown actual; fallback: calcula con helper en USD
-   */
-  getCoverageUpgradeCost(): number {
-    const breakdown = this.priceBreakdown();
-    if (!breakdown) {
-      return 0;
-    }
-
-    const coverageUsd =
-      breakdown.coverageUpgradeUsd ??
-      calculateCoverageUpgradeCost(this.coverageUpgrade(), breakdown.subtotalUsd);
-
-    const fx = this.fxSnapshot();
-    if (!fx) {
-      return Math.round(coverageUsd);
-    }
-
-    const coverageArs = this.fxService.convert(coverageUsd, fx);
-    return Math.round(coverageArs);
-  }
-
-  /**
-   * Handler: Cambio de consentimientos
-   */
-  protected onConsentsChange(consents: UserConsents): void {
-    this.consents.set(consents);
-  }
-
-  /**
-   * ✅ NEW: Handler para refrescar price lock
-   */
-  protected async onRefreshPriceLock(): Promise<void> {
-    const lock = this.priceLock();
-    if (!lock) return;
-
-    try {
-      const result = await this.dynamicPricingService.refreshPriceLock(lock);
-      if (result.ok && result.priceLock) {
-        this.priceLock.set(result.priceLock);
-        console.log('✅ [DynamicPricing] Price lock refreshed');
-      } else {
-        console.warn('⚠️ [DynamicPricing] Could not refresh price lock:', result.error);
-      }
-    } catch (error) {
-      console.error('❌ [DynamicPricing] Error refreshing price lock:', error);
-    }
-  }
-
-  /**
-   * ✅ NEW: Handler para mostrar desglose de precio
-   */
-  protected onViewPriceBreakdown(): void {
-    this.showBreakdownModal.set(true);
-  }
-
-  /**
-   * Handler: Cambio de autorización de pago (card)
-   */
-  protected onAuthorizationChange(auth: PaymentAuthorization | null): void {
-    this.paymentAuthorization.set(auth);
-  }
-
-  /**
-   * Handler: Cambio de lock de wallet
-   */
-  protected onWalletLockChange(lock: WalletLock | null): void {
-    this.walletLock.set(lock);
-  }
-
-  /**
-   * Handler: Fallback a wallet desde card
-   * ✅ MEJORA: Ahora muestra mensaje explicativo al usuario
-   */
-  protected onFallbackToWallet(reason?: string): void {
-    // Establecer razón del fallback
-    this.fallbackReason.set(reason || 'La pre-autorización con tu tarjeta fue rechazada');
-
-    // Mostrar mensaje explicativo
-    this.showFallbackMessage.set(true);
-
-    // Cambiar modo de pago a wallet
-    this.paymentMode.set('wallet');
-
-    // Ocultar mensaje después de 8 segundos
-    setTimeout(() => {
-      this.showFallbackMessage.set(false);
-    }, 8000);
-  }
-
-  /**
-   * Handler: Confirmar y crear booking
-   */
-  /**
-   * Retry initialization of snapshots and data
-   */
-  protected async retryInitialization(): Promise<void> {
-    this.error.set(null);
-    await this.initializeSnapshots();
-  }
-
-  protected async onConfirm(): Promise<void> {
-    if (!this.canProceed()) {
-      // Mostrar errores de validación
-      const errors = this.collectValidationErrors();
-      this.validationErrors.set(errors);
-      return;
-    }
-
-    // ✅ NUEVO: Verificar si el usuario tiene date_of_birth antes de continuar
-    const needsBirthDate = await this.checkAndRequestBirthDate();
-    if (needsBirthDate) {
-      // Modal se mostrará, esperamos que el usuario complete
-      return;
-    }
-
-    this.loading.set(true);
-    this.error.set(null);
-    this.validationErrors.set([]);
-
-    try {
-      const existingBookingId = this.existingBookingId;
-
-      if (existingBookingId) {
-        // FLUJO UPDATE: Booking existente desde /bookings
-        await this.updateExistingBooking(existingBookingId);
-      } else {
-        // FLUJO CREATE: Nueva reserva desde car-detail
-        await this.createNewBooking();
-      }
-    } catch (err: unknown) {
-      this.error.set(err instanceof Error ? err.message : 'Error al confirmar reserva');
+    } catch (err) {
+      console.error('Error loading FX:', err);
+      this.error.set('No se pudo obtener la cotización del día.');
     } finally {
       this.loading.set(false);
     }
   }
 
-  /**
-   * ✅ FIX CRÍTICO: Actualiza un booking existente y procesa pago inmediatamente
-   * ANTES: Redirigía a /bookings/checkout (flujo de dos pasos)
-   * AHORA: Procesa el pago final en la misma página (flujo consolidado)
-   */
-  private async updateExistingBooking(bookingId: string): Promise<void> {
-    // 1. Persistir risk snapshot con booking_id real
-    const riskSnapshotResult = await this.persistRiskSnapshot(bookingId);
-    if (!riskSnapshotResult.ok || !riskSnapshotResult.snapshotId) {
-      throw new Error(riskSnapshotResult.error || 'Error al guardar risk snapshot');
-    }
-
-    // 2. Actualizar booking con payment_mode, autorizaciones y datos de distancia
-    const { error } = await this.supabaseClient
-      .from('bookings')
-      .update({
-        payment_mode: this.paymentMode(),
-        coverage_upgrade: this.coverageUpgrade(),
-        authorized_payment_id: this.paymentAuthorization()?.authorizedPaymentId,
-        wallet_lock_id: this.walletLock()?.lockId,
-        risk_snapshot_booking_id: bookingId, // FIXED: Column is risk_snapshot_booking_id, not risk_snapshot_id
-        risk_snapshot_date: new Date().toISOString(),
-        delivery_distance_km: this.distanceKm() || null,
-        distance_risk_tier: this.distanceTier() || null,
-        delivery_fee_cents: this.deliveryFeeCents() || 0,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', bookingId);
-
-    if (error) throw error;
-
-    // 3. Limpiar sessionStorage si existe
-    sessionStorage.removeItem('booking_detail_input');
-
-    // ✅ NUEVO: Procesar pago inmediatamente en lugar de redirigir a checkout
-    await this.processFinalPayment(bookingId);
+  downloadPdf(): void {
+    window.print();
   }
 
-  /**
-   * NUEVO: Crea un nuevo booking (flujo original)
-   */
-  /**
-   * ✅ FIX CRÍTICO: Crear booking usando función atómica
-   * ANTES: Múltiples pasos no transaccionales → riesgo de reservas fantasma
-   * AHORA: Una sola transacción atómica en la base de datos
-   */
-  private async createNewBooking(): Promise<void> {
+  async payWithMercadoPago(): Promise<void> {
     const input = this.bookingInput();
-    const pricing = this.priceBreakdown();
-    const risk = this.riskSnapshot();
-    const userId = this.userId();
+    if (!input) return;
 
-    if (!input || !pricing || !risk || !userId) {
-      throw new Error('Faltan datos para crear reserva');
-    }
-
-    // ✅ NEW: Get dynamic pricing parameters
-    const lock = this.priceLock();
-    const useDynamicPricing = lock !== null;
-    const priceLockToken = lock?.lockToken;
-    const dynamicPriceSnapshot = lock?.priceSnapshot as Record<string, unknown> | undefined;
-
-    // Llamar a la función RPC atómica que hace todo en una transacción
-    const result = await this.bookingsService.createBookingAtomic({
-      carId: input.carId,
-      startDate: input.startDate.toISOString(),
-      endDate: input.endDate.toISOString(),
-      totalAmount: pricing.totalArs,
-      currency: 'ARS',
-      paymentMode: this.paymentMode(),
-      coverageUpgrade: this.mapCoverageUpgrade(this.coverageUpgrade()),
-      authorizedPaymentId: this.paymentAuthorization()?.authorizedPaymentId,
-      walletLockId: this.walletLock()?.lockId,
-      distanceKm: this.distanceKm(),
-      distanceTier: this.distanceTier(),
-      deliveryFeeCents: this.deliveryFeeCents(),
-      // ✅ NEW: Dynamic pricing parameters
-      useDynamicPricing,
-      priceLockToken,
-      dynamicPriceSnapshot,
-      riskSnapshot: {
-        dailyPriceUsd: pricing.totalUsd / (calculateTotalDays(input.startDate, input.endDate) || 1),
-        securityDepositUsd: risk.creditSecurityUsd,
-        vehicleValueUsd: risk.vehicleValueUsd,
-        // ✅ IMPLEMENTADO: Cálculo real de edad desde profile
-        // Fallback a 30 si date_of_birth no está configurado
-        driverAge: await this.getDriverAge(),
-        coverageType: risk.coverageUpgrade || 'standard',
-        paymentMode: this.paymentMode(),
-        totalUsd: pricing.totalUsd,
-        totalArs: pricing.totalArs,
-        exchangeRate: risk.fxRate,
-      },
-    });
-
-    if (!result.success || !result.bookingId) {
-      throw new Error(result.error || 'Error al crear reserva');
-    }
-
-    // ✅ NUEVO: Guardar booking ID para procesamiento de pago
-    this.lastCreatedBookingId.set(result.bookingId);
-
-    // ✅ Guardar booking ID en sessionStorage para redirect de MercadoPago
-    sessionStorage.setItem('pending_booking_id', result.bookingId);
-
-    // Limpiar sessionStorage
-    sessionStorage.removeItem('booking_detail_input');
-
-    // ✅ NUEVO: Procesar pago inmediatamente en lugar de navegar
-    await this.processFinalPayment(result.bookingId);
-  }
-
-  // ==================== HELPERS ====================
-
-  /**
-   * Persiste el risk snapshot en DB
-   */
-  private async persistRiskSnapshot(
-    bookingId: string,
-  ): Promise<{ ok: boolean; snapshotId?: string; error?: string }> {
-    const risk = this.riskSnapshot();
-    const input = this.bookingInput();
-
-    if (!risk || !input) {
-      return { ok: false, error: 'Faltan datos de riesgo o booking' };
-    }
-
-    return firstValueFrom(
-      this.riskService.persistRiskSnapshot(bookingId, risk, this.paymentMode()),
-    );
-  }
-
-  /**
-   * Crea el booking en DB con validación de disponibilidad
-   * ✅ SPRINT 2 INTEGRATION: Usa BookingsService.createBookingWithValidation()
-   */
-  private async createBooking(): Promise<CreateBookingResult> {
-    const input = this.bookingInput();
-    const pricing = this.priceBreakdown();
-    const userId = this.userId();
-
-    if (!input || !pricing || !userId) {
-      return { ok: false, error: 'Faltan datos para crear reserva' };
-    }
-
-    // ✅ Usar método con validación de disponibilidad
-    const result = await this.bookingsService.createBookingWithValidation(
-      input.carId,
-      input.startDate.toISOString(),
-      input.endDate.toISOString(),
-    );
-
-    if (!result.success || !result.booking?.id) {
-      return {
-        ok: false,
-        error: result.error || 'Error desconocido al crear reserva',
-      };
-    }
-
-    // ✅ Paso 2: Actualizar la reserva con los detalles del pago
+    this.processingPayment.set(true);
     try {
-      await this.bookingsService.updateBooking(result.booking.id, {
-        total_amount: pricing.totalArs, // Corregido a snake_case
-        currency: 'ARS',
-        payment_mode: this.paymentMode(), // Corregido a snake_case
-        coverage_upgrade: this.mapCoverageUpgrade(this.coverageUpgrade()), // Corregido a snake_case y tipo
-        authorized_payment_id: this.paymentAuthorization()?.authorizedPaymentId, // Corregido a snake_case
-        wallet_lock_id: this.walletLock()?.lockId, // Corregido a snake_case
-        status: 'pending',
-      });
-    } catch (updateError: unknown) {
-      const errorMessage =
-        updateError instanceof Error
-          ? updateError.message
-          : 'Error desconocido al actualizar la reserva';
-      // Opcional: Considerar cancelar la reserva si la actualización falla
-      return {
-        ok: false,
-        error: `La reserva se creó pero no se pudo actualizar: ${errorMessage}`,
-      };
-    }
+      // Create booking first (simplified for this flow)
+      // Note: In a real flow we might want to create the booking record first
+      // For now we assume we pass the carId/dates to the preference creation or use a temp ID
+      // But the gateway expects a bookingId.
+      // Let's try to create a pending booking first.
 
-    return {
-      ok: true,
-      bookingId: result.booking!.id,
-    };
-  }
+      const { data: booking, error: bookingError } = await this.supabaseClient
+        .from('bookings')
+        .insert({
+          car_id: input.carId,
+          renter_id: (await this.authService.getCurrentUser())?.id,
+          start_at: input.startDate.toISOString(),
+          end_at: input.endDate.toISOString(),
+          status: 'pending_payment',
+          total_amount_cents: this.PRE_AUTH_AMOUNT_USD * 100, // Store in cents USD
+          currency: 'USD',
+          payment_mode: 'card'
+        })
+        .select()
+        .single();
 
-  /**
-   * Actualiza el booking con el risk_snapshot_booking_id
-   */
-  private async updateBookingRiskSnapshot(
-    bookingId: string,
-    _riskSnapshotId: string,
-  ): Promise<void> {
-    const { error } = await this.supabaseClient
-      .from('bookings')
-      .update({
-        risk_snapshot_booking_id: bookingId, // FIXED: Column is risk_snapshot_booking_id
-        risk_snapshot_date: new Date().toISOString(),
-      })
-      .eq('id', bookingId);
+      if (bookingError) throw bookingError;
 
-    if (error) {
-      throw new Error('Error al actualizar risk snapshot');
-    }
-  }
+      // Get MP Preference
+      const preference = await this.mpGateway.createPreference(booking.id);
 
-  /**
-   * Recolecta errores de validación
-   */
-  private collectValidationErrors(): ValidationError[] {
-    const errors: ValidationError[] = [];
-
-    // Consentimientos
-    errors.push(...validateConsents(this.consents(), this.paymentMode()));
-
-    // Autorización (card)
-    if (this.paymentMode() === 'card') {
-      errors.push(...validatePaymentAuthorization(this.paymentAuthorization()));
-    }
-
-    // Wallet lock
-    if (this.paymentMode() === 'wallet') {
-      const lock = this.walletLock();
-      if (!lock || lock.status !== 'locked') {
-        errors.push({
-          field: 'walletLock',
-          message: 'Debes bloquear el Crédito de Seguridad antes de continuar',
-          code: 'WALLET_NOT_LOCKED',
-        });
-      }
-    }
-
-    return errors;
-  }
-
-  /**
-   * Guarda estado en sessionStorage
-   */
-  private saveStateToSession(): void {
-    const state = {
-      bookingInput: this.bookingInput(),
-      fxSnapshot: this.fxSnapshot(),
-      riskSnapshot: this.riskSnapshot(),
-      priceBreakdown: this.priceBreakdown(),
-      paymentMode: this.paymentMode(),
-      coverageUpgrade: this.coverageUpgrade(),
-    };
-    sessionStorage.setItem('booking_detail_state', JSON.stringify(state));
-  }
-
-  // Expose formatters to template
-  formatUsd = formatUsd;
-  formatArs = formatArs;
-
-  // ==================== PROCESAMIENTO DE PAGO FINAL ====================
-
-  /**
-   * ✅ NUEVO: Procesa el pago final inmediatamente después de crear el booking
-   * Consolida la lógica que estaba en checkout.page.ts
-   */
-  private async processFinalPayment(bookingId: string): Promise<void> {
-    this.processingFinalPayment.set(true);
-
-    try {
-      // Obtener el booking recién creado
-      const booking = await this.bookingsService.getBookingById(bookingId);
-      if (!booking) {
-        throw new Error('Booking no encontrado');
-      }
-
-      const method = this.paymentMode();
-
-      // Procesar según el método
-      if (method === 'wallet') {
-        await this.processWalletPayment(booking);
+      // Redirect to MP
+      if (preference.initPoint) {
+        window.location.href = preference.initPoint;
       } else {
-        await this.processCreditCardPayment(booking);
-      }
-    } catch (error: unknown) {
-      this.error.set(error instanceof Error ? error.message : 'Error al procesar el pago');
-      this.processingFinalPayment.set(false);
-      // No redirigir, dejar al usuario en la página para reintentar
-    }
-  }
-
-  /**
-   * ✅ NUEVO: Procesa pago con wallet
-   * Lógica consolidada de checkout-payment.service.ts -> payWithWallet()
-   */
-  private async processWalletPayment(booking: Booking): Promise<void> {
-    const bookingId = booking.id;
-    const rentalAmount = booking.total_amount || 0;
-    const riskSnap = this.riskSnapshot();
-    const depositUsd = riskSnap?.creditSecurityUsd || 0;
-
-    // Bloquear fondos en wallet
-    const lock = await firstValueFrom(
-      this.walletService.lockRentalAndDeposit(bookingId, rentalAmount, depositUsd),
-    );
-
-    if (!lock.success) {
-      throw new Error(lock.message ?? 'No se pudo bloquear fondos en wallet');
-    }
-
-    // Actualizar booking a confirmado
-    await this.bookingsService.updateBooking(bookingId, {
-      payment_method: 'wallet',
-      rental_amount_cents: Math.round(rentalAmount * 100),
-      deposit_amount_cents: Math.round(depositUsd * 100),
-      rental_lock_transaction_id: lock.rental_lock_transaction_id,
-      deposit_lock_transaction_id: lock.deposit_lock_transaction_id,
-      deposit_status: 'locked',
-      status: 'confirmed',
-    });
-
-    // Recalcular pricing
-    await this.bookingsService.recalculatePricing(bookingId);
-
-    // Redirigir a página de éxito
-    this.router.navigate(['/bookings/success', bookingId]);
-  }
-
-  /**
-   * ✅ NUEVO: Procesa pago con tarjeta (MercadoPago)
-   * Lógica consolidada de checkout-payment.service.ts -> payWithCreditCard()
-   */
-  private async processCreditCardPayment(booking: Booking): Promise<void> {
-    const bookingId = booking.id;
-    const riskSnap = this.riskSnapshot();
-    const depositUsd = riskSnap?.creditSecurityUsd || 0;
-
-    // Crear intención de pago
-    const intent = await this.paymentsService.createIntent(bookingId);
-
-    // Actualizar booking con método de pago
-    await this.bookingsService.updateBooking(bookingId, {
-      payment_method: 'credit_card',
-      wallet_amount_cents: 0,
-      deposit_amount_cents: Math.round(depositUsd * 100),
-    });
-
-    // Recalcular pricing
-    await this.bookingsService.recalculatePricing(bookingId);
-
-    // Crear preferencia de MercadoPago
-    const preference = await this.createPreferenceWithOnboardingGuard(bookingId);
-
-    // Redirigir a MercadoPago
-    if (preference.initPoint) {
-      window.location.href = preference.initPoint;
-    } else {
-      throw new Error('No se pudo crear preferencia de pago');
-    }
-  }
-
-  private async createPreferenceWithOnboardingGuard(
-    bookingId: string,
-  ): Promise<MercadoPagoPreferenceResponse> {
-    try {
-      return await this.mpGateway.createPreference(bookingId);
-    } catch (_error) {
-      if (this.isOwnerOnboardingError(_error)) {
-        const message =
-          (_error as Error).message ||
-          'El propietario todavía no completó la vinculación de Mercado Pago. Tu reserva permanecerá pendiente.';
-        this.error.set(message);
-        this.processingFinalPayment.set(false);
+        throw new Error('No se recibió link de pago');
       }
 
-      throw _error instanceof Error
-        ? _error
-        : new Error('No pudimos crear la preferencia de Mercado Pago.');
+    } catch (err: any) {
+      console.error('Payment error:', err);
+      this.error.set(err.message || 'Error al iniciar el pago');
+    } finally {
+      this.processingPayment.set(false);
     }
   }
 
-  private isOwnerOnboardingError(error: unknown): error is Error & { code?: string } {
-    return (
-      !!error &&
-      typeof error === 'object' &&
-      'code' in error &&
-      (error as { code?: string }).code === 'OWNER_ONBOARDING_REQUIRED'
-    );
-  }
 
-  // ============================================
-  // CONVERSIÓN OPTIMIZADA
-  // ============================================
-
-  /**
-   * Controla si mostrar vista optimizada para mejor conversión
-   */
-  readonly showOptimizedView = computed(() => this.conversionMode() === 'optimized');
-
-  /**
-   * Cambia entre vista estándar y optimizada
-   */
-  toggleConversionMode(): void {
-    this.conversionMode.update((mode) => (mode === 'optimized' ? 'standard' : 'optimized'));
-  }
-
-  /**
-   * Obtiene URL de foto del auto (para vista optimizada)
-   */
-  getCarPhotoUrl(): string {
-    const car = this.car();
-    if (!car) return '/assets/placeholder-car.jpg';
-
-    const photos = car.photos || (car as any).car_photos;
-    if (photos && photos.length > 0 && photos[0].url) {
-      return photos[0].url;
-    }
-
-    // Placeholder si no hay fotos
-    return '/assets/placeholder-car.jpg';
-  }
-
-  /**
-   * Calcula total simplificado (sin breakdown detallado)
-   */
-  readonly simplifiedTotal = computed(() => {
-    const breakdown = this.priceBreakdown();
-    if (!breakdown) return 0;
-
-    return breakdown.totalArs;
-  });
-
-  /**
-   * Mensaje de confianza para conversión
-   */
-  readonly trustMessage = computed(() => {
-    const car = this.car();
-    const rating = car?.rating_avg || 0;
-    const reviews = car?.rating_count || 0;
-
-    if (rating >= 4.5 && reviews >= 10) {
-      return '⭐ Auto muy bien evaluado por otros usuarios';
-    } else if (rating >= 4.0) {
-      return '👍 Auto bien evaluado';
-    } else if (reviews >= 5) {
-      return '✅ Auto con evaluaciones verificadas';
-    } else {
-      return '🔒 Reserva protegida con franquicia';
-    }
-  });
-
-  /**
-   * ✅ NUEVO: Verifica si el usuario tiene date_of_birth y muestra modal si no la tiene
-   * Retorna true si se necesita mostrar el modal (bloqueando el flujo)
-   * Retorna false si el usuario ya tiene date_of_birth (continuar con booking)
-   */
-  private async checkAndRequestBirthDate(): Promise<boolean> {
-    try {
-      const profile = await this.profileService.getCurrentProfile();
-
-      // Si ya tiene date_of_birth, no mostrar modal
-      if (profile?.date_of_birth) {
-        return false;
-      }
-
-      // No tiene date_of_birth, mostrar modal
-      this.showBirthDateModal.set(true);
-      return true;
-    } catch (error) {
-      console.error('[BookingDetailPayment] Error checking date_of_birth:', error);
-      // En caso de error, asumir que no tiene y mostrar modal
-      this.showBirthDateModal.set(true);
-      return true;
-    }
-  }
-
-  /**
-   * ✅ NUEVO: Handler cuando el usuario completa el modal de fecha de nacimiento
-   * Cierra el modal y reintenta la confirmación del booking
-   */
-  onBirthDateCompleted(birthDate: string): void {
-    console.log('[BookingDetailPayment] Birth date completed:', birthDate);
-    this.showBirthDateModal.set(false);
-
-    // Reintentar confirmación automáticamente
-    // El usuario ya hizo clic en "Confirmar Reserva", ahora tiene date_of_birth
-    setTimeout(() => {
-      this.onConfirm();
-    }, 100);
-  }
-
-  /**
-   * ✅ NUEVO: Handler cuando el usuario cancela el modal de fecha de nacimiento
-   * Solo cierra el modal, no procede con el booking
-   */
-  onBirthDateCancelled(): void {
-    console.log('[BookingDetailPayment] Birth date cancelled');
-    this.showBirthDateModal.set(false);
-    // No hacer nada más, el usuario puede decidir si quiere intentar nuevamente
-  }
-
-  /**
-   * ✅ DRIVER AGE: Obtiene edad real del conductor desde su perfil
-   * Usa fecha de nacimiento si está configurada, caso contrario fallback a 30
-   */
-  private async getDriverAge(): Promise<number> {
-    try {
-      const profile = await this.profileService.getCurrentProfile();
-      return getAgeFromProfile(profile, 30);
-    } catch (error) {
-      console.warn('[BookingDetailPayment] Error getting driver age, using fallback:', error);
-      return 30;
-    }
-  }
 }

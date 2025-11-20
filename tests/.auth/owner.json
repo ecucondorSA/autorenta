@@ -5,16 +5,36 @@
       "origin": "http://localhost:4200",
       "localStorage": [
         {
-          "name": "theme",
-          "value": "light"
+          "name": "autorenta:list-sort",
+          "value": "rating"
         },
         {
           "name": "autorenta:tour:debug",
           "value": "true"
         },
         {
+          "name": "supabase.auth.token",
+          "value": "{\"access_token\":\"eyJhbGciOiJIUzI1NiIsImtpZCI6IlRNdFFyYUNoNVZFUkE0d2QiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3Bpc3FqbW9rbGl2enB3dWZoc2N4LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI1ODE5MjdiMy00ZWIwLTQ5NzUtOWNiOC05MGQ0OTYzYzg5ZDYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzYzNTQ0MTQ2LCJpYXQiOjE3NjM1NDA1NDYsImVtYWlsIjoidGVzdC1vd25lckBhdXRvcmVudGEuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZnVsbF9uYW1lIjoiVGVzdCBMb2NhZG9yIiwicm9sZSI6ImxvY2Fkb3IifSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2MzU0MDU0Nn1dLCJzZXNzaW9uX2lkIjoiYTMyN2M5ZTUtMDc2NS00MmZjLWI4ZDctNDI0NGU2YzkwNjNlIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.Aketk_1JNDJfuiJvupllb3ICFgKniZqz3shJHN8vY5o\",\"token_type\":\"bearer\",\"expires_in\":3600,\"expires_at\":1763544146,\"refresh_token\":\"ke6xtewxp2zm\",\"user\":{\"id\":\"581927b3-4eb0-4975-9cb8-90d4963c89d6\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"test-owner@autorenta.com\",\"email_confirmed_at\":\"2025-11-19T08:19:38.257664Z\",\"phone\":\"\",\"confirmed_at\":\"2025-11-19T08:19:38.257664Z\",\"last_sign_in_at\":\"2025-11-19T08:22:26.400437955Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{\"email_verified\":true,\"full_name\":\"Test Locador\",\"role\":\"locador\"},\"identities\":[{\"identity_id\":\"ea5b3a3a-8c56-4475-8d6e-9290fe2b5063\",\"id\":\"581927b3-4eb0-4975-9cb8-90d4963c89d6\",\"user_id\":\"581927b3-4eb0-4975-9cb8-90d4963c89d6\",\"identity_data\":{\"email\":\"test-owner@autorenta.com\",\"email_verified\":false,\"phone_verified\":false,\"sub\":\"581927b3-4eb0-4975-9cb8-90d4963c89d6\"},\"provider\":\"email\",\"last_sign_in_at\":\"2025-11-19T08:19:38.25609Z\",\"created_at\":\"2025-11-19T08:19:38.256148Z\",\"updated_at\":\"2025-11-19T08:19:38.256148Z\",\"email\":\"test-owner@autorenta.com\"}],\"created_at\":\"2025-11-19T08:19:38.253425Z\",\"updated_at\":\"2025-11-19T08:22:26.404358Z\",\"is_anonymous\":false},\"weak_password\":null}"
+        },
+        {
+          "name": "theme",
+          "value": "light"
+        },
+        {
+          "name": "mapbox.eventData.uuidTimestamp:ZWN1Y29uZG9y",
+          "value": "1762223247327"
+        },
+        {
+          "name": "mapbox.eventData:ZWN1Y29uZG9y",
+          "value": "{\"lastSuccess\":1762223247323,\"tokenU\":\"ecucondor\"}"
+        },
+        {
+          "name": "mapbox.eventData.uuid:ZWN1Y29uZG9y",
+          "value": "721acc02-1a73-4409-b8f2-da65f13727f2"
+        },
+        {
           "name": "app_lang",
-          "value": "es"
+          "value": "en"
         },
         {
           "name": "preferred_language",

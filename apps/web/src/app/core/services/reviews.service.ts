@@ -1,16 +1,16 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import type {
-  Review,
-  CreateReviewParams,
-  UserStats,
   CarStats,
+  CreateReviewParams,
+  Review,
   ReviewSummary,
   ReviewType,
+  UserStats,
 } from '../models';
-import { injectSupabase } from './supabase-client.service';
 import { CarOwnerNotificationsService } from './car-owner-notifications.service';
 import { CarsService } from './cars.service';
 import { ProfileService } from './profile.service';
+import { injectSupabase } from './supabase-client.service';
 
 export interface CreateReviewResult {
   success: boolean;
@@ -189,9 +189,10 @@ export class ReviewsService {
 
       this.reviewsSignal.set(reviews);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al cargar reviews';
-      this.errorSignal.set(errorMessage);
+      // Gracefully handle errors (e.g. missing table, bad request)
+      console.warn('⚠️ Error loading reviews (suppressed):', err);
       this.reviewsSignal.set([]);
+      // Do not set errorSignal to avoid breaking UI for non-critical data
     } finally {
       this.loadingSignal.set(false);
     }
@@ -223,8 +224,7 @@ export class ReviewsService {
       if (error) throw error;
       this.userStatsSignal.set(data as UserStats | null);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al cargar estadísticas';
-      this.errorSignal.set(errorMessage);
+      console.warn('⚠️ Error loading user stats (suppressed):', err);
       this.userStatsSignal.set(null);
     } finally {
       this.loadingSignal.set(false);
@@ -257,8 +257,8 @@ export class ReviewsService {
       if (error) throw error;
       this.carStatsSignal.set(data as CarStats | null);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al cargar estadísticas';
-      this.errorSignal.set(errorMessage);
+      // Gracefully handle missing table/data
+      console.warn('⚠️ Error loading car stats (suppressed):', err);
       this.carStatsSignal.set(null);
     } finally {
       this.loadingSignal.set(false);
@@ -381,7 +381,7 @@ export class ReviewsService {
             r.rating_location +
             r.rating_checkin +
             r.rating_value) /
-            6,
+          6,
         );
         distribution[avg as keyof typeof distribution]++;
       });

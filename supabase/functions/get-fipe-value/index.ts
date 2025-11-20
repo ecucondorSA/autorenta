@@ -254,7 +254,7 @@ async function searchFipeVehicle(
       return {
         error: {
           code: 'BRAND_NOT_FOUND',
-          message: `La marca "${brand}" no está disponible en la base de datos FIPE.`,
+          message: `La marca "${brand}" no está disponible en nuestro sistema de valoración.`,
           suggestions: [
             'Verifica que el nombre de la marca esté correcto',
             'Prueba con el nombre completo (ej: "Volkswagen" en vez de "VW")',
@@ -297,7 +297,7 @@ async function searchFipeVehicle(
       return {
         error: {
           code: 'MODEL_NOT_FOUND',
-          message: `El modelo "${model}" no está disponible para ${brand} en FIPE.`,
+          message: `El modelo "${model}" no está disponible para ${brand} en nuestro sistema.`,
           suggestions: [
             'Verifica que el nombre del modelo esté correcto',
             'Intenta con el nombre completo (ej: "Gol 1.6" en vez de "Gol")',
@@ -350,12 +350,12 @@ async function searchFipeVehicle(
       return {
         error: {
           code: 'YEAR_NOT_FOUND',
-          message: `El año ${year} no está disponible para ${brand} ${model} en nuestra base de datos de valoración.`,
+          message: `El año ${year} no está disponible para ${brand} ${model}.`,
           suggestions: [
             'Verifica que el año sea correcto',
-            `Este modelo solo está disponible en nuestra base de datos para los años: ${availableYears.slice(0, 10).join(', ')}${availableYears.length > 10 ? '...' : ''}`,
+            `Este modelo está disponible para los años: ${availableYears.slice(0, 10).join(', ')}${availableYears.length > 10 ? '...' : ''}`,
             'Selecciona un año de la lista anterior',
-            'Si el modelo es muy nuevo o muy antiguo, puede no estar en nuestra base de datos aún'
+            'Si el modelo es muy nuevo o muy antiguo, puede no estar disponible aún'
           ],
           availableOptions: { years: availableYears }
         }

@@ -42,56 +42,60 @@ async function seedUsers() {
     }
 
     const existingUser = existingUsers.users.find(u => u.email === user.email);
+    let userId = existingUser?.id;
 
     if (existingUser) {
       console.log(`  - User exists (ID: ${existingUser.id}). Deleting...`);
       const { error: deleteError } = await supabase.auth.admin.deleteUser(existingUser.id);
       if (deleteError) {
         console.error(`  ❌ Error deleting user: ${deleteError.message}`);
-        continue;
+        console.log(`  - Proceeding with existing user...`);
+      } else {
+        console.log('  ✅ User deleted.');
+        userId = undefined;
       }
-      console.log('  ✅ User deleted.');
     }
 
-    // 2. Create user
-    console.log(`  - Creating user...`);
-    const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
-      email: user.email,
-      password: user.password,
-      email_confirm: true,
-      user_metadata: {
-        full_name: `Test ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}`,
-        role: user.role // Note: This is metadata, actual role handling might depend on your app logic (e.g. public.users table triggers)
+    // 2. Create user if needed
+    if (!userId) {
+      console.log(`  - Creating user...`);
+      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+        email: user.email,
+        password: user.password,
+        email_confirm: true,
+        user_metadata: {
+          full_name: `Test ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}`,
+          role: user.role,
+          is_admin: (user as any).isAdmin || false
+        }
+      });
+
+      if (createError) {
+        console.error(`  ❌ Error creating user: ${createError.message}`);
+        continue;
       }
-    });
 
-    if (createError) {
-      console.error(`  ❌ Error creating user: ${createError.message}`);
-    } else {
       console.log(`  ✅ User created successfully (ID: ${newUser.user.id})`);
+      userId = newUser.user.id;
+    }
 
-      // 3. Upsert profile with correct role
+    // 3. Upsert profile with correct role
+    if (userId) {
       console.log(`  - Upserting profile for ${user.email}...`);
-      // Map 'locador' to 'owner' and 'locatario' to 'renter' if needed, or use as is if DB expects specific values
-      // Based on ProfileService, roles are 'renter', 'owner', 'both', 'admin'
-      let dbRole = user.role;
-      if (user.role === 'locador') dbRole = 'owner';
-      if (user.role === 'locatario') dbRole = 'renter';
 
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
-          id: newUser.user.id,
-          email: user.email,
+          id: userId,
           full_name: `Test ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}`,
-          role: dbRole,
-          country: 'AR'
+          role: user.role,
+          is_admin: (user as any).isAdmin || false
         });
 
       if (profileError) {
         console.error(`  ❌ Error updating profile: ${profileError.message}`);
       } else {
-        console.log(`  ✅ Profile updated with role: ${dbRole}`);
+        console.log(`  ✅ Profile updated with role: ${user.role}`);
       }
     }
   }

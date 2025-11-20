@@ -1917,7 +1917,7 @@ export type Database = {
           execution_time_ms: number | null;
           id: string;
           pair: string;
-          platform_rate: number | null;
+          rate: number | null;
           success: boolean;
           sync_method: string;
           synced_at: string;
@@ -6088,137 +6088,137 @@ export type Database = {
       };
       refresh_accounting_balances: { Args: never; Returns: undefined };
       register_payment_split:
-        | {
-            Args: {
-              p_booking_id: string;
-              p_mercadopago_payment_id?: string;
-              p_owner_amount: number;
-              p_owner_collector_id: string;
-              p_payment_id: string;
-              p_platform_fee: number;
-              p_total_amount: number;
-            };
-            Returns: string;
-          }
-        | {
-            Args: {
-              p_booking_id: string;
-              p_currency?: string;
-              p_mp_payment_id: string;
-              p_total_amount_cents: number;
-            };
-            Returns: string;
-          };
+      | {
+        Args: {
+          p_booking_id: string;
+          p_mercadopago_payment_id?: string;
+          p_owner_amount: number;
+          p_owner_collector_id: string;
+          p_payment_id: string;
+          p_platform_fee: number;
+          p_total_amount: number;
+        };
+        Returns: string;
+      }
+      | {
+        Args: {
+          p_booking_id: string;
+          p_currency?: string;
+          p_mp_payment_id: string;
+          p_total_amount_cents: number;
+        };
+        Returns: string;
+      };
       remove_from_waitlist: {
         Args: { p_waitlist_id: string };
         Returns: boolean;
       };
       request_booking:
-        | {
-            Args: {
-              p_car_id: string;
-              p_delivery_distance_km?: number;
-              p_delivery_fee_cents?: number;
-              p_delivery_required?: boolean;
-              p_distance_risk_tier?: string;
-              p_driver_age?: number;
-              p_dropoff_lat?: number;
-              p_dropoff_lng?: number;
-              p_end: string;
-              p_payment_method?: string;
-              p_pickup_lat?: number;
-              p_pickup_lng?: number;
-              p_start: string;
-              p_total_price?: number;
-            };
-            Returns: Json;
-          }
-        | {
-            Args: {
-              p_car_id: string;
-              p_delivery_required?: boolean;
-              p_dropoff_lat?: number;
-              p_dropoff_lng?: number;
-              p_dynamic_price_snapshot?: Json;
-              p_end: string;
-              p_pickup_lat?: number;
-              p_pickup_lng?: number;
-              p_price_lock_token?: string;
-              p_start: string;
-              p_use_dynamic_pricing?: boolean;
-            };
-            Returns: {
-              authorized_payment_id: string | null;
-              breakdown: Json | null;
-              calendar_sync_enabled: boolean | null;
-              calendar_synced_at: string | null;
-              cancellation_fee_cents: number | null;
-              cancellation_policy_id: number | null;
-              cancellation_reason: string | null;
-              cancelled_at: string | null;
-              car_id: string;
-              coverage_upgrade: string | null;
-              created_at: string;
-              currency: string;
-              days_count: number | null;
-              delivery_distance_km: number | null;
-              delivery_fee_cents: number | null;
-              delivery_required: boolean | null;
-              discounts_cents: number | null;
-              distance_risk_tier: string | null;
-              dropoff_location_lat: number | null;
-              dropoff_location_lng: number | null;
-              dynamic_price_snapshot: Json | null;
-              end_at: string;
-              expires_at: string | null;
-              fees_cents: number | null;
-              google_calendar_event_id: string | null;
-              guarantee_amount_cents: number | null;
-              guarantee_type: string | null;
-              has_dynamic_pricing: boolean | null;
-              hold_authorization_id: string | null;
-              hold_expires_at: string | null;
-              id: string;
-              idempotency_key: string | null;
-              insurance_cents: number | null;
-              nightly_rate_cents: number | null;
-              owner_payment_amount: number | null;
-              paid_at: string | null;
-              payment_id: string | null;
-              payment_init_point: string | null;
-              payment_mode: string | null;
-              payment_preference_id: string | null;
-              payment_provider: Database['public']['Enums']['payment_provider'] | null;
-              payment_split_completed: boolean | null;
-              payment_split_validated_at: string | null;
-              pickup_location_lat: number | null;
-              pickup_location_lng: number | null;
-              platform_fee: number | null;
-              price_lock_token: string | null;
-              price_locked_until: string | null;
-              provider_collector_id: string | null;
-              provider_split_payment_id: string | null;
-              reauthorization_count: number | null;
-              renter_id: string;
-              requires_revalidation: boolean | null;
-              risk_snapshot_booking_id: string | null;
-              risk_snapshot_date: string | null;
-              start_at: string;
-              status: Database['public']['Enums']['booking_status'];
-              subtotal_cents: number | null;
-              total_amount: number;
-              total_cents: number | null;
-              total_price_ars: number | null;
-              updated_at: string;
-              wallet_lock_id: string | null;
-            };
-            SetofOptions: {
-              from: '*';
-              to: 'bookings';
-              isOneToOne: true;
-              isSetofReturn: false;
-            };
-          };
+      | {
+        Args: {
+          p_car_id: string;
+          p_delivery_distance_km?: number;
+          p_delivery_fee_cents?: number;
+          p_delivery_required?: boolean;
+          p_distance_risk_tier?: string;
+          p_driver_age?: number;
+          p_dropoff_lat?: number;
+          p_dropoff_lng?: number;
+          p_end: string;
+          p_payment_method?: string;
+          p_pickup_lat?: number;
+          p_pickup_lng?: number;
+          p_start: string;
+          p_total_price?: number;
+        };
+        Returns: Json;
+      }
+      | {
+        Args: {
+          p_car_id: string;
+          p_delivery_required?: boolean;
+          p_dropoff_lat?: number;
+          p_dropoff_lng?: number;
+          p_dynamic_price_snapshot?: Json;
+          p_end: string;
+          p_pickup_lat?: number;
+          p_pickup_lng?: number;
+          p_price_lock_token?: string;
+          p_start: string;
+          p_use_dynamic_pricing?: boolean;
+        };
+        Returns: {
+          authorized_payment_id: string | null;
+          breakdown: Json | null;
+          calendar_sync_enabled: boolean | null;
+          calendar_synced_at: string | null;
+          cancellation_fee_cents: number | null;
+          cancellation_policy_id: number | null;
+          cancellation_reason: string | null;
+          cancelled_at: string | null;
+          car_id: string;
+          coverage_upgrade: string | null;
+          created_at: string;
+          currency: string;
+          days_count: number | null;
+          delivery_distance_km: number | null;
+          delivery_fee_cents: number | null;
+          delivery_required: boolean | null;
+          discounts_cents: number | null;
+          distance_risk_tier: string | null;
+          dropoff_location_lat: number | null;
+          dropoff_location_lng: number | null;
+          dynamic_price_snapshot: Json | null;
+          end_at: string;
+          expires_at: string | null;
+          fees_cents: number | null;
+          google_calendar_event_id: string | null;
+          guarantee_amount_cents: number | null;
+          guarantee_type: string | null;
+          has_dynamic_pricing: boolean | null;
+          hold_authorization_id: string | null;
+          hold_expires_at: string | null;
+          id: string;
+          idempotency_key: string | null;
+          insurance_cents: number | null;
+          nightly_rate_cents: number | null;
+          owner_payment_amount: number | null;
+          paid_at: string | null;
+          payment_id: string | null;
+          payment_init_point: string | null;
+          payment_mode: string | null;
+          payment_preference_id: string | null;
+          payment_provider: Database['public']['Enums']['payment_provider'] | null;
+          payment_split_completed: boolean | null;
+          payment_split_validated_at: string | null;
+          pickup_location_lat: number | null;
+          pickup_location_lng: number | null;
+          platform_fee: number | null;
+          price_lock_token: string | null;
+          price_locked_until: string | null;
+          provider_collector_id: string | null;
+          provider_split_payment_id: string | null;
+          reauthorization_count: number | null;
+          renter_id: string;
+          requires_revalidation: boolean | null;
+          risk_snapshot_booking_id: string | null;
+          risk_snapshot_date: string | null;
+          start_at: string;
+          status: Database['public']['Enums']['booking_status'];
+          subtotal_cents: number | null;
+          total_amount: number;
+          total_cents: number | null;
+          total_price_ars: number | null;
+          updated_at: string;
+          wallet_lock_id: string | null;
+        };
+        SetofOptions: {
+          from: '*';
+          to: 'bookings';
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       rotate_encryption_key: { Args: never; Returns: string };
       send_encrypted_message: {
         Args: {
@@ -6326,26 +6326,26 @@ export type Database = {
     };
     Enums: {
       booking_status:
-        | 'pending_payment'
-        | 'pending'
-        | 'confirmed'
-        | 'in_progress'
-        | 'completed'
-        | 'cancelled'
-        | 'no_show'
-        | 'expired';
+      | 'pending_payment'
+      | 'pending'
+      | 'confirmed'
+      | 'in_progress'
+      | 'completed'
+      | 'cancelled'
+      | 'no_show'
+      | 'expired';
       car_status: 'draft' | 'pending' | 'active' | 'suspended' | 'deleted';
       document_kind: 'gov_id_front' | 'gov_id_back' | 'driver_license' | 'utility_bill' | 'selfie';
       kyc_status: 'not_started' | 'pending' | 'verified' | 'rejected';
       notification_type:
-        | 'new_booking_for_owner'
-        | 'booking_cancelled_for_owner'
-        | 'booking_cancelled_for_renter'
-        | 'new_chat_message'
-        | 'payment_successful'
-        | 'payout_successful'
-        | 'inspection_reminder'
-        | 'generic_announcement';
+      | 'new_booking_for_owner'
+      | 'booking_cancelled_for_owner'
+      | 'booking_cancelled_for_renter'
+      | 'new_chat_message'
+      | 'payment_successful'
+      | 'payout_successful'
+      | 'inspection_reminder'
+      | 'generic_announcement';
       payment_provider: 'mock' | 'mercadopago' | 'stripe';
       payment_status: 'pending' | 'processing' | 'approved' | 'rejected' | 'refunded' | 'cancelled';
     };
@@ -6361,114 +6361,114 @@ type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
-    : never = never,
+  ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R;
     }
-    ? R
-    : never
+  ? R
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R;
-      }
-      ? R
-      : never
-    : never;
+  ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+    Row: infer R;
+  }
+  ? R
+  : never
+  : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['Tables']
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Insert: infer I;
-    }
-    ? I
-    : never
+    Insert: infer I;
+  }
+  ? I
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I;
-      }
-      ? I
-      : never
-    : never;
+  ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+    Insert: infer I;
+  }
+  ? I
+  : never
+  : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['Tables']
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Update: infer U;
-    }
-    ? U
-    : never
+    Update: infer U;
+  }
+  ? U
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U;
-      }
-      ? U
-      : never
-    : never;
+  ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+    Update: infer U;
+  }
+  ? U
+  : never
+  : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['Enums']
+  | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+  : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
-    : never;
+  ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['CompositeTypes']
+  | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
-    : never = never,
+  ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+  : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
-    : never;
+  ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  : never;
 
 export const Constants = {
   public: {

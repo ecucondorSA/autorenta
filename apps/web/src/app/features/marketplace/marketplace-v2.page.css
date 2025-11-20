@@ -17,45 +17,30 @@
   }
 }
 
-/* Card Animations */
-.car-card-enhanced {
-  animation: fadeInUp 0.6s ease-out backwards;
+/* Game Mode Card Animations */
+.car-card-game {
+  animation: slideInRight 0.5s ease-out backwards;
 }
 
-.car-card-enhanced:nth-child(1) {
-  animation-delay: 0.1s;
-}
-.car-card-enhanced:nth-child(2) {
-  animation-delay: 0.15s;
-}
-.car-card-enhanced:nth-child(3) {
-  animation-delay: 0.2s;
-}
-.car-card-enhanced:nth-child(4) {
-  animation-delay: 0.25s;
-}
-.car-card-enhanced:nth-child(5) {
-  animation-delay: 0.3s;
-}
-.car-card-enhanced:nth-child(6) {
-  animation-delay: 0.35s;
-}
-.car-card-enhanced:nth-child(7) {
-  animation-delay: 0.4s;
-}
-.car-card-enhanced:nth-child(8) {
-  animation-delay: 0.45s;
-}
+.car-card-game:nth-child(1) { animation-delay: 0.1s; }
+.car-card-game:nth-child(2) { animation-delay: 0.2s; }
+.car-card-game:nth-child(3) { animation-delay: 0.3s; }
+.car-card-game:nth-child(4) { animation-delay: 0.4s; }
 
-@keyframes fadeInUp {
+@keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateX(-50px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
+}
+
+/* Active State Glow */
+.car-card-game.scale-105 .shadow-cyan-500\/50 {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
 }
 
 /* Hover Effects */
@@ -64,11 +49,20 @@
 }
 
 .car-card-enhanced img {
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .car-card-enhanced:hover img {
-  transform: scale(1.1);
+  transform: scale(1.05);
+}
+
+/* Card Placeholder Gradient */
+.car-card-enhanced .bg-surface-raised {
+  background: white;
+}
+
+.dark .car-card-enhanced .bg-surface-raised {
+  background: rgb(30, 41, 59);
 }
 
 /* Badge Animations */
@@ -125,17 +119,9 @@ button:active {
 }
 
 /* Search Bar Focus */
-input:focus {
-  animation: inputFocus 0.3s ease-out;
-}
-
-@keyframes inputFocus {
-  0% {
-    box-shadow: 0 0 0 0 rgba(167, 216, 244, 0.4); /* cta-default con opacidad */
-  }
-  100% {
-    box-shadow: 0 0 0 4px rgba(167, 216, 244, 0.1); /* cta-default con opacidad */
-  }
+input:focus, select:focus {
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15); /* cyan-500/15 */
+  border-color: rgb(6, 182, 212); /* cyan-500 */
 }
 
 /* Quick Filter Pills */
@@ -279,21 +265,21 @@ html {
 }
 
 /* Custom Scrollbar */
-::-webkit-scrollbar {
+.custom-scrollbar::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-::-webkit-scrollbar-track {
+.custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
+.custom-scrollbar::-webkit-scrollbar-thumb {
   background: rgba(167, 216, 244, 0.3); /* cta-default con opacidad */
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(167, 216, 244, 0.5); /* cta-default con opacidad */
 }
 
@@ -792,9 +778,25 @@ button.px-6.py-3:hover {
   }
 }
 
-/* Mask for scrollable containers */
-.mask-linear-fade {
-  mask-image: linear-gradient(to right, black calc(100% - 60px), transparent);
-  -webkit-mask-image: linear-gradient(to right, black calc(100% - 60px), transparent);
-  padding-right: 60px; /* Ensure last item is visible under mask */
+/* Mask for scrollable containers REMOVED */
+/* Text Shadow for better contrast */
+.text-shadow-sm {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.text-shadow-md {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark Mode Background Refinements */
+.dark .bg-surface-secondary {
+  background-color: #0f172a; /* slate-900 */
+}
+
+.dark .bg-surface-raised {
+  background-color: #1e293b; /* slate-800 */
+}
+
+.dark .border-border-default {
+  border-color: #334155; /* slate-700 */
 }

@@ -1,0 +1,233 @@
+.dates-step-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.step-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: var(--ion-color-medium);
+  }
+}
+
+.car-info-card {
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  ion-card-content {
+    padding: 1rem;
+  }
+}
+
+.car-info-content {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.car-thumbnail {
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.car-details {
+  flex: 1;
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--ion-color-dark);
+  }
+
+  .car-price {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .car-location {
+    font-size: 0.85rem;
+    color: var(--ion-color-medium);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    ion-icon {
+      font-size: 1rem;
+    }
+  }
+}
+
+.section {
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  ion-icon {
+    font-size: 1.3rem;
+    color: var(--ion-color-primary);
+  }
+}
+
+.date-summary {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+
+  p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--ion-color-dark);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    ion-icon {
+      color: var(--ion-color-primary);
+    }
+  }
+
+  .estimated-price {
+    font-size: 1.05rem;
+    color: var(--ion-color-success);
+    font-weight: 600;
+  }
+}
+
+.same-location-toggle {
+  margin-bottom: 1rem;
+
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+  }
+
+  ion-label {
+    font-weight: 500;
+  }
+}
+
+.different-location-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(var(--ion-color-warning-rgb), 0.1);
+  border-radius: 6px;
+  font-size: 0.85rem;
+
+  ion-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+}
+
+.validation-message {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(var(--ion-color-warning-rgb), 0.15);
+  border-left: 4px solid var(--ion-color-warning);
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+
+  ion-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  p {
+    margin: 0;
+    color: var(--ion-color-dark);
+    font-weight: 500;
+  }
+}
+
+.tips-card {
+  margin-top: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  ion-card-header {
+    padding-bottom: 0.5rem;
+
+    ion-card-title {
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--ion-color-primary);
+
+      ion-icon {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .tips-list {
+    margin: 0;
+    padding-left: 1.25rem;
+
+    li {
+      font-size: 0.9rem;
+      color: var(--ion-color-medium-shade);
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Mobile optimizations
+@media (max-width: 768px) {
+  .step-header {
+    h2 {
+      font-size: 1.3rem;
+    }
+  }
+
+  .car-info-content {
+    gap: 0.75rem;
+  }
+
+  .car-thumbnail {
+    width: 80px;
+    height: 60px;
+  }
+
+  .car-details h3 {
+    font-size: 1rem;
+  }
+}

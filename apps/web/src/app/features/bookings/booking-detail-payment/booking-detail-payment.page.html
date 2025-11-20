@@ -1,1262 +1,145 @@
-<div class="min-h-screen bg-surface-base dark:bg-surface-base transition-colors duration-300">
-  <!-- Header con Breadcrumbs -->
-  <div
-    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
-  >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <nav
-        class="flex items-center space-x-2 text-sm text-text-secondary dark:text-text-secondary/70"
-      >
-        <a
-          href="/cars"
-          class="hover:text-text-primary dark:text-text-secondary/80 dark:hover:text-ivory-luminous"
-          >Vehículos</a
-        >
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <span class="text-text-primary dark:text-text-primary font-medium">Detalle & Pago</span>
-        <span
-          class="ml-auto text-xs bg-primary-100 text-primary-700 dark:bg-cta-default/20 dark:text-cta-default/80 px-2 py-1 rounded transition-colors"
-          >3/3</span
-        >
-      </nav>
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2">
-          <div
-            class="w-8 h-8 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center"
-          >
-            <svg
-              class="w-4 h-4 text-success-light dark:text-success-light"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-          <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary">¡Último paso!</h1>
-        </div>
-        <span class="text-sm text-success-light dark:text-success-light font-medium">
-          Reserva casi lista
-        </span>
+<div class="min-h-screen bg-surface-base dark:bg-surface-base transition-colors duration-300 flex flex-col">
+  <!-- Header -->
+  <header class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 py-4 print:hidden">
+    <div class="max-w-3xl mx-auto px-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <a href="/cars" class="text-text-secondary hover:text-text-primary transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </a>
+        <h1 class="text-xl font-bold text-text-primary">Confirmar Reserva</h1>
       </div>
     </div>
-  </div>
+  </header>
 
   <!-- Main Content -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- ✅ NUEVO: Mensaje de Fallback a Wallet -->
-    @if (showFallbackMessage()) {
-      <div
-        class="mb-6 bg-warning-bg border-l-4 border-warning-border dark:bg-warning-900/20 dark:border-warning-border/70 rounded-lg p-4 animate-slide-down transition-all duration-300"
-        role="alert"
-      >
-        <div class="flex items-start space-x-3">
-          <svg
-            class="w-6 h-6 text-warning-text dark:text-warning-400 flex-shrink-0"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <div class="flex-1">
-            <p class="text-sm font-semibold text-warning-strong dark:text-warning-100">
-              Pago con tarjeta no disponible
-            </p>
-            <p class="mt-1 text-sm text-warning-strong dark:text-warning-200">
-              {{ fallbackReason() }}. Puedes usar tu Wallet de AutoRenta para completar la reserva
-              de forma segura.
-            </p>
-            <div class="mt-3 flex flex-wrap gap-2">
-              <button
-                type="button"
-                (click)="showFallbackMessage.set(false); paymentMode.set('card')"
-                class="text-xs font-medium text-warning-strong dark:text-warning-300 hover:text-warning-strong dark:hover:text-warning-100 underline"
-              >
-                Intentar con otra tarjeta
-              </button>
-              <button
-                type="button"
-                (click)="showFallbackMessage.set(false)"
-                class="text-xs font-medium text-warning-text dark:text-warning-400 hover:text-warning-strong dark:hover:text-warning-300"
-              >
-                Continuar con Wallet ✓
-              </button>
-            </div>
-          </div>
-          <button
-            type="button"
-            (click)="showFallbackMessage.set(false)"
-            class="text-warning-500 hover:text-warning-strong dark:text-warning-400 dark:hover:text-warning-200"
-            aria-label="Cerrar mensaje"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
-        </div>
+  <main class="flex-1 max-w-3xl mx-auto w-full px-4 py-8 print:p-0 print:max-w-none">
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="flex flex-col items-center justify-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <p class="mt-4 text-text-secondary">Cargando información...</p>
       </div>
     }
 
-    <!-- Global Loading -->
-    @if (loadingFx() || loadingRisk() || loadingPricing()) {
-      <div class="flex flex-col items-center justify-center py-16">
-        <svg
-          class="animate-spin h-12 w-12 text-primary-600 dark:text-cta-default"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
-        <p class="mt-4 text-sm text-text-secondary dark:text-text-secondary/70">
-          Calculando tu reserva...
-        </p>
-      </div>
-    }
-
-    <!-- Global Error -->
+    <!-- Error State -->
     @if (error(); as errorMsg) {
-      <div
-        class="mb-6 bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4 transition-colors duration-300"
-      >
-        <div class="flex items-start space-x-3">
-          <svg
-            class="w-6 h-6 text-error-text flex-shrink-0"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-error-strong">Error</p>
-            <p class="mt-1 text-sm text-error-strong">{{ errorMsg }}</p>
-            <button
-              type="button"
-              (click)="retryInitialization()"
-              class="mt-3 inline-flex items-center px-3 py-1.5 border border-error-300 text-sm font-medium rounded-md text-error-strong bg-surface-raised dark:bg-surface-secondary hover:bg-error-bg dark:bg-error-900/50 dark:border-error-700 dark:text-error-200 dark:hover:bg-error-900/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
-            >
-              <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-              Reintentar
-            </button>
-          </div>
-        </div>
+      <div class="bg-error-bg border border-error-border text-error-strong px-4 py-3 rounded mb-6" role="alert">
+        <strong class="font-bold">Error: </strong>
+        <span class="block sm:inline">{{ errorMsg }}</span>
       </div>
     }
 
-    <!-- Main Grid Layout -->
-    @if (
-      bookingInput() && fxSnapshot() && riskSnapshot() && priceBreakdown() && bookingDates();
-      as dates
-    ) {
-      <section class="mb-6">
-        <div
-          class="rounded-2xl border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-6 shadow-soft grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          <div>
-            <p
-              class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-            >
-              Vehículo
-            </p>
-            <p class="mt-1 text-lg font-semibold text-text-primary dark:text-text-primary truncate">
-              {{ car()?.model || 'Vehículo confirmado' }}
-            </p>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70">
-              {{ car()?.location_city || 'Argentina' }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-            >
-              Fechas
-            </p>
-            <p class="mt-1 font-semibold text-text-primary dark:text-text-primary">
-              {{ dates.startDate | date: 'dd/MM HH:mm' }} →
-              {{ dates.endDate | date: 'dd/MM HH:mm' }}
-            </p>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70">
-              {{ dates.totalDays }} {{ dates.totalDays === 1 ? 'día' : 'días' }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-            >
-              Modalidad
-            </p>
-            <p class="mt-1 font-semibold text-text-primary dark:text-text-primary">
-              {{ paymentMode() === 'card' ? 'Con tarjeta' : 'Crédito de seguridad' }}
-            </p>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70">
-              @if (paymentMode() === 'card') {
-                Hold reembolsable hasta
-                {{ riskSnapshot()?.holdEstimatedUsd || 0 | number: '1.0-0' }} USD
-              } @else {
-                Crédito en wallet de
-                {{ riskSnapshot()?.creditSecurityUsd || 0 | number: '1.0-0' }} USD
-              }
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-            >
-              Total estimado
-            </p>
-            <p class="mt-1 text-lg font-semibold text-text-primary dark:text-text-primary">
-              $ {{ priceBreakdown()?.totalArs | number: '1.0-0' }}
-            </p>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70">
-              ≈ {{ priceBreakdown()?.totalUsd | currency: 'USD' : 'symbol' : '1.2-2' }}
-            </p>
+    <!-- Content -->
+    @if (!loading() && !error() && car()) {
+      <div class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-lg overflow-hidden border border-border-default dark:border-neutral-800/60 print:shadow-none print:border-none">
+
+        <!-- Document Header (Visible mostly in print/PDF) -->
+        <div class="p-8 border-b border-border-default dark:border-neutral-800/60">
+          <div class="flex justify-between items-start">
+            <div>
+              <h2 class="text-2xl font-bold text-text-primary mb-2">Preautorización de Garantía</h2>
+              <p class="text-text-secondary text-sm">Documento de respaldo para reserva de vehículo</p>
+            </div>
+            <div class="text-right">
+              <p class="text-sm font-mono text-text-secondary">{{ fxSnapshot()?.timestamp | date:'dd/MM/yyyy' }}</p>
+              <p class="text-xs text-text-secondary/60 mt-1">Ref: {{ bookingInput()?.carId?.slice(0,8) }}</p>
+            </div>
           </div>
         </div>
-      </section>
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
-        <!-- LEFT COLUMN (8-9 cols) -->
-        <div class="space-y-6 w-full lg:flex-[0_0_65%]">
-          <!-- ✅ NUEVO: Payment Summary Panel -->
-          <app-payment-summary-panel
-            [priceBreakdown]="priceBreakdown()!"
-            [riskSnapshot]="riskSnapshot()!"
-            [fxSnapshot]="fxSnapshot()!"
-            [paymentMode]="paymentMode()"
-            (compareMethodsClick)="onCompareMethodsClick()"
-          />
 
-          <!-- Payment Mode Toggle -->
-          <section
-            class="rounded-2xl border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
-          >
-            <div class="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <p
-                  class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-                >
-                  Método de pago y garantía
-                </p>
-                <h2 class="mt-1 text-xl font-semibold text-text-primary dark:text-text-primary">
-                  ¿Cómo querés pagar y garantizar tu reserva?
-                </h2>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/70">
-                  Tenés dos opciones seguras para reservar. Elegí la que más te convenga.
-                </p>
-              </div>
-              <span
-                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-success-light/10 text-success-light dark:bg-success-light/20 dark:text-success-light"
-              >
-                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                {{ paymentMode() === 'card' ? 'Pago con tarjeta' : 'Pago con wallet' }}
-              </span>
-            </div>
-            <div class="mt-4">
-              <app-payment-mode-toggle
-                [selectedMode]="paymentMode()"
-                (modeChange)="onPaymentModeChange($event)"
-              />
-            </div>
-
-            <!-- ✅ NUEVO: Alerta contextual según método seleccionado -->
-            <div class="mt-4">
-              <app-payment-mode-alert
-                [paymentMode]="paymentMode()"
-                [riskSnapshot]="riskSnapshot()!"
-                [fxSnapshot]="fxSnapshot()!"
-              />
-            </div>
-          </section>
-
-          <!-- Protección y cobertura -->
-          <section
-            class="rounded-2xl border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
-          >
-            <div class="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <p
-                  class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-                >
-                  Protección incluida
-                </p>
-                <h3 class="mt-1 text-lg font-semibold text-text-primary dark:text-text-primary">
-                  Tu reserva está completamente protegida
-                </h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/70">
-                  Conocé los límites de protección y qué cubrimos en caso de daños o problemas.
-                </p>
-              </div>
-              <div class="text-right">
-                <p
-                  class="text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-                >
-                  Monto protegido
-                </p>
-                <p class="font-semibold text-text-primary dark:text-text-primary">
-                  $ {{ riskSnapshot()?.holdEstimatedArs | number: '1.0-0' }}
-                </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/60">
-                  ≈ {{ riskSnapshot()?.holdEstimatedUsd | currency: 'USD' : 'symbol' : '1.0-0' }}
-                </p>
-              </div>
-            </div>
-
-            <!-- Protección destacada -->
-            <div
-              class="mt-4 p-4 bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/60 rounded-lg"
-            >
-              <div class="flex items-start gap-3">
-                <svg
-                  class="w-6 h-6 text-success-light flex-shrink-0 mt-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <div>
-                  <p class="font-medium text-success-light dark:text-success-light mb-1">
-                    Protección automática incluida
-                  </p>
-                  <p class="text-sm text-success-light dark:text-success-light">
-                    @if (paymentMode() === 'card') {
-                      Autorizamos un monto temporal en tu tarjeta. Si todo está bien, se libera
-                      automáticamente al devolver el auto.
-                    } @else {
-                      Bloqueamos un crédito de seguridad en tu wallet. Se usa solo si hay gastos o
-                      daños.
-                    }
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <details class="mt-4 group">
-              <summary
-                class="flex items-center gap-2 text-sm font-semibold text-primary-700 dark:text-cta-default cursor-pointer list-none"
-              >
-                <span class="group-open:rotate-90 transition-transform">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </span>
-                Ver detalles de protección
-              </summary>
-              <div class="pt-4">
-                <app-risk-policy-table
-                  *ngIf="riskSnapshot() && fxSnapshot()"
-                  [riskSnapshot]="riskSnapshot()!"
-                  [paymentMode]="paymentMode()"
-                  [fxSnapshot]="fxSnapshot()!"
-                />
-              </div>
-            </details>
-          </section>
-
-          <!-- Cobertura opcional -->
-          <section
-            class="rounded-2xl border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
-          >
-            <div class="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <p
-                  class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-                >
-                  Cobertura extra (opcional)
-                </p>
-                <h3 class="mt-1 text-lg font-semibold text-text-primary dark:text-text-primary">
-                  ¿Querés más tranquilidad?
-                </h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/70">
-                  Reducí aún más tu responsabilidad en caso de daños o accidentes.
-                </p>
-              </div>
-              <div class="text-right">
-                <p
-                  class="text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-                >
-                  Opción elegida
-                </p>
-                <p class="font-semibold text-text-primary dark:text-text-primary">
-                  @if (coverageUpgrade() === 'standard') {
-                    Protección estándar
-                  } @else if (coverageUpgrade() === 'premium50') {
-                    Cobertura Premium
-                  } @else if (coverageUpgrade() === 'zero') {
-                    Sin deducibles
-                  }
-                </p>
-              </div>
-            </div>
-
-            <!-- Beneficio destacado -->
-            <div
-              class="mt-4 p-4 bg-gradient-to-r from-cta-default/10 to-cta-default/10 dark:from-cta-default/20 dark:to-cta-default/20 border border-cta-default/40 dark:border-cta-default/60 rounded-lg"
-            >
-              <div class="flex items-start gap-3">
-                <svg
-                  class="w-6 h-6 text-cta-default flex-shrink-0 mt-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-                <div>
-                  <p class="font-medium text-cta-default dark:text-cta-default mb-1">
-                    Menos preocupaciones, más viaje
-                  </p>
-                  <p class="text-sm text-cta-default dark:text-cta-default">
-                    Elegí cuánto querés reducir tu responsabilidad máxima en caso de problemas con
-                    el auto.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-4">
-              <app-coverage-upgrade-selector
-                [selectedUpgrade]="coverageUpgrade()"
-                (upgradeChange)="onCoverageUpgradeChange($event)"
-              />
-            </div>
-
-            <div class="mt-4 p-3 bg-surface-base dark:bg-surface-secondary/40 rounded-lg">
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-text-secondary dark:text-text-secondary/80">
-                  Costo adicional por esta cobertura
-                </span>
-                <span class="font-semibold text-primary-600 dark:text-cta-default">
-                  @if (coverageUpgrade() === 'standard') {
-                    Incluido
-                  } @else if (coverageUpgrade() === 'premium50') {
-                    +{{ getCoverageUpgradeCost() | currency: 'ARS' : 'symbol' : '1.0-0' }}
-                  } @else if (coverageUpgrade() === 'zero') {
-                    +{{ getCoverageUpgradeCost() | currency: 'ARS' : 'symbol' : '1.0-0' }}
-                  }
-                </span>
-              </div>
-            </div>
-          </section>
-
-          <!-- Card Hold Panel (solo si paymentMode === 'card') -->
-          @if (paymentMode() === 'card') {
-            <section
-              class="rounded-2xl border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
-            >
-              <div class="flex items-center justify-between gap-3">
-                <div>
-                  <p
-                    class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-                  >
-                    Preautorización
-                  </p>
-                  <h3 class="mt-1 text-lg font-semibold text-text-primary dark:text-text-primary">
-                    Monto a autorizar antes del viaje
-                  </h3>
-                </div>
-                <span class="text-sm font-semibold text-primary-700 dark:text-cta-default">
-                  $ {{ riskSnapshot()?.holdEstimatedArs | number: '1.0-0' }}
-                </span>
-              </div>
-              <div class="mt-4">
-                <app-card-hold-panel
-                  *ngIf="riskSnapshot() && fxSnapshot()"
-                  [riskSnapshot]="riskSnapshot()!"
-                  [fxSnapshot]="fxSnapshot()!"
-                  [userId]="userId() || ''"
-                  [currentAuthorization]="paymentAuthorization()"
-                  (authorizationChange)="onAuthorizationChange($event)"
-                  (fallbackToWallet)="onFallbackToWallet()"
-                />
-              </div>
-            </section>
-          }
-
-          <!-- Credit Security Panel (solo si paymentMode === 'wallet') -->
-          @if (paymentMode() === 'wallet') {
-            <section
-              class="rounded-2xl border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
-            >
-              <div class="flex items-center justify-between gap-3">
-                <div>
-                  <p
-                    class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-                  >
-                    Crédito de seguridad
-                  </p>
-                  <h3 class="mt-1 text-lg font-semibold text-text-primary dark:text-text-primary">
-                    Bloqueo temporal en tu wallet
-                  </h3>
-                </div>
-                <span class="text-sm font-semibold text-primary-700 dark:text-cta-default">
-                  {{ riskSnapshot()?.creditSecurityUsd | currency: 'USD' : 'symbol' : '1.0-0' }}
-                </span>
-              </div>
-              <div class="mt-4">
-                <app-credit-security-panel
-                  *ngIf="riskSnapshot() && fxSnapshot()"
-                  [riskSnapshot]="riskSnapshot()!"
-                  [fxSnapshot]="fxSnapshot()!"
-                  [userId]="userId() || ''"
-                  [bookingId]="bookingInput()?.carId"
-                  [currentLockInput]="walletLock()"
-                  (lockChange)="onWalletLockChange($event)"
-                />
-              </div>
-            </section>
-          }
-
-          <!-- Terms & Consents -->
-          <section
-            class="rounded-2xl border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
-          >
-            <div class="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <p
-                  class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-                >
-                  Consentimientos obligatorios
-                </p>
-                <h3 class="mt-1 text-lg font-semibold text-text-primary dark:text-text-primary">
-                  Aceptá Términos y políticas
-                </h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/70">
-                  Necesitamos tu confirmación para proceder con el cargo y almacenar tu tarjeta
-                  según políticas.
-                </p>
-              </div>
-            </div>
-            <div class="mt-4">
-              <app-terms-and-consents
-                [consents]="consents()"
-                [paymentMode]="paymentMode()"
-                (consentsChange)="onConsentsChange($event)"
-              />
-            </div>
-          </section>
-
-          <!-- Validation Errors -->
-          @if (validationErrors().length > 0) {
-            <div
-              class="bg-warning-bg border border-warning-border dark:bg-warning-900/30 dark:border-warning-700/60 rounded-lg p-4 transition-colors duration-300"
-            >
-              <div class="flex items-start space-x-3">
-                <svg
-                  class="w-5 h-5 text-warning-text dark:text-warning-200 flex-shrink-0 mt-0.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                <div class="flex-1">
-                  <p class="text-sm font-medium text-warning-strong dark:text-warning-50">
-                    Completa los requisitos:
-                  </p>
-                  <ul
-                    class="mt-2 text-sm text-warning-strong dark:text-warning-200 list-disc list-inside space-y-1"
-                  >
-                    @for (error of validationErrors(); track error.code) {
-                      <li>{{ error.message }}</li>
-                    }
-                  </ul>
-                </div>
-              </div>
-            </div>
-          }
-        </div>
-
-        <!-- RIGHT COLUMN (3-4 cols) - Sticky Summary -->
-        <div class="w-full lg:flex-[0_0_35%] lg:sticky lg:top-6">
-          <app-booking-summary-card
-            [carName]="car()?.model || 'Vehículo'"
-            [carImage]="car()?.photos?.[0]?.url || car()?.car_photos?.[0]?.url || ''"
-            [carLocation]="car()?.location_city || 'Argentina'"
-            [dates]="dates"
-            [priceBreakdown]="priceBreakdown()"
-            [fxSnapshot]="fxSnapshot()"
-            [riskSnapshot]="riskSnapshot()"
-            [paymentMode]="paymentMode()"
-          >
-            <!-- ✅ NUEVO: CTA Button con estados mejorados (via ng-content) -->
-            <button
-              type="button"
-              (click)="onConfirm()"
-              [disabled]="!canProceed() || loading() || processingFinalPayment()"
-              class="w-full flex justify-center items-center px-6 py-4 border border-transparent text-lg font-semibold rounded-lg text-text-inverse bg-gradient-to-r from-success-light to-cta-default hover:from-success-light hover:to-cta-default dark:from-success-light dark:to-cta-default dark:hover:from-success-light dark:hover:to-cta-default focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-success-light dark:focus:ring-success-light dark:focus:ring-offset-neutral-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl dark:shadow-neutral-950/40"
-            >
-              <!-- Estado 1: Creando reserva -->
-              @if (loading() && !processingFinalPayment()) {
-                <svg
-                  class="animate-spin -ml-1 mr-3 h-6 w-6 text-text-inverse dark:text-text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                <span>Reservando tu auto...</span>
-              }
-              <!-- Estado 2: Procesando pago -->
-              @else if (processingFinalPayment()) {
-                <svg
-                  class="animate-spin -ml-1 mr-3 h-6 w-6 text-text-inverse dark:text-text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                <span>Procesando pago seguro...</span>
-              }
-              <!-- Estado 3: Normal (listo para confirmar) -->
-              @else {
-                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span>¡Confirmar mi reserva!</span>
-              }
-            </button>
-
-            <!-- Mensaje de confianza -->
-            <div
-              class="mt-3 p-3 bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/60 rounded-lg"
-            >
-              <div class="flex items-center justify-center gap-2">
-                <svg
-                  class="w-4 h-4 text-success-light"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <p class="text-xs text-center text-success-light dark:text-success-light">
-                  <strong>Pago 100% seguro</strong> • Tu dinero está protegido por MercadoPago
-                </p>
-              </div>
-            </div>
-
-            <!-- Subtexto FX -->
-            <p class="mt-3 text-xs text-center text-text-secondary dark:text-text-secondary/70">
-              Tipo de cambio válido hasta {{ fxSnapshot()!.expiresAt | date: 'dd/MM/yyyy HH:mm' }}
-            </p>
-          </app-booking-summary-card>
-
-          <!-- ✅ NEW: Dynamic Price Lock Panel -->
-          @if (priceLock()) {
-            <div class="mt-6">
-              <app-dynamic-price-lock-panel
-                [priceLock]="priceLock()"
-                [comparison]="priceComparison()"
-                [surgeInfo]="surgeInfo()"
-                (refresh)="onRefreshPriceLock()"
-                (viewBreakdown)="onViewPriceBreakdown()"
-              />
-            </div>
-          }
-        </div>
-      </div>
-
-      <!-- Sticky CTA móvil -->
-      <div
-        class="lg:hidden fixed bottom-0 inset-x-0 bg-surface-raised dark:bg-surface-secondary/95 dark:bg-surface-raised/95 border-t border-border-default dark:border-border-default/70 dark:border-neutral-800/70 backdrop-blur z-30 px-4 py-3"
-      >
-        <div class="flex items-center justify-between gap-4">
-          <div>
-            <p
-              class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-            >
-              Total
-            </p>
-            <p class="text-lg font-semibold text-text-primary dark:text-text-primary">
-              $ {{ priceBreakdown()?.totalArs | number: '1.0-0' }}
-            </p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-              ≈ {{ priceBreakdown()?.totalUsd | currency: 'USD' : 'symbol' : '1.0-2' }}
-            </p>
-          </div>
-          <button
-            type="button"
-            (click)="onConfirm()"
-            [disabled]="!canProceed() || loading() || processingFinalPayment()"
-            class="flex-1 inline-flex justify-center items-center px-4 py-3 rounded-xl text-sm font-semibold text-cta-text bg-primary-600 hover:bg-primary-700 dark:bg-cta-default dark:hover:bg-cta-default/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
-          >
-            @if (processingFinalPayment()) {
-              <svg
-                class="animate-spin -ml-1 mr-2 h-5 w-5 text-text-inverse"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                ></path>
-              </svg>
-              Procesando...
-            } @else {
-              Confirmar y pagar
+        <div class="p-8 space-y-8">
+          <!-- Car Details -->
+          <div class="flex gap-6 items-start">
+            @if (car()?.photos?.[0]?.url) {
+              <img [src]="car()?.photos?.[0]?.url" alt="Car" class="w-32 h-24 object-cover rounded-lg shadow-sm print:hidden">
             }
-          </button>
-        </div>
-      </div>
-    }
-
-    <!-- ============================================
-         VISTA OPTIMIZADA PARA CONVERSIÓN
-         ============================================ -->
-    @if (showOptimizedView()) {
-      <div class="mt-8 space-y-6">
-        <!-- Header optimizado -->
-        <div
-          class="bg-gradient-to-r from-success-light/10 to-cta-default/10 dark:from-success-light/20 dark:to-cta-default/20 rounded-2xl p-6 border border-success-light/40 dark:border-success-light/60"
-        >
-          <div class="flex items-center justify-between">
             <div>
-              <h2 class="text-2xl font-bold text-text-primary dark:text-text-inverse">
-                ¡Ya casi está tu reserva! 🎉
-              </h2>
-              <p class="text-text-secondary dark:text-text-secondary mt-1">
-                Confirma los detalles y completa tu pago seguro
-              </p>
-            </div>
-            <div class="hidden md:flex items-center gap-2">
-              <button
-                (click)="toggleConversionMode()"
-                class="text-xs px-3 py-1 bg-surface-raised dark:bg-surface-secondary/80 dark:bg-surface-base/80 rounded-full border border-border-muted dark:border-border-default text-text-secondary dark:text-text-secondary hover:bg-surface-raised dark:hover:bg-surface-base transition-colors"
-              >
-                Vista detallada
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Resumen simplificado -->
-        <div class="grid md:grid-cols-2 gap-6">
-          <!-- Auto y fechas -->
-          <div
-            class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-lg p-6 border border-border-default dark:border-border-muted"
-          >
-            <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
-              <svg
-                class="w-5 h-5 text-cta-default"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
-              </svg>
-              Tu reserva
-            </h3>
-
-            <div class="space-y-4">
-              <!-- Auto -->
-              <div class="flex items-center gap-4">
-                <img
-                  [src]="getCarPhotoUrl()"
-                  [alt]="car()?.title || 'Auto'"
-                  class="w-16 h-16 rounded-lg object-cover border border-border-default dark:border-border-default"
-                />
-                <div>
-                  <h4 class="font-medium text-text-primary dark:text-text-inverse">
-                    {{ car()?.title }}
-                  </h4>
-                  <p
-                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                  >
-                    {{ car()?.location_city }}, {{ car()?.location_state }}
-                  </p>
-                  <p
-                    class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                  >
-                    {{ trustMessage() }}
-                  </p>
-                </div>
-              </div>
-
-              <!-- Fechas -->
-              <div class="bg-surface-base dark:bg-surface-base/50 rounded-lg p-4">
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <p
-                      class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary uppercase tracking-wide"
-                    >
-                      Recogida
-                    </p>
-                    <p class="font-medium text-text-primary dark:text-text-inverse">
-                      {{ bookingDates()?.startDate | date: 'dd/MM/yyyy HH:mm' }}
-                    </p>
-                  </div>
-                  <div>
-                    <p
-                      class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary uppercase tracking-wide"
-                    >
-                      Devolución
-                    </p>
-                    <p class="font-medium text-text-primary dark:text-text-inverse">
-                      {{ bookingDates()?.endDate | date: 'dd/MM/yyyy HH:mm' }}
-                    </p>
-                  </div>
-                </div>
-                <div class="mt-2 pt-2 border-t border-border-default dark:border-border-default">
-                  <p
-                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                  >
-                    Duración: {{ bookingDates()?.totalDays }}
-                    {{ bookingDates()?.totalDays === 1 ? 'día' : 'días' }}
-                  </p>
-                </div>
+              <h3 class="text-lg font-semibold text-text-primary">{{ car()?.brand }} {{ car()?.model }}</h3>
+              <p class="text-text-secondary">{{ car()?.year }} • {{ car()?.transmission }}</p>
+              <div class="mt-2 flex items-center gap-2 text-sm text-text-secondary">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {{ car()?.location_city }}
               </div>
             </div>
           </div>
 
-          <!-- Pago simplificado -->
-          <div
-            class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-lg p-6 border border-border-default dark:border-border-muted"
-          >
-            <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
-              <svg
-                class="w-5 h-5 text-success-light"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              Pago seguro
-            </h3>
-
-            <div class="space-y-4">
-              <!-- Total simplificado -->
-              <div
-                class="bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/60 rounded-lg p-4"
-              >
-                <div class="flex justify-between items-center">
-                  <div>
-                    <p class="text-sm text-success-light dark:text-success-light">Total a pagar</p>
-                    <p class="text-xs text-success-light dark:text-success-light">
-                      Incluye alquiler + depósito de garantía
-                    </p>
-                  </div>
-                  <div class="text-right">
-                    <p class="text-2xl font-bold text-success-light dark:text-success-light">
-                      {{ simplifiedTotal() | currency: 'ARS' : 'symbol' : '1.0-0' }}
-                    </p>
-                    <p class="text-sm text-success-light dark:text-success-light">
-                      ≈ {{ simplifiedTotal() * 0.0056 | currency: 'USD' : 'symbol' : '1.2-2' }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Método de pago -->
-              <div class="space-y-3">
-                <label class="text-sm font-medium text-text-primary dark:text-text-secondary"
-                  >Método de pago</label
-                >
-
-                <!-- Wallet -->
-                <div class="relative">
-                  <input
-                    type="radio"
-                    id="wallet-optimized"
-                    name="payment-method-optimized"
-                    [value]="'wallet'"
-                    [(ngModel)]="paymentMode"
-                    class="sr-only peer"
-                  />
-                  <label
-                    for="wallet-optimized"
-                    class="flex items-center p-4 border border-border-default dark:border-border-default rounded-lg cursor-pointer hover:bg-surface-base dark:hover:bg-gray-700/50 peer-checked:border-success-light peer-checked:bg-success-light/10 dark:peer-checked:bg-success-light/20 transition-all"
-                  >
-                    <div class="flex items-center gap-3 flex-1">
-                      <div
-                        class="w-10 h-10 bg-warning-bg-hover dark:bg-warning-900/30 rounded-full flex items-center justify-center"
-                      >
-                        <span class="text-lg">💰</span>
-                      </div>
-                      <div>
-                        <p class="font-medium text-text-primary dark:text-text-inverse">
-                          Wallet AutoRenta
-                        </p>
-                        <p
-                          class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                        >
-                          Pago instantáneo sin comisiones
-                        </p>
-                      </div>
-                    </div>
-                    <div
-                      class="w-4 h-4 border-2 border-border-muted dark:border-border-default rounded-full peer-checked:border-success-light peer-checked:bg-success-light flex items-center justify-center"
-                    >
-                      <div
-                        class="w-2 h-2 bg-surface-raised dark:bg-surface-secondary rounded-full opacity-0 peer-checked:opacity-100"
-                      ></div>
-                    </div>
-                  </label>
-                </div>
-
-                <!-- Tarjeta -->
-                <div class="relative">
-                  <input
-                    type="radio"
-                    id="card-optimized"
-                    name="payment-method-optimized"
-                    [value]="'card'"
-                    [(ngModel)]="paymentMode"
-                    class="sr-only peer"
-                  />
-                  <label
-                    for="card-optimized"
-                    class="flex items-center p-4 border border-border-default dark:border-border-default rounded-lg cursor-pointer hover:bg-surface-base dark:hover:bg-gray-700/50 peer-checked:border-success-light peer-checked:bg-success-light/10 dark:peer-checked:bg-success-light/20 transition-all"
-                  >
-                    <div class="flex items-center gap-3 flex-1">
-                      <div
-                        class="w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
-                      >
-                        <span class="text-lg">💳</span>
-                      </div>
-                      <div>
-                        <p class="font-medium text-text-primary dark:text-text-inverse">
-                          Tarjeta de crédito/débito
-                        </p>
-                        <p
-                          class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                        >
-                          A través de MercadoPago
-                        </p>
-                      </div>
-                    </div>
-                    <div
-                      class="w-4 h-4 border-2 border-border-muted dark:border-border-default rounded-full peer-checked:border-success-light peer-checked:bg-success-light flex items-center justify-center"
-                    >
-                      <div
-                        class="w-2 h-2 bg-surface-raised dark:bg-surface-secondary rounded-full opacity-0 peer-checked:opacity-100"
-                      ></div>
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              <!-- Garantía simplificada -->
-              <div
-                class="bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default/60 rounded-lg p-4"
-              >
-                <div class="flex items-start gap-3">
-                  <svg
-                    class="w-5 h-5 text-cta-default mt-0.5 flex-shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                  <div>
-                    <p class="font-medium text-cta-default dark:text-cta-default">
-                      Reserva protegida
-                    </p>
-                    <p class="text-sm text-cta-default dark:text-cta-default mt-1">
-                      Depósito de garantía reembolsable. Máxima protección para tu alquiler.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Consentimientos simplificados -->
-              <div class="space-y-3">
-                <div class="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    id="terms-optimized"
-                    [(ngModel)]="consents().termsAccepted"
-                    class="mt-1 w-4 h-4 text-success-light bg-surface-raised dark:bg-surface-base border-border-muted dark:border-border-default rounded focus:ring-success-light dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-surface-base dark:border-border-default"
-                  />
-                  <label
-                    for="terms-optimized"
-                    class="text-sm text-text-primary dark:text-text-secondary cursor-pointer"
-                  >
-                    Acepto los
-                    <a
-                      href="/terminos"
-                      target="_blank"
-                      class="text-cta-default hover:text-cta-default dark:text-cta-default dark:hover:text-cta-default underline"
-                      >términos y condiciones</a
-                    >
-                  </label>
-                </div>
-
-                <div class="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    id="privacy-optimized"
-                    [(ngModel)]="consents().privacyPolicyAccepted"
-                    class="mt-1 w-4 h-4 text-success-light bg-surface-raised dark:bg-surface-base border-border-muted dark:border-border-default rounded focus:ring-success-light dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-surface-base dark:border-border-default"
-                  />
-                  <label
-                    for="privacy-optimized"
-                    class="text-sm text-text-primary dark:text-text-secondary cursor-pointer"
-                  >
-                    Acepto la
-                    <a
-                      href="/privacidad"
-                      target="_blank"
-                      class="text-cta-default hover:text-cta-default dark:text-cta-default dark:hover:text-cta-default underline"
-                      >política de privacidad</a
-                    >
-                  </label>
-                </div>
-
-                @if (paymentMode() === 'card') {
-                  <div class="flex items-start gap-3">
-                    <input
-                      type="checkbox"
-                      id="card-consent-optimized"
-                      [(ngModel)]="consents().cardOnFileAccepted"
-                      class="mt-1 w-4 h-4 text-success-light bg-surface-raised dark:bg-surface-base border-border-muted dark:border-border-default rounded focus:ring-success-light dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-surface-base dark:border-border-default"
-                    />
-                    <label
-                      for="card-consent-optimized"
-                      class="text-sm text-text-primary dark:text-text-secondary cursor-pointer"
-                    >
-                      Autorizo guardar mi tarjeta para cargos diferidos
-                    </label>
-                  </div>
-                }
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Botón de confirmación optimizado -->
-        <div
-          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-lg p-6 border border-border-default dark:border-border-muted"
-        >
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <!-- Dates -->
+          <div class="grid grid-cols-2 gap-8 p-4 bg-surface-base dark:bg-surface-base rounded-xl print:border print:border-gray-200">
             <div>
-              <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-1">
-                ¡Listo para confirmar tu reserva!
-              </h3>
-              <p
-                class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-              >
-                Revisa que todo esté correcto antes de continuar
-              </p>
+              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Retiro</p>
+              <p class="font-medium text-text-primary">{{ bookingInput()?.startDate | date:'dd MMM yyyy, HH:mm' }}</p>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Devolución</p>
+              <p class="font-medium text-text-primary">{{ bookingInput()?.endDate | date:'dd MMM yyyy, HH:mm' }}</p>
+            </div>
+          </div>
+
+          <!-- Financial Details -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-text-primary border-b border-border-default pb-2">Detalle de Preautorización</h3>
+
+            <div class="flex justify-between items-center py-2">
+              <span class="text-text-secondary">Monto a bloquear (Garantía)</span>
+              <span class="font-medium text-text-primary text-lg">USD {{ PRE_AUTH_AMOUNT_USD | number:'1.0-0' }}</span>
             </div>
 
+            <div class="flex justify-between items-center py-2">
+              <span class="text-text-secondary">Tasa de conversión</span>
+              <span class="font-medium text-text-primary">1 USD = $ {{ fxSnapshot()?.rate | number:'1.2-2' }} ARS</span>
+            </div>
+
+            <div class="mt-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-100 dark:border-primary-800 flex justify-between items-center">
+              <span class="font-semibold text-primary-900 dark:text-primary-100">Total Estimado a Bloquear</span>
+              <span class="font-bold text-2xl text-primary-700 dark:text-primary-300">$ {{ totalArs() | number:'1.0-0' }} ARS</span>
+            </div>
+
+            <p class="text-xs text-text-secondary text-center mt-4">
+              * Este monto es una preautorización (bloqueo temporal) en su tarjeta de crédito. No es un cargo definitivo.
+              El monto se liberará automáticamente al finalizar el alquiler sin novedades.
+            </p>
+          </div>
+        </div>
+
+        <!-- Actions (Hidden in Print) -->
+        <div class="p-8 bg-surface-base dark:bg-surface-base border-t border-border-default dark:border-neutral-800/60 print:hidden">
+          <div class="flex flex-col gap-4">
             <button
-              type="button"
-              (click)="onConfirm()"
-              [disabled]="loading() || !canProceed()"
-              class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-success-light to-cta-default hover:from-success-light hover:to-cta-default disabled:from-gray-400 disabled:to-gray-500 text-text-inverse font-semibold rounded-xl shadow-lg hover:shadow-xl disabled:shadow-none disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-3"
+              (click)="payWithMercadoPago()"
+              [disabled]="processingPayment()"
+              class="w-full py-4 px-6 bg-cta-default hover:bg-cta-hover text-white font-bold rounded-xl shadow-lg transform transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              @if (loading()) {
-                <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+              @if (processingPayment()) {
+                <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
                 Procesando...
               } @else {
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                Confirmar Reserva
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v12h16V6H4zm2 3h4v2H6V9zm0 4h8v2H6v-2z"/></svg>
+                Pagar con MercadoPago
               }
             </button>
-          </div>
 
-          <!-- Mensaje de confianza final -->
-          <div
-            class="mt-4 p-4 bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/60 rounded-lg"
-          >
-            <div class="flex items-center gap-3">
-              <svg
-                class="w-5 h-5 text-success-light flex-shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+            <button
+              (click)="downloadPdf()"
+              class="w-full py-3 px-6 bg-surface-raised border border-border-default text-text-primary font-medium rounded-xl hover:bg-surface-base transition-colors flex items-center justify-center gap-2"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <div>
-                <p class="font-medium text-success-light dark:text-success-light">
-                  Pago 100% seguro
-                </p>
-                <p class="text-sm text-success-light dark:text-success-light">
-                  Tu dinero está protegido. Si hay algún problema, te devolvemos el depósito
-                  completo.
-                </p>
-              </div>
-            </div>
+              Descargar Presupuesto (PDF)
+            </button>
           </div>
         </div>
       </div>
     }
-  </div>
-
-  <!-- ✅ NUEVO: Modal de Comparación de Métodos -->
-  @if (showComparisonModal() && fxSnapshot() && riskSnapshot() && priceBreakdown()) {
-    <app-payment-method-comparison-modal
-      [priceBreakdown]="priceBreakdown()!"
-      [riskSnapshot]="riskSnapshot()!"
-      [fxSnapshot]="fxSnapshot()!"
-      (close)="onCloseComparisonModal()"
-    />
-  }
-
-  <!-- ✅ NUEVO: Modal para solicitar fecha de nacimiento -->
-  @if (showBirthDateModal()) {
-    <app-birth-date-modal
-      (completed)="onBirthDateCompleted($event)"
-      (cancelled)="onBirthDateCancelled()"
-    />
-  }
-
-  <!-- ✅ NEW: Dynamic Price Breakdown Modal -->
-  <app-dynamic-price-breakdown-modal
-    [isOpen]="showBreakdownModal()"
-    [snapshot]="priceLock()?.priceSnapshot ?? null"
-    (closed)="showBreakdownModal.set(false)"
-  />
+  </main>
 </div>
+

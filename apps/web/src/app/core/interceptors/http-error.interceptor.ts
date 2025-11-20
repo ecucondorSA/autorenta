@@ -1,6 +1,6 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { catchError, retry, throwError, timer } from 'rxjs';
 import { ErrorHandlerService } from '../services/error-handler.service';
 
 /**
@@ -24,6 +24,18 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
   const errorHandler = inject(ErrorHandlerService);
 
   return next(req).pipe(
+    // Retry failed requests (network errors or 5xx) up to 2 times
+    retry({
+      count: 2,
+      delay: (error, retryCount) => {
+        // Don't retry client errors (4xx), except 408 (Timeout) and 429 (Too Many Requests)
+        if (error.status >= 400 && error.status < 500 && error.status !== 408 && error.status !== 429) {
+          throw error;
+        }
+        // Exponential backoff: 1s, 2s
+        return timer(retryCount * 1000);
+      },
+    }),
     catchError((error: HttpErrorResponse) => {
       // Determine if we should show error to user
       // Skip for certain endpoints (e.g., analytics, health checks)

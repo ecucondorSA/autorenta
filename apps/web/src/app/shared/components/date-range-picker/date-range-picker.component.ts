@@ -124,25 +124,36 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit, OnDestro
 
     const blockedDates = this.blockedDatesArray;
 
-    this.fpInstance = flatpickr(this.dateRangeInput.nativeElement, {
-      mode: 'range',
-      locale: Spanish,
-      dateFormat: 'Y-m-d',
-      minDate: 'today',
-      disable: blockedDates,
-      defaultDate:
-        this.from() && this.to() ? [this.from()!, this.to()!] : undefined,
-      onChange: (selectedDates, dateStr) => {
-        if (selectedDates.length === 2) {
-          const from = selectedDates[0].toISOString().split('T')[0];
-          const to = selectedDates[1].toISOString().split('T')[0];
+    try {
+      this.fpInstance = flatpickr(this.dateRangeInput.nativeElement, {
+        mode: 'range',
+        locale: Spanish,
+        dateFormat: 'Y-m-d',
+        minDate: 'today',
+        disable: blockedDates,
+        defaultDate:
+          this.from() && this.to() ? [this.from()!, this.to()!] : undefined,
+        position: 'auto',
+        clickOpens: true,
+        allowInput: false,
+        onChange: (selectedDates, dateStr) => {
+          if (selectedDates.length === 2) {
+            const from = selectedDates[0].toISOString().split('T')[0];
+            const to = selectedDates[1].toISOString().split('T')[0];
 
-          this.from.set(from);
-          this.to.set(to);
-          void this.emit();
-        }
-      },
-    });
+            this.from.set(from);
+            this.to.set(to);
+            void this.emit();
+          }
+        },
+      });
+    } catch (error) {
+      // Ignore SecurityError related to cssRules access in flatpickr
+      const err = error as Error;
+      if (err.name !== 'SecurityError' && !err.message?.includes('cssRules')) {
+        console.warn('⚠️ Error initializing flatpickr:', error);
+      }
+    }
   }
 
   async applyPreset(preset: DatePreset): Promise<void> {
@@ -407,7 +418,16 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit, OnDestro
   handleDateInputClick(): void {
     // Flatpickr handles the click automatically
     if (this.fpInstance) {
-      this.fpInstance.open();
+      try {
+        this.fpInstance.open();
+      } catch (error) {
+        // Ignore SecurityError related to cssRules access in flatpickr
+        // This happens when flatpickr tries to scan cross-origin stylesheets
+        const err = error as Error;
+        if (err.name !== 'SecurityError' && !err.message?.includes('cssRules')) {
+          console.warn('⚠️ Error opening flatpickr:', error);
+        }
+      }
     }
   }
 

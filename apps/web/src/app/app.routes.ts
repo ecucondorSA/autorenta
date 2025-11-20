@@ -34,6 +34,11 @@ export const routes: Routes = [
       import('./features/referrals/referral-landing.page').then((m) => m.ReferralLandingPage),
   },
   {
+    path: 'favorites',
+    loadComponent: () =>
+      import('./features/favorites/favorites.page').then((m) => m.FavoritesPage),
+  },
+  {
     path: 'cars',
     children: [
       {
