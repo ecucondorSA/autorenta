@@ -309,6 +309,8 @@
                   </p>
                 </div>
               }
+              <!--
+              TODO: security_deposit_usd field doesn't exist in Car model
               @if (car()?.security_deposit_usd) {
                 <div>
                   <p class="text-text-secondary">Depósito de seguridad</p>
@@ -317,6 +319,7 @@
                   </p>
                 </div>
               }
+              -->
             </div>
 
             @if (car()?.terms_and_conditions) {
@@ -334,38 +337,54 @@
         <div
           class="p-8 bg-surface-base dark:bg-surface-base border-t border-border-default dark:border-neutral-800/60 print:hidden"
         >
+          <!-- Payment Form (shown if booking not created) -->
+          @if (!bookingCreated() && !loading() && !error()) {
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold text-text-primary mb-4">Método de Pago</h3>
+              <app-mercadopago-card-form
+                [amountArs]="totalArs()"
+                (cardTokenGenerated)="onCardTokenGenerated($event)"
+                (cardError)="onCardError($event)"
+              ></app-mercadopago-card-form>
+            </div>
+          }
+
+          <!-- Alternative Actions -->
           <div class="flex flex-col gap-4">
-            <button
-              (click)="payWithMercadoPago()"
-              [disabled]="processingPayment()"
-              class="w-full py-4 px-6 bg-cta-default hover:bg-cta-hover text-white font-bold rounded-xl shadow-lg transform transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              @if (processingPayment()) {
-                <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Procesando...
-              } @else {
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                    d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v12h16V6H4zm2 3h4v2H6V9zm0 4h8v2H6v-2z"
-                  />
-                </svg>
-                Pagar con MercadoPago
-              }
-            </button>
+            <!-- Checkout Pro Button (fallback or if booking exists) -->
+            @if (bookingCreated()) {
+              <button
+                (click)="payWithMercadoPago()"
+                [disabled]="processingPayment() || paymentProcessing()"
+                class="w-full py-4 px-6 bg-cta-default hover:bg-cta-hover text-white font-bold rounded-xl shadow-lg transform transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                @if (processingPayment() || paymentProcessing()) {
+                  <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Procesando...
+                } @else {
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v12h16V6H4zm2 3h4v2H6V9zm0 4h8v2H6v-2z"
+                    />
+                  </svg>
+                  Pagar con MercadoPago (Checkout Pro)
+                }
+              </button>
+            }
 
             <button
               (click)="downloadPdf()"

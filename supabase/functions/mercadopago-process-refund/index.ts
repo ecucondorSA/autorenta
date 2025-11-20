@@ -172,7 +172,7 @@ serve(async (req) => {
     const paymentId = booking.metadata?.mercadopago_payment_id;
     if (!paymentId) {
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           error: 'Payment not found for this booking',
           code: 'NO_PAYMENT_ID'
         }),
@@ -186,7 +186,7 @@ serve(async (req) => {
     // Verificar que el booking esté pagado
     if (booking.status !== 'confirmed' && booking.status !== 'completed') {
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           error: `Booking is not in a refundable state (current: ${booking.status})`,
           code: 'INVALID_BOOKING_STATUS'
         }),
@@ -249,7 +249,7 @@ serve(async (req) => {
     if (!mpResponse.ok) {
       const errorData = await mpResponse.json();
       console.error('MercadoPago Refund API Error:', errorData);
-      
+
       return new Response(
         JSON.stringify({
           error: 'Failed to process refund in MercadoPago',
@@ -326,7 +326,7 @@ serve(async (req) => {
         // No fallar, el reembolso ya se procesó en MP
       } else {
         console.log('✅ Refund credited to wallet');
-        
+
         // Actualizar balance del wallet (trigger debería hacerlo automáticamente, pero por si acaso)
         await supabase.rpc('wallet_get_balance', {
           p_user_id: booking.renter_id,

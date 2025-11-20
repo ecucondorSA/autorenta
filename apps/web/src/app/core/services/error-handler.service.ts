@@ -211,6 +211,10 @@ export class ErrorHandlerService {
         pattern: /booking.*exists|already.*booked/i,
         message: 'Ya existe una reserva para este auto en esas fechas.',
       },
+      {
+        pattern: /invalid.*booking.*status|booking.*not.*pending|not.*pending.*payment/i,
+        message: 'El estado de la reserva no permite crear el pago. Por favor intenta crear una nueva reserva.',
+      },
 
       // Supabase errors
       {

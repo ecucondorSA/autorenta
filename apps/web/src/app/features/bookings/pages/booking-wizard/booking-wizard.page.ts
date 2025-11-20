@@ -14,9 +14,9 @@ import { BookingReviewStepComponent } from '../../components/booking-review-step
 import { BookingStepIndicatorComponent } from '../../components/booking-step-indicator/booking-step-indicator.component';
 
 // Services
+import { Car } from '../../../../core/models';
 import { BookingsService } from '../../../../core/services/bookings.service';
 import { CarsService } from '../../../../core/services/cars.service';
-import { Car } from '../../../../core/models';
 
 export interface BookingWizardData {
   // Step 1: Dates & Location
@@ -66,6 +66,47 @@ export interface BookingWizardData {
   // Step 6: Review
   termsAccepted: boolean;
   cancellationPolicyAccepted: boolean;
+}
+
+/**
+ * Tipo específico para los datos de reserva preparados
+ * Asegura que todos los campos requeridos estén presentes
+ */
+interface PreparedBookingData {
+  car_id: string;
+  start_date: Date;
+  end_date: Date;
+  pickup_location: {
+    address: string;
+    lat: number;
+    lng: number;
+  };
+  dropoff_location: {
+    address: string;
+    lat: number;
+    lng: number;
+  };
+  insurance_level: 'basic' | 'standard' | 'premium' | null;
+  extras: {
+    id: string;
+    type: 'gps' | 'child_seat' | 'additional_driver' | 'toll_pass' | 'fuel_prepaid' | 'delivery';
+    quantity: number;
+    dailyRate: number;
+  }[];
+  driver_license: {
+    number: string;
+    expirationDate: Date | null;
+    frontPhoto: string | null;
+    backPhoto: string | null;
+  } | null;
+  emergency_contact: {
+    name: string;
+    phone: string;
+    relationship: string;
+  } | null;
+  payment_method: 'wallet' | 'card' | 'bank_transfer' | 'split' | null;
+  payment_plan: 'full' | 'split_50_50' | 'deposit_20' | 'installments' | null;
+  promo_code: string | null;
 }
 
 @Component({
@@ -143,7 +184,7 @@ export class BookingWizardPage implements OnInit {
     private route: ActivatedRoute,
     private carsService: CarsService,
     private bookingsService: BookingsService,
-  ) {}
+  ) { }
 
   async ngOnInit() {
     // Get car ID from route params
@@ -239,7 +280,7 @@ export class BookingWizardPage implements OnInit {
     this.isLoading.set(true);
     try {
       const bookingData = this.prepareBookingData();
-      // TODO: Fix createBooking method call - method doesn't exist in BookingsService
+
       const result = await this.bookingsService.createBookingWithValidation(
         bookingData.car_id,
         bookingData.start_date.toISOString(),
@@ -249,10 +290,10 @@ export class BookingWizardPage implements OnInit {
           pickupLng: bookingData.pickup_location.lng,
           dropoffLat: bookingData.dropoff_location.lat,
           dropoffLng: bookingData.dropoff_location.lng,
-          deliveryRequired: false, // TODO: Calculate from distance
-          distanceKm: 0, // TODO: Calculate from distance
-          deliveryFeeCents: 0, // TODO: Calculate from distance
-          distanceTier: 'local', // TODO: Calculate from distance
+          deliveryRequired: false, // TODO: Calculate from distance based on car location
+          distanceKm: 0, // TODO: Calculate actual distance
+          deliveryFeeCents: 0, // TODO: Calculate fee based on distance
+          distanceTier: 'local',
         },
       );
 
@@ -276,15 +317,15 @@ export class BookingWizardPage implements OnInit {
     }
   }
 
-  private prepareBookingData(): Record<string, unknown> {
+  private prepareBookingData(): PreparedBookingData {
     const data = this.wizardData();
 
     return {
       car_id: data.carId,
-      start_date: data.startDate,
-      end_date: data.endDate,
-      pickup_location: data.pickupLocation,
-      dropoff_location: data.dropoffLocation,
+      start_date: data.startDate!,
+      end_date: data.endDate!,
+      pickup_location: data.pickupLocation!,
+      dropoff_location: data.dropoffLocation || data.pickupLocation!,
       insurance_level: data.insuranceLevel,
       extras: data.extras,
       driver_license: data.driverLicense,

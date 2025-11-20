@@ -13,6 +13,10 @@ interface DistanceConfig {
   maxSearchRadiusKm: number;
 }
 
+interface TikTokConfig {
+  clientId?: string;
+}
+
 interface EnvDefaults {
   production?: boolean;
   supabaseUrl?: string;
@@ -41,6 +45,7 @@ interface EnvDefaults {
   googleCalendarId?: string;
   googleCalendarApiKey?: string;
   googleCalendarClientId?: string;
+  tiktok?: TikTokConfig;
 }
 
 // Type-safe interfaces for global environment access
@@ -145,6 +150,9 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     'NG_APP_GOOGLE_CALENDAR_CLIENT_ID',
     defaults.googleCalendarClientId,
   ),
+  tiktok: {
+    clientId: resolve('NG_APP_TIKTOK_CLIENT_ID', defaults.tiktok?.clientId),
+  },
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

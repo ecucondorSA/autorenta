@@ -1,9 +1,40 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { FavoritesService } from '../../core/services/favorites.service';
 import { AuthService } from '../../core/services/auth.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 import { FavoriteButtonComponent } from '../../shared/components/favorite-button/favorite-button.component';
+
+/**
+ * Tipo específico para autos favoritos con información del propietario
+ * Refleja la estructura exacta retornada por la consulta de Supabase
+ */
+interface CarWithOwner {
+  id: string;
+  brand: string;
+  model: string;
+  year: number;
+  price_per_day: number;
+  location_city?: string | null;
+  location_state?: string | null;
+  location_province?: string | null;
+  location_formatted_address?: string | null;
+  car_photos?: Array<{
+    id: string;
+    url: string;
+    position: number;
+  }> | null;
+  photos?: Array<{
+    id: string;
+    url: string;
+    position: number;
+  }> | null;
+  profiles?: {
+    full_name: string;
+    avatar_url?: string | null;
+    is_superhost?: boolean | null;
+  } | null;
+}
 
 @Component({
   selector: 'app-favorites-page',
@@ -51,7 +82,11 @@ import { FavoriteButtonComponent } from '../../shared/components/favorite-button
               <!-- Image -->
               <div class="car-image-container">
                 <img
-                  [src]="car.photos?.[0]?.url || '/assets/placeholder-car.jpg'"
+                  [src]="
+                    car.car_photos?.[0]?.url ||
+                    car.photos?.[0]?.url ||
+                    '/assets/placeholder-car.jpg'
+                  "
                   [alt]="car.brand + ' ' + car.model"
                   class="car-image"
                   loading="lazy"
@@ -73,10 +108,12 @@ import { FavoriteButtonComponent } from '../../shared/components/favorite-button
                 </div>
 
                 <!-- Location -->
-                @if (car.location?.address) {
+                @if (car.location_formatted_address || car.location_city) {
                   <div class="car-location">
                     <span class="icon">📍</span>
-                    <span class="text">{{ car.location.address }}</span>
+                    <span class="text">{{
+                      car.location_formatted_address || car.location_city
+                    }}</span>
                   </div>
                 }
 
@@ -362,7 +399,7 @@ export class FavoritesPage implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  favoriteCars = signal<unknown[]>([]);
+  favoriteCars = signal<CarWithOwner[]>([]);
   isLoading = signal(true);
   favoriteCount = signal(0);
 
@@ -375,7 +412,11 @@ export class FavoritesPage implements OnInit {
     try {
       await this.favoritesService.loadFavorites();
       const cars = await this.favoritesService.getFavoriteCars();
-      this.favoriteCars.set(cars);
+
+      // Double type assertion necesaria porque Supabase retorna tipos anidados
+      // que TypeScript no puede inferir correctamente. Primero convertimos a unknown
+      // y luego al tipo específico que sabemos que tiene la estructura.
+      this.favoriteCars.set(cars as unknown as CarWithOwner[]);
       this.favoriteCount.set(cars.length);
     } catch (error) {
       console.error('Error loading favorites:', error);

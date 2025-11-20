@@ -70,4 +70,22 @@ export class LoginPage {
       this.loading.set(false);
     }
   }
+
+  async signInWithTikTok(): Promise<void> {
+    if (this.loading()) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      await this.auth.signInWithTikTok();
+    } catch (err) {
+      this.error.set(
+        err instanceof Error
+          ? err.message
+          : 'No pudimos conectar con TikTok. Intentá nuevamente.',
+      );
+      this.loading.set(false);
+    }
+  }
 }

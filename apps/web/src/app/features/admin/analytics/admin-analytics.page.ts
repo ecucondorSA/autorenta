@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService, ConversionEventType } from '../../../core/services/analytics.service';
@@ -19,6 +19,20 @@ interface AnalyticsOverview {
   top_events: EventStats[];
 }
 
+/**
+ * Tipo específico para eventos de analytics
+ */
+interface AnalyticsEvent {
+  id?: string;
+  event_type: string;
+  user_id?: string | null;
+  created_at: string;
+  event_data?: {
+    car_id?: string;
+    [key: string]: unknown;
+  } | null;
+}
+
 @Component({
   standalone: true,
   selector: 'app-admin-analytics-page',
@@ -33,7 +47,7 @@ export class AdminAnalyticsPage implements OnInit {
 
   protected readonly overview = signal<AnalyticsOverview | null>(null);
   protected readonly topCars = signal<Array<{ car_id: string; count: number }>>([]);
-  protected readonly recentEvents = signal<unknown[]>([]);
+  protected readonly recentEvents = signal<AnalyticsEvent[]>([]);
   protected readonly isLoading = signal(true);
   protected readonly error = signal<string | null>(null);
 

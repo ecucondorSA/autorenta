@@ -1,31 +1,31 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonSearchbar,
+  IonButton,
   IonCard,
   IonCardContent,
-  IonButton,
-  IonIcon,
   IonChip,
+  IonContent,
+  IonHeader,
+  IonIcon,
   IonLabel,
   IonRefresher,
   IonRefresherContent,
+  IonSearchbar,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { searchOutline, locationOutline, calendarOutline, trendingUp } from 'ionicons/icons';
-import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
-import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
+import { arrowForwardOutline, calendarOutline, carSportOutline, locationOutline, searchOutline, trendingUp } from 'ionicons/icons';
+import { Car } from '../../core/models';
 import { CarsService } from '../../core/services/cars.service';
 import { OnboardingService } from '../../core/services/onboarding.service';
+import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
 import { InitialGoalModalComponent } from '../../shared/components/initial-goal-modal/initial-goal-modal.component';
 import { OnboardingChecklistComponent } from '../../shared/components/onboarding-checklist/onboarding-checklist.component';
-import { Car } from '../../core/models';
+import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
 
 @Component({
   selector: 'app-home',
@@ -68,7 +68,7 @@ export class HomePage implements OnInit {
   readonly activeChecklist = this.onboardingService.activeChecklist;
 
   constructor() {
-    addIcons({ searchOutline, locationOutline, calendarOutline, trendingUp });
+    addIcons({ searchOutline, locationOutline, calendarOutline, trendingUp, arrowForwardOutline, carSportOutline });
   }
 
   async ngOnInit() {
@@ -97,5 +97,5 @@ export class HomePage implements OnInit {
     });
   }
 
-  onSearch() {}
+  onSearch() { }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { AccountingService } from '../../../../core/services/accounting.service';
+import { AccountingService, JournalEntry } from '../../../../core/services/accounting.service';
 
 @Component({
   selector: 'app-journal-entries',
@@ -36,7 +36,7 @@ import { AccountingService } from '../../../../core/services/accounting.service'
 })
 export class JournalEntriesPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
-  readonly entries = signal<unknown[]>([]);
+  readonly entries = signal<JournalEntry[]>([]);
   readonly loading = signal(false);
 
   async ngOnInit() {

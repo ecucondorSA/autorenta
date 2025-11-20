@@ -171,8 +171,8 @@ serve(async (req) => {
       );
     }
 
-    // Validar que el booking esté en estado 'pending' (pendiente de pago)
-    if (booking.status !== 'pending') {
+    // Validar que el booking esté en estado 'pending' o 'pending_payment' (pendiente de pago)
+    if (booking.status !== 'pending' && booking.status !== 'pending_payment') {
       return new Response(
         JSON.stringify({
           error: `Booking is not pending payment (current status: ${booking.status})`,

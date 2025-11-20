@@ -134,6 +134,113 @@ export class AuthService implements OnDestroy {
   }
 
   /**
+   * Inicia sesión con TikTok usando OAuth custom
+   * Redirige al usuario a TikTok para autenticación
+   */
+  async signInWithTikTok(): Promise<void> {
+    const TIKTOK_CLIENT_ID = environment.tiktok?.clientId;
+    if (!TIKTOK_CLIENT_ID) {
+      throw new Error('TikTok Client ID no configurado');
+    }
+
+    const redirectUri = `${window.location.origin}/auth/callback`;
+    const scope = 'user.info.basic';
+    const state = this.generateRandomState();
+
+    // Guardar state en sessionStorage para validación
+    sessionStorage.setItem('tiktok_oauth_state', state);
+
+    // Construir URL de TikTok
+    const tiktokAuthUrl = new URL('https://www.tiktok.com/v2/oauth/authorize/');
+    tiktokAuthUrl.searchParams.set('client_key', TIKTOK_CLIENT_ID);
+    tiktokAuthUrl.searchParams.set('redirect_uri', redirectUri);
+    tiktokAuthUrl.searchParams.set('response_type', 'code');
+    tiktokAuthUrl.searchParams.set('scope', scope);
+    tiktokAuthUrl.searchParams.set('state', state);
+
+    // Redirigir a TikTok
+    window.location.href = tiktokAuthUrl.toString();
+  }
+
+  /**
+   * Maneja el callback de TikTok OAuth
+   * Intercambia el código por sesión de usuario
+   */
+  async handleTikTokCallback(code: string): Promise<{ data: Session | null; error: Error | null }> {
+    try {
+      // Validar state para seguridad (CSRF protection)
+      const savedState = sessionStorage.getItem('tiktok_oauth_state');
+      sessionStorage.removeItem('tiktok_oauth_state');
+
+      if (!savedState) {
+        return {
+          data: null,
+          error: new Error('OAuth state no encontrado. Por favor intenta nuevamente.'),
+        };
+      }
+
+      console.log('🔐 Intercambiando código TikTok por sesión...');
+
+      // Llamar Edge Function para intercambiar código
+      const response = await fetch(
+        `${environment.supabaseUrl}/functions/v1/tiktok-oauth-callback`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ code }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        console.error('❌ Error del callback de TikTok:', data);
+        return {
+          data: null,
+          error: new Error(data.error || 'Error al procesar autenticación de TikTok'),
+        };
+      }
+
+      // Si la función devolvió una sesión válida, usarla
+      if (data.session) {
+        this.state.set({
+          session: data.session,
+          loading: false,
+        });
+
+        console.log('✅ Usuario TikTok autenticado:', data.user.display_name);
+
+        return {
+          data: data.session,
+          error: null,
+        };
+      }
+
+      return {
+        data: null,
+        error: new Error('No se recibió sesión válida'),
+      };
+    } catch (err) {
+      console.error('❌ Error en handleTikTokCallback:', err);
+      return {
+        data: null,
+        error: err instanceof Error ? err : new Error('Error procesando callback de TikTok'),
+      };
+    }
+  }
+
+  /**
+   * Genera un estado aleatorio para protección CSRF
+   */
+  private generateRandomState(): string {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+  }
+
+  /**
    * Maneja el callback de OAuth procesando los tokens del hash
    * Supabase detecta automáticamente tokens en URL fragments (#access_token=...)
    */

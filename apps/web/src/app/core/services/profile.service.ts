@@ -10,6 +10,9 @@ import {
 } from '../models';
 import { SupabaseClientService } from './supabase-client.service';
 
+// Re-export UserProfile for convenience
+export type { UserProfile };
+
 export interface UpdateProfileData {
   full_name?: string;
   role?: Role;

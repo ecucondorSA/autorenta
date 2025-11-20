@@ -1,28 +1,28 @@
 /** Ionic CSS Variables **/
 :root {
-  /** Primary Brand Color **/
-  --ion-color-primary: #4f46e5;
-  --ion-color-primary-rgb: 79, 70, 229;
-  --ion-color-primary-contrast: #ffffff;
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #463dca;
-  --ion-color-primary-tint: #615ae8;
+  /** Primary Brand Color - Matches --cta-default */
+  --ion-color-primary: #7dd3e0;
+  --ion-color-primary-rgb: 125, 211, 224;
+  --ion-color-primary-contrast: #0a3d52;
+  --ion-color-primary-contrast-rgb: 10, 61, 82;
+  --ion-color-primary-shade: #6ebac5;
+  --ion-color-primary-tint: #8ad7e3;
 
-  /** Secondary **/
-  --ion-color-secondary: #7c3aed;
-  --ion-color-secondary-rgb: 124, 58, 237;
-  --ion-color-secondary-contrast: #ffffff;
-  --ion-color-secondary-contrast-rgb: 255, 255, 255;
-  --ion-color-secondary-shade: #6d33d1;
-  --ion-color-secondary-tint: #8950ef;
+  /** Secondary - Matches --surface-secondary */
+  --ion-color-secondary: #d9eef3;
+  --ion-color-secondary-rgb: 217, 238, 243;
+  --ion-color-secondary-contrast: #0a3d52;
+  --ion-color-secondary-contrast-rgb: 10, 61, 82;
+  --ion-color-secondary-shade: #bfd1d6;
+  --ion-color-secondary-tint: #ddf0f4;
 
-  /** Success **/
-  --ion-color-success: #10b981;
-  --ion-color-success-rgb: 16, 185, 129;
+  /** Success - Matches --success-500 */
+  --ion-color-success: #699248;
+  --ion-color-success-rgb: 105, 146, 72;
   --ion-color-success-contrast: #ffffff;
   --ion-color-success-contrast-rgb: 255, 255, 255;
-  --ion-color-success-shade: #0ea372;
-  --ion-color-success-tint: #28c197;
+  --ion-color-success-shade: #5c803f;
+  --ion-color-success-tint: #789d5a;
 
   /** Warning **/
   --ion-color-warning: #f59e0b;

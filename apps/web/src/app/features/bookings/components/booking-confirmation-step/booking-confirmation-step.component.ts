@@ -1,8 +1,22 @@
-import { Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, input } from '@angular/core';
 import { WizardStepComponent } from '../../../../shared/components/wizard-step/wizard-step.component';
 import { BookingDatesLocation } from '../booking-dates-location-step/booking-dates-location-step.component';
 import { BookingPaymentCoverage } from '../booking-payment-coverage-step/booking-payment-coverage-step.component';
+
+/**
+ * Tipo específico para los datos de la reserva en el resumen
+ */
+interface BookingDataSummary {
+  daily_rate: number;
+  platform_fee?: number;
+  car?: {
+    brand: string;
+    model: string;
+    year: number;
+    category?: string;
+  };
+}
 
 /**
  * BookingConfirmationStepComponent - Step 3 (final) of booking checkout wizard
@@ -394,7 +408,7 @@ export class BookingConfirmationStepComponent {
   /**
    * Booking data from database
    */
-  bookingData = input<Record<string, unknown> | null>(null);
+  bookingData = input<BookingDataSummary | null>(null);
 
   // ==================== COMPUTED ====================
 

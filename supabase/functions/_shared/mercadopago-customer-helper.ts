@@ -1,6 +1,6 @@
 /**
  * Helper functions para MercadoPago Customers API
- * 
+ *
  * Funciones compartidas para crear y obtener customers de MercadoPago
  */
 
@@ -14,7 +14,7 @@ interface CustomerData {
 
 /**
  * Crea o obtiene un customer de MercadoPago
- * 
+ *
  * @param supabase - Cliente de Supabase
  * @param userId - ID del usuario
  * @param mpAccessToken - Access token de MercadoPago
@@ -46,7 +46,7 @@ export async function createOrGetCustomer(
 
     // 2. Obtener datos del usuario autenticado
     const { data: authUser } = await supabase.auth.admin.getUserById(userId);
-    
+
     // 3. Preparar datos del customer
     const fullName = profile.full_name || authUser?.user?.user_metadata?.full_name || 'Usuario AutoRenta';
     const nameParts = fullName.trim().split(' ');
@@ -57,8 +57,8 @@ export async function createOrGetCustomer(
     let phoneFormatted: { area_code: string; number: string } | undefined;
     if (profile.phone) {
       const phoneCleaned = profile.phone.replace(/[^0-9]/g, '');
-      const phoneWithoutCountry = phoneCleaned.startsWith('54') 
-        ? phoneCleaned.substring(2) 
+      const phoneWithoutCountry = phoneCleaned.startsWith('54')
+        ? phoneCleaned.substring(2)
         : phoneCleaned;
       const areaCode = phoneWithoutCountry.substring(0, 2) || '11';
       const number = phoneWithoutCountry.substring(2) || '';

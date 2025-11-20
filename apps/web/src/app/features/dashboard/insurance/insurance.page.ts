@@ -61,3 +61,4 @@ export class InsurancePage implements OnInit {
     return 'valid';
   }
 }
+

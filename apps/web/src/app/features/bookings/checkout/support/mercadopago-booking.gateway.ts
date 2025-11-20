@@ -43,6 +43,16 @@ export class MercadoPagoBookingGateway {
         throw onboardingError;
       }
 
+      if (parsed?.code === 'INVALID_BOOKING_STATUS') {
+        const statusError = new Error(
+          parsed.message ??
+            'El estado de la reserva no permite crear el pago. Intenta crear una nueva reserva.',
+        ) as MercadoPagoGatewayError;
+        statusError.code = parsed.code;
+        statusError.meta = parsed.meta;
+        throw statusError;
+      }
+
       throw new Error(
         parsed?.message ?? error.message ?? 'No se pudo crear la preferencia de Mercado Pago',
       );

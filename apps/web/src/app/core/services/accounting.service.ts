@@ -110,6 +110,20 @@ export interface LedgerEntry {
   };
 }
 
+export interface CashFlowEntry {
+  id: string;
+  date?: string;
+  created_at?: string;
+  type?: string;
+  transaction_type?: string;
+  description?: string;
+  inflow?: number;
+  debit?: number;
+  outflow?: number;
+  credit?: number;
+  balance?: number;
+}
+
 export interface PaginatedResult<T> {
   data: T[];
   total: number;
@@ -358,7 +372,7 @@ export class AccountingService {
   /**
    * Obtener flujo de caja
    */
-  async getCashFlow(limit: number = 100): Promise<unknown[]> {
+  async getCashFlow(limit: number = 100): Promise<CashFlowEntry[]> {
     const { data, error } = await this.supabase
       .from('accounting_cash_flow')
       .select('*')
@@ -368,7 +382,7 @@ export class AccountingService {
       return [];
     }
 
-    return data || [];
+    return (data as CashFlowEntry[]) || [];
   }
 
   /**

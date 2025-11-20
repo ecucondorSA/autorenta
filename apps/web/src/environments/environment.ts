@@ -26,6 +26,12 @@ export const environment = buildEnvironment({
   googleCalendarId: '', // Se configura via NG_APP_GOOGLE_CALENDAR_ID
   googleCalendarApiKey: '', // Se configura via NG_APP_GOOGLE_CALENDAR_API_KEY
   googleCalendarClientId: '', // Se configura via NG_APP_GOOGLE_CALENDAR_CLIENT_ID
+  // TikTok OAuth Configuration
+  // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
+  // NG_APP_TIKTOK_CLIENT_ID - Client ID de TikTok Developer
+  tiktok: {
+    clientId: '', // Se configura via NG_APP_TIKTOK_CLIENT_ID
+  },
   // PayPal Production Credentials
   // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
   // NG_APP_PAYPAL_CLIENT_ID - Client ID de PayPal Production

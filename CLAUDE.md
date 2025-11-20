@@ -597,3 +597,4 @@ cat docs/runbooks/troubleshooting.md
 ---
 
 **Nota**: Este archivo es ahora ~8k caracteres (vs 41k original), mejorando significativamente el performance de Claude Code. Para información detallada, consulta los archivos modulares correspondientes.
+- main-content > div > app-booking-detail-payment > div > main > div  NO CAMBIO ABSOLUTAMENTE NADA, TE REJO EL COPY SELECTOR PARA REALIZAR REALMENTE UNA BUSQUEDA EXHASITVA DEL PORQUE NO FUNCIONA Y DEL SDK DE MERCADOPAGO

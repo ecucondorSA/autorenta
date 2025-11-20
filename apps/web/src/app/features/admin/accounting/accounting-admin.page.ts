@@ -204,7 +204,7 @@ export class AccountingAdminPage implements OnInit {
   exportLedgerToCSV(): void {
     const data = this.ledgerData().data;
     const csvContent = this.convertToCSV(
-      data,
+      data as unknown[] as Record<string, unknown>[],
       [
         'entry_date',
         'account_code',
@@ -256,7 +256,7 @@ export class AccountingAdminPage implements OnInit {
   exportProvisionsToCSV(): void {
     const data = this.provisions();
     const csvContent = this.convertToCSV(
-      data,
+      data as unknown[] as Record<string, unknown>[],
       ['created_date', 'provision_type', 'amount', 'status', 'probability', 'notes'],
       ['Fecha', 'Tipo', 'Monto', 'Estado', 'Probabilidad', 'Notas'],
     );
@@ -351,7 +351,7 @@ export class AccountingAdminPage implements OnInit {
   exportClosuresToCSV(): void {
     const data = this.periodClosures();
     const csvContent = this.convertToCSV(
-      data,
+      data as unknown[] as Record<string, unknown>[],
       [
         'period_code',
         'period_type',
@@ -428,7 +428,7 @@ export class AccountingAdminPage implements OnInit {
   exportAuditLogsToCSV(): void {
     const data = this.auditLogs().data;
     const csvContent = this.convertToCSV(
-      data,
+      data as unknown[] as Record<string, unknown>[],
       [
         'created_at',
         'severity',
@@ -464,7 +464,11 @@ export class AccountingAdminPage implements OnInit {
   }
 
   // Utility methods
-  private convertToCSV(data: Record<string, unknown>[], fields: string[], headers: string[]): string {
+  private convertToCSV(
+    data: Record<string, unknown>[],
+    fields: string[],
+    headers: string[],
+  ): string {
     const csvRows: string[] = [];
 
     // Add headers

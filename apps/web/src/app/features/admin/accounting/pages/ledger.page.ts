@@ -96,7 +96,7 @@ export class LedgerPage implements OnInit {
   exportToCSV(): void {
     const data = this.ledgerData().data;
     const csvContent = this.convertToCSV(
-      data,
+      data as unknown[] as Record<string, unknown>[],
       [
         'entry_date',
         'account_code',
@@ -111,7 +111,11 @@ export class LedgerPage implements OnInit {
     this.downloadCSV(csvContent, `ledger-${new Date().toISOString()}.csv`);
   }
 
-  private convertToCSV(data: Record<string, unknown>[], fields: string[], headers: string[]): string {
+  private convertToCSV(
+    data: Record<string, unknown>[],
+    fields: string[],
+    headers: string[],
+  ): string {
     const csvRows: string[] = [];
     csvRows.push(headers.join(','));
     for (const row of data) {

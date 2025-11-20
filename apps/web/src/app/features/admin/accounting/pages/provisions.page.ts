@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { AccountingService } from '../../../../core/services/accounting.service';
+import { AccountingService, ProvisionDetail } from '../../../../core/services/accounting.service';
 
 @Component({
   selector: 'app-provisions',
@@ -22,7 +22,7 @@ import { AccountingService } from '../../../../core/services/accounting.service'
         <ion-item *ngFor="let provision of provisions()">
           <ion-label>
             <h3>{{ provision.provision_type }}</h3>
-            <p>Saldo: {{ formatCurrency(provision.current_balance) }}</p>
+            <p>Saldo: {{ formatCurrency(getProvisionBalance(provision)) }}</p>
           </ion-label>
           <ion-badge slot="end" [color]="provision.status === 'ACTIVE' ? 'success' : 'medium'">
             {{ provision.status }}
@@ -34,7 +34,7 @@ import { AccountingService } from '../../../../core/services/accounting.service'
 })
 export class ProvisionsPage implements OnInit {
   private readonly accountingService = inject(AccountingService);
-  readonly provisions = signal<unknown[]>([]);
+  readonly provisions = signal<ProvisionDetail[]>([]);
   readonly loading = signal(false);
 
   async ngOnInit() {
@@ -51,6 +51,11 @@ export class ProvisionsPage implements OnInit {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  getProvisionBalance(provision: ProvisionDetail): number {
+    // Return the amount as the balance
+    return provision.amount || 0;
   }
 
   formatCurrency(amount: number) {

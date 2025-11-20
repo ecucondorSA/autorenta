@@ -502,6 +502,20 @@ body.no-scroll {
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
+  /* ─── Ionic Font Inheritance ─── */
+  ion-app,
+  ion-content,
+  ion-item,
+  ion-input,
+  ion-textarea,
+  ion-button,
+  ion-label,
+  ion-title,
+  ion-segment-button,
+  ion-tab-button {
+    font-family: inherit !important;
+  }
+
   .dark .text-text-secondary {
     color: rgba(247, 245, 238, 0.72) !important;
   }

@@ -27,7 +27,7 @@ import { AuthService } from './core/services/auth.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
 import { GuidedTourService } from './core/guided-tour';
 import { LocaleManagerService } from './core/services/locale-manager.service';
-import { ProfileService } from './core/services/profile.service';
+import { ProfileService, UserProfile } from './core/services/profile.service';
 import { PwaService } from './core/services/pwa.service';
 import { PushNotificationService } from './core/services/push-notification.service';
 import { PendingReviewsBannerComponent } from './shared/components/pending-reviews-banner/pending-reviews-banner.component';
@@ -160,7 +160,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   readonly profileMenuOpen = signal(false);
   readonly darkMode = signal(false);
   readonly fullBleedLayout = signal(false);
-  readonly userProfile = signal<Record<string, unknown> | null>(null);
+  readonly userProfile = signal<UserProfile | null>(null);
   readonly isOnVerificationPage = signal(false);
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
@@ -443,7 +443,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     try {
       const profile = await this.profileService.getCurrentProfile();
-      this.userProfile.set(profile as Record<string, unknown> | null);
+      this.userProfile.set(profile);
     } catch {
       // Silently fail - avatar will show placeholder
     }

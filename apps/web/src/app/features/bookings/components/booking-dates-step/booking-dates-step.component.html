@@ -18,10 +18,10 @@
           <div class="car-details">
             <h3>{{ car.brand }} {{ car.model }}</h3>
             <p class="car-price">${{ car.price_per_day }}/día</p>
-            @if (car.location) {
+            @if (car.location_formatted_address || car.location_city) {
               <p class="car-location">
                 <ion-icon name="location-outline"></ion-icon>
-                {{ car.location.address }}
+                {{ car.location_formatted_address || car.location_city }}
               </p>
             }
           </div>

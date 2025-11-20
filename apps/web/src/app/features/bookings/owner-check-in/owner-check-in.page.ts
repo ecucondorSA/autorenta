@@ -1,18 +1,18 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { Booking } from '../../../core/models';
+import { AuthService } from '../../../core/services/auth.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import {
   LocationTrackingService,
   TrackingSession,
 } from '../../../core/services/location-tracking.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { LiveTrackingMapComponent } from '../../../shared/components/live-tracking-map/live-tracking-map.component';
-import { Booking } from '../../../core/models';
 
 /**
  * Owner Check-In Page
@@ -107,7 +107,7 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
 
       // Subscribe to location tracking updates for this booking
       this.subscribeToLocationUpdates(bookingId);
-    } catch {
+    } catch (error) {
       this.toastService.error('Error', 'No se pudo cargar la reserva');
       this.router.navigate(['/bookings/owner']);
     } finally {
@@ -153,7 +153,7 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
         'Ubicación compartida',
         'El locatario puede ver tu ubicación en tiempo real',
       );
-    } catch {
+    } catch (error) {
       console.error('Error starting location sharing:', error);
       this.toastService.error('Error', 'No se pudo iniciar el compartir ubicación');
     }
@@ -164,7 +164,7 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
       await this.locationTracking.stopTracking('inactive');
       this.isSharing.set(false);
       this.toastService.success('Ubicación detenida', 'Ya no estás compartiendo tu ubicación');
-    } catch {
+    } catch (error) {
       console.error('Error stopping location sharing:', error);
       this.toastService.error('Error', 'No se pudo detener el compartir ubicación');
     }
@@ -175,7 +175,7 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
       await this.locationTracking.stopTracking('arrived');
       this.isSharing.set(false);
       this.toastService.success('Llegada registrada', 'Has llegado al punto de encuentro');
-    } catch {
+    } catch (error) {
       console.error('Error marking arrival:', error);
       this.toastService.error('Error', 'No se pudo registrar la llegada');
     }
@@ -272,7 +272,7 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
 
       // Navegar al detalle de la reserva
       this.router.navigate(['/bookings/detail', booking.id]);
-    } catch {
+    } catch (error) {
       console.error('Error en check-in:', error);
       this.toastService.error(
         'Error',

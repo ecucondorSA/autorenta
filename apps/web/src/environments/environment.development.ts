@@ -41,4 +41,8 @@ export const environment = buildEnvironment({
   googleCalendarId: undefined, // Lee de NG_APP_GOOGLE_CALENDAR_ID
   googleCalendarApiKey: undefined, // Lee de NG_APP_GOOGLE_CALENDAR_API_KEY
   googleCalendarClientId: undefined, // Lee de NG_APP_GOOGLE_CALENDAR_CLIENT_ID
+  // TikTok OAuth Configuration
+  tiktok: {
+    clientId: undefined, // Lee de NG_APP_TIKTOK_CLIENT_ID
+  },
 });

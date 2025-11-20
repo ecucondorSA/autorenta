@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
-import { AccountingService } from '../../../../core/services/accounting.service';
+import { AccountingService, CashFlowEntry } from '../../../../core/services/accounting.service';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
@@ -112,7 +112,7 @@ import { environment } from '../../../../../environments/environment';
 export class CashFlowPage implements OnInit {
   private readonly accountingService: AccountingService;
 
-  readonly cashFlow = signal<unknown[]>([]);
+  readonly cashFlow = signal<CashFlowEntry[]>([]);
   readonly loading = signal(false);
 
   constructor() {

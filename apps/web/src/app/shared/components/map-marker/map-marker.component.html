@@ -1,4 +1,5 @@
 <div
+  *ngIf="car"
   class="relative cursor-pointer transition-transform duration-200 ease-in-out"
   [class.transform]="isSelected"
   [class.scale-110]="isSelected"
@@ -13,7 +14,7 @@
     <img
       class="w-full h-full rounded-full object-cover"
       [src]="car.photoUrl || '/assets/images/car-placeholder.svg'"
-      [alt]="'Photo of ' + car.title"
+      [alt]="'Photo of ' + (car.title || 'Car')"
     />
   </div>
   <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/4">

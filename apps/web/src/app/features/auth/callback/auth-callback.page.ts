@@ -7,14 +7,20 @@ import { ProfileService } from '../../../core/services/profile.service';
 /**
  * AuthCallbackPage
  *
- * Página de callback para autenticación OAuth (Google, etc.)
+ * Página de callback para autenticación OAuth (Google, TikTok, etc.)
  * Maneja el retorno desde el proveedor OAuth y redirige al usuario
  *
- * Flujo:
- * 1. Usuario clickea "Continuar con Google" → Redirige a Google
- * 2. Usuario autoriza en Google → Google redirige a /auth/callback
- * 3. Esta página procesa el callback → Extrae sesión de Supabase
- * 4. Redirige al usuario a la página principal
+ * Flujos soportados:
+ * 1. Google OAuth:
+ *    - Usuario clickea "Continuar con Google" → Redirige a Google
+ *    - Google redirige a /auth/callback con #access_token=...
+ *    - Esta página procesa el callback → Extrae sesión de Supabase
+ *
+ * 2. TikTok OAuth:
+ *    - Usuario clickea "Continuar con TikTok" → Redirige a TikTok
+ *    - TikTok redirige a /auth/callback?code=...
+ *    - Esta página detecta código TikTok y llama handleTikTokCallback
+ *    - Edge Function intercambia código por sesión
  */
 @Component({
   standalone: true,
@@ -123,9 +129,21 @@ export class AuthCallbackPage implements OnInit {
         throw new Error(errorMessage);
       }
 
-      // Procesar tokens del hash de OAuth
-      // Supabase Auth detecta automáticamente tokens en URL fragments (#access_token=...)
-      const { error } = await this.auth.handleOAuthCallback();
+      // Detectar si es callback de TikTok (tiene parámetro ?code=...)
+      const tiktokCode = urlParams.get('code');
+      let sessionResult: { error: Error | null } | null = null;
+
+      if (tiktokCode) {
+        // Procesar callback de TikTok
+        console.log('🎵 Detectado callback de TikTok');
+        sessionResult = await this.auth.handleTikTokCallback(tiktokCode);
+      } else {
+        // Procesar tokens del hash de OAuth (Google, etc.)
+        // Supabase Auth detecta automáticamente tokens en URL fragments (#access_token=...)
+        sessionResult = await this.auth.handleOAuthCallback();
+      }
+
+      const { error } = sessionResult;
 
       if (error) {
         // Manejar errores específicos de Supabase

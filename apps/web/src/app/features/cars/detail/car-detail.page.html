@@ -654,7 +654,9 @@
             <div class="relative flex-shrink-0">
               <img
                 *ngIf="car()?.owner?.avatar_url; else defaultAvatar"
-                [src]="car()?.owner?.avatar_url"
+                [ngSrc]="car()?.owner?.avatar_url"
+                width="56"
+                height="56"
                 [alt]="car()?.owner?.full_name"
                 class="w-14 h-14 rounded-full object-cover border-2 border-cta-default"
               />

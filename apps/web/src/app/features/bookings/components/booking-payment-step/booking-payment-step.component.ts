@@ -1,9 +1,9 @@
-import { Component, Input, Output, EventEmitter, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
 import { Car } from '../../../../core/models';
+import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
 
 @Component({
   selector: 'app-booking-payment-step',
@@ -173,8 +173,13 @@ export class BookingPaymentStepComponent implements OnInit {
 
   onDataChange() {
     this.dataChange.emit({
-      paymentMethod: this.paymentMethod() as 'card' | 'wallet' | 'cash' | null,
-      paymentPlan: this.paymentPlan() as 'full' | 'partial' | null,
+      paymentMethod: this.paymentMethod() as 'wallet' | 'card' | 'bank_transfer' | 'split' | null,
+      paymentPlan: this.paymentPlan() as
+        | 'full'
+        | 'split_50_50'
+        | 'deposit_20'
+        | 'installments'
+        | null,
       promoCode: this.promoCode() || null,
     });
   }

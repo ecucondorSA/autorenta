@@ -85,3 +85,4 @@ COMMENT ON VIEW public.owner_bookings IS 'Bookings for cars owned by the current
 
 COMMIT;
 
+

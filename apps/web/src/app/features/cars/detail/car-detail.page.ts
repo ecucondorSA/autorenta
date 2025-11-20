@@ -1,62 +1,62 @@
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   inject,
-  signal,
   OnInit,
+  signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap, catchError, map } from 'rxjs/operators';
-import { of, combineLatest, from } from 'rxjs';
+import { combineLatest, from, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 // Services
-import { CarsService } from '../../../core/services/cars.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { ReviewsService } from '../../../core/services/reviews.service';
-import { WalletService } from '../../../core/services/wallet.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { MetaService } from '../../../core/services/meta.service';
+import { BookingsService } from '../../../core/services/bookings.service';
+import { CarsService } from '../../../core/services/cars.service';
+import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { FxService } from '../../../core/services/fx.service';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
-import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { LocationService } from '../../../core/services/location.service';
+import { MetaService } from '../../../core/services/meta.service';
+import { ReviewsService } from '../../../core/services/reviews.service';
+import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { WalletService } from '../../../core/services/wallet.service';
 
 // Models
-import { Car, Review, CarStats, CarPhoto } from '../../../core/models';
-import { BookingPaymentMethod } from '../../../core/models/wallet.model';
+import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
 import { calculateCreditSecurityUsd } from '../../../core/models/booking-detail-payment.model';
+import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 
 // Components
-import {
-  DateRangePickerComponent,
-  DateRange,
-} from '../../../shared/components/date-range-picker/date-range-picker.component';
-import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
-import { ShareMenuComponent } from '../../../shared/components/share-menu/share-menu.component';
-import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
-import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
-import { SocialProofIndicatorsComponent } from '../../../shared/components/social-proof-indicators/social-proof-indicators.component';
-import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
+import {
+  DateRange,
+  DateRangePickerComponent,
+} from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { DistanceBadgeComponent } from '../../../shared/components/distance-badge/distance-badge.component';
-import { CarChatComponent } from '../../messages/components/car-chat.component';
 import {
   PaymentMethodButtonsComponent,
   type PaymentMethod,
 } from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
 import {
-  BookingLocationFormComponent,
-  BookingLocationData,
-} from '../../bookings/components/booking-location-form/booking-location-form.component';
-import {
-  PickupLocationSelectorComponent,
   PickupLocationSelection,
+  PickupLocationSelectorComponent,
 } from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
+import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
+import { ShareMenuComponent } from '../../../shared/components/share-menu/share-menu.component';
+import { SocialProofIndicatorsComponent } from '../../../shared/components/social-proof-indicators/social-proof-indicators.component';
+import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
+import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
+import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import {
+  BookingLocationData,
+  BookingLocationFormComponent,
+} from '../../bookings/components/booking-location-form/booking-location-form.component';
+import { CarChatComponent } from '../../messages/components/car-chat.component';
 // TODO: Re-add when photo-gallery component is created
 // import {
 //   PhotoGalleryComponent,
@@ -79,11 +79,11 @@ export interface BreadcrumbItem {
 }
 
 // Services
-import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 import { AnalyticsService } from '../../../core/services/analytics.service';
-import { WaitlistService } from '../../../core/services/waitlist.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { TikTokEventsService } from '../../../core/services/tiktok-events.service';
+import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
+import { WaitlistService } from '../../../core/services/waitlist.service';
 
 interface CarDetailState {
   car: Car | null;
@@ -98,6 +98,7 @@ interface CarDetailState {
   selector: 'app-car-detail-page',
   imports: [
     CommonModule,
+    NgOptimizedImage,
     RouterLink,
     DateRangePickerComponent,
     MoneyPipe,
