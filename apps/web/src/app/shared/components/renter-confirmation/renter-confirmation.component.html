@@ -188,12 +188,21 @@
   </div>
 
   <!-- Mensaje de resultado -->
-  <div *ngIf="message()" class="mt-4 p-4 rounded-lg" [class.bg-success-light/10]="confirmationResult()?.success" [class.dark:bg-success-light/20]="confirmationResult()?.success" [class.bg-error-bg]="!confirmationResult()?.success" [class.dark:bg-error-900/20]="!confirmationResult()?.success">
-
-
-
-
-    <p class="text-sm" [class.text-success-light]="confirmationResult()?.success" [class.dark:text-success-light]="confirmationResult()?.success" [class.text-error-strong]="!confirmationResult()?.success" [class.dark:text-error-300]="!confirmationResult()?.success">
+  <div
+    *ngIf="message()"
+    class="mt-4 p-4 rounded-lg"
+    [class.bg-success-light/10]="confirmationResult()?.success"
+    [class.dark:bg-success-light/20]="confirmationResult()?.success"
+    [class.bg-error-bg]="!confirmationResult()?.success"
+    [class.dark:bg-error-900/20]="!confirmationResult()?.success"
+  >
+    <p
+      class="text-sm"
+      [class.text-success-light]="confirmationResult()?.success"
+      [class.dark:text-success-light]="confirmationResult()?.success"
+      [class.text-error-strong]="!confirmationResult()?.success"
+      [class.dark:text-error-300]="!confirmationResult()?.success"
+    >
       {{ message() }}
     </p>
 

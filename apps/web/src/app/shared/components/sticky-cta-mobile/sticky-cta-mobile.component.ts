@@ -25,4 +25,21 @@ export class StickyCtaMobileComponent {
       this.ctaClick.emit();
     }
   }
+
+  get buttonClasses(): Record<string, boolean> {
+    const isInteractive = !this.disabled && !this.loading;
+    return {
+      'opacity-50': this.disabled || this.loading,
+      'cursor-not-allowed': this.disabled || this.loading,
+      'bg-gradient-to-r': true,
+      'from-cta-default': true,
+      'to-cta-default/80': !this.expressMode,
+      'to-warning-light': this.expressMode,
+      'text-white': !this.expressMode,
+      'text-text-inverse': this.expressMode,
+      'shadow-md': isInteractive,
+      'hover:shadow-lg': isInteractive,
+      'animate-pulse': isInteractive && this.totalPrice !== null,
+    };
+  }
 }
