@@ -318,7 +318,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
       // Load claims for this booking
       await this.loadClaims();
-    } catch (_err) {
+    } catch {
       this.error.set('Error al cargar la reserva');
     } finally {
       this.loading.set(false);
@@ -338,7 +338,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       const totalUSD = booking.breakdown.total_cents / 100; // Convertir centavos a dólares
       const totalARS = await this.exchangeRateService.convertUsdToArs(totalUSD);
       this.totalInARS.set(totalARS);
-    } catch (__error) {
+    } catch {
       // No fallar si no se puede obtener la tasa, solo no mostrar conversión
     } finally {
       this.loadingRate.set(false);
@@ -362,7 +362,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         const ownerFullName = owner?.full_name || 'el anfitrión';
         this.carOwnerName.set(ownerFullName);
       }
-    } catch (__error) {
+    } catch {
       // Silently ignore errors loading owner name
     }
   }
@@ -374,7 +374,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     try {
       const inspections = await firstValueFrom(this.fgoService.getInspections(booking.id));
       this.inspections.set(inspections);
-    } catch (__error) {
+    } catch {
       // Non-blocking error, inspections are optional
     }
   }
@@ -389,7 +389,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       const allClaims = await firstValueFrom(this.insuranceService.getMyClaims());
       const bookingClaims = allClaims.filter((c) => c.booking_id === booking.id);
       this.bookingClaims.set(bookingClaims);
-    } catch (__error) {
+    } catch {
       // Non-blocking error, claims are optional
     } finally {
       this.loadingClaims.set(false);

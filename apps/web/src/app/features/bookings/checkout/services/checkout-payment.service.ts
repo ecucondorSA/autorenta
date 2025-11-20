@@ -188,7 +188,7 @@ export class CheckoutPaymentService {
         `${walletText} bloqueados de tu wallet. Redirigiendo a Mercado Pago para pagar ${cardText}...`,
       );
 
-      this.scheduleRiskSnapshot(booking, 'partial_wallet').catch((err) => {
+      this.scheduleRiskSnapshot(booking, 'partial_wallet').catch((_err) => {
         // Silently ignore risk snapshot errors
       });
 
@@ -212,7 +212,7 @@ export class CheckoutPaymentService {
           wallet_lock_transaction_id: booking.wallet_lock_transaction_id ?? undefined,
           payment_intent_id: booking.payment_intent_id ?? undefined,
         });
-      } catch (_rollbackError) {
+      } catch {
         // Silently ignore rollback errors
       }
 
@@ -295,7 +295,7 @@ export class CheckoutPaymentService {
       })
       .pipe(
         timeout({ each: 10_000 }),
-        catchError((error) => {
+        catchError((_error) => {
           return of(null);
         }),
       );
@@ -306,7 +306,7 @@ export class CheckoutPaymentService {
   private async safeUnlockWallet(bookingId: string, reason: string): Promise<void> {
     try {
       await firstValueFrom(this.wallet.unlockFunds(bookingId, reason));
-    } catch (_unlockError) {
+    } catch {
       // Silently ignore unlock errors
     }
   }

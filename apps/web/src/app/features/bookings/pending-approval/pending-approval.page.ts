@@ -92,7 +92,7 @@ export class PendingApprovalPage implements OnInit {
       } else {
         this.toastService.error('Error', `Error: ${result.error}`);
       }
-    } catch (error: unknown) {
+    } catch {
       this.toastService.error('Error', 'Error al aprobar reserva');
     } finally {
       this.processingBookingId.set(null);
@@ -126,7 +126,7 @@ export class PendingApprovalPage implements OnInit {
       } else {
         this.toastService.error('Error', `Error: ${result.error}`);
       }
-    } catch (error: unknown) {
+    } catch {
       this.toastService.error('Error', 'Error al rechazar reserva');
     } finally {
       this.processingBookingId.set(null);
