@@ -8,6 +8,13 @@ import { DateRangePickerComponent } from '../../../../shared/components/date-ran
 import { BookingLocationFormComponent } from '../../../../shared/components/booking-location-form/booking-location-form.component';
 
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
+import { Car } from '../../../../core/models';
+
+interface LocationData {
+  address: string;
+  lat: number;
+  lng: number;
+}
 
 @Component({
   selector: 'app-booking-dates-step',
@@ -23,14 +30,14 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
   styleUrls: ['./booking-dates-step.component.scss'],
 })
 export class BookingDatesStepComponent implements OnInit {
-  @Input() car: any;
+  @Input() car: Car | null = null;
   @Input() data: BookingWizardData | null = null;
   @Output() dataChange = new EventEmitter<Partial<BookingWizardData>>();
 
   startDate = signal<Date | null>(null);
   endDate = signal<Date | null>(null);
-  pickupLocation = signal<any>(null);
-  dropoffLocation = signal<any>(null);
+  pickupLocation = signal<LocationData | null>(null);
+  dropoffLocation = signal<LocationData | null>(null);
   sameLocation = signal(true);
 
   // Computed values
@@ -82,7 +89,7 @@ export class BookingDatesStepComponent implements OnInit {
     this.emitChanges();
   }
 
-  onPickupLocationChange(location: any) {
+  onPickupLocationChange(location: LocationData) {
     this.pickupLocation.set(location);
 
     // If same location checkbox is checked, copy to dropoff
@@ -93,7 +100,7 @@ export class BookingDatesStepComponent implements OnInit {
     this.emitChanges();
   }
 
-  onDropoffLocationChange(location: any) {
+  onDropoffLocationChange(location: LocationData) {
     this.dropoffLocation.set(location);
     this.emitChanges();
   }

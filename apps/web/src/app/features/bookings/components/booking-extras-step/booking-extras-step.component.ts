@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, signal, OnInit } from '@angular
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
+import { Car } from '../../../../core/models';
 
 interface Extra {
   id: string;
@@ -158,7 +159,7 @@ interface Extra {
   ],
 })
 export class BookingExtrasStepComponent implements OnInit {
-  @Input() car: any;
+  @Input() car: Car | null = null;
   @Input() data: BookingWizardData | null = null;
   @Output() dataChange = new EventEmitter<Partial<BookingWizardData>>();
 

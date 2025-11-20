@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
+import { Car } from '../../../../core/models';
 
 @Component({
   selector: 'app-booking-review-step',
@@ -181,7 +182,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
   ],
 })
 export class BookingReviewStepComponent implements OnInit {
-  @Input() car: any;
+  @Input() car: Car | null = null;
   @Input() data: BookingWizardData | null = null;
   @Output() dataChange = new EventEmitter<Partial<BookingWizardData>>();
 

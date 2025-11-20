@@ -16,6 +16,7 @@ import { BookingStepIndicatorComponent } from '../../components/booking-step-ind
 // Services
 import { BookingsService } from '../../../../core/services/bookings.service';
 import { CarsService } from '../../../../core/services/cars.service';
+import { Car } from '../../../../core/models';
 
 export interface BookingWizardData {
   // Step 1: Dates & Location
@@ -106,7 +107,7 @@ export class BookingWizardPage implements OnInit {
     cancellationPolicyAccepted: false,
   });
 
-  car = signal<any>(null);
+  car = signal<Car | null>(null);
   isLoading = signal(false);
   isSavingDraft = signal(false);
 
@@ -225,7 +226,7 @@ export class BookingWizardPage implements OnInit {
     }
   }
 
-  onStepDataChange(stepData: any) {
+  onStepDataChange(stepData: Partial<BookingWizardData>) {
     this.wizardData.update((data) => ({ ...data, ...stepData }));
     this.saveDraft();
   }
@@ -275,7 +276,7 @@ export class BookingWizardPage implements OnInit {
     }
   }
 
-  private prepareBookingData(): any {
+  private prepareBookingData(): Record<string, unknown> {
     const data = this.wizardData();
 
     return {

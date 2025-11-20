@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
+import { Car } from '../../../../core/models';
 
 @Component({
   selector: 'app-booking-payment-step',
@@ -152,7 +153,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
   ],
 })
 export class BookingPaymentStepComponent implements OnInit {
-  @Input() car: any;
+  @Input() car: Car | null = null;
   @Input() data: BookingWizardData | null = null;
   @Output() dataChange = new EventEmitter<Partial<BookingWizardData>>();
 
@@ -172,8 +173,8 @@ export class BookingPaymentStepComponent implements OnInit {
 
   onDataChange() {
     this.dataChange.emit({
-      paymentMethod: this.paymentMethod() as any,
-      paymentPlan: this.paymentPlan() as any,
+      paymentMethod: this.paymentMethod() as 'card' | 'wallet' | 'cash' | null,
+      paymentPlan: this.paymentPlan() as 'full' | 'partial' | null,
       promoCode: this.promoCode() || null,
     });
   }

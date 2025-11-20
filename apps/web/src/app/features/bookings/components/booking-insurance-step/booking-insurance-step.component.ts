@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
+import { Car } from '../../../../core/models';
 
 interface InsuranceOption {
   level: 'basic' | 'standard' | 'premium';
@@ -24,7 +25,7 @@ interface InsuranceOption {
   styleUrls: ['./booking-insurance-step.component.scss'],
 })
 export class BookingInsuranceStepComponent implements OnInit {
-  @Input() car: any;
+  @Input() car: Car | null = null;
   @Input() data: BookingWizardData | null = null;
   @Output() dataChange = new EventEmitter<Partial<BookingWizardData>>();
 
