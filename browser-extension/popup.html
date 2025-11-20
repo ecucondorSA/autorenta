@@ -90,8 +90,8 @@
     </div>
   </div>
 
-  <button onclick="testExtension()">🧪 Test Extension</button>
-  <button class="secondary" onclick="openDocs()">📚 Documentation</button>
+  <button id="test-btn">🧪 Test Extension</button>
+  <button id="docs-btn" class="secondary">📚 Documentation</button>
 
   <div class="info">
     Extension is active and ready.<br>
@@ -99,38 +99,6 @@
     <strong>Bridge Server:</strong> <code>ws://localhost:9222</code>
   </div>
 
-  <script>
-    // Check bridge connection
-    chrome.runtime.sendMessage({ type: 'status' }, (response) => {
-      const statusEl = document.getElementById('bridge-status');
-      if (response && response.connected) {
-        statusEl.innerHTML = '<span class="indicator active"></span><strong>Connected</strong>';
-      }
-    });
-
-    function testExtension() {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]) {
-          chrome.tabs.sendMessage(tabs[0].id, {
-            type: 'execute',
-            action: {
-              type: 'scroll',
-              options: { direction: 'down', amount: 300 }
-            }
-          }, (response) => {
-            if (response && response.success) {
-              alert('✅ Test successful! Page scrolled.');
-            } else {
-              alert('❌ Test failed. Check console for details.');
-            }
-          });
-        }
-      });
-    }
-
-    function openDocs() {
-      window.open('https://github.com/ecucondorSA/autorenta/tree/main/browser-extension', '_blank');
-    }
-  </script>
+  <script src="popup.js"></script>
 </body>
 </html>
