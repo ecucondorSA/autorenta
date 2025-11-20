@@ -46,7 +46,7 @@ export class BookingFlowService {
   /**
    * Obtiene las acciones disponibles para un booking según su estado y el rol del usuario
    */
-  getAvailableActions(booking: Booking, userRole: 'owner' | 'renter' | 'both'): BookingAction[] {
+  getAvailableActions(booking: Booking, _userRole: 'owner' | 'renter' | 'both'): BookingAction[] {
     const actions: BookingAction[] = [];
     const status = booking.status;
     const currentUserId = this.authService.session$()?.user?.id;
@@ -197,7 +197,7 @@ export class BookingFlowService {
   /**
    * Obtiene el siguiente paso recomendado en el flujo
    */
-  getNextStep(booking: Booking, userRole: 'owner' | 'renter'): NextStep | null {
+  getNextStep(booking: Booking, _userRole: 'owner' | 'renter'): NextStep | null {
     const status = booking.status;
     const currentUserId = this.authService.session$()?.user?.id;
     if (!currentUserId) return null;

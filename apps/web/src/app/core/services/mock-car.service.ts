@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of, Observable } from 'rxjs';
-import { Car, Transmission, FuelType, CarStatus, CancelPolicy } from '../models';
+import { Car } from '../models';
 
 @Injectable({
   providedIn: 'root',

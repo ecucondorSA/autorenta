@@ -38,14 +38,11 @@ import {
 } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
-import { PaymentMethodSelectorComponent } from '../../../shared/components/payment-method-selector/payment-method-selector.component';
 import { ShareMenuComponent } from '../../../shared/components/share-menu/share-menu.component';
 import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
-import { DynamicPriceDisplayComponent } from '../../../shared/components/dynamic-price-display/dynamic-price-display.component';
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { SocialProofIndicatorsComponent } from '../../../shared/components/social-proof-indicators/social-proof-indicators.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
-import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { DistanceBadgeComponent } from '../../../shared/components/distance-badge/distance-badge.component';
 import { CarChatComponent } from '../../messages/components/car-chat.component';
 import {

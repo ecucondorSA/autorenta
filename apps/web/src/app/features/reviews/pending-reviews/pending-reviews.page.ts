@@ -2,7 +2,6 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ReviewsService } from '../../../core/services/reviews.service';
-import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
 import { AuthService } from '../../../core/services/auth.service';
 
 interface PendingReview {

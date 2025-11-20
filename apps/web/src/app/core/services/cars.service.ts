@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { Car, CarFilters, CarPhoto } from '../models';
 import { injectSupabase } from './supabase-client.service';

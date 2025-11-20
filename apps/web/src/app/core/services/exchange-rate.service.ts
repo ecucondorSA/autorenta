@@ -2,17 +2,6 @@ import { Injectable, signal } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
-interface ExchangeRate {
-  id: string;
-  pair: string;
-  source: string;
-  rate: number; // Tasa de cambio (ya incluye margen del 10% desde Edge Function)
-  is_active: boolean;
-  last_updated: string;
-  created_at: string;
-  updated_at: string;
-}
-
 /**
  * ExchangeRateService
  *

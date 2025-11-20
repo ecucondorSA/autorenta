@@ -29,8 +29,6 @@ import {
   FilterState,
 } from '../../shared/components/map-filters/map-filters.component';
 import { MapDrawerComponent } from '../../shared/components/map-drawer/map-drawer.component';
-import { StickyCtaMobileComponent } from '../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
-import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
 import { CarsService } from '../../core/services/cars.service';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import { Car } from '../../core/models';
