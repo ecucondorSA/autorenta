@@ -72,11 +72,11 @@ export const appConfig: ApplicationConfig = {
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode()
       ? {
-        provide: APP_INITIALIZER,
-        useFactory: initializePerformanceMonitoring,
-        deps: [PerformanceMonitoringService],
-        multi: true,
-      }
+          provide: APP_INITIALIZER,
+          useFactory: initializePerformanceMonitoring,
+          deps: [PerformanceMonitoringService],
+          multi: true,
+        }
       : [],
   ],
 };

@@ -23,7 +23,10 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
           </ion-card-header>
           <ion-card-content>
             <div class="car-summary">
-              <img [src]="car.photos?.[0]?.url || '/assets/placeholder-car.jpg'" class="car-image" />
+              <img
+                [src]="car.photos?.[0]?.url || '/assets/placeholder-car.jpg'"
+                class="car-image"
+              />
               <div>
                 <h3>{{ car.brand }} {{ car.model }}</h3>
                 <p>\${{ car.price_per_day }}/día</p>
@@ -42,11 +45,11 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
           <ion-card-content>
             <div class="detail-row">
               <span>Desde:</span>
-              <strong>{{ data.startDate | date:'short' }}</strong>
+              <strong>{{ data.startDate | date: 'short' }}</strong>
             </div>
             <div class="detail-row">
               <span>Hasta:</span>
-              <strong>{{ data.endDate | date:'short' }}</strong>
+              <strong>{{ data.endDate | date: 'short' }}</strong>
             </div>
             <div class="detail-row">
               <span>Recogida:</span>
@@ -93,13 +96,19 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
       <ion-card>
         <ion-card-content>
           <ion-item lines="none">
-            <ion-checkbox [(ngModel)]="termsAccepted" (ngModelChange)="onDataChange()"></ion-checkbox>
+            <ion-checkbox
+              [(ngModel)]="termsAccepted"
+              (ngModelChange)="onDataChange()"
+            ></ion-checkbox>
             <ion-label class="ion-text-wrap">
               Acepto los <a href="/terms">términos y condiciones</a> de AutoRenta
             </ion-label>
           </ion-item>
           <ion-item lines="none">
-            <ion-checkbox [(ngModel)]="cancellationPolicyAccepted" (ngModelChange)="onDataChange()"></ion-checkbox>
+            <ion-checkbox
+              [(ngModel)]="cancellationPolicyAccepted"
+              (ngModelChange)="onDataChange()"
+            ></ion-checkbox>
             <ion-label class="ion-text-wrap">
               He leído y acepto la <a href="/cancellation">política de cancelación</a>
             </ion-label>
@@ -114,20 +123,62 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
       }
     </div>
   `,
-  styles: [`
-    .review-step-container { max-width: 700px; margin: 0 auto; }
-    .step-header { text-align: center; margin-bottom: 1.5rem; }
-    .step-header h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .step-header p { color: var(--ion-color-medium); }
-    .car-summary { display: flex; gap: 1rem; align-items: center; }
-    .car-image { width: 120px; height: 90px; object-fit: cover; border-radius: 8px; }
-    .car-summary h3 { font-weight: 600; margin: 0; }
-    .car-summary p { color: var(--ion-color-primary); font-weight: 700; margin: 0.25rem 0 0; }
-    .detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--ion-color-light); }
-    .detail-row:last-child { border-bottom: none; }
-    ion-item { --padding-start: 0; }
-    a { color: var(--ion-color-primary); text-decoration: none; }
-  `]
+  styles: [
+    `
+      .review-step-container {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      .step-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+      .step-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .step-header p {
+        color: var(--ion-color-medium);
+      }
+      .car-summary {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+      .car-image {
+        width: 120px;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+      .car-summary h3 {
+        font-weight: 600;
+        margin: 0;
+      }
+      .car-summary p {
+        color: var(--ion-color-primary);
+        font-weight: 700;
+        margin: 0.25rem 0 0;
+      }
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--ion-color-light);
+      }
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+      ion-item {
+        --padding-start: 0;
+      }
+      a {
+        color: var(--ion-color-primary);
+        text-decoration: none;
+      }
+    `,
+  ],
 })
 export class BookingReviewStepComponent implements OnInit {
   @Input() car: any;
@@ -137,9 +188,7 @@ export class BookingReviewStepComponent implements OnInit {
   termsAccepted = signal(false);
   cancellationPolicyAccepted = signal(false);
 
-  isValid = computed(() =>
-    this.termsAccepted() && this.cancellationPolicyAccepted()
-  );
+  isValid = computed(() => this.termsAccepted() && this.cancellationPolicyAccepted());
 
   ngOnInit() {
     if (this.data) {
@@ -160,7 +209,7 @@ export class BookingReviewStepComponent implements OnInit {
       card: 'Tarjeta',
       wallet: 'Wallet',
       bank_transfer: 'Transferencia',
-      split: 'Pago mixto'
+      split: 'Pago mixto',
     };
     return labels[method || ''] || 'N/A';
   }
@@ -169,7 +218,7 @@ export class BookingReviewStepComponent implements OnInit {
     const labels: Record<string, string> = {
       full: 'Pago completo',
       split_50_50: '50% ahora, 50% al check-in',
-      deposit_20: '20% ahora, resto 7 días antes'
+      deposit_20: '20% ahora, resto 7 días antes',
     };
     return labels[plan || ''] || 'N/A';
   }

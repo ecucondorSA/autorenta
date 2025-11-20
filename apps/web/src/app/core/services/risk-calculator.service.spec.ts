@@ -446,8 +446,6 @@ describe('RiskCalculatorService', () => {
       expect(riskWithCard.guaranteeAmountUsd).not.toBe(riskWithoutCard.guaranteeAmountUsd);
     });
 
-
-
     it('should calculate ARS amounts consistently with FX rate', async () => {
       const result = await service.calculateRisk(15000, mockFxRate, true);
 

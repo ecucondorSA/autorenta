@@ -21,7 +21,7 @@ interface InsuranceOption {
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule],
   templateUrl: './booking-insurance-step.component.html',
-  styleUrls: ['./booking-insurance-step.component.scss']
+  styleUrls: ['./booking-insurance-step.component.scss'],
 })
 export class BookingInsuranceStepComponent implements OnInit {
   @Input() car: any;
@@ -38,11 +38,7 @@ export class BookingInsuranceStepComponent implements OnInit {
       price: 5,
       coverage: 500000,
       deductible: 50000,
-      features: [
-        'Daños por colisión',
-        'Daños a terceros',
-        'Robo del vehículo',
-      ],
+      features: ['Daños por colisión', 'Daños a terceros', 'Robo del vehículo'],
       recommended: false,
     },
     {
@@ -90,6 +86,6 @@ export class BookingInsuranceStepComponent implements OnInit {
   }
 
   getSelectedOption(): InsuranceOption | undefined {
-    return this.insuranceOptions.find(opt => opt.level === this.selectedLevel());
+    return this.insuranceOptions.find((opt) => opt.level === this.selectedLevel());
   }
 }

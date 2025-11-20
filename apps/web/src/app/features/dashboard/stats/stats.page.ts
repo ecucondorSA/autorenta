@@ -64,4 +64,3 @@ export class StatsPage implements OnInit {
     });
   }
 }
-

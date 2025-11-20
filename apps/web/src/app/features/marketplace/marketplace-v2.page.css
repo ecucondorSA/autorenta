@@ -22,10 +22,18 @@
   animation: slideInRight 0.5s ease-out backwards;
 }
 
-.car-card-game:nth-child(1) { animation-delay: 0.1s; }
-.car-card-game:nth-child(2) { animation-delay: 0.2s; }
-.car-card-game:nth-child(3) { animation-delay: 0.3s; }
-.car-card-game:nth-child(4) { animation-delay: 0.4s; }
+.car-card-game:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.car-card-game:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.car-card-game:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.car-card-game:nth-child(4) {
+  animation-delay: 0.4s;
+}
 
 @keyframes slideInRight {
   from {
@@ -119,7 +127,8 @@ button:active {
 }
 
 /* Search Bar Focus */
-input:focus, select:focus {
+input:focus,
+select:focus {
   box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15); /* cyan-500/15 */
   border-color: rgb(6, 182, 212); /* cyan-500 */
 }

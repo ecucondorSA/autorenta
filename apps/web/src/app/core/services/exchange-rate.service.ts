@@ -45,11 +45,11 @@ export class ExchangeRateService {
   private readonly CACHE_TTL_MS = 30000; // 30 segundos - precio en tiempo real
 
   private lastRates = signal<{
-    binance: number;   // Tasa raw de Binance (sin margen)
-    platform: number;  // Tasa con 10% margen (solo para garantías)
+    binance: number; // Tasa raw de Binance (sin margen)
+    platform: number; // Tasa con 10% margen (solo para garantías)
   } | null>(null);
   private lastFetch = signal<number>(0);
-  private readonly PLATFORM_MARGIN = 1.10; // 10% margen SOLO para garantías USD→ARS
+  private readonly PLATFORM_MARGIN = 1.1; // 10% margen SOLO para garantías USD→ARS
 
   /**
    * Obtiene tasa Binance RAW (sin margen) para conversiones de precios
@@ -140,7 +140,6 @@ export class ExchangeRateService {
     }
   }
 
-
   /**
    * Convierte pesos argentinos a dólares usando tasa Binance SIN margen
    * Uso: Mostrar equivalente en USD de precios en ARS
@@ -157,8 +156,8 @@ export class ExchangeRateService {
    */
   async convertUsdToArs(usd: number, useMargin = true): Promise<number> {
     const rate = useMargin
-      ? await this.getPlatformRate()  // Con 10% margen
-      : await this.getBinanceRate();  // Sin margen
+      ? await this.getPlatformRate() // Con 10% margen
+      : await this.getBinanceRate(); // Sin margen
     const ars = usd * rate;
     return Math.round(ars * 100) / 100;
   }

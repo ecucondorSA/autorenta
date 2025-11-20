@@ -18,7 +18,11 @@ import { FavoriteButtonComponent } from '../../shared/components/favorite-button
           Volver
         </button>
         <h1>Mis Favoritos</h1>
-        <p class="subtitle">{{ favoriteCount() }} auto{{ favoriteCount() !== 1 ? 's' : '' }} guardado{{ favoriteCount() !== 1 ? 's' : '' }}</p>
+        <p class="subtitle">
+          {{ favoriteCount() }} auto{{ favoriteCount() !== 1 ? 's' : '' }} guardado{{
+            favoriteCount() !== 1 ? 's' : ''
+          }}
+        </p>
       </div>
 
       <!-- Loading State -->
@@ -35,9 +39,7 @@ import { FavoriteButtonComponent } from '../../shared/components/favorite-button
           <div class="empty-icon">❤️</div>
           <h2>Aún no tienes favoritos</h2>
           <p>Guarda autos que te interesen para encontrarlos fácilmente después</p>
-          <button (click)="goToMarketplace()" class="cta-button">
-            Explorar autos
-          </button>
+          <button (click)="goToMarketplace()" class="cta-button">Explorar autos</button>
         </div>
       }
 
@@ -92,9 +94,7 @@ import { FavoriteButtonComponent } from '../../shared/components/favorite-button
                 }
 
                 <!-- CTA -->
-                <button class="reserve-button">
-                  Ver detalles
-                </button>
+                <button class="reserve-button">Ver detalles</button>
               </div>
             </div>
           }
@@ -102,256 +102,260 @@ import { FavoriteButtonComponent } from '../../shared/components/favorite-button
       }
     </div>
   `,
-  styles: [`
-    .favorites-page {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-      padding: 2rem 1rem;
-    }
-
-    .header {
-      max-width: 1200px;
-      margin: 0 auto 2rem;
-      text-align: center;
-    }
-
-    .back-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      margin-bottom: 1rem;
-      transition: all 0.2s;
-
-      &:hover {
-        background: #f9fafb;
-      }
-
-      .icon {
-        font-size: 1.25rem;
-      }
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #111827;
-      margin-bottom: 0.5rem;
-    }
-
-    .subtitle {
-      font-size: 1.125rem;
-      color: #6b7280;
-    }
-
-    .loading-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 400px;
-      gap: 1rem;
-    }
-
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid #e5e7eb;
-      border-top-color: #3b82f6;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .empty-state {
-      max-width: 500px;
-      margin: 4rem auto;
-      text-align: center;
-      background: white;
-      padding: 3rem 2rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .empty-icon {
-      font-size: 4rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .empty-state h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #111827;
-      margin-bottom: 0.75rem;
-    }
-
-    .empty-state p {
-      color: #6b7280;
-      margin-bottom: 2rem;
-    }
-
-    .cta-button {
-      background: #3b82f6;
-      color: white;
-      border: none;
-      padding: 0.75rem 2rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-
-      &:hover {
-        background: #2563eb;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-      }
-    }
-
-    .favorites-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .car-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: all 0.2s;
-
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-      }
-    }
-
-    .car-image-container {
-      position: relative;
-      width: 100%;
-      height: 200px;
-      overflow: hidden;
-    }
-
-    .car-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .favorite-overlay {
-      position: absolute;
-      top: 0.75rem;
-      right: 0.75rem;
-    }
-
-    .car-details {
-      padding: 1.25rem;
-    }
-
-    .car-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #111827;
-      margin-bottom: 0.25rem;
-    }
-
-    .car-year {
-      color: #6b7280;
-      font-size: 0.875rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .car-price {
-      margin-bottom: 0.75rem;
-    }
-
-    .price {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #3b82f6;
-    }
-
-    .price-label {
-      color: #6b7280;
-      font-size: 0.875rem;
-    }
-
-    .car-location {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #6b7280;
-      font-size: 0.875rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .car-owner {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .owner-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    .owner-name {
-      font-size: 0.875rem;
-      color: #374151;
-    }
-
-    .superhost-badge {
-      font-size: 0.875rem;
-    }
-
-    .reserve-button {
-      width: 100%;
-      background: #3b82f6;
-      color: white;
-      border: none;
-      padding: 0.75rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-
-      &:hover {
-        background: #2563eb;
-      }
-    }
-
-    /* Mobile */
-    @media (max-width: 768px) {
+  styles: [
+    `
       .favorites-page {
-        padding: 1rem 0.5rem;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        padding: 2rem 1rem;
+      }
+
+      .header {
+        max-width: 1200px;
+        margin: 0 auto 2rem;
+        text-align: center;
+      }
+
+      .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #f9fafb;
+        }
+
+        .icon {
+          font-size: 1.25rem;
+        }
       }
 
       h1 {
-        font-size: 2rem;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        font-size: 1.125rem;
+        color: #6b7280;
+      }
+
+      .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+        gap: 1rem;
+      }
+
+      .spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid #e5e7eb;
+        border-top-color: #3b82f6;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .empty-state {
+        max-width: 500px;
+        margin: 4rem auto;
+        text-align: center;
+        background: white;
+        padding: 3rem 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .empty-state h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.75rem;
+      }
+
+      .empty-state p {
+        color: #6b7280;
+        margin-bottom: 2rem;
+      }
+
+      .cta-button {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #2563eb;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
       }
 
       .favorites-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
       }
-    }
-  `]
+
+      .car-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+      }
+
+      .car-image-container {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+      }
+
+      .car-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .favorite-overlay {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+      }
+
+      .car-details {
+        padding: 1.25rem;
+      }
+
+      .car-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.25rem;
+      }
+
+      .car-year {
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .car-price {
+        margin-bottom: 0.75rem;
+      }
+
+      .price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #3b82f6;
+      }
+
+      .price-label {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+
+      .car-location {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .car-owner {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .owner-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .owner-name {
+        font-size: 0.875rem;
+        color: #374151;
+      }
+
+      .superhost-badge {
+        font-size: 0.875rem;
+      }
+
+      .reserve-button {
+        width: 100%;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #2563eb;
+        }
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .favorites-page {
+          padding: 1rem 0.5rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .favorites-grid {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+      }
+    `,
+  ],
 })
 export class FavoritesPage implements OnInit {
   private favoritesService = inject(FavoritesService);

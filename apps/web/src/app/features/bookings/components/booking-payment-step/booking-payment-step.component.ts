@@ -111,22 +111,45 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
       </ion-card>
 
       @if (!isValid()) {
-        <ion-note color="warning">
-          Selecciona un método de pago y plan de pago
-        </ion-note>
+        <ion-note color="warning"> Selecciona un método de pago y plan de pago </ion-note>
       }
     </div>
   `,
-  styles: [`
-    .payment-step-container { max-width: 600px; margin: 0 auto; }
-    .step-header { text-align: center; margin-bottom: 1.5rem; }
-    .step-header h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .step-header p { color: var(--ion-color-medium); }
-    ion-card { margin-bottom: 1.5rem; }
-    ion-radio { width: 100%; }
-    ion-label h3 { font-weight: 600; margin: 0; }
-    ion-label p { color: var(--ion-color-medium); font-size: 0.85rem; margin: 0.25rem 0 0; }
-  `]
+  styles: [
+    `
+      .payment-step-container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .step-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+      .step-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .step-header p {
+        color: var(--ion-color-medium);
+      }
+      ion-card {
+        margin-bottom: 1.5rem;
+      }
+      ion-radio {
+        width: 100%;
+      }
+      ion-label h3 {
+        font-weight: 600;
+        margin: 0;
+      }
+      ion-label p {
+        color: var(--ion-color-medium);
+        font-size: 0.85rem;
+        margin: 0.25rem 0 0;
+      }
+    `,
+  ],
 })
 export class BookingPaymentStepComponent implements OnInit {
   @Input() car: any;
@@ -137,9 +160,7 @@ export class BookingPaymentStepComponent implements OnInit {
   paymentPlan = signal<string>('');
   promoCode = signal<string>('');
 
-  isValid = computed(() =>
-    this.paymentMethod() !== '' && this.paymentPlan() !== ''
-  );
+  isValid = computed(() => this.paymentMethod() !== '' && this.paymentPlan() !== '');
 
   ngOnInit() {
     if (this.data) {

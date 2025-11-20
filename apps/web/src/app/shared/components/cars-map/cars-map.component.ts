@@ -842,7 +842,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       }
 
       // Create a batch during idle time
-      for (let i = 0; i < componentsPerBatch && this.markerComponentPool.length < targetPoolSize; i++) {
+      for (
+        let i = 0;
+        i < componentsPerBatch && this.markerComponentPool.length < targetPoolSize;
+        i++
+      ) {
         const newComponentRef = createComponent(MapMarkerComponent, {
           environmentInjector: this.injector,
         });

@@ -381,7 +381,7 @@ export class ReviewsService {
             r.rating_location +
             r.rating_checkin +
             r.rating_value) /
-          6,
+            6,
         );
         distribution[avg as keyof typeof distribution]++;
       });

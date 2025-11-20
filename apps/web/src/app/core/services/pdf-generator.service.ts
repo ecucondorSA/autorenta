@@ -37,7 +37,7 @@ export class PdfGeneratorService {
    */
   async generateFromElement(
     elementOrSelector: HTMLElement | string,
-    options: PdfOptions = {}
+    options: PdfOptions = {},
   ): Promise<void> {
     const {
       filename = 'document.pdf',
@@ -56,7 +56,7 @@ export class PdfGeneratorService {
 
       if (!element) {
         throw new Error(
-          `Element not found: ${typeof elementOrSelector === 'string' ? elementOrSelector : 'provided element'}`
+          `Element not found: ${typeof elementOrSelector === 'string' ? elementOrSelector : 'provided element'}`,
         );
       }
 
@@ -115,7 +115,7 @@ export class PdfGeneratorService {
    */
   async generateMultiPagePdf(
     elementOrSelector: HTMLElement | string,
-    options: PdfOptions = {}
+    options: PdfOptions = {},
   ): Promise<void> {
     const {
       filename = 'document.pdf',

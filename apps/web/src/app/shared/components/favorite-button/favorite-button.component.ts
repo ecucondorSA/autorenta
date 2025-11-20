@@ -24,89 +24,92 @@ import { FavoritesService } from '../../../core/services/favorites.service';
       }
     </button>
   `,
-  styles: [`
-    .favorite-button {
-      position: relative;
-      width: 40px;
-      height: 40px;
-      border: none;
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(8px);
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-      &:hover:not(:disabled) {
-        transform: scale(1.1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      }
-
-      &:active:not(:disabled) {
-        transform: scale(0.95);
-      }
-
-      &:disabled {
-        cursor: not-allowed;
-        opacity: 0.6;
-      }
-
-      &.is-favorite {
-        animation: heartBeat 0.3s ease;
-      }
-    }
-
-    .heart-icon {
-      font-size: 1.25rem;
-      line-height: 1;
-      transition: transform 0.2s ease;
-    }
-
-    .loading-spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid #e5e7eb;
-      border-top-color: #3b82f6;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-    }
-
-    @keyframes heartBeat {
-      0%, 100% {
-        transform: scale(1);
-      }
-      25% {
-        transform: scale(1.2);
-      }
-      50% {
-        transform: scale(0.95);
-      }
-      75% {
-        transform: scale(1.1);
-      }
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* Mobile */
-    @media (max-width: 768px) {
+  styles: [
+    `
       .favorite-button {
-        width: 36px;
-        height: 36px;
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        &:hover:not(:disabled) {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        &:active:not(:disabled) {
+          transform: scale(0.95);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.6;
+        }
+
+        &.is-favorite {
+          animation: heartBeat 0.3s ease;
+        }
       }
 
       .heart-icon {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
+        line-height: 1;
+        transition: transform 0.2s ease;
       }
-    }
-  `]
+
+      .loading-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #e5e7eb;
+        border-top-color: #3b82f6;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+
+      @keyframes heartBeat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        25% {
+          transform: scale(1.2);
+        }
+        50% {
+          transform: scale(0.95);
+        }
+        75% {
+          transform: scale(1.1);
+        }
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .favorite-button {
+          width: 36px;
+          height: 36px;
+        }
+
+        .heart-icon {
+          font-size: 1.125rem;
+        }
+      }
+    `,
+  ],
 })
 export class FavoriteButtonComponent {
   @Input() carId!: string;

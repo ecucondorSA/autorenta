@@ -34,8 +34,6 @@ export class ThreeCanvasComponent implements OnInit, OnDestroy {
     // composer + passes
     // Note: EffectComposer expects the renderer in the constructor in many postprocessing versions
     // We assume postprocessing exports EffectComposer compatible with this usage.
-    // If your postprocessing version differs, adapt accordingly.
-    // @ts-ignore: some versions export different types
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
 

@@ -12,7 +12,7 @@ export interface FavoriteCar {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FavoritesService {
   private readonly supabase = injectSupabase();
@@ -39,7 +39,7 @@ export class FavoritesService {
 
       if (error) throw error;
 
-      const favoriteIds = new Set(data?.map(f => f.car_id) || []);
+      const favoriteIds = new Set(data?.map((f) => f.car_id) || []);
       this.favorites.set(favoriteIds);
 
       // Sync with localStorage
@@ -71,7 +71,7 @@ export class FavoritesService {
     if (!user) {
       this.notifications.info(
         'Favoritos',
-        isFavorite ? 'Eliminado de favoritos' : 'Agregado a favoritos'
+        isFavorite ? 'Eliminado de favoritos' : 'Agregado a favoritos',
       );
       return !isFavorite;
     }
@@ -128,7 +128,8 @@ export class FavoritesService {
     try {
       const { data, error } = await this.supabase
         .from('user_favorite_cars')
-        .select(`
+        .select(
+          `
           car_id,
           cars (
             *,
@@ -138,13 +139,14 @@ export class FavoritesService {
               is_superhost
             )
           )
-        `)
+        `,
+        )
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      return data?.map(f => f.cars) || [];
+      return data?.map((f) => f.cars) || [];
     } catch (error) {
       console.error('Error fetching favorite cars:', error);
       return [];
@@ -186,9 +188,9 @@ export class FavoritesService {
 
     try {
       // Insert all local favorites to DB
-      const insertData = [...localFavorites].map(car_id => ({
+      const insertData = [...localFavorites].map((car_id) => ({
         user_id: user.id,
-        car_id
+        car_id,
       }));
 
       const { error } = await this.supabase

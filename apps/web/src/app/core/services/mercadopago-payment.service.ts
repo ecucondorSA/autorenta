@@ -90,4 +90,3 @@ export class MercadoPagoPaymentService {
     return supabase.supabaseUrl || '';
   }
 }
-

@@ -17,7 +17,7 @@ import { FxSnapshot } from '../../../core/models/booking-detail-payment.model';
 
 // Extended FxSnapshot with dual rates
 interface DualRateFxSnapshot extends FxSnapshot {
-  binanceRate: number;  // Raw Binance rate (no margin) - for price conversions
+  binanceRate: number; // Raw Binance rate (no margin) - for price conversions
   platformRate: number; // Binance + 10% margin - for guarantees only
 }
 
@@ -109,6 +109,14 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   } | null>(null);
 
   /**
+   * Check if car has any features to display
+   */
+  hasCarFeatures(): boolean {
+    const features = this.getCarFeatures();
+    return features.length > 0;
+  }
+
+  /**
    * Parse car features from JSONB to displayable array
    */
   getCarFeatures(): string[] {
@@ -116,9 +124,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     if (!car || !car.features) return [];
 
     try {
-      const features = typeof car.features === 'string'
-        ? JSON.parse(car.features)
-        : car.features;
+      const features = typeof car.features === 'string' ? JSON.parse(car.features) : car.features;
 
       if (typeof features !== 'object' || features === null) return [];
 
@@ -150,7 +156,10 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       return Object.entries(features)
         .filter(([_, value]) => value === true || value === 'true')
-        .map(([key]) => featureMap[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()))
+        .map(
+          ([key]) =>
+            featureMap[key] || key.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+        )
         .sort();
     } catch (error) {
       console.error('Error parsing car features:', error);
@@ -241,8 +250,8 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       const snapshot: DualRateFxSnapshot = {
         rate: platformRate, // Keep 'rate' as platform_rate for backward compatibility with template
-        binanceRate,        // Raw Binance rate (no margin)
-        platformRate,       // Binance + 10% margin (guarantees only)
+        binanceRate, // Raw Binance rate (no margin)
+        platformRate, // Binance + 10% margin (guarantees only)
         timestamp: new Date(),
         fromCurrency: 'USD',
         toCurrency: 'ARS',
@@ -318,7 +327,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           total_cents: this.PRE_AUTH_AMOUNT_USD * 100, // Store in cents USD
           total_amount: this.PRE_AUTH_AMOUNT_USD, // Store decimal amount
           currency: 'USD',
-          payment_mode: 'card'
+          payment_mode: 'card',
         })
         .select()
         .single();
@@ -334,7 +343,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       } else {
         throw new Error('No se recibió link de pago');
       }
-
     } catch (err: any) {
       console.error('Payment error:', err);
       this.error.set(err.message || 'Error al iniciar el pago');
@@ -342,6 +350,4 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       this.processingPayment.set(false);
     }
   }
-
-
 }

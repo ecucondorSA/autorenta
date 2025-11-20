@@ -117,7 +117,8 @@ export class MapCacheService {
         cache.delete(lruKey);
         // Also try to delete from other cache if it exists
         if (lruKey.includes(':') && lruKey.split(':').length === 2) {
-          const otherCache = cache === this.isochroneCache ? this.directionsCache : this.isochroneCache;
+          const otherCache =
+            cache === this.isochroneCache ? this.directionsCache : this.isochroneCache;
           otherCache.delete(lruKey);
         }
       }

@@ -51,7 +51,10 @@ import {
 import { TooltipComponent } from '../../shared/components/tooltip/tooltip.component';
 // import { FiltersDrawerComponent } from '../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 import { environment } from '../../../environments/environment';
-import { MapControlsComponent, MapControlsEvent } from '../../shared/components/map-controls/map-controls.component';
+import {
+  MapControlsComponent,
+  MapControlsEvent,
+} from '../../shared/components/map-controls/map-controls.component';
 
 export interface CarWithDistance extends Car {
   distance?: number;
@@ -610,7 +613,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private toggleFullscreen(): void {
     const elem = document.documentElement;
     if (!document.fullscreenElement) {
-      elem.requestFullscreen().catch(err => {
+      elem.requestFullscreen().catch((err) => {
         console.error(`Error attempting to enable fullscreen: ${err.message}`);
         this.showToast('No se pudo activar pantalla completa', 'error');
       });

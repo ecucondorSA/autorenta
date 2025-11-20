@@ -91,7 +91,7 @@ export class RealtimePricingService {
 
   constructor() {
     // Effect para log de debug (opcional)
-    effect(() => { });
+    effect(() => {});
   }
 
   /**

@@ -131,8 +131,7 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit, OnDestro
         dateFormat: 'Y-m-d',
         minDate: 'today',
         disable: blockedDates,
-        defaultDate:
-          this.from() && this.to() ? [this.from()!, this.to()!] : undefined,
+        defaultDate: this.from() && this.to() ? [this.from()!, this.to()!] : undefined,
         position: 'auto',
         clickOpens: true,
         allowInput: false,

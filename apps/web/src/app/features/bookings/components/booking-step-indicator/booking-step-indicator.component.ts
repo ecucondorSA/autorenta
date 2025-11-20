@@ -16,7 +16,7 @@ interface Step {
   standalone: true,
   imports: [CommonModule, IonicModule],
   templateUrl: './booking-step-indicator.component.html',
-  styleUrls: ['./booking-step-indicator.component.scss']
+  styleUrls: ['./booking-step-indicator.component.scss'],
 })
 export class BookingStepIndicatorComponent {
   @Input() currentStep: number = 1;

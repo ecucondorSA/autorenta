@@ -20,14 +20,16 @@ import { IonicModule } from '@ionic/angular';
       </ion-item>
     </div>
   `,
-  styles: [`
-    .location-form {
-      margin-bottom: 1rem;
-    }
-    ion-item {
-      --padding-start: 0;
-    }
-  `]
+  styles: [
+    `
+      .location-form {
+        margin-bottom: 1rem;
+      }
+      ion-item {
+        --padding-start: 0;
+      }
+    `,
+  ],
 })
 export class BookingLocationFormComponent {
   @Input() initialLocation: any;
@@ -48,7 +50,7 @@ export class BookingLocationFormComponent {
     this.locationChange.emit({
       address: this.locationText,
       lat: 0,
-      lng: 0
+      lng: 0,
     });
   }
 }

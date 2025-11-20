@@ -327,4 +327,3 @@ export function formatOwnerEarnings(totalAmount: number): {
     },
   };
 }
-

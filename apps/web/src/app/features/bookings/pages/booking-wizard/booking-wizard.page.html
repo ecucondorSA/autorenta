@@ -53,10 +53,7 @@
           />
         }
         @case (4) {
-          <app-booking-driver-step
-            [data]="wizardData()"
-            (dataChange)="onStepDataChange($event)"
-          />
+          <app-booking-driver-step [data]="wizardData()" (dataChange)="onStepDataChange($event)" />
         }
         @case (5) {
           <app-booking-payment-step
@@ -105,11 +102,7 @@
         }
       </ion-button>
     } @else {
-      <ion-button
-        [disabled]="!canProceed()"
-        (click)="nextStep()"
-        class="nav-button next-button"
-      >
+      <ion-button [disabled]="!canProceed()" (click)="nextStep()" class="nav-button next-button">
         Siguiente
         <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
       </ion-button>

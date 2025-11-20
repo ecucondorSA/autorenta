@@ -51,7 +51,7 @@
           {{ totalDays() }} día{{ totalDays() > 1 ? 's' : '' }} de renta
         </p>
         <p class="estimated-price">
-          <strong>Precio estimado:</strong> ${{ estimatedPrice() | number:'1.2-2' }}
+          <strong>Precio estimado:</strong> ${{ estimatedPrice() | number: '1.2-2' }}
         </p>
       </div>
     }
@@ -79,9 +79,7 @@
         (ionChange)="onSameLocationToggle()"
         slot="start"
       ></ion-checkbox>
-      <ion-label>
-        Devolver en el mismo lugar
-      </ion-label>
+      <ion-label> Devolver en el mismo lugar </ion-label>
     </ion-item>
   </div>
 

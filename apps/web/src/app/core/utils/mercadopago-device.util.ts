@@ -81,4 +81,3 @@ export function getDeviceFingerprint(): {
     language: navigator.language,
   };
 }
-

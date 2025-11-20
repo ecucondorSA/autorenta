@@ -83,7 +83,7 @@ export interface BookingWizardData {
     BookingReviewStepComponent,
   ],
   templateUrl: './booking-wizard.page.html',
-  styleUrls: ['./booking-wizard.page.scss']
+  styleUrls: ['./booking-wizard.page.scss'],
 })
 export class BookingWizardPage implements OnInit {
   currentStep = signal(1);
@@ -141,8 +141,8 @@ export class BookingWizardPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private carsService: CarsService,
-    private bookingsService: BookingsService
-  ) { }
+    private bookingsService: BookingsService,
+  ) {}
 
   async ngOnInit() {
     // Get car ID from route params
@@ -153,7 +153,7 @@ export class BookingWizardPage implements OnInit {
       return;
     }
 
-    this.wizardData.update(data => ({ ...data, carId }));
+    this.wizardData.update((data) => ({ ...data, carId }));
 
     // Load car details
     await this.loadCar(carId);
@@ -205,7 +205,7 @@ export class BookingWizardPage implements OnInit {
 
   nextStep() {
     if (this.canGoForward()) {
-      this.currentStep.update(step => step + 1);
+      this.currentStep.update((step) => step + 1);
       this.saveDraft();
       window.scrollTo(0, 0);
     }
@@ -213,7 +213,7 @@ export class BookingWizardPage implements OnInit {
 
   previousStep() {
     if (this.canGoBack()) {
-      this.currentStep.update(step => step - 1);
+      this.currentStep.update((step) => step - 1);
       window.scrollTo(0, 0);
     }
   }
@@ -226,7 +226,7 @@ export class BookingWizardPage implements OnInit {
   }
 
   onStepDataChange(stepData: any) {
-    this.wizardData.update(data => ({ ...data, ...stepData }));
+    this.wizardData.update((data) => ({ ...data, ...stepData }));
     this.saveDraft();
   }
 
@@ -252,7 +252,7 @@ export class BookingWizardPage implements OnInit {
           distanceKm: 0, // TODO: Calculate from distance
           deliveryFeeCents: 0, // TODO: Calculate from distance
           distanceTier: 'local', // TODO: Calculate from distance
-        }
+        },
       );
 
       if (!result.success || !result.booking) {

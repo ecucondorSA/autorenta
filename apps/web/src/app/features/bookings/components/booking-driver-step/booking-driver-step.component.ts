@@ -78,20 +78,37 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
       </ion-card>
 
       @if (!isValid()) {
-        <ion-note color="warning">
-          Por favor completa todos los campos requeridos
-        </ion-note>
+        <ion-note color="warning"> Por favor completa todos los campos requeridos </ion-note>
       }
     </div>
   `,
-  styles: [`
-    .driver-step-container { max-width: 600px; margin: 0 auto; }
-    .step-header { text-align: center; margin-bottom: 1.5rem; }
-    .step-header h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .step-header p { color: var(--ion-color-medium); }
-    ion-card { margin-bottom: 1.5rem; }
-    ion-item { --padding-start: 0; margin-bottom: 0.75rem; }
-  `]
+  styles: [
+    `
+      .driver-step-container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .step-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+      .step-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .step-header p {
+        color: var(--ion-color-medium);
+      }
+      ion-card {
+        margin-bottom: 1.5rem;
+      }
+      ion-item {
+        --padding-start: 0;
+        margin-bottom: 0.75rem;
+      }
+    `,
+  ],
 })
 export class BookingDriverStepComponent implements OnInit {
   @Input() data: BookingWizardData | null = null;
@@ -103,18 +120,21 @@ export class BookingDriverStepComponent implements OnInit {
   emergencyPhone = signal('');
   relationship = signal('');
 
-  isValid = computed(() =>
-    this.licenseNumber() !== '' &&
-    this.expirationDate() !== '' &&
-    this.emergencyName() !== '' &&
-    this.emergencyPhone() !== '' &&
-    this.relationship() !== ''
+  isValid = computed(
+    () =>
+      this.licenseNumber() !== '' &&
+      this.expirationDate() !== '' &&
+      this.emergencyName() !== '' &&
+      this.emergencyPhone() !== '' &&
+      this.relationship() !== '',
   );
 
   ngOnInit() {
     if (this.data?.driverLicense) {
       this.licenseNumber.set(this.data.driverLicense.number || '');
-      this.expirationDate.set(this.data.driverLicense.expirationDate?.toISOString().split('T')[0] || '');
+      this.expirationDate.set(
+        this.data.driverLicense.expirationDate?.toISOString().split('T')[0] || '',
+      );
     }
     if (this.data?.emergencyContact) {
       this.emergencyName.set(this.data.emergencyContact.name || '');
@@ -135,7 +155,7 @@ export class BookingDriverStepComponent implements OnInit {
         name: this.emergencyName(),
         phone: this.emergencyPhone(),
         relationship: this.relationship(),
-      }
+      },
     });
   }
 }

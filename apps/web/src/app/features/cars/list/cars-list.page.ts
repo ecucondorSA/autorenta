@@ -944,7 +944,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   }
 
   toggleFiltersDrawer(): void {
-    this.drawerOpen.update(open => !open);
+    this.drawerOpen.update((open) => !open);
   }
 
   // Cálculo de distancia usando DistanceCalculatorService
@@ -995,7 +995,7 @@ export class CarsListPage implements OnInit, OnDestroy {
       title: car.title,
       brand,
       model,
-      images: car.photos?.map(photo => photo.url) || [],
+      images: car.photos?.map((photo) => photo.url) || [],
       pricePerDay: car.price_per_day,
       rating: car.rating_avg || 0,
       ratingCount: car.rating_count || 0,

@@ -14,7 +14,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   constructor(
     private injector: Injector,
     private zone: NgZone,
-  ) { }
+  ) {}
 
   handleError(error: unknown): void {
     // Run in zone to ensure change detection works for toasts/dialogs

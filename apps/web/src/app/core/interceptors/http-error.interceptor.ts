@@ -29,7 +29,12 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
       count: 2,
       delay: (error, retryCount) => {
         // Don't retry client errors (4xx), except 408 (Timeout) and 429 (Too Many Requests)
-        if (error.status >= 400 && error.status < 500 && error.status !== 408 && error.status !== 429) {
+        if (
+          error.status >= 400 &&
+          error.status < 500 &&
+          error.status !== 408 &&
+          error.status !== 429
+        ) {
           throw error;
         }
         // Exponential backoff: 1s, 2s

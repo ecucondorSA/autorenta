@@ -20,7 +20,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
     BookingLocationFormComponent,
   ],
   templateUrl: './booking-dates-step.component.html',
-  styleUrls: ['./booking-dates-step.component.scss']
+  styleUrls: ['./booking-dates-step.component.scss'],
 })
 export class BookingDatesStepComponent implements OnInit {
   @Input() car: any;
@@ -52,10 +52,12 @@ export class BookingDatesStepComponent implements OnInit {
   readonly minDate = new Date();
 
   canProceed = computed(() => {
-    return this.startDate() !== null &&
-           this.endDate() !== null &&
-           this.pickupLocation() !== null &&
-           (!this.sameLocation() ? this.dropoffLocation() !== null : true);
+    return (
+      this.startDate() !== null &&
+      this.endDate() !== null &&
+      this.pickupLocation() !== null &&
+      (!this.sameLocation() ? this.dropoffLocation() !== null : true)
+    );
   });
 
   ngOnInit() {
@@ -68,7 +70,7 @@ export class BookingDatesStepComponent implements OnInit {
       // If dropoff is different from pickup, set sameLocation to false
       if (this.data.pickupLocation && this.data.dropoffLocation) {
         this.sameLocation.set(
-          this.data.pickupLocation.address === this.data.dropoffLocation.address
+          this.data.pickupLocation.address === this.data.dropoffLocation.address,
         );
       }
     }
@@ -112,9 +114,7 @@ export class BookingDatesStepComponent implements OnInit {
       startDate: this.startDate(),
       endDate: this.endDate(),
       pickupLocation: this.pickupLocation(),
-      dropoffLocation: this.sameLocation()
-        ? this.pickupLocation()
-        : this.dropoffLocation(),
+      dropoffLocation: this.sameLocation() ? this.pickupLocation() : this.dropoffLocation(),
     });
   }
 }
