@@ -35,7 +35,7 @@ export class MockCarService {
       photos: [
         {
           url: 'https://www.elcarrocolombiano.com/wp-content/uploads/2021/03/20210325-RENAULT-KANGOO-2022-PRECIOS-Y-CARACTERISTICAS-EN-COLOMBIA-01.jpg',
-        } as any,
+        } as Partial<CarPhoto>,
       ],
       mileage: 50000,
       cancel_policy: 'flexible',
@@ -70,7 +70,7 @@ export class MockCarService {
       photos: [
         {
           url: 'https://www.ford.com.ar/content/dam/Ford/website-assets/latam/ar/nameplate/2023/ranger/v778/billboard/foco-lanzamiento/AR_Ranger_2023_Hero_V2.jpg',
-        } as any,
+        } as Partial<CarPhoto>,
       ],
       mileage: 25000,
       cancel_policy: 'moderate',
@@ -105,7 +105,7 @@ export class MockCarService {
       photos: [
         {
           url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Peugeot_208_GT_Line_2020_%2850014695802%29.jpg/1200px-Peugeot_208_GT_Line_2020_%2850014695802%29.jpg',
-        } as any,
+        } as Partial<CarPhoto>,
       ],
       mileage: 60000,
       cancel_policy: 'strict',

@@ -74,7 +74,7 @@ export class GestureService {
   private startY = 0;
   private startTime = 0;
   private lastTapTime = 0;
-  private longPressTimer: any = null;
+  private longPressTimer: ReturnType<typeof setTimeout> | null = null;
   private initialDistance = 0;
   private initialScale = 1;
 
@@ -199,7 +199,7 @@ export class GestureService {
 
     // Cleanup function
     return () => {
-      element.removeEventListener('touchstart', handleTouchStart as any);
+      element.removeEventListener('touchstart', handleTouchStart);
       element.removeEventListener('touchend', handleTouchEnd);
       element.removeEventListener('mousedown', handleMouseDown);
       element.removeEventListener('mouseup', handleMouseUp);
@@ -301,7 +301,7 @@ export class GestureService {
 
     return () => {
       element.removeEventListener('touchstart', handleTouchStart);
-      element.removeEventListener('touchmove', handleTouchMove as any);
+      element.removeEventListener('touchmove', handleTouchMove);
       element.removeEventListener('touchend', handleTouchEnd);
     };
   }

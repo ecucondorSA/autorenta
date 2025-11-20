@@ -16,14 +16,14 @@ export class MapCacheService {
   private readonly maxEntries = 100;
   private readonly ttlMs = 60 * 60 * 1000; // 1 hour TTL
 
-  private isochroneCache = new Map<string, CacheEntry<any>>();
-  private directionsCache = new Map<string, CacheEntry<any>>();
+  private isochroneCache = new Map<string, CacheEntry<unknown>>();
+  private directionsCache = new Map<string, CacheEntry<unknown>>();
   private accessOrder: string[] = []; // Track LRU order
 
   /**
    * Get cached isochrone data
    */
-  getIsochrone(profile: string, lng: number, lat: number): any | null {
+  getIsochrone(profile: string, lng: number, lat: number): unknown | null {
     const key = `${profile}:${lng.toFixed(6)}:${lat.toFixed(6)}`;
     return this.getCachedValue(this.isochroneCache, key);
   }
@@ -31,7 +31,7 @@ export class MapCacheService {
   /**
    * Set isochrone cache entry
    */
-  setIsochrone(profile: string, lng: number, lat: number, data: any): void {
+  setIsochrone(profile: string, lng: number, lat: number, data: unknown): void {
     const key = `${profile}:${lng.toFixed(6)}:${lat.toFixed(6)}`;
     this.setCachedValue(this.isochroneCache, key, data);
   }
@@ -39,7 +39,7 @@ export class MapCacheService {
   /**
    * Get cached directions data
    */
-  getDirections(origin: string, destination: string): any | null {
+  getDirections(origin: string, destination: string): unknown | null {
     const key = `${origin}:${destination}`;
     return this.getCachedValue(this.directionsCache, key);
   }
@@ -47,7 +47,7 @@ export class MapCacheService {
   /**
    * Set directions cache entry
    */
-  setDirections(origin: string, destination: string, data: any): void {
+  setDirections(origin: string, destination: string, data: unknown): void {
     const key = `${origin}:${destination}`;
     this.setCachedValue(this.directionsCache, key, data);
   }
