@@ -13,13 +13,13 @@ import { SupabaseClientService } from './supabase-client.service';
  * Servicio para gestionar tipos de cambio (FX)
  * Maneja snapshots, validación de expiración y revalidación
  *
- * IMPORTANTE: El campo 'rate' de la DB YA contiene el margen aplicado.
- * NO multiplicar por 1.1 nuevamente en el frontend.
+ * IMPORTANTE: Ahora obtiene precio EN TIEMPO REAL de Binance API.
+ * El ExchangeRateService aplica margen del 10% automáticamente.
  *
  * Flujo:
- * - Binance API actualiza c/30 min (dinámico: USDTARS en tiempo real)
- * - Edge Function: sync-binance-rates → aplica margen y guarda en 'rate'
- * - Frontend: Consulta 'rate' directamente para mostrar al usuario
+ * - Frontend → ExchangeRateService → Binance API (tiempo real)
+ * - Cache en memoria: 30 segundos
+ * - Margen del 10% aplicado automáticamente
  */
 @Injectable({
   providedIn: 'root',

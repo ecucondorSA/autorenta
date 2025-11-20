@@ -16,21 +16,23 @@ interface ExchangeRate {
 /**
  * ExchangeRateService
  *
- * Servicio para obtener tasas de cambio desde la base de datos (actualizada desde Binance cada 30 min).
+ * Servicio para obtener tasas de cambio EN TIEMPO REAL desde Binance API.
  *
- * IMPORTANTE: El campo 'rate' en la DB YA incluye el margen aplicado por el Edge Function.
- * NO multiplicar por 1.1 en el frontend - solo usar el valor directo de 'rate'.
+ * IMPORTANTE: Hace fetch directo a Binance para obtener precio actualizado.
+ * Aplica margen del 10% automáticamente (política de negocio).
  *
  * Características:
- * - Consulta tasas desde exchange_rates table
- * - Cache de 60 segundos para evitar consultas excesivas
- * - Fallback a Binance API si no hay tasas en DB
+ * - Fetch directo a Binance API (precio en tiempo real)
+ * - Cache en memoria de 30 segundos (evita spam a API)
+ * - Aplica margen del 10% sobre precio Binance
  * - Conversión bidireccional ARS ↔ USD
- * - Fuente: Binance USDT/ARS (NO es "Dólar Tarjeta" oficial)
+ * - Fuente: Binance USDT/ARS spot market
+ * - CORS habilitado - funciona desde navegador
  *
  * Uso:
  * ```typescript
  * const rate = await this.exchangeRateService.getRate('USDARS');
+ * // rate ya incluye margen del 10%
  * const usd = await this.exchangeRateService.convertArsToUsd(10000);
  * ```
  */
@@ -40,82 +42,63 @@ interface ExchangeRate {
 export class ExchangeRateService {
   private readonly supabase: SupabaseClient = injectSupabase();
   private readonly BINANCE_API = 'https://api.binance.com/api/v3/ticker/price';
-  private readonly CACHE_TTL_MS = 60000; // 60 segundos
+  private readonly CACHE_TTL_MS = 30000; // 30 segundos - precio en tiempo real
 
-  private lastRate = signal<ExchangeRate | null>(null);
+  private lastRate = signal<number | null>(null);
   private lastFetch = signal<number>(0);
+  private readonly PLATFORM_MARGIN = 1.10; // 10% margen de protección
 
   /**
-   * Obtiene la tasa de cambio desde la base de datos
+   * Obtiene la tasa de cambio EN TIEMPO REAL directamente desde Binance API
    *
-   * NOTA: El campo 'rate' en la DB YA contiene el margen aplicado.
-   * NO multiplicar por 1.1 en el frontend.
-   *
-   * El Edge Function actualiza la tasa cada 30 minutos desde Binance API
-   * y aplica el margen de protección antes de guardarla en la DB.
+   * IMPORTANTE: Hace fetch directo a Binance para obtener precio actualizado.
+   * Aplica margen del 10% en el frontend.
+   * Cache de 30 segundos para evitar exceso de requests.
    */
   async getRate(pair = 'USDARS'): Promise<number> {
     const now = Date.now();
     const cacheAge = now - this.lastFetch();
 
+    // Check cache (30 segundos)
     if (this.lastRate() !== null && cacheAge < this.CACHE_TTL_MS) {
       const cached = this.lastRate()!;
       console.log(
-        `💱 Usando cotización cacheada: ${cached.rate} ARS/USD (age: ${Math.round(cacheAge / 1000)}s)`,
+        `💱 Usando cotización cacheada: ${cached} ARS/USD (age: ${Math.round(cacheAge / 1000)}s)`,
       );
-      return cached.rate;
+      return cached;
     }
 
     try {
-      const { data, error } = await this.supabase
-        .from('exchange_rates')
-        .select('*')
-        .eq('pair', pair)
-        .eq('is_active', true)
-        .order('last_updated', { ascending: false })
-        .limit(1)
-        .single();
+      // Fetch directo a Binance API (tiempo real)
+      const symbol = pair === 'USDARS' ? 'USDTARS' : pair;
+      const response = await fetch(`${this.BINANCE_API}?symbol=${symbol}`);
 
-      if (error) {
-        throw new Error(`Database error: ${error.message}`);
+      if (!response.ok) {
+        throw new Error(`Binance API error: ${response.status}`);
       }
 
-      if (!data) {
-        throw new Error(`No exchange rate found for pair: ${pair}`);
+      const binanceData = await response.json();
+      const binanceRate = parseFloat(binanceData.price);
+
+      if (isNaN(binanceRate) || binanceRate <= 0) {
+        throw new Error(`Invalid rate from Binance: ${binanceData.price}`);
       }
 
-      this.lastRate.set(data as ExchangeRate);
+      // Aplicar margen del 10% (política de negocio)
+      const platformRate = binanceRate * this.PLATFORM_MARGIN;
+
+      // Cachear en memoria
+      this.lastRate.set(platformRate);
       this.lastFetch.set(now);
 
       console.log(
-        `✅ Tasa de cambio: ${data.rate} ARS/USD (fuente: ${data.source}, actualizada: ${data.last_updated})`,
+        `✅ Binance USDT/ARS EN TIEMPO REAL: ${binanceRate.toFixed(2)} → Con margen 10%: ${platformRate.toFixed(2)} ARS/USD`,
       );
 
-      return data.rate;
+      return platformRate;
     } catch (error) {
-      console.error('Error obteniendo tasa de DB:', error);
-
-      try {
-        const response = await fetch(`${this.BINANCE_API}?symbol=USDTARS`);
-
-        if (!response.ok) {
-          throw new Error(`Binance API error: ${response.status}`);
-        }
-
-        const binanceData = await response.json();
-        const rate = parseFloat(binanceData.price);
-
-        if (isNaN(rate) || rate <= 0) {
-          throw new Error(`Invalid rate from Binance: ${binanceData.price}`);
-        }
-
-        console.log(`⚠️ Fallback a Binance directo: ${rate} ARS/USD`);
-
-        return rate;
-      } catch (binanceError) {
-        console.error('Error obteniendo tasa de Binance:', binanceError);
-        throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');
-      }
+      console.error('Error obteniendo tasa de Binance:', error);
+      throw new Error('No se pudo obtener tasa de cambio de Binance');
     }
   }
 
@@ -150,18 +133,11 @@ export class ExchangeRateService {
   }
 
   /**
-   * Obtiene la última tasa conocida (ExchangeRate object completo)
-   */
-  getLastKnownRate(): ExchangeRate | null {
-    return this.lastRate();
-  }
-
-  /**
-   * Obtiene el valor de la última tasa conocida
-   * NOTA: Ya incluye el margen aplicado, no multiplicar nuevamente
+   * Obtiene el valor de la última tasa conocida (cacheada)
+   * NOTA: Ya incluye el margen del 10%, no multiplicar nuevamente
    */
   getLastKnownRateValue(): number | null {
-    return this.lastRate()?.rate ?? null;
+    return this.lastRate();
   }
 
   /** @deprecated Use getLastKnownRateValue() instead */
