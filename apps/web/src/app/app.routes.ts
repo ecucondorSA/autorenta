@@ -10,6 +10,10 @@ export const routes: Routes = [
       import('./features/marketplace/marketplace-v2.page').then((m) => m.MarketplaceV2Page),
   },
   {
+    path: 'explore',
+    loadComponent: () => import('./features/explore/explore.page').then((m) => m.ExplorePage),
+  },
+  {
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },

@@ -19,6 +19,7 @@ import { CarAvailabilityService } from '../../../core/services/car-availability.
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PricingService } from '../../../core/services/pricing.service';
 import { ProfileService } from '../../../core/services/profile.service';
+import { NavigationService } from '../../../core/services/navigation.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import { getAgeFromProfile } from '../../utils/age-calculator';
 import { BirthDateModalComponent } from '../birth-date-modal/birth-date-modal.component';
@@ -231,6 +232,37 @@ export interface BookingFormData {
           </div>
         </div>
 
+        <!-- Navigate Buttons -->
+        <div *ngIf="car">
+          <label class="block text-sm font-medium text-text-primary mb-2">¿Cómo llegar?</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              (click)="navigateWithWaze(); $event.stopPropagation()"
+              class="flex items-center justify-center gap-1.5 bg-[#33CCFF] hover:bg-[#2BB8EA] text-white font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
+              title="Navegar con Waze"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"/>
+                <path d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"/>
+              </svg>
+              <span>Waze</span>
+            </button>
+
+            <button
+              type="button"
+              (click)="navigateWithGoogleMaps(); $event.stopPropagation()"
+              class="flex items-center justify-center gap-1.5 bg-[#4285F4] hover:bg-[#3367D6] text-white font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
+              title="Navegar con Google Maps"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+              <span>Maps</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Error Message -->
         <div *ngIf="error()" class="bg-error/10 border border-error rounded-lg p-3">
           <p class="text-sm text-error">{{ error() }}</p>
@@ -314,6 +346,7 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
   private readonly pricingService = inject(PricingService);
   private readonly profileService = inject(ProfileService);
   private readonly router = inject(Router);
+  private readonly navigationService = inject(NavigationService);
 
   readonly startDate = signal<string>('');
   readonly endDate = signal<string>('');
@@ -580,5 +613,35 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
       console.warn('[MapBookingPanel] Error getting driver age, using fallback:', error);
       return 30;
     }
+  }
+
+  /**
+   * Navigate to car location using Waze
+   */
+  navigateWithWaze(): void {
+    if (!this.car) {
+      return;
+    }
+
+    this.navigationService.navigateWithWaze({
+      lat: this.car.lat,
+      lng: this.car.lng,
+      destinationName: this.car.title || 'Auto en ' + (this.car.locationLabel || 'AutoRenta'),
+    });
+  }
+
+  /**
+   * Navigate to car location using Google Maps
+   */
+  navigateWithGoogleMaps(): void {
+    if (!this.car) {
+      return;
+    }
+
+    this.navigationService.navigateWithGoogleMaps({
+      lat: this.car.lat,
+      lng: this.car.lng,
+      destinationName: this.car.title || 'Auto en ' + (this.car.locationLabel || 'AutoRenta'),
+    });
   }
 }

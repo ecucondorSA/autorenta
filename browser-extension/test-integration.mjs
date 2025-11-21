@@ -4,11 +4,11 @@
  * Verifica que todo está conectado: Bridge ↔ Extension ↔ Playwright MCP
  */
 
-import WebSocket from 'ws';
 import http from 'http';
+import WebSocket from 'ws';
 
-const BRIDGE_URL = 'ws://localhost:9222';
-const HEALTH_CHECK_URL = 'http://localhost:9222/health';
+const BRIDGE_URL = 'ws://localhost:9223';
+const HEALTH_CHECK_URL = 'http://localhost:9223/health';
 
 let testResults = {
   bridgeServer: false,

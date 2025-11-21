@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { readFileSync, existsSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { spawn } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 const root = process.cwd();
 const envFile = resolve(root, '.env.development.local');
@@ -21,7 +21,7 @@ if (existsSync(envFile)) {
   }
 }
 
-const child = spawn('npx', ['ng', 'serve', '--configuration', 'development'], {
+const child = spawn('npx', ['ng', 'serve', '--configuration', 'development', '--ssl'], {
   stdio: 'inherit',
   env: process.env,
   cwd: root,

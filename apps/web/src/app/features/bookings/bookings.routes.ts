@@ -96,6 +96,18 @@ export const BOOKINGS_ROUTES: Routes = [
     canMatch: [AuthGuard],
   },
   {
+    path: ':bookingId/payment',
+    loadComponent: () =>
+      import('./booking-payment/booking-payment.page').then((m) => m.BookingPaymentPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: ':bookingId/pending',
+    loadComponent: () =>
+      import('./booking-pending/booking-pending.page').then((m) => m.BookingPendingPage),
+    canMatch: [AuthGuard],
+  },
+  {
     path: ':bookingId/report-claim',
     loadComponent: () => import('./report-claim/report-claim.page').then((m) => m.ReportClaimPage),
     canMatch: [AuthGuard],

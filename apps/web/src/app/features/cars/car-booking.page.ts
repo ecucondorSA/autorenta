@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { BookingService } from '../../core/services/booking.service';
+import { BookingsService } from '../../core/services/bookings.service';
 import { CalendarComponent } from '../../shared/calendar.component';
 
 @Component({
@@ -34,7 +34,7 @@ export class CarBookingPage {
   result: any = null;
   error: any = null;
 
-  private bookingService = inject(BookingService);
+  private bookingService = inject(BookingsService);
 
   onRange(r: { start: string; end: string }) {
     this.selectedRange = r;
@@ -45,14 +45,11 @@ export class CarBookingPage {
   async book() {
     if (!this.selectedRange) return;
     try {
-      const payload = await this.bookingService.requestBooking({
-        car_id: this.carId,
-        renter_id: '00000000-0000-0000-0000-000000000002',
-        start_at: this.selectedRange.start,
-        end_at: this.selectedRange.end,
-        payment_method: 'card',
-        idempotency_key: `idem-${Date.now()}`,
-      });
+      const payload = await this.bookingService.requestBooking(
+        this.carId,
+        this.selectedRange.start,
+        this.selectedRange.end
+      );
       this.result = payload;
     } catch (err: any) {
       this.error = err?.message || err;

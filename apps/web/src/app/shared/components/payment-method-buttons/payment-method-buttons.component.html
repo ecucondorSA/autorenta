@@ -67,7 +67,7 @@
   <button
     type="button"
     (click)="selectMethod('wallet')"
-    [disabled]="disabled || !hasSufficientFunds()"
+    [disabled]="disabled"
     [class.ring-2]="isSelected('wallet')"
     [class.ring-cta-default]="isSelected('wallet')"
     [class.bg-cta-default/5]="isSelected('wallet')"

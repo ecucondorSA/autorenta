@@ -9,11 +9,11 @@
  * 3. Resultados vuelven a Bridge Server → Playwright MCP
  */
 
-import { WebSocketServer, WebSocket } from 'ws';
 import http from 'http';
 import { URL } from 'url';
+import { WebSocketServer } from 'ws';
 
-const PORT = 9222;
+const PORT = 9223;
 const WS_OPEN = 1; // WebSocket.OPEN
 const wss = new WebSocketServer({ noServer: true });
 

@@ -110,8 +110,8 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   supabaseAnonKey: resolve('NG_APP_SUPABASE_ANON_KEY', defaults.supabaseAnonKey),
   defaultCurrency: resolve('NG_APP_DEFAULT_CURRENCY', defaults.defaultCurrency ?? 'USD'),
   paymentsWebhookUrl: resolve('NG_APP_PAYMENTS_WEBHOOK_URL', defaults.paymentsWebhookUrl ?? ''),
-  // FORCE HARDCODED TOKEN: Bypass env var resolution to fix production issue
-  mapboxAccessToken: defaults.mapboxAccessToken,
+  // Read from env var first, then fallback to defaults
+  mapboxAccessToken: resolve('NG_APP_MAPBOX_ACCESS_TOKEN', defaults.mapboxAccessToken),
   carLocationsCacheTtlMs: defaults.carLocationsCacheTtlMs ?? 5 * 60 * 1000,
   carLocationsRefreshMs: defaults.carLocationsRefreshMs ?? 60 * 1000,
   carLocationsEdgeFunction: resolve(

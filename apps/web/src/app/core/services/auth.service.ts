@@ -1,10 +1,10 @@
-import { Injectable, computed, inject, signal, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { getErrorMessage } from '../utils/type-guards';
-import { injectSupabase } from './supabase-client.service';
 import { LoggerService } from './logger.service';
+import { injectSupabase } from './supabase-client.service';
 
 interface AuthState {
   session: Session | null;
@@ -76,6 +76,18 @@ export class AuthService implements OnDestroy {
       );
     }
     this.state.set({ session: session ?? null, loading: false });
+  }
+
+  async refreshSession(): Promise<Session | null> {
+    const { data, error } = await this.supabase.auth.refreshSession();
+    if (error) {
+      this.logger.warn('Failed to refresh session', 'AuthService', error);
+      return null;
+    }
+    if (data.session) {
+      this.state.set({ session: data.session, loading: false });
+    }
+    return data.session;
   }
 
   private listenToAuthChanges(): void {

@@ -1,38 +1,39 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  signal,
-  computed,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Geolocation } from '@capacitor/geolocation';
 import {
   IonContent,
-  IonHeader,
-  IonToolbar,
-  IonIcon,
   IonFab,
   IonFabButton,
+  IonHeader,
+  IonIcon,
   IonSearchbar,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { optionsOutline, locateOutline } from 'ionicons/icons';
-import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
-import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
-import {
-  MapFiltersComponent,
-  FilterState,
-} from '../../shared/components/map-filters/map-filters.component';
-import { MapDrawerComponent } from '../../shared/components/map-drawer/map-drawer.component';
-import { CarsService } from '../../core/services/cars.service';
-import { BreakpointService } from '../../core/services/breakpoint.service';
+import { gridOutline, listOutline, locateOutline, mapOutline, optionsOutline } from 'ionicons/icons';
 import { Car } from '../../core/models';
+import { BreakpointService } from '../../core/services/breakpoint.service';
 import type { CarMapLocation } from '../../core/services/car-locations.service';
+import { CarsService } from '../../core/services/cars.service';
+import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
+import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
+import { WazeLiveMapComponent } from '../../shared/components/waze-live-map/waze-live-map.component';
+import { MapDrawerComponent } from '../../shared/components/map-drawer/map-drawer.component';
+import {
+  FilterState,
+  MapFiltersComponent,
+} from '../../shared/components/map-filters/map-filters.component';
 
 @Component({
   selector: 'app-explore',
@@ -50,6 +51,7 @@ import type { CarMapLocation } from '../../core/services/car-locations.service';
     IonFabButton,
     IonSearchbar,
     CarsMapComponent,
+    WazeLiveMapComponent,
     CarCardComponent,
     MapFiltersComponent,
     MapDrawerComponent,
@@ -72,6 +74,8 @@ export class ExplorePage implements OnInit, AfterViewInit {
   readonly isMobileView;
   readonly currentFilters = signal<FilterState | null>(null);
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
+  readonly viewMode = signal<'map' | 'grid' | 'list'>('map'); // Default to map, can change based on device
+  readonly mapProvider = signal<'mapbox' | 'waze'>('mapbox'); // Map provider toggle
 
   // Computed
   readonly selectedCar = computed<CarMapLocation | undefined>(() => {
@@ -109,9 +113,14 @@ export class ExplorePage implements OnInit, AfterViewInit {
     private router: Router,
     private breakpoint: BreakpointService,
   ) {
-    addIcons({ optionsOutline, locateOutline });
+    addIcons({ optionsOutline, locateOutline, gridOutline, listOutline, mapOutline });
     // Usar BreakpointService en lugar de window.innerWidth
     this.isMobileView = this.breakpoint.isMobile;
+
+    // Set default view mode based on device
+    if (!this.isMobileView()) {
+      this.viewMode.set('grid');
+    }
   }
 
   ngOnInit(): void {
@@ -318,7 +327,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     }
   }
 
-  private extractPhotoGallery(car: Car): string[] {
+  extractPhotoGallery(car: Car): string[] {
     const rawPhotos = car.photos ?? car.car_photos ?? [];
     if (!Array.isArray(rawPhotos)) {
       return [];

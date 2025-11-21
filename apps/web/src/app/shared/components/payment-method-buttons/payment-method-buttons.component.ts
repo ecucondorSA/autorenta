@@ -1,15 +1,15 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   computed,
   inject,
   signal,
-  OnInit,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
@@ -94,6 +94,11 @@ export class PaymentMethodButtonsComponent implements OnInit {
 
     // Don't allow wallet if insufficient funds
     if (method === 'wallet' && !this.hasSufficientFunds()) {
+      console.warn('[PaymentMethodButtons] Wallet selected but insufficient funds');
+      // Still emit the selection to allow parent to handle the situation
+      // Parent can show options to deposit or use card
+      this.selectedMethod.set(method);
+      this.methodSelected.emit(method);
       return;
     }
 

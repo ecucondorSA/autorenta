@@ -49,7 +49,7 @@
     "enableErrorTracking": true
   },
   "hooks": {
-    "onPromptSubmit": [
+    "UserPromptSubmit": [
       {
         "matcher": {},
         "hooks": [
@@ -58,18 +58,6 @@
             "command": "node .claude/hooks/json-to-toon.mjs"
           }
         ]
-      }
-    ],
-    "preCommit": [
-      {
-        "type": "command",
-        "command": ".claude/hooks/pre-commit.sh"
-      }
-    ],
-    "postCode": [
-      {
-        "type": "command",
-        "command": ".claude/hooks/post-code.sh"
       }
     ]
   },

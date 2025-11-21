@@ -44,22 +44,24 @@ export interface MapControlsEvent {
     `
       .map-controls-container {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
+        top: 1.5rem;
+        right: 1.5rem;
         z-index: 1000;
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 1rem;
         pointer-events: none;
       }
 
       .control-group {
         display: flex;
         flex-direction: column;
-        gap: 2px;
         background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06),
+          0 0 0 1px rgba(0, 0, 0, 0.05);
         overflow: hidden;
         pointer-events: auto;
       }
@@ -71,81 +73,117 @@ export interface MapControlsEvent {
       .control-btn {
         background: white;
         border: none;
-        padding: 0.75rem;
+        padding: 0;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         align-items: center;
         justify-content: center;
-        min-width: 40px;
-        min-height: 40px;
+        width: 44px;
+        height: 44px;
         position: relative;
+        color: #4b5563;
 
         &:hover {
-          background: #f3f4f6;
+          background: #f9fafb;
+          color: #111827;
         }
 
         &:active {
-          background: #e5e7eb;
+          background: #f3f4f6;
         }
 
         &.active {
-          background: #3b82f6;
-          color: white;
+          background: #eff6ff;
+          color: #2563eb;
 
           ion-icon {
-            color: white;
+            color: #2563eb;
           }
         }
 
         ion-icon {
           font-size: 1.25rem;
-          color: #374151;
+          transition: transform 0.2s;
         }
 
-        &:not(:last-child) {
-          border-bottom: 1px solid #e5e7eb;
+        &:hover ion-icon {
+          transform: scale(1.1);
         }
+
+        &:not(:last-child)::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 8px;
+          right: 8px;
+          height: 1px;
+          background-color: #f3f4f6;
+        }
+      }
+
+      .search-area-control {
+        align-items: center;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        overflow: visible;
       }
 
       .search-area-btn {
         flex-direction: row;
         gap: 0.5rem;
-        padding: 0.75rem 1.25rem;
+        padding: 0 1.25rem;
+        height: 40px;
+        width: auto;
         font-size: 0.875rem;
         font-weight: 600;
         color: white;
-        background: #3b82f6;
+        background: #2563eb;
+        border-radius: 9999px;
+        box-shadow:
+          0 4px 6px -1px rgba(37, 99, 235, 0.3),
+          0 2px 4px -1px rgba(37, 99, 235, 0.15);
 
         &:hover {
-          background: #2563eb;
+          background: #1d4ed8;
+          transform: translateY(-1px);
+          box-shadow:
+            0 6px 8px -1px rgba(37, 99, 235, 0.4),
+            0 3px 6px -1px rgba(37, 99, 235, 0.2);
         }
 
         &:active {
-          background: #1d4ed8;
+          background: #1e40af;
+          transform: translateY(0);
         }
 
         ion-icon {
           color: white;
+          font-size: 1.125rem;
         }
 
         span {
           color: white;
+          white-space: nowrap;
+        }
+
+        &::after {
+          display: none;
         }
       }
 
       /* Mobile */
       @media (max-width: 768px) {
         .map-controls-container {
-          top: 0.5rem;
-          right: 0.5rem;
-          gap: 0.5rem;
+          top: 1rem;
+          right: 1rem;
+          gap: 0.75rem;
         }
 
         .control-btn {
-          padding: 0.625rem;
-          min-width: 36px;
-          min-height: 36px;
+          width: 40px;
+          height: 40px;
 
           ion-icon {
             font-size: 1.125rem;
@@ -153,8 +191,9 @@ export interface MapControlsEvent {
         }
 
         .search-area-btn {
+          height: 36px;
+          padding: 0 1rem;
           font-size: 0.8125rem;
-          padding: 0.625rem 1rem;
         }
       }
     `,

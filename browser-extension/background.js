@@ -72,7 +72,7 @@ function connectToBridge() {
 
   try {
     console.log('[Background] Connecting to bridge server (attempt ' + (connectionAttempts + 1) + ')...');
-    bridgeSocket = new WebSocket('ws://localhost:9222');
+    bridgeSocket = new WebSocket('ws://localhost:9223');
 
     bridgeSocket.onopen = () => {
       console.log('[Background] ✅ Connected to bridge server');

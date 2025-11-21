@@ -40,6 +40,8 @@
     "depurar:cdp": "./scripts/debug-cdp.sh",
     "tests:cdp": "./scripts/test-with-cdp.sh",
     "tests:cdp:ui": "./scripts/test-with-cdp.sh --ui",
+    "debug:mercadopago": "node scripts/debug-mercadopago-sdk.mjs",
+    "debug:mp": "node scripts/debug-mercadopago-sdk.mjs",
     "_comment_build": "=== BUILDING ===",
     "build": "./tools/run.sh build",
     "build:web": "./tools/run.sh build:web",

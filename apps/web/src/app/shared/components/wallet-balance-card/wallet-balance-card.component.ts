@@ -348,12 +348,12 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Formatea un número (en centavos) como moneda
+   * Formatea un número como moneda
+   * El valor ya viene en unidades (no centavos) desde wallet_get_balance()
    * Usa la moneda del balance actual o USD por defecto
    */
-  formatCurrency(amountCents: number): string {
+  formatCurrency(amount: number): string {
     const currency = this.balance()?.currency || 'USD';
-    const amount = amountCents / 100; // Convertir centavos a unidades
 
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',

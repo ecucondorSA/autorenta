@@ -20,6 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MessageService } from 'primeng/api';
 import { routes } from './app.routes';
+import { authRefreshInterceptor } from './core/interceptors/auth-refresh.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
 import { GlobalErrorHandler } from './core/services/global-error-handler';
@@ -49,7 +50,13 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: 'enabled',
       }),
     ),
-    provideHttpClient(withInterceptors([SupabaseAuthInterceptor, httpErrorInterceptor])),
+    provideHttpClient(
+      withInterceptors([
+        SupabaseAuthInterceptor,
+        authRefreshInterceptor,
+        httpErrorInterceptor,
+      ]),
+    ),
     provideAnimationsAsync(),
     provideIonicAngular({
       mode: 'md',
@@ -72,11 +79,11 @@ export const appConfig: ApplicationConfig = {
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode()
       ? {
-          provide: APP_INITIALIZER,
-          useFactory: initializePerformanceMonitoring,
-          deps: [PerformanceMonitoringService],
-          multi: true,
-        }
+        provide: APP_INITIALIZER,
+        useFactory: initializePerformanceMonitoring,
+        deps: [PerformanceMonitoringService],
+        multi: true,
+      }
       : [],
   ],
 };

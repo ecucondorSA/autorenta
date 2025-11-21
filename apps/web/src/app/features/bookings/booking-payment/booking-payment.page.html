@@ -1,0 +1,281 @@
+<div class="min-h-screen bg-surface-default dark:bg-surface-default">
+  <!-- Loading State -->
+  <app-loading-state *ngIf="loading()" />
+
+  <!-- Main Content -->
+  <div *ngIf="!loading()" class="container mx-auto px-4 py-6 max-w-6xl">
+    <!-- Header -->
+    <div class="mb-6">
+      <button
+        (click)="goBack()"
+        class="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Volver</span>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column: Payment Form -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Payment Method Header -->
+        <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6">
+          <h1 class="text-2xl font-bold text-text-primary dark:text-text-secondary mb-2">
+            Completar Pago
+          </h1>
+          <p class="text-text-secondary">
+            Confirma el pago para tu reserva
+          </p>
+        </div>
+
+        <!-- Payment Options (when wallet has insufficient funds) -->
+        <div *ngIf="showPaymentOptions()" class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6">
+          <h2 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-4">
+            Opciones de Pago Disponibles
+          </h2>
+
+          <div class="bg-warning-light/10 border border-warning-light/20 rounded-lg p-4 mb-4">
+            <p class="text-sm text-warning-strong">
+              <svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              Tu wallet no tiene fondos suficientes. Necesitas <strong>{{ totalAmount() | money }}</strong> para completar esta reserva.
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <button
+              *ngFor="let option of paymentOptions()"
+              (click)="selectPaymentOption(option.id)"
+              [disabled]="!option.available || processing()"
+              class="w-full p-4 rounded-lg border-2 text-left transition-all group"
+              [class.border-cta-default]="selectedOption() === option.id"
+              [class.bg-cta-default/5]="selectedOption() === option.id"
+              [class.border-border-default]="selectedOption() !== option.id"
+              [class.hover:border-cta-default/50]="option.available && selectedOption() !== option.id"
+              [class.opacity-50]="!option.available"
+              [class.cursor-not-allowed]="!option.available"
+            >
+              <div class="flex items-start gap-3">
+                <span class="text-2xl">{{ option.icon }}</span>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-text-primary dark:text-text-secondary">
+                    {{ option.label }}
+                  </h3>
+                  <p class="text-sm text-text-secondary">
+                    {{ option.description }}
+                  </p>
+                </div>
+                <div
+                  class="w-6 h-6 rounded-full border-2 flex items-center justify-center"
+                  [class.border-cta-default]="selectedOption() === option.id"
+                  [class.bg-cta-default]="selectedOption() === option.id"
+                  [class.border-border-default]="selectedOption() !== option.id"
+                >
+                  <div
+                    *ngIf="selectedOption() === option.id"
+                    class="w-3 h-3 bg-surface-raised rounded-full"
+                  ></div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Wallet Payment (when sufficient funds) -->
+        <div *ngIf="paymentMethod() === 'wallet' && hasSufficientFunds() && !showPaymentOptions()"
+          class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6">
+          <h2 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-4">
+            Pagar con Wallet AutoRenta
+          </h2>
+
+          <!-- Wallet Balance Card -->
+          <app-wallet-balance-card class="mb-6" />
+
+          <!-- Payment Breakdown -->
+          <div class="space-y-2 mb-6">
+            <div class="flex justify-between text-sm">
+              <span class="text-text-secondary">Alquiler del vehículo:</span>
+              <span class="font-semibold text-text-primary dark:text-text-secondary">
+                {{ booking()?.total_amount | money }}
+              </span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-text-secondary">Depósito de garantía:</span>
+              <span class="font-semibold text-text-primary dark:text-text-secondary">
+                {{ depositAmount() | money }}
+              </span>
+            </div>
+            <div class="pt-2 mt-2 border-t border-border-default">
+              <div class="flex justify-between">
+                <span class="font-semibold text-text-primary dark:text-text-secondary">Total a bloquear:</span>
+                <span class="font-bold text-xl text-cta-default">
+                  {{ totalAmount() | money }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Success Message -->
+          <div class="bg-success-light/10 border border-success-light/20 rounded-lg p-4 mb-6">
+            <div class="flex items-start gap-2">
+              <svg class="w-5 h-5 text-success-light mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd" />
+              </svg>
+              <div class="text-sm text-success-strong">
+                <p class="font-semibold mb-1">Fondos disponibles confirmados</p>
+                <p class="text-success-text">
+                  Los fondos se bloquearán hasta que completes el check-in.
+                  Si cancelas la reserva, se liberarán automáticamente.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Confirm Button -->
+          <app-button
+            [fullWidth]="true"
+            [loading]="processing()"
+            [disabled]="processing()"
+            (onClick)="processWalletPayment()"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Confirmar y Bloquear Fondos
+          </app-button>
+        </div>
+
+        <!-- Credit Card Payment -->
+        <div *ngIf="paymentMethod() === 'credit_card' && !showPaymentOptions()"
+          class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6">
+          <h2 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-4">
+            Pagar con Tarjeta de Crédito/Débito
+          </h2>
+
+          <!-- MercadoPago Card Form -->
+          <app-mercadopago-card-form
+            [amountArs]="totalAmount()"
+            (cardTokenGenerated)="onCardTokenGenerated($event)"
+            (cardError)="onCardPaymentError($event)"
+          />
+
+          <!-- Security Info -->
+          <div class="mt-6 flex items-start gap-2 text-xs text-text-secondary">
+            <svg class="w-4 h-4 mt-0.5 text-success-light" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+            </svg>
+            <p>
+              Pago seguro procesado por MercadoPago. Tus datos están protegidos con encriptación SSL.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Booking Summary -->
+      <div class="lg:col-span-1">
+        <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6 sticky top-6">
+          <h2 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-4">
+            Resumen de Reserva
+          </h2>
+
+          <!-- Car Info -->
+          <div *ngIf="car()" class="mb-4 pb-4 border-b border-border-default">
+            <div class="flex gap-3">
+              <img
+                src="/assets/car-placeholder.jpg"
+                [alt]="car()!.title"
+                class="w-20 h-16 object-cover rounded-lg"
+              >
+              <div>
+                <h3 class="font-semibold text-text-primary dark:text-text-secondary">
+                  {{ car()!.title }}
+                </h3>
+                <p class="text-sm text-text-secondary">
+                  {{ car()!.brand }} {{ car()!.model }} {{ car()!.year }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dates -->
+          <div class="space-y-2 mb-4 pb-4 border-b border-border-default">
+            <div class="flex justify-between text-sm">
+              <span class="text-text-secondary">Check-in:</span>
+              <span class="font-medium text-text-primary dark:text-text-secondary">
+                {{ booking()?.start_at | date:'dd/MM/yyyy' }}
+              </span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-text-secondary">Check-out:</span>
+              <span class="font-medium text-text-primary dark:text-text-secondary">
+                {{ booking()?.end_at | date:'dd/MM/yyyy' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Amounts -->
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-text-secondary">Subtotal:</span>
+              <span class="font-medium text-text-primary dark:text-text-secondary">
+                {{ booking()?.total_amount | money }}
+              </span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-text-secondary">Depósito:</span>
+              <span class="font-medium text-text-primary dark:text-text-secondary">
+                {{ depositAmount() | money }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Total -->
+          <div class="pt-4 border-t border-border-default">
+            <div class="flex justify-between items-end">
+              <span class="font-semibold text-text-primary dark:text-text-secondary">Total:</span>
+              <span class="text-2xl font-bold text-cta-default">
+                {{ totalAmount() | money }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Payment Method Display -->
+          <div class="mt-4 pt-4 border-t border-border-default">
+            <p class="text-sm text-text-secondary mb-2">Método de pago:</p>
+            <div class="flex items-center gap-2 px-3 py-2 bg-surface-default dark:bg-surface-pressed rounded-lg">
+              <span class="text-lg">
+                {{ paymentMethod() === 'wallet' ? '🏦' : '💳' }}
+              </span>
+              <span class="font-medium text-text-primary dark:text-text-secondary">
+                {{ paymentMethod() === 'wallet' ? 'Wallet AutoRenta' : 'Tarjeta de Crédito/Débito' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Processing Overlay -->
+  <div *ngIf="processing()"
+    class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+    <div class="bg-surface-raised rounded-xl p-8 max-w-sm mx-4 text-center">
+      <app-loading-state type="spinner" class="mb-4" />
+      <p class="text-text-primary dark:text-text-secondary font-semibold">
+        Procesando tu pago...
+      </p>
+      <p class="text-sm text-text-secondary mt-2">
+        Por favor, no cierres esta ventana
+      </p>
+    </div>
+  </div>
+</div>

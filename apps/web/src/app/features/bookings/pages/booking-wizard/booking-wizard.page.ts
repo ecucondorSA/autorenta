@@ -17,6 +17,7 @@ import { BookingStepIndicatorComponent } from '../../components/booking-step-ind
 import { Car } from '../../../../core/models';
 import { BookingsService } from '../../../../core/services/bookings.service';
 import { CarsService } from '../../../../core/services/cars.service';
+import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 
 export interface BookingWizardData {
   // Step 1: Dates & Location
@@ -184,6 +185,7 @@ export class BookingWizardPage implements OnInit {
     private route: ActivatedRoute,
     private carsService: CarsService,
     private bookingsService: BookingsService,
+    private errorHandler: ErrorHandlerService,
   ) { }
 
   async ngOnInit() {
@@ -310,8 +312,7 @@ export class BookingWizardPage implements OnInit {
       // Navigate to payment page
       this.router.navigate(['/bookings', booking.id, 'payment']);
     } catch (error) {
-      console.error('Error creating booking:', error);
-      // TODO: Show error toast
+      this.errorHandler.handleError(error, 'Crear reserva', true);
     } finally {
       this.isLoading.set(false);
     }

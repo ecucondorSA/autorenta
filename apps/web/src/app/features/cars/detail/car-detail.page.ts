@@ -896,7 +896,29 @@ export class CarDetailPage implements OnInit {
       queryParams['paymentMethod'] = paymentMethod;
     }
 
-    await this.router.navigate(['/bookings/detail-payment'], { queryParams });
+    // First create the booking, then navigate to payment page
+    try {
+      // Call booking service to create the booking (using requestBooking RPC)
+      const booking = await this.bookingsService.requestBooking(
+        car.id,
+        startDate,
+        endDate
+      );
+
+      if (booking?.id) {
+        // Navigate to new payment page with booking ID
+        await this.router.navigate(['/bookings', booking.id, 'payment'], {
+          queryParams: { paymentMethod }
+        });
+      } else {
+        // Fallback to old flow if booking creation fails
+        await this.router.navigate(['/bookings/detail-payment'], { queryParams });
+      }
+    } catch (error) {
+      console.error('[CarDetail] Error creating booking:', error);
+      // Fallback to old flow on error
+      await this.router.navigate(['/bookings/detail-payment'], { queryParams });
+    }
   }
 
   async onBookClick(): Promise<void> {

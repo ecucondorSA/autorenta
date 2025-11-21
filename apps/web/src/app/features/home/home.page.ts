@@ -4,18 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import {
   IonButton,
-  IonCard,
-  IonCardContent,
-  IonChip,
   IonContent,
-  IonHeader,
   IonIcon,
-  IonLabel,
   IonRefresher,
   IonRefresherContent,
-  IonSearchbar,
-  IonTitle,
-  IonToolbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowForwardOutline, calendarOutline, carSportOutline, locationOutline, searchOutline, trendingUp } from 'ionicons/icons';
@@ -37,16 +29,8 @@ import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader
     RouterLink,
     FormsModule,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonSearchbar,
-    IonCard,
-    IonCardContent,
     IonButton,
     IonIcon,
-    IonChip,
-    IonLabel,
     IonRefresher,
     IonRefresherContent,
     CarCardComponent,

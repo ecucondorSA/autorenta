@@ -8,7 +8,7 @@
     "bridge": "node bridge-server.js",
     "bridge:dev": "node --watch bridge-server.js",
     "install-extension": "echo 'Chrome Extension instalada en chrome://extensions → Load unpacked'",
-    "test": "echo 'Bridge Server running on ws://localhost:9222'"
+    "test": "echo 'Bridge Server running on ws://localhost:9223'"
   },
   "keywords": [
     "browser-automation",
