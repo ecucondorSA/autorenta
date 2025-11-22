@@ -155,6 +155,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly locationSearchLoading = signal(false); // Cargando sugerencias
   readonly googleCalendarId = signal<string | null>(environment.googleCalendarId || null); // ID del calendario de Google desde environment
   readonly showPriceTransparencyModal = signal(false); // Modal de transparencia de precios
+  readonly mapBounds = signal<{ north: number; south: number; east: number; west: number } | null>(
+    null,
+  );
+  readonly showSearchAreaButton = signal(false); // Botón "Buscar en esta zona"
 
   // Computed - Ahora usa BreakpointService
   readonly isMobile = this.breakpoint.isMobile;
@@ -257,7 +261,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   readonly visibleCars = computed(() => {
     // Return cars that match current filters
-    // For now, return all carsWithDistance
+    // Now that we filter on backend, we just return the cars list
+    // The backend ensures they are within bounds if a search was performed
     return this.carsWithDistance();
   });
 
@@ -364,9 +369,13 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         const items = await this.carsService.listActiveCars({
           from: dateRange.from ?? undefined,
           to: dateRange.to ?? undefined,
+          bounds: this.mapBounds() ?? undefined, // ✅ Pass bounds to backend
         });
         this.cars.set(items);
       }
+
+      // Hide search button after loading
+      this.showSearchAreaButton.set(false);
 
       // Open drawer if there are cars and user location is set
       if (this.cars().length > 0 && this.userLocation() && !this.drawerOpen()) {
@@ -575,6 +584,26 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.userLocation.set(location);
     void this.loadCars();
     this.showToast('Ubicación actualizada', 'success');
+  }
+
+  /**
+   * Handle map bounds change
+   */
+  onBoundsChange(bounds: { north: number; south: number; east: number; west: number }): void {
+    // Don't update immediately, just show the button
+    // Only update if bounds are significantly different to avoid jitter
+    this.showSearchAreaButton.set(true);
+
+    // Store bounds but don't trigger reload yet
+    // We'll use these bounds when user clicks "Search in this area"
+    this.mapBounds.set(bounds);
+  }
+
+  /**
+   * Trigger search in current area
+   */
+  searchInArea(): void {
+    void this.loadCars();
   }
 
   /**
