@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 /**
  * Test Suite: User Login
@@ -108,7 +108,7 @@ test.describe('User Login', () => {
 
     await expect(emailInput).toHaveAttribute('aria-required', 'true');
     await expect(passwordInput).toHaveAttribute('aria-required', 'true');
-    await expect(emailInput).toHaveAttribute('autocomplete', 'email');
+    await expect(emailInput).toHaveAttribute('autocomplete', 'username email');
     await expect(passwordInput).toHaveAttribute('autocomplete', 'current-password');
   });
 

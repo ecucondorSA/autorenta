@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { generateTestUser } from '../helpers/test-data';
 
 /**
@@ -28,6 +28,7 @@ test.describe('User Registration', () => {
     await expect(page.locator('#register-fullname')).toBeVisible();
     await expect(page.locator('#register-email')).toBeVisible();
     await expect(page.locator('#register-password')).toBeVisible();
+    await expect(page.locator('#register-phone')).toBeVisible();
 
     // Verify submit button
     await expect(page.getByRole('button', { name: 'Crear cuenta' })).toBeVisible();
@@ -66,11 +67,13 @@ test.describe('User Registration', () => {
     await page.locator('#register-fullname').fill(testUser.fullName);
     await page.locator('#register-email').fill(testUser.email);
     await page.locator('#register-password').fill(testUser.password);
+    await page.locator('#register-phone').fill('+59899123456');
 
     // Verify no validation errors
     await expect(page.locator('#register-fullname-error')).not.toBeVisible();
     await expect(page.locator('#register-email-error')).not.toBeVisible();
     await expect(page.locator('#register-password-error')).not.toBeVisible();
+    await expect(page.locator('#register-phone-error')).not.toBeVisible();
 
     // Verify submit button becomes enabled
     const submitButton = page.getByRole('button', { name: 'Crear cuenta' });
@@ -105,6 +108,7 @@ test.describe('User Registration', () => {
     await page.locator('#register-fullname').fill(testUser.fullName);
     await page.locator('#register-email').fill(testUser.email);
     await page.locator('#register-password').fill(testUser.password);
+    await page.locator('#register-phone').fill('+59899123456');
 
     // Submit form
     await page.getByRole('button', { name: 'Crear cuenta' }).click();
@@ -143,6 +147,7 @@ test.describe('User Registration', () => {
     await expect(fullNameLabel).toContainText('*');
     await expect(emailLabel).toContainText('*');
     await expect(passwordLabel).toContainText('*');
+    await expect(page.locator('label[for="register-phone"]')).toContainText('*');
   });
 
   test('should have proper accessibility attributes', async ({ page }) => {
@@ -154,5 +159,6 @@ test.describe('User Registration', () => {
     await expect(passwordInput).toHaveAttribute('aria-required', 'true');
     await expect(emailInput).toHaveAttribute('autocomplete', 'email');
     await expect(passwordInput).toHaveAttribute('autocomplete', 'new-password');
+    await expect(page.locator('#register-phone')).toHaveAttribute('aria-required', 'true');
   });
 });
