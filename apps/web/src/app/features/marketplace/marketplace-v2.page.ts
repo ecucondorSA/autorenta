@@ -369,7 +369,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         const items = await this.carsService.listActiveCars({
           from: dateRange.from ?? undefined,
           to: dateRange.to ?? undefined,
-          bounds: this.mapBounds() ?? undefined, // ✅ Pass bounds to backend
         });
         this.cars.set(items);
       }
@@ -589,14 +588,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   /**
    * Handle map bounds change
    */
-  onBoundsChange(bounds: { north: number; south: number; east: number; west: number }): void {
+  onBoundsChange(bounds: any): void {
     // Don't update immediately, just show the button
     // Only update if bounds are significantly different to avoid jitter
-    this.showSearchAreaButton.set(true);
-
-    // Store bounds but don't trigger reload yet
-    // We'll use these bounds when user clicks "Search in this area"
     this.mapBounds.set(bounds);
+    this.showSearchAreaButton.set(true);
   }
 
   /**
