@@ -1,5 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ReviewsService } from '../../../core/services/reviews.service';
@@ -24,7 +24,7 @@ export class PendingReviewsBannerComponent implements OnInit {
   loading = signal(false);
   isDismissed = signal(false);
 
-  constructor(private reviewsService: ReviewsService) {}
+  constructor(private reviewsService: ReviewsService) { }
 
   async ngOnInit(): Promise<void> {
     // Check if banner was dismissed in this session
@@ -42,7 +42,7 @@ export class PendingReviewsBannerComponent implements OnInit {
     try {
       const reviews = await this.reviewsService.getPendingReviews();
       this.pendingReviews.set(reviews);
-    } catch (__error) {
+    } catch {
       /* Silenced */
     } finally {
       this.loading.set(false);

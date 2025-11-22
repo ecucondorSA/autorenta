@@ -71,7 +71,7 @@ export class CarBookingDemoPage {
   start: string | null = null;
   end: string | null = null;
   loading = false;
-  result: any = null;
+  result: unknown = null;
   error: string | null = null;
   blockedRanges: BlockedDateRange[] = [];
   availabilityChecker: ((carId: string, from: string, to: string) => Promise<boolean>) | null =
@@ -97,8 +97,9 @@ export class CarBookingDemoPage {
     try {
       const booking = await this.bookingsService.requestBooking(this.carId, this.start!, this.end!);
       this.result = booking;
-    } catch (err: any) {
-      this.error = err?.message || String(err);
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      this.error = error?.message || String(err);
     } finally {
       this.loading = false;
     }

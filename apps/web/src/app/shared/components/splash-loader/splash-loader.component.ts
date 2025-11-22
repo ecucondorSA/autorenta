@@ -1,5 +1,5 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -194,8 +194,8 @@ export class SplashLoaderComponent implements AfterViewInit {
 
     if (playPromise !== undefined) {
       playPromise
-        .then(() => {})
-        .catch((err) => {
+        .then(() => { })
+        .catch(() => {
           // Attempt 2: Retry after 100ms (video might still be loading)
           if (attempt === 1) {
             setTimeout(() => this.attemptPlay(video, 2), 100);

@@ -1,10 +1,10 @@
-import { Component, inject, signal, output, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  OfflineMessagesService,
-  OfflineMessage,
-} from '../../../core/services/offline-messages.service';
+import { Component, inject, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { MessagesService } from '../../../core/services/messages.service';
+import {
+  OfflineMessage,
+  OfflineMessagesService,
+} from '../../../core/services/offline-messages.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 
 /**
@@ -279,7 +279,7 @@ export class OfflineMessagesPanelComponent implements OnInit, OnDestroy {
       // Success: remove from queue
       await this.offlineMessages.removeMessage(message.id);
       await this.loadMessages();
-    } catch (error) {
+    } catch {
       // Increment retry counter
       await this.offlineMessages.incrementRetry(message.id);
       await this.loadMessages();

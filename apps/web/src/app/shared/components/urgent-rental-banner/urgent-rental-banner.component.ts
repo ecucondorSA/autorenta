@@ -1,11 +1,11 @@
-import { Component, Input, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import {
-  UrgentRentalService,
   UrgentRentalAvailability,
   UrgentRentalQuote,
+  UrgentRentalService,
 } from '../../../core/services/urgent-rental.service';
-import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 
 @Component({
   selector: 'app-urgent-rental-banner',

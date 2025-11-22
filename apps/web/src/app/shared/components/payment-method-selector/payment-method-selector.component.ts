@@ -1,18 +1,18 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  signal,
-  inject,
   computed,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { WalletService } from '../../../core/services/wallet.service';
 import type { BookingPaymentMethod } from '../../../core/models/wallet.model';
+import { WalletService } from '../../../core/services/wallet.service';
 
 /**
  * PaymentMethodSelectorComponent
@@ -148,7 +148,7 @@ export class PaymentMethodSelectorComponent implements OnInit {
     this.isLoadingBalance.set(true);
     try {
       await this.walletService.getBalance();
-    } catch (_err) {
+    } catch {
       /* Silenced */
     } finally {
       this.isLoadingBalance.set(false);

@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { BlockedDateRange } from '../../shared/components/date-range-picker/date-range-picker.component';
-import { injectSupabase } from './supabase-client.service';
+import { Car } from '../models';
 import { CarBlockingService } from './car-blocking.service';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * Blocked date range from database
@@ -314,6 +315,181 @@ export class CarAvailabilityService {
    * />
    * ```
    */
+  /**
+   * ✅ SPRINT 2 FIX: Obtener autos disponibles usando RPC function
+   * Previene doble reserva validando en base de datos
+   */
+  async getAvailableCars(
+    startDate: string,
+    endDate: string,
+    options: {
+      limit?: number;
+      offset?: number;
+      city?: string;
+    } = {},
+  ): Promise<Car[]> {
+    const { data, error } = await this.supabase.rpc('get_available_cars', {
+      p_start_date: startDate,
+      p_end_date: endDate,
+      p_limit: options.limit || 100,
+      p_offset: options.offset || 0,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data || data.length === 0) {
+      return [];
+    }
+
+    // Filtrar por ciudad si se especificó
+    let filteredCars = data;
+    if (options.city) {
+      filteredCars = data.filter((car: Record<string, unknown>) => {
+        const carLocation = car.location as Record<string, unknown> | undefined;
+        const cityInLocation = (carLocation?.city as string | undefined)?.toLowerCase();
+        return cityInLocation?.includes(options.city!.toLowerCase());
+      });
+    }
+
+    // Cargar fotos para cada auto (la RPC no las incluye por performance)
+    const carsWithPhotos = await Promise.all(
+      filteredCars.map(async (car: Record<string, unknown>) => {
+        const { data: photos } = await this.supabase
+          .from('car_photos')
+          .select('*')
+          .eq('car_id', car.id)
+          .order('position');
+
+        return {
+          ...car,
+          photos: photos || [],
+        } as Car;
+      }),
+    );
+
+    return carsWithPhotos;
+  }
+
+  /**
+   * ✅ NUEVO: Verifica si un auto tiene reservas activas
+   */
+  async hasActiveBookings(carId: string): Promise<{
+    hasActive: boolean;
+    count: number;
+    bookings?: Array<{ id: string; status: string; start_date: string; end_date: string }>;
+  }> {
+    const { data: allBookings, error: allError } = await this.supabase
+      .from('bookings')
+      .select('id, status')
+      .eq('car_id', carId);
+
+    if (allError) {
+      throw allError;
+    }
+
+    if (allBookings && allBookings.length > 0) {
+      const { data: activeBookings, error: activeError } = await this.supabase
+        .from('bookings')
+        .select('id, status, start_date, end_date')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'confirmed', 'in_progress'])
+        .order('start_date', { ascending: true });
+
+      if (activeError) throw activeError;
+
+      return {
+        hasActive: true,
+        count: allBookings.length,
+        bookings: activeBookings || [],
+      };
+    }
+
+    return {
+      hasActive: false,
+      count: 0,
+      bookings: [],
+    };
+  }
+
+  /**
+   * ✅ NUEVO: Obtener próximos rangos de fechas disponibles
+   */
+  async getNextAvailableRange(
+    carId: string,
+    startDate: string,
+    endDate: string,
+    _maxOptions = 3,
+  ): Promise<
+    Array<{
+      startDate: string;
+      endDate: string;
+      daysCount: number;
+    }>
+  > {
+    try {
+
+
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const { error } = await this.supabase
+        .from('bookings')
+        .select('start_at, end_at')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'confirmed', 'in_progress'])
+        .gte('end_at', today.toISOString())
+        .order('start_at', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching bookings for availability:', error);
+        return [];
+      }
+
+      // TODO: Implementar lógica completa de búsqueda de huecos
+      // Por ahora retornamos array vacío para simplificar la migración inicial
+      return [];
+    } catch (error) {
+      console.error('Error calculating next available range:', error);
+      return [];
+    }
+  }
+
+  /**
+   * ✅ FIX P0.2: Filtrar autos que NO tienen reservas conflictivas
+   * Verifica disponibilidad real contra bookings existentes
+   */
+  async filterByAvailability(
+    cars: Car[],
+    startDate: string,
+    endDate: string,
+    additionalBlockedIds: string[] = [],
+  ): Promise<Car[]> {
+    if (cars.length === 0) return [];
+
+    const carIds = cars.map((c) => c.id);
+
+    const { data: conflicts, error } = await this.supabase
+      .from('bookings')
+      .select('car_id')
+      .in('car_id', carIds)
+      .in('status', ['confirmed', 'in_progress', 'pending'])
+      .or(`start_at.lte.${endDate},end_at.gte.${startDate}`);
+
+    if (error) {
+      return cars;
+    }
+
+    const blockedIds = new Set([
+      ...additionalBlockedIds,
+      ...(conflicts || []).map((c) => c.car_id),
+    ]);
+
+    return cars.filter((car) => !blockedIds.has(car.id));
+  }
+
   createChecker(carId: string): (carId: string, from: string, to: string) => Promise<boolean> {
     return async (_carId: string, from: string, to: string) => {
       return this.checkAvailability(carId, from, to);

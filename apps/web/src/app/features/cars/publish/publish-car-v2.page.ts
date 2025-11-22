@@ -1,23 +1,23 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
-import { PricingService } from '../../../core/services/pricing.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
-import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
-import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
+import { PricingService } from '../../../core/services/pricing.service';
 import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
 import { FipeAutocompleteComponent } from '../../../shared/components/fipe-autocomplete/fipe-autocomplete.component';
+import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
+import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
 
 // ✅ NEW: Extracted services
+import { CarOwnerNotificationsService } from '../../../core/services/car-owner-notifications.service';
+import { VehicleDocumentsService } from '../../../core/services/vehicle-documents.service';
 import { PublishCarFormService } from './services/publish-car-form.service';
-import { PublishCarPhotoService } from './services/publish-car-photo.service';
 import { PublishCarLocationService } from './services/publish-car-location.service';
 import { PublishCarMpOnboardingService } from './services/publish-car-mp-onboarding.service';
-import { VehicleDocumentsService } from '../../../core/services/vehicle-documents.service';
-import { CarOwnerNotificationsService } from '../../../core/services/car-owner-notifications.service';
+import { PublishCarPhotoService } from './services/publish-car-photo.service';
 
 /**
  * Publish Car V2 Component (REFACTORED)
@@ -117,14 +117,17 @@ export class PublishCarV2Page implements OnInit {
 
   // FIPE value signals (for UI state)
   readonly valueAutoCalculated = signal(false);
-  readonly isFetchingFipeValue = signal(false);
+  readonly isFetchingFIPEValue = signal(false);
   readonly fipeError = signal<string | null>(null);
   readonly fipeErrorCode = signal<string | null>(null); // ✅ NEW: Machine-readable error code
   readonly fipeSuggestions = signal<string[]>([]); // ✅ NEW: Actionable suggestions
   readonly allowManualValueEdit = signal(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly fipeMultiCurrencyValues = signal<any>(null);
-  readonly selectedFipeBrand = signal<any>(null);
-  readonly selectedFipeModel = signal<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly selectedFIPEBrand = signal<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly selectedFIPEModel = signal<any>(null);
   readonly suggestedPrice = signal<number | null>(null);
   readonly selectedCategoryName = signal<string>('');
   readonly isCalculatingSuggestedPrice = signal(false);
@@ -141,8 +144,8 @@ export class PublishCarV2Page implements OnInit {
     const modelTextBackup = this.publishForm?.get('model_text_backup')?.value;
 
     // Verificar valores FIPE (nuevo sistema)
-    const fipeBrand = this.selectedFipeBrand();
-    const fipeModel = this.selectedFipeModel();
+    const fipeBrand = this.selectedFIPEBrand();
+    const fipeModel = this.selectedFIPEModel();
 
     // Aceptar cualquiera de los sistemas: UUIDs, texto backup, o FIPE signals
     const hasBrand = !!(brandId || brandTextBackup || (fipeBrand && fipeBrand.name));
@@ -155,11 +158,23 @@ export class PublishCarV2Page implements OnInit {
     return !!(hasBrand && hasModel && year && hasPhotos);
   });
 
+  // Submit habilitado con datos mínimos; MP recomendado pero no bloquea
+  readonly canSubmitWithPayments = computed(() => this.canSubmit());
+  readonly publishBlockerMessage = computed(() => {
+    if (this.mpStatusLoading()) return null;
+    if (!this.mpReady()) {
+      return 'Conecta Mercado Pago para cobrar (puedes publicar igual).';
+    }
+    return null;
+  });
+
   // FIPE autocomplete signals
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly fipeBrands = signal<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly fipeModels = signal<any[]>([]);
-  readonly isLoadingFipeBrands = signal(false);
-  readonly isLoadingFipeModels = signal(false);
+  readonly isLoadingFIPEBrands = signal(false);
+  readonly isLoadingFIPEModels = signal(false);
 
   // Year options (2013-2025)
   // ✅ Generate years dynamically from current year back 12 years
@@ -188,7 +203,7 @@ export class PublishCarV2Page implements OnInit {
     await this.formService.loadBrandsAndModels();
 
     // ✅ CRITICAL: Load FIPE brands for autocomplete
-    await this.loadFipeBrands();
+    await this.loadFIPEBrands();
 
     // Load car data if editing
     if (this.carId) {
@@ -213,8 +228,10 @@ export class PublishCarV2Page implements OnInit {
       console.log('[PublishCarV2] updateCategoryName called with categoryId:', categoryId);
       const categories = await this.pricingService.getVehicleCategories();
       console.log('[PublishCarV2] Loaded categories:', categories.length);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const category = categories.find((c: any) => c.id === categoryId);
       if (category) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const categoryName = (category as any).name_es || category.name;
         console.log('[PublishCarV2] ✅ Category name updated:', categoryName);
         this.selectedCategoryName.set(categoryName);
@@ -267,13 +284,13 @@ export class PublishCarV2Page implements OnInit {
   /**
    * ✅ NEW: Load FIPE brands from API
    */
-  async loadFipeBrands(): Promise<void> {
-    this.isLoadingFipeBrands.set(true);
+  async loadFIPEBrands(): Promise<void> {
+    this.isLoadingFIPEBrands.set(true);
     try {
       const brands = await this.pricingService.getFipeBrands();
       console.log('[PublishCarV2] Loaded FIPE brands:', brands.length);
 
-      // Convert to FipeAutocompleteOption format
+      // Convert to FIPEAutocompleteOption format
       const formattedBrands = brands.map((brand) => ({
         code: brand.code,
         name: brand.name,
@@ -285,17 +302,18 @@ export class PublishCarV2Page implements OnInit {
       console.error('[PublishCarV2] Error loading FIPE brands:', error);
       this.fipeBrands.set([]);
     } finally {
-      this.isLoadingFipeBrands.set(false);
+      this.isLoadingFIPEBrands.set(false);
     }
   }
 
   /**
    * Handle FIPE brand selection
    */
-  async onFipeBrandSelected(brand: any): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async onFIPEBrandSelected(brand: any): Promise<void> {
     console.log('[PublishCarV2] Brand selected:', brand);
-    this.selectedFipeBrand.set(brand);
-    this.selectedFipeModel.set(null);
+    this.selectedFIPEBrand.set(brand);
+    this.selectedFIPEModel.set(null);
     this.fipeModels.set([]);
 
     // ✅ CRITICAL: brand_id y model_id son UUIDs, NO códigos FIPE
@@ -313,12 +331,12 @@ export class PublishCarV2Page implements OnInit {
 
     // Load models for selected brand
     if (brand && brand.code) {
-      this.isLoadingFipeModels.set(true);
+      this.isLoadingFIPEModels.set(true);
       try {
         const models = await this.pricingService.getFipeModels(brand.code);
         console.log('[PublishCarV2] Loaded models for brand:', models.length);
 
-        // Convert to FipeAutocompleteOption format
+        // Convert to FIPEAutocompleteOption format
         const formattedModels = models.map((model) => ({
           code: model.code,
           name: model.name,
@@ -329,7 +347,7 @@ export class PublishCarV2Page implements OnInit {
         console.error('[PublishCarV2] Error loading FIPE models:', error);
         this.fipeModels.set([]);
       } finally {
-        this.isLoadingFipeModels.set(false);
+        this.isLoadingFIPEModels.set(false);
       }
     }
   }
@@ -337,9 +355,10 @@ export class PublishCarV2Page implements OnInit {
   /**
    * Handle FIPE model selection
    */
-  async onFipeModelSelected(model: any): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async onFIPEModelSelected(model: any): Promise<void> {
     console.log('[PublishCarV2] Model selected:', model);
-    this.selectedFipeModel.set(model);
+    this.selectedFIPEModel.set(model);
 
     // ✅ CRITICAL: model_id es UUID, NO código FIPE
     // Guardar nombre de modelo en model_text_backup (para backward compatibility)
@@ -352,7 +371,7 @@ export class PublishCarV2Page implements OnInit {
     }
 
     // Fetch vehicle value from FIPE API when we have brand, model, and year
-    await this.fetchFipeValue();
+    await this.fetchFIPEValue();
   }
 
   /**
@@ -363,17 +382,17 @@ export class PublishCarV2Page implements OnInit {
     console.log('[PublishCarV2] Year changed to:', year);
 
     // Re-fetch FIPE value if we have all required data
-    if (year && this.selectedFipeBrand() && this.selectedFipeModel()) {
-      await this.fetchFipeValue();
+    if (year && this.selectedFIPEBrand() && this.selectedFIPEModel()) {
+      await this.fetchFIPEValue();
     }
   }
 
   /**
    * ✅ NEW: Fetch FIPE value when brand, model, and year are available
    */
-  async fetchFipeValue(): Promise<void> {
-    const brand = this.selectedFipeBrand();
-    const model = this.selectedFipeModel();
+  async fetchFIPEValue(): Promise<void> {
+    const brand = this.selectedFIPEBrand();
+    const model = this.selectedFIPEModel();
     const year = this.publishForm?.get('year')?.value;
 
     // Need all three to fetch value
@@ -392,7 +411,7 @@ export class PublishCarV2Page implements OnInit {
       year,
     });
 
-    this.isFetchingFipeValue.set(true);
+    this.isFetchingFIPEValue.set(true);
     this.fipeError.set(null);
     this.fipeErrorCode.set(null);
     this.fipeSuggestions.set([]);
@@ -483,7 +502,7 @@ export class PublishCarV2Page implements OnInit {
       }
     } catch (err) {
       console.error('[PublishCarV2] Error fetching FIPE value:', err);
-      this.isFetchingFipeValue.set(false);
+      this.isFetchingFIPEValue.set(false);
       this.fipeError.set('Error al consultar el valor. Intentá nuevamente en unos momentos.');
       this.fipeErrorCode.set('NETWORK_ERROR');
       this.fipeSuggestions.set([
@@ -496,7 +515,7 @@ export class PublishCarV2Page implements OnInit {
       this.valueAutoCalculated.set(false);
       this.allowManualValueEdit.set(true);
     } finally {
-      this.isFetchingFipeValue.set(false);
+      this.isFetchingFIPEValue.set(false);
     }
   }
 
@@ -593,8 +612,10 @@ export class PublishCarV2Page implements OnInit {
 
     console.log('[PublishCarV2] Value-based classification:', { valueUsd, categoryCode });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const category = categories.find((c: any) => c.code === categoryCode);
     if (category) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const categoryName = (category as any).name_es || category.name;
       console.log(
         '[PublishCarV2] ✅ Category from value USD:',
@@ -626,6 +647,7 @@ export class PublishCarV2Page implements OnInit {
         '[PublishCarV2] ❌ Category not found for code:',
         categoryCode,
         'Available codes:',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         categories.map((c: any) => c.code),
       );
     }
@@ -707,7 +729,7 @@ export class PublishCarV2Page implements OnInit {
    * Get placeholder text for model selection
    */
   getModelPlaceholder(): string {
-    const selectedBrand = this.selectedFipeBrand();
+    const selectedBrand = this.selectedFIPEBrand();
     if (!selectedBrand) {
       return 'Primero selecciona una marca';
     }
@@ -718,7 +740,7 @@ export class PublishCarV2Page implements OnInit {
    * Get helper text for model selection
    */
   getModelHelperText(): string {
-    const selectedBrand = this.selectedFipeBrand();
+    const selectedBrand = this.selectedFIPEBrand();
     if (!selectedBrand) {
       return 'Primero selecciona una marca';
     }
@@ -754,8 +776,9 @@ export class PublishCarV2Page implements OnInit {
    */
   getCurrentBrand(): string {
     // Try FIPE signal first
-    const fipeBrand = this.selectedFipeBrand();
-    if (fipeBrand && fipeBrand.name) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fipeBrand = this.selectedFIPEBrand() as any;
+    if (fipeBrand && fipeBrand.code) {
       return fipeBrand.name;
     }
 
@@ -778,7 +801,7 @@ export class PublishCarV2Page implements OnInit {
    */
   getCurrentModel(): string {
     // Try FIPE signal first
-    const fipeModel = this.selectedFipeModel();
+    const fipeModel = this.selectedFIPEModel();
     if (fipeModel && fipeModel.name) {
       return fipeModel.name;
     }
@@ -884,8 +907,8 @@ export class PublishCarV2Page implements OnInit {
     const modelId = this.publishForm.get('model_id')?.value;
     const brandTextBackup = this.publishForm.get('brand_text_backup')?.value;
     const modelTextBackup = this.publishForm.get('model_text_backup')?.value;
-    const fipeBrand = this.selectedFipeBrand();
-    const fipeModel = this.selectedFipeModel();
+    const fipeBrand = this.selectedFIPEBrand();
+    const fipeModel = this.selectedFIPEModel();
 
     const hasBrand = !!(brandId || brandTextBackup || (fipeBrand && fipeBrand.name));
     const hasModel = !!(modelId || modelTextBackup || (fipeModel && fipeModel.name));
@@ -901,6 +924,15 @@ export class PublishCarV2Page implements OnInit {
         'Fotos requeridas',
         'Debes subir al menos 3 fotos para publicar tu auto.',
       );
+      return;
+    }
+
+    if (!this.mpReady()) {
+      this.notificationManager.warning(
+        'Conectá Mercado Pago',
+        'Antes de publicar, vinculá tu cuenta para poder recibir pagos y activar tu vehículo.',
+      );
+      await this.openOnboardingModal();
       return;
     }
 
@@ -932,6 +964,7 @@ export class PublishCarV2Page implements OnInit {
 
       console.log('💰 Calculated price_per_day:', pricePerDay);
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const carData: any = {
         ...formData,
         // Campos opcionales con valores por defecto
@@ -1029,7 +1062,7 @@ export class PublishCarV2Page implements OnInit {
         // Ejecutar después de un pequeño delay para que el usuario vea primero
         // la notificación de éxito de publicación
         setTimeout(() => {
-          this.checkMissingDocuments(carId).catch((error) => {
+          this.checkMissingDocuments(carId).catch(() => {
             // Silently fail - notification is optional
           });
         }, 2000); // 2 segundos después de la publicación exitosa
@@ -1124,7 +1157,7 @@ export class PublishCarV2Page implements OnInit {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }
       }
-    } catch (error) {
+    } catch {
       // Silently fail
     }
   }

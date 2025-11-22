@@ -1,23 +1,23 @@
-import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { format, addDays, startOfMonth, endOfMonth, addMonths, eachDayOfInterval } from 'date-fns';
+import { Router } from '@angular/router';
+import { addMonths, eachDayOfInterval, endOfMonth, format, startOfMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
-import { CarsService } from '../../../../core/services/cars.service';
+import { Car } from '../../../../core/models';
 import { AuthService } from '../../../../core/services/auth.service';
-import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 import {
   CarAvailabilityService,
   DetailedBlockedRange,
 } from '../../../../core/services/car-availability.service';
 import { CarBlockingService } from '../../../../core/services/car-blocking.service';
+import { CarsService } from '../../../../core/services/cars.service';
+import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
+import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
 import {
   BlockDateModalComponent,
   BlockDateRequest,
 } from '../../../../shared/components/block-date-modal/block-date-modal.component';
-import { Car } from '../../../../core/models';
 
 interface CarCalendarData {
   carId: string;

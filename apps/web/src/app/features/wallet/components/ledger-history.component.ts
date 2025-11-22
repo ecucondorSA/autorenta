@@ -1,12 +1,11 @@
-import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  WalletLedgerService,
-  LedgerEntry,
   LedgerKind,
+  WalletLedgerService
 } from '@app/core/services/wallet-ledger.service';
-import { toSignal } from '@angular/core/rxjs-interop';
+
 
 @Component({
   selector: 'app-ledger-history',

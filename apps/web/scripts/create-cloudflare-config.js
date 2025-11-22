@@ -48,25 +48,25 @@ const headersContent = `# Headers globales de seguridad
 /*
   # Prevenir clickjacking
   X-Frame-Options: DENY
-  
+
   # Prevenir MIME-type sniffing
   X-Content-Type-Options: nosniff
-  
+
   # Habilitar XSS protection en navegadores antiguos
   X-XSS-Protection: 1; mode=block
-  
+
   # Política de referrer
   Referrer-Policy: strict-origin-when-cross-origin
-  
+
   # Permissions Policy (reemplaza Feature-Policy)
   Permissions-Policy: geolocation=(self), microphone=(), camera=(), payment=(self), usb=(), magnetometer=(), gyroscope=(), accelerometer=()
-  
+
   # HTTP Strict Transport Security (HSTS)
   # Fuerza HTTPS por 1 año, incluye subdominios
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  
+
   # Content Security Policy
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://*.workers.dev wss://*.supabase.co https://cloudflareinsights.com https://parallelum.com.br https://www.googleapis.com https://api.binance.com https://data-api.binance.vision; frame-src 'self' https://www.mercadopago.com https://www.mercadopago.com.ar https://sdk.mercadopago.com https://calendar.google.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://www.mercadopago.com;
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com https://static.cloudflareinsights.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com https://unpkg.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com; connect-src 'self' https://*.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://*.workers.dev wss://*.supabase.co https://cloudflareinsights.com https://parallelum.com.br https://www.googleapis.com https://api.binance.com https://data-api.binance.vision https://unpkg.com; frame-src 'self' https://www.mercadopago.com https://www.mercadopago.com.ar https://sdk.mercadopago.com https://calendar.google.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://www.mercadopago.com;
 
 # Cache para assets con hash (1 año)
 /*.js

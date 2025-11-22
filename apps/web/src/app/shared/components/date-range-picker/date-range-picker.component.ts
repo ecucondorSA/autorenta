@@ -9,7 +9,6 @@ import {
   inject,
   Input,
   OnDestroy,
-  OnInit,
   Output,
   signal,
   ViewChild,
@@ -54,7 +53,7 @@ export interface AlternativeDateSuggestion {
   styleUrls: ['./date-range-picker.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DateRangePickerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
   private readonly analytics = inject(AnalyticsService);
 
   @Input() label = 'Fechas';
@@ -104,9 +103,7 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit, OnDestro
     { label: '1 mes', days: 30, icon: '📆' },
   ];
 
-  ngOnInit(): void {
-    // Initialization if needed
-  }
+
 
   ngAfterViewInit(): void {
     this.initFlatpickr();
@@ -135,7 +132,7 @@ export class DateRangePickerComponent implements OnInit, AfterViewInit, OnDestro
         position: 'auto',
         clickOpens: true,
         allowInput: false,
-        onChange: (selectedDates, dateStr) => {
+        onChange: (selectedDates, _dateStr) => {
           if (selectedDates.length === 2) {
             const from = selectedDates[0].toISOString().split('T')[0];
             const to = selectedDates[1].toISOString().split('T')[0];

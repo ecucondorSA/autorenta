@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, input, output, signal, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit, effect, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import { MessagesService, Message } from '../../../../core/services/messages.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { Message, MessagesService } from '../../../../core/services/messages.service';
 import { NotificationSoundService } from '../../../../core/services/notification-sound.service';
 import type { ChatContext } from '../types/chat-context';
 
@@ -96,7 +96,7 @@ export class ChatShellComponent implements OnInit, OnDestroy {
           ? await this.messagesService.listByBooking(ctx.contextId)
           : await this.messagesService.listByCar(ctx.contextId);
       this.messages.set(messages);
-    } catch (_err) {
+    } catch {
       this.error.set('No pudimos cargar los mensajes');
     } finally {
       this.loading.set(false);
@@ -131,7 +131,7 @@ export class ChatShellComponent implements OnInit, OnDestroy {
 
       if (message.sender_id !== this.currentUserId()) {
         this.showNotification(`Nuevo mensaje de ${ctx.recipientName}`);
-        this.notificationSound.playNotificationSound().catch(() => {});
+        this.notificationSound.playNotificationSound().catch(() => { });
         this.messageReceived.emit({ message, context: ctx });
       }
     };
@@ -183,7 +183,7 @@ export class ChatShellComponent implements OnInit, OnDestroy {
 
       this.newMessage.set('');
       this.messageSent.emit({ messageId: '', context: ctx }); // TODO: obtener ID real
-    } catch (_err) {
+    } catch {
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
     } finally {
       this.sending.set(false);

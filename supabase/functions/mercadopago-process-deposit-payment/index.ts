@@ -39,6 +39,16 @@ interface MercadoPagoPaymentResponse {
   metadata?: Record<string, unknown>;
 }
 
+const ensureProductionToken = (rawToken: string, context: string) => {
+  const cleaned = rawToken.trim().replace(/[\r\n\t\s]/g, '');
+  if (cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST')) {
+    throw new Error(
+      `${context}: MERCADOPAGO_ACCESS_TOKEN parece ser de sandbox (TEST). Configura token APP_USR-*`,
+    );
+  }
+  return cleaned;
+};
+
 const FAILURE_STATUSES = new Set([
   'rejected',
   'cancelled',
@@ -75,7 +85,10 @@ serve(async (req) => {
       throw new Error('Missing required environment variables');
     }
 
-    const MP_ACCESS_TOKEN = MP_ACCESS_TOKEN_RAW.trim().replace(/[\r\n\t\s]/g, '');
+    const MP_ACCESS_TOKEN = ensureProductionToken(
+      MP_ACCESS_TOKEN_RAW,
+      'mercadopago-process-deposit-payment',
+    );
 
     if (req.method !== 'POST') {
       return new Response(
@@ -442,5 +455,4 @@ serve(async (req) => {
     );
   }
 });
-
 

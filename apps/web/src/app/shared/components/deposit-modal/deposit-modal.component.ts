@@ -1,22 +1,21 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
-  EventEmitter,
-  Output,
-  inject,
-  signal,
   effect,
+  EventEmitter,
+  inject,
   Input,
   OnInit,
+  Output,
+  signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { WalletService } from '../../../core/services/wallet.service';
-import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
-import { AnalyticsService } from '../../../core/services/analytics.service';
 import type { WalletPaymentProvider } from '../../../core/models/wallet.model';
+import { AnalyticsService } from '../../../core/services/analytics.service';
+import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
+import { WalletService } from '../../../core/services/wallet.service';
 import { FocusTrapDirective } from '../../directives/focus-trap.directive';
-import { EscapeKeyDirective } from '../../directives/escape-key.directive';
 
 @Component({
   selector: 'app-deposit-modal',
@@ -90,25 +89,25 @@ export class DepositModalComponent implements OnInit {
     label: string;
     description: string;
   }> = [
-    {
-      value: 'mercadopago',
-      label: 'Mercado Pago',
-      description: 'Tarjeta de crédito/débito, Rapipago, Pago Fácil',
-    },
-    { value: 'stripe', label: 'Stripe', description: 'Tarjeta de crédito internacional' },
-    {
-      value: 'bank_transfer',
-      label: 'Transferencia Bancaria',
-      description: 'Transferencia o depósito directo',
-    },
-  ];
+      {
+        value: 'mercadopago',
+        label: 'Mercado Pago',
+        description: 'Tarjeta de crédito/débito, Rapipago, Pago Fácil',
+      },
+      { value: 'stripe', label: 'Stripe', description: 'Tarjeta de crédito internacional' },
+      {
+        value: 'bank_transfer',
+        label: 'Transferencia Bancaria',
+        description: 'Transferencia o depósito directo',
+      },
+    ];
 
   async loadExchangeRate(): Promise<void> {
     this.loadingRate.set(true);
     try {
       const rate = await this.exchangeRateService.getPlatformRate();
       this.platformRate.set(rate);
-    } catch (__error) {
+    } catch {
       this.platformRate.set(1748.01);
     } finally {
       this.loadingRate.set(false);
@@ -247,11 +246,11 @@ export class DepositModalComponent implements OnInit {
             deposit_type: this.depositType(),
             deposit_provider: provider !== 'internal' ? provider : undefined,
             error_message: this.getFriendlyErrorMessage(error),
-            failure_reason: (error as any).code || 'UNKNOWN_ERROR',
+            failure_reason: (error as { code?: string }).code || 'UNKNOWN_ERROR',
           });
 
           this.formError.set(this.getFriendlyErrorMessage(error));
-          if ((error as any).code === 'MERCADOPAGO_ERROR') {
+          if ((error as { code?: string }).code === 'MERCADOPAGO_ERROR') {
             this.provider.set('bank_transfer');
             this.fallbackSuggestion.set('bank_transfer');
           }
@@ -284,7 +283,7 @@ export class DepositModalComponent implements OnInit {
   }
 
   private getFriendlyErrorMessage(error: unknown): string {
-    const err = error as any;
+    const err = error as { code?: string; message?: string };
     if (err?.code === 'MERCADOPAGO_ERROR') {
       return 'No pudimos iniciar el pago con Mercado Pago. Reintentá en unos minutos o elegí otro método.';
     }

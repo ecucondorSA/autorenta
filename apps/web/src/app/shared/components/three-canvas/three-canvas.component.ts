@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, HostListener } from '@angular/core';
-import * as THREE from 'three';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EffectComposer, EffectPass, RenderPass } from 'postprocessing';
+import * as THREE from 'three';
 import AsciiEffect from '../../three/effects/ascii-effect';
 
 @Component({
@@ -62,10 +62,12 @@ export class ThreeCanvasComponent implements OnInit, OnDestroy {
     this.asciiEffect.addTime(dt);
     // render via composer
     // composer.render can accept delta in some versions; fallback to render()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (typeof (this.composer as any).render === 'function') {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (this.composer as any).render(dt);
-      } catch (_) {
+      } catch {
         this.composer.render();
       }
     }

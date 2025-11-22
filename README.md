@@ -1,183 +1,111 @@
-# Supabase CLI
+# Project: autorenta
 
-[![Coverage Status](https://coveralls.io/repos/github/supabase/cli/badge.svg?branch=main)](https://coveralls.io/github/supabase/cli?branch=main) [![Bitbucket Pipelines](https://img.shields.io/bitbucket/pipelines/supabase-cli/setup-cli/master?style=flat-square&label=Bitbucket%20Canary)](https://bitbucket.org/supabase-cli/setup-cli/pipelines) [![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/sweatybridge%2Fsetup-cli?label=Gitlab%20Canary)
-](https://gitlab.com/sweatybridge/setup-cli/-/pipelines)
+This document provides an overview of the `autorenta` project, its technologies, and development conventions, serving as instructional context for future interactions.
 
-[Supabase](https://supabase.io) is an open source Firebase alternative. We're building the features of Firebase using enterprise-grade open source tools.
+## Project Overview
 
-This repository contains all the functionality for Supabase CLI.
+`autorenta` is a monorepo project built with Angular and TypeScript, designed as a car rental application. It leverages a modern web stack for both frontend and backend services.
 
-- [x] Running Supabase locally
-- [x] Managing database migrations
-- [x] Creating and deploying Supabase Functions
-- [x] Generating types directly from your database schema
-- [x] Making authenticated HTTP requests to [Management API](https://supabase.com/docs/reference/api/introduction)
+**Key Technologies:**
+*   **Frontend:** Angular (standalone components)
+*   **Backend:** Supabase
+*   **Package Manager:** pnpm
+*   **Monorepo Orchestration:** Turbo
+*   **End-to-End Testing:** Playwright
+*   **Deployment:** Cloudflare Pages (via GitHub Actions)
+*   **Languages:** TypeScript, SQL
 
-## Getting started
+## Deployment
 
-### Install the CLI
+The project is configured for automatic deployment to Cloudflare Pages using GitHub Actions.
 
-Available via [NPM](https://www.npmjs.com) as dev dependency. To install:
+**How it works:**
+1.  **Push to Main:** Any commit pushed to the `main` branch automatically triggers the `Build and Deploy` workflow.
+2.  **Build:** The workflow builds the Angular application (`npm run build:web`).
+3.  **Deploy:** The built artifacts are deployed to Cloudflare Pages.
+
+**Required GitHub Secrets:**
+Ensure the following secrets are set in your GitHub repository settings:
+*   `CF_API_TOKEN`: Cloudflare API Token with Pages permissions.
+*   `CF_ACCOUNT_ID`: Your Cloudflare Account ID.
+*   `SUPABASE_URL`: Production Supabase URL.
+*   `SUPABASE_ANON_KEY`: Production Supabase Anon Key.
+*   `MERCADOPAGO_PROD_PUBLIC_KEY`: Mercado Pago Public Key.
+*   `MAPBOX_ACCESS_TOKEN`: Mapbox Access Token.
+
+**Architecture:**
+The project follows an `angular-standalone` architecture for its frontend applications. The backend is powered by Supabase, handling database, authentication, and other services. The monorepo structure is organized into:
+*   `apps/web`: Contains the main web application(s).
+*   `apps/web-v2`: Potentially a newer version or a separate web application.
+*   `apps/workers`: Houses worker services.
+*   `tools`: Contains utility scripts and configurations.
+
+## Building and Running
+
+Most project operations are centralized through the `./tools/run.sh` script.
+
+**Initial Setup:**
+To set up the project for the first time, install dependencies using pnpm:
+```bash
+pnpm install
+```
+
+**Development Server:**
+To start the development server for the web application:
+```bash
+npm run dev:web
+# or using the wrapper script
+./tools/run.sh dev:web
+```
+
+**Building the Project:**
+To build the project for production:
+```bash
+npm run build
+# or using the wrapper script
+./tools/run.sh build
+```
+
+**Running Tests:**
+The project uses Playwright for end-to-end testing.
+```bash
+npm run test:e2e
+# or using the wrapper script
+./tools/run.sh test:e2e
+```
+
+**Linting:**
+To lint the codebase:
+```bash
+npm run lint
+# or using the wrapper script
+./tools/run.sh lint
+```
+
+## Development Conventions
+
+**Coding Style:**
+The project adheres to specific naming conventions as defined in `package.json`:
+*   **File Naming:** `kebab-case`
+*   **Component Suffix:** `.component.ts`
+*   **Service Suffix:** `.service.ts`
+*   **Page Suffix:** `.page.ts`
+*   **Model Suffix:** `.model.ts`
+
+**Testing:**
+End-to-end tests are written using Playwright. Refer to the `e2e/` and `tests/` directories for existing test suites.
+
+**Database:**
+Supabase is used as the backend. Database schema changes and migrations are managed through SQL files located in the `database/` directory.
+
+**Type Generation:**
+TypeScript types for the Supabase database schema can be generated using the `types:db:gen` script.
+
+## Responsive Design
+
+For detailed information on the project's responsive design strategy, including tools, breakpoints, and guidelines, please refer to the [Responsive Design Documentation](docs/RESPONSIVE_DESIGN.md).
 
 ```bash
-npm i supabase --save-dev
+npm run types:db:gen
 ```
-
-To install the beta release channel:
-
-```bash
-npm i supabase@beta --save-dev
-```
-
-When installing with yarn 4, you need to disable experimental fetch with the following nodejs config.
-
-```
-NODE_OPTIONS=--no-experimental-fetch yarn add supabase
-```
-
-> **Note**
-For Bun versions below v1.0.17, you must add `supabase` as a [trusted dependency](https://bun.sh/guides/install/trusted) before running `bun add -D supabase`.
-
-<details>
-  <summary><b>macOS</b></summary>
-
-  Available via [Homebrew](https://brew.sh). To install:
-
-  ```sh
-  brew install supabase/tap/supabase
-  ```
-
-  To install the beta release channel:
-  
-  ```sh
-  brew install supabase/tap/supabase-beta
-  brew link --overwrite supabase-beta
-  ```
-  
-  To upgrade:
-
-  ```sh
-  brew upgrade supabase
-  ```
-</details>
-
-<details>
-  <summary><b>Windows</b></summary>
-
-  Available via [Scoop](https://scoop.sh). To install:
-
-  ```powershell
-  scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
-  scoop install supabase
-  ```
-
-  To upgrade:
-
-  ```powershell
-  scoop update supabase
-  ```
-</details>
-
-<details>
-  <summary><b>Linux</b></summary>
-
-  Available via [Homebrew](https://brew.sh) and Linux packages.
-
-  #### via Homebrew
-
-  To install:
-
-  ```sh
-  brew install supabase/tap/supabase
-  ```
-
-  To upgrade:
-
-  ```sh
-  brew upgrade supabase
-  ```
-
-  #### via Linux packages
-
-  Linux packages are provided in [Releases](https://github.com/supabase/cli/releases). To install, download the `.apk`/`.deb`/`.rpm`/`.pkg.tar.zst` file depending on your package manager and run the respective commands.
-
-  ```sh
-  sudo apk add --allow-untrusted <...>.apk
-  ```
-
-  ```sh
-  sudo dpkg -i <...>.deb
-  ```
-
-  ```sh
-  sudo rpm -i <...>.rpm
-  ```
-
-  ```sh
-  sudo pacman -U <...>.pkg.tar.zst
-  ```
-</details>
-
-<details>
-  <summary><b>Other Platforms</b></summary>
-
-  You can also install the CLI via [go modules](https://go.dev/ref/mod#go-install) without the help of package managers.
-
-  ```sh
-  go install github.com/supabase/cli@latest
-  ```
-
-  Add a symlink to the binary in `$PATH` for easier access:
-
-  ```sh
-  ln -s "$(go env GOPATH)/bin/cli" /usr/bin/supabase
-  ```
-
-  This works on other non-standard Linux distros.
-</details>
-
-<details>
-  <summary><b>Community Maintained Packages</b></summary>
-
-  Available via [pkgx](https://pkgx.sh/). Package script [here](https://github.com/pkgxdev/pantry/blob/main/projects/supabase.com/cli/package.yml).
-  To install in your working directory:
-
-  ```bash
-  pkgx install supabase
-  ```
-
-  Available via [Nixpkgs](https://nixos.org/). Package script [here](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/tools/supabase-cli/default.nix).
-</details>
-
-### Run the CLI
-
-```bash
-supabase bootstrap
-```
-
-Or using npx:
-
-```bash
-npx supabase bootstrap
-```
-
-The bootstrap command will guide you through the process of setting up a Supabase project using one of the [starter](https://github.com/supabase-community/supabase-samples/blob/main/samples.json) templates.
-
-## Docs
-
-Command & config reference can be found [here](https://supabase.com/docs/reference/cli/about).
-
-## Breaking changes
-
-We follow semantic versioning for changes that directly impact CLI commands, flags, and configurations.
-
-However, due to dependencies on other service images, we cannot guarantee that schema migrations, seed.sql, and generated types will always work for the same CLI major version. If you need such guarantees, we encourage you to pin a specific version of CLI in package.json.
-
-## Developing
-
-To run from source:
-
-```sh
-# Go >= 1.22
-go run . help
-```
+This command generates `supabase.types.generated.ts`.

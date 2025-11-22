@@ -1,14 +1,13 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   Input,
-  OnInit,
   OnChanges,
+  OnInit,
   SimpleChanges,
-  signal,
-  computed,
   inject,
+  signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { CarAvailabilityService } from '../../../core/services/car-availability.service';
 
 interface CalendarEvent {

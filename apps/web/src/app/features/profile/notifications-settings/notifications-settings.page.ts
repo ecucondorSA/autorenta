@@ -1,9 +1,9 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NotificationsService } from '../../../core/services/user-notifications.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { NotificationsService } from '../../../core/services/user-notifications.service';
 
 /**
  * NotificationsSettingsPage
@@ -112,7 +112,7 @@ export class NotificationsSettingsPage implements OnInit {
   toggleSetting(setting: keyof typeof this.settings extends () => infer T ? keyof T : never) {
     this.settings.update((s) => ({
       ...s,
-      [setting]: !(s as any)[setting],
+      [setting]: !(s as Record<string, unknown>)[setting],
     }));
     this.saveSettings();
   }
@@ -146,9 +146,9 @@ export class NotificationsSettingsPage implements OnInit {
     // Instrucciones para abrir configuración del navegador
     alert(
       'Para cambiar los permisos de notificaciones:\n\n' +
-        '1. Chrome/Edge: Haz clic en el ícono de candado en la barra de direcciones\n' +
-        '2. Firefox: Haz clic en el ícono de escudo\n' +
-        '3. Safari: Preferencias > Sitios web > Notificaciones',
+      '1. Chrome/Edge: Haz clic en el ícono de candado en la barra de direcciones\n' +
+      '2. Firefox: Haz clic en el ícono de escudo\n' +
+      '3. Safari: Preferencias > Sitios web > Notificaciones',
     );
   }
 }

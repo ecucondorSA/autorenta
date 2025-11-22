@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,14 +11,13 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  DateRangePickerComponent,
-  BlockedDateRange,
-} from '../date-range-picker/date-range-picker.component';
-import type { CarMapLocation } from '../../../core/services/car-locations.service';
 import { CarAvailabilityService } from '../../../core/services/car-availability.service';
+import type { CarMapLocation } from '../../../core/services/car-locations.service';
+import {
+  BlockedDateRange,
+  DateRangePickerComponent,
+} from '../date-range-picker/date-range-picker.component';
 
 /**
  * Filter state interface
@@ -110,7 +110,7 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
 
   readonly availableTransmissions = computed(() => {
     const types = new Set<string>();
-    this.availableCarsSignal().forEach((car) => {
+    this.availableCarsSignal().forEach((_car) => {
       // Placeholder: agregar transmisión desde car object cuando esté disponible
       // Por ahora retorna set vacío
     });
@@ -414,9 +414,9 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
         ...filter,
         dateRange: filter.dateRange
           ? {
-              start: filter.dateRange.start.toISOString(),
-              end: filter.dateRange.end.toISOString(),
-            }
+            start: filter.dateRange.start.toISOString(),
+            end: filter.dateRange.end.toISOString(),
+          }
           : null,
       };
       sessionStorage.setItem('mapFilters', JSON.stringify(serialized));

@@ -1,17 +1,17 @@
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
   AfterViewInit,
-  OnDestroy,
+  Component,
+  EventEmitter,
   inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
   PLATFORM_ID,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { PayPalBookingGatewayService } from '../../../core/services/paypal-booking-gateway.service';
 import { environment } from '../../../../environments/environment';
+import { PayPalBookingGatewayService } from '../../../core/services/paypal-booking-gateway.service';
 
 // PayPal SDK types
 interface PayPalWindow extends Window {
@@ -163,7 +163,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
     paypal
       .Buttons({
         // Create order on PayPal side
-        createOrder: async (data: unknown, actions: unknown) => {
+        createOrder: async (_data: unknown, _actions: unknown) => {
           return this.createOrder();
         },
 

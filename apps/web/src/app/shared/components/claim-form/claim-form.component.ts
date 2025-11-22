@@ -1,14 +1,15 @@
-import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { v4 as uuidv4 } from 'uuid';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import {
-  SettlementService,
   DamageItem,
   DamageType,
+  SettlementService,
 } from '../../../core/services/settlement.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
-import { v4 as uuidv4 } from 'uuid';
+
 
 /**
  * Componente para reportar daños y crear claims
@@ -65,10 +66,10 @@ export class ClaimFormComponent implements OnInit {
     label: string;
     hint: string;
   }> = [
-    { value: 'minor', label: 'Menor', hint: 'Daño superficial, fácil de reparar' },
-    { value: 'moderate', label: 'Moderado', hint: 'Requiere reparación profesional' },
-    { value: 'severe', label: 'Severo', hint: 'Daño significativo o estructural' },
-  ];
+      { value: 'minor', label: 'Menor', hint: 'Daño superficial, fácil de reparar' },
+      { value: 'moderate', label: 'Moderado', hint: 'Requiere reparación profesional' },
+      { value: 'severe', label: 'Severo', hint: 'Daño significativo o estructural' },
+    ];
 
   // Computed properties
   readonly totalCost = computed(() => {

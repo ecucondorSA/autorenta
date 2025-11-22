@@ -1,38 +1,35 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
+import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { BookingsService } from '../../../core/services/bookings.service';
-import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import {
   LocationTrackingService,
   TrackingSession,
 } from '../../../core/services/location-tracking.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 import { LiveTrackingMapComponent } from '../../../shared/components/live-tracking-map/live-tracking-map.component';
 
 /**
  * Owner Check-In Page
  *
  * Permite al dueño realizar la inspección inicial del auto antes de entregarlo al locatario
- * - Registra estado inicial (odómetro, combustible, daños)
- * - Sube fotos de evidencia
- * - Firma digital
- * - Cambia booking de 'confirmed' → 'in_progress'
+ * - Registra estado inicial (odómetro, combustible, daños) usando InspectionUploaderComponent
+ * - Comparte ubicación en tiempo real
  */
 @Component({
   selector: 'app-owner-check-in',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, LiveTrackingMapComponent],
+  imports: [CommonModule, IonicModule, LiveTrackingMapComponent, InspectionUploaderComponent],
   templateUrl: './owner-check-in.page.html',
   styleUrl: './owner-check-in.page.css',
 })
 export class OwnerCheckInPage implements OnInit, OnDestroy {
   private readonly bookingsService = inject(BookingsService);
-  private readonly fgoService = inject(FgoV1_1Service);
   private readonly authService = inject(AuthService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly locationTracking = inject(LocationTrackingService);
@@ -40,7 +37,6 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
 
   readonly loading = signal(true);
-  readonly submitting = signal(false);
   readonly booking = signal<Booking | null>(null);
   readonly currentUserId = signal<string | null>(null);
 
@@ -48,23 +44,6 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
   readonly isSharing = signal(false);
   readonly trackingSessions = signal<TrackingSession[]>([]);
   private unsubscribeTracking?: () => void;
-
-  // Datos del formulario
-  readonly odometer = signal<number | null>(null);
-  readonly fuelLevel = signal<number>(100);
-  readonly damagesNotes = signal('');
-  readonly uploadedPhotos = signal<string[]>([]);
-  readonly signatureDataUrl = signal<string | null>(null);
-
-  readonly canSubmit = computed(() => {
-    return (
-      this.odometer() !== null &&
-      this.odometer()! > 0 &&
-      this.fuelLevel() > 0 &&
-      this.uploadedPhotos().length >= 4 && // Mínimo 4 fotos
-      this.signatureDataUrl() !== null
-    );
-  });
 
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
@@ -107,7 +86,7 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
 
       // Subscribe to location tracking updates for this booking
       this.subscribeToLocationUpdates(bookingId);
-    } catch (error) {
+    } catch {
       this.toastService.error('Error', 'No se pudo cargar la reserva');
       this.router.navigate(['/bookings/owner']);
     } finally {
@@ -223,48 +202,15 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
     return `${diffHours} h`;
   }
 
-  onFilesSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (!input.files) return;
+  // ============================================================================
+  // INSPECTION METHODS
+  // ============================================================================
 
-    const files = Array.from(input.files);
-    const photoUrls: string[] = [];
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        photoUrls.push(e.target?.result as string);
-        if (photoUrls.length === files.length) {
-          this.uploadedPhotos.set([...this.uploadedPhotos(), ...photoUrls]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async submitCheckIn() {
-    if (!this.canSubmit() || this.submitting()) return;
-
+  async onInspectionCompleted(_inspection: BookingInspection) {
     const booking = this.booking();
     if (!booking) return;
 
-    this.submitting.set(true);
-
     try {
-      // 1. Crear registro FGO (Fine-Grained Observation) para check-in
-      // TODO: Implementar cuando FGO service esté listo
-      const fgoData = {
-        booking_id: booking.id,
-        event_type: 'check_in_owner',
-        initiated_by: this.currentUserId()!,
-        odometer_reading: this.odometer()!,
-        fuel_level: this.fuelLevel(),
-        damage_notes: this.damagesNotes() || null,
-        photo_urls: this.uploadedPhotos(),
-        signature_data_url: this.signatureDataUrl()!,
-      };
-      console.log('FGO Check-in data:', fgoData);
-
       // 2. Iniciar alquiler (confirmed → in_progress)
       await this.bookingsService.updateBooking(booking.id, { status: 'in_progress' });
 
@@ -278,16 +224,10 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
         'Error',
         error instanceof Error ? error.message : 'Error al completar check-in',
       );
-    } finally {
-      this.submitting.set(false);
     }
   }
 
   cancel() {
     this.router.navigate(['/bookings/owner']);
-  }
-
-  get fuelLevelPercentage(): string {
-    return `${this.fuelLevel()}%`;
   }
 }

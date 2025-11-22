@@ -127,21 +127,14 @@ BEGIN
     p_allow_withdrawal
   );
 
-  -- Generar URL de pago simulada (en producción, llamar a API del proveedor)
-  -- TODO: Integrar con API real de Mercado Pago / Stripe
-  v_payment_url := FORMAT(
-    'https://checkout.%s.com/pay/%s?amount=%s',
-    CASE
-      WHEN p_provider = 'mercadopago' THEN 'mercadopago'
-      WHEN p_provider = 'stripe' THEN 'stripe'
-      ELSE 'bank'
-    END,
-    v_transaction_id,
-    p_amount
-  );
-  v_payment_mobile_link := v_payment_url;
+  -- Generar placeholders de URL de pago. El init_point real se inyecta
+  -- desde la Edge Function `mercadopago-create-preference` (u otra según
+  -- proveedor) inmediatamente después de crear la transacción. Evitamos
+  -- URLs simuladas para forzar el uso de la API real de MP/Stripe.
+  v_payment_url := NULL;
+  v_payment_mobile_link := NULL;
 
-  -- Actualizar metadata con payment URL
+  -- Guardar placeholders en metadata para mantener compatibilidad
   UPDATE wallet_transactions
   SET provider_metadata = provider_metadata || jsonb_build_object(
     'payment_url', v_payment_url,

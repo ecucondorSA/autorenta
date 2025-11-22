@@ -111,7 +111,7 @@ export class PublishCarLocationService {
       };
 
       return address;
-    } catch (error) {
+    } catch {
       // console.error('Reverse geocoding failed:', error);
       return null;
     }
@@ -149,7 +149,7 @@ export class PublishCarLocationService {
       this.manualCoordinates.set(location);
 
       return location;
-    } catch (error) {
+    } catch {
       // console.error('Geocoding failed:', error);
       return null;
     }
@@ -159,7 +159,9 @@ export class PublishCarLocationService {
    * Find value in Mapbox context array
    */
   private findContextValue(context: unknown[], type: string): string | null {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const item = context.find((ctx: any) => ctx.id?.startsWith(type));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return item ? (item as any).text : null;
   }
 

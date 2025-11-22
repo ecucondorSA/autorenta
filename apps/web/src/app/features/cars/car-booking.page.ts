@@ -31,8 +31,8 @@ import { CalendarComponent } from '../../shared/calendar.component';
 export class CarBookingPage {
   carId = '11111111-1111-1111-1111-111111111111';
   selectedRange?: { start: string; end: string };
-  result: any = null;
-  error: any = null;
+  result: unknown = null;
+  error: string | null = null;
 
   private bookingService = inject(BookingsService);
 
@@ -51,8 +51,9 @@ export class CarBookingPage {
         this.selectedRange.end
       );
       this.result = payload;
-    } catch (err: any) {
-      this.error = err?.message || err;
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      this.error = error?.message || String(err);
     }
   }
 }

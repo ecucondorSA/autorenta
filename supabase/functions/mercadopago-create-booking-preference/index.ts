@@ -24,6 +24,17 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 
+// Helper para evitar usar tokens sandbox en flujos productivos
+const ensureProductionToken = (rawToken: string, context: string) => {
+  const cleaned = rawToken.trim().replace(/[\r\n\t\s]/g, '');
+  if (cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST')) {
+    throw new Error(
+      `${context}: MERCADOPAGO_ACCESS_TOKEN parece ser de sandbox (TEST). Configura el token de producción APP_USR-*`,
+    );
+  }
+  return cleaned;
+};
+
 // Tipos
 interface CreateBookingPreferenceRequest {
   booking_id: string;
@@ -49,7 +60,10 @@ serve(async (req) => {
     }
 
     // Limpiar token
-    const MP_ACCESS_TOKEN = MP_ACCESS_TOKEN_RAW.trim().replace(/[\r\n\t\s]/g, '');
+    const MP_ACCESS_TOKEN = ensureProductionToken(
+      MP_ACCESS_TOKEN_RAW,
+      'mercadopago-create-booking-preference',
+    );
 
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');

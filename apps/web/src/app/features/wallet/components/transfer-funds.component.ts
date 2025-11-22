@@ -1,10 +1,10 @@
-import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { toSignalOrNull } from '@app/core/utils/signal-helpers';
-import { WalletLedgerService, TransferResponse } from '@app/core/services/wallet-ledger.service';
+import { TransferResponse, WalletLedgerService } from '@app/core/services/wallet-ledger.service';
 import { WalletService } from '@app/core/services/wallet.service';
-import { WalletBalance } from '@app/core/models/wallet.model';
+import { toSignalOrNull } from '@app/core/utils/signal-helpers';
+
 
 interface UserSearchResult {
   id: string;
@@ -83,7 +83,7 @@ export class TransferFundsComponent {
       } else {
         this.searchError.set('Número de cuenta no encontrado');
       }
-    } catch (_err) {
+    } catch {
       this.searchError.set('Error al buscar usuario');
     }
   }

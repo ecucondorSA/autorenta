@@ -1,8 +1,8 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ReferralsService } from '../../core/services/referrals.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ReferralsService } from '../../core/services/referrals.service';
 
 /**
  * Referral Landing Page
@@ -160,7 +160,7 @@ export class ReferralLandingPage implements OnInit {
         // Guardar código en sessionStorage para aplicarlo después del registro
         sessionStorage.setItem('referral_code', this.code());
       }
-    } catch (err) {
+    } catch {
       this.error.set('Hubo un error al validar el código. Por favor, intentá de nuevo.');
     } finally {
       this.loading.set(false);
@@ -176,8 +176,9 @@ export class ReferralLandingPage implements OnInit {
       setTimeout(() => {
         this.router.navigate(['/cars/publish']);
       }, 3000);
-    } catch (err: any) {
-      if (err.message?.includes('already referred')) {
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      if (error.message?.includes('already referred')) {
         this.error.set('Ya usaste un código de referido anteriormente');
       } else {
         this.error.set('No pudimos aplicar el código. Intentá de nuevo más tarde.');

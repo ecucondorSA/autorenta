@@ -40,17 +40,14 @@
     </div>
 
     <!-- Check-In Comparison Card -->
-    <div
-      *ngIf="checkInData()"
-      class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-4 mb-6"
-    >
+    <div *ngIf="checkInData()"
+      class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-4 mb-6">
       <h3 class="font-semibold text-cta-default mb-3">📋 Estado al Check-In</h3>
       <div class="space-y-2 text-sm">
         <div class="flex justify-between">
           <span class="text-cta-default">Kilometraje:</span>
-          <span class="font-semibold text-cta-default"
-            >{{ checkInData().odometer_reading | number }} km</span
-          >
+          <span class="font-semibold text-cta-default">{{ checkInData().odometer_reading | number }}
+            km</span>
         </div>
         <div class="flex justify-between">
           <span class="text-cta-default">Combustible:</span>
@@ -59,115 +56,27 @@
       </div>
     </div>
 
-    <!-- Form -->
-    <form class="space-y-6">
-      <!-- Odometer -->
-      <div class="card-premium p-6">
-        <h3 class="font-bold text-text-primary mb-4">1. Kilometraje Actual</h3>
-        <ion-item>
-          <ion-label position="stacked">Kilometraje *</ion-label>
-          <ion-input
-            type="number"
-            [value]="odometer()"
-            (ionInput)="odometer.set($any($event.target).value)"
-            placeholder="Ej: 45250"
-            required
-          ></ion-input>
-        </ion-item>
-        <div *ngIf="odometerDifference() !== null" class="mt-3 p-3 bg-surface-secondary rounded-lg">
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-text-secondary">Kilómetros recorridos:</span>
-            <span class="font-bold text-cta-default">{{ odometerDifference() | number }} km</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fuel Level -->
-      <div class="card-premium p-6">
-        <h3 class="font-bold text-text-primary mb-4">2. Nivel de Combustible</h3>
-        <div class="px-4">
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-text-secondary">Nivel:</span>
-            <span class="font-bold text-cta-default">{{ fuelLevelPercentage }}</span>
-          </div>
-          <ion-range
-            [value]="fuelLevel()"
-            (ionChange)="fuelLevel.set($any($event.detail.value))"
-            min="0"
-            max="100"
-            step="10"
-            snaps="true"
-            ticks="true"
-            color="primary"
-          >
-            <ion-label slot="start">0%</ion-label>
-            <ion-label slot="end">100%</ion-label>
-          </ion-range>
-        </div>
-        <div
-          *ngIf="fuelDifference() !== null"
-          class="mt-3 p-3 rounded-lg"
-          [ngClass]="{
-            'bg-success-light/10': fuelDifference()! >= 0,
-            'bg-error-bg': fuelDifference()! < 0,
-          }"
-        >
-          <div class="flex justify-between items-center">
-            <span class="text-sm">Diferencia de combustible:</span>
-            <span
-              class="font-bold"
-              [ngClass]="{
-                'text-success-light': fuelDifference()! >= 0,
-                'text-error-strong': fuelDifference()! < 0,
-              }"
-            >
-              {{ fuelDifference()! > 0 ? '+' : '' }}{{ fuelDifference() }}%
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Photos -->
-      <div class="card-premium p-6">
-        <h3 class="font-bold text-text-primary mb-4">3. Fotos del Auto (mínimo 4) *</h3>
-        <p class="text-sm text-text-secondary mb-4">
-          Toma fotos del estado actual del auto, especialmente de cualquier daño nuevo
-        </p>
-        <input
-          type="file"
-          #fileInput
-          accept="image/*"
-          multiple
-          (change)="onFilesSelected($event)"
-          style="display: none"
-        />
-        <button
-          type="button"
-          (click)="fileInput.click()"
-          class="w-full px-4 py-3 border-2 border-dashed border-border-default rounded-lg hover:border-cta-default transition-colors"
-        >
-          <ion-icon name="camera" class="text-2xl text-cta-default"></ion-icon>
-          <p class="text-sm text-text-secondary mt-2">Click para subir fotos</p>
-        </button>
-        <div *ngIf="uploadedPhotos().length > 0" class="grid grid-cols-2 gap-4 mt-4">
-          <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative">
-            <img [src]="photo" alt="Foto {{ i + 1 }}" class="w-full h-32 object-cover rounded-lg" />
-          </div>
-        </div>
-        <p class="text-sm text-text-secondary mt-2">
-          {{ uploadedPhotos().length }} foto(s) subida(s)
+    <!-- Step 1: Inspection Uploader -->
+    <div *ngIf="step() === 'inspection'" class="mb-8">
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <p class="text-sm text-blue-800">
+          ℹ️ <strong>Instrucciones:</strong> Realiza la inspección final. Si hay daños nuevos,
+          asegúrate de tomar fotos claras como evidencia.
         </p>
       </div>
 
-      <!-- Damages Toggle -->
+      <app-inspection-uploader [bookingId]="booking()!.id" [stage]="'check_out'"
+        (inspectionCompleted)="onInspectionCompleted($event)"
+        (inspectionCancelled)="cancel()"></app-inspection-uploader>
+    </div>
+
+    <!-- Step 2: Damage Claim -->
+    <div *ngIf="step() === 'damages'" class="mb-8">
       <div class="card-premium p-6">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="font-bold text-text-primary">4. ¿Hay daños nuevos?</h3>
-          <ion-toggle
-            [checked]="hasDamages()"
-            (ionChange)="toggleDamages()"
-            color="danger"
-          ></ion-toggle>
+          <h3 class="font-bold text-text-primary">¿Hay daños nuevos que reportar?</h3>
+          <ion-toggle [checked]="hasDamages()" (ionChange)="toggleDamages()"
+            color="danger"></ion-toggle>
         </div>
 
         <!-- Damages Form (if hasDamages) -->
@@ -180,116 +89,45 @@
 
           <ion-item>
             <ion-label position="stacked">Monto del daño (USD) *</ion-label>
-            <ion-input
-              type="number"
-              [value]="damageAmount()"
-              (ionInput)="damageAmount.set($any($event.target).value)"
-              placeholder="Ej: 50"
-              min="1"
-              max="250"
-              required
-            ></ion-input>
+            <ion-input type="number" [value]="damageAmount()"
+              (ionInput)="damageAmount.set($any($event.target).value)" placeholder="Ej: 50" min="1"
+              max="250" required></ion-input>
             <ion-note slot="helper">Máximo: $250 USD</ion-note>
           </ion-item>
 
           <ion-item>
             <ion-label position="stacked">Descripción del daño *</ion-label>
-            <ion-textarea
-              [value]="damagesNotes()"
-              (ionInput)="damagesNotes.set($any($event.target).value)"
-              rows="4"
-              placeholder="Describe el daño en detalle..."
-              required
-            ></ion-textarea>
+            <ion-textarea [value]="damagesNotes()"
+              (ionInput)="damagesNotes.set($any($event.target).value)" rows="4"
+              placeholder="Describe el daño en detalle..." required></ion-textarea>
           </ion-item>
         </div>
 
         <!-- No Damages (if !hasDamages) -->
-        <div
-          *ngIf="!hasDamages()"
-          class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mt-4"
-        >
+        <div *ngIf="!hasDamages()"
+          class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mt-4">
           <div class="flex items-center gap-2">
             <ion-icon name="checkmark-circle" class="text-success-light text-2xl"></ion-icon>
-            <span class="text-sm text-success-light"
-              >El auto fue devuelto en buenas condiciones</span
-            >
-          </div>
-        </div>
-      </div>
-
-      <!-- Signature -->
-      <div class="card-premium p-6">
-        <h3 class="font-bold text-text-primary mb-4">5. Firma Digital *</h3>
-        <div class="border-2 border-dashed border-border-default rounded-lg p-4">
-          <div class="bg-surface-raised border border-border-default rounded p-4 text-center">
-            <p class="text-sm text-text-secondary">Firma digital (simulada)</p>
-            <button
-              type="button"
-              (click)="signatureDataUrl.set('signature-placeholder')"
-              class="mt-2 px-4 py-2 bg-cta-default text-cta-text rounded-lg"
-            >
-              {{ signatureDataUrl() ? '✓ Firmado' : 'Firmar' }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Summary -->
-      <div class="card-premium p-6 bg-gradient-to-br from-cta-default/5 to-warning-light/5">
-        <h3 class="font-bold text-text-primary mb-4">Resumen</h3>
-        <div class="space-y-2 text-sm">
-          <div class="flex justify-between">
-            <span class="text-text-secondary">Kilómetros recorridos:</span>
-            <span class="font-semibold">{{ odometerDifference() || '---' }} km</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-text-secondary">Diferencia de combustible:</span>
-            <span
-              class="font-semibold"
-              [class.text-success-light]="fuelDifference()! >= 0"
-              [class.text-error-text]="fuelDifference()! < 0"
-            >
-              {{
-                fuelDifference() !== null
-                  ? (fuelDifference()! > 0 ? '+' : '') + fuelDifference() + '%'
-                  : '---'
-              }}
-            </span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-text-secondary">Daños reportados:</span>
-            <span
-              class="font-semibold"
-              [class.text-error-text]="hasDamages()"
-              [class.text-success-light]="!hasDamages()"
-            >
-              {{ hasDamages() ? 'Sí ($' + damageAmount() + ' USD)' : 'No' }}
-            </span>
+            <span class="text-sm text-success-light">El auto fue devuelto en buenas
+              condiciones</span>
           </div>
         </div>
       </div>
 
       <!-- Submit Buttons -->
-      <div class="flex gap-4">
-        <button
-          type="button"
-          (click)="cancel()"
+      <div class="flex gap-4 mt-6">
+        <button type="button" (click)="step.set('inspection')"
           class="flex-1 px-6 py-3 rounded-xl border-2 border-border-default text-text-secondary font-semibold hover:bg-surface-secondary transition-all"
-          [disabled]="submitting()"
-        >
-          Cancelar
+          [disabled]="submitting()">
+          Volver a Fotos
         </button>
-        <button
-          type="button"
-          (click)="submitCheckOut()"
-          [disabled]="!canSubmit() || submitting()"
-          class="flex-1 px-6 py-3 rounded-xl bg-cta-default text-cta-text-pure font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
+        <button type="button" (click)="submitCheckOut()"
+          [disabled]="!canSubmitDamages() || submitting()"
+          class="flex-1 px-6 py-3 rounded-xl bg-cta-default text-cta-text-pure font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
           <ion-spinner *ngIf="submitting()" name="crescent" class="mr-2"></ion-spinner>
-          {{ submitting() ? 'Procesando...' : 'Completar Check-Out' }}
+          {{ submitting() ? 'Procesando...' : 'Finalizar Check-Out' }}
         </button>
       </div>
-    </form>
+    </div>
   </div>
 </ion-content>

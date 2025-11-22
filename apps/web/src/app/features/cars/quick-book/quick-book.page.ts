@@ -41,6 +41,7 @@ export class QuickBookPage {
   private analytics = inject(AnalyticsService);
 
   readonly carId = computed(() => this.route.snapshot.paramMap.get('id'));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly car = signal<any | null>(null);
 
   readonly dateRange = signal<{ from: string | null; to: string | null }>({ from: null, to: null });
@@ -147,6 +148,7 @@ export class QuickBookPage {
     const car = this.car();
     if (!car) return '/assets/placeholder-car.jpg';
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const photos = car.photos || (car as any).car_photos;
     if (photos && photos.length > 0 && photos[0].url) {
       return photos[0].url;

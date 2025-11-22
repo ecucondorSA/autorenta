@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular';
 
 export interface MapControlsEvent {
   type: 'center' | 'search-area' | 'fullscreen' | '3d-toggle';
-  data?: any;
+  data?: unknown;
 }
 
 @Component({
@@ -30,14 +30,6 @@ export interface MapControlsEvent {
           <ion-icon name="expand-outline"></ion-icon>
         </button>
       </div>
-
-      <!-- Search This Area -->
-      <div class="control-group search-area-control">
-        <button class="control-btn search-area-btn" (click)="onSearchArea()">
-          <ion-icon name="search-outline"></ion-icon>
-          <span>Buscar en esta área</span>
-        </button>
-      </div>
     </div>
   `,
   styles: [
@@ -51,6 +43,7 @@ export interface MapControlsEvent {
         flex-direction: column;
         gap: 1rem;
         pointer-events: none;
+        align-items: flex-end; /* Prevent stretching */
       }
 
       .control-group {
@@ -122,80 +115,7 @@ export interface MapControlsEvent {
         }
       }
 
-      .search-area-control {
-        align-items: center;
-        background: transparent;
-        box-shadow: none;
-        border-radius: 0;
-        overflow: visible;
-      }
 
-      .search-area-btn {
-        flex-direction: row;
-        gap: 0.5rem;
-        padding: 0 1.25rem;
-        height: 40px;
-        width: auto;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: white;
-        background: #2563eb;
-        border-radius: 9999px;
-        box-shadow:
-          0 4px 6px -1px rgba(37, 99, 235, 0.3),
-          0 2px 4px -1px rgba(37, 99, 235, 0.15);
-
-        &:hover {
-          background: #1d4ed8;
-          transform: translateY(-1px);
-          box-shadow:
-            0 6px 8px -1px rgba(37, 99, 235, 0.4),
-            0 3px 6px -1px rgba(37, 99, 235, 0.2);
-        }
-
-        &:active {
-          background: #1e40af;
-          transform: translateY(0);
-        }
-
-        ion-icon {
-          color: white;
-          font-size: 1.125rem;
-        }
-
-        span {
-          color: white;
-          white-space: nowrap;
-        }
-
-        &::after {
-          display: none;
-        }
-      }
-
-      /* Mobile */
-      @media (max-width: 768px) {
-        .map-controls-container {
-          top: 1rem;
-          right: 1rem;
-          gap: 0.75rem;
-        }
-
-        .control-btn {
-          width: 40px;
-          height: 40px;
-
-          ion-icon {
-            font-size: 1.125rem;
-          }
-        }
-
-        .search-area-btn {
-          height: 36px;
-          padding: 0 1rem;
-          font-size: 0.8125rem;
-        }
-      }
     `,
   ],
 })

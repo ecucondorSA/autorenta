@@ -1,4 +1,4 @@
-import { Injectable, Signal, computed, effect, signal } from '@angular/core';
+import { Injectable, Signal, computed, effect } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { fromEvent, map, startWith, throttleTime } from 'rxjs';
 

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, output, Signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Booking } from '../../../core/models';
 import { AuthService } from '../../../core/services/auth.service';
@@ -186,9 +185,9 @@ export class BookingConfirmationTimelineComponent {
         actionDescription: 'Confirmar que recibiste el vehículo (con o sin daños)',
         metadata: booking.owner_reported_damages
           ? {
-              damageAmount: booking.owner_damage_amount || 0,
-              damageDescription: booking.owner_damage_description || undefined,
-            }
+            damageAmount: booking.owner_damage_amount || 0,
+            damageDescription: booking.owner_damage_description || undefined,
+          }
           : undefined,
       },
 

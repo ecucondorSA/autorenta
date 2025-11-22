@@ -4,34 +4,34 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { PaymentsService } from '../../../core/services/payments.service';
-import { ReviewsService } from '../../../core/services/reviews.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
-import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
-import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
-import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
-import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
+import { CLAIM_STATUS_LABELS, InsuranceClaim } from '../../../core/models/insurance.model';
+import { AuthService } from '../../../core/services/auth.service';
 import {
   BookingConfirmationService,
   ConfirmAndReleaseResponse,
 } from '../../../core/services/booking-confirmation.service';
-import { MetaService } from '../../../core/services/meta.service';
+import { BookingsService } from '../../../core/services/bookings.service';
+import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
+import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { InsuranceService } from '../../../core/services/insurance.service';
-import { InsuranceClaim, CLAIM_STATUS_LABELS } from '../../../core/models/insurance.model';
-import { BookingStatusComponent } from './booking-status.component';
-import { ReviewManagementComponent } from './review-management.component';
+import { MetaService } from '../../../core/services/meta.service';
+import { PaymentsService } from '../../../core/services/payments.service';
+import { ReviewsService } from '../../../core/services/reviews.service';
+import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
+import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
+import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 import { DisputeFormComponent } from '../../../shared/components/dispute-form/dispute-form.component';
 import { DisputesListComponent } from '../../../shared/components/disputes-list/disputes-list.component';
-import { RefundRequestComponent } from '../../../shared/components/refund-request/refund-request.component';
-import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
-import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
-import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
 import { DistanceRiskTierBadgeComponent } from '../../../shared/components/distance-risk-tier-badge/distance-risk-tier-badge.component';
-import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
+import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
+import { RefundRequestComponent } from '../../../shared/components/refund-request/refund-request.component';
+import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
+import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
+import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
+import { BookingStatusComponent } from './booking-status.component';
+import { ReviewManagementComponent } from './review-management.component';
 
 /**
  * BookingDetailPage

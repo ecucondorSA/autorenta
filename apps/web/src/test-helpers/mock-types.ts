@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Mock Types - Sistema de tipos compartidos para tests
  *
@@ -385,7 +386,7 @@ export function createMockSupabaseClient(options?: {
   const mockAuth = createMockAuth(options?.user || null);
 
   return {
-    from: jasmine.createSpy('from').and.callFake((table: string) => {
+    from: jasmine.createSpy('from').and.callFake((_table: string) => {
       return createMockQueryBuilder(options?.defaultData);
     }),
     storage: {

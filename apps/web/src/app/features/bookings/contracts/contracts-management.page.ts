@@ -1,11 +1,11 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { RouterModule, ActivatedRoute } from '@angular/router';
-import { ContractsService, BookingContract } from '../../../core/services/contracts.service';
-import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
+import { BookingsService } from '../../../core/services/bookings.service';
+import { BookingContract, ContractsService } from '../../../core/services/contracts.service';
 
 @Component({
   selector: 'app-contracts-management',
@@ -66,7 +66,7 @@ export class ContractsManagementPage implements OnInit {
       );
 
       this.contracts.set(
-        contractsWithBookings.filter((c: any) => c !== null) as Array<
+        contractsWithBookings.filter((c) => c !== null) as Array<
           BookingContract & { booking?: Booking }
         >,
       );

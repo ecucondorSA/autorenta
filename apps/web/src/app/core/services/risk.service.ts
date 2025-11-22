@@ -1,15 +1,15 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, from, map, catchError, of } from 'rxjs';
+import { Observable, catchError, from, map, of } from 'rxjs';
 import {
-  RiskSnapshot,
-  CalculateRiskSnapshotParams,
   BucketType,
+  CalculateRiskSnapshotParams,
   CoverageUpgrade,
-  calculateDeductibleUsd,
+  RiskSnapshot,
   applyUpgradeToDeductible,
+  calculateDeductibleUsd,
 } from '../models/booking-detail-payment.model';
-import { SupabaseClientService } from './supabase-client.service';
 import { RiskCalculatorService } from './risk-calculator.service';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * Servicio para cálculo de riesgos y garantías
@@ -22,6 +22,7 @@ import { RiskCalculatorService } from './risk-calculator.service';
 export class RiskService {
   private supabaseClient = inject(SupabaseClientService).getClient();
   private riskCalculator = inject(RiskCalculatorService);
+  private readonly riskSnapshotTable = 'booking_risk_snapshots';
 
   /**
    * Calcula el risk snapshot completo para una reserva
@@ -116,7 +117,7 @@ export class RiskService {
 
     return from(
       this.supabaseClient
-        .from('booking_risk_snapshot')
+        .from(this.riskSnapshotTable)
         .insert(snapshotData)
         .select('booking_id')
         .single(),
@@ -141,7 +142,7 @@ export class RiskService {
   ): Observable<{ snapshot: RiskSnapshot | null; error?: string }> {
     return from(
       this.supabaseClient
-        .from('booking_risk_snapshot')
+        .from(this.riskSnapshotTable)
         .select('*')
         .eq('booking_id', bookingId)
         .single(),
@@ -151,10 +152,12 @@ export class RiskService {
           return { snapshot: null, error: response.error?.message };
         }
 
-        const data = response.data;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const data = response.data as any;
         const snapshot: RiskSnapshot = {
-          deductibleUsd: data.deductible_usd,
-          rolloverDeductibleUsd: data.rollover_deductible_usd,
+          deductibleUsd: data.franchise_usd,
+          rolloverDeductibleUsd:
+            data.rollover_franchise_usd ?? data.meta?.rollover_deductible_usd ?? 0,
           holdEstimatedArs: data.estimated_hold_amount || 0,
           holdEstimatedUsd: (data.estimated_hold_amount || 0) / data.fx_snapshot,
           creditSecurityUsd: data.estimated_deposit || 0,
@@ -163,7 +166,10 @@ export class RiskService {
           country: data.country_code,
           fxRate: data.fx_snapshot,
           calculatedAt: new Date(data.created_at),
-          coverageUpgrade: (data.coverage_upgrade as CoverageUpgrade) || 'standard',
+          coverageUpgrade:
+            (data.coverage_upgrade as CoverageUpgrade) ||
+            (data.meta?.coverage_upgrade as CoverageUpgrade) ||
+            'standard',
         };
 
         return { snapshot };

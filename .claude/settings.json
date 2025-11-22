@@ -51,7 +51,9 @@
   "hooks": {
     "UserPromptSubmit": [
       {
-        "matcher": {},
+        "matcher": {
+          "patterns": [".*"]
+        },
         "hooks": [
           {
             "type": "command",

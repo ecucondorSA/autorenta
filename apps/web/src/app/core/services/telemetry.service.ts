@@ -1,9 +1,9 @@
-import { Injectable, computed, signal, inject } from '@angular/core';
-import { injectSupabase } from './supabase-client.service';
-import { AuthService } from './auth.service';
-import { LoggerService } from './logger.service';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { AuthService } from './auth.service';
+import { LoggerService } from './logger.service';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * TelemetryService
@@ -545,9 +545,9 @@ export class TelemetryService {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.toRad(prevLat)) *
-        Math.cos(this.toRad(currLat)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(this.toRad(currLat)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c; // Distancia en km

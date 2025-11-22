@@ -2,27 +2,26 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   OnDestroy,
+  OnInit,
   inject,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { interval, Subject, from } from 'rxjs';
-import { takeUntil, switchMap } from 'rxjs/operators';
+import { Subject, from, interval } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 // Services
 import { BookingsService } from '../../../core/services/bookings.service';
 import { ToastService } from '../../../core/services/toast.service';
 
 // Components
-import { LoadingStateComponent } from '../../../shared/components/loading-state/loading-state.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { LoadingStateComponent } from '../../../shared/components/loading-state/loading-state.component';
 
 // Pipes
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
-import { DatePipe } from '@angular/common';
 
 // Types
 import type { Database } from '../../../../types/supabase.types';
@@ -34,12 +33,10 @@ type Car = Database['public']['Tables']['cars']['Row'];
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     TranslateModule,
     LoadingStateComponent,
     ButtonComponent,
     MoneyPipe,
-    DatePipe,
   ],
   templateUrl: './booking-pending.page.html',
   styleUrls: ['./booking-pending.page.css'],
@@ -156,7 +153,7 @@ export class BookingPendingPage implements OnInit, OnDestroy {
     });
   }
 
-  private handleTimeout(bookingId: string): void {
+  private handleTimeout(_bookingId: string): void {
     this.destroy$.next(); // Stop polling
     this.toastService.warning('Verificación pendiente', 'La verificación del pago está tardando más de lo esperado');
   }

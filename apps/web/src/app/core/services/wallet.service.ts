@@ -154,9 +154,28 @@ export class WalletService {
               result.transaction_id,
               params.amount,
               params.description ?? 'Depósito a wallet',
-            ).then(() => result),
+            ).then((preference) => {
+              // Si MercadoPago devolvió init_point, propagarlo a la respuesta
+              if (preference?.init_point) {
+                result.payment_url = preference.init_point;
+                result.payment_mobile_deep_link =
+                  preference.sandbox_init_point ?? preference.init_point;
+              }
+              return result;
+            }),
           );
         }
+
+        if (params.provider === 'stripe') {
+          return from(
+            Promise.reject(
+              new Error(
+                'Stripe aún no está configurado para depósitos. Usa Mercado Pago o transferencia bancaria.',
+              ),
+            ),
+          );
+        }
+
         return from(Promise.resolve(result));
       }),
       catchError((err) => {
@@ -174,7 +193,7 @@ export class WalletService {
     transactionId: string,
     amount: number,
     description: string,
-  ): Promise<void> {
+  ): Promise<{ init_point?: string; sandbox_init_point?: string }> {
     const {
       data: { session },
     } = await this.supabase.auth.getSession();
@@ -193,10 +212,19 @@ export class WalletService {
       },
     });
 
-    const { error } = response as { error: { message?: string } | null };
+    const { data, error } = response as {
+      data: { init_point?: string; sandbox_init_point?: string } | null;
+      error: { message?: string } | null;
+    };
+
     if (error) {
       throw new Error(error.message ?? 'No se pudo crear la preferencia de pago');
     }
+
+    return {
+      init_point: data?.init_point,
+      sandbox_init_point: data?.sandbox_init_point,
+    };
   }
 
   private handleError(err: unknown, defaultMessage: string): void {

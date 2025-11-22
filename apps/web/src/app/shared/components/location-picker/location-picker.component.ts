@@ -1,12 +1,11 @@
-import { Component, Output, EventEmitter, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  LocationService,
-  LocationData,
-  LocationChoice,
-} from '../../../core/services/location.service';
 import { GeocodingService } from '../../../core/services/geocoding.service';
+import {
+  LocationChoice,
+  LocationService,
+} from '../../../core/services/location.service';
 
 /**
  * Location selection result

@@ -1,37 +1,37 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-  ElementRef,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
-  OnChanges,
-  SimpleChanges,
-  signal,
-  computed,
-  inject,
-  PLATFORM_ID,
-  ApplicationRef,
-  ComponentRef,
-  createComponent,
-  EnvironmentInjector,
-} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import type { CarMapLocation } from '../../../core/services/car-locations.service';
-import { EnhancedMapTooltipComponent } from '../enhanced-map-tooltip/enhanced-map-tooltip.component';
-import { MapBookingPanelComponent } from '../map-booking-panel/map-booking-panel.component';
+import {
+  AfterViewInit,
+  ApplicationRef,
+  Component,
+  ComponentRef,
+  computed,
+  createComponent,
+  ElementRef,
+  EnvironmentInjector,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  PLATFORM_ID,
+  signal,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { environment } from '../../../../environments/environment';
+import type { CarMapLocation } from '../../../core/services/car-locations.service';
+import { MapboxDirectionsService } from '../../../core/services/mapbox-directions.service';
+import { EnhancedMapTooltipComponent } from '../enhanced-map-tooltip/enhanced-map-tooltip.component';
+import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
+import { MapBookingPanelComponent } from '../map-booking-panel/map-booking-panel.component';
 import { MapDetailsPanelComponent } from '../map-details-panel/map-details-panel.component';
-import { MapMarkerComponent } from '../map-marker/map-marker.component';
 import {
   MapLayersControlComponent,
   type MapLayer,
 } from '../map-layers-control/map-layers-control.component';
-import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
-import { MapboxDirectionsService } from '../../../core/services/mapbox-directions.service';
+import { MapMarkerComponent } from '../map-marker/map-marker.component';
 
 type MapboxGL = typeof import('mapbox-gl').default;
 type MapboxMap = import('mapbox-gl').Map;
@@ -216,6 +216,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Output() readonly bookingConfirmed = new EventEmitter<{
     carId: string;
     bookingData: BookingFormData;
+  }>();
+  @Output() readonly boundsChange = new EventEmitter<{
+    north: number;
+    south: number;
+    east: number;
+    west: number;
   }>();
 
   private readonly platformId = inject(PLATFORM_ID);
@@ -484,6 +490,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         }
         this.setupFollowLocation();
         this.setupLockControls();
+
+        // Emit initial bounds
+        this.emitBounds();
+
+        // Listen for move end to emit bounds
+        this.map.on('moveend', () => {
+          this.emitBounds();
+        });
 
         // Pre-warm component pool during idle time for better performance
         this.preWarmComponentPoolDuringIdle();
@@ -801,19 +815,34 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     minLat -= padding;
     maxLat += padding;
 
-    const bounds = {
-      x: minLng,
-      y: minLat,
-      width: maxLng - minLng,
-      height: maxLat - minLat,
-    };
+    this.spatialIndex = new QuadTree(
+      {
+        x: minLng,
+        y: minLat,
+        width: maxLng - minLng,
+        height: maxLat - minLat,
+      },
+      8,
+    );
 
-    this.spatialIndex = new QuadTree(bounds, 8); // Capacity of 8 points per node
-
-    // Insert all cars
     for (const car of this.cars) {
       this.spatialIndex.insert(car);
     }
+  }
+
+  /**
+   * Emit current map bounds
+   */
+  private emitBounds(): void {
+    if (!this.map) return;
+
+    const bounds = this.map.getBounds();
+    this.boundsChange.emit({
+      north: bounds.getNorth(),
+      south: bounds.getSouth(),
+      east: bounds.getEast(),
+      west: bounds.getWest(),
+    });
   }
 
   /**
@@ -1778,7 +1807,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     const lat2 = Math.asin(
       Math.sin(lat1) * Math.cos(distanceMeters / R) +
-        Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
+      Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
     );
 
     const lng2 =

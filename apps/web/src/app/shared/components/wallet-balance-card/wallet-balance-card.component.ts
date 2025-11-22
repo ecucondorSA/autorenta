@@ -1,16 +1,16 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
-  OnInit,
-  OnDestroy,
-  inject,
-  signal,
   computed,
   effect,
   EffectRef,
-  runInInjectionContext,
+  inject,
   Injector,
+  OnDestroy,
+  OnInit,
+  runInInjectionContext,
+  signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
 
@@ -186,10 +186,10 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
         this.showDepositConfirmedToast(transaction as unknown as Record<string, unknown>);
 
         // Recargar pending deposits
-        this.loadPendingDeposits().catch((err) => {});
+        this.loadPendingDeposits().catch(() => { });
       },
       // Callback para cualquier cambio en transacciones
-      (transaction) => {},
+      () => { },
     );
 
     // Iniciar auto-refresh si está habilitado
@@ -211,7 +211,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // Desuscribirse de cambios realtime
-    this.walletService.unsubscribeFromWalletChanges().catch((err) => {});
+    this.walletService.unsubscribeFromWalletChanges().catch(() => { });
 
     // Limpiar interval al destruir componente
     if (this.refreshInterval) {
@@ -236,7 +236,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     try {
       await this.walletService.getBalance();
       this.lastUpdate.set(new Date()); // Guardar timestamp de actualización
-    } catch (_err) {
+    } catch {
       // El error ya está en walletService.error()
     } finally {
       this.isLoadingBalance.set(false);
@@ -277,7 +277,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
           '⏳ Tus depósitos aún están pendientes de aprobación en MercadoPago.\n\nPueden tardar algunos minutos. Te notificaremos cuando se acrediten.',
         );
       }
-    } catch (_err) {
+    } catch {
       // El error ya está en walletService.error(), solo recargamos el balance local
       await this.loadBalance();
       await this.loadPendingDeposits();
@@ -292,7 +292,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   async loadPendingDeposits(): Promise<void> {
     try {
       await this.walletService.refreshPendingDepositsCount();
-    } catch (_err) {
+    } catch {
       // Silently ignore refresh errors
     }
   }
@@ -413,7 +413,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
       await navigator.clipboard.writeText(text);
       // TODO: Agregar toast notification en vez de alert
       alert(`✅ Copiado al portapapeles: ${text}`);
-    } catch (_err) {
+    } catch {
       alert('❌ Error al copiar. Por favor, copia manualmente.');
     }
   }

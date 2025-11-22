@@ -6,7 +6,6 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
-  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -256,6 +255,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   private mediaStream: MediaStream | null = null;
   private mediaRecorder: MediaRecorder | null = null;
   private recordedChunks: Blob[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private recordingInterval: any = null;
 
   async ngOnInit(): Promise<void> {
@@ -316,8 +316,8 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
           this.stopRecording();
         }
       }, 1000);
-    } catch (_error) {
-      console.error('Failed to start recording:', _error);
+    } catch (error) {
+      console.error('Failed to start recording:', error);
       this.error.set('No se pudo acceder a la cámara. Por favor verifica los permisos.');
     }
   }
@@ -372,8 +372,8 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
 
       // Reload status
       await this.faceVerificationService.checkFaceVerificationStatus();
-    } catch (_error) {
-      console.error('Failed to verify face:', _error);
+    } catch (error) {
+      console.error('Failed to verify face:', error);
     }
   }
 

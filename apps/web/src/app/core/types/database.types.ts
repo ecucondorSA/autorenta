@@ -8,7 +8,7 @@
  *   npm run sync:types        # Desde proyecto local
  *   npm run sync:types:remote # Desde proyecto remoto
  *
- * Última actualización: 2025-11-20 00:14:55
+ * Última actualización: 2025-11-21 00:00:00
  */
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
@@ -1044,6 +1044,7 @@ export type Database = {
       };
       booking_risk_snapshot: {
         Row: {
+          id?: string;
           booking_id: string;
           bucket: string;
           car_location_lat: number | null;
@@ -1074,6 +1075,7 @@ export type Database = {
           standard_franchise_usd: number | null;
         };
         Insert: {
+          id?: string;
           booking_id: string;
           bucket: string;
           car_location_lat?: number | null;
@@ -1104,6 +1106,7 @@ export type Database = {
           standard_franchise_usd?: number | null;
         };
         Update: {
+          id?: string;
           booking_id?: string;
           bucket?: string;
           car_location_lat?: number | null;
@@ -1168,6 +1171,113 @@ export type Database = {
             isOneToOne: true;
             referencedRelation: 'pending_payouts_critical';
             referencedColumns: ['booking_id'];
+          },
+        ];
+      };
+      booking_risk_snapshots: {
+        Row: {
+          id: string;
+          booking_id: string;
+          bucket: string;
+          car_location_lat: number | null;
+          car_location_lng: number | null;
+          country_code: string;
+          created_at: string | null;
+          currency: string;
+          distance_km: number | null;
+          distance_risk_multiplier: number | null;
+          distance_risk_tier: string | null;
+          estimated_deposit: number | null;
+          estimated_hold_amount: number | null;
+          franchise_usd: number;
+          fx_snapshot: number;
+          fx_snapshot_date: string | null;
+          guarantee_amount_ars: number | null;
+          guarantee_amount_usd: number | null;
+          guarantee_type: string | null;
+          has_card: boolean;
+          has_wallet_security: boolean;
+          meta: Json | null;
+          min_hold_ars: number | null;
+          renter_location_lat: number | null;
+          renter_location_lng: number | null;
+          requires_revalidation: boolean | null;
+          revalidation_reason: string | null;
+          rollover_franchise_usd: number | null;
+          standard_franchise_usd: number | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          booking_id: string;
+          bucket: string;
+          car_location_lat?: number | null;
+          car_location_lng?: number | null;
+          country_code: string;
+          created_at?: string | null;
+          currency?: string;
+          distance_km?: number | null;
+          distance_risk_multiplier?: number | null;
+          distance_risk_tier?: string | null;
+          estimated_deposit?: number | null;
+          estimated_hold_amount?: number | null;
+          franchise_usd: number;
+          fx_snapshot?: number;
+          fx_snapshot_date?: string | null;
+          guarantee_amount_ars?: number | null;
+          guarantee_amount_usd?: number | null;
+          guarantee_type?: string | null;
+          has_card?: boolean;
+          has_wallet_security?: boolean;
+          meta?: Json | null;
+          min_hold_ars?: number | null;
+          renter_location_lat?: number | null;
+          renter_location_lng?: number | null;
+          requires_revalidation?: boolean | null;
+          revalidation_reason?: string | null;
+          rollover_franchise_usd?: number | null;
+          standard_franchise_usd?: number | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          booking_id?: string;
+          bucket?: string;
+          car_location_lat?: number | null;
+          car_location_lng?: number | null;
+          country_code?: string;
+          created_at?: string | null;
+          currency?: string;
+          distance_km?: number | null;
+          distance_risk_multiplier?: number | null;
+          distance_risk_tier?: string | null;
+          estimated_deposit?: number | null;
+          estimated_hold_amount?: number | null;
+          franchise_usd?: number;
+          fx_snapshot?: number;
+          fx_snapshot_date?: string | null;
+          guarantee_amount_ars?: number | null;
+          guarantee_amount_usd?: number | null;
+          guarantee_type?: string | null;
+          has_card?: boolean;
+          has_wallet_security?: boolean;
+          meta?: Json | null;
+          min_hold_ars?: number | null;
+          renter_location_lat?: number | null;
+          renter_location_lng?: number | null;
+          requires_revalidation?: boolean | null;
+          revalidation_reason?: string | null;
+          rollover_franchise_usd?: number | null;
+          standard_franchise_usd?: number | null;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'booking_risk_snapshots_booking_id_fkey';
+            columns: ['booking_id'];
+            isOneToOne: true;
+            referencedRelation: 'bookings';
+            referencedColumns: ['id'];
           },
         ];
       };

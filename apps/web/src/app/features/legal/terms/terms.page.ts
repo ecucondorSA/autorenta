@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -7,6 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, TranslateModule],
   templateUrl: './terms.page.html',
-  styleUrls: ['./terms.page.css'],
+  styleUrls: ['../legal-shared.css'],
 })
-export class TermsPage {}
+export class TermsPage { }

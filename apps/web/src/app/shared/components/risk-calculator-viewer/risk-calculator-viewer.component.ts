@@ -1,8 +1,8 @@
-import { Component, input, signal, inject, computed, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, input } from '@angular/core';
 import {
-  RiskCalculatorService,
   RiskCalculation,
+  RiskCalculatorService,
 } from '../../../core/services/risk-calculator.service';
 
 @Component({

@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
-import { CarsService } from '../../../core/services/cars.service';
 import type { Car } from '../../../core/models';
+import { CarsService } from '../../../core/services/cars.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 
 @Component({
   selector: 'app-urgent-booking',
@@ -21,7 +21,9 @@ export class UrgentBookingPage implements OnInit {
   private readonly toastService = inject(NotificationManagerService);
 
   readonly car = signal<Car | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly availability = signal<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly quote = signal<any>(null);
   readonly loading = signal(false);
   readonly creating = signal(false);
@@ -50,7 +52,7 @@ export class UrgentBookingPage implements OnInit {
     try {
       const car = await this.carsService.getCarById(this.carId);
       this.car.set(car);
-    } catch (err) {
+    } catch {
       this.error.set('Error al cargar información del auto');
     } finally {
       this.loading.set(false);

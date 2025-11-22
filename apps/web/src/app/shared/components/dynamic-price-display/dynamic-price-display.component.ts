@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import {
-  DynamicPricingService,
   DynamicPricingResponse,
+  DynamicPricingService,
   PricingRequest,
 } from '../../../core/services/dynamic-pricing.service';
 
@@ -205,7 +205,7 @@ export class DynamicPriceDisplayComponent implements OnInit, OnDestroy {
 
       const result = await this.pricingService.calculatePrice(request);
       this.pricing.set(result);
-    } catch (_err) {
+    } catch {
       this.error.set('No se pudo calcular el precio. Intenta nuevamente.');
     } finally {
       this.loading.set(false);

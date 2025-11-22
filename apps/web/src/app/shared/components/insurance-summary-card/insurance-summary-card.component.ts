@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { InsuranceService } from '../../../core/services/insurance.service';
 import { InsuranceSummary } from '../../../core/models/insurance.model';
+import { InsuranceService } from '../../../core/services/insurance.service';
 
 /**
  * Componente que muestra el resumen de seguro de una reserva
@@ -424,7 +424,7 @@ export class InsuranceSummaryCardComponent implements OnInit {
       this.loading = true;
       this.error = false;
       this.summary = await this.insuranceService.getInsuranceSummary(this.bookingId);
-    } catch (_err) {
+    } catch {
       this.error = true;
     } finally {
       this.loading = false;

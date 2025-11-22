@@ -1,14 +1,14 @@
-import {
-  Component,
-  signal,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { ProfileService } from '../../../core/services/profile.service';
 
@@ -40,14 +40,22 @@ interface OnboardingQuestion {
 })
 export class SmartOnboardingComponent implements OnInit {
   @Input() userRole?: string;
-  @Output() completed = new EventEmitter<any>();
+  @Output() completed = new EventEmitter<unknown>();
 
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
 
   readonly currentStep = signal(0);
   readonly loading = signal(false);
-  readonly answers = signal<Record<string, any>>({});
+  readonly answers = signal<Record<string, string | string[]>>({});
+
+  isOptionSelected(questionId: string, value: string): boolean {
+    const answer = this.answers()[questionId];
+    if (Array.isArray(answer)) {
+      return answer.includes(value);
+    }
+    return answer === value;
+  }
 
   readonly questions = signal<OnboardingQuestion[]>([
     {
@@ -287,7 +295,7 @@ export class SmartOnboardingComponent implements OnInit {
 
   toggleMultipleAnswer(questionId: string, value: string) {
     const currentAnswers = { ...this.answers() };
-    const currentValues = currentAnswers[questionId] || [];
+    const currentValues = (currentAnswers[questionId] || []) as string[];
 
     if (currentValues.includes(value)) {
       // Remover valor
@@ -351,12 +359,12 @@ export class SmartOnboardingComponent implements OnInit {
       if (role === 'locador' || role === 'ambos') {
         this.router.navigate(['/cars/publish']);
       } else {
-        this.router.navigate(['/tabs/explore']);
+        this.router.navigate(['/explore']);
       }
-    } catch (_error) {
-      console.error('Error completing onboarding:', _error);
+    } catch {
+      console.error('Error completing onboarding');
       // Fallback: ir a home
-      this.router.navigate(['/tabs/home']);
+      this.router.navigate(['/']);
     } finally {
       this.loading.set(false);
     }

@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
 import { BookingsService } from '../../../../core/services/bookings.service';
@@ -53,6 +53,7 @@ export class BookingConfirmationPage implements OnInit {
   /**
    * Detalles del booking
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   booking = signal<any>(null);
 
   /**
@@ -184,11 +185,17 @@ export class BookingConfirmationPage implements OnInit {
    * Extrae detalles del pago de los query params
    */
   private extractPaymentDetails(queryParams: unknown): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const provider = (queryParams as any)['provider'] as PaymentProvider;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const orderId = (queryParams as any)['orderId'];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const captureId = (queryParams as any)['captureId'];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const preferenceId = (queryParams as any)['preference_id'];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const paymentId = (queryParams as any)['payment_id'];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mpStatus = (queryParams as any)['status'];
 
     if (!provider) {
@@ -321,6 +328,7 @@ export class BookingConfirmationPage implements OnInit {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     link.download = `recibo-${(booking as any).id}.html`;
     link.click();
 
@@ -332,10 +340,12 @@ export class BookingConfirmationPage implements OnInit {
    * Genera HTML del recibo de pago
    */
   private generateReceiptHTML(booking: unknown, _payment: PaymentDetails): string {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const b = booking as any;
     const confirmDate = this.formatDate(this.confirmedAt());
     const totalAmount = this.formatCurrency(
-      (booking as any).total_price,
-      (booking as any).currency || 'ARS',
+      b.total_price,
+      b.currency || 'ARS',
     );
 
     return `
@@ -344,7 +354,7 @@ export class BookingConfirmationPage implements OnInit {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recibo de Pago - ${(booking as any).id}</title>
+  <title>Recibo de Pago - ${b.id}</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -458,19 +468,19 @@ export class BookingConfirmationPage implements OnInit {
       <h2 class="section-title">Información de la Reserva</h2>
       <div class="detail-row">
         <span class="detail-label">ID de Reserva:</span>
-        <span class="detail-value">${(booking as any).id}</span>
+        <span class="detail-value">${b.id}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Vehículo:</span>
-        <span class="detail-value">${(booking as any).car?.brand || ''} ${(booking as any).car?.model || ''}</span>
+        <span class="detail-value">${b.car?.brand || ''} ${b.car?.model || ''}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Desde:</span>
-        <span class="detail-value">${this.formatDate((booking as any).start_date)}</span>
+        <span class="detail-value">${this.formatDate(b.start_date)}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Hasta:</span>
-        <span class="detail-value">${this.formatDate((booking as any).end_date)}</span>
+        <span class="detail-value">${this.formatDate(b.end_date)}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Estado:</span>

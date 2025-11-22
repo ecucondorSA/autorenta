@@ -1,23 +1,23 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
+  EventEmitter,
   Input,
   OnInit,
   Output,
-  EventEmitter,
   computed,
   inject,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
+import {
+  BookingInspection,
+  InspectionPhoto,
+  InspectionStage,
+} from '../../../core/models/fgo-v1-1.model';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
-import {
-  InspectionStage,
-  InspectionPhoto,
-  BookingInspection,
-} from '../../../core/models/fgo-v1-1.model';
 
 // Window extension for inspection callback
 interface WindowWithInspectionCallback extends Window {
@@ -125,7 +125,7 @@ export class InspectionUploaderComponent implements OnInit {
           this.photos.update((p) => [...p, photo]);
         }
       }
-    } catch (_err) {
+    } catch {
       this.error.set('Error al subir fotos. Intente nuevamente.');
     } finally {
       this.uploading.set(false);
@@ -173,7 +173,7 @@ export class InspectionUploaderComponent implements OnInit {
         url: publicUrl,
         type: 'exterior', // Por defecto exterior, en versión avanzada podría categorizarse
       };
-    } catch (__error) {
+    } catch {
       return null;
     }
   }

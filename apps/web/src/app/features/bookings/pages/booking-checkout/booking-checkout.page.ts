@@ -1,12 +1,12 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { PaymentProviderSelectorComponent } from '../../../../shared/components/payment-provider-selector/payment-provider-selector.component';
-import { PayPalButtonComponent } from '../../../../shared/components/paypal-button/paypal-button.component';
 import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
-import { PaymentGatewayFactory } from '../../../../core/services/payment-gateway.factory';
 import { BookingsService } from '../../../../core/services/bookings.service';
 import { DriverProfileService } from '../../../../core/services/driver-profile.service';
+import { PaymentGatewayFactory } from '../../../../core/services/payment-gateway.factory';
+import { PaymentProviderSelectorComponent } from '../../../../shared/components/payment-provider-selector/payment-provider-selector.component';
+import { PayPalButtonComponent } from '../../../../shared/components/paypal-button/paypal-button.component';
 
 /**
  * Booking Checkout Page
@@ -51,6 +51,7 @@ export class BookingCheckoutPage implements OnInit {
   /**
    * Detalles del booking cargados desde la DB
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   booking = signal<any>(null);
 
   /**

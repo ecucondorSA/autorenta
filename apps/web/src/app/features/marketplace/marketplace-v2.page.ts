@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { environment } from '../../../environments/environment';
 import { Car } from '../../core/models';
 import { CarMapLocation } from '../../core/services/car-locations.service';
 import { CarsService } from '../../core/services/cars.service';
@@ -37,24 +38,22 @@ import { BookingsService } from '../../core/services/bookings.service';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { TikTokEventsService } from '../../core/services/tiktok-events.service';
-import { SkeletonComponent } from '../../shared/components-v2/ui/skeleton.component';
 import {
   DateRange,
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
 import { DynamicPricingBadgeComponent } from '../../shared/components/dynamic-pricing-badge/dynamic-pricing-badge.component';
+import {
+  MapControlsComponent,
+  MapControlsEvent,
+} from '../../shared/components/map-controls/map-controls.component';
 import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
 import {
   QuickBookingData,
   QuickBookingModalComponent,
 } from '../../shared/components/quick-booking-modal/quick-booking-modal.component';
 import { TooltipComponent } from '../../shared/components/tooltip/tooltip.component';
-// import { FiltersDrawerComponent } from '../../shared/components/marketplace/filters-drawer/filters-drawer.component';
-import { environment } from '../../../environments/environment';
-import {
-  MapControlsComponent,
-  MapControlsEvent,
-} from '../../shared/components/map-controls/map-controls.component';
+import { SkeletonComponent } from './components/ui/skeleton.component';
 
 export interface CarWithDistance extends Car {
   distance?: number;
@@ -358,7 +357,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.error.set(null);
     try {
       const dateRange = this.dateRange();
-      const filters = this.mapFilters();
+      // const filters = this.mapFilters();
 
       if (dateRange.from && dateRange.to) {
         const items = await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
@@ -588,6 +587,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   /**
    * Handle map bounds change
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onBoundsChange(bounds: any): void {
     // Don't update immediately, just show the button
     // Only update if bounds are significantly different to avoid jitter
@@ -968,7 +968,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   /**
    * Check if a quick filter is active
    */
-  isQuickFilterActive(filterId: string): boolean {
+  isQuickFilterActive(_filterId: string): boolean {
     // TODO: Implement actual filter state checking
     return false;
   }

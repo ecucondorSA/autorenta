@@ -1,10 +1,10 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { PayoutService, Payout, BankAccount } from '../../core/services/payout.service';
-import { WalletService } from '../../core/services/wallet.service';
-import { SupabaseClientService } from '../../core/services/supabase-client.service';
 import { take } from 'rxjs/operators';
+import { BankAccount, PayoutService } from '../../core/services/payout.service';
+import { SupabaseClientService } from '../../core/services/supabase-client.service';
+import { WalletService } from '../../core/services/wallet.service';
 import { BankAccountsComponent } from './components/bank-accounts.component';
 import { PayoutHistoryComponent } from './components/payout-history.component';
 import { RequestPayoutModalComponent } from './components/request-payout-modal.component';

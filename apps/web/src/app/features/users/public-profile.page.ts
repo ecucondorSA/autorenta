@@ -1,30 +1,21 @@
-import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap, map, catchError } from 'rxjs/operators';
-import { of, from } from 'rxjs';
-import { ProfileService } from '../../core/services/profile.service';
+import { from, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import type { Car, Review } from '../../core/models';
 import { CarsService } from '../../core/services/cars.service';
+import { ProfileService } from '../../core/services/profile.service';
 import { ReviewsService } from '../../core/services/reviews.service';
-import type { UserProfile, Car, Review } from '../../core/models';
-import { getCarImageUrl } from '../../shared/utils/car-placeholder.util';
 import {
   ReviewRadarChartComponent,
   type RadarChartData,
 } from '../../shared/components/review-radar-chart/review-radar-chart.component';
+import { getCarImageUrl } from '../../shared/utils/car-placeholder.util';
 
-interface UserStats {
-  owner_rating_avg: number | null;
-  owner_reviews_count: number;
-  owner_trips_count: number;
-  renter_rating_avg: number | null;
-  renter_reviews_count: number;
-  renter_trips_count: number;
-  total_cars: number;
-  member_since: string;
-}
+
 
 @Component({
   selector: 'app-public-profile',

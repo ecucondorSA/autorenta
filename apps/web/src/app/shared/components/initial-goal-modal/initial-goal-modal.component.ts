@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { OnboardingService } from '../../../core/services/onboarding.service';
 
@@ -248,7 +248,7 @@ export class InitialGoalModalComponent {
     this.onboardingService.dismissInitialModal();
   }
 
-  onBackdropClick(event: MouseEvent): void {
+  onBackdropClick(_event: MouseEvent): void {
     // Close on backdrop click
     this.onDismiss();
   }

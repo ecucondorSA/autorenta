@@ -99,7 +99,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     });
   });
 
-  private carouselHovered = false;
+
 
   constructor(
     private carsService: CarsService,
@@ -251,9 +251,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     this.isDrawerOpen.set(true);
   }
 
-  onCarouselHover(isHovered: boolean) {
-    this.carouselHovered = isHovered;
-  }
+
 
   onUserLocationChange(location: { lat: number; lng: number }) {
     this.userLocation.set(location);

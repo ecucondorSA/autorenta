@@ -1,36 +1,31 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
+import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { BookingConfirmationService } from '../../../core/services/booking-confirmation.service';
 import { BookingsService } from '../../../core/services/bookings.service';
-import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 
 /**
  * Owner Check-Out Page
  *
  * Permite al dueño realizar la inspección final del auto cuando el locatario lo devuelve
- * - Registra estado final (odómetro, combustible, daños)
- * - Compara con check-in
- * - Sube fotos de evidencia
- * - Reporta daños si los hay
- * - Firma digital
+ * - Registra estado final (odómetro, combustible, daños) usando InspectionUploaderComponent
  * - Marca como 'returned' e inicia confirmación bilateral
  */
 @Component({
   selector: 'app-owner-check-out',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, IonicModule, InspectionUploaderComponent],
   templateUrl: './owner-check-out.page.html',
   styleUrl: './owner-check-out.page.css',
 })
 export class OwnerCheckOutPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
-  private readonly fgoService = inject(FgoV1_1Service);
   private readonly confirmationService = inject(BookingConfirmationService);
   private readonly authService = inject(AuthService);
   private readonly toastService = inject(NotificationManagerService);
@@ -38,44 +33,24 @@ export class OwnerCheckOutPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
 
   readonly loading = signal(true);
-  readonly submitting = signal(false);
-  readonly booking = signal<Booking | null>(null);
-  readonly currentUserId = signal<string | null>(null);
-  readonly checkInData = signal<any>(null);
+  // Estado del flujo
+  readonly step = signal<'inspection' | 'damages'>('inspection');
 
-  // Datos del formulario
-  readonly odometer = signal<number | null>(null);
-  readonly fuelLevel = signal<number>(100);
+  // Datos del formulario de daños
   readonly hasDamages = signal(false);
   readonly damagesNotes = signal('');
   readonly damageAmount = signal<number>(0);
-  readonly uploadedPhotos = signal<string[]>([]);
-  readonly signatureDataUrl = signal<string | null>(null);
 
-  readonly odometerDifference = computed(() => {
-    const checkIn = this.checkInData();
-    const current = this.odometer();
-    if (!checkIn || !current) return null;
-    return current - checkIn.odometer_reading;
+  readonly canSubmitDamages = computed(() => {
+    return !this.hasDamages() || (this.damageAmount() > 0 && this.damageAmount() <= 250 && this.damagesNotes().length > 0);
   });
 
-  readonly fuelDifference = computed(() => {
-    const checkIn = this.checkInData();
-    const current = this.fuelLevel();
-    if (!checkIn) return null;
-    return current - checkIn.fuel_level;
-  });
+  readonly booking = signal<Booking | null>(null);
+  readonly currentUserId = signal<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly checkInData = signal<any>(null);
+  readonly submitting = signal(false);
 
-  readonly canSubmit = computed(() => {
-    return (
-      this.odometer() !== null &&
-      this.odometer()! > 0 &&
-      this.fuelLevel() > 0 &&
-      this.uploadedPhotos().length >= 4 && // Mínimo 4 fotos
-      this.signatureDataUrl() !== null &&
-      (!this.hasDamages() || (this.damageAmount() > 0 && this.damageAmount() <= 250))
-    );
-  });
 
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
@@ -127,23 +102,13 @@ export class OwnerCheckOutPage implements OnInit {
     }
   }
 
-  onFilesSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (!input.files) return;
-
-    const files = Array.from(input.files);
-    const photoUrls: string[] = [];
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        photoUrls.push(e.target?.result as string);
-        if (photoUrls.length === files.length) {
-          this.uploadedPhotos.set([...this.uploadedPhotos(), ...photoUrls]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+  /**
+   * Paso 1: Inspección completada
+   * Avanza al paso de reclamo de daños
+   */
+  onInspectionCompleted(_inspection: BookingInspection) {
+    this.step.set('damages');
+    this.toastService.success('Inspección guardada', 'Ahora confirma si hay daños a reportar');
   }
 
   toggleDamages() {
@@ -154,8 +119,11 @@ export class OwnerCheckOutPage implements OnInit {
     }
   }
 
+  /**
+   * Paso 2: Confirmar devolución y daños
+   */
   async submitCheckOut() {
-    if (!this.canSubmit() || this.submitting()) return;
+    if (!this.canSubmitDamages() || this.submitting()) return;
 
     const booking = this.booking();
     if (!booking) return;
@@ -163,29 +131,13 @@ export class OwnerCheckOutPage implements OnInit {
     this.submitting.set(true);
 
     try {
-      // 1. Crear registro FGO para check-out
-      // TODO: Implementar cuando FGO service esté listo
-      const fgoData = {
-        booking_id: booking.id,
-        event_type: 'check_out_owner',
-        initiated_by: this.currentUserId()!,
-        odometer_reading: this.odometer()!,
-        fuel_level: this.fuelLevel(),
-        damage_notes: this.damagesNotes() || null,
-        photo_urls: this.uploadedPhotos(),
-        signature_data_url: this.signatureDataUrl()!,
-        has_damages: this.hasDamages(),
-        damage_amount: this.damageAmount(),
-      };
-      console.log('FGO Check-out data:', fgoData);
-
       // 2. Marcar como devuelto (in_progress → returned)
       await this.confirmationService.markAsReturned({
         booking_id: booking.id,
         returned_by: this.currentUserId()!,
       });
 
-      // 3. Confirmar como propietario (puede reportar daños)
+      // 3. Confirmar como propietario con los daños reportados
       const confirmResult = await this.confirmationService.confirmOwner({
         booking_id: booking.id,
         confirming_user_id: this.currentUserId()!,
@@ -221,13 +173,5 @@ export class OwnerCheckOutPage implements OnInit {
 
   cancel() {
     this.router.navigate(['/bookings/owner']);
-  }
-
-  get fuelLevelPercentage(): string {
-    return `${this.fuelLevel()}%`;
-  }
-
-  get damageAmountFormatted(): string {
-    return `$${this.damageAmount()} USD`;
   }
 }

@@ -1,20 +1,17 @@
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-  signal,
-  computed,
-  inject,
-  PLATFORM_ID,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  PLATFORM_ID,
+  signal,
   WritableSignal,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
 import type { Map } from 'mapbox-gl';
 
 export interface LocationCircle {

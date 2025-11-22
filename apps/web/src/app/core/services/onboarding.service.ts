@@ -193,8 +193,8 @@ export class OnboardingService {
         this.router.navigate(['/marketplace']);
         break;
       case 'both':
-        // Show both checklists in home
-        this.router.navigate(['/tabs/home']);
+        // Fall back to the marketplace landing where both experiences converge
+        this.router.navigate(['/']);
         break;
     }
   }

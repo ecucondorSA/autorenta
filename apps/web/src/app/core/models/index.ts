@@ -1,39 +1,25 @@
 import type {
-  UserRole,
+  BookingStatus,
+  CancelPolicy,
   CarStatus,
   FuelType,
-  Transmission,
-  CancelPolicy,
-  BookingStatus,
-  PaymentStatus,
   PaymentProvider,
+  PaymentStatus,
+  Transmission,
+  UserRole,
 } from '../types/database.types';
 
 // Re-export Supabase types for use throughout the app
 export type {
-  Profile,
-  Car as CarDB,
-  Booking as BookingDB,
-  WalletBalance,
-  WalletTransaction as WalletTransactionDB,
-  WalletLedger,
-  Payment as PaymentDB,
-  PaymentAuthorization,
-  BankAccount as BankAccountDB,
-  Review as ReviewDB,
+  BankAccount as BankAccountDB, Booking as BookingDB, Car as CarDB, PaymentAuthorization, Payment as PaymentDB, Profile, Review as ReviewDB, WalletBalance, WalletLedger, WalletTransaction as WalletTransactionDB
 } from '../types/supabase-types';
+export type {
+  BookingStatus, CancelPolicy, CarStatus,
+  FuelType, PaymentProvider, PaymentStatus, Transmission
+};
 
 // Re-export for backward compatibility
 export type Role = UserRole;
-export type {
-  CarStatus,
-  FuelType,
-  Transmission,
-  CancelPolicy,
-  BookingStatus,
-  PaymentStatus,
-  PaymentProvider,
-};
 
 // Export FGO models
 export * from './fgo.model';
@@ -349,6 +335,12 @@ export interface CarFilters {
   from?: string;
   to?: string;
   blockedCarIds?: string[];
+  bounds?: {
+    north: number;
+    south: number;
+    east: number;
+    west: number;
+  };
 }
 
 export interface BookingBreakdown {

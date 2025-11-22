@@ -1,16 +1,16 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  inject,
   input,
+  OnInit,
   output,
   signal,
-  inject,
-  OnInit,
-  CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SettlementService, DamageItem } from '../../../core/services/settlement.service';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import { firstValueFrom } from 'rxjs';
+import { DamageItem, SettlementService } from '../../../core/services/settlement.service';
+
 
 @Component({
   selector: 'app-damage-comparison',

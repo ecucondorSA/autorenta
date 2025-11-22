@@ -1,17 +1,17 @@
-import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 // Services
-import { ProfileService } from '../../../core/services/profile.service';
-import { CarsService } from '../../../core/services/cars.service';
 import { BookingsService } from '../../../core/services/bookings.service';
-import { WalletService } from '../../../core/services/wallet.service';
+import { CarsService } from '../../../core/services/cars.service';
+import { ProfileService } from '../../../core/services/profile.service';
 import { NotificationsService } from '../../../core/services/user-notifications.service';
+import { WalletService } from '../../../core/services/wallet.service';
 
 // Models
-import type { Car, Booking } from '../../../core/models';
+import type { Booking, Car } from '../../../core/models';
 
 // Utils
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
@@ -295,8 +295,12 @@ export class PersonalizedDashboardComponent implements OnInit {
   }
 
   getCarPhotoUrl(car: Car): string {
-    const photos = car.photos || (car as any).car_photos;
-    return getCarImageUrl(photos, {
+    const rawPhotos = car.photos || ((car as unknown as Record<string, unknown>)['car_photos'] as string[]);
+    const photos = Array.isArray(rawPhotos) && typeof rawPhotos[0] === 'string'
+      ? (rawPhotos as string[]).map(url => ({ url }))
+      : rawPhotos;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return getCarImageUrl(photos as any, {
       brand: car.brand || car.brand_name || '',
       model: car.model || car.model_name || '',
       year: car.year,

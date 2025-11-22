@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
@@ -31,11 +31,11 @@ import { IonicModule } from '@ionic/angular';
     `,
   ],
 })
-export class BookingLocationFormComponent {
-  @Input() initialLocation: any;
+export class BookingLocationFormComponent implements OnInit {
+  @Input() initialLocation: { address?: string } | null = null;
   @Input() label = 'Ubicación';
   @Input() placeholder = 'Ingresa una dirección';
-  @Output() locationChange = new EventEmitter<any>();
+  @Output() locationChange = new EventEmitter<{ address: string; lat: number; lng: number }>();
 
   locationText = '';
 

@@ -1,253 +1,154 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from '../BasePage';
 
 /**
- * Publish Car Page Object
+ * Publish Car Page Object (v2 UI)
  *
- * Handles car publication form and interactions
- * Used by: Test P0 #2 (Owner can publish new car)
+ * Usa los selectores reales de la página Angular actual.
+ * Requiere subir mínimo 3 fotos y marca/modelo vía FIPE autocomplete.
  */
 export class PublishCarPage extends BasePage {
-  // Form locators
   readonly publishForm: Locator;
-  readonly brandSelect: Locator;
+
+  // FIPE autocompletes
+  readonly brandInput: Locator;
   readonly modelInput: Locator;
-  readonly yearInput: Locator;
-  readonly priceInput: Locator;
-  readonly descriptionTextarea: Locator;
-  readonly categorySelect: Locator;
+  readonly brandOptions: Locator;
+  readonly modelOptions: Locator;
+
+  // Basic fields
+  readonly yearSelect: Locator;
+  readonly mileageInput: Locator;
+  readonly colorInput: Locator;
   readonly transmissionSelect: Locator;
-  readonly fuelTypeSelect: Locator;
-  readonly seatsInput: Locator;
+  readonly fuelSelect: Locator;
 
-  // Location fields
-  readonly citySelect: Locator;
-  readonly addressInput: Locator;
+  // Pricing
+  readonly priceModeCustom: Locator;
+  readonly pricePerDayInput: Locator;
 
-  // Photo upload
-  readonly photoUploadInput: Locator;
-  readonly photoPreviewList: Locator;
+  // Location
+  readonly streetInput: Locator;
+  readonly streetNumberInput: Locator;
+  readonly cityInput: Locator;
+  readonly stateInput: Locator;
+  readonly countrySelect: Locator;
 
-  // Buttons
+  // Photos
+  readonly photoInput: Locator;
+  readonly photoPreviews: Locator;
+
+  // Actions
   readonly submitButton: Locator;
-  readonly cancelButton: Locator;
-
-  // Validation
-  readonly errorMessages: Locator;
-  readonly successMessage: Locator;
 
   constructor(page: Page) {
     super(page);
 
-    // Form
-    this.publishForm = page.getByTestId('publish-form')
-      .or(page.locator('form[name="publishCar"]'))
-      .or(page.locator('#publish-car-form'));
+    this.publishForm = page.getByTestId('publish-form').first();
 
-    // Basic info
-    this.brandSelect = page.getByTestId('brand-select')
-      .or(page.locator('select[name="brand"]'))
-      .or(page.locator('#brand'));
+    // Autocomplete components (brand/model) - first = brand, second = model
+    this.brandInput = page.locator('app-fipe-autocomplete').nth(0).locator('input');
+    this.modelInput = page.locator('app-fipe-autocomplete').nth(1).locator('input');
+    this.brandOptions = page.locator('app-fipe-autocomplete').nth(0).locator('button');
+    this.modelOptions = page.locator('app-fipe-autocomplete').nth(1).locator('button');
 
-    this.modelInput = page.getByTestId('model-input')
-      .or(page.locator('input[name="model"]'))
-      .or(page.locator('#model'));
+    this.yearSelect = page.locator('select[formcontrolname="year"]');
+    this.mileageInput = page.locator('input[formcontrolname="mileage"]');
+    this.colorInput = page.locator('input[formcontrolname="color"]');
+    this.transmissionSelect = page.locator('select[formcontrolname="transmission"]');
+    this.fuelSelect = page.locator('select[formcontrolname="fuel"]');
 
-    this.yearInput = page.getByTestId('year-input')
-      .or(page.locator('input[name="year"]'))
-      .or(page.locator('#year'));
+    this.priceModeCustom = page.getByRole('button', { name: /precio personalizado/i }).first();
+    this.pricePerDayInput = page.locator('input[formcontrolname="price_per_day"]');
 
-    this.priceInput = page.getByTestId('price-input')
-      .or(page.locator('input[name="price_per_day"]'))
-      .or(page.locator('#price'));
+    this.streetInput = page.locator('input[formcontrolname="location_street"]');
+    this.streetNumberInput = page.locator('input[formcontrolname="location_street_number"]');
+    this.cityInput = page.locator('input[formcontrolname="location_city"]');
+    this.stateInput = page.locator('input[formcontrolname="location_state"]');
+    this.countrySelect = page.locator('select[formcontrolname="location_country"]');
 
-    this.descriptionTextarea = page.getByTestId('description-textarea')
-      .or(page.locator('textarea[name="description"]'))
-      .or(page.locator('#description'));
+    this.photoInput = page.locator('input[type="file"]').first();
+    this.photoPreviews = page.locator('img[alt^="Foto"]');
 
-    // Car details
-    this.categorySelect = page.getByTestId('category-select')
-      .or(page.locator('select[name="category"]'))
-      .or(page.locator('#category'));
-
-    this.transmissionSelect = page.getByTestId('transmission-select')
-      .or(page.locator('select[name="transmission"]'))
-      .or(page.locator('#transmission'));
-
-    this.fuelTypeSelect = page.getByTestId('fuel-type-select')
-      .or(page.locator('select[name="fuel_type"]'))
-      .or(page.locator('#fuelType'));
-
-    this.seatsInput = page.getByTestId('seats-input')
-      .or(page.locator('input[name="seats"]'))
-      .or(page.locator('#seats'));
-
-    // Location
-    this.citySelect = page.getByTestId('city-select')
-      .or(page.locator('select[name="city"]'))
-      .or(page.locator('#city'));
-
-    this.addressInput = page.getByTestId('address-input')
-      .or(page.locator('input[name="address"]'))
-      .or(page.locator('#address'));
-
-    // Photos
-    this.photoUploadInput = page.getByTestId('photo-upload')
-      .or(page.locator('input[type="file"]'))
-      .or(page.locator('#photos'));
-
-    this.photoPreviewList = page.getByTestId('photo-preview-list')
-      .or(page.locator('.photo-preview-container'));
-
-    // Actions
-    this.submitButton = page.getByRole('button', { name: /publicar|submit|guardar/i })
-      .or(page.getByTestId('submit-button'));
-
-    this.cancelButton = page.getByRole('button', { name: /cancelar|cancel/i })
-      .or(page.getByTestId('cancel-button'));
-
-    // Feedback
-    this.errorMessages = page.locator('.error-message, .text-red-500, [role="alert"]');
-    this.successMessage = page.getByTestId('success-message')
-      .or(page.locator('.success-message'));
+    this.submitButton = page.getByRole('button', { name: /publicar|guardar|continuar/i }).first();
   }
 
-  /**
-   * Navigate to publish car page
-   */
   async goto(): Promise<void> {
     await super.goto('/cars/publish');
     await this.waitForVisible(this.publishForm);
   }
 
-  /**
-   * Fill basic car information
-   */
-  async fillBasicInfo(data: {
-    brand: string;
-    model: string;
-    year: number;
-    pricePerDay: number;
-    description: string;
-  }): Promise<void> {
-    await this.brandSelect.selectOption(data.brand);
-    await this.fillInput(this.modelInput, data.model);
-    await this.fillInput(this.yearInput, data.year.toString());
-    await this.fillInput(this.priceInput, data.pricePerDay.toString());
-    await this.fillInput(this.descriptionTextarea, data.description);
+  async selectBrand(name: string): Promise<void> {
+    await this.brandInput.fill(name.slice(0, 3));
+    await this.page.waitForTimeout(500);
+    const option = this.brandOptions.filter({ hasText: new RegExp(name, 'i') }).first();
+    await option.click({ trial: true }).catch(() => {});
+    await option.click();
   }
 
-  /**
-   * Fill car details
-   */
-  async fillCarDetails(data: {
-    category: string;
-    transmission: string;
-    fuelType: string;
-    seats: number;
-  }): Promise<void> {
-    await this.categorySelect.selectOption(data.category);
-    await this.transmissionSelect.selectOption(data.transmission);
-    await this.fuelTypeSelect.selectOption(data.fuelType);
-    await this.fillInput(this.seatsInput, data.seats.toString());
+  async selectModel(name: string): Promise<void> {
+    await this.modelInput.fill(name.slice(0, 3));
+    await this.page.waitForTimeout(500);
+    const option = this.modelOptions.filter({ hasText: new RegExp(name, 'i') }).first();
+    await option.click({ trial: true }).catch(() => {});
+    await option.click();
   }
 
-  /**
-   * Fill location
-   */
+  async fillYear(year: number): Promise<void> {
+    await this.yearSelect.selectOption(year.toString());
+  }
+
+  async fillVehicleDetails(opts: {
+    mileage?: number;
+    color?: string;
+    transmission?: 'Manual' | 'Automática';
+    fuel?: 'nafta' | 'gasoil' | 'electrico' | 'hibrido';
+  }): Promise<void> {
+    if (opts.mileage !== undefined) {
+      await this.mileageInput.fill(String(opts.mileage));
+    }
+    if (opts.color) {
+      await this.colorInput.fill(opts.color);
+    }
+    if (opts.transmission) {
+      await this.transmissionSelect.selectOption({ label: opts.transmission });
+    }
+    if (opts.fuel) {
+      await this.fuelSelect.selectOption({ value: opts.fuel });
+    }
+  }
+
+  async configurePricing(pricePerDay: number): Promise<void> {
+    await this.priceModeCustom.click();
+    await this.pricePerDayInput.fill(pricePerDay.toString());
+  }
+
   async fillLocation(data: {
+    street: string;
+    number: string;
     city: string;
-    address: string;
+    state: string;
+    country?: string;
   }): Promise<void> {
-    await this.citySelect.selectOption(data.city);
-    await this.fillInput(this.addressInput, data.address);
+    await this.streetInput.fill(data.street);
+    await this.streetNumberInput.fill(data.number);
+    await this.cityInput.fill(data.city);
+    await this.stateInput.fill(data.state);
+    if (data.country) {
+      await this.countrySelect.selectOption(data.country);
+    }
   }
 
-  /**
-   * Upload photos
-   */
-  async uploadPhotos(photoPaths: string[]): Promise<void> {
-    await this.uploadFile(this.photoUploadInput, photoPaths);
-
-    // Wait for previews to appear
-    const expectedCount = photoPaths.length;
-    const previews = this.photoPreviewList.locator('img');
-    await this.page.waitForFunction(
-      (count) => document.querySelectorAll('.photo-preview-container img').length === count,
-      expectedCount
-    );
+  async uploadPhotos(paths: string[]): Promise<void> {
+    await this.photoInput.setInputFiles(paths);
+    await expect(this.photoPreviews).toHaveCount(paths.length, { timeout: 10000 });
   }
 
-  /**
-   * Submit form
-   */
   async submit(): Promise<void> {
     await this.submitButton.click();
-    await this.waitForLoadingComplete();
   }
 
-  /**
-   * Fill complete form and submit
-   */
-  async publishCar(data: {
-    brand: string;
-    model: string;
-    year: number;
-    pricePerDay: number;
-    description: string;
-    category: string;
-    transmission: string;
-    fuelType: string;
-    seats: number;
-    city: string;
-    address: string;
-    photos?: string[];
-  }): Promise<void> {
-    await this.fillBasicInfo({
-      brand: data.brand,
-      model: data.model,
-      year: data.year,
-      pricePerDay: data.pricePerDay,
-      description: data.description,
-    });
-
-    await this.fillCarDetails({
-      category: data.category,
-      transmission: data.transmission,
-      fuelType: data.fuelType,
-      seats: data.seats,
-    });
-
-    await this.fillLocation({
-      city: data.city,
-      address: data.address,
-    });
-
-    if (data.photos && data.photos.length > 0) {
-      await this.uploadPhotos(data.photos);
-    }
-
-    await this.submit();
-  }
-
-  /**
-   * Assert form validation errors are visible
-   */
-  async assertValidationErrors(): Promise<void> {
-    await this.waitForVisible(this.errorMessages.first());
-  }
-
-  /**
-   * Assert success message is visible
-   */
-  async assertSuccess(): Promise<void> {
-    await this.waitForVisible(this.successMessage);
-  }
-
-  /**
-   * Assert redirected to my cars page
-   */
   async assertRedirectedToMyCars(): Promise<void> {
-    await this.assertUrlContains('/cars/my-cars');
+    await expect(this.page).toHaveURL(/\/cars\/my-cars/i, { timeout: 15000 });
   }
 }

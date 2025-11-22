@@ -1,19 +1,18 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
-  OnInit,
   OnDestroy,
+  OnInit,
+  effect,
+  inject,
   input,
   output,
   signal,
-  inject,
-  effect,
-  computed,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import { MessagesService, Message } from '../../../core/services/messages.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { Message, MessagesService } from '../../../core/services/messages.service';
 import { NotificationSoundService } from '../../../core/services/notification-sound.service';
 
 /**
@@ -396,7 +395,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
           ? await this.messagesService.listByBooking(ctx.contextId)
           : await this.messagesService.listByCar(ctx.contextId);
       this.messages.set(messages);
-    } catch (_err) {
+    } catch {
       this.error.set('No pudimos cargar los mensajes');
     } finally {
       this.loading.set(false);
@@ -425,7 +424,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
             m.body === message.body &&
             m.sender_id === message.sender_id &&
             Math.abs(new Date(m.created_at).getTime() - new Date(message.created_at).getTime()) <
-              5000,
+            5000,
         );
 
         if (optimisticIndex >= 0) {
@@ -453,7 +452,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
 
       if (message.sender_id !== this.currentUserId()) {
         this.showNotification(`Nuevo mensaje de ${ctx.recipientName}`);
-        this.notificationSound.playNotificationSound().catch(() => {});
+        this.notificationSound.playNotificationSound().catch(() => { });
         this.messageReceived.emit({ message, context: ctx });
       }
     };
@@ -522,7 +521,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
       // El mensaje real llegará via realtime subscription y reemplazará al optimistic
       // Ver subscribeToMessages() para la lógica de deduplicación
       this.messageSent.emit({ messageId: optimisticId, context: ctx });
-    } catch (_err) {
+    } catch {
       // Remover mensaje optimistic en caso de error
       this.messages.update((prev) => prev.filter((m) => m.id !== optimisticId));
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');

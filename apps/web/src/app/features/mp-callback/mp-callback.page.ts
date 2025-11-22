@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { MarketplaceOnboardingService } from '../../core/services/marketplace-onboarding.service';
@@ -318,7 +318,7 @@ export class MpCallbackPage implements OnInit, OnDestroy {
 
     try {
       // Completar onboarding
-      const collectorId = await this.onboardingService.handleCallback(code, state);
+      await this.onboardingService.handleCallback(code, state);
 
       // Mostrar success
       this.state.set('success');

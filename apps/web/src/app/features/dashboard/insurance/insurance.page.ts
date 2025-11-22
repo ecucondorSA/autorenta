@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
@@ -15,6 +15,7 @@ export class InsurancePage implements OnInit {
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly cars = signal<any[]>([]);
 
   async ngOnInit(): Promise<void> {
@@ -61,6 +62,8 @@ export class InsurancePage implements OnInit {
     return 'valid';
   }
 }
+
+
 
 
 

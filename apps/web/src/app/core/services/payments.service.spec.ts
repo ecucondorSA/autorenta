@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
+import type { PaymentIntent } from '../models';
+import { FxService } from './fx.service';
 import { PaymentsService } from './payments.service';
 import { SupabaseClientService } from './supabase-client.service';
-import { FxService } from './fx.service';
-import type { PaymentIntent } from '../models';
 
 describe('PaymentsService', () => {
   let service: PaymentsService;

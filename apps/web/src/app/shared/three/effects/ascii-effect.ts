@@ -1,4 +1,4 @@
-import { Effect, BlendFunction } from 'postprocessing';
+import { BlendFunction, Effect } from 'postprocessing';
 import { Uniform, Vector2 } from 'three';
 
 const fragmentShader = `
@@ -231,6 +231,7 @@ export type AsciiEffectOptions = {
   style?: number;
   resolution?: Vector2;
   mousePos?: Vector2;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   postfx?: Record<string, any>;
 };
 

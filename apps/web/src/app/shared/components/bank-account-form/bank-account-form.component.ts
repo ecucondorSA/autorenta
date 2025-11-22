@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Output, signal, computed, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import type { BankAccountType, AddBankAccountParams } from '../../../core/models/wallet.model';
+import type { AddBankAccountParams, BankAccountType } from '../../../core/models/wallet.model';
 import { ProfileService } from '../../../core/services/profile.service';
 
 /**
@@ -42,25 +42,25 @@ export class BankAccountFormComponent implements OnInit {
     placeholder: string;
     hint: string;
   }[] = [
-    {
-      value: 'cbu',
-      label: 'CBU',
-      placeholder: '0000003100010000000001',
-      hint: '22 dígitos numéricos',
-    },
-    {
-      value: 'cvu',
-      label: 'CVU',
-      placeholder: '0000003100010000000001',
-      hint: '22 dígitos numéricos',
-    },
-    {
-      value: 'alias',
-      label: 'Alias',
-      placeholder: 'mi.alias.banco',
-      hint: '6-20 caracteres alfanuméricos',
-    },
-  ];
+      {
+        value: 'cbu',
+        label: 'CBU',
+        placeholder: '0000003100010000000001',
+        hint: '22 dígitos numéricos',
+      },
+      {
+        value: 'cvu',
+        label: 'CVU',
+        placeholder: '0000003100010000000001',
+        hint: '22 dígitos numéricos',
+      },
+      {
+        value: 'alias',
+        label: 'Alias',
+        placeholder: 'mi.alias.banco',
+        hint: '6-20 caracteres alfanuméricos',
+      },
+    ];
 
   constructor(private readonly fb: FormBuilder) {
     this.form = this.fb.group({
@@ -97,7 +97,7 @@ export class BankAccountFormComponent implements OnInit {
         fullName: profile.full_name,
         govIdNumber: profile.gov_id_number,
       });
-    } catch (__error) {
+    } catch {
       this.profileError.set('Error al cargar tu perfil');
     }
   }

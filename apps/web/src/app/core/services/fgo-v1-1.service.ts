@@ -47,6 +47,7 @@ import { SupabaseClientService } from './supabase-client.service';
 })
 export class FgoV1_1Service {
   private readonly supabaseClient: SupabaseClient;
+  private readonly riskSnapshotTable = 'booking_risk_snapshots';
 
   constructor(private readonly supabaseService: SupabaseClientService) {
     this.supabaseClient = this.supabaseService.getClient();
@@ -152,7 +153,7 @@ export class FgoV1_1Service {
     };
 
     return from(
-      this.supabaseClient.from('booking_risk_snapshot').insert(snapshotData).select().single(),
+      this.supabaseClient.from(this.riskSnapshotTable).insert(snapshotData).select().single(),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -174,7 +175,7 @@ export class FgoV1_1Service {
   getRiskSnapshot(bookingId: string): Observable<BookingRiskSnapshot | null> {
     return from(
       this.supabaseClient
-        .from('booking_risk_snapshot')
+        .from(this.riskSnapshotTable)
         .select('*')
         .eq('booking_id', bookingId)
         .maybeSingle(),

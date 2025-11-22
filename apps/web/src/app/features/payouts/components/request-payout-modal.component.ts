@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PayoutService, BankAccount } from '../../../core/services/payout.service';
 import { take } from 'rxjs/operators';
+import { BankAccount, PayoutService } from '../../../core/services/payout.service';
 
 /**
  * Request Payout Modal Component

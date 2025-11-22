@@ -1,4 +1,6 @@
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
@@ -8,46 +10,44 @@ import {
   computed,
   inject,
   signal,
-  AfterViewInit,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ActivatedRoute,
+  ChildrenOutletContexts,
   NavigationEnd,
   Router,
   RouterLink,
-  RouterOutlet,
   RouterLinkActive,
+  RouterOutlet,
 } from '@angular/router';
-import { filter } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Toast } from 'primeng/toast';
+import { filter } from 'rxjs';
+import { GuidedTourService } from './core/guided-tour';
 import { AuthService } from './core/services/auth.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
-import { GuidedTourService } from './core/guided-tour';
 import { LocaleManagerService } from './core/services/locale-manager.service';
+import { MobileBottomNavPortalService } from './core/services/mobile-bottom-nav-portal.service';
 import { ProfileService, UserProfile } from './core/services/profile.service';
-import { PwaService } from './core/services/pwa.service';
 import { PushNotificationService } from './core/services/push-notification.service';
+import { PwaService } from './core/services/pwa.service';
+import { FooterComponent } from './shared/components/footer/footer.component';
+import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
+import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
+import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { PendingReviewsBannerComponent } from './shared/components/pending-reviews-banner/pending-reviews-banner.component';
-import { SplashLoaderComponent } from './shared/components/splash-loader/splash-loader.component';
-import { PwaInstallPromptComponent } from './shared/components/pwa-install-prompt/pwa-install-prompt.component';
-import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
-import { PwaTitlebarComponent } from './shared/components/pwa-titlebar/pwa-titlebar.component';
 import { PwaInstallBannerComponent } from './shared/components/pwa-install-banner/pwa-install-banner.component';
+import { PwaInstallPromptComponent } from './shared/components/pwa-install-prompt/pwa-install-prompt.component';
+import { PwaTitlebarComponent } from './shared/components/pwa-titlebar/pwa-titlebar.component';
+import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
+import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
+import { SplashLoaderComponent } from './shared/components/splash-loader/splash-loader.component';
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
-import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
-import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
-import { MobileBottomNavPortalService } from './core/services/mobile-bottom-nav-portal.service';
-import { NotificationsComponent } from './shared/components/notifications/notifications.component';
-import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
-import { FooterComponent } from './shared/components/footer/footer.component';
 // TODO: Re-add when components are created
 // import { BottomNavBarComponent } from './shared/components/bottom-nav-bar/bottom-nav-bar.component';
 // import { fadeAnimation } from './core/animations/route-animations';
-import { ChildrenOutletContexts } from '@angular/router';
 
 @Component({
   selector: 'app-root',

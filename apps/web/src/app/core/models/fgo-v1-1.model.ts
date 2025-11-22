@@ -114,6 +114,7 @@ export interface BookingRiskSnapshot {
  * Versión DB de BookingRiskSnapshot
  */
 export interface BookingRiskSnapshotDb {
+  id?: string;
   booking_id: string;
   country_code: string;
   bucket: string;
@@ -122,6 +123,8 @@ export interface BookingRiskSnapshotDb {
   estimated_hold_amount?: number;
   estimated_deposit?: number;
   franchise_usd: number;
+  rollover_franchise_usd?: number | null;
+  coverage_upgrade?: string | null;
   has_card: boolean;
   has_wallet_security: boolean;
   meta?: Record<string, unknown>;

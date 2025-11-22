@@ -1,10 +1,10 @@
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { UserProfile } from '../../../core/models';
 import { ProfileService } from '../../../core/services/profile.service';
 import { VerificationService } from '../../../core/services/verification.service';
-import { UserProfile } from '../../../core/models';
 
 /**
  * VerificationPromptBannerComponent
@@ -374,7 +374,7 @@ export class VerificationPromptBannerComponent implements OnInit {
     try {
       const profile = await this.profileService.getCurrentProfile();
       this.profile.set(profile);
-    } catch (__error) {
+    } catch {
       /* Silenced */
     }
   }

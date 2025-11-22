@@ -1,24 +1,23 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  computed,
   inject,
   OnInit,
-  signal,
+  signal
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { ProfileService } from '../../core/services/profile.service';
+import { DOCUMENT_TYPES } from '../../core/config/document-types.config';
+import { Role } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
+import type { UpdateProfileData } from '../../core/services/profile.service';
+import { ProfileService } from '../../core/services/profile.service';
 import { WalletService } from '../../core/services/wallet.service';
 import { ProfileStore } from '../../core/stores/profile.store';
-import { UserProfile, Role } from '../../core/models';
-import type { UpdateProfileData } from '../../core/services/profile.service';
-import { DOCUMENT_TYPES } from '../../core/config/document-types.config';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const SECTION_ANCHORS = {
   'basic-info': 'basic-info-card',
@@ -177,7 +176,7 @@ export class ProfilePage implements OnInit {
           country: profile.country ?? '',
         });
       }
-    } catch (err) {
+    } catch {
       // Error is already handled by ProfileStore
       // Silent fail - error is shown via ProfileStore.error signal
     }
@@ -312,7 +311,7 @@ export class ProfilePage implements OnInit {
   async signOut(): Promise<void> {
     try {
       await this.authService.signOut();
-    } catch (_err) {
+    } catch {
       this.error.set('Error al cerrar sesión');
     }
   }

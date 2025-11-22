@@ -14,7 +14,7 @@
  * ```
  */
 
-import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class ProfileValidators {
   /**
@@ -53,7 +53,7 @@ export class ProfileValidators {
         }
 
         return null;
-      } catch (error) {
+      } catch {
         return {
           invalidDate: {
             message: 'Fecha de nacimiento inválida',
@@ -94,7 +94,7 @@ export class ProfileValidators {
         }
 
         return null;
-      } catch (error) {
+      } catch {
         return { invalidDate: { message: 'Fecha de nacimiento inválida' } };
       }
     };
@@ -436,7 +436,7 @@ export class ProfileValidators {
       try {
         Intl.DateTimeFormat(undefined, { timeZone: timezone });
         return null;
-      } catch (error) {
+      } catch {
         return {
           timezone: {
             message: 'Zona horaria inválida',

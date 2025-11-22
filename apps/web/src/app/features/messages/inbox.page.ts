@@ -1,17 +1,17 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessagesService, Message } from '../../core/services/messages.service';
+import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
+import type { ConversationDTO } from '../../core/repositories/messages.repository';
 import { AuthService } from '../../core/services/auth.service';
-import { UnreadMessagesService } from '../../core/services/unread-messages.service';
-import { SupabaseClientService } from '../../core/services/supabase-client.service';
+import { Message, MessagesService } from '../../core/services/messages.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import {
-  RealtimeConnectionService,
   ConnectionStatus,
+  RealtimeConnectionService,
 } from '../../core/services/realtime-connection.service';
-import type { ConversationDTO } from '../../core/repositories/messages.repository';
-import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClientService } from '../../core/services/supabase-client.service';
+import { UnreadMessagesService } from '../../core/services/unread-messages.service';
 
 /**
  * 📬 Bandeja de entrada de mensajes
@@ -286,7 +286,7 @@ export class InboxPage implements OnInit, OnDestroy {
     );
 
     // Canal para mensajes donde el usuario es el destinatario
-    const recipientChannel = this.realtimeConnection.subscribeWithRetry<Message>(
+    this.realtimeConnection.subscribeWithRetry<Message>(
       'inbox-conversations-recipient',
       {
         event: '*', // INSERT, UPDATE
@@ -402,7 +402,7 @@ export class InboxPage implements OnInit, OnDestroy {
   }
 
   openConversation(conv: ConversationDTO): void {
-    const params: any = {
+    const params: Record<string, string> = {
       userId: conv.otherUserId,
       userName: conv.otherUserName,
     };
@@ -497,7 +497,7 @@ export class InboxPage implements OnInit, OnDestroy {
       // Subir a Supabase Storage
       const userId = session.user.id;
       const timestamp = Date.now();
-      const fileExt = file.name.split('.').pop();
+
       const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
       const fileName = `${timestamp}_${sanitizedName}`;
       const filePath = `${userId}/messages/${fileName}`;

@@ -507,7 +507,7 @@ export class CarDetailPage implements OnInit {
   checkAvailability = async (carId: string, from: string, to: string): Promise<boolean> => {
     try {
       return await this.carsService.isCarAvailable(carId, from, to);
-    } catch (_error) {
+    } catch {
       return false;
     }
   };
@@ -529,7 +529,7 @@ export class CarDetailPage implements OnInit {
         from: this.normalizeDateInput(firstSuggestion.startDate),
         to: this.normalizeDateInput(firstSuggestion.endDate),
       };
-    } catch (_error) {
+    } catch {
       // Silent fail - próxima ventana disponible es opcional
       return null;
     }
@@ -654,7 +654,7 @@ export class CarDetailPage implements OnInit {
           address: homeLocation.address,
         });
       }
-    } catch (_error) {
+    } catch {
       // Silently fail - distance is optional
     }
   }
@@ -699,7 +699,7 @@ export class CarDetailPage implements OnInit {
           const quote = await this.urgentRentalService.getUrgentQuote(car.id, car.region_id, hours);
           // Usar el precio por hora del sistema de pricing dinámico
           this.dynamicHourlyRate.set(quote.hourlyRate);
-        } catch (_error) {
+        } catch {
           // Fallback: calcular desde precio diario
           const pricePerDay = this.displayPrice();
           if (pricePerDay > 0) {
@@ -710,7 +710,7 @@ export class CarDetailPage implements OnInit {
           this.hourlyRateLoading.set(false);
         }
       }
-    } catch (_error) {
+    } catch {
       // Silent fail - will use static price
     } finally {
       this.priceLoading.set(false);
@@ -734,7 +734,7 @@ export class CarDetailPage implements OnInit {
       // Obtener ubicación del usuario
       try {
         await this.urgentRentalService.getCurrentLocation();
-      } catch (_error) {
+      } catch {
         // Silent fail - location is optional
       }
 
@@ -757,8 +757,8 @@ export class CarDetailPage implements OnInit {
         console.log(
           `💰 [CarDetail] Express mode hourly rate: $${quote.hourlyRate}/hora (quote para ${hours} horas)`,
         );
-      } catch (_error) {
-        console.warn('⚠️ [CarDetail] Could not load hourly rate for express mode:', _error);
+      } catch {
+        console.warn('⚠️ [CarDetail] Could not load hourly rate for express mode:');
         // Fallback: calcular desde precio diario si está disponible
         const pricePerDay = this.displayPrice();
         if (pricePerDay > 0) {

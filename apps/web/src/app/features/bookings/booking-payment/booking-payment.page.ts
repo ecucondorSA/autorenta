@@ -3,33 +3,29 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  inject,
-  signal,
   computed,
   effect,
+  inject,
+  signal,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { from } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { forkJoin, of, from } from 'rxjs';
 
 // Core imports
+import { DatePipe } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
 import { BookingsService } from '../../../core/services/bookings.service';
-import { WalletService } from '../../../core/services/wallet.service';
-import { MercadoPagoPaymentService } from '../../../core/services/mercadopago-payment.service';
 import { MercadoPagoScriptService } from '../../../core/services/mercado-pago-script.service';
+import { MercadoPagoPaymentService } from '../../../core/services/mercadopago-payment.service';
 import { ToastService } from '../../../core/services/toast.service';
-
-// Shared components
+import { WalletService } from '../../../core/services/wallet.service';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { LoadingStateComponent } from '../../../shared/components/loading-state/loading-state.component';
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import { WalletBalanceCardComponent } from '../../../shared/components/wallet-balance-card/wallet-balance-card.component';
-import { LoadingStateComponent } from '../../../shared/components/loading-state/loading-state.component';
-import { ButtonComponent } from '../../../shared/components/button/button.component';
-
-// Pipes
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
-import { DatePipe } from '@angular/common';
 
 // Types
 import type { Database } from '../../../../types/supabase.types';
@@ -49,7 +45,6 @@ interface PaymentOption {
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     TranslateModule,
     MercadopagoCardFormComponent,
     WalletBalanceCardComponent,
@@ -104,7 +99,7 @@ export class BookingPaymentPage implements OnInit {
 
   readonly paymentOptions = computed<PaymentOption[]>(() => {
     const balance = this.walletBalance();
-    const required = this.totalAmount();
+
 
     return [
       {
@@ -294,6 +289,7 @@ export class BookingPaymentPage implements OnInit {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onCardPaymentError(error: any): void {
     console.error('[BookingPayment] Card form error:', error);
     this.toastService.error('Error de tarjeta', error.message || 'Error al procesar la tarjeta');

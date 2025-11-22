@@ -25,6 +25,17 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
 import { getCorsHeaders } from '../_shared/cors.ts';
 
+// Small helper: prevent accidental use of sandbox/test tokens in production flows
+const ensureProductionToken = (rawToken: string, context: string) => {
+  const cleaned = rawToken.trim().replace(/[\r\n\t\s]/g, '');
+  if (cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST')) {
+    throw new Error(
+      `${context}: MERCADOPAGO_ACCESS_TOKEN parece ser de sandbox (TEST). Configura el token de producción APP_USR-*`,
+    );
+  }
+  return cleaned;
+};
+
 // Tipos
 interface CreatePreferenceRequest {
   transaction_id: string;
@@ -64,8 +75,8 @@ serve(async (req) => {
       throw new Error('MERCADOPAGO_ACCESS_TOKEN environment variable not configured');
     }
 
-    // Limpiar token: remover espacios, saltos de línea, tabs
-    const MP_ACCESS_TOKEN = MP_ACCESS_TOKEN_RAW.trim().replace(/[\r\n\t\s]/g, '');
+    // Limpiar token y validar que no sea de sandbox
+    const MP_ACCESS_TOKEN = ensureProductionToken(MP_ACCESS_TOKEN_RAW, 'mercadopago-create-preference');
 
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
@@ -452,6 +463,7 @@ serve(async (req) => {
           preference_id: mpData.id,
           init_point: mpData.init_point,
           sandbox_init_point: mpData.sandbox_init_point,
+          payment_url: mpData.init_point,
           created_at: new Date().toISOString(),
         },
       })
@@ -464,6 +476,7 @@ serve(async (req) => {
         preference_id: mpData.id,
         init_point: mpData.init_point,
         sandbox_init_point: mpData.sandbox_init_point,
+        payment_url: mpData.init_point,
       }),
       {
         status: 200,

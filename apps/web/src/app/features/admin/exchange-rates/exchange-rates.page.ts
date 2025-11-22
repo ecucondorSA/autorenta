@@ -61,7 +61,7 @@ export class ExchangeRatesPage implements OnInit {
   constructor(
     private supabase: SupabaseClientService,
     private router: Router,
-  ) {}
+  ) { }
 
   async ngOnInit(): Promise<void> {
     await this.loadData();
@@ -122,10 +122,10 @@ export class ExchangeRatesPage implements OnInit {
     const lastSync =
       rates.length > 0
         ? rates.reduce((latest, r) => {
-            const rateDate = new Date(r.last_updated);
-            const latestDate = latest ? new Date(latest) : new Date(0);
-            return rateDate > latestDate ? r.last_updated : latest;
-          }, '')
+          const rateDate = new Date(r.last_updated);
+          const latestDate = latest ? new Date(latest) : new Date(0);
+          return rateDate > latestDate ? r.last_updated : latest;
+        }, '')
         : null;
 
     this.stats.set({
@@ -228,7 +228,7 @@ export class ExchangeRatesPage implements OnInit {
     return `Hace ${days} días`;
   }
 
-  calculateMarginVisualization(rate: ExchangeRate): number {
+  calculateMarginVisualization(_rate: ExchangeRate): number {
     // Calculate percentage for visual representation (10% margin = 100% of bar)
     return (10 / 10) * 100;
   }

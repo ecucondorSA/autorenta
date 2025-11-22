@@ -1,26 +1,26 @@
-import {
-  Component,
-  signal,
-  computed,
-  inject,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  OnDestroy,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnDestroy,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
+import { es } from 'date-fns/locale';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import type { Instance } from 'flatpickr/dist/types/instance';
-import { format, addMonths, subMonths, startOfMonth, endOfMonth } from 'date-fns';
-import { es } from 'date-fns/locale';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import {
   CarAvailabilityService,
   DetailedBlockedRange,
 } from '../../../core/services/car-availability.service';
 import { CarBlockingService } from '../../../core/services/car-blocking.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import {
   BlockDateModalComponent,
   BlockDateRequest,
@@ -298,10 +298,10 @@ export class AvailabilityCalendarPage implements AfterViewInit, OnDestroy {
     void this.router.navigate(['/dashboard']);
   }
   hasManualBlocks(): boolean {
-    return this.blockedRanges().filter((r: any) => r.type === 'manual_block').length > 0;
+    return this.blockedRanges().filter((r) => r.type === 'manual_block').length > 0;
   }
 
-  getManualBlocks(): any[] {
-    return this.blockedRanges().filter((r: any) => r.type === 'manual_block');
+  getManualBlocks(): DetailedBlockedRange[] {
+    return this.blockedRanges().filter((r) => r.type === 'manual_block');
   }
 }

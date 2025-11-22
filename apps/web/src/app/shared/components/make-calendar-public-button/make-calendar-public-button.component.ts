@@ -1,9 +1,9 @@
-import { Component, Input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, inject, Input, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
 @Component({
   selector: 'app-make-calendar-public-button',
@@ -112,10 +112,11 @@ export class MakeCalendarPublicButtonComponent {
           window.location.reload();
         }, 2000);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error making calendar public:', err);
 
-      const errorMessage = err?.error?.error || err?.message || 'Error desconocido';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const errorMessage = (err as any)?.error?.error || (err as Error)?.message || 'Error desconocido';
       this.error.set(errorMessage);
 
       this.notifications.error('Error', `No se pudo hacer público el calendario: ${errorMessage}`);

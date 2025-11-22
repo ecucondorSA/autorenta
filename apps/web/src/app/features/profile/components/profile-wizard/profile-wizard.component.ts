@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,21 +9,16 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
-import { ProfileStore } from '../../../../core/stores/profile.store';
-import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
-import { AnalyticsService } from '../../../../core/services/analytics.service';
 import type { Role, UpdateProfileData } from '../../../../core/models';
+import { AnalyticsService } from '../../../../core/services/analytics.service';
+import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
+import { ProfileStore } from '../../../../core/stores/profile.store';
 
 export type WizardStep = 'general' | 'contact' | 'address' | 'license';
 
-interface StepState {
-  step: WizardStep;
-  completed: boolean;
-  dirty: boolean;
-}
+
 
 /**
  * ProfileWizardComponent - Wizard de edición de perfil por pasos
@@ -299,7 +295,7 @@ export class ProfileWizardComponent implements OnInit {
       this.profileStore.profile.set({
         ...currentProfile,
         ...formData,
-      } as any);
+      } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
     }
 
     try {

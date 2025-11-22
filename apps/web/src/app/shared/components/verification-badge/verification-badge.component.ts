@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { VerificationService } from '../../../core/services/verification.service';
 import type { VerificationStatus } from '../../../core/models';
+import { VerificationService } from '../../../core/services/verification.service';
 
 @Component({
   standalone: true,
@@ -60,7 +60,7 @@ export class VerificationBadgeComponent implements OnInit {
     if (!this.statuses().length) {
       try {
         await this.verificationService.loadStatuses();
-      } catch (__error) {
+      } catch {
         // Silent fail - verification status is optional
       }
     }

@@ -1,16 +1,16 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-  ElementRef,
-  signal,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import type mapboxgl from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
@@ -117,7 +117,7 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
   coordinates = signal<LocationCoordinates | null>(null);
   currentAddress = signal<string>('');
 
-  constructor(private readonly geocodingService: GeocodingService) {}
+  constructor(private readonly geocodingService: GeocodingService) { }
 
   ngOnInit(): void {
     if (this.initialAddress) {
@@ -175,7 +175,7 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
       this.map.on('error', (_e: unknown) => {
         this.isLoading.set(false);
       });
-    } catch (__error) {
+    } catch {
       this.isLoading.set(false);
     }
   }

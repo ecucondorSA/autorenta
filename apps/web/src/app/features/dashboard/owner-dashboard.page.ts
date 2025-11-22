@@ -1,13 +1,13 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import type { DashboardStats } from '../../core/models/dashboard.model';
 import { DashboardService } from '../../core/services/dashboard.service';
 import { NotificationsService } from '../../core/services/user-notifications.service';
+import { MissingDocumentsWidgetComponent } from '../../shared/components/missing-documents-widget/missing-documents-widget.component';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
-import { MissingDocumentsWidgetComponent } from '../../shared/components/missing-documents-widget/missing-documents-widget.component';
 import { PayoutsHistoryComponent } from './components/payouts-history/payouts-history.component';
 
 @Component({

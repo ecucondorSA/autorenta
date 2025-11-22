@@ -161,7 +161,7 @@ export class BookingFlowService {
    */
   private canLeaveReview(
     booking: Booking,
-    userId: string,
+    _userId: string,
   ): {
     canReview: boolean;
     description?: string;

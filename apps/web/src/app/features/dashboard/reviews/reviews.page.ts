@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
@@ -22,11 +22,13 @@ export class ReviewsPage implements OnInit {
   readonly userRole = signal<'owner' | 'renter' | 'both' | null>(null);
 
   // Reviews as owner
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly ownerReviews = signal<any[]>([]);
   readonly ownerAverageRating = signal<number>(0);
   readonly ownerReviewsCount = signal<number>(0);
 
   // Reviews as renter
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly renterReviews = signal<any[]>([]);
   readonly renterAverageRating = signal<number>(0);
   readonly renterReviewsCount = signal<number>(0);

@@ -1,14 +1,14 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { BookingsService } from '../../../core/services/bookings.service';
+import { v4 as uuidv4 } from 'uuid';
+import { Booking } from '../../../core/models';
 import { AuthService } from '../../../core/services/auth.service';
+import { BookingsService } from '../../../core/services/bookings.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
-import { Booking } from '../../../core/models';
-import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Owner Damage Report Page

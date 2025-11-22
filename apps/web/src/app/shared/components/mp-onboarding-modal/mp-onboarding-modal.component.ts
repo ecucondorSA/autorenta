@@ -1,11 +1,11 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
+import { AuthService } from '../../../core/services/auth.service';
 import {
   MarketplaceOnboardingService,
   MarketplaceStatus,
 } from '../../../core/services/marketplace-onboarding.service';
-import { AuthService } from '../../../core/services/auth.service';
 
 /**
  * Modal para onboarding de plataformas de pago
@@ -524,7 +524,7 @@ export class MpOnboardingModalComponent implements OnInit {
         await this.dismiss({ completed: true, alreadyLinked: true });
         return;
       }
-    } catch (_err) {
+    } catch {
       this.error.set('Error al cargar estado');
     } finally {
       this.loading.set(false);

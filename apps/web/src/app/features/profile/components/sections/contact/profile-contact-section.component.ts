@@ -18,16 +18,16 @@
  * - Country-specific postal code validation
  */
 
-import { Component, Input, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
-import { SectionCardComponent } from '../../shared/section-card';
-import { ProfileValidators } from '../../shared/field-validators';
+import { UpdateProfileData, UserProfile } from '../../../../../core/models';
 import { ProfileStore } from '../../../../../core/stores/profile.store';
-import { UserProfile, UpdateProfileData } from '../../../../../core/models';
+import { ProfileValidators } from '../../shared/field-validators';
+import { SectionCardComponent } from '../../shared/section-card';
 
 @Component({
   selector: 'app-profile-contact-section',

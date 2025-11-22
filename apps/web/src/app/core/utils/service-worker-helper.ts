@@ -17,7 +17,7 @@ export async function forceServiceWorkerUpdate(): Promise<void> {
 
     // 2. Unregister all service workers
     for (const registration of registrations) {
-      const success = await registration.unregister();
+      await registration.unregister();
     }
 
     // 3. Clear all caches
@@ -25,7 +25,7 @@ export async function forceServiceWorkerUpdate(): Promise<void> {
       const cacheNames = await caches.keys();
 
       for (const cacheName of cacheNames) {
-        const deleted = await caches.delete(cacheName);
+        await caches.delete(cacheName);
       }
     }
 
@@ -35,7 +35,7 @@ export async function forceServiceWorkerUpdate(): Promise<void> {
 
     // 5. Reload the page to get fresh content
     window.location.reload();
-  } catch (_error) {
+  } catch {
     // Silently ignore service worker errors
   }
 }
@@ -70,7 +70,7 @@ export async function checkServiceWorkerHealth(): Promise<boolean> {
     }
 
     return true; // Healthy
-  } catch (_error) {
+  } catch {
     return false; // Assume not healthy on error
   }
 }

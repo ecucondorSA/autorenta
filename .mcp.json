@@ -1,31 +1,31 @@
 {
   "mcpServers": {
     "cloudflare-builds": {
+      "type": "http",
       "url": "https://builds.mcp.cloudflare.com/mcp",
-      "transport": "sse",
       "description": "Deploy and manage Cloudflare Pages and Workers builds"
     },
     "cloudflare-docs": {
+      "type": "http",
       "url": "https://docs.mcp.cloudflare.com/mcp",
-      "transport": "sse",
       "description": "Quick reference for Cloudflare documentation"
     },
     "cloudflare-bindings": {
+      "type": "http",
       "url": "https://bindings.mcp.cloudflare.com/mcp",
-      "transport": "sse",
       "description": "Manage Workers bindings (R2, KV, D1, AI, etc.)"
     },
     "mercadopago-mcp-server-prod": {
+      "type": "http",
       "url": "https://mcp.mercadopago.com/mcp",
-      "transport": "sse",
       "headers": {
-        "Authorization": "Bearer APP_USR-4340262352975191-101722-3fc884850841f34c6f83bd4e29b3134c-2302679571"
+        "Authorization": "Bearer ${MERCADOPAGO_ACCESS_TOKEN}"
       },
       "description": "MercadoPago MCP Server - Integraciones con IA, documentación y optimización de pagos"
     },
     "supabase": {
+      "type": "http",
       "url": "https://mcp.supabase.com/mcp?project_ref=pisqjmoklivzpwufhscx",
-      "transport": "sse",
       "description": "Supabase MCP Server - Database queries, schema management, TypeScript generation, Edge Functions deployment for AutoRenta FIPE+Binance integration"
     },
     "autorenta-platform": {

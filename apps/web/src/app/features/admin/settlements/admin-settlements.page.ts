@@ -1,7 +1,7 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { SettlementService, Claim } from '../../../core/services/settlement.service';
+import { Claim, SettlementService } from '../../../core/services/settlement.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
 /**
@@ -80,8 +80,8 @@ export class AdminSettlementsPage implements OnInit {
 
       // Calculate stats
       this.calculateStats(mockClaims);
-    } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Error al cargar claims');
+    } catch {
+      this.error.set('Error al cargar claims');
     } finally {
       this.loading.set(false);
     }
@@ -230,15 +230,15 @@ export class AdminSettlementsPage implements OnInit {
         alert(
           `Claim procesado exitosamente. Total recuperado: ${this.formatCurrency(
             (result.waterfall?.breakdown.holdCaptured || 0) / 100 +
-              (result.waterfall?.breakdown.walletDebited || 0) / 100 +
-              (result.waterfall?.breakdown.fgoPaid || 0) / 100,
+            (result.waterfall?.breakdown.walletDebited || 0) / 100 +
+            (result.waterfall?.breakdown.fgoPaid || 0) / 100,
           )}`,
         );
         await this.loadClaims();
       } else {
         alert(`Error: ${result.error}`);
       }
-    } catch (err) {
+    } catch {
       alert('Error al procesar claim');
     } finally {
       this.loading.set(false);

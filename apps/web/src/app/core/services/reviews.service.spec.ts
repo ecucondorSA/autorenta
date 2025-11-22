@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { ReviewsService } from './reviews.service';
-import { SupabaseClientService } from './supabase-client.service';
 import { createSupabaseMock } from '../../testing/mocks/supabase-mock';
 import type { ReviewType } from '../models';
+import { ReviewsService } from './reviews.service';
+import { SupabaseClientService } from './supabase-client.service';
 
 describe('ReviewsService', () => {
   let service: ReviewsService;

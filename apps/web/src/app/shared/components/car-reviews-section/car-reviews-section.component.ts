@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { ReviewCardComponent } from '../review-card/review-card.component';
 
@@ -108,6 +108,7 @@ export class CarReviewsSectionComponent implements OnInit {
     ];
 
     // Forzar los signals con datos de prueba (esto es temporal para testing)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (this.reviewsService as any).reviewsSignal.set(testReviews);
     console.log('✅ Datos de prueba cargados. La UI debería mostrar las reviews ahora.');
   }

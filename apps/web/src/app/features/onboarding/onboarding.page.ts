@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SmartOnboardingComponent } from '../../shared/components/smart-onboarding/smart-onboarding.component';
 

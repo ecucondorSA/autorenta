@@ -1,0 +1,486 @@
+
+> lint
+> ./tools/run.sh lint
+
+
+[0;34m╔══════════════════════════════════════════════════════════╗[0m
+[0;34m║[0m  🔍 Running Linter
+[0;34m╚══════════════════════════════════════════════════════════╝[0m
+
+
+> autorenta-web@0.1.0 lint
+> node_modules/.bin/ng lint
+
+
+Linting "web"...
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/app.component.ts[24m[0m
+[0m  [2m50:1[22m  [33mwarning[39m  `@angular/router` import should occur before import of `./core/services/auth.service`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/services/booking-flow.service.ts[24m[0m
+[0m  [2m164:5[22m  [33mwarning[39m  'userId' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/services/booking-notifications.service.ts[24m[0m
+[0m   [2m42:13[22m  [33mwarning[39m  'ownerName' is assigned a value but never used    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m270:13[22m  [33mwarning[39m  'otherUserId' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/services/breakpoint.service.ts[24m[0m
+[0m  [2m1:48[22m  [33mwarning[39m  'signal' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/services/car-availability.service.ts[24m[0m
+[0m  [2m423:5[22m   [33mwarning[39m  'maxOptions' is assigned a value but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m435:13[22m  [33mwarning[39m  'durationDays' is assigned a value but never used                                      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m440:21[22m  [33mwarning[39m  'bookings' is assigned a value but never used                                          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/services/gesture.service.ts[24m[0m
+[0m  [2m1:30[22m  [33mwarning[39m  'effect' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/services/payments.service.spec.ts[24m[0m
+[0m  [2m6:1[22m  [33mwarning[39m  `../models` type import should occur before import of `./payments.service`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/services/reviews.service.spec.ts[24m[0m
+[0m  [2m4:1[22m  [33mwarning[39m  `../../testing/mocks/supabase-mock` import should occur before import of `./reviews.service`  [2mimport/order[22m[0m
+[0m  [2m5:1[22m  [33mwarning[39m  `../models` type import should occur before import of `./reviews.service`                     [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/services/risk.service.ts[24m[0m
+[0m  [2m155:39[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/services/telemetry.service.ts[24m[0m
+[0m  [2m5:1[22m  [33mwarning[39m  `rxjs` import should occur before import of `./supabase-client.service`            [2mimport/order[22m[0m
+[0m  [2m6:1[22m  [33mwarning[39m  `rxjs/operators` import should occur before import of `./supabase-client.service`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/stores/profile.store.ts[24m[0m
+[0m  [2m2:28[22m  [33mwarning[39m  'Role' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/core/utils/service-worker-helper.ts[24m[0m
+[0m  [2m20:13[22m  [33mwarning[39m  'success' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m28:15[22m  [33mwarning[39m  'deleted' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m38:12[22m  [33mwarning[39m  '_error' is defined but never used            [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m73:12[22m  [33mwarning[39m  '_error' is defined but never used            [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/admin/accounting/accounting-admin.page.ts[24m[0m
+[0m   [2m7:3[22m  [33mwarning[39m  'inject' is defined but never used                                                                [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m22:1[22m  [33mwarning[39m  `../../../../environments/environment` import should occur after import of `@ngx-translate/core`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/admin/exchange-rates/exchange-rates.page.ts[24m[0m
+[0m  [2m231:32[22m  [33mwarning[39m  'rate' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/admin/settlements/admin-settlements.page.ts[24m[0m
+[0m  [2m241:14[22m  [33mwarning[39m  'err' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/auth/reset-password/reset-password.page.ts[24m[0m
+[0m  [2m26:14[22m  [33mwarning[39m  '_err' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/bookings/booking-detail/booking-detail.page.ts[24m[0m
+[0m  [2m24:1[22m  [33mwarning[39m  `./booking-status.component` import should occur after import of `../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component`     [2mimport/order[22m[0m
+[0m  [2m25:1[22m  [33mwarning[39m  `./review-management.component` import should occur after import of `../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/bookings/booking-payment/booking-payment.page.ts[24m[0m
+[0m   [2m14:10[22m  [33mwarning[39m  'forkJoin' is defined but never used                                                          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m14:20[22m  [33mwarning[39m  'of' is defined but never used                                                                [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m32:1[22m   [33mwarning[39m  `@angular/common` import should occur before import of `../../../core/services/auth.service`  [2mimport/order[22m[0m
+[0m  [2m106:11[22m  [33mwarning[39m  'required' is assigned a value but never used                                                 [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m296:29[22m  [33mwarning[39m  Unexpected any. Specify a different type                                                      [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/bookings/booking-pending/booking-pending.page.ts[24m[0m
+[0m  [2m156:25[22m  [33mwarning[39m  'bookingId' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/bookings/contracts/contracts-management.page.ts[24m[0m
+[0m  [2m69:42[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/bookings/owner-check-in/owner-check-in.page.ts[24m[0m
+[0m   [2m89:14[22m  [33mwarning[39m  'error' is defined but never used                                             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m209:31[22m  [33mwarning[39m  'inspection' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/bookings/owner-check-out/owner-check-out.page.ts[24m[0m
+[0m   [2m50:33[22m  [33mwarning[39m  Unexpected any. Specify a different type                                      [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m108:25[22m  [33mwarning[39m  'inspection' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/bookings/owner-damage-report/owner-damage-report.page.ts[24m[0m
+[0m  [2m11:1[22m  [33mwarning[39m  `uuid` import should occur before import of `../../../core/services/bookings.service`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.ts[24m[0m
+[0m  [2m54:20[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/bookings/pages/booking-confirmation/booking-confirmation.page.ts[24m[0m
+[0m   [2m56:20[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m187:38[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m188:37[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m189:39[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m190:42[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m191:39[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m192:38[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m324:43[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m337:19[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m338:19[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m347:41[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m461:50[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m465:50[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m465:87[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m469:66[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m473:66[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/bookings/urgent-booking/urgent-booking.page.ts[24m[0m
+[0m  [2m24:34[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m25:27[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m53:14[22m  [33mwarning[39m  'err' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/availability-calendar/availability-calendar.page.ts[24m[0m
+[0m  [2m301:44[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m304:22[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m305:44[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/bulk-blocking/bulk-blocking.page.ts[24m[0m
+[0m  [2m5:30[22m  [33mwarning[39m  'BlockDateParams' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/car-booking-demo.page.ts[24m[0m
+[0m   [2m74:11[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m100:19[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/car-booking.page.ts[24m[0m
+[0m  [2m34:11[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m35:10[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m54:19[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/detail/car-detail.page.ts[24m[0m
+[0m  [2m510:14[22m  [33mwarning[39m  '_error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m532:14[22m  [33mwarning[39m  '_error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m657:14[22m  [33mwarning[39m  '_error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m702:18[22m  [33mwarning[39m  '_error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m713:14[22m  [33mwarning[39m  '_error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m737:16[22m  [33mwarning[39m  '_error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/my-cars/my-cars.page.ts[24m[0m
+[0m   [2m6:10[22m  [33mwarning[39m  'toSignal' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m7:10[22m  [33mwarning[39m  'from' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m62:14[22m  [33mwarning[39m  'error' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m77:14[22m  [33mwarning[39m  'error' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/publish/publish-car-v2.page.ts[24m[0m
+[0m   [2m125:45[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m126:39[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m127:39[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m169:32[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m170:32[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m226:44[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m228:43[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m305:36[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m350:36[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m606:42[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m608:41[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m639:28[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m954:22[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m1051:52[22m  [33mwarning[39m  'error' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m1146:14[22m  [33mwarning[39m  'error' is defined but never used                                        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/publish/services/publish-car-location.service.ts[24m[0m
+[0m  [2m114:14[22m  [33mwarning[39m  'error' is defined but never used         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m152:14[22m  [33mwarning[39m  'error' is defined but never used         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m162:37[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m163:28[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/publish/services/publish-car-mp-onboarding.service.ts[24m[0m
+[0m    [2m1:48[22m  [33mwarning[39m  'effect' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m116:14[22m  [33mwarning[39m  'error' is defined but never used   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/publish/services/publish-car-photo.service.ts[24m[0m
+[0m  [2m154:14[22m  [33mwarning[39m  'error' is defined but never used                                        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m353:28[22m  [33mwarning[39m  'carId' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m373:14[22m  [33mwarning[39m  'error' is defined but never used                                        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/cars/quick-book/quick-book.page.ts[24m[0m
+[0m   [2m44:25[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m150:42[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/dashboard/components/multi-car-calendar/multi-car-calendar.component.ts[24m[0m
+[0m  [2m5:18[22m  [33mwarning[39m  'addDays' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/dashboard/earnings/earnings.page.ts[24m[0m
+[0m  [2m11:1[22m   [33mwarning[39m  `ng2-charts` import should occur before import of `../../../core/services/dashboard.service`  [2mimport/order[22m[0m
+[0m  [2m12:1[22m   [33mwarning[39m  `chart.js` import should occur before import of `../../../core/services/dashboard.service`    [2mimport/order[22m[0m
+[0m  [2m12:41[22m  [33mwarning[39m  'ChartType' is defined but never used                                                         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m53:11[22m  [33mwarning[39m  'categories' is assigned a value but never used                                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/dashboard/insurance/insurance.page.ts[24m[0m
+[0m  [2m18:26[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/dashboard/owner-dashboard.page.ts[24m[0m
+[0m  [2m10:1[22m  [33mwarning[39m  `../../shared/components/missing-documents-widget/missing-documents-widget.component` import should occur before import of `./components/multi-car-calendar/multi-car-calendar.component`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/dashboard/reviews/reviews.page.ts[24m[0m
+[0m   [2m1:45[22m  [33mwarning[39m  'computed' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m25:34[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m30:35[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/experiences/communication/chat-shell/chat-shell.component.ts[24m[0m
+[0m   [2m99:14[22m  [33mwarning[39m  '_err' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m186:14[22m  [33mwarning[39m  '_err' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/marketplace/components/ui/modal.component.ts[24m[0m
+[0m  [2m1:36[22m  [33mwarning[39m  'signal' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/marketplace/components/ui/toast.component.ts[24m[0m
+[0m  [2m335:19[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/marketplace/marketplace-v2.page.ts[24m[0m
+[0m  [2m361:13[22m  [33mwarning[39m  'filters' is assigned a value but never used                                [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m591:26[22m  [33mwarning[39m  Unexpected any. Specify a different type                                    [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m971:23[22m  [33mwarning[39m  'filterId' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/messages/inbox.page.ts[24m[0m
+[0m    [2m1:56[22m  [33mwarning[39m  'computed' is defined but never used                                                                      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m    [2m1:66[22m  [33mwarning[39m  'effect' is defined but never used                                                                        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m14:1[22m   [33mwarning[39m  `@supabase/supabase-js` type import should occur before import of `../../core/services/messages.service`  [2mimport/order[22m[0m
+[0m  [2m289:11[22m  [33mwarning[39m  'recipientChannel' is assigned a value but never used                                                     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m405:19[22m  [33mwarning[39m  Unexpected any. Specify a different type                                                                  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m500:13[22m  [33mwarning[39m  'fileExt' is assigned a value but never used                                                              [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/mp-callback/mp-callback.page.ts[24m[0m
+[0m  [2m321:13[22m  [33mwarning[39m  'collectorId' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/onboarding/onboarding.page.ts[24m[0m
+[0m  [2m1:29[22m  [33mwarning[39m  'signal' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/payouts/components/bank-accounts.component.ts[24m[0m
+[0m  [2m5:1[22m  [33mwarning[39m  `rxjs/operators` import should occur before import of `../../../core/services/payout.service`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/payouts/components/payout-history.component.ts[24m[0m
+[0m  [2m4:1[22m  [33mwarning[39m  `rxjs/operators` import should occur before import of `../../../core/services/payout.service`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/payouts/components/request-payout-modal.component.ts[24m[0m
+[0m  [2m5:1[22m  [33mwarning[39m  `rxjs/operators` import should occur before import of `../../../core/services/payout.service`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/payouts/payouts.page.ts[24m[0m
+[0m  [2m4:25[22m  [33mwarning[39m  'Payout' is defined but never used                                                          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m7:1[22m   [33mwarning[39m  `rxjs/operators` import should occur before import of `../../core/services/payout.service`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/profile/components/profile-wizard/profile-wizard.component.ts[24m[0m
+[0m   [2m21:11[22m  [33mwarning[39m  'StepState' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m302:12[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/profile/components/sections/contact/profile-contact-section.component.ts[24m[0m
+[0m  [2m23:34[22m  [33mwarning[39m  'Validators' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/profile/components/shared/field-validators/profile-validators.ts[24m[0m
+[0m   [2m17:58[22m  [33mwarning[39m  'FormGroup' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m56:16[22m  [33mwarning[39m  'error' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m97:16[22m  [33mwarning[39m  'error' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m439:16[22m  [33mwarning[39m  'error' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/profile/mercadopago-connect.component.ts[24m[0m
+[0m  [2m34:14[22m  [33mwarning[39m  'err' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/profile/notifications-settings/notifications-settings.page.ts[24m[0m
+[0m  [2m115:25[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/profile/profile.page.ts[24m[0m
+[0m    [2m5:3[22m   [33mwarning[39m  'computed' is defined but never used                                                                     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m18:10[22m  [33mwarning[39m  'UserProfile' is defined but never used                                                                  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m21:1[22m   [33mwarning[39m  `@angular/core/rxjs-interop` import should occur before import of `../../core/services/profile.service`  [2mimport/order[22m[0m
+[0m  [2m180:14[22m  [33mwarning[39m  'err' is defined but never used                                                                          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m315:14[22m  [33mwarning[39m  '_err' is defined but never used                                                                         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/referrals/referral-landing.page.ts[24m[0m
+[0m  [2m163:14[22m  [33mwarning[39m  'err' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m179:19[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/users/public-profile.page.ts[24m[0m
+[0m  [2m11:15[22m  [33mwarning[39m  'UserProfile' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m18:11[22m  [33mwarning[39m  'UserStats' is defined but never used    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/wallet/components/ledger-history.component.ts[24m[0m
+[0m  [2m6:3[22m   [33mwarning[39m  'LedgerEntry' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m9:10[22m  [33mwarning[39m  'toSignal' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/features/wallet/components/transfer-funds.component.ts[24m[0m
+[0m   [2m7:10[22m  [33mwarning[39m  'WalletBalance' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m86:14[22m  [33mwarning[39m  '_err' is defined but never used           [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/app-header/app-header.component.ts[24m[0m
+[0m  [2m9:3[22m  [33mwarning[39m  'computed' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/bank-account-form/bank-account-form.component.ts[24m[0m
+[0m  [2m100:14[22m  [33mwarning[39m  '__error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/base-chat/base-chat.component.ts[24m[0m
+[0m   [2m10:3[22m   [33mwarning[39m  'computed' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m399:14[22m  [33mwarning[39m  '_err' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m525:14[22m  [33mwarning[39m  '_err' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component.ts[24m[0m
+[0m  [2m3:10[22m  [33mwarning[39m  'RouterLink' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/booking-location-form/booking-location-form.component.ts[24m[0m
+[0m  [2m35:29[22m  [33mwarning[39m  Unexpected any. Specify a different type                                                                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m38:47[22m  [33mwarning[39m  Unexpected any. Specify a different type                                                                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m42:3[22m   [33mwarning[39m  Lifecycle interface 'OnInit' should be implemented for method 'ngOnInit'. (https://angular.dev/style-guide#style-09-01)  [2m@angular-eslint/use-lifecycle-interface[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/calendar-events-list/calendar-events-list.component.ts[24m[0m
+[0m  [2m8:3[22m  [33mwarning[39m  'computed' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/car-reviews-section/car-reviews-section.component.ts[24m[0m
+[0m  [2m111:29[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/claim-form/claim-form.component.ts[24m[0m
+[0m  [2m11:1[22m  [33mwarning[39m  `uuid` import should occur before import of `../../../core/services/settlement.service`  [2mimport/order[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/damage-comparison/damage-comparison.component.ts[24m[0m
+[0m  [2m13:1[22m   [33mwarning[39m  `rxjs` import should occur before import of `../../../core/services/settlement.service`  [2mimport/order[22m[0m
+[0m  [2m13:10[22m  [33mwarning[39m  'firstValueFrom' is defined but never used                                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/date-range-picker/date-range-picker.component.ts[24m[0m
+[0m  [2m107:3[22m   [31merror[39m    Lifecycle methods should not be empty                                      [2m@angular-eslint/no-empty-lifecycle-method[22m[0m
+[0m  [2m138:35[22m  [33mwarning[39m  'dateStr' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/deposit-modal/deposit-modal.component.ts[24m[0m
+[0m   [2m19:10[22m  [33mwarning[39m  'EscapeKeyDirective' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m111:14[22m  [33mwarning[39m  '__error' is defined but never used             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m250:39[22m  [33mwarning[39m  Unexpected any. Specify a different type        [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m254:25[22m  [33mwarning[39m  Unexpected any. Specify a different type        [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m287:26[22m  [33mwarning[39m  Unexpected any. Specify a different type        [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/distance-badge/distance-badge.component.ts[24m[0m
+[0m  [2m1:38[22m  [33mwarning[39m  'signal' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/dynamic-price-display/dynamic-price-display.component.ts[24m[0m
+[0m  [2m208:14[22m  [33mwarning[39m  '_err' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/earnings-card/earnings-card.component.ts[24m[0m
+[0m  [2m3:10[22m  [33mwarning[39m  'MoneyPipe' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/initial-goal-modal/initial-goal-modal.component.ts[24m[0m
+[0m  [2m251:19[22m  [33mwarning[39m  'event' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/inspection-uploader/inspection-uploader.component.ts[24m[0m
+[0m  [2m128:14[22m  [33mwarning[39m  '_err' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m176:14[22m  [33mwarning[39m  '__error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/insurance-summary-card/insurance-summary-card.component.ts[24m[0m
+[0m  [2m427:14[22m  [33mwarning[39m  '_err' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/location-map-picker/location-map-picker.component.ts[24m[0m
+[0m  [2m178:14[22m  [33mwarning[39m  '__error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/location-picker/location-picker.component.ts[24m[0m
+[0m  [2m6:3[22m  [33mwarning[39m  'LocationData' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/make-calendar-public-button/make-calendar-public-button.component.ts[24m[0m
+[0m  [2m115:19[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/map-card-tooltip/map-card-tooltip.component.ts[24m[0m
+[0m   [2m7:3[22m   [33mwarning[39m  'inject' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m11:10[22m  [33mwarning[39m  'RouterLink' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/map-controls/map-controls.component.ts[24m[0m
+[0m  [2m7:10[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/map-filters/map-filters.component.ts[24m[0m
+[0m  [2m113:41[22m  [33mwarning[39m  'car' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/mobile-bottom-nav/mobile-bottom-nav.component.ts[24m[0m
+[0m   [2m1:21[22m  [33mwarning[39m  'computed' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m85:14[22m  [33mwarning[39m  '_e' is defined but never used        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/mp-onboarding-modal/mp-onboarding-modal.component.ts[24m[0m
+[0m  [2m527:14[22m  [33mwarning[39m  '_err' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/offline-messages-panel/offline-messages-panel.component.ts[24m[0m
+[0m  [2m282:14[22m  [33mwarning[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/payment-method-selector/payment-method-selector.component.ts[24m[0m
+[0m  [2m151:14[22m  [33mwarning[39m  '_err' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/paypal-button/paypal-button.component.ts[24m[0m
+[0m  [2m166:29[22m  [33mwarning[39m  'data' is defined but never used. Allowed unused args must match /^_/u     [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m166:44[22m  [33mwarning[39m  'actions' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/pending-reviews-banner/pending-reviews-banner.component.ts[24m[0m
+[0m  [2m45:14[22m  [33mwarning[39m  '__error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/personalized-dashboard/personalized-dashboard.component.ts[24m[0m
+[0m  [2m298:42[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/personalized-location/personalized-location.component.ts[24m[0m
+[0m   [2m8:3[22m  [33mwarning[39m  'ViewChild' is defined but never used   [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m9:3[22m  [33mwarning[39m  'ElementRef' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m11:3[22m  [33mwarning[39m  'computed' is defined but never used    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/quick-booking-modal/quick-booking-modal.component.ts[24m[0m
+[0m  [2m412:76[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/risk-calculator-viewer/risk-calculator-viewer.component.ts[24m[0m
+[0m  [2m1:28[22m  [33mwarning[39m  'signal' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/selfie-capture/selfie-capture.component.ts[24m[0m
+[0m    [2m9:3[22m   [33mwarning[39m  'computed' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m259:30[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/settlement-simulator/settlement-simulator.component.ts[24m[0m
+[0m   [2m3:28[22m  [33mwarning[39m  'OnInit' is defined but never used        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m22:18[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m23:25[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/smart-onboarding/smart-onboarding.component.ts[24m[0m
+[0m  [2m43:42[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m50:44[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/splash-loader/splash-loader.component.ts[24m[0m
+[0m  [2m198:17[22m  [33mwarning[39m  'err' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/three-canvas/three-canvas.component.ts[24m[0m
+[0m  [2m65:34[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m67:27[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m68:16[22m  [33mwarning[39m  '_' is defined but never used             [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/urgent-rental-banner/urgent-rental-banner.component.ts[24m[0m
+[0m  [2m1:63[22m  [33mwarning[39m  'computed' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/verification-badge/verification-badge.component.ts[24m[0m
+[0m  [2m63:16[22m  [33mwarning[39m  '__error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/verification-progress/verification-progress.component.ts[24m[0m
+[0m  [2m8:3[22m  [33mwarning[39m  'signal' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/verification-prompt-banner/verification-prompt-banner.component.ts[24m[0m
+[0m  [2m377:14[22m  [33mwarning[39m  '__error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/components/wallet-balance-card/wallet-balance-card.component.ts[24m[0m
+[0m  [2m189:43[22m  [33mwarning[39m  'err' is defined but never used. Allowed unused args must match /^_/u          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m192:8[22m   [33mwarning[39m  'transaction' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m214:62[22m  [33mwarning[39m  'err' is defined but never used. Allowed unused args must match /^_/u          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m239:14[22m  [33mwarning[39m  '_err' is defined but never used                                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m280:14[22m  [33mwarning[39m  '_err' is defined but never used                                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m295:14[22m  [33mwarning[39m  '_err' is defined but never used                                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m416:14[22m  [33mwarning[39m  '_err' is defined but never used                                               [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/shared/three/effects/ascii-effect.ts[24m[0m
+[0m  [2m234:27[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/app/workers/spatial-index.worker.ts[24m[0m
+[0m  [2m17:18[22m  [33mwarning[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m[0m
+[0m[4m/home/edu/autorenta/apps/web/src/test-helpers/mock-types.ts[24m[0m
+[0m   [2m21:43[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m37:33[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m38:34[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m64:39[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m81:44[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m95:60[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m96:39[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m   [2m97:16[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m164:41[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m184:43[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m209:50[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m239:44[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m242:18[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m276:84[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m277:84[22m  [33mwarning[39m  Unexpected any. Specify a different type                                 [2m@typescript-eslint/no-explicit-any[22m[0m
+[0m  [2m388:51[22m  [33mwarning[39m  'table' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[31m[1m✖ 245 problems (1 error, 244 warnings)[22m[39m[0m
+[0m[31m[1m[22m[39m[31m[1m  0 errors and 23 warnings potentially fixable with the `--fix` option.[22m[39m[0m
+[0m[31m[1m[22m[39m[0m
+[1m[33mLint warnings found in the listed files.
+[39m[22m
+[1m[31mLint errors found in the listed files.
+[39m[22m

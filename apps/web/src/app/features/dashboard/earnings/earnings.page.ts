@@ -1,15 +1,15 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DashboardService } from '../../../core/services/dashboard.service';
+import { ChartConfiguration, ChartData } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
+import type { Car } from '../../../core/models';
+import type { DashboardStats } from '../../../core/models/dashboard.model';
 import { CarsService } from '../../../core/services/cars.service';
+import { DashboardService } from '../../../core/services/dashboard.service';
 import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
-import type { DashboardStats } from '../../../core/models/dashboard.model';
-import type { Car } from '../../../core/models';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-earnings-page',
@@ -50,7 +50,7 @@ export class EarningsPage implements OnInit {
   // Depreciation and breakeven calculations
   readonly totalAnnualDepreciation = computed(() => {
     const userCars = this.cars();
-    const categories = this.carCategories();
+
     let total = 0;
 
     for (const car of userCars) {

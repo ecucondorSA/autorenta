@@ -1,17 +1,16 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
-  signal,
-  computed,
-  inject,
-  PLATFORM_ID,
-  ChangeDetectionStrategy,
-} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 

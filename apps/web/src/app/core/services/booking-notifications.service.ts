@@ -39,7 +39,7 @@ export class BookingNotificationsService {
       const carTitle =
         bookingData.cars?.title || `${bookingData.cars?.brand} ${bookingData.cars?.model}`;
       const renterName = bookingData.renter?.full_name || 'el locatario';
-      const ownerName = bookingData.owner?.full_name || 'el locador';
+
 
       // Notificar según el cambio de estado
       switch (newStatus) {
@@ -267,7 +267,6 @@ export class BookingNotificationsService {
       const carTitle =
         bookingData.cars?.title || `${bookingData.cars?.brand} ${bookingData.cars?.model}`;
       const isOwner = completedByUserId === booking.owner_id;
-      const otherUserId = isOwner ? booking.renter_id : booking.owner_id;
       const otherUserName = isOwner ? bookingData.renter?.full_name : bookingData.owner?.full_name;
 
       if (inspectionType === 'check_in') {
@@ -371,6 +370,8 @@ export class BookingNotificationsService {
     }
   }
 }
+
+
 
 
 

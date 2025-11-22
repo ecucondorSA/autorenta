@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
+import { Component, Input, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
-import { SettlementService } from '../../../core/services/settlement.service';
+import { EligibilityResult, WaterfallBreakdown } from '../../../core/models/fgo-v1-1.model';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { SettlementService } from '../../../core/services/settlement.service';
 
 @Component({
   selector: 'app-settlement-simulator',
@@ -19,8 +20,8 @@ export class SettlementSimulatorComponent {
   claimAmountUsd = 100;
   readonly simulating = signal(false);
   readonly simulationResult = signal<{
-    eligibility: any;
-    estimatedBreakdown: any;
+    eligibility: EligibilityResult | null;
+    estimatedBreakdown: Partial<WaterfallBreakdown> | null;
   } | null>(null);
   readonly error = signal<string | null>(null);
 

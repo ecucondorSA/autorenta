@@ -4,24 +4,23 @@ import {
   Component,
   OnInit,
   computed,
-  inject,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import {
   AccountingService,
-  LedgerEntry,
-  ProvisionDetail,
-  PeriodClosure,
   AuditLog,
+  LedgerEntry,
+  PaginatedResult,
+  PeriodClosure,
+  ProvisionDetail,
   RevenueRecognition,
   WalletReconciliation,
-  PaginatedResult,
 } from '@core/services/accounting.service';
-import { environment } from '../../../../environments/environment';
-import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { TranslateModule } from '@ngx-translate/core';
+import { MoneyPipe } from '@shared/pipes/money.pipe';
+import { environment } from '../../../../environments/environment';
 
 type ActiveTab = 'ledger' | 'provisions' | 'closures' | 'audit';
 

@@ -359,6 +359,13 @@ export const routes: Routes = [
     loadComponent: () => import('./features/legal/terms/terms.page').then((m) => m.TermsPage),
   },
   {
+    path: 'politica-seguros',
+    loadComponent: () =>
+      import('./features/legal/insurance-policy/insurance-policy.page').then(
+        (m) => m.InsurancePolicyPage,
+      ),
+  },
+  {
     path: 'messages',
     canMatch: [AuthGuard],
     children: [

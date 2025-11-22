@@ -29,6 +29,16 @@ interface MercadoPagoPaymentResponse {
   transaction_amount?: number;
 }
 
+const ensureProductionToken = (rawToken: string, context: string) => {
+  const cleaned = rawToken.trim().replace(/[\r\n\t\s]/g, '');
+  if (cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST')) {
+    throw new Error(
+      `${context}: MERCADOPAGO_ACCESS_TOKEN parece ser de sandbox (TEST). Configura token APP_USR-*`,
+    );
+  }
+  return cleaned;
+};
+
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
 
@@ -59,7 +69,10 @@ serve(async (req) => {
       throw new Error('MERCADOPAGO_ACCESS_TOKEN environment variable not configured');
     }
 
-    const MP_ACCESS_TOKEN = MP_ACCESS_TOKEN_RAW.trim().replace(/[\r\n\t\s]/g, '');
+    const MP_ACCESS_TOKEN = ensureProductionToken(
+      MP_ACCESS_TOKEN_RAW,
+      'mercadopago-process-booking-payment',
+    );
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     const MP_MARKETPLACE_ID = Deno.env.get('MERCADOPAGO_MARKETPLACE_ID');
@@ -361,4 +374,3 @@ serve(async (req) => {
     );
   }
 });
-

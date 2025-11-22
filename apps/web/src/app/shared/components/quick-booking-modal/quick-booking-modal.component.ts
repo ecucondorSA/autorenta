@@ -1,21 +1,21 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  ChangeDetectionStrategy,
-  signal,
-  computed,
-  inject,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { MoneyPipe } from '../../pipes/money.pipe';
-import { WalletService } from '../../../core/services/wallet.service';
 import type { Car } from '../../../core/models';
+import { WalletService } from '../../../core/services/wallet.service';
+import { MoneyPipe } from '../../pipes/money.pipe';
 
 export interface QuickBookingData {
   carId: string;
@@ -409,7 +409,7 @@ export class QuickBookingModalComponent implements OnInit {
     const photos = this.car.photos ?? this.car.car_photos ?? [];
     if (Array.isArray(photos) && photos.length > 0) {
       const firstPhoto = photos[0];
-      return typeof firstPhoto === 'string' ? firstPhoto : ((firstPhoto as any)?.url ?? null);
+      return typeof firstPhoto === 'string' ? firstPhoto : (((firstPhoto as unknown) as Record<string, unknown>)?.['url'] as string ?? null);
     }
     return null;
   });
