@@ -2,84 +2,64 @@
 
 <!-- Hero Header with Search -->
 <div
-  class="hero-header relative bg-gradient-to-br from-cyan-400 via-cyan-300 to-blue-300 dark:from-cyan-900 dark:via-cyan-800 dark:to-blue-900 text-white overflow-hidden min-h-[600px] flex items-center"
->
+  class="hero-header relative bg-gradient-to-br from-cyan-400 via-cyan-300 to-blue-300 dark:from-cyan-900 dark:via-cyan-800 dark:to-blue-900 text-white overflow-hidden min-h-[500px] md:min-h-[600px] flex items-center">
   <!-- Clean Gradient Background -->
   <div class="absolute inset-0 bg-gradient-to-br from-cyan-400 via-cyan-300 to-blue-300"></div>
 
   <!-- Subtle Pattern Overlay -->
-  <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 32px 32px;"></div>
+  <div class="absolute inset-0 opacity-[0.03]"
+    style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 32px 32px;">
+  </div>
 
-  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 w-full">
+  <div
+    class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[calc(3rem+env(safe-area-inset-top))] pb-10 lg:py-20 w-full">
     <!-- Hero Title Section -->
     <div class="text-center mb-12">
       <!-- Logo y título -->
-      <div class="flex items-center justify-center gap-4 mb-6">
-        <div
-          (click)="onLogoClick()"
-          class="w-32 h-32 md:w-36 md:h-36 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg border border-white/20 overflow-hidden cursor-pointer hover:bg-white/20 hover:shadow-xl hover:border-white/30 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent transition-all duration-200"
-          role="button"
-          tabindex="0"
-          (keydown.enter)="onLogoClick()"
-          (keydown.space)="onLogoClick()"
-          aria-label="Ver mapa del marketplace"
-        >
-          <img
-            src="/assets/images/c40-logo.png"
-            alt="Autorentar Logo"
-            width="144"
-            height="144"
-            class="w-full h-full object-contain p-2 pointer-events-none"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-            onerror="this.style.display='none'"
-          />
+      <div
+        class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 mb-4 md:mb-6">
+        <div (click)="onLogoClick()"
+          class="w-20 h-20 md:w-36 md:h-36 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg border border-white/20 overflow-hidden cursor-pointer hover:bg-white/20 hover:shadow-xl hover:border-white/30 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent transition-all duration-200"
+          role="button" tabindex="0" (keydown.enter)="onLogoClick()" (keydown.space)="onLogoClick()"
+          aria-label="Ver mapa del marketplace">
+          <img src="/assets/images/c40-logo.png" alt="Autorentar Logo" width="144" height="144"
+            class="w-full h-full object-contain p-2 pointer-events-none" loading="eager"
+            fetchpriority="high" decoding="async" onerror="this.style.display='none'" />
         </div>
-        <h1 class="text-5xl md:text-6xl font-bold text-white drop-shadow-2xl">Autorentar</h1>
+        <h1 class="text-3xl md:text-6xl font-bold text-white drop-shadow-2xl mt-2 md:mt-0">
+          Autorentar</h1>
       </div>
 
       <!-- Título principal -->
       <h2
-        class="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight leading-tight"
-      >
+        class="text-2xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight leading-tight px-2">
         Encuentra tu auto ideal
       </h2>
 
       <!-- Subtítulo descriptivo -->
-      <p class="text-lg md:text-xl text-slate-800 dark:text-slate-100 mb-10 max-w-2xl mx-auto font-light">
+      <p
+        class="text-base md:text-xl text-slate-800 dark:text-slate-100 mb-6 md:mb-10 max-w-2xl mx-auto font-light px-4">
         Miles de vehículos verificados listos para tu próxima aventura
       </p>
 
       <!-- Stats bar -->
-      <div class="flex items-center justify-center gap-4 md:gap-8 mb-8 flex-wrap">
+      <div class="flex items-center justify-center gap-2 md:gap-8 mb-6 md:mb-8 flex-wrap px-2">
         <div
-          class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
-        >
-          <img
-            src="assets/images/MB.png"
-            alt="Auto"
-            width="48"
-            height="48"
-            class="h-12 w-12 object-contain"
-            loading="eager"
-            decoding="async"
-          />
-          <span class="text-sm md:text-base font-semibold text-white"
-            >{{ visibleCars().length }}+ autos</span
-          >
+          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg">
+          <img src="assets/images/MB.png" alt="Auto" width="48" height="48"
+            class="h-8 w-8 md:h-12 md:w-12 object-contain" loading="eager" decoding="async" />
+          <span class="text-xs md:text-base font-semibold text-white">{{ visibleCars().length }}+
+            autos</span>
         </div>
         <div
-          class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
-        >
-          <span class="text-2xl">⭐</span>
-          <span class="text-sm md:text-base font-semibold text-white">4.8/5 rating</span>
+          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg">
+          <span class="text-lg md:text-2xl">⭐</span>
+          <span class="text-xs md:text-base font-semibold text-white">4.8/5 rating</span>
         </div>
         <div
-          class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
-        >
-          <span class="text-2xl">🛡️</span>
-          <span class="text-sm md:text-base font-semibold text-white">100% asegurado</span>
+          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg">
+          <span class="text-lg md:text-2xl">🛡️</span>
+          <span class="text-xs md:text-base font-semibold text-white">100% asegurado</span>
         </div>
       </div>
     </div>
@@ -88,15 +68,11 @@
     <div class="hidden md:flex items-center justify-center gap-4 mb-8">
       <button
         class="px-6 py-3 bg-white text-cyan-700 font-semibold rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transform transition-all duration-200"
-        type="button"
-        (click)="handleHeroQuickBook()"
-      >
+        type="button" (click)="handleHeroQuickBook()">
         ⚡ Reserva instantánea
       </button>
-      <button
-        (click)="onLogoClick()"
-        class="px-6 py-3 bg-white/10 backdrop-blur-md text-white border-2 border-white/30 font-semibold rounded-xl hover:bg-white/20 hover:scale-105 transform transition-all duration-200"
-      >
+      <button (click)="onLogoClick()"
+        class="px-6 py-3 bg-white/10 backdrop-blur-md text-white border-2 border-white/30 font-semibold rounded-xl hover:bg-white/20 hover:scale-105 transform transition-all duration-200">
         Explora el marketplace
       </button>
     </div>
@@ -104,16 +80,17 @@
 
 
     <!-- Enhanced Search Card -->
-    <div class="max-w-5xl mx-auto transform translate-y-8 relative z-20">
+    <div
+      class="max-w-5xl mx-auto transform translate-y-4 md:translate-y-8 relative z-20 px-2 md:px-0">
       <div
-        class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-6 md:p-8 border border-slate-100 dark:border-slate-700"
-      >
+        class="bg-white dark:bg-slate-800 rounded-2xl md:rounded-3xl shadow-2xl p-4 md:p-8 border border-slate-100 dark:border-slate-700">
         <!-- Search Header -->
         <div class="flex items-center justify-between mb-8">
           <h3 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">
             Comienza tu viaje
           </h3>
-          <div class="hidden md:flex items-center gap-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 px-3 py-1 rounded-full">
+          <div
+            class="hidden md:flex items-center gap-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 px-3 py-1 rounded-full">
             <span class="animate-pulse">●</span>
             <span>{{ visibleCars().length }} autos disponibles</span>
           </div>
@@ -123,89 +100,56 @@
           <!-- Location Search -->
           <div class="lg:col-span-5 relative group z-30">
             <label
-              class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1"
-            >
+              class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1">
               Ubicación
             </label>
-            <div class="relative transition-all duration-200 group-focus-within:transform group-focus-within:-translate-y-1">
+            <div
+              class="relative transition-all duration-200 group-focus-within:transform group-focus-within:-translate-y-1">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg
                   class="w-6 h-6 text-slate-400 group-focus-within:text-cyan-500 transition-colors duration-200"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <input
-                type="text"
-                placeholder="¿Dónde recoges el auto?"
+              <input type="text" placeholder="¿Dónde recoges el auto?"
                 [value]="selectedLocation() || searchValue()"
-                (input)="onLocationInputChange($event)"
-                (focus)="showLocationSuggestions.set(true)"
-                (blur)="onLocationInputBlur()"
-                (keydown.escape)="closeLocationSuggestions()"
-                class="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 dark:focus:border-cyan-400 text-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200 shadow-sm group-hover:border-slate-300 dark:group-hover:border-slate-600"
-              />
+                (input)="onLocationInputChange($event)" (focus)="showLocationSuggestions.set(true)"
+                (blur)="onLocationInputBlur()" (keydown.escape)="closeLocationSuggestions()"
+                class="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 dark:focus:border-cyan-400 text-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200 shadow-sm group-hover:border-slate-300 dark:group-hover:border-slate-600" />
 
               <!-- Loading indicator -->
-              <div
-                *ngIf="locationSearchLoading()"
-                class="absolute right-4 top-1/2 -translate-y-1/2"
-              >
+              <div *ngIf="locationSearchLoading()"
+                class="absolute right-4 top-1/2 -translate-y-1/2">
                 <div
-                  class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-500 border-t-transparent"
-                ></div>
+                  class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-500 border-t-transparent">
+                </div>
               </div>
 
               <!-- Dropdown de sugerencias -->
-              <div
-                *ngIf="showLocationSuggestions() && locationSuggestions().length > 0"
-                class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-700 max-h-80 overflow-y-auto overflow-hidden ring-1 ring-black/5"
-              >
+              <div *ngIf="showLocationSuggestions() && locationSuggestions().length > 0"
+                class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-700 max-h-80 overflow-y-auto overflow-hidden ring-1 ring-black/5">
                 <div class="py-2">
                   <button
                     *ngFor="let suggestion of locationSuggestions(); trackBy: trackBySuggestion"
                     (click)="onLocationSuggestionSelect(suggestion)"
-                    class="w-full px-5 py-3.5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex items-start gap-3 group border-b border-slate-50 dark:border-slate-700/50 last:border-0"
-                  >
-                    <div class="p-2 bg-cyan-50 dark:bg-cyan-900/20 rounded-full group-hover:bg-cyan-100 dark:group-hover:bg-cyan-900/40 transition-colors">
-                      <svg
-                        class="w-4 h-4 text-cyan-600 dark:text-cyan-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
+                    class="w-full px-5 py-3.5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex items-start gap-3 group border-b border-slate-50 dark:border-slate-700/50 last:border-0">
+                    <div
+                      class="p-2 bg-cyan-50 dark:bg-cyan-900/20 rounded-full group-hover:bg-cyan-100 dark:group-hover:bg-cyan-900/40 transition-colors">
+                      <svg class="w-4 h-4 text-cyan-600 dark:text-cyan-400" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </div>
                     <div class="flex-1 min-w-0 pt-0.5">
                       <p
-                        class="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors"
-                      >
+                        class="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors">
                         {{ suggestion.placeName }}
                       </p>
                       <p class="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
@@ -217,22 +161,25 @@
               </div>
 
               <!-- Mensaje cuando no hay resultados -->
-              <div
-                *ngIf="
+              <div *ngIf="
                   showLocationSuggestions() &&
                   !locationSearchLoading() &&
                   locationSuggestions().length === 0 &&
                   (selectedLocation() || searchValue()).length >= 2
                 "
-                class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 p-6 text-center"
-              >
-                <div class="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 p-6 text-center">
+                <div
+                  class="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <p class="text-sm font-medium text-slate-900 dark:text-white">No encontramos esa ubicación</p>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Intenta con una dirección más específica</p>
+                <p class="text-sm font-medium text-slate-900 dark:text-white">No encontramos esa
+                  ubicación</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Intenta con una dirección
+                  más específica</p>
               </div>
             </div>
           </div>
@@ -240,35 +187,25 @@
           <!-- Date Range Calendar -->
           <div class="lg:col-span-4 relative group z-20">
             <label
-              class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1"
-            >
+              class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1">
               Fechas
             </label>
-            <div class="relative transition-all duration-200 group-focus-within:transform group-focus-within:-translate-y-1">
-              <app-date-range-picker
-                [initialFrom]="dateRange().from"
-                [initialTo]="dateRange().to"
-                (rangeChange)="onDateRangeChange($event)"
-                (calendarClick)="openDatePicker()"
-              />
+            <div
+              class="relative transition-all duration-200 group-focus-within:transform group-focus-within:-translate-y-1">
+              <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
+                (rangeChange)="onDateRangeChange($event)" (calendarClick)="openDatePicker()" />
             </div>
           </div>
 
           <!-- Search Button -->
           <div class="lg:col-span-3 pt-6 lg:pt-8">
-            <button
-              (click)="onSearchSubmit(searchValue())"
-              class="w-full h-[60px] bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-cyan-500/30 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-3 group"
-            >
+            <button (click)="onSearchSubmit(searchValue())"
+              class="w-full h-[60px] bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-cyan-500/30 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-3 group">
               <span>Buscar</span>
               <div class="bg-white/20 rounded-full p-1 group-hover:bg-white/30 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
             </button>
@@ -278,16 +215,13 @@
         <!-- Quick Filters Pills - Modernized -->
         <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700/50">
           <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">Filtros rápidos:</p>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">
+              Filtros rápidos:</p>
             <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full scrollbar-hide">
-              <app-tooltip
-                *ngFor="let filter of quickFilters"
+              <app-tooltip *ngFor="let filter of quickFilters"
                 [text]="filter.tooltip || 'Filtrar autos por ' + filter.label.toLowerCase()"
-                position="top"
-              >
-                <button
-                  type="button"
-                  (click)="onQuickFilterClick(filter.id)"
+                position="top">
+                <button type="button" (click)="onQuickFilterClick(filter.id)"
                   class="group flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 hover:border-cyan-200 dark:hover:border-cyan-800 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-cyan-700 dark:hover:text-cyan-300 hover:shadow-md transition-all duration-200 flex-shrink-0"
                   [class.bg-cyan-50]="isQuickFilterActive(filter.id)"
                   [class.dark:bg-cyan-900/30]="isQuickFilterActive(filter.id)"
@@ -295,94 +229,49 @@
                   [class.dark:border-cyan-800]="isQuickFilterActive(filter.id)"
                   [class.text-cyan-700]="isQuickFilterActive(filter.id)"
                   [class.dark:text-cyan-300]="isQuickFilterActive(filter.id)"
-                  [class.shadow-sm]="isQuickFilterActive(filter.id)"
-                >
+                  [class.shadow-sm]="isQuickFilterActive(filter.id)">
                   <!-- Icon SVG based on filter.id -->
-                  <svg
-                    *ngIf="filter.id === 'immediate'"
+                  <svg *ngIf="filter.id === 'immediate'"
                     class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
                     [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
+                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <svg
-                    *ngIf="filter.id === 'verified'"
+                  <svg *ngIf="filter.id === 'verified'"
                     class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
                     [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
+                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <svg
-                    *ngIf="filter.id === 'no-card'"
+                  <svg *ngIf="filter.id === 'no-card'"
                     class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
                     [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                    />
+                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                   </svg>
-                  <svg
-                    *ngIf="filter.id === 'near-me'"
+                  <svg *ngIf="filter.id === 'near-me'"
                     class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
                     [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
+                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  <svg
-                    *ngIf="filter.id === 'electric'"
+                  <svg *ngIf="filter.id === 'electric'"
                     class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
                     [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
+                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                   <span class="whitespace-nowrap">{{ filter.label }}</span>
                 </button>
@@ -413,13 +302,18 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
         <!-- Connector Line (Desktop) -->
-        <div class="hidden lg:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-cyan-200 via-blue-200 to-purple-200 dark:from-slate-700 dark:via-slate-700 dark:to-slate-700 z-0"></div>
+        <div
+          class="hidden lg:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-cyan-200 via-blue-200 to-purple-200 dark:from-slate-700 dark:via-slate-700 dark:to-slate-700 z-0">
+        </div>
 
         <!-- Step 1 -->
         <div class="relative z-10 flex flex-col items-center text-center group">
-          <div class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-cyan-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
+          <div
+            class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-cyan-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
             <span class="text-4xl">🗺️</span>
-            <div class="absolute -top-2 -right-2 w-8 h-8 bg-cyan-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">1</div>
+            <div
+              class="absolute -top-2 -right-2 w-8 h-8 bg-cyan-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">
+              1</div>
           </div>
           <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Explora y Elige</h3>
           <p class="text-slate-600 dark:text-slate-400 px-4">
@@ -429,9 +323,12 @@
 
         <!-- Step 2 -->
         <div class="relative z-10 flex flex-col items-center text-center group">
-          <div class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-blue-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
+          <div
+            class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-blue-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
             <span class="text-4xl">📅</span>
-            <div class="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">2</div>
+            <div
+              class="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">
+              2</div>
           </div>
           <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Reserva y Coordina</h3>
           <p class="text-slate-600 dark:text-slate-400 px-4">
@@ -441,9 +338,12 @@
 
         <!-- Step 3 -->
         <div class="relative z-10 flex flex-col items-center text-center group">
-          <div class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-purple-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
+          <div
+            class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-purple-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
             <span class="text-4xl">🆔</span>
-            <div class="absolute -top-2 -right-2 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">3</div>
+            <div
+              class="absolute -top-2 -right-2 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">
+              3</div>
           </div>
           <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Verifícate</h3>
           <p class="text-slate-600 dark:text-slate-400 px-4">
@@ -453,9 +353,12 @@
 
         <!-- Step 4 -->
         <div class="relative z-10 flex flex-col items-center text-center group">
-          <div class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-green-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
+          <div
+            class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-green-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
             <span class="text-4xl">💳</span>
-            <div class="absolute -top-2 -right-2 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">4</div>
+            <div
+              class="absolute -top-2 -right-2 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">
+              4</div>
           </div>
           <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Paga y Viaja</h3>
           <p class="text-slate-600 dark:text-slate-400 px-4">
@@ -467,14 +370,17 @@
     <!-- Stats Strip -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative h-[calc(100vh-100px)]">
       <!-- LEFT PANEL: List/Grid Content (35% width approx) -->
-      <div class="lg:col-span-4 xl:col-span-4 w-full h-full overflow-y-auto pr-2 custom-scrollbar" [class.hidden]="viewMode() === 'map' && !isDesktop()">
+      <div class="lg:col-span-4 xl:col-span-4 w-full h-full overflow-y-auto pr-2 custom-scrollbar"
+        [class.hidden]="viewMode() === 'map' && !isDesktop()">
 
 
 
         <!-- Trust Badges Strip -->
         <div class="mb-12 grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
-            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center text-2xl">
+          <div
+            class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
+            <div
+              class="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center text-2xl">
               ✓
             </div>
             <div>
@@ -483,8 +389,10 @@
             </div>
           </div>
 
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
-            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
+          <div
+            class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
+            <div
+              class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
               🛡️
             </div>
             <div>
@@ -493,8 +401,10 @@
             </div>
           </div>
 
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
-            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center text-2xl">
+          <div
+            class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
+            <div
+              class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center text-2xl">
               💳
             </div>
             <div>
@@ -503,8 +413,10 @@
             </div>
           </div>
 
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
-            <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 rounded-full flex items-center justify-center text-2xl">
+          <div
+            class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
+            <div
+              class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 rounded-full flex items-center justify-center text-2xl">
               ⚡
             </div>
             <div>
@@ -518,26 +430,27 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
           <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             Autos cerca de ti
-            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs rounded-full">{{ visibleCars().length }}</span>
+            <span
+              class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs rounded-full">{{
+              visibleCars().length }}</span>
           </h2>
 
           <div class="flex items-center gap-3">
             <!-- Custom Sort Dropdown -->
             <div class="relative group">
-              <select
-                [value]="sortOrder()"
-                (change)="onSortOrderChange($event)"
-                class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 pr-10 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
-              >
+              <select [value]="sortOrder()" (change)="onSortOrderChange($event)"
+                class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 pr-10 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
                 <option value="score">Relevancia</option>
                 <option value="distance">Más cercanos</option>
                 <option value="price_asc">Precio: menor a mayor</option>
                 <option value="price_desc">Precio: mayor a menor</option>
                 <option value="rating">Mejor valorados</option>
               </select>
-              <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <div
+                class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
             </div>
@@ -552,22 +465,24 @@
                 [class.dark:text-white]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
                 [class.text-slate-500]="!(viewMode() === 'grid' || (isDesktop() && viewMode() === 'map'))"
                 (click)="viewMode.set('grid')"
-                class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
                 <span class="hidden sm:inline">Cuadrícula</span>
               </button>
-              <button
-                [class.bg-white]="viewMode() === 'list'"
+              <button [class.bg-white]="viewMode() === 'list'"
                 [class.dark:bg-slate-700]="viewMode() === 'list'"
                 [class.shadow-sm]="viewMode() === 'list'"
                 [class.text-slate-900]="viewMode() === 'list'"
                 [class.dark:text-white]="viewMode() === 'list'"
-                [class.text-slate-500]="viewMode() !== 'list'"
-                (click)="viewMode.set('list')"
-                class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                [class.text-slate-500]="viewMode() !== 'list'" (click)="viewMode.set('list')"
+                class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
                 <span class="hidden sm:inline">Lista</span>
               </button>
             </div>
@@ -575,44 +490,38 @@
         </div>
 
         <!-- Grid View - Video Game Style -->
-        <div
-          *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-          class="flex flex-col gap-6"
-        >
-          <div
-            *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
+        <div *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+          class="flex flex-col gap-6">
+          <div *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
             class="car-card-game group relative transition-all duration-300"
-            [class.scale-105]="selectedCarId() === car.id"
-            [class.z-10]="selectedCarId() === car.id"
-            (click)="onCarSelected(car.id)"
-            role="button"
+            [class.scale-105]="selectedCarId() === car.id" [class.z-10]="selectedCarId() === car.id"
+            (click)="onCarSelected(car.id)" role="button"
             [attr.aria-label]="'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup"
-            tabindex="0"
-            (keydown.enter)="onCarSelected(car.id)"
-            (keydown.space)="onCarSelected(car.id)"
-          >
+            tabindex="0" (keydown.enter)="onCarSelected(car.id)"
+            (keydown.space)="onCarSelected(car.id)">
             <!-- Game Card -->
             <div
               class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-lg overflow-hidden cursor-pointer border-2 transition-all duration-300"
               [class.border-cyan-400]="selectedCarId() === car.id"
               [class.shadow-cyan-500/50]="selectedCarId() === car.id"
-              [class.border-transparent]="selectedCarId() !== car.id"
-            >
+              [class.border-transparent]="selectedCarId() !== car.id">
               <!-- Image Container -->
               <div class="relative h-48 overflow-hidden">
-                <img
-                  [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
+                <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
                   [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   [loading]="i < 2 ? 'eager' : 'lazy'"
-                  [attr.fetchpriority]="i < 2 ? 'high' : 'auto'"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                  [attr.fetchpriority]="i < 2 ? 'high' : 'auto'" />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+                </div>
 
                 <!-- Price Badge (Circular) -->
-                <div class="absolute top-4 right-4 w-16 h-16 bg-cyan-500 rounded-full flex flex-col items-center justify-center text-white shadow-lg border-2 border-white transform group-hover:scale-110 transition-transform">
+                <div
+                  class="absolute top-4 right-4 w-16 h-16 bg-cyan-500 rounded-full flex flex-col items-center justify-center text-white shadow-lg border-2 border-white transform group-hover:scale-110 transition-transform">
                   <span class="text-xs font-bold">USD</span>
-                  <span class="text-lg font-black leading-none">{{ car.price_per_day | number: '1.0-0' }}</span>
+                  <span class="text-lg font-black leading-none">{{ car.price_per_day | number:
+                    '1.0-0' }}</span>
                 </div>
               </div>
 
@@ -625,13 +534,19 @@
                 <!-- Circular Specs -->
                 <div class="flex items-center justify-between gap-2">
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg" title="Transmisión" aria-label="Transmisión">
+                    <div
+                      class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg"
+                      title="Transmisión" aria-label="Transmisión">
                       ⚙️
                     </div>
-                    <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg" title="Asientos" aria-label="Asientos">
+                    <div
+                      class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg"
+                      title="Asientos" aria-label="Asientos">
                       👥
                     </div>
-                    <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg" title="Combustible" aria-label="Combustible">
+                    <div
+                      class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg"
+                      title="Combustible" aria-label="Combustible">
                       ⛽
                     </div>
                   </div>
@@ -639,8 +554,7 @@
                   <!-- Action Button -->
                   <button
                     class="w-10 h-10 rounded-full bg-cyan-500 text-white flex items-center justify-center hover:bg-cyan-400 transition-colors"
-                    aria-label="Seleccionar vehículo"
-                  >
+                    aria-label="Seleccionar vehículo">
                     ➜
                   </button>
                 </div>
@@ -651,10 +565,8 @@
 
           <!-- Loading skeleton -->
           <ng-container *ngIf="loading()">
-            <div
-              *ngFor="let _ of [].constructor(8)"
-              class="col-span-1 bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md overflow-hidden"
-            >
+            <div *ngFor="let _ of [].constructor(8)"
+              class="col-span-1 bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md overflow-hidden">
               <app-skeleton variant="rectangle" height="180px" />
               <div class="p-4">
                 <app-skeleton variant="text" width="80%" height="20px" className="mb-2" />
@@ -670,25 +582,22 @@
           <!-- Empty state -->
           <div *ngIf="!loading() && !error() && visibleCars().length === 0" class="col-span-full">
             <div
-              class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-12 text-center border border-border-default dark:border-border-muted"
-            >
+              class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-12 text-center border border-border-default dark:border-border-muted">
               <div
-                class="w-24 h-24 bg-surface-secondary dark:bg-surface-base rounded-full flex items-center justify-center mx-auto mb-6"
-              >
+                class="w-24 h-24 bg-surface-secondary dark:bg-surface-base rounded-full flex items-center justify-center mx-auto mb-6">
                 <span class="text-5xl">🏜️</span>
               </div>
               <h3 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2">
                 No hay autos para esta búsqueda
               </h3>
               <p class="text-text-secondary mb-8 max-w-md mx-auto">
-                Prueba a cambiar los filtros, las fechas o a buscar en otra ubicación para encontrar tu
+                Prueba a cambiar los filtros, las fechas o a buscar en otra ubicación para encontrar
+                tu
                 auto ideal.
               </p>
               <button
                 class="px-6 py-3 bg-cta-default hover:bg-cta-default/90 text-cta-text font-semibold rounded-lg transition-colors shadow-lg hover:shadow-xl"
-                type="button"
-                (click)="clearQuickFilters()"
-              >
+                type="button" (click)="clearQuickFilters()">
                 Limpiar filtros
               </button>
             </div>
@@ -697,11 +606,9 @@
           <!-- Error state -->
           <div *ngIf="!loading() && error()" class="col-span-full">
             <div
-              class="bg-danger-light/10 dark:bg-danger-light/10 rounded-2xl p-12 text-center border border-danger-light"
-            >
+              class="bg-danger-light/10 dark:bg-danger-light/10 rounded-2xl p-12 text-center border border-danger-light">
               <div
-                class="w-24 h-24 bg-danger-light/20 rounded-full flex items-center justify-center mx-auto mb-6"
-              >
+                class="w-24 h-24 bg-danger-light/20 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span class="text-5xl">🤯</span>
               </div>
               <h3 class="text-2xl font-bold text-danger-dark dark:text-danger-light mb-2">
@@ -712,9 +619,7 @@
               </p>
               <button
                 class="px-6 py-3 bg-cta-default hover:bg-cta-default/90 text-cta-text font-semibold rounded-lg transition-colors shadow-lg hover:shadow-xl"
-                type="button"
-                (click)="loadCars()"
-              >
+                type="button" (click)="loadCars()">
                 Reintentar
               </button>
             </div>
@@ -723,20 +628,17 @@
 
         <!-- List View -->
         <div *ngIf="viewMode() === 'list'" class="space-y-6 lg:space-y-8">
-          <div
-            *ngFor="let car of visibleCars(); trackBy: trackByCarId"
+          <div *ngFor="let car of visibleCars(); trackBy: trackByCarId"
             (click)="onCarSelected(car.id)"
-            class="bg-surface-raised dark:bg-surface-raised text-text-primary rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
-          >
+            class="bg-surface-raised dark:bg-surface-raised text-text-primary rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
             <div class="flex flex-col md:flex-row">
               <!-- Image -->
-              <div class="relative md:w-80 aspect-[16/9] md:aspect-auto overflow-hidden flex-shrink-0">
-                <img
-                  [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
+              <div
+                class="relative md:w-80 aspect-[16/9] md:aspect-auto overflow-hidden flex-shrink-0">
+                <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
                   [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
                   class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                  loading="lazy"
-                />
+                  loading="lazy" />
               </div>
 
               <!-- Content -->
@@ -750,7 +652,7 @@
                         </h3>
                         <!-- ✅ NEW: Dynamic pricing badge -->
                         @if (car.uses_dynamic_pricing) {
-                          <app-dynamic-pricing-badge />
+                        <app-dynamic-pricing-badge />
                         }
                       </div>
                       <div class="flex items-center gap-3 text-sm text-text-secondary">
@@ -793,16 +695,12 @@
                 </div>
 
                 <div class="flex items-center gap-3">
-                  <button
-                    (click)="onCarSelected(car.id); $event.stopPropagation()"
-                    class="flex-1 px-6 py-3 bg-surface-secondary dark:bg-surface-base hover:bg-border-default text-text-primary dark:text-text-primary font-semibold rounded-lg transition-colors"
-                  >
+                  <button (click)="onCarSelected(car.id); $event.stopPropagation()"
+                    class="flex-1 px-6 py-3 bg-surface-secondary dark:bg-surface-base hover:bg-border-default text-text-primary dark:text-text-primary font-semibold rounded-lg transition-colors">
                     Ver detalles
                   </button>
-                  <button
-                    (click)="onQuickBook(car.id); $event.stopPropagation()"
-                    class="flex-1 px-6 py-3 bg-cta-default hover:bg-cta-default/90 text-cta-text font-semibold rounded-lg transition-colors shadow-md"
-                  >
+                  <button (click)="onQuickBook(car.id); $event.stopPropagation()"
+                    class="flex-1 px-6 py-3 bg-cta-default hover:bg-cta-default/90 text-cta-text font-semibold rounded-lg transition-colors shadow-md">
                     Reservar ahora
                   </button>
                 </div>
@@ -814,57 +712,59 @@
 
       <!-- RIGHT PANEL: Map (65% width approx) -->
       <div class="lg:col-span-8 xl:col-span-8 hidden lg:block h-full sticky top-24">
-        <div class="h-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-700 relative">
-          <app-cars-map
-            [cars]="carMapLocations()"
-            [selectedCarId]="selectedCarId()"
-            [userLocation]="userLocation()"
-            [markerVariant]="contextualMarkerVariant()"
-            [searchRadiusKm]="radiusKm()"
-            [showSearchRadius]="true"
-            (carSelected)="onCarSelected($event)"
-            (quickBook)="onQuickBook($event)"
+        <div
+          class="h-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-700 relative">
+          <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
+            [userLocation]="userLocation()" [markerVariant]="contextualMarkerVariant()"
+            [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
+            (carSelected)="onCarSelected($event)" (quickBook)="onQuickBook($event)"
             (userLocationChange)="onUserLocationChange($event)"
             (searchRadiusChange)="onSearchRadiusChange($event)"
-            class="w-full h-full"
-          />
+            (boundsChange)="onBoundsChange($event)" class="w-full h-full" />
           <app-map-controls (controlEvent)="onMapControlEvent($event)" />
+
+          <!-- Search in this area button -->
+          <div *ngIf="showSearchAreaButton()"
+            class="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
+            <button (click)="searchInArea()"
+              class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-4 py-2 rounded-full shadow-lg font-semibold text-sm flex items-center gap-2 hover:scale-105 transition-transform animate-fade-in-up border border-slate-200 dark:border-slate-700">
+              <span class="text-cyan-500">🔍</span>
+              Buscar en esta zona
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Map View -->
-    <div
-      *ngIf="viewMode() === 'map'"
-      class="relative h-[calc(100vh-400px)] min-h-[600px] rounded-2xl overflow-hidden shadow-2xl"
-    >
-      <app-cars-map
-        [cars]="carMapLocations()"
-        [selectedCarId]="selectedCarId()"
-        [userLocation]="userLocation()"
-        [markerVariant]="contextualMarkerVariant()"
-        [searchRadiusKm]="radiusKm()"
-        [showSearchRadius]="true"
-        (carSelected)="onCarSelected($event)"
-        (quickBook)="onQuickBook($event)"
+    <!-- Map View (Mobile Only) -->
+    <div *ngIf="viewMode() === 'map' && !isDesktop()"
+      class="relative h-[calc(100vh-400px)] min-h-[600px] rounded-2xl overflow-hidden shadow-2xl">
+      <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
+        [userLocation]="userLocation()" [markerVariant]="contextualMarkerVariant()"
+        [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
+        (carSelected)="onCarSelected($event)" (quickBook)="onQuickBook($event)"
         (userLocationChange)="onUserLocationChange($event)"
-        (searchRadiusChange)="onSearchRadiusChange($event)"
-        class="w-full h-full"
-      />
+        (searchRadiusChange)="onSearchRadiusChange($event)" (boundsChange)="onBoundsChange($event)"
+        class="w-full h-full" />
       <app-map-controls (controlEvent)="onMapControlEvent($event)" />
+
+      <!-- Search in this area button (Mobile) -->
+      <div *ngIf="showSearchAreaButton()"
+        class="absolute top-20 left-1/2 transform -translate-x-1/2 z-10">
+        <button (click)="searchInArea()"
+          class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-4 py-2 rounded-full shadow-lg font-semibold text-sm flex items-center gap-2 hover:scale-105 transition-transform animate-fade-in-up border border-slate-200 dark:border-slate-700">
+          <span class="text-cyan-500">🔍</span>
+          Buscar en esta zona
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Quick Booking Modal -->
-<app-quick-booking-modal
-  *ngIf="quickBookingCar()"
-  [car]="quickBookingCar()!"
-  [userLocation]="userLocation() || undefined"
-  [isOpen]="quickBookingModalOpen()"
-  (confirmBooking)="onQuickBookingConfirm($event)"
-  (cancelBooking)="onQuickBookingCancel()"
-/>
+<app-quick-booking-modal *ngIf="quickBookingCar()" [car]="quickBookingCar()!"
+  [userLocation]="userLocation() || undefined" [isOpen]="quickBookingModalOpen()"
+  (confirmBooking)="onQuickBookingConfirm($event)" (cancelBooking)="onQuickBookingCancel()" />
 
 <!-- Responsive Filters Drawer (Desktop Sidebar + Mobile Bottom Sheet) -->
 <!-- TODO: Re-enable filters drawer -->
@@ -876,95 +776,60 @@
 ></app-filters-drawer> -->
 
 <!-- Mobile Filters Overlay Backdrop (click to close) -->
-<div
-  *ngIf="showFilters()"
-  class="fixed inset-0 z-30 md:hidden bg-black/40 backdrop-blur-sm"
-  (click)="closeFiltersPanel()"
-></div>
+<div *ngIf="showFilters()" class="fixed inset-0 z-30 md:hidden bg-black/40 backdrop-blur-sm"
+  (click)="closeFiltersPanel()"></div>
 
 <!-- Floating Action Button -->
-<app-floating-action-fab
-  [actions]="fabActions"
-  position="bottom-right"
-  (actionClick)="onFabActionClick($event)"
-/>
+<app-floating-action-fab [actions]="fabActions" position="bottom-right"
+  (actionClick)="onFabActionClick($event)" />
 
 <!-- Date Picker Modal -->
-<div
-  *ngIf="showDatePicker()"
-  class="fixed inset-0 z-50 flex items-start justify-center pt-6 px-4"
-  (click)="closeDatePicker()"
->
+<div *ngIf="showDatePicker()" class="fixed inset-0 z-50 flex items-start justify-center pt-6 px-4"
+  (click)="closeDatePicker()">
   <div
     class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-700/50 overflow-hidden transform transition-all duration-300"
-    (click)="$event.stopPropagation()"
-  >
+    (click)="$event.stopPropagation()">
     <!-- Header con gradiente de marca -->
     <div
-      class="bg-gradient-to-r from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between"
-    >
+      class="bg-gradient-to-r from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div
-          class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
-        >
+          class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
         </div>
         <h3 class="text-lg font-bold text-white">Selecciona las fechas</h3>
       </div>
-      <button
-        (click)="closeDatePicker()"
+      <button (click)="closeDatePicker()"
         class="w-8 h-8 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
-        aria-label="Cerrar"
-      >
+        aria-label="Cerrar">
         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
 
     <!-- Contenido -->
     <div
-      class="p-5 bg-gradient-to-b from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50"
-    >
-      <app-date-range-picker
-        [initialFrom]="dateRange().from"
-        [initialTo]="dateRange().to"
-        (rangeChange)="onDateRangeChange($event)"
-      />
+      class="p-5 bg-gradient-to-b from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50">
+      <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
+        (rangeChange)="onDateRangeChange($event)" />
 
       <!-- Footer con botón de acción -->
       <div
-        class="mt-5 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex items-center justify-end gap-3"
-      >
-        <button
-          (click)="closeDatePicker()"
-          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-        >
+        class="mt-5 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex items-center justify-end gap-3">
+        <button (click)="closeDatePicker()"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
           Cancelar
         </button>
-        <button
-          (click)="closeDatePicker()"
-          class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl text-sm shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
-        >
+        <button (click)="closeDatePicker()"
+          class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl text-sm shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 13l4 4L19 7"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 13l4 4L19 7" />
           </svg>
           Aplicar fechas
         </button>
@@ -974,48 +839,29 @@
 </div>
 
 <!-- Location Picker Modal -->
-<div
-  *ngIf="showLocationPicker()"
+<div *ngIf="showLocationPicker()"
   class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-  (click)="closeLocationPicker()"
->
-  <div
-    class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden"
-    (click)="$event.stopPropagation()"
-  >
+  (click)="closeLocationPicker()">
+  <div class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden"
+    (click)="$event.stopPropagation()">
     <div
-      class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between"
-    >
+      class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
       <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Selecciona la ubicación</h3>
-      <button
-        (click)="closeLocationPicker()"
-        class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-      >
-        <svg
-          class="w-6 h-6 text-gray-600 dark:text-gray-300"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
+      <button (click)="closeLocationPicker()"
+        class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+        <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
     <div class="p-6">
       <!-- Search input -->
       <div class="mb-4">
-        <input
-          type="text"
-          placeholder="Buscar ubicación..."
-          [value]="selectedLocation()"
+        <input type="text" placeholder="Buscar ubicación..." [value]="selectedLocation()"
           (input)="selectedLocation.set($any($event.target).value)"
-          class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 text-gray-900 dark:text-white placeholder:text-gray-400"
-        />
+          class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 text-gray-900 dark:text-white placeholder:text-gray-400" />
       </div>
 
       <!-- Popular locations -->
@@ -1026,27 +872,14 @@
         <button
           *ngFor="let location of ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza', 'La Plata']"
           (click)="onLocationSelect(location)"
-          class="w-full px-4 py-3 text-left bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 rounded-xl transition-colors text-gray-900 dark:text-white"
-        >
+          class="w-full px-4 py-3 text-left bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 rounded-xl transition-colors text-gray-900 dark:text-white">
           <div class="flex items-center gap-3">
-            <svg
-              class="w-5 h-5 text-cyan-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-              />
+            <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <span>{{ location }}</span>
           </div>
@@ -1054,10 +887,8 @@
       </div>
 
       <!-- Use my location button -->
-      <button
-        (click)="onLogoClick()"
-        class="w-full mt-4 px-4 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
-      >
+      <button (click)="onLogoClick()"
+        class="w-full mt-4 px-4 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
         <span class="text-xl">📍</span>
         Usar mi ubicación
       </button>
@@ -1070,5 +901,5 @@
 
 <!-- Price Transparency Modal -->
 @if (showPriceTransparencyModal()) {
-  <app-price-transparency-modal (closed)="onPriceTransparencyModalClose()" />
+<app-price-transparency-modal (closed)="onPriceTransparencyModalClose()" />
 }

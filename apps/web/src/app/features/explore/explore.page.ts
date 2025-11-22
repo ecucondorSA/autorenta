@@ -13,12 +13,10 @@ import { Router } from '@angular/router';
 import { Geolocation } from '@capacitor/geolocation';
 import {
   IonContent,
-  IonFab,
-  IonFabButton,
   IonHeader,
   IonIcon,
-  IonSearchbar,
   IonToolbar,
+  ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { gridOutline, listOutline, locateOutline, mapOutline, optionsOutline } from 'ionicons/icons';
@@ -26,14 +24,13 @@ import { Car } from '../../core/models';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import type { CarMapLocation } from '../../core/services/car-locations.service';
 import { CarsService } from '../../core/services/cars.service';
-import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
-import { WazeLiveMapComponent } from '../../shared/components/waze-live-map/waze-live-map.component';
 import { MapDrawerComponent } from '../../shared/components/map-drawer/map-drawer.component';
 import {
   FilterState,
   MapFiltersComponent,
 } from '../../shared/components/map-filters/map-filters.component';
+import { WazeLiveMapComponent } from '../../shared/components/waze-live-map/waze-live-map.component';
 
 @Component({
   selector: 'app-explore',
@@ -47,12 +44,8 @@ import {
     IonHeader,
     IonToolbar,
     IonIcon,
-    IonFab,
-    IonFabButton,
-    IonSearchbar,
     CarsMapComponent,
     WazeLiveMapComponent,
-    CarCardComponent,
     MapFiltersComponent,
     MapDrawerComponent,
   ],
@@ -112,6 +105,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     private carsService: CarsService,
     private router: Router,
     private breakpoint: BreakpointService,
+    private toastController: ToastController,
   ) {
     addIcons({ optionsOutline, locateOutline, gridOutline, listOutline, mapOutline });
     // Usar BreakpointService en lugar de window.innerWidth
@@ -154,8 +148,16 @@ export class ExplorePage implements OnInit, AfterViewInit {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       });
-    } catch {
-      /* Silenced */
+    } catch (error) {
+      console.error('Error getting location:', error);
+      const toast = await this.toastController.create({
+        message: 'No pudimos obtener tu ubicación. Por favor verifica los permisos.',
+        duration: 3000,
+        position: 'bottom',
+        color: 'warning',
+        icon: 'location-outline'
+      });
+      await toast.present();
     }
   }
 
