@@ -23,6 +23,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { requireEmailVerification } from '../_shared/auth-utils.ts';
 
 // Helper para evitar usar tokens sandbox en flujos productivos
 const ensureProductionToken = (rawToken: string, context: string) => {
@@ -118,23 +119,36 @@ serve(async (req) => {
       );
     }
 
-    // Crear cliente de Supabase
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+    // Crear cliente de Supabase con el token del usuario
+    const userToken = authHeader.replace('Bearer ', '');
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+      global: {
+        headers: {
+          Authorization: authHeader,
+        },
+      },
+    });
 
-    // Obtener usuario autenticado
-    const { data: { user }, error: authError } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
-
-    if (authError || !user) {
+    // P0-013 FIX: Verificar que el email está confirmado
+    const verificationResult = await requireEmailVerification(supabase);
+    if (!verificationResult.isVerified) {
+      console.warn('Email verification required for booking payment', {
+        error: verificationResult.error,
+        bookingId: booking_id,
+      });
       return new Response(
-        JSON.stringify({ error: 'Invalid or expired token' }),
+        JSON.stringify({
+          error: verificationResult.error || 'Email verification required',
+          code: 'EMAIL_NOT_VERIFIED',
+        }),
         {
-          status: 401,
+          status: 403,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
-    const authenticated_user_id = user.id;
+    const authenticated_user_id = verificationResult.user!.id;
 
     // Obtener el booking con información del propietario
     const { data: booking, error: bookingError } = await supabase

@@ -27,8 +27,8 @@ export const environment = buildEnvironment({
   paymentsWebhookUrl: 'http://localhost:8787/webhooks/payments',
   appUrl: 'http://localhost:4200',
   // PayPal Sandbox Credentials
+  // P0-027 FIX: Only public client ID is safe for frontend
   paypalClientId: undefined, // Lee de NG_APP_PAYPAL_CLIENT_ID
-  paypalClientSecret: '', // No se necesita en frontend
   // Sentry Configuration
   sentryDsn: '', // Opcional: NG_APP_SENTRY_DSN
   sentryEnvironment: 'development',

@@ -71,8 +71,9 @@ export class MarketplaceOnboardingService {
   private readonly MP_TOKEN_URL = 'https://api.mercadopago.com/oauth/token';
 
   // Credenciales (deben estar en environment)
+  // P0-027 FIX: CLIENT_ID is public (OK for frontend)
+  // CLIENT_SECRET is NEVER exposed to frontend - handled by backend Edge Function
   private readonly CLIENT_ID = environment.mercadopagoClientId;
-  private readonly CLIENT_SECRET = environment.mercadopagoClientSecret;
   private readonly REDIRECT_URI = `${environment.appUrl}/mp-callback`;
 
   // Scopes requeridos para marketplace
@@ -346,36 +347,24 @@ export class MarketplaceOnboardingService {
 
   /**
    * Intercambia el code por tokens de acceso
+   * P0-027 FIX: OAuth token exchange MUST happen on backend to protect CLIENT_SECRET
+   * This method is now deprecated - use backend Edge Function instead
+   * @deprecated Use mercadopago-oauth-callback Edge Function instead
    */
   private async exchangeCodeForToken(code: string): Promise<MpTokenResponse> {
-    const body = {
-      client_id: this.CLIENT_ID,
-      client_secret: this.CLIENT_SECRET,
-      code,
-      grant_type: 'authorization_code',
-      redirect_uri: this.REDIRECT_URI,
-    };
+    // P0-027 FIX: Token exchange MUST be done server-side
+    // Call backend Edge Function that has access to CLIENT_SECRET
+    const { data, error } = await this.supabase.functions.invoke('mercadopago-oauth-callback', {
+      body: { code },
+    });
 
-    try {
-      const response = await fetch(this.MP_TOKEN_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Error al obtener tokens: ${errorData.message || response.statusText}`);
-      }
-
-      const tokenData: MpTokenResponse = await response.json();
-      return tokenData;
-    } catch {
-      throw new Error('No se pudo completar la autorización con Mercado Pago');
+    if (error || !data?.success) {
+      console.error('[MP OAuth] Error from backend:', error || data?.error);
+      throw new Error(data?.error || 'No se pudo completar la autorización con Mercado Pago');
     }
+
+    // Backend returns the full token response
+    return data as unknown as MpTokenResponse;
   }
 
   /**
@@ -429,28 +418,20 @@ export class MarketplaceOnboardingService {
 
   /**
    * Refresh access token (cuando expira)
-   * TODO: Implementar para mantener tokens actualizados
+   * P0-027 FIX: Token refresh MUST happen on backend to protect CLIENT_SECRET
+   * @deprecated Use backend Edge Function for token refresh
    */
   private async refreshAccessToken(refreshToken: string): Promise<MpTokenResponse> {
-    const body = {
-      client_id: this.CLIENT_ID,
-      client_secret: this.CLIENT_SECRET,
-      grant_type: 'refresh_token',
-      refresh_token: refreshToken,
-    };
-
-    const response = await fetch(this.MP_TOKEN_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
+    // P0-027 FIX: Call backend to refresh token (CLIENT_SECRET is backend-only)
+    const { data, error } = await this.supabase.functions.invoke('mercadopago-refresh-token', {
+      body: { refresh_token: refreshToken },
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to refresh token');
+    if (error || !data?.success) {
+      console.error('[MP Refresh] Error from backend:', error || data?.error);
+      throw new Error(data?.error || 'Failed to refresh token');
     }
 
-    return response.json();
+    return data as unknown as MpTokenResponse;
   }
 }

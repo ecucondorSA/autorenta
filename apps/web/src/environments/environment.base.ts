@@ -29,9 +29,11 @@ interface EnvDefaults {
   carLocationsEdgeFunction?: string;
   mercadopagoPublicKey?: string;
   mercadopagoClientId?: string;
-  mercadopagoClientSecret?: string;
+  // P0-027 FIX: CLIENT_SECRET removed - must NEVER be in frontend
+  // mercadopagoClientSecret is handled by backend Edge Functions only
   paypalClientId?: string;
-  paypalClientSecret?: string;
+  // P0-027 FIX: PayPal secret removed - must NEVER be in frontend
+  // paypalClientSecret is handled by backend Edge Functions only
   appUrl?: string;
   encryptionKey?: string;
   googleAnalyticsMeasurementId?: string;
@@ -68,6 +70,7 @@ const readEnv = (key: string): string | undefined => {
   }
 
   // import.meta.env (Angular 17+ builder exposes env vars at build time)
+  // @ts-ignore - import.meta is supported at runtime even if TS config doesn't declare it
   const metaEnv =
     typeof import.meta !== 'undefined' && (import.meta as unknown as ImportMetaWithEnv).env
       ? (import.meta as unknown as ImportMetaWithEnv).env?.[key]
@@ -120,12 +123,8 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   ),
   mercadopagoPublicKey: resolve('NG_APP_MERCADOPAGO_PUBLIC_KEY', defaults.mercadopagoPublicKey),
   mercadopagoClientId: resolve('NG_APP_MERCADOPAGO_CLIENT_ID', defaults.mercadopagoClientId),
-  mercadopagoClientSecret: resolve(
-    'NG_APP_MERCADOPAGO_CLIENT_SECRET',
-    defaults.mercadopagoClientSecret,
-  ),
+  // P0-027 FIX: Secrets removed from frontend - handled by backend only
   paypalClientId: resolve('NG_APP_PAYPAL_CLIENT_ID', defaults.paypalClientId),
-  paypalClientSecret: resolve('NG_APP_PAYPAL_CLIENT_SECRET', defaults.paypalClientSecret),
   appUrl: resolve('NG_APP_URL', defaults.appUrl ?? 'http://localhost:4200'),
   encryptionKey: resolve('NG_APP_ENCRYPTION_KEY', defaults.encryptionKey),
   googleAnalyticsMeasurementId: resolve(
