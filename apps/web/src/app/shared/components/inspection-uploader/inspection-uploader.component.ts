@@ -18,6 +18,7 @@ import {
 } from '../../../core/models/fgo-v1-1.model';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { validateFiles, allFilesValid, getFirstError, logFileUpload } from '../../../core/utils/file-validation.util';
 
 // Window extension for inspection callback
 interface WindowWithInspectionCallback extends Window {
@@ -104,17 +105,23 @@ export class InspectionUploaderComponent implements OnInit {
     try {
       const files = Array.from(input.files);
 
-      // Validar que sean imágenes
-      const invalidFiles = files.filter((f) => !f.type.startsWith('image/'));
-      if (invalidFiles.length > 0) {
-        this.error.set('Solo se permiten archivos de imagen');
-        return;
-      }
+      // P0-014: Use centralized file validation
+      const validationResults = validateFiles(files, {
+        maxSizeBytes: 10 * 1024 * 1024, // 10MB max
+        allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
+        checkMimeType: true,
+      });
 
-      // Validar tamaño (max 5MB por foto)
-      const largeFiles = files.filter((f) => f.size > 5 * 1024 * 1024);
-      if (largeFiles.length > 0) {
-        this.error.set('Las fotos no deben superar 5MB cada una');
+      if (!allFilesValid(validationResults)) {
+        const errorMsg = getFirstError(validationResults);
+        this.error.set(errorMsg || 'Invalid file detected');
+
+        // Log failed validation attempts
+        validationResults.forEach((result) => {
+          if (!result.valid) {
+            logFileUpload(result.fileName, false, result.error);
+          }
+        });
         return;
       }
 
@@ -123,6 +130,9 @@ export class InspectionUploaderComponent implements OnInit {
         const photo = await this.uploadPhoto(file);
         if (photo) {
           this.photos.update((p) => [...p, photo]);
+          logFileUpload(file.name, true);
+        } else {
+          logFileUpload(file.name, false, 'Upload failed');
         }
       }
     } catch {

@@ -135,6 +135,22 @@
           >
             {{ 'nav.wallet' | translate }}
           </a>
+          <a
+            *ngIf="isAuthenticatedSig()"
+            routerLink="/messages"
+            routerLinkActive="nav-link-active"
+            class="nav-link"
+          >
+            Mensajes
+          </a>
+          <a
+            *ngIf="isAuthenticatedSig()"
+            routerLink="/favorites"
+            routerLinkActive="nav-link-active"
+            class="nav-link"
+          >
+            Favoritos
+          </a>
         </nav>
       </div>
 
@@ -738,6 +754,123 @@
                 </svg>
               </a>
 
+              <a
+                routerLink="/favorites"
+                (click)="closeProfileMenu()"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                role="menuitem"
+              >
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-pink-500/10 dark:bg-pink-400/10 group-hover:bg-pink-500/20 dark:group-hover:bg-pink-400/20 transition-colors"
+                >
+                  <svg
+                    class="h-5 w-5 text-pink-600 dark:text-pink-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
+                </div>
+                <span class="flex-1">Favoritos</span>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </a>
+
+              <a
+                routerLink="/messages"
+                (click)="closeProfileMenu()"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                role="menuitem"
+              >
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 dark:bg-blue-400/10 group-hover:bg-blue-500/20 dark:group-hover:bg-blue-400/20 transition-colors"
+                >
+                  <svg
+                    class="h-5 w-5 text-blue-600 dark:text-blue-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                    />
+                  </svg>
+                </div>
+                <span class="flex-1">Mensajes</span>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </a>
+
+              <a
+                routerLink="/wallet/payouts"
+                (click)="closeProfileMenu()"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                role="menuitem"
+              >
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-500/10 dark:bg-teal-400/10 group-hover:bg-teal-500/20 dark:group-hover:bg-teal-400/20 transition-colors"
+                >
+                  <svg
+                    class="h-5 w-5 text-teal-600 dark:text-teal-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                    />
+                  </svg>
+                </div>
+                <span class="flex-1">Retiros</span>
+                <svg
+                  class="h-4 w-4 text-text-tertiary dark:text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </a>
+
               <div class="my-2 border-t border-border-subtle dark:border-border-subtle"></div>
 
               <button
@@ -865,6 +998,38 @@
           class="block px-4 py-3 rounded-xl hover:bg-surface-secondary dark:hover:bg-slate-deep transition-base font-medium"
         >
           {{ 'nav.wallet' | translate }}
+        </a>
+        <a
+          *ngIf="isAuthenticatedSig()"
+          routerLink="/messages"
+          (click)="closeSidebar()"
+          class="block px-4 py-3 rounded-xl hover:bg-surface-secondary dark:hover:bg-slate-deep transition-base font-medium"
+        >
+          Mensajes
+        </a>
+        <a
+          *ngIf="isAuthenticatedSig()"
+          routerLink="/favorites"
+          (click)="closeSidebar()"
+          class="block px-4 py-3 rounded-xl hover:bg-surface-secondary dark:hover:bg-slate-deep transition-base font-medium"
+        >
+          Favoritos
+        </a>
+        <a
+          *ngIf="isAuthenticatedSig()"
+          routerLink="/wallet/payouts"
+          (click)="closeSidebar()"
+          class="block px-4 py-3 rounded-xl hover:bg-surface-secondary dark:hover:bg-slate-deep transition-base font-medium"
+        >
+          Retiros
+        </a>
+        <a
+          *ngIf="isAuthenticatedSig()"
+          routerLink="/bookings/calendar"
+          (click)="closeSidebar()"
+          class="block px-4 py-3 rounded-xl hover:bg-surface-secondary dark:hover:bg-slate-deep transition-base font-medium"
+        >
+          Calendario
         </a>
         <a
           *ngIf="isAuthenticatedSig()"

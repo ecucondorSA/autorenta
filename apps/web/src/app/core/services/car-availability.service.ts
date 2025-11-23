@@ -62,6 +62,9 @@ export class CarAvailabilityService {
   private readonly cache = new Map<string, { data: BlockedDateRange[]; timestamp: number }>();
   private readonly CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
+  // ✅ P0-022 FIX: Real-time subscriptions for car availability updates
+  private realtimeSubscriptions = new Map<string, ReturnType<typeof this.supabase.channel>>();
+
   /**
    * Get all blocked date ranges for a car
    *
@@ -491,5 +494,161 @@ export class CarAvailabilityService {
     return async (_carId: string, from: string, to: string) => {
       return this.checkAvailability(carId, from, to);
     };
+  }
+
+  /**
+   * ✅ P0-022 FIX: Subscribe to real-time availability updates for a car
+   *
+   * Listens to bookings table changes and clears cache when availability changes
+   * This ensures users always see the most up-to-date availability
+   *
+   * @param carId - UUID of the car to monitor
+   * @param callback - Optional callback to execute when availability changes
+   * @returns Subscription ID
+   */
+  subscribeToAvailabilityUpdates(
+    carId: string,
+    callback?: (payload: { car_id: string; status: string }) => void,
+  ): string {
+    // Check if already subscribed
+    if (this.realtimeSubscriptions.has(carId)) {
+      console.warn(`Already subscribed to availability updates for car ${carId}`);
+      return carId;
+    }
+
+    // Create channel for this car
+    const channel = this.supabase
+      .channel(`car-availability:${carId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to INSERT, UPDATE, DELETE
+          schema: 'public',
+          table: 'bookings',
+          filter: `car_id=eq.${carId}`,
+        },
+        (payload) => {
+          console.log('Car availability changed via Realtime:', payload);
+
+          // Clear cache for this car
+          this.clearCache(carId);
+
+          // Execute callback if provided
+          if (callback && payload.new && typeof payload.new === 'object') {
+            const newRecord = payload.new as { car_id: string; status: string };
+            callback({
+              car_id: newRecord.car_id,
+              status: newRecord.status,
+            });
+          }
+        },
+      )
+      .subscribe((status) => {
+        console.log(`Realtime subscription status for car ${carId}:`, status);
+      });
+
+    // Store subscription
+    this.realtimeSubscriptions.set(carId, channel);
+
+    return carId;
+  }
+
+  /**
+   * ✅ P0-022 FIX: Unsubscribe from real-time availability updates
+   *
+   * @param carId - UUID of the car to stop monitoring
+   */
+  unsubscribeFromAvailabilityUpdates(carId: string): void {
+    const subscription = this.realtimeSubscriptions.get(carId);
+
+    if (subscription) {
+      this.supabase.removeChannel(subscription);
+      this.realtimeSubscriptions.delete(carId);
+      console.log(`Unsubscribed from availability updates for car ${carId}`);
+    }
+  }
+
+  /**
+   * ✅ P0-022 FIX: Subscribe to global availability updates (all cars)
+   *
+   * Useful for map views showing multiple cars
+   *
+   * @param callback - Callback to execute when any car's availability changes
+   * @returns Subscription ID
+   */
+  subscribeToAllAvailabilityUpdates(
+    callback: (payload: { car_id: string; status: string }) => void,
+  ): string {
+    const subscriptionId = 'global-availability';
+
+    // Check if already subscribed
+    if (this.realtimeSubscriptions.has(subscriptionId)) {
+      console.warn('Already subscribed to global availability updates');
+      return subscriptionId;
+    }
+
+    // Create channel for all bookings
+    const channel = this.supabase
+      .channel('all-bookings-availability')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to INSERT, UPDATE, DELETE
+          schema: 'public',
+          table: 'bookings',
+        },
+        (payload) => {
+          console.log('Booking changed via Realtime:', payload);
+
+          // Extract car_id from payload
+          let carId: string | undefined;
+          if (payload.new && typeof payload.new === 'object') {
+            const newRecord = payload.new as { car_id: string; status: string };
+            carId = newRecord.car_id;
+
+            // Clear cache for affected car
+            if (carId) {
+              this.clearCache(carId);
+              callback({
+                car_id: carId,
+                status: newRecord.status,
+              });
+            }
+          } else if (payload.old && typeof payload.old === 'object') {
+            // Handle DELETE events
+            const oldRecord = payload.old as { car_id: string; status: string };
+            carId = oldRecord.car_id;
+
+            if (carId) {
+              this.clearCache(carId);
+              callback({
+                car_id: carId,
+                status: 'deleted',
+              });
+            }
+          }
+        },
+      )
+      .subscribe((status) => {
+        console.log('Global realtime subscription status:', status);
+      });
+
+    // Store subscription
+    this.realtimeSubscriptions.set(subscriptionId, channel);
+
+    return subscriptionId;
+  }
+
+  /**
+   * ✅ P0-022 FIX: Cleanup all realtime subscriptions
+   *
+   * Should be called when component/service is destroyed
+   */
+  unsubscribeAll(): void {
+    for (const [key, subscription] of this.realtimeSubscriptions.entries()) {
+      this.supabase.removeChannel(subscription);
+      console.log(`Unsubscribed from ${key}`);
+    }
+    this.realtimeSubscriptions.clear();
   }
 }

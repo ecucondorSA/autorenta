@@ -69,11 +69,20 @@ export class RefundService {
       // Validate request
       this.validateRefundRequest(request);
 
+      // P0-012: Validate booking eligibility for refund
+      await this.validateRefundEligibility(request.booking_id, request.amount);
+
       // Get auth token
       const session = await this.authService.ensureSession();
       if (!session?.access_token) {
         throw new Error('Not authenticated');
       }
+
+      // Log refund attempt
+      this.logger.info(
+        `Refund attempt: booking=${request.booking_id}, type=${request.refund_type}, amount=${request.amount}`,
+        'RefundService',
+      );
 
       // Call Edge Function
       const { data, error } = await this.supabase.functions.invoke('mercadopago-process-refund', {
@@ -165,6 +174,70 @@ export class RefundService {
     } catch (error) {
       this.logger.error('Error getting refund status', 'RefundService', error as Error);
       throw error;
+    }
+  }
+
+  /**
+   * P0-012: Validate booking eligibility for refund
+   * - Booking status must be 'confirmed' or 'in_progress'
+   * - Booking must be less than 30 days old
+   * - Refund amount must not exceed booking amount
+   * - No pending insurance claims
+   */
+  private async validateRefundEligibility(
+    bookingId: string,
+    requestedAmount?: number,
+  ): Promise<void> {
+    const { data: booking, error } = await this.supabase
+      .from('bookings')
+      .select('status, total_price, created_at, metadata')
+      .eq('id', bookingId)
+      .single();
+
+    if (error || !booking) {
+      throw new Error('Booking not found');
+    }
+
+    // Validate booking status
+    const validStatuses = ['confirmed', 'in_progress'];
+    if (!validStatuses.includes(booking.status)) {
+      throw new Error(
+        `Cannot refund booking with status "${booking.status}". Only confirmed or in-progress bookings can be refunded.`,
+      );
+    }
+
+    // Validate booking age (must be < 30 days)
+    const bookingDate = new Date(booking.created_at);
+    const daysSinceBooking = Math.floor(
+      (Date.now() - bookingDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
+    if (daysSinceBooking > 30) {
+      throw new Error(
+        `Cannot refund bookings older than 30 days. This booking is ${daysSinceBooking} days old.`,
+      );
+    }
+
+    // Validate refund amount
+    if (requestedAmount && requestedAmount > booking.total_price) {
+      throw new Error(
+        `Refund amount ($${requestedAmount}) exceeds booking total ($${booking.total_price})`,
+      );
+    }
+
+    // Check for pending insurance claims
+    const { data: claims, error: claimsError } = await this.supabase
+      .from('claims')
+      .select('id, status')
+      .eq('booking_id', bookingId)
+      .in('status', ['pending', 'under_review']);
+
+    if (claimsError) {
+      this.logger.error('Error checking claims', 'RefundService', claimsError as Error);
+      // Don't block refund on claims check error
+    } else if (claims && claims.length > 0) {
+      throw new Error(
+        `Cannot refund booking with pending insurance claims. Please wait for claim resolution.`,
+      );
     }
   }
 }

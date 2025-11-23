@@ -17,6 +17,7 @@ import { BookingStepIndicatorComponent } from '../../components/booking-step-ind
 import { Car } from '../../../../core/models';
 import { BookingsService } from '../../../../core/services/bookings.service';
 import { CarsService } from '../../../../core/services/cars.service';
+import { EmailVerificationService } from '../../../../core/services/email-verification.service';
 import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 
 export interface BookingWizardData {
@@ -186,7 +187,8 @@ export class BookingWizardPage implements OnInit {
     private carsService: CarsService,
     private bookingsService: BookingsService,
     private errorHandler: ErrorHandlerService,
-  ) {}
+    private emailVerificationService: EmailVerificationService,
+  ) { }
 
   async ngOnInit() {
     // Get car ID from route params
@@ -276,6 +278,17 @@ export class BookingWizardPage implements OnInit {
 
   async submitBooking() {
     if (!this.canProceed()) {
+      return;
+    }
+
+    // P0-013: Check email verification before allowing booking
+    const emailStatus = await this.emailVerificationService.checkStatus();
+    if (!emailStatus.isVerified) {
+      this.errorHandler.handleError(
+        new Error('Please verify your email before booking'),
+        'Email Verification Required',
+        true,
+      );
       return;
     }
 

@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { getErrorMessage } from '../utils/type-guards';
 import { LoggerService } from './logger.service';
 import { NotificationManagerService } from './notification-manager.service';
@@ -135,11 +136,19 @@ export class ErrorHandlerService {
   /**
    * Get user-friendly error message
    * Maps technical errors to friendly messages
+   * ✅ P0-020 FIX: Hide stack traces and technical details in production
    * @private
    */
   private getUserFriendlyMessage(error: unknown, context: string): string {
-    // If it's already a user-friendly string, return it
+    // ✅ P0-020: In production, never expose raw error messages
+    // Always return sanitized, user-friendly messages
+
+    // If it's already a user-friendly string (no technical jargon), return it
     if (typeof error === 'string') {
+      // In production, check if message contains technical terms
+      if (environment.production && this.containsTechnicalJargon(error)) {
+        return 'Ocurrió un error inesperado. Por favor intenta nuevamente.';
+      }
       return error;
     }
 
@@ -147,8 +156,22 @@ export class ErrorHandlerService {
     let errorMessage = '';
     if (error instanceof Error) {
       errorMessage = error.message.toLowerCase();
+
+      // ✅ P0-020: In production, NEVER expose Error objects directly
+      if (environment.production && this.containsTechnicalJargon(error.message)) {
+        // Return generic message, log details to Sentry only
+        this.logger.error('Technical error hidden from user (production)', 'ErrorHandlerService', error);
+        errorMessage = ''; // Clear to force mapping to user-friendly message
+      }
     } else if (error && typeof error === 'object' && 'message' in error) {
       errorMessage = String(error.message).toLowerCase();
+
+      // ✅ P0-020: Same protection for error-like objects
+      if (environment.production && this.containsTechnicalJargon(String(error.message))) {
+        this.logger.error('Technical error hidden from user (production)', 'ErrorHandlerService',
+          error instanceof Error ? error : new Error(String(error.message)));
+        errorMessage = '';
+      }
     }
 
     // Map common error patterns to user-friendly messages
@@ -287,5 +310,39 @@ export class ErrorHandlerService {
       default:
         this.toast.error(title, message);
     }
+  }
+
+  /**
+   * ✅ P0-020: Check if message contains technical jargon
+   * Technical terms should never be shown to users in production
+   * @private
+   */
+  private containsTechnicalJargon(message: string): boolean {
+    const technicalPatterns = [
+      /Error:/i,
+      /Exception/i,
+      /at\s+\w+\./i,           // Stack trace pattern: "at Function.method"
+      /\w+\.\w+\(/i,            // Method call pattern: "service.method("
+      /line\s+\d+/i,            // Line number references
+      /column\s+\d+/i,          // Column number references
+      /\w+Error/i,              // Error types: TypeError, ReferenceError, etc.
+      /null\s+is\s+not/i,       // "null is not an object"
+      /undefined\s+is\s+not/i,  // "undefined is not a function"
+      /cannot\s+read\s+property/i,
+      /cannot\s+access/i,
+      /'[a-z_]+'\s+of\s+(null|undefined)/i, // "'property' of undefined"
+      /\[\w+\]/i,               // Property access: [propertyName]
+      /stack\s*:/i,             // Stack property
+      /PGRST\d+/i,              // Postgres/Supabase error codes
+      /23\d{3}/i,               // PostgreSQL error codes (23xxx)
+      /42\d{3}/i,               // PostgreSQL error codes (42xxx)
+      /function\s+\w+/i,        // Function references
+      /class\s+\w+/i,           // Class references
+      /RPC\s+/i,                // RPC errors
+      /SQL\s+/i,                // SQL errors
+      /database\s+/i,           // Database errors (be cautious - might be user-friendly in some contexts)
+    ];
+
+    return technicalPatterns.some(pattern => pattern.test(message));
   }
 }

@@ -8,6 +8,7 @@ import {
 import { injectSupabase } from './supabase-client.service';
 import { RealtimeConnectionService, ConnectionStatus } from './realtime-connection.service';
 import { OfflineMessagesService } from './offline-messages.service';
+import { RateLimiterService } from './rate-limiter.service';
 
 export interface Message {
   id: string;
@@ -146,8 +147,17 @@ export class MessagesService {
     if (authError) throw authError;
     if (!user?.id) throw new Error('Usuario no autenticado');
 
+    // P0-015: Check rate limit for messages
+    const rateLimiter = inject(RateLimiterService);
+
+    if (!rateLimiter.isAllowed('messageSend', user.id)) {
+      rateLimiter.logViolation('messageSend', user.id);
+      throw new Error(rateLimiter.getErrorMessage('messageSend', user.id));
+    }
+
     // Try to send immediately
     try {
+      rateLimiter.recordAttempt('messageSend', user.id);
       const { data, error } = await this.supabase
         .from('messages')
         .insert({

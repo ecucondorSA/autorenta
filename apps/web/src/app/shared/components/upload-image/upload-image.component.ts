@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { logFileUpload, validateFiles } from '../../../core/utils/file-validation.util';
 
 export interface UploadFilePreview {
   name: string;
@@ -32,38 +33,31 @@ export class UploadImageComponent {
     const target = event.target as HTMLInputElement;
     if (!target.files?.length) return;
 
+    // P0-014: Use centralized file validation with MIME type checking
+    const validationResults = validateFiles(target.files, {
+      maxSizeBytes: this.maxSizeMB * 1024 * 1024,
+      allowedMimeTypes: this.acceptedTypes,
+      checkMimeType: true,
+    });
+
     const validFiles: File[] = [];
     const errors: FileValidationError[] = [];
-    const maxSizeBytes = this.maxSizeMB * 1024 * 1024;
 
-    // Validate each file
-    for (let i = 0; i < target.files.length; i++) {
-      const file = target.files[i];
+    // Process validation results
+    validationResults.forEach((result, index) => {
+      const file = target.files![index];
 
-      // Check MIME type
-      if (!this.acceptedTypes.includes(file.type)) {
-        const allowedFormats = this.acceptedTypes
-          .map((type) => type.split('/')[1].toUpperCase())
-          .join(', ');
+      if (result.valid) {
+        validFiles.push(file);
+        logFileUpload(file.name, true);
+      } else {
         errors.push({
-          fileName: file.name,
-          reason: `Formato no permitido. Solo se aceptan: ${allowedFormats}`,
+          fileName: result.fileName,
+          reason: result.error || 'Invalid file',
         });
-        continue;
+        logFileUpload(result.fileName, false, result.error);
       }
-
-      // Check file size
-      if (file.size > maxSizeBytes) {
-        errors.push({
-          fileName: file.name,
-          reason: `El archivo supera el tamaño máximo de ${this.maxSizeMB}MB`,
-        });
-        continue;
-      }
-
-      // File is valid
-      validFiles.push(file);
-    }
+    });
 
     // Emit validation errors if any
     if (errors.length > 0) {

@@ -16,21 +16,23 @@
     <!-- Hero Title Section -->
     <div class="text-center mb-12">
       <!-- Logo y título -->
-      <div class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 mb-4 md:mb-6">
+      <div
+        class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 mb-4 md:mb-6">
         <div (click)="onLogoClick()"
           class="w-20 h-20 md:w-36 md:h-36 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg border border-white/20 overflow-hidden cursor-pointer hover:bg-white/20 hover:shadow-xl hover:border-white/30 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent transition-all duration-200"
           role="button" tabindex="0" (keydown.enter)="onLogoClick()" (keydown.space)="onLogoClick()"
           aria-label="Ver mapa del marketplace">
           <img src="/assets/images/c40-logo.png" alt="Autorentar Logo" width="144" height="144"
-            class="w-full h-full object-contain p-2 pointer-events-none" loading="eager" fetchpriority="high"
-            decoding="async" onerror="this.style.display='none'" />
+            class="w-full h-full object-contain p-2 pointer-events-none" loading="eager"
+            fetchpriority="high" decoding="async" onerror="this.style.display='none'" />
         </div>
         <h1 class="text-3xl md:text-6xl font-bold text-white drop-shadow-2xl mt-2 md:mt-0">
           Autorentar</h1>
       </div>
 
       <!-- Título principal -->
-      <h2 class="text-2xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight leading-tight px-2">
+      <h2
+        class="text-2xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight leading-tight px-2">
         Encuentra tu auto ideal
       </h2>
 
@@ -84,7 +86,8 @@
 
 
     <!-- Enhanced Search Card -->
-    <div class="max-w-5xl mx-auto transform translate-y-4 md:translate-y-8 relative z-20 px-2 md:px-0">
+    <div
+      class="max-w-5xl mx-auto transform translate-y-4 md:translate-y-8 relative z-20 px-2 md:px-0">
       <div
         class="bg-white dark:bg-slate-800 rounded-2xl md:rounded-3xl shadow-2xl p-4 md:p-8 border border-slate-100 dark:border-slate-700">
         <!-- Search Header -->
@@ -109,7 +112,8 @@
             <div
               class="relative transition-all duration-200 group-focus-within:transform group-focus-within:-translate-y-1">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg class="w-6 h-6 text-slate-400 group-focus-within:text-cyan-500 transition-colors duration-200"
+                <svg
+                  class="w-6 h-6 text-slate-400 group-focus-within:text-cyan-500 transition-colors duration-200"
                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -117,14 +121,17 @@
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <input type="text" placeholder="¿Dónde recoges el auto?" [value]="selectedLocation() || searchValue()"
+              <input type="text" placeholder="¿Dónde recoges el auto?"
+                [value]="selectedLocation() || searchValue()"
                 (input)="onLocationInputChange($event)" (focus)="showLocationSuggestions.set(true)"
                 (blur)="onLocationInputBlur()" (keydown.escape)="closeLocationSuggestions()"
                 class="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 dark:focus:border-cyan-400 text-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200 shadow-sm group-hover:border-slate-300 dark:group-hover:border-slate-600" />
 
               <!-- Loading indicator -->
-              <div *ngIf="locationSearchLoading()" class="absolute right-4 top-1/2 -translate-y-1/2">
-                <div class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-500 border-t-transparent">
+              <div *ngIf="locationSearchLoading()"
+                class="absolute right-4 top-1/2 -translate-y-1/2">
+                <div
+                  class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-500 border-t-transparent">
                 </div>
               </div>
 
@@ -132,13 +139,14 @@
               <div *ngIf="showLocationSuggestions() && locationSuggestions().length > 0"
                 class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-700 max-h-80 overflow-y-auto overflow-hidden ring-1 ring-black/5">
                 <div class="py-2">
-                  <button *ngFor="let suggestion of locationSuggestions(); trackBy: trackBySuggestion"
+                  <button
+                    *ngFor="let suggestion of locationSuggestions(); trackBy: trackBySuggestion"
                     (click)="onLocationSuggestionSelect(suggestion)"
                     class="w-full px-5 py-3.5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex items-start gap-3 group border-b border-slate-50 dark:border-slate-700/50 last:border-0">
                     <div
                       class="p-2 bg-cyan-50 dark:bg-cyan-900/20 rounded-full group-hover:bg-cyan-100 dark:group-hover:bg-cyan-900/40 transition-colors">
-                      <svg class="w-4 h-4 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 text-cyan-600 dark:text-cyan-400" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -168,7 +176,8 @@
                 class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 p-6 text-center">
                 <div
                   class="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -216,7 +225,8 @@
               Filtros rápidos:</p>
             <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full scrollbar-hide">
               <app-tooltip *ngFor="let filter of quickFilters"
-                [text]="filter.tooltip || 'Filtrar autos por ' + filter.label.toLowerCase()" position="top">
+                [text]="filter.tooltip || 'Filtrar autos por ' + filter.label.toLowerCase()"
+                position="top">
                 <button type="button" (click)="onQuickFilterClick(filter.id)"
                   class="group flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 hover:border-cyan-200 dark:hover:border-cyan-800 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-cyan-700 dark:hover:text-cyan-300 hover:shadow-md transition-all duration-200 flex-shrink-0"
                   [class.bg-cyan-50]="isQuickFilterActive(filter.id)"
@@ -230,32 +240,32 @@
                   <svg *ngIf="filter.id === 'immediate'"
                     class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
                     [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
+                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                   <svg *ngIf="filter.id === 'verified'"
                     class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
                     [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
+                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <svg *ngIf="filter.id === 'no-card'"
                     class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
                     [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
+                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                   </svg>
                   <svg *ngIf="filter.id === 'near-me'"
                     class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
                     [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
+                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -264,8 +274,8 @@
                   <svg *ngIf="filter.id === 'electric'"
                     class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
                     [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
+                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
@@ -442,16 +452,19 @@
                 <option value="price_desc">Precio: mayor a menor</option>
                 <option value="rating">Mejor valorados</option>
               </select>
-              <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <div
+                class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
             </div>
 
             <!-- Segmented View Toggle -->
             <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center">
-              <button [class.bg-white]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+              <button
+                [class.bg-white]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
                 [class.dark:bg-slate-700]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
                 [class.shadow-sm]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
                 [class.text-slate-900]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
@@ -465,13 +478,16 @@
                 </svg>
                 <span class="hidden sm:inline">Cuadrícula</span>
               </button>
-              <button [class.bg-white]="viewMode() === 'list'" [class.dark:bg-slate-700]="viewMode() === 'list'"
-                [class.shadow-sm]="viewMode() === 'list'" [class.text-slate-900]="viewMode() === 'list'"
-                [class.dark:text-white]="viewMode() === 'list'" [class.text-slate-500]="viewMode() !== 'list'"
-                (click)="viewMode.set('list')"
+              <button [class.bg-white]="viewMode() === 'list'"
+                [class.dark:bg-slate-700]="viewMode() === 'list'"
+                [class.shadow-sm]="viewMode() === 'list'"
+                [class.text-slate-900]="viewMode() === 'list'"
+                [class.dark:text-white]="viewMode() === 'list'"
+                [class.text-slate-500]="viewMode() !== 'list'" (click)="viewMode.set('list')"
                 class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
                 <span class="hidden sm:inline">Lista</span>
               </button>
@@ -480,13 +496,15 @@
         </div>
 
         <!-- Grid View - Video Game Style -->
-        <div *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')" class="flex flex-col gap-6">
+        <div *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+          class="flex flex-col gap-6">
           <div *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
             class="car-card-game group relative transition-all duration-300"
             [class.scale-105]="selectedCarId() === car.id" [class.z-10]="selectedCarId() === car.id"
             (click)="onCarSelected(car.id)" role="button"
-            [attr.aria-label]="'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup" tabindex="0"
-            (keydown.enter)="onCarSelected(car.id)" (keydown.space)="onCarSelected(car.id)">
+            [attr.aria-label]="'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup"
+            tabindex="0" (keydown.enter)="onCarSelected(car.id)"
+            (keydown.space)="onCarSelected(car.id)">
             <!-- Game Card -->
             <div
               class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-lg overflow-hidden cursor-pointer border-2 transition-all duration-300"
@@ -498,8 +516,10 @@
                 <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
                   [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  [loading]="i < 2 ? 'eager' : 'lazy'" [attr.fetchpriority]="i < 2 ? 'high' : 'auto'" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+                  [loading]="i < 2 ? 'eager' : 'lazy'"
+                  [attr.fetchpriority]="i < 2 ? 'high' : 'auto'" />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
                 </div>
 
                 <!-- Price Badge (Circular) -->
@@ -593,7 +613,8 @@
           <div *ngIf="!loading() && error()" class="col-span-full">
             <div
               class="bg-danger-light/10 dark:bg-danger-light/10 rounded-2xl p-12 text-center border border-danger-light">
-              <div class="w-24 h-24 bg-danger-light/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div
+                class="w-24 h-24 bg-danger-light/20 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span class="text-5xl">🤯</span>
               </div>
               <h3 class="text-2xl font-bold text-danger-dark dark:text-danger-light mb-2">
@@ -613,14 +634,17 @@
 
         <!-- List View -->
         <div *ngIf="viewMode() === 'list'" class="space-y-6 lg:space-y-8">
-          <div *ngFor="let car of visibleCars(); trackBy: trackByCarId" (click)="onCarSelected(car.id)"
+          <div *ngFor="let car of visibleCars(); trackBy: trackByCarId"
+            (click)="onCarSelected(car.id)"
             class="bg-surface-raised dark:bg-surface-raised text-text-primary rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
             <div class="flex flex-col md:flex-row">
               <!-- Image -->
-              <div class="relative md:w-80 aspect-[16/9] md:aspect-auto overflow-hidden flex-shrink-0">
+              <div
+                class="relative md:w-80 aspect-[16/9] md:aspect-auto overflow-hidden flex-shrink-0">
                 <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
                   [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
-                  class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
+                  class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                  loading="lazy" />
               </div>
 
               <!-- Content -->
@@ -696,15 +720,18 @@
       <div class="lg:col-span-8 xl:col-span-8 hidden lg:block h-full sticky top-24">
         <div
           class="h-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-700 relative">
-          <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()" [userLocation]="userLocation()"
-            [markerVariant]="contextualMarkerVariant()" [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
+          <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
+            [userLocation]="userLocation()" [markerVariant]="contextualMarkerVariant()"
+            [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
             (carSelected)="onCarSelected($event)" (quickBook)="onQuickBook($event)"
-            (userLocationChange)="onUserLocationChange($event)" (searchRadiusChange)="onSearchRadiusChange($event)"
+            (userLocationChange)="onUserLocationChange($event)"
+            (searchRadiusChange)="onSearchRadiusChange($event)"
             (boundsChange)="onBoundsChange($event)" class="w-full h-full" />
           <app-map-controls (controlEvent)="onMapControlEvent($event)" />
 
           <!-- Search in this area button -->
-          <div *ngIf="showSearchAreaButton()" class="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
+          <div *ngIf="showSearchAreaButton()"
+            class="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
             <button (click)="searchInArea()"
               class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-4 py-2 rounded-full shadow-lg font-semibold text-sm flex items-center gap-2 hover:scale-105 transition-transform animate-fade-in-up border border-slate-200 dark:border-slate-700">
               <span class="text-cyan-500">🔍</span>
@@ -718,15 +745,18 @@
     <!-- Map View (Mobile Only) -->
     <div *ngIf="viewMode() === 'map' && !isDesktop()"
       class="relative h-[calc(100vh-400px)] min-h-[600px] rounded-2xl overflow-hidden shadow-2xl">
-      <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()" [userLocation]="userLocation()"
-        [markerVariant]="contextualMarkerVariant()" [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
+      <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
+        [userLocation]="userLocation()" [markerVariant]="contextualMarkerVariant()"
+        [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
         (carSelected)="onCarSelected($event)" (quickBook)="onQuickBook($event)"
-        (userLocationChange)="onUserLocationChange($event)" (searchRadiusChange)="onSearchRadiusChange($event)"
-        (boundsChange)="onBoundsChange($event)" class="w-full h-full" />
+        (userLocationChange)="onUserLocationChange($event)"
+        (searchRadiusChange)="onSearchRadiusChange($event)" (boundsChange)="onBoundsChange($event)"
+        class="w-full h-full" />
       <app-map-controls (controlEvent)="onMapControlEvent($event)" />
 
       <!-- Search in this area button (Mobile) -->
-      <div *ngIf="showSearchAreaButton()" class="absolute top-20 left-1/2 transform -translate-x-1/2 z-10">
+      <div *ngIf="showSearchAreaButton()"
+        class="absolute top-20 left-1/2 transform -translate-x-1/2 z-10">
         <button (click)="searchInArea()"
           class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-4 py-2 rounded-full shadow-lg font-semibold text-sm flex items-center gap-2 hover:scale-105 transition-transform animate-fade-in-up border border-slate-200 dark:border-slate-700">
           <span class="text-cyan-500">🔍</span>
@@ -743,19 +773,16 @@
   (confirmBooking)="onQuickBookingConfirm($event)" (cancelBooking)="onQuickBookingCancel()" />
 
 <!-- Responsive Filters Drawer (Desktop Sidebar + Mobile Bottom Sheet) -->
-<app-filters-drawer
-  [availableCars]="mapFilterSourceLocations()"
-  [isOpenInput]="showFilters()"
-  (filterChange)="onFiltersChange($event)"
-  (onClose)="closeFiltersPanel()"
-></app-filters-drawer>
+<app-map-filters [availableCars]="mapFilterSourceLocations()"
+  (filterChange)="onFiltersChange($event)"></app-map-filters>
 
 <!-- Mobile Filters Overlay Backdrop (click to close) -->
 <div *ngIf="showFilters()" class="fixed inset-0 z-30 md:hidden bg-black/40 backdrop-blur-sm"
   (click)="closeFiltersPanel()"></div>
 
 <!-- Floating Action Button -->
-<app-floating-action-fab [actions]="fabActions" position="bottom-right" (actionClick)="onFabActionClick($event)" />
+<app-floating-action-fab [actions]="fabActions" position="bottom-right"
+  (actionClick)="onFabActionClick($event)" />
 
 <!-- Date Picker Modal -->
 <div *ngIf="showDatePicker()" class="fixed inset-0 z-50 flex items-start justify-center pt-6 px-4"
@@ -764,9 +791,11 @@
     class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-700/50 overflow-hidden transform transition-all duration-300"
     (click)="$event.stopPropagation()">
     <!-- Header con gradiente de marca -->
-    <div class="bg-gradient-to-r from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between">
+    <div
+      class="bg-gradient-to-r from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+        <div
+          class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -778,18 +807,21 @@
         class="w-8 h-8 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
         aria-label="Cerrar">
         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
 
     <!-- Contenido -->
-    <div class="p-5 bg-gradient-to-b from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50">
+    <div
+      class="p-5 bg-gradient-to-b from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50">
       <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
         (rangeChange)="onDateRangeChange($event)" />
 
       <!-- Footer con botón de acción -->
-      <div class="mt-5 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex items-center justify-end gap-3">
+      <div
+        class="mt-5 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex items-center justify-end gap-3">
         <button (click)="closeDatePicker()"
           class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
           Cancelar
@@ -797,7 +829,8 @@
         <button (click)="closeDatePicker()"
           class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl text-sm shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 13l4 4L19 7" />
           </svg>
           Aplicar fechas
         </button>
@@ -807,16 +840,20 @@
 </div>
 
 <!-- Location Picker Modal -->
-<div *ngIf="showLocationPicker()" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+<div *ngIf="showLocationPicker()"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
   (click)="closeLocationPicker()">
   <div class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden"
     (click)="$event.stopPropagation()">
-    <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
+    <div
+      class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
       <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Selecciona la ubicación</h3>
       <button (click)="closeLocationPicker()"
         class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-        <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
@@ -833,11 +870,13 @@
         <p class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-3">
           Ubicaciones populares
         </p>
-        <button *ngFor="let location of ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza', 'La Plata']"
+        <button
+          *ngFor="let location of ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza', 'La Plata']"
           (click)="onLocationSelect(location)"
           class="w-full px-4 py-3 text-left bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 rounded-xl transition-colors text-gray-900 dark:text-white">
           <div class="flex items-center gap-3">
-            <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

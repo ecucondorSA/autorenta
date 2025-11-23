@@ -166,7 +166,7 @@ serve(async (req) => {
 
   // CORS - Permitir llamadas desde cualquier origen (testing)
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    ...corsHeaders,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   };

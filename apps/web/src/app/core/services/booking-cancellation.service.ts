@@ -71,9 +71,21 @@ export class BookingCancellationService {
         };
       }
 
-      // 4. Process automatic refund if booking was paid
-      if (booking.status === 'confirmed') {
-        await this.processRefund(booking, force);
+      // 4. ✅ P0-021 FIX: Process automatic refund if booking was paid
+      // Always process refund for confirmed or in_progress bookings
+      // If refund fails, log error but don't block cancellation
+      if (booking.status === 'confirmed' || booking.status === 'in_progress') {
+        try {
+          await this.processRefund(booking, force);
+        } catch (refundError) {
+          this.logger.error(
+            'Refund failed during cancellation - booking still cancelled',
+            'BookingCancellationService',
+            refundError instanceof Error ? refundError : new Error(getErrorMessage(refundError)),
+          );
+          // ✅ P0-021: Log error but continue - cancellation should not fail if refund fails
+          // Admin will be notified via Sentry and can process refund manually
+        }
       }
 
       // 5. Unlock wallet funds if locked

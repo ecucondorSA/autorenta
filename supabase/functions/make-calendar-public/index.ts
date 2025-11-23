@@ -17,7 +17,7 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
  */
 serve(async (req) => {
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    ...corsHeaders,
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   };
 
@@ -180,7 +180,7 @@ serve(async (req) => {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        ...corsHeaders,
         'Content-Type': 'application/json',
       },
     });

@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { getErrorMessage } from '../utils/type-guards';
 import { LoggerService } from './logger.service';
 import { injectSupabase } from './supabase-client.service';
+import { RateLimiterService } from './rate-limiter.service';
 
 interface AuthState {
   session: Session | null;
@@ -118,7 +119,19 @@ export class AuthService implements OnDestroy {
   }
 
   async signIn(email: string, password: string): Promise<void> {
+    // P0-015: Check rate limit before attempting login
+    const rateLimiter = inject(RateLimiterService);
+
+    if (!rateLimiter.isAllowed('login', email)) {
+      rateLimiter.logViolation('login', email);
+      throw new Error(rateLimiter.getErrorMessage('login', email));
+    }
+
     const { error } = await this.supabase.auth.signInWithPassword({ email, password });
+
+    // Record attempt regardless of success/failure
+    rateLimiter.recordAttempt('login', email);
+
     if (error) {
       throw this.mapError(error);
     }
@@ -305,9 +318,21 @@ export class AuthService implements OnDestroy {
   }
 
   async resetPassword(email: string, redirectTo?: string): Promise<void> {
+    // P0-015: Check rate limit for password reset
+    const rateLimiter = inject(RateLimiterService);
+
+    if (!rateLimiter.isAllowed('passwordReset', email)) {
+      rateLimiter.logViolation('passwordReset', email);
+      throw new Error(rateLimiter.getErrorMessage('passwordReset', email));
+    }
+
     const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
       redirectTo,
     });
+
+    // Record attempt
+    rateLimiter.recordAttempt('passwordReset', email);
+
     if (error) {
       throw this.mapError(error);
     }

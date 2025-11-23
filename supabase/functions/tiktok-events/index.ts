@@ -175,7 +175,7 @@ async function sendTikTokEvent(
 serve(async (req) => {
   // CORS headers
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    ...corsHeaders,
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   };
 

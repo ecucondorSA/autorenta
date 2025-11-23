@@ -14,6 +14,11 @@ export const WALLET_ROUTES: Routes = [
     title: 'Transferir AutoCréditos - AutoRenta',
   },
   {
+    path: 'payouts',
+    loadComponent: () => import('../payouts/payouts.page').then((m) => m.PayoutsPage),
+    title: 'Retiros - AutoRenta',
+  },
+  {
     path: '',
     redirectTo: 'history',
     pathMatch: 'full',

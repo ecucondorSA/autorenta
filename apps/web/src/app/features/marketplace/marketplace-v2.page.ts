@@ -48,7 +48,7 @@ import {
   MapControlsComponent,
   MapControlsEvent,
 } from '../../shared/components/map-controls/map-controls.component';
-import { FiltersDrawerComponent } from '../../shared/components/marketplace/filters-drawer/filters-drawer.component';
+import { MapFiltersComponent } from '../../shared/components/map-filters/map-filters.component';
 import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
 import {
   QuickBookingData,
@@ -95,7 +95,7 @@ export interface Stat {
     TooltipComponent,
     DateRangePickerComponent,
     DynamicPricingBadgeComponent,
-    FiltersDrawerComponent,
+    MapFiltersComponent,
     MapControlsComponent,
     PriceTransparencyModalComponent,
     SkeletonComponent,

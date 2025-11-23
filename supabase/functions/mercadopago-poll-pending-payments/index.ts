@@ -29,7 +29,7 @@ interface PollResult {
 
 serve(async (req: Request) => {
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    ...corsHeaders,
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   };
 

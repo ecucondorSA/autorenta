@@ -117,6 +117,11 @@ export const BOOKINGS_ROUTES: Routes = [
     loadComponent: () => import('./claims/my-claims.page').then((m) => m.MyClaimsPage),
     canMatch: [AuthGuard],
   },
+  {
+    path: 'calendar',
+    loadComponent: () => import('../calendar/calendar.page').then((m) => m.CalendarPage),
+    canMatch: [AuthGuard],
+  },
   // {
   //   path: ':id/voucher',
   //   loadComponent: () =>
