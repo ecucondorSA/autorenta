@@ -1,6 +1,7 @@
-import { Injectable, Signal, computed, effect } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, Signal, computed, effect, inject, PLATFORM_ID } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { fromEvent, map, startWith, throttleTime } from 'rxjs';
+import { fromEvent, map, startWith, throttleTime, of } from 'rxjs';
 
 /**
  * Breakpoints centralizados - Alineados con Tailwind CSS
@@ -72,15 +73,23 @@ export class BreakpointService {
   readonly current: Signal<Breakpoint>;
 
   constructor() {
+    const platformId = inject(PLATFORM_ID);
+    const isBrowser = isPlatformBrowser(platformId);
+
+    // Default width for SSR (desktop first approach or mobile first, here using desktop)
+    const defaultWidth = isBrowser ? window.innerWidth : 1024;
+
     // Observable del resize con throttle para performance
-    const resize$ = fromEvent(window, 'resize').pipe(
-      throttleTime(150, undefined, { leading: true, trailing: true }),
-      map(() => window.innerWidth),
-      startWith(window.innerWidth),
-    );
+    const resize$ = isBrowser
+      ? fromEvent(window, 'resize').pipe(
+        throttleTime(150, undefined, { leading: true, trailing: true }),
+        map(() => window.innerWidth),
+        startWith(window.innerWidth),
+      )
+      : of(defaultWidth); // Static value for SSR
 
     // Convertir a signal
-    this.width = toSignal(resize$, { initialValue: window.innerWidth });
+    this.width = toSignal(resize$, { initialValue: defaultWidth });
 
     // Signals computados para cada breakpoint
     this.isMobile = computed(() => this.width() < BREAKPOINTS.md);
@@ -90,8 +99,8 @@ export class BreakpointService {
     this.isLargeDesktop = computed(() => this.width() >= BREAKPOINTS.xl);
 
     // Orientación
-    this.isPortrait = computed(() => window.innerHeight > window.innerWidth);
-    this.isLandscape = computed(() => window.innerHeight <= window.innerWidth);
+    this.isPortrait = computed(() => (isBrowser ? window.innerHeight > window.innerWidth : false));
+    this.isLandscape = computed(() => (isBrowser ? window.innerHeight <= window.innerWidth : true));
 
     // Breakpoint actual
     this.current = computed(() => {

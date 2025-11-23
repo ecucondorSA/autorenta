@@ -331,6 +331,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
    * Inicia el auto-refresh del balance
    */
   private startAutoRefresh(): void {
+    this.stopAutoRefresh();
     this.refreshInterval = setInterval(async () => {
       await this.loadBalance();
       await this.loadPendingDeposits();

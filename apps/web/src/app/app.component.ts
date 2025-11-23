@@ -42,7 +42,7 @@ import { PwaInstallPromptComponent } from './shared/components/pwa-install-promp
 import { PwaTitlebarComponent } from './shared/components/pwa-titlebar/pwa-titlebar.component';
 import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
-import { SplashLoaderComponent } from './shared/components/splash-loader/splash-loader.component';
+import { SplashComponent } from './shared/components/splash/splash.component';
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 // TODO: Re-add when components are created
@@ -62,7 +62,7 @@ import { VerificationPromptBannerComponent } from './shared/components/verificat
     TranslateModule,
     PendingReviewsBannerComponent,
     VerificationPromptBannerComponent,
-    SplashLoaderComponent,
+    SplashComponent,
     PwaInstallPromptComponent,
     PwaInstallBannerComponent,
     PwaUpdatePromptComponent,
@@ -331,16 +331,16 @@ export class AppComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const hasSeenSplash = sessionStorage.getItem('splash_shown');
+    // const hasSeenSplash = sessionStorage.getItem('splash_shown');
 
-    if (!hasSeenSplash) {
-      setTimeout(() => {
-        this.showSplash.set(false);
-        sessionStorage.setItem('splash_shown', '1');
-      }, 4000);
-    } else {
+    // if (!hasSeenSplash) {
+    setTimeout(() => {
       this.showSplash.set(false);
-    }
+      // sessionStorage.setItem('splash_shown', '1');
+    }, 4000);
+    // } else {
+    //   this.showSplash.set(false);
+    // }
   }
 
   private initializeTheme(): void {

@@ -1,20 +1,14 @@
 <div
-  class="min-h-screen bg-surface-base dark:bg-surface-base transition-colors duration-300 flex flex-col"
->
+  class="min-h-screen bg-surface-base dark:bg-surface-base transition-colors duration-300 flex flex-col">
   <!-- Header -->
   <header
-    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 py-4 print:hidden"
-  >
+    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 py-4 print:hidden">
     <div class="max-w-3xl mx-auto px-4 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <a href="/cars" class="text-text-secondary hover:text-text-primary transition-colors">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </a>
         <h1 class="text-xl font-bold text-text-primary">Confirmar Reserva</h1>
@@ -26,383 +20,324 @@
   <main class="flex-1 max-w-3xl mx-auto w-full px-4 py-8 print:p-0 print:max-w-none">
     <!-- Loading State -->
     @if (loading()) {
-      <div class="flex flex-col items-center justify-center py-20">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-        <p class="mt-4 text-text-secondary">Cargando información...</p>
-      </div>
+    <div class="flex flex-col items-center justify-center py-20">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <p class="mt-4 text-text-secondary">Cargando información...</p>
+    </div>
     }
 
     <!-- Error State -->
     @if (error(); as errorMsg) {
-      <div
-        class="bg-error-bg border border-error-border text-error-strong px-4 py-3 rounded mb-6"
-        role="alert"
-      >
-        <strong class="font-bold">Error: </strong>
-        <span class="block sm:inline">{{ errorMsg }}</span>
-      </div>
+    <div class="bg-error-bg border border-error-border text-error-strong px-4 py-3 rounded mb-6"
+      role="alert">
+      <strong class="font-bold">Error: </strong>
+      <span class="block sm:inline">{{ errorMsg }}</span>
+    </div>
     }
 
     <!-- Content -->
     @if (!loading() && !error() && car()) {
-      <div
-        id="pdf-content"
-        class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-lg overflow-hidden border border-border-default dark:border-neutral-800/60 print:shadow-none print:border-none"
-      >
-        <!-- Document Header (Visible mostly in print/PDF) -->
-        <div class="p-8 border-b border-border-default dark:border-neutral-800/60">
-          <div class="flex justify-between items-start">
-            <div>
-              <h2 class="text-2xl font-bold text-text-primary mb-2">Preautorización de Garantía</h2>
-              <p class="text-text-secondary text-sm">
-                Documento de respaldo para reserva de vehículo
-              </p>
-            </div>
-            <div class="text-right">
-              <p class="text-sm font-mono text-text-secondary">
-                {{ fxSnapshot()?.timestamp | date: 'dd/MM/yyyy' }}
-              </p>
-              <p class="text-xs text-text-secondary/60 mt-1">
-                Ref: {{ bookingInput()?.carId?.slice(0, 8) }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="p-8 space-y-8">
-          <!-- Car Details -->
-          <div class="space-y-6">
-            <div class="flex gap-6 items-start">
-              @if (car()?.photos?.[0]?.url) {
-                <img
-                  [src]="car()?.photos?.[0]?.url"
-                  alt="Car"
-                  class="w-32 h-24 object-cover rounded-lg shadow-sm"
-                />
-              }
-              <div class="flex-1">
-                <h3 class="text-2xl font-bold text-text-primary mb-2">
-                  {{ car()?.brand }} {{ car()?.model }} {{ car()?.year }}
-                </h3>
-                @if (car()?.plate) {
-                  <p
-                    class="text-sm text-text-secondary font-mono bg-surface-base px-2 py-1 rounded inline-block mb-2"
-                  >
-                    Patente: {{ car()?.plate }}
-                  </p>
-                }
-                <div class="mt-2 flex items-center gap-2 text-sm text-text-secondary">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  {{ car()?.location_city }}
-                  @if (car()?.location_state) {
-                    , {{ car()?.location_state }}
-                  }
-                </div>
-              </div>
-            </div>
-
-            <!-- Vehicle Specifications -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-surface-base rounded-xl">
-              <div class="text-center">
-                <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Transmisión</p>
-                <p class="font-medium text-text-primary">{{ car()?.transmission || 'N/A' }}</p>
-              </div>
-              @if (car()?.fuel_type) {
-                <div class="text-center">
-                  <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">
-                    Combustible
-                  </p>
-                  <p class="font-medium text-text-primary">{{ car()?.fuel_type }}</p>
-                </div>
-              }
-              @if (car()?.color) {
-                <div class="text-center">
-                  <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Color</p>
-                  <p class="font-medium text-text-primary">{{ car()?.color }}</p>
-                </div>
-              }
-              <div class="text-center">
-                <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Pasajeros</p>
-                <p class="font-medium text-text-primary">{{ car()?.seats || 5 }}</p>
-              </div>
-              <div class="text-center">
-                <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Puertas</p>
-                <p class="font-medium text-text-primary">{{ car()?.doors || 4 }}</p>
-              </div>
-              @if (car()?.mileage) {
-                <div class="text-center">
-                  <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">
-                    Kilometraje
-                  </p>
-                  <p class="font-medium text-text-primary">
-                    {{ car()?.mileage | number: '1.0-0' }} km
-                  </p>
-                </div>
-              }
-              @if (car()?.insurance_included) {
-                <div class="text-center">
-                  <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Seguro</p>
-                  <p class="font-medium text-success-strong">✓ Incluido</p>
-                </div>
-              }
-            </div>
-
-            <!-- Vehicle Features (if available) -->
-            @if (hasCarFeatures()) {
-              <div class="p-4 bg-surface-base rounded-xl">
-                <h4 class="text-sm font-semibold text-text-primary mb-3">
-                  Características y Equipamiento
-                </h4>
-                <div class="grid grid-cols-2 gap-2 text-sm text-text-secondary">
-                  @for (feature of getCarFeatures(); track feature) {
-                    <div class="flex items-center gap-2">
-                      <svg
-                        class="w-4 h-4 text-success-strong"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      <span>{{ feature }}</span>
-                    </div>
-                  }
-                </div>
-              </div>
-            }
-          </div>
-
-          <!-- Dates -->
-          <div
-            class="grid grid-cols-2 gap-8 p-4 bg-surface-base dark:bg-surface-base rounded-xl print:border print:border-gray-200"
-          >
-            <div>
-              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Retiro</p>
-              <p class="font-medium text-text-primary">
-                {{ bookingInput()?.startDate | date: 'dd MMM yyyy, HH:mm' }}
-              </p>
-            </div>
-            <div>
-              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Devolución</p>
-              <p class="font-medium text-text-primary">
-                {{ bookingInput()?.endDate | date: 'dd MMM yyyy, HH:mm' }}
-              </p>
-            </div>
-          </div>
-
-          <!-- Financial Details -->
-          <div class="space-y-4">
-            <h3 class="text-lg font-semibold text-text-primary border-b border-border-default pb-2">
-              Detalle de Preautorización
-            </h3>
-
-            <!-- Guarantee -->
-            <div
-              class="space-y-3 p-4 bg-surface-base dark:bg-surface-base rounded-lg border border-border-default dark:border-neutral-800/60"
-            >
-              <div class="flex justify-between items-center">
-                <span class="text-text-secondary">Garantía (Preautorización)</span>
-                <span class="font-medium text-text-primary"
-                  >USD {{ PRE_AUTH_AMOUNT_USD | number: '1.0-0' }}</span
-                >
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-text-secondary">En pesos argentinos</span>
-                <span class="font-medium text-text-primary"
-                  >$
-                  {{ PRE_AUTH_AMOUNT_USD * fxSnapshot()?.platformRate! | number: '1.0-0' }}
-                  ARS</span
-                >
-              </div>
-            </div>
-
-            <!-- Rental Cost -->
-            <div
-              class="space-y-3 p-4 bg-surface-base dark:bg-surface-base rounded-lg border border-border-default dark:border-neutral-800/60"
-            >
-              <div class="flex justify-between items-center">
-                <span class="text-text-secondary">Alquiler del vehículo</span>
-                <span class="font-medium text-text-primary">{{ rentalDays() }} día(s)</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-text-secondary"
-                  >$ {{ car()?.price_per_day | number: '1.0-0' }} ARS/día</span
-                >
-                <span class="font-medium text-text-primary"
-                  >$ {{ rentalCostArs() | number: '1.0-0' }} ARS</span
-                >
-              </div>
-            </div>
-
-            <!-- Exchange Rate Info -->
-            <div class="flex justify-between items-center py-2">
-              <span class="text-text-secondary text-sm">Tasa de conversión</span>
-              <span class="font-medium text-text-primary text-sm"
-                >1 USD = $ {{ fxSnapshot()?.platformRate | number: '1.2-2' }} ARS</span
-              >
-            </div>
-
-            <!-- Total -->
-            <div
-              class="mt-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-100 dark:border-primary-800"
-            >
-              <div class="flex justify-between items-center">
-                <span class="font-semibold text-primary-900 dark:text-primary-100"
-                  >Total a Bloquear</span
-                >
-                <span class="font-bold text-2xl text-primary-700 dark:text-primary-300"
-                  >$ {{ totalArs() | number: '1.0-0' }} ARS</span
-                >
-              </div>
-              <p class="text-xs text-primary-700 dark:text-primary-200 mt-2">
-                Garantía + Alquiler de {{ rentalDays() }} día(s)
-              </p>
-            </div>
-
-            <p class="text-xs text-text-secondary text-center mt-4">
-              * Este monto incluye la preautorización (bloqueo temporal) más el alquiler del
-              vehículo. La garantía se liberará automáticamente al finalizar el alquiler sin
-              novedades.
+    <div id="pdf-content"
+      class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-lg overflow-hidden border border-border-default dark:border-neutral-800/60 print:shadow-none print:border-none">
+      <!-- Document Header (Visible mostly in print/PDF) -->
+      <div class="p-8 border-b border-border-default dark:border-neutral-800/60">
+        <div class="flex justify-between items-start">
+          <div>
+            <h2 class="text-2xl font-bold text-text-primary mb-2">Preautorización de Garantía</h2>
+            <p class="text-text-secondary text-sm">
+              Documento de respaldo para reserva de vehículo
             </p>
           </div>
-
-          <!-- Rental Conditions -->
-          <div class="space-y-4 border-t border-border-default pt-6">
-            <h3 class="text-lg font-semibold text-text-primary">Condiciones de Alquiler</h3>
-
-            <div class="grid grid-cols-2 gap-4 text-sm">
-              @if (car()?.min_rental_days) {
-                <div>
-                  <p class="text-text-secondary">Días mínimos de alquiler</p>
-                  <p class="font-medium text-text-primary">{{ car()?.min_rental_days }} día(s)</p>
-                </div>
-              }
-              @if (car()?.max_rental_days) {
-                <div>
-                  <p class="text-text-secondary">Días máximos de alquiler</p>
-                  <p class="font-medium text-text-primary">{{ car()?.max_rental_days }} día(s)</p>
-                </div>
-              }
-              @if (car()?.deposit_required) {
-                <div>
-                  <p class="text-text-secondary">Depósito requerido</p>
-                  <p class="font-medium text-text-primary">
-                    $ {{ car()?.deposit_amount | number: '1.0-0' }}
-                  </p>
-                </div>
-              }
-              <!--
-              TODO: security_deposit_usd field doesn't exist in Car model
-              @if (car()?.security_deposit_usd) {
-                <div>
-                  <p class="text-text-secondary">Depósito de seguridad</p>
-                  <p class="font-medium text-text-primary">
-                    USD {{ car()?.security_deposit_usd | number: '1.0-0' }}
-                  </p>
-                </div>
-              }
-              -->
-            </div>
-
-            @if (car()?.terms_and_conditions) {
-              <div class="mt-4 p-4 bg-surface-base rounded-lg">
-                <h4 class="text-sm font-semibold text-text-primary mb-2">Términos y Condiciones</h4>
-                <p class="text-xs text-text-secondary whitespace-pre-line">
-                  {{ car()?.terms_and_conditions }}
-                </p>
-              </div>
-            }
-          </div>
-        </div>
-
-        <!-- Actions (Hidden in Print) -->
-        <div
-          class="p-8 bg-surface-base dark:bg-surface-base border-t border-border-default dark:border-neutral-800/60 print:hidden"
-        >
-          <!-- Mostrar CardForm si aún no se creó booking -->
-          @if (!bookingCreated() && !loading() && !error()) {
-            <div class="mb-8 pb-8 border-b border-border-default">
-              <app-mercadopago-card-form
-                [amountArs]="totalArs()"
-                (cardTokenGenerated)="onCardTokenGenerated($event)"
-                (cardError)="onCardError($event)"
-              ></app-mercadopago-card-form>
-            </div>
-          }
-
-          <!-- Botones de acción alternativos -->
-          <div class="flex flex-col gap-4">
-            <!-- Opción 1: Si no hay CardForm, mostrar Checkout Pro -->
-            @if (bookingCreated() || !car()) {
-              <button
-                (click)="payWithMercadoPago()"
-                [disabled]="processingPayment() || paymentProcessing()"
-                class="w-full py-4 px-6 bg-cta-default hover:bg-cta-hover text-white font-bold rounded-xl shadow-lg transform transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                @if (processingPayment() || paymentProcessing()) {
-                  <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Procesando...
-                } @else {
-                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path
-                      d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v12h16V6H4zm2 3h4v2H6V9zm0 4h8v2H6v-2z"
-                    />
-                  </svg>
-                  Pagar con MercadoPago
-                }
-              </button>
-            }
-
-            <!-- Descargar PDF -->
-            <button
-              (click)="downloadPdf()"
-              class="w-full py-3 px-6 bg-surface-raised border border-border-default text-text-primary font-medium rounded-xl hover:bg-surface-base transition-colors flex items-center justify-center gap-2"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              Descargar Presupuesto (PDF)
-            </button>
+          <div class="text-right">
+            <p class="text-sm font-mono text-text-secondary">
+              {{ fxSnapshot()?.timestamp | date: 'dd/MM/yyyy' }}
+            </p>
+            <p class="text-xs text-text-secondary/60 mt-1">
+              Ref: {{ bookingInput()?.carId?.slice(0, 8) }}
+            </p>
           </div>
         </div>
       </div>
+
+      <div class="p-8 space-y-8">
+        <!-- Car Details -->
+        <div class="space-y-6">
+          <div class="flex gap-6 items-start">
+            @if (car()?.photos?.[0]?.url) {
+            <img [src]="car()?.photos?.[0]?.url" alt="Car"
+              class="w-32 h-24 object-cover rounded-lg shadow-sm" />
+            }
+            <div class="flex-1">
+              <h3 class="text-2xl font-bold text-text-primary mb-2">
+                {{ car()?.brand }} {{ car()?.model }} {{ car()?.year }}
+              </h3>
+              @if (car()?.plate) {
+              <p
+                class="text-sm text-text-secondary font-mono bg-surface-base px-2 py-1 rounded inline-block mb-2">
+                Patente: {{ car()?.plate }}
+              </p>
+              }
+              <div class="mt-2 flex items-center gap-2 text-sm text-text-secondary">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {{ car()?.location_city }}
+                @if (car()?.location_state) {
+                , {{ car()?.location_state }}
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle Specifications -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-surface-base rounded-xl">
+            <div class="text-center">
+              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Transmisión</p>
+              <p class="font-medium text-text-primary">{{ car()?.transmission || 'N/A' }}</p>
+            </div>
+            @if (car()?.fuel_type) {
+            <div class="text-center">
+              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">
+                Combustible
+              </p>
+              <p class="font-medium text-text-primary">{{ car()?.fuel_type }}</p>
+            </div>
+            }
+            @if (car()?.color) {
+            <div class="text-center">
+              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Color</p>
+              <p class="font-medium text-text-primary">{{ car()?.color }}</p>
+            </div>
+            }
+            <div class="text-center">
+              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Pasajeros</p>
+              <p class="font-medium text-text-primary">{{ car()?.seats || 5 }}</p>
+            </div>
+            <div class="text-center">
+              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Puertas</p>
+              <p class="font-medium text-text-primary">{{ car()?.doors || 4 }}</p>
+            </div>
+            @if (car()?.mileage) {
+            <div class="text-center">
+              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">
+                Kilometraje
+              </p>
+              <p class="font-medium text-text-primary">
+                {{ car()?.mileage | number: '1.0-0' }} km
+              </p>
+            </div>
+            }
+            @if (car()?.insurance_included) {
+            <div class="text-center">
+              <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Seguro</p>
+              <p class="font-medium text-success-strong">✓ Incluido</p>
+            </div>
+            }
+          </div>
+
+          <!-- Vehicle Features (if available) -->
+          @if (hasCarFeatures()) {
+          <div class="p-4 bg-surface-base rounded-xl">
+            <h4 class="text-sm font-semibold text-text-primary mb-3">
+              Características y Equipamiento
+            </h4>
+            <div class="grid grid-cols-2 gap-2 text-sm text-text-secondary">
+              @for (feature of getCarFeatures(); track feature) {
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-success-strong" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{{ feature }}</span>
+              </div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Dates -->
+        <div
+          class="grid grid-cols-2 gap-8 p-4 bg-surface-base dark:bg-surface-base rounded-xl print:border print:border-gray-200">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Retiro</p>
+            <p class="font-medium text-text-primary">
+              {{ bookingInput()?.startDate | date: 'dd MMM yyyy, HH:mm' }}
+            </p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Devolución</p>
+            <p class="font-medium text-text-primary">
+              {{ bookingInput()?.endDate | date: 'dd MMM yyyy, HH:mm' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Financial Details -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-semibold text-text-primary border-b border-border-default pb-2">
+            Detalle de Preautorización
+          </h3>
+
+          <!-- Guarantee -->
+          <div
+            class="space-y-3 p-4 bg-surface-base dark:bg-surface-base rounded-lg border border-border-default dark:border-neutral-800/60">
+            <div class="flex justify-between items-center">
+              <span class="text-text-secondary">Garantía (Preautorización)</span>
+              <span class="font-medium text-text-primary">USD {{ PRE_AUTH_AMOUNT_USD | number:
+                '1.0-0' }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-text-secondary">En pesos argentinos</span>
+              <span class="font-medium text-text-primary">$
+                {{ PRE_AUTH_AMOUNT_USD * fxSnapshot()?.platformRate! | number: '1.0-0' }}
+                ARS</span>
+            </div>
+          </div>
+
+          <!-- Rental Cost -->
+          <div
+            class="space-y-3 p-4 bg-surface-base dark:bg-surface-base rounded-lg border border-border-default dark:border-neutral-800/60">
+            <div class="flex justify-between items-center">
+              <span class="text-text-secondary">Alquiler del vehículo</span>
+              <span class="font-medium text-text-primary">{{ rentalDays() }} día(s)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-text-secondary">$ {{ car()?.price_per_day | number: '1.0-0'
+                }} ARS/día</span>
+              <span class="font-medium text-text-primary">$ {{ rentalCostArs() | number: '1.0-0' }}
+                ARS</span>
+            </div>
+          </div>
+
+          <!-- Exchange Rate Info -->
+          <div class="flex justify-between items-center py-2">
+            <span class="text-text-secondary text-sm">Tasa de conversión</span>
+            <span class="font-medium text-text-primary text-sm">1 USD = $ {{
+              fxSnapshot()?.platformRate | number: '1.2-2' }} ARS</span>
+          </div>
+
+          <!-- Total -->
+          <div
+            class="mt-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-100 dark:border-primary-800">
+            <div class="flex justify-between items-center">
+              <span class="font-semibold text-primary-900 dark:text-primary-100">Total a
+                Bloquear</span>
+              <span class="font-bold text-2xl text-primary-700 dark:text-primary-300">$ {{
+                totalArs() | number: '1.0-0' }} ARS</span>
+            </div>
+            <p class="text-xs text-primary-700 dark:text-primary-200 mt-2">
+              Garantía + Alquiler de {{ rentalDays() }} día(s)
+            </p>
+          </div>
+
+          <p class="text-xs text-text-secondary text-center mt-4">
+            * Este monto incluye la preautorización (bloqueo temporal) más el alquiler del
+            vehículo. La garantía se liberará automáticamente al finalizar el alquiler sin
+            novedades.
+          </p>
+        </div>
+
+        <!-- Rental Conditions -->
+        <div class="space-y-4 border-t border-border-default pt-6">
+          <h3 class="text-lg font-semibold text-text-primary">Condiciones de Alquiler</h3>
+
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            @if (car()?.min_rental_days) {
+            <div>
+              <p class="text-text-secondary">Días mínimos de alquiler</p>
+              <p class="font-medium text-text-primary">{{ car()?.min_rental_days }} día(s)</p>
+            </div>
+            }
+            @if (car()?.max_rental_days) {
+            <div>
+              <p class="text-text-secondary">Días máximos de alquiler</p>
+              <p class="font-medium text-text-primary">{{ car()?.max_rental_days }} día(s)</p>
+            </div>
+            }
+            @if (car()?.deposit_required) {
+            <div>
+              <p class="text-text-secondary">Depósito requerido</p>
+              <p class="font-medium text-text-primary">
+                $ {{ car()?.deposit_amount | number: '1.0-0' }}
+              </p>
+            </div>
+            }
+            @if (car()?.security_deposit_usd) {
+            <div>
+              <p class="text-text-secondary">Depósito de seguridad</p>
+              <p class="font-medium text-text-primary">
+                USD {{ car()?.security_deposit_usd | number: '1.0-0' }}
+              </p>
+            </div>
+            }
+          </div>
+
+          @if (car()?.terms_and_conditions) {
+          <div class="mt-4 p-4 bg-surface-base rounded-lg">
+            <h4 class="text-sm font-semibold text-text-primary mb-2">Términos y Condiciones</h4>
+            <p class="text-xs text-text-secondary whitespace-pre-line">
+              {{ car()?.terms_and_conditions }}
+            </p>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Actions (Hidden in Print) -->
+      <div
+        class="p-8 bg-surface-base dark:bg-surface-base border-t border-border-default dark:border-neutral-800/60 print:hidden">
+        <!-- Mostrar CardForm si aún no se creó booking -->
+        @if (!bookingCreated() && !loading() && !error()) {
+        <div class="mb-8 pb-8 border-b border-border-default">
+          <app-mercadopago-card-form [amountArs]="totalArs()"
+            (cardTokenGenerated)="onCardTokenGenerated($event)"
+            (cardError)="onCardError($event)"></app-mercadopago-card-form>
+        </div>
+        }
+
+        <!-- Botones de acción alternativos -->
+        <div class="flex flex-col gap-4">
+          <!-- Opción 1: Si no hay CardForm, mostrar Checkout Pro -->
+          @if (bookingCreated() || !car()) {
+          <button (click)="payWithMercadoPago()"
+            [disabled]="processingPayment() || paymentProcessing()"
+            class="w-full py-4 px-6 bg-cta-default hover:bg-cta-hover text-white font-bold rounded-xl shadow-lg transform transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            @if (processingPayment() || paymentProcessing()) {
+            <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+            Procesando...
+            } @else {
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v12h16V6H4zm2 3h4v2H6V9zm0 4h8v2H6v-2z" />
+            </svg>
+            Pagar con MercadoPago
+            }
+          </button>
+          }
+
+          <!-- Descargar PDF -->
+          <button (click)="downloadPdf()"
+            class="w-full py-3 px-6 bg-surface-raised border border-border-default text-text-primary font-medium rounded-xl hover:bg-surface-base transition-colors flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Descargar Presupuesto (PDF)
+          </button>
+        </div>
+      </div>
+    </div>
     }
   </main>
 </div>

@@ -36,11 +36,20 @@ test.describe('Fase 5: WALLET & PAGO - MercadoPago Deposit', () => {
     // PASO 1: Obtener balance inicial
     // ============================================
     try {
-      // En un test real, obtendríamos el user ID de las fixtures
-      const testUserId = process.env.TEST_USER_ID || 'test-user-id';
-      const dbBalance = await getWalletBalance(testUserId);
-      initialBalance = dbBalance.availableBalance / 100; // Convertir centavos
-      console.log('Balance inicial:', initialBalance);
+      // Obtener ID del usuario de prueba dinámicamente
+      const email = 'test-renter@autorenta.com';
+      const password = 'TestPassword123!';
+      // Import helper dynamically to avoid circular deps if any, or just use the imported one
+      const { getUserIdByEmail } = await import('../../helpers/booking-test-helpers');
+      const userId = await getUserIdByEmail(email, password);
+
+      if (!userId) {
+        console.warn('No se pudo obtener el ID del usuario test-renter');
+      } else {
+        const dbBalance = await getWalletBalance(userId);
+        initialBalance = dbBalance.availableBalance / 100; // Convertir centavos
+        console.log('Balance inicial:', initialBalance);
+      }
     } catch (error) {
       console.warn('No se pudo obtener balance inicial:', error);
     }
@@ -53,6 +62,14 @@ test.describe('Fase 5: WALLET & PAGO - MercadoPago Deposit', () => {
 
     // Verificar que estamos en wallet
     await expect(page).toHaveURL(/\/wallet/);
+
+    console.log('Current URL:', page.url());
+    // Debug: Check if we are logged in
+    if (await page.getByText('Iniciar sesión').isVisible()) {
+      console.error('ERROR: User is NOT logged in!');
+    } else {
+      console.log('User appears to be logged in (Login button not found)');
+    }
 
     // ============================================
     // PASO 3: Hacer click en "Depositar Fondos"
@@ -138,8 +155,8 @@ test.describe('Fase 5: WALLET & PAGO - MercadoPago Deposit', () => {
 
     const newUrl = page.url();
     const isMercadoPago = newUrl.includes('mercadopago') ||
-                         newUrl.includes('checkout') ||
-                         newUrl.includes('payment');
+      newUrl.includes('checkout') ||
+      newUrl.includes('payment');
 
     if (isMercadoPago) {
       console.log('Redirigido a MercadoPago checkout:', newUrl);

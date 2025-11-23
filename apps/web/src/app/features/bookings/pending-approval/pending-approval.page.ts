@@ -1,7 +1,7 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
@@ -29,10 +29,11 @@ interface PendingApproval {
   templateUrl: './pending-approval.page.html',
   styleUrl: './pending-approval.page.scss',
 })
-export class PendingApprovalPage implements OnInit {
+export class PendingApprovalPage implements OnInit, OnDestroy {
   private readonly bookingsService = inject(BookingsService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly router = inject(Router);
+  private pollInterval?: any;
 
   readonly loading = signal(true);
   readonly pendingBookings = signal<PendingApproval[]>([]);
@@ -54,11 +55,18 @@ export class PendingApprovalPage implements OnInit {
     await this.loadPendingApprovals();
 
     // Auto-refresh cada 30 segundos
-    setInterval(() => {
+    // Auto-refresh cada 30 segundos
+    this.pollInterval = setInterval(() => {
       if (!this.processingBookingId()) {
         this.loadPendingApprovals();
       }
     }, 30000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+    }
   }
 
   async loadPendingApprovals() {

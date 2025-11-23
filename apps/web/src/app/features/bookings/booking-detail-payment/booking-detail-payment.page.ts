@@ -34,6 +34,7 @@ interface DualRateFxSnapshot extends FxSnapshot {
 })
 export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+  private pollInterval?: any;
 
   // Injected services
   private router = inject(Router);
@@ -194,6 +195,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.stopPolling();
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -243,12 +245,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     this.loading.set(false);
 
     // Poll every 30 seconds
-    const intervalId = setInterval(() => {
+    this.stopPolling(); // Ensure no duplicate intervals
+    this.pollInterval = setInterval(() => {
       this.fetchAndSetRate();
     }, 30000);
+  }
 
-    // Cleanup interval on destroy
-    this.destroy$.subscribe(() => clearInterval(intervalId));
+  private stopPolling(): void {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+      this.pollInterval = undefined;
+    }
   }
 
   private async fetchAndSetRate(): Promise<void> {

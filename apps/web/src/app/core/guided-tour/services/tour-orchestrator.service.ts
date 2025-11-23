@@ -1,16 +1,16 @@
-import { Injectable, inject, signal, OnDestroy } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { inject, Injectable, OnDestroy, signal } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
+import { ShepherdAdapterService } from '../adapters/shepherd-adapter.service';
 import {
-  TourId,
+  StepDefinition,
   TourDefinition,
+  TourId,
+  TourPriority,
   TourRequestOptions,
   TourState,
-  TourPriority,
-  StepDefinition,
 } from '../interfaces/tour-definition.interface';
 import { TourRegistryService } from '../registry/tour-registry.service';
-import { ShepherdAdapterService } from '../adapters/shepherd-adapter.service';
 import { StepResolverService } from '../resolvers/step-resolver.service';
 import { TelemetryBridgeService } from './telemetry-bridge.service';
 
@@ -198,7 +198,7 @@ export class TourOrchestratorService implements OnDestroy {
       });
 
       // Create tour with adapter
-      this.adapter.createTour(definition.id, {
+      await this.adapter.createTour(definition.id, {
         useModalOverlay: true,
         canClickTarget: true,
       });

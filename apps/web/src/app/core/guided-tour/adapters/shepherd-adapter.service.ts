@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import Shepherd from 'shepherd.js';
-import type { Tour, StepOptions, TourOptions } from 'shepherd.js';
+import type { StepOptions, Tour, TourOptions } from 'shepherd.js';
 import { StepDefinition, TourId } from '../interfaces/tour-definition.interface';
 
 export interface TourRendererAdapter {
-  createTour(tourId: TourId, options?: Record<string, unknown>): void;
+  createTour(tourId: TourId, options?: Record<string, unknown>): Promise<void>;
   addStep(step: StepDefinition, callbacks?: StepCallbacks): void;
   start(): void;
   next(): void;
@@ -32,7 +31,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
   private currentTourId?: TourId;
   private stepCallbacks = new Map<string, StepCallbacks>();
 
-  createTour(tourId: TourId, options: Record<string, unknown> = {}): void {
+  async createTour(tourId: TourId, options: Record<string, unknown> = {}): Promise<void> {
     // Cleanup existing tour
     if (this.tour) {
       this.destroy();
@@ -58,6 +57,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
       },
     };
 
+    const Shepherd = (await import('shepherd.js')).default;
     this.tour = new Shepherd.Tour(defaultOptions as TourOptions);
 
     // Setup event listeners

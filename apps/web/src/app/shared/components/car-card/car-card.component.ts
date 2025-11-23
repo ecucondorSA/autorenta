@@ -1,26 +1,27 @@
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
-  Output,
-  EventEmitter,
   computed,
-  signal,
+  EventEmitter,
   inject,
-  OnInit,
+  Input,
   OnDestroy,
+  OnInit,
+  Output,
+  signal,
 } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Car } from '../../../core/models';
-import { MoneyPipe } from '../../pipes/money.pipe';
-import { getCarImageUrl } from '../../utils/car-placeholder.util';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import { RealtimePricingService } from '../../../core/services/realtime-pricing.service';
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { MoneyPipe } from '../../pipes/money.pipe';
+import { getCarImageUrl } => '../../utils/car-placeholder.util';
 
 @Component({
   selector: 'app-car-card',
@@ -314,11 +315,15 @@ export class CarCardComponent implements OnInit, OnDestroy {
     }
   }
 
+  private readonly notificationManager = inject(NotificationManagerService);
+
   onCompareToggle(event: Event): void {
     event.stopPropagation();
     event.preventDefault();
     if (!this.compareDisabled || this.isComparing) {
       this.compareToggle.emit(this.car.id);
+    } else {
+      this.notificationManager.warning('Límite alcanzado', 'Solo puedes comparar hasta 3 autos');
     }
   }
 

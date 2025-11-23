@@ -5,14 +5,12 @@
   <meta charset="utf-8" />
   <title>Autorentar - Alquiler de Autos entre Personas</title>
   <base href="/" />
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
 
   <!-- SEO Meta Tags -->
   <meta name="description"
     content="Alquiler de autos entre personas. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura." />
-  <meta name="keywords"
-    content="alquiler autos, rent a car, uruguay, autorentar, alquiler vehiculos" />
+  <meta name="keywords" content="alquiler autos, rent a car, uruguay, autorentar, alquiler vehiculos" />
   <meta name="author" content="Autorentar" />
   <meta name="tiktok-developers-site-verification" content="GRIz5qjvcGDIOvq4kx7mriQCMVbR4g1r" />
 
@@ -24,8 +22,7 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.css" rel="stylesheet" />
 
   <!-- Ionicons -->
-  <script type="module"
-    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
   <!-- Open Graph / Facebook -->
@@ -51,7 +48,7 @@
   <!-- NOTE: This meta tag is overridden by _headers file in production -->
   <!-- Keep in sync with apps/web/public/_headers and apps/web/scripts/create-cloudflare-config.js -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://static.cloudflareinsights.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com https://unpkg.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com; connect-src 'self' https://*.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://events.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.workers.dev wss://*.supabase.co https://cloudflareinsights.com https://parallelum.com.br https://www.googleapis.com https://api.binance.com https://data-api.binance.vision https://unpkg.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.ar https://*.mercadolibre.com https://calendar.google.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://*.mercadopago.com;" />
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://static.cloudflareinsights.com https://unpkg.com https://ajax.googleapis.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com https://unpkg.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com; connect-src 'self' blob: https://*.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://events.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.workers.dev wss://*.supabase.co https://cloudflareinsights.com https://parallelum.com.br https://www.googleapis.com https://api.binance.com https://data-api.binance.vision https://unpkg.com https://www.gstatic.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.ar https://*.mercadolibre.com https://calendar.google.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://*.mercadopago.com;" />
 
   <!-- PWA Configuration -->
   <meta name="mobile-web-app-capable" content="yes" />
@@ -68,13 +65,14 @@
     fetchpriority="high" />
 
   <!-- Preload splash video for instant playback -->
-  <link rel="preload" href="/assets/videos/volvo-c-recharge-splash.mp4" as="video"
-    type="video/mp4" />
+  <link rel="preload" href="/assets/videos/volvo-c-recharge-splash.mp4" as="video" type="video/mp4" />
   <link rel="prefetch" href="/assets/images/volvo-c-recharge-splash-poster.jpg" as="image" />
 
   <!-- PWA Manifests -->
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="manifest" href="manifest-v2.webmanifest" />
+  <!-- Model Viewer -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 
 <body>
@@ -88,14 +86,15 @@
   <!-- TODO: Enable Angular Service Worker in angular.json if offline support needed -->
   <script>
     // Service Worker temporarily disabled due to build configuration
-    console.log('⚠️ Service Worker disabled - enable in angular.json if needed');
+    // Service Worker temporarily disabled due to build configuration
+    // console.log('⚠️ Service Worker disabled - enable in angular.json if needed');
 
     // Install prompt for PWA
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      console.log('💡 PWA install prompt ready');
+      // console.log('💡 PWA install prompt ready');
 
       // Dispatch custom event for app to show install button
       window.dispatchEvent(new CustomEvent('pwa-install-available', { detail: e }));
@@ -103,7 +102,7 @@
 
     // Track PWA installation
     window.addEventListener('appinstalled', () => {
-      console.log('✅ PWA installed successfully');
+      // console.log('✅ PWA installed successfully');
       deferredPrompt = null;
     });
 
@@ -113,7 +112,7 @@
       !window.navigator.standalone &&
       !window.matchMedia('(display-mode: standalone)').matches
     ) {
-      console.log('💡 iOS: Show "Add to Home Screen" hint');
+      // console.log('💡 iOS: Show "Add to Home Screen" hint');
       window.dispatchEvent(new CustomEvent('ios-install-hint'));
     }
   </script>

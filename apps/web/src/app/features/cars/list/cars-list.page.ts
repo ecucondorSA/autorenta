@@ -159,6 +159,9 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly isMobile = this.breakpoint.isMobile;
   readonly isDesktop = this.breakpoint.isDesktop;
 
+  // View Mode (grid, list, map)
+  readonly viewMode = signal<'grid' | 'list' | 'map'>('grid');
+
   // Filtros y ordenamiento
   readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('rating');
   readonly sortLabel = computed(() => this.getSortLabel(this.sortBy()));

@@ -265,6 +265,7 @@ export interface Car {
   price_per_day: number;
   currency: string;
   value_usd?: number; // ✅ NUEVO: Valor real del vehículo en USD (para cálculos de riesgo/seguro)
+  security_deposit_usd?: number; // ✅ NUEVO: Depósito de garantía en USD
   uses_dynamic_pricing?: boolean; // ✅ DYNAMIC PRICING: Si el auto usa pricing dinámico
   rating_avg: number;
   rating_count: number;

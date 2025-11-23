@@ -44,7 +44,9 @@ export class SentryErrorHandler implements ErrorHandler {
  */
 export function initSentry(): void {
   if (!environment.sentryDsn) {
-    console.warn('⚠️ Sentry DSN not configured - error tracking disabled');
+    if (environment.production) {
+      console.warn('⚠️ Sentry DSN not configured - error tracking disabled');
+    }
     return;
   }
 

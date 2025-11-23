@@ -68,11 +68,7 @@
               ],
               "outputHashing": "all",
               "serviceWorker": false,
-              "sourceMap": {
-                "scripts": true,
-                "styles": false,
-                "hidden": true
-              }
+              "sourceMap": true
             },
             "development": {
               "fileReplacements": [

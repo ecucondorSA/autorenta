@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
@@ -33,7 +33,8 @@ interface ExchangeRateStats {
   templateUrl: './exchange-rates.page.html',
   styleUrls: ['./exchange-rates.page.css'],
 })
-export class ExchangeRatesPage implements OnInit {
+export class ExchangeRatesPage implements OnInit, OnDestroy {
+  private pollInterval?: any;
   // Signals
   readonly rates = signal<ExchangeRate[]>([]);
   readonly stats = signal<ExchangeRateStats>({
@@ -67,9 +68,16 @@ export class ExchangeRatesPage implements OnInit {
     await this.loadData();
 
     // Auto-refresh every 60 seconds
-    setInterval(() => {
+    // Auto-refresh every 60 seconds
+    this.pollInterval = setInterval(() => {
       this.loadData();
     }, 60000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+    }
   }
 
   async loadData(): Promise<void> {

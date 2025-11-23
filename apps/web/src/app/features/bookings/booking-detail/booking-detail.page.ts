@@ -424,6 +424,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       return;
     }
 
+    this.stopCountdown();
     this.updateCountdown();
 
     // Update every second

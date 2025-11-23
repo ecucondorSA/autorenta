@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environment';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
@@ -55,7 +55,8 @@ interface DatabaseTransactionRow {
   templateUrl: './deposits-monitoring.page.html',
   styleUrls: ['./deposits-monitoring.page.css'],
 })
-export class DepositsMonitoringPage implements OnInit {
+export class DepositsMonitoringPage implements OnInit, OnDestroy {
+  private pollInterval?: any;
   // Signals
   readonly stats = signal<DepositStats>({
     total_deposits: 0,
@@ -94,15 +95,22 @@ export class DepositsMonitoringPage implements OnInit {
   constructor(
     private supabase: SupabaseClientService,
     private router: Router,
-  ) {}
+  ) { }
 
   async ngOnInit(): Promise<void> {
     await this.loadData();
 
     // Auto-refresh cada 30 segundos
-    setInterval(() => {
+    // Auto-refresh cada 30 segundos
+    this.pollInterval = setInterval(() => {
       this.loadData();
     }, 30000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+    }
   }
 
   async loadData(): Promise<void> {

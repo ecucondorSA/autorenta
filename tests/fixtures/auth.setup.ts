@@ -66,11 +66,21 @@ setup('authenticate as renter', async ({ page }) => {
   await page.waitForLoadState('domcontentloaded');
 
   // Set session in localStorage
-  await page.evaluate((session) => {
+  // Set session in localStorage
+  await page.evaluate(({ session, supabaseUrl }) => {
     localStorage.setItem('supabase.auth.token', JSON.stringify(session));
-    // También guardar en sessionStorage por si acaso
     sessionStorage.setItem('supabase.auth.token', JSON.stringify(session));
-  }, data.session);
+
+    // Also set the project-specific key which newer Supabase clients use
+    try {
+      const url = new URL(supabaseUrl);
+      const projectRef = url.hostname.split('.')[0];
+      const key = `sb-${projectRef}-auth-token`;
+      localStorage.setItem(key, JSON.stringify(session));
+    } catch (e) {
+      console.error('Failed to set project-specific auth key', e);
+    }
+  }, { session: data.session, supabaseUrl });
 
   // Reload page to apply session
   await page.reload();
@@ -143,11 +153,20 @@ setup('authenticate as owner', async ({ page }) => {
   await page.waitForLoadState('domcontentloaded');
 
   // Set session in localStorage
-  await page.evaluate((session) => {
+  // Set session in localStorage
+  await page.evaluate(({ session, supabaseUrl }) => {
     localStorage.setItem('supabase.auth.token', JSON.stringify(session));
-    // También guardar en sessionStorage por si acaso
     sessionStorage.setItem('supabase.auth.token', JSON.stringify(session));
-  }, data.session);
+
+    try {
+      const url = new URL(supabaseUrl);
+      const projectRef = url.hostname.split('.')[0];
+      const key = `sb-${projectRef}-auth-token`;
+      localStorage.setItem(key, JSON.stringify(session));
+    } catch (e) {
+      console.error('Failed to set project-specific auth key', e);
+    }
+  }, { session: data.session, supabaseUrl });
 
   // Reload page to apply session
   await page.reload();

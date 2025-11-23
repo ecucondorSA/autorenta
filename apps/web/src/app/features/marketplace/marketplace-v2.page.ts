@@ -38,6 +38,7 @@ import { BookingsService } from '../../core/services/bookings.service';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { TikTokEventsService } from '../../core/services/tiktok-events.service';
+import { Car3dViewerComponent } from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
 import {
   DateRange,
   DateRangePickerComponent,
@@ -90,6 +91,7 @@ export interface Stat {
     MapControlsComponent,
     PriceTransparencyModalComponent,
     SkeletonComponent,
+    Car3dViewerComponent,
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -141,7 +143,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly quickBookingCar = signal<Car | null>(null);
   readonly searchValue = signal('');
   readonly showFilters = signal(false);
-  readonly viewMode = signal<ViewMode>('grid');
+  readonly viewMode = signal<ViewMode>('list');
   readonly toastMessage = signal('');
   readonly toastType = signal<ToastType>('info');
   readonly toastVisible = signal(false);
@@ -258,11 +260,91 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     return this.carsWithDistance().filter((c) => c.distance && c.distance < 5).length;
   });
 
+  readonly activeQuickFilters = signal<Set<string>>(new Set());
+
   readonly visibleCars = computed(() => {
-    // Return cars that match current filters
-    // Now that we filter on backend, we just return the cars list
-    // The backend ensures they are within bounds if a search was performed
-    return this.carsWithDistance();
+    // Return cars that match current filters and apply sorting
+    let cars = [...this.carsWithDistance()];
+    const filters = this.mapFilters();
+    const quickFilters = this.activeQuickFilters();
+
+    // 1. Filter by Map Filters
+    if (filters.priceRange) {
+      cars = cars.filter(
+        (c) => c.price_per_day >= filters.priceRange!.min && c.price_per_day <= filters.priceRange!.max,
+      );
+    }
+
+    if (filters.transmission && filters.transmission.length > 0) {
+      cars = cars.filter((c) => filters.transmission!.includes(c.transmission));
+    }
+
+    if (filters.immediateOnly) {
+      cars = cars.filter((c) => c.auto_approval);
+    }
+
+    // 2. Filter by Quick Filters
+    if (quickFilters.has('verified')) {
+      // Filter by verified owner (email + phone verified)
+      cars = cars.filter((c) => c.owner?.is_email_verified && c.owner?.is_phone_verified);
+    }
+
+    if (quickFilters.has('electric')) {
+      cars = cars.filter((c) => c.fuel_type === 'electric' || c.fuel === 'electric');
+    }
+
+    if (quickFilters.has('no-card')) {
+      // Filter cars that accept other payment methods or don't require credit card
+      // Assuming 'debit_card', 'cash', 'transfer' in payment_methods
+      cars = cars.filter((c) =>
+        c.payment_methods?.some(pm => ['debit_card', 'cash', 'transfer', 'wallet'].includes(pm)) ||
+        !c.payment_methods?.includes('credit_card')
+      );
+    }
+
+    // 'near-me' is handled by sorting/radius, but we can enforce radius filter if needed
+    // 'immediate' is handled by mapFilters sync
+
+    const sort = this.sortOrder();
+
+    // Apply sorting based on selected order
+    switch (sort) {
+      case 'distance':
+        // Sort by distance (closest first)
+        cars = cars.sort((a, b) => {
+          const distA = a.distance ?? Number.MAX_VALUE;
+          const distB = b.distance ?? Number.MAX_VALUE;
+          return distA - distB;
+        });
+        break;
+
+      case 'price_asc':
+        // Sort by price (lowest first)
+        cars = cars.sort((a, b) => a.price_per_day - b.price_per_day);
+        break;
+
+      case 'price_desc':
+        // Sort by price (highest first)
+        cars = cars.sort((a, b) => b.price_per_day - a.price_per_day);
+        break;
+
+      case 'rating':
+        // Sort by rating (highest first)
+        cars = cars.sort((a, b) => {
+          const ratingA = a.avg_rating ?? 0;
+          const ratingB = b.avg_rating ?? 0;
+          return ratingB - ratingA;
+        });
+        break;
+
+      case 'score':
+      case 'relevance':
+      default:
+        // Keep default order (relevance/score from backend)
+        break;
+    }
+
+    return cars;
   });
 
   readonly sortOrder = signal<string>('relevance');
@@ -553,6 +635,13 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
    */
   onFiltersChange(filters: FilterState): void {
     this.mapFilters.set(filters);
+
+    // Sync quick filters if needed
+    const quick = new Set(this.activeQuickFilters());
+    if (filters.immediateOnly) quick.add('immediate');
+    else quick.delete('immediate');
+    this.activeQuickFilters.set(quick);
+
     void this.loadCars();
     this.showToast('Filtros aplicados', 'success');
     this.closeFiltersPanel();
@@ -587,8 +676,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   /**
    * Handle map bounds change
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onBoundsChange(bounds: any): void {
+  onBoundsChange(bounds: google.maps.LatLngBoundsLiteral): void {
     // Don't update immediately, just show the button
     // Only update if bounds are significantly different to avoid jitter
     this.mapBounds.set(bounds);
@@ -614,9 +702,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     switch (event.type) {
       case 'center':
         if (this.userLocation()) {
-          // TODO: Implement center on user
+          this.carsMapComponent.flyTo(this.userLocation()!);
+          this.showToast('Centrando en tu ubicación...', 'info');
         } else {
           this.showToast('Ubicación no disponible', 'warning');
+          void this.onLogoClick(); // Try to get location
         }
         break;
       case 'fullscreen':
@@ -688,8 +778,29 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   onQuickFilterClick(filterId: string): void {
-    this.showToast(`Filtro "${filterId}" aplicado`, 'info');
-    // TODO: Apply quick filter
+    const current = new Set(this.activeQuickFilters());
+    let active = false;
+
+    if (current.has(filterId)) {
+      current.delete(filterId);
+      active = false;
+    } else {
+      current.add(filterId);
+      active = true;
+    }
+    this.activeQuickFilters.set(current);
+
+    // Sync specific filters with mapFilters
+    if (filterId === 'immediate') {
+      const filters = this.mapFilters();
+      this.mapFilters.set({ ...filters, immediateOnly: active });
+    }
+
+    if (filterId === 'near-me' && active) {
+      this.sortOrder.set('distance');
+    }
+
+    this.showToast(`Filtro "${filterId}" ${active ? 'activado' : 'desactivado'}`, 'info');
   }
 
   private openQuickBooking(): void {
@@ -968,9 +1079,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   /**
    * Check if a quick filter is active
    */
-  isQuickFilterActive(_filterId: string): boolean {
-    // TODO: Implement actual filter state checking
-    return false;
+  isQuickFilterActive(filterId: string): boolean {
+    return this.activeQuickFilters().has(filterId);
   }
 
   /**
@@ -980,8 +1090,19 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     const select = event.target as HTMLSelectElement;
     const value = select.value;
     this.sortOrder.set(value);
-    this.showToast(`Ordenado por: ${value}`, 'info');
-    // TODO: Implement actual sorting logic
+
+    // Show user-friendly toast message
+    const messages: Record<string, string> = {
+      'distance': 'Mostrando autos más cercanos primero',
+      'price_asc': 'Ordenado por precio: menor a mayor',
+      'price_desc': 'Ordenado por precio: mayor a menor',
+      'rating': 'Mostrando mejor valorados primero',
+      'score': 'Ordenado por relevancia',
+      'relevance': 'Ordenado por relevancia'
+    };
+
+    const message = messages[value] || `Ordenado por: ${value}`;
+    this.showToast(message, 'info');
   }
 
   /**
@@ -996,6 +1117,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       immediateOnly: false,
       transmission: null,
     });
+    this.activeQuickFilters.set(new Set());
     void this.loadCars();
     this.showToast('Filtros limpiados', 'success');
   }
