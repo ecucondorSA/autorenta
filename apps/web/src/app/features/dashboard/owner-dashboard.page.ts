@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { Subject, takeUntil } from 'rxjs';
 import type { DashboardStats } from '../../core/models/dashboard.model';
 import { DashboardService } from '../../core/services/dashboard.service';
 import { NotificationsService } from '../../core/services/user-notifications.service';
@@ -25,9 +26,12 @@ import { PayoutsHistoryComponent } from './components/payouts-history/payouts-hi
   templateUrl: './owner-dashboard.page.html',
   styleUrls: ['./owner-dashboard.page.css'],
 })
-export class OwnerDashboardPage implements OnInit {
+export class OwnerDashboardPage implements OnInit, OnDestroy {
   private readonly dashboardService = inject(DashboardService);
   private readonly notificationsService = inject(NotificationsService);
+
+  // P0-006 FIX: Memory leak prevention
+  private readonly destroy$ = new Subject<void>();
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -93,16 +97,19 @@ export class OwnerDashboardPage implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.dashboardService.getDashboardStats(forceRefresh).subscribe({
-      next: (stats) => {
-        this.stats.set(stats);
-        this.loading.set(false);
-      },
-      error: (_err) => {
-        this.error.set('No pudimos cargar las estadísticas. Intentá de nuevo.');
-        this.loading.set(false);
-      },
-    });
+    // P0-006 FIX: Prevent memory leak with takeUntil
+    this.dashboardService.getDashboardStats(forceRefresh)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (stats) => {
+          this.stats.set(stats);
+          this.loading.set(false);
+        },
+        error: (_err) => {
+          this.error.set('No pudimos cargar las estadísticas. Intentá de nuevo.');
+          this.loading.set(false);
+        },
+      });
   }
 
   /**
@@ -116,5 +123,11 @@ export class OwnerDashboardPage implements OnInit {
 
   toggleCalendar(): void {
     this.showCalendar.set(!this.showCalendar());
+  }
+
+  ngOnDestroy(): void {
+    // P0-006 FIX: Clean up subscriptions
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

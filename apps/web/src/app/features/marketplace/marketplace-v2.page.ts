@@ -358,7 +358,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     return cars;
   });
 
-  readonly sortOrder = signal<string>('relevance');
+  readonly sortOrder = signal<string>('distance');
 
   /**
    * Contextual marker variant:
@@ -406,6 +406,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
+    // Set default view mode: 'map' for mobile, 'list' for desktop
+    if (this.isMobile()) {
+      this.viewMode.set('map');
+    }
+
     void this.initializeUserLocation();
     void this.loadCars();
     if (this.isBrowser) {
@@ -534,22 +539,14 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   onCarSelected(carId: string): void {
-    this.selectedCarId.set(carId);
-    this.drawerOpen.set(true);
+    // Navigate to car detail page
+    this.router.navigate(['/cars/detail', carId]);
 
     // Track analytics event
-    this.analyticsService.trackEvent('cta_clicked', {
+    this.analyticsService.trackEvent('car_details_clicked', {
       car_id: carId,
       source: 'car_card',
     });
-
-    // Scroll to car in list view
-    if (this.viewMode() === 'list' && this.isBrowser) {
-      setTimeout(() => {
-        const element = document.querySelector(`[data-car-id="${carId}"]`);
-        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
-    }
   }
 
   /**

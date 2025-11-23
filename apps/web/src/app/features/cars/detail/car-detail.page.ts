@@ -4,14 +4,15 @@ import {
   Component,
   computed,
   inject,
+  OnDestroy,
   OnInit,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { combineLatest, from, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { combineLatest, from, of, Subject } from 'rxjs';
+import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
 
 // Services
 import { AuthService } from '../../../core/services/auth.service';
@@ -115,7 +116,7 @@ interface CarDetailState {
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarDetailPage implements OnInit {
+export class CarDetailPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   public readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -134,6 +135,9 @@ export class CarDetailPage implements OnInit {
   private readonly waitlistService = inject(WaitlistService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly tiktokEvents = inject(TikTokEventsService);
+
+  // P0-006 FIX: Memory leak prevention
+  private readonly destroy$ = new Subject<void>();
 
   readonly expressMode = signal(false);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -531,27 +535,31 @@ export class CarDetailPage implements OnInit {
   };
 
   ngOnInit(): void {
-    // Verificar si viene con query param urgent
-    this.route.queryParams.subscribe((params) => {
-      if (params['urgent'] === 'true') {
-        this.expressMode.set(true);
-        void this.setupExpressMode();
-      }
-    });
-
-    // Cargar fechas bloqueadas cuando el auto esté disponible
-    this.carData$.subscribe((state) => {
-      if (state.car) {
-        void this.loadBlockedDates(state.car.id);
-        // ✅ FIX: Cargar precio dinámico si el auto tiene region_id
-        if (state.car.region_id) {
-          void this.loadDynamicPrice();
+    // Verificar si viene con query param urgent - P0-006 FIX: Added takeUntil
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        if (params['urgent'] === 'true') {
+          this.expressMode.set(true);
+          void this.setupExpressMode();
         }
-        // ✅ NEW: Inicializar ubicación y calcular distancia
-        void this.initializeUserLocationAndDistance(state.car);
+      });
 
-        // ✅ NEW: Check if current user is the owner
-        void this.checkOwnership(state.car.owner_id);
+    // Cargar fechas bloqueadas cuando el auto esté disponible - P0-006 FIX: Added takeUntil
+    this.carData$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        if (state.car) {
+          void this.loadBlockedDates(state.car.id);
+          // ✅ FIX: Cargar precio dinámico si el auto tiene region_id
+          if (state.car.region_id) {
+            void this.loadDynamicPrice();
+          }
+          // ✅ NEW: Inicializar ubicación y calcular distancia
+          void this.initializeUserLocationAndDistance(state.car);
+
+          // ✅ NEW: Check if current user is the owner
+          void this.checkOwnership(state.car.owner_id);
 
         // 🎯 TikTok Events: Track ViewContent
         void this.tiktokEvents.trackViewContent({
@@ -1304,5 +1312,11 @@ export class CarDetailPage implements OnInit {
 
     // Update current photo index for any other components that might need it
     this.currentPhotoIndex.set(event.index);
+  }
+
+  ngOnDestroy(): void {
+    // P0-006 FIX: Clean up subscriptions
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
