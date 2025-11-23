@@ -186,6 +186,7 @@ export class CarDetailPage implements OnInit {
    * Valida si un string es un UUID válido
    */
   private isValidUUID(uuid: string): boolean {
+    // Matches UUID v4 format: 8-4-4-4-12 hexadecimal characters with hyphens
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     return uuidRegex.test(uuid);
   }

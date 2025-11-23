@@ -9,6 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { SUCCESS_MESSAGE_DURATION_MS } from '../../../core/constants/timing.constants';
 import { EmailVerificationService } from '../../../core/services/email-verification.service';
 
 @Component({
@@ -150,7 +151,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
     this.unsubscribe = this.emailVerificationService.subscribeToEmailChanges((verified) => {
       if (verified) {
         this.successMessage.set('¡Email verificado exitosamente!');
-        setTimeout(() => this.successMessage.set(null), 5000);
+        setTimeout(() => this.successMessage.set(null), SUCCESS_MESSAGE_DURATION_MS);
       }
     });
 
@@ -179,7 +180,7 @@ export class EmailVerificationComponent implements OnInit, OnDestroy {
       this.startCooldownTimer();
 
       // Auto-hide success message after 5 seconds
-      setTimeout(() => this.successMessage.set(null), 5000);
+      setTimeout(() => this.successMessage.set(null), SUCCESS_MESSAGE_DURATION_MS);
     } catch (_error) {
       // Error is handled by service
       console.error('Failed to resend verification email:', _error);

@@ -68,12 +68,10 @@
               ],
               "outputHashing": "all",
               "optimization": true,
-              "buildOptimizer": true,
               "serviceWorker": "ngsw-config.json",
               "sourceMap": false,
               "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false
+              "extractLicenses": true
             },
             "development": {
               "fileReplacements": [

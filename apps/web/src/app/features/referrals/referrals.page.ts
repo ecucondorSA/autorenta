@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReferralsService } from '../../core/services/referrals.service';
+import { MEDIUM_TIMEOUT_MS } from '../../core/constants/timing.constants';
 
 @Component({
   selector: 'app-referrals',
@@ -34,7 +35,7 @@ export class ReferralsPage implements OnInit {
     if (code) {
       await navigator.clipboard.writeText(code);
       this.copied.set(true);
-      setTimeout(() => this.copied.set(false), 2000);
+      setTimeout(() => this.copied.set(false), MEDIUM_TIMEOUT_MS);
     }
   }
 
@@ -43,7 +44,7 @@ export class ReferralsPage implements OnInit {
     if (link) {
       await navigator.clipboard.writeText(link);
       this.copiedLink.set(true);
-      setTimeout(() => this.copiedLink.set(false), 2000);
+      setTimeout(() => this.copiedLink.set(false), MEDIUM_TIMEOUT_MS);
     }
   }
 }

@@ -2551,6 +2551,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           this.clearMarkers();
         }
         break;
+      default:
+        console.warn(`[CarsMap] Unhandled layer toggle: ${event.layerId}`);
+        break;
     }
   }
 }

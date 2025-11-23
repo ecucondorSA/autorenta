@@ -254,6 +254,7 @@ export class ProfileValidators {
 
       // If no country specified, accept any alphanumeric postal code
       if (!country) {
+        // Matches 3-10 alphanumeric characters (case-insensitive)
         const genericPattern = /^[A-Z0-9]{3,10}$/i;
         if (!genericPattern.test(postalCode)) {
           return {
@@ -409,6 +410,7 @@ export class ProfileValidators {
       }
 
       // Check for valid characters (letters, spaces, hyphens, apostrophes)
+      // Matches: letters (including accented), spaces, hyphens, and apostrophes
       const validPattern = /^[a-zA-ZÀ-ÿ\s'-]+$/;
       if (!validPattern.test(name)) {
         return {
@@ -456,7 +458,8 @@ export class ProfileValidators {
 
       const locale = String(control.value);
 
-      // Basic locale format: language-COUNTRY
+      // Basic locale format: language-COUNTRY (e.g., es-AR, en-US)
+      // Matches: 2 lowercase letters, hyphen, 2 uppercase letters
       const localePattern = /^[a-z]{2}-[A-Z]{2}$/;
       if (!localePattern.test(locale)) {
         return {

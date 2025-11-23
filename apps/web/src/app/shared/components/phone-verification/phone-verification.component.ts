@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { SUCCESS_MESSAGE_DURATION_MS } from '../../../core/constants/timing.constants';
 import { PhoneVerificationService } from '../../../core/services/phone-verification.service';
 
 @Component({
@@ -316,7 +317,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
     this.unsubscribe = this.phoneVerificationService.subscribeToChanges((verified) => {
       if (verified) {
         this.successMessage.set('¡Teléfono verificado exitosamente!');
-        setTimeout(() => this.successMessage.set(null), 5000);
+        setTimeout(() => this.successMessage.set(null), SUCCESS_MESSAGE_DURATION_MS);
       }
     });
 
@@ -346,7 +347,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
       this.updateRemainingAttempts();
       this.startCooldownTimer();
 
-      setTimeout(() => this.successMessage.set(null), 5000);
+      setTimeout(() => this.successMessage.set(null), SUCCESS_MESSAGE_DURATION_MS);
     } catch (_error) {
       console.error('Failed to send OTP:', _error);
     }

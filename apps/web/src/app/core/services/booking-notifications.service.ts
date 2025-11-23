@@ -166,6 +166,11 @@ export class BookingNotificationsService {
             });
           }
           break;
+
+        default:
+          // No notification for other status changes
+          console.log(`[BookingNotifications] No notification configured for status: ${newStatus}`);
+          break;
       }
     } catch (error) {
       console.error('Error creating status change notification:', error);

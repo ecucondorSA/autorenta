@@ -11,6 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { TOAST_AUTO_CLOSE_MS } from '../../core/constants/timing.constants';
 import { DOCUMENT_TYPES } from '../../core/config/document-types.config';
 import { Role } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
@@ -218,7 +219,7 @@ export class ProfilePage implements OnInit {
   onWizardComplete(): void {
     this.editMode.set(false);
     this.message.set('Perfil actualizado exitosamente');
-    setTimeout(() => this.message.set(null), 3000);
+    setTimeout(() => this.message.set(null), TOAST_AUTO_CLOSE_MS);
   }
 
   /**
@@ -261,7 +262,7 @@ export class ProfilePage implements OnInit {
       this.message.set('Perfil actualizado exitosamente');
 
       // Limpiar mensaje después de 3 segundos
-      setTimeout(() => this.message.set(null), 3000);
+      setTimeout(() => this.message.set(null), TOAST_AUTO_CLOSE_MS);
     } catch (err) {
       // Error is already handled by ProfileStore
       this.message.set(err instanceof Error ? err.message : 'No pudimos actualizar tu perfil.');
@@ -281,7 +282,7 @@ export class ProfilePage implements OnInit {
     try {
       await this.profileStore.uploadAvatar(file);
       this.message.set('Avatar actualizado exitosamente');
-      setTimeout(() => this.message.set(null), 3000);
+      setTimeout(() => this.message.set(null), TOAST_AUTO_CLOSE_MS);
     } catch (err) {
       // Error is already handled by ProfileStore
       this.message.set(err instanceof Error ? err.message : 'No pudimos actualizar tu avatar.');
@@ -301,7 +302,7 @@ export class ProfilePage implements OnInit {
     try {
       await this.profileStore.deleteAvatar();
       this.message.set('Avatar eliminado');
-      setTimeout(() => this.message.set(null), 3000);
+      setTimeout(() => this.message.set(null), TOAST_AUTO_CLOSE_MS);
     } catch (err) {
       // Error is already handled by ProfileStore
       this.message.set(err instanceof Error ? err.message : 'No pudimos eliminar tu avatar.');

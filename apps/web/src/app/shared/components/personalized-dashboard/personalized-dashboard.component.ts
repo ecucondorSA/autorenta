@@ -243,8 +243,8 @@ export class PersonalizedDashboardComponent implements OnInit {
 
       if (role === 'renter' || role === 'both') {
         // Reservas activas del renter
-        const bookings = await this.bookingsService.getMyBookings();
-        const activeBookings = bookings.filter(
+        const result = await this.bookingsService.getMyBookings();
+        const activeBookings = result.bookings.filter(
           (b: Booking) => b.status === 'confirmed' || b.status === 'in_progress',
         ).length;
 
@@ -270,8 +270,8 @@ export class PersonalizedDashboardComponent implements OnInit {
 
       if (role === 'renter' || role === 'both') {
         // Reservas recientes del renter
-        const bookings = await this.bookingsService.getMyBookings();
-        this.recentBookings.set(bookings.slice(0, 3));
+        const result = await this.bookingsService.getMyBookings();
+        this.recentBookings.set(result.bookings.slice(0, 3));
       }
     } catch (_error) {
       console.error('Error loading recent data:', _error);

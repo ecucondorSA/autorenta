@@ -730,6 +730,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         void this.loadCars();
         this.showToast('Buscando en esta área...', 'info');
         break;
+      default:
+        console.warn(`[Marketplace] Unhandled action type: ${event.type}`);
+        break;
     }
   }
 
@@ -994,6 +997,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         break;
       case 'location':
         void this.handleLocationAction();
+        break;
+      default:
+        console.warn(`[Marketplace] Unhandled FAB action: ${actionId}`);
         break;
     }
   }
