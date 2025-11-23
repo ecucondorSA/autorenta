@@ -415,19 +415,19 @@ export class Car3dViewerComponent {
     cargo: { x: 0, y: 0.9, z: -1.5 },
   };
 
-  handleModelLoad(event: Event) {
+  handleModelLoad(_event: Event) {
     // Model loaded
   }
 
   changeColor(colorHex: string) {
-    const modelViewer = document.querySelector('model-viewer') as any;
+    const modelViewer = document.querySelector('model-viewer') as HTMLElement & { model: { materials: Array<{ name: string; pbrMetallicRoughness: { setBaseColorFactor: (hex: string) => void } }> } };
     if (!modelViewer || !modelViewer.model) return;
 
     // Material name identified via inspection script
     const targetMaterialName = 'tripo_node_a41145e0-39be-4e18-8be5-4aba2aff666d_material.001';
 
     const paintMaterial = modelViewer.model.materials.find(
-      (mat: any) => mat.name === targetMaterialName,
+      (mat: { name: string }) => mat.name === targetMaterialName,
     );
 
     if (paintMaterial) {
@@ -442,7 +442,7 @@ export class Car3dViewerComponent {
 
   updateHotspot(hotspotName: 'engine' | 'cargo', axis: 'x' | 'y' | 'z', value: number) {
     this.hotspots[hotspotName][axis] = value;
-    const modelViewer = document.querySelector('model-viewer') as any;
+    const modelViewer = document.querySelector('model-viewer') as HTMLElement & { querySelector: (s: string) => HTMLElement | null };
     const hotspot = modelViewer?.querySelector(`[slot="hotspot-${hotspotName}"]`);
     if (hotspot) {
       const pos = this.hotspots[hotspotName];
