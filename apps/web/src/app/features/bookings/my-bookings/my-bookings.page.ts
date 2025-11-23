@@ -229,7 +229,7 @@ export class MyBookingsPage implements OnInit {
       booking.car_city && booking.car_province
         ? `${booking.car_city}, ${booking.car_province}`
         : 'Ver en detalle';
-    // TODO: Open modal with instructions
+    // FIXME: Replace alert with modal component for check-in instructions
     alert(
       `📋 Instrucciones para ${booking.car_title}\n\n1. Documentos: DNI y Licencia\n2. Ubicación: ${location}\n3. Hora: ${booking.start_at}\n\n[En próxima actualización: Modal completo con checklist]`,
     );

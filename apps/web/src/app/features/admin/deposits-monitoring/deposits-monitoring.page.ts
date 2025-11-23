@@ -56,7 +56,7 @@ interface DatabaseTransactionRow {
   styleUrls: ['./deposits-monitoring.page.css'],
 })
 export class DepositsMonitoringPage implements OnInit, OnDestroy {
-  private pollInterval?: any;
+  private pollInterval?: ReturnType<typeof setInterval>;
   // Signals
   readonly stats = signal<DepositStats>({
     total_deposits: 0,

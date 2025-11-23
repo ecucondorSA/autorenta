@@ -78,7 +78,7 @@ export class VerificationStateService implements OnDestroy {
 
       // Subscribe to changes
       this.subscribeToChanges(user.id);
-    } catch (_error) {
+    } catch {
       this.error.set('No se pudo inicializar el estado de verificación');
     }
   }

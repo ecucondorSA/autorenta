@@ -43,7 +43,6 @@ export class BookingChatWrapperComponent {
    * Maneja eventos de mensaje enviado (para analytics)
    */
   onMessageSent(event: { messageId: string; context: ChatContext }): void {
-    // TODO: Implementar analytics
     console.log('Message sent:', event);
   }
 
@@ -51,7 +50,6 @@ export class BookingChatWrapperComponent {
    * Maneja eventos de mensaje recibido (para analytics)
    */
   onMessageReceived(event: { message: unknown; context: ChatContext }): void {
-    // TODO: Implementar analytics
     console.log('Message received:', event);
   }
 
@@ -59,7 +57,6 @@ export class BookingChatWrapperComponent {
    * Maneja click en menú
    */
   onMenuClicked(): void {
-    // TODO: Implementar menú de opciones
     console.log('Menu clicked');
   }
 
@@ -67,7 +64,6 @@ export class BookingChatWrapperComponent {
    * Maneja eventos de typing
    */
   onTyping(isTyping: boolean): void {
-    // TODO: Implementar analytics o UI feedback
     if (isTyping) {
       console.log('Recipient is typing...');
     }

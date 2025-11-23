@@ -115,9 +115,8 @@ export class MakeCalendarPublicButtonComponent {
     } catch (err: unknown) {
       console.error('Error making calendar public:', err);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const errorMessage =
-        (err as any)?.error?.error || (err as Error)?.message || 'Error desconocido';
+        (err as { error?: { error?: string } })?.error?.error || (err as Error)?.message || 'Error desconocido';
       this.error.set(errorMessage);
 
       this.notifications.error('Error', `No se pudo hacer público el calendario: ${errorMessage}`);

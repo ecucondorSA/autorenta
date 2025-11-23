@@ -13,7 +13,7 @@ export class SplashComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isVisible = true;
   shouldHide = false;
-  private timeoutId: any;
+  private timeoutId?: ReturnType<typeof setTimeout>;
 
   ngAfterViewInit() {
     if (this.splashVideo?.nativeElement) {

@@ -257,7 +257,7 @@ export class MarketplaceOnboardingService {
 
       // Desencriptar token
       return await this.encryptionService.decrypt(data.mp_access_token_encrypted);
-    } catch (_error) {
+    } catch {
       return null;
     }
   }
@@ -283,7 +283,7 @@ export class MarketplaceOnboardingService {
 
       // Desencriptar token
       return await this.encryptionService.decrypt(data.mp_refresh_token_encrypted);
-    } catch (_error) {
+    } catch {
       return null;
     }
   }

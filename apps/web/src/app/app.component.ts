@@ -45,14 +45,10 @@ import { ShareButtonComponent } from './shared/components/share-button/share-but
 import { SplashComponent } from './shared/components/splash/splash.component';
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
-// TODO: Re-add when components are created
-// import { BottomNavBarComponent } from './shared/components/bottom-nav-bar/bottom-nav-bar.component';
-// import { fadeAnimation } from './core/animations/route-animations';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  // animations: [fadeAnimation], // TODO: Re-add when route-animations is created
   imports: [
     CommonModule,
     NgOptimizedImage,
@@ -73,7 +69,6 @@ import { VerificationPromptBannerComponent } from './shared/components/verificat
     NotificationsComponent,
     ShareButtonComponent,
     FooterComponent,
-    // BottomNavBarComponent, // TODO: Re-add when component is created
     Toast,
   ],
   templateUrl: './app.component.html',

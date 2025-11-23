@@ -34,7 +34,7 @@ interface DualRateFxSnapshot extends FxSnapshot {
 })
 export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  private pollInterval?: any;
+  private pollInterval?: ReturnType<typeof setInterval>;
 
   // Injected services
   private router = inject(Router);

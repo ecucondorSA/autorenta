@@ -34,7 +34,7 @@ interface ExchangeRateStats {
   styleUrls: ['./exchange-rates.page.css'],
 })
 export class ExchangeRatesPage implements OnInit, OnDestroy {
-  private pollInterval?: any;
+  private pollInterval?: ReturnType<typeof setInterval>;
   // Signals
   readonly rates = signal<ExchangeRate[]>([]);
   readonly stats = signal<ExchangeRateStats>({

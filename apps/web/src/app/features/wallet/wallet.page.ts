@@ -303,7 +303,7 @@ export class WalletPage implements AfterViewInit, OnInit {
     });
 
     // Open deposit modal
-    // TODO: When deposit modal is enhanced, pre-select "protected credit" type
+    // FIXME: Pre-select "protected credit" type when deposit modal is enhanced
     this.openDepositModal();
   }
 

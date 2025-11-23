@@ -68,11 +68,11 @@ export class ProfileExpandedPage {
 
   // Avatar and user info
   readonly avatarUrl = computed(() => this.profile()?.avatar_url);
-  readonly userEmail = computed(() => this.profile()?.id); // TODO: get email from auth
+  readonly userEmail = computed(() => this.profile()?.id); // FIXME: Get email from auth service
 
   // UI state
-  readonly uploadingAvatar = computed(() => false); // TODO: implement avatar upload
-  readonly message = computed(() => null as string | null); // TODO: implement messages
+  readonly uploadingAvatar = computed(() => false); // FIXME: Implement avatar upload functionality
+  readonly message = computed(() => null as string | null); // FIXME: Implement user messaging
 
   constructor() {
     // Set page metadata

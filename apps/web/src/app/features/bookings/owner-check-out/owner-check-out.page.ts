@@ -94,7 +94,7 @@ export class OwnerCheckOutPage implements OnInit {
       this.booking.set(booking);
 
       // Cargar datos del check-in
-      // TODO: Implementar cuando FGO service esté listo
+      // FIXME: Implement once FGO (Fast Global Onboarding) service is ready
       this.checkInData.set({ odometer_reading: 0, fuel_level: 100 });
     } catch {
       this.toastService.error('Error', 'No se pudo cargar la reserva');

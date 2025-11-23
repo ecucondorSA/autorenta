@@ -33,7 +33,7 @@ export class PendingApprovalPage implements OnInit, OnDestroy {
   private readonly bookingsService = inject(BookingsService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly router = inject(Router);
-  private pollInterval?: any;
+  private pollInterval?: ReturnType<typeof setInterval>;
 
   readonly loading = signal(true);
   readonly pendingBookings = signal<PendingApproval[]>([]);

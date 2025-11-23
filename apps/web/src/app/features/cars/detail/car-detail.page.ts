@@ -57,12 +57,6 @@ import {
   BookingLocationFormComponent,
 } from '../../bookings/components/booking-location-form/booking-location-form.component';
 import { CarChatComponent } from '../../messages/components/car-chat.component';
-// TODO: Re-add when photo-gallery component is created
-// import {
-//   PhotoGalleryComponent,
-//   Photo,
-// } from '../../../shared/components/marketplace/photo-gallery/photo-gallery.component';
-// import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
 
 // Temporary interfaces until components are created
 export interface Photo {

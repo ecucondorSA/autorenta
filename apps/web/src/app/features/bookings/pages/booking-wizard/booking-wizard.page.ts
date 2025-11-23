@@ -305,9 +305,9 @@ export class BookingWizardPage implements OnInit {
           pickupLng: bookingData.pickup_location.lng,
           dropoffLat: bookingData.dropoff_location.lat,
           dropoffLng: bookingData.dropoff_location.lng,
-          deliveryRequired: false, // TODO: Calculate from distance based on car location
-          distanceKm: 0, // TODO: Calculate actual distance
-          deliveryFeeCents: 0, // TODO: Calculate fee based on distance
+          deliveryRequired: false, // FIXME: Calculate from distance based on car location
+          distanceKm: 0, // FIXME: Calculate actual distance
+          deliveryFeeCents: 0, // FIXME: Calculate fee based on distance
           distanceTier: 'local',
         },
       );

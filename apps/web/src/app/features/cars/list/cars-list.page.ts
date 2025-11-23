@@ -1006,7 +1006,7 @@ export class CarsListPage implements OnInit, OnDestroy {
       ratingCount: car.rating_count || 0,
       location: `${car.location_city}, ${car.location_state}`,
       distanceKm: car.distance,
-      instantBook: false, // TODO: Add instant_booking field to Car model
+      instantBook: false, // FIXME: Add instant_booking field to Car model and database
     };
   }
 
