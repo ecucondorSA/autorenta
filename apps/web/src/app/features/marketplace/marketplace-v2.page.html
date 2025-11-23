@@ -2,9 +2,14 @@
 
 <!-- Hero Header with Search -->
 <div
-  class="hero-header relative bg-gradient-to-br from-cyan-400 via-cyan-300 to-blue-300 dark:from-cyan-900 dark:via-cyan-800 dark:to-blue-900 text-white overflow-hidden min-h-[500px] md:min-h-[600px] flex items-center">
-  <!-- Clean Gradient Background -->
-  <div class="absolute inset-0 bg-gradient-to-br from-cyan-400 via-cyan-300 to-blue-300"></div>
+  class="hero-header relative hero-animated-bg text-white overflow-hidden min-h-[500px] md:min-h-[600px] flex items-center">
+  <!-- Clean Gradient Background (Removed in favor of animated bg) -->
+  <!-- <div class="absolute inset-0 bg-gradient-to-br from-cyan-400 via-cyan-300 to-blue-300"></div> -->
+
+  <!-- Floating Orbs -->
+  <div class="floating-orb orb-1"></div>
+  <div class="floating-orb orb-2"></div>
+  <div class="floating-orb orb-3"></div>
 
   <!-- Subtle Pattern Overlay -->
   <div class="absolute inset-0 opacity-[0.03]"
@@ -15,7 +20,7 @@
   <div
     class="absolute inset-0 z-0 flex items-center justify-center md:justify-end md:pr-10 opacity-90 pointer-events-none">
     <div class="w-full md:w-3/4 h-full pointer-events-auto">
-      <app-car-3d-viewer src="assets/models/car-3d-model.glb"
+      <app-car-3d-viewer src="assets/models/car-3d-model.glb" [selectedColor]="selectedCar()?.color"
         alt="Featured Car 3D Model"></app-car-3d-viewer>
     </div>
   </div>
@@ -35,19 +40,20 @@
             class="w-full h-full object-contain p-2 pointer-events-none" loading="eager"
             fetchpriority="high" decoding="async" onerror="this.style.display='none'" />
         </div>
-        <h1 class="text-3xl md:text-6xl font-bold text-white drop-shadow-2xl mt-2 md:mt-0">
+        <h1
+          class="text-3xl md:text-6xl font-bold text-white drop-shadow-2xl mt-2 md:mt-0 text-reveal">
           Autorentar</h1>
       </div>
 
       <!-- Título principal -->
       <h2
-        class="text-2xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight leading-tight px-2">
+        class="text-2xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight leading-tight px-2 text-reveal text-reveal-delay-1">
         Encuentra tu auto ideal
       </h2>
 
       <!-- Subtítulo descriptivo -->
       <p
-        class="text-base md:text-xl text-slate-800 dark:text-slate-100 mb-6 md:mb-10 max-w-2xl mx-auto font-light px-4">
+        class="text-base md:text-xl text-slate-800 dark:text-slate-100 mb-6 md:mb-10 max-w-2xl mx-auto font-light px-4 text-reveal text-reveal-delay-2">
         Miles de vehículos verificados listos para tu próxima aventura
       </p>
 
@@ -56,19 +62,19 @@
       <!-- Stats bar -->
       <div class="flex items-center justify-center gap-2 md:gap-8 mb-6 md:mb-8 flex-wrap px-2">
         <div
-          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg">
+          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg stats-badge-interactive">
           <img src="assets/images/MB.png" alt="Auto" width="48" height="48"
             class="h-8 w-8 md:h-12 md:w-12 object-contain" loading="eager" decoding="async" />
           <span class="text-xs md:text-base font-semibold text-white">{{ visibleCars().length }}+
             autos</span>
         </div>
         <div
-          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg">
+          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg stats-badge-interactive">
           <span class="text-lg md:text-2xl">⭐</span>
           <span class="text-xs md:text-base font-semibold text-white">4.8/5 rating</span>
         </div>
         <div
-          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg">
+          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg stats-badge-interactive">
           <span class="text-lg md:text-2xl">🛡️</span>
           <span class="text-xs md:text-base font-semibold text-white">100% asegurado</span>
         </div>
@@ -76,7 +82,8 @@
     </div>
 
     <!-- Quick Actions (replacing old quick stats) -->
-    <div class="hidden md:flex items-center justify-center gap-4 mb-8">
+    <div
+      class="hidden md:flex items-center justify-center gap-4 mb-8 text-reveal text-reveal-delay-2">
       <button
         class="px-6 py-3 bg-white text-cyan-700 font-semibold rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transform transition-all duration-200"
         type="button" (click)="handleHeroQuickBook()">
@@ -93,8 +100,7 @@
     <!-- Enhanced Search Card -->
     <div
       class="max-w-5xl mx-auto transform translate-y-4 md:translate-y-8 relative z-20 px-2 md:px-0">
-      <div
-        class="bg-white dark:bg-slate-800 rounded-2xl md:rounded-3xl shadow-2xl p-4 md:p-8 border border-slate-100 dark:border-slate-700">
+      <div class="glass-premium rounded-2xl md:rounded-3xl shadow-2xl p-4 md:p-8">
         <!-- Search Header -->
         <div class="flex items-center justify-between mb-8">
           <h3 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">

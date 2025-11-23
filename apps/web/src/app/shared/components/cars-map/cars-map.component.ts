@@ -189,7 +189,7 @@ class QuadTree {
   styleUrls: ['./cars-map.component.css'],
 })
 export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
-  @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
 
   @Input() cars: CarMapLocation[] = [];
   @Input() selectedCarId: string | null = null;

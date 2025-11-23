@@ -101,7 +101,7 @@ export interface LocationCoordinates {
   ],
 })
 export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
 
   @Input() initialLatitude?: number;
   @Input() initialLongitude?: number;

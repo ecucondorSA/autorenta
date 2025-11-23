@@ -1,19 +1,19 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { AlertController, IonicModule, ToastController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { IonicModule, AlertController, ToastController } from '@ionic/angular';
-import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
-import { formatDateRange } from '../../../shared/utils/date.utils';
-import { MoneyPipe } from '../../../shared/pipes/money.pipe';
-import { MessagesService, Message } from '../../../core/services/messages.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { BookingsService } from '../../../core/services/bookings.service';
 import {
   MarketplaceOnboardingService,
   MarketplaceStatus,
 } from '../../../core/services/marketplace-onboarding.service';
+import { Message, MessagesService } from '../../../core/services/messages.service';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
+import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import { formatDateRange } from '../../../shared/utils/date.utils';
 
 interface CarLead {
   carId: string;
@@ -61,7 +61,7 @@ export class OwnerBookingsPage implements OnInit {
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly marketplaceService: MarketplaceOnboardingService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     void this.initialize();
@@ -90,9 +90,9 @@ export class OwnerBookingsPage implements OnInit {
     this.renterContacts.set({});
     try {
       // ✅ NUEVO: Obtener reservas de AUTOS DEL LOCADOR
-      const items = await this.bookingsService.getOwnerBookings();
-      await this.loadRenterContacts(items);
-      this.bookings.set(items);
+      const { bookings } = await this.bookingsService.getOwnerBookings();
+      await this.loadRenterContacts(bookings);
+      this.bookings.set(bookings);
       await this.loadCarLeads();
     } catch {
       this.error.set('No pudimos cargar las reservas. Por favor intentá de nuevo más tarde.');

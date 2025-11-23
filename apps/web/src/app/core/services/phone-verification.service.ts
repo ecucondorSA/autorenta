@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import type { AuthError } from '@supabase/supabase-js';
 import { VerificationBaseService, VerificationStatus } from './verification-base.service';
+import { LoggerService } from './logger.service';
 
 /**
  * Phone Verification Status (extends base with OTP-specific fields)
@@ -50,11 +51,12 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
   // Phone-specific rate limiting
   private readonly MAX_ATTEMPTS_PER_HOUR = 3;
   private otpAttempts: number[] = []; // Timestamps of OTP attempts
+  private logger = inject(LoggerService).createChildLogger('PhoneVerificationService');
 
   constructor() {
     super();
     this.checkStatus().catch((err) => {
-      console.error('Failed to check initial phone status:', err);
+      this.logger.error('Failed to check initial phone status', { error: err });
     });
   }
 
@@ -88,9 +90,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
         throw new Error('Usuario no autenticado');
       }
 
-      console.log('[PhoneVerificationService] Fresh user data from server:', {
-        phone: user.phone,
-        phone_confirmed_at: user.phone_confirmed_at,
+      this.logger.info('Fresh user data from server', {
         isVerified: user.phone_confirmed_at !== null,
       });
 
@@ -155,11 +155,8 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       // Format phone number (E.164 format)
       const formattedPhone = this.formatPhoneNumber(cleanedPhone, countryCode);
 
-      console.log('[PhoneVerificationService] Phone formatting:', {
-        original: phone,
-        cleaned: cleanedPhone,
+      this.logger.info('Phone formatting processed', {
         countryCode,
-        formatted: formattedPhone,
       });
 
       // Check if formatted phone is empty or invalid
@@ -171,8 +168,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       // Validate phone number format
       if (!this.isValidPhoneNumber(formattedPhone, countryCode)) {
         const formatHint = this.getPhoneFormatHint(countryCode);
-        console.error('[PhoneVerificationService] Invalid phone format:', {
-          formattedPhone,
+        this.logger.warn('Invalid phone format provided', {
           countryCode,
           formatHint,
         });
@@ -233,10 +229,8 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
         }
 
         // Log the full error for debugging
-        console.error('[PhoneVerificationService] Supabase error:', {
+        this.logger.error('Supabase authentication error', {
           code: errorCode,
-          message: errorMessage,
-          error: error,
         });
 
         // Re-throw original error if we don't have a specific message

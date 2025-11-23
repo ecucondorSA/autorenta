@@ -241,7 +241,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   private readonly faceVerificationService = inject(FaceVerificationService);
   private readonly identityLevelService = inject(IdentityLevelService);
 
-  @ViewChild('videoPreview', { static: false }) videoPreview!: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoPreview') videoPreview!: ElementRef<HTMLVideoElement>;
 
   readonly status = this.faceVerificationService.status;
   readonly processing = this.faceVerificationService.processing;

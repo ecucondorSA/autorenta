@@ -34,7 +34,7 @@ export class BottomSheetComponent implements OnInit, OnDestroy {
   @Output() sheetHeightChange = new EventEmitter<BottomSheetHeight>();
   @Output() closeSheet = new EventEmitter<void>();
 
-  @ViewChild('sheet', { static: false }) sheetRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('sheet') sheetRef?: ElementRef<HTMLDivElement>;
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);

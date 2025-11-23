@@ -1,162 +1,31 @@
 
 import { CommonModule } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 @Component({
   selector: 'app-car-3d-viewer',
   standalone: true,
   imports: [CommonModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <div class="viewer-container">
-      <model-viewer
-        [attr.src]="src"
-        [attr.alt]="alt"
-        (load)="handleModelLoad($event)"
-        auto-rotate
-        camera-controls
-        touch-action="pan-y"
-        shadow-intensity="1"
-        shadow-softness="1"
-        exposure="1"
-        environment-image="neutral"
-        loading="lazy"
-        interaction-prompt="auto"
-        ar
-        ar-modes="webxr scene-viewer quick-look"
-        camera-orbit="45deg 75deg 2.5m"
-        field-of-view="45deg"
-        min-camera-orbit="30deg 30deg 1.5m"
-        max-camera-orbit="70deg 80deg 3m"
-        min-field-of-view="auto"
-        max-field-of-view="auto"
-        interpolation-decay="200"
-      >
-        <!-- Hotspot: Engine/Hood -->
-        <button
-          class="hotspot"
-          slot="hotspot-engine"
-          [attr.data-position]="
-            hotspots.engine.x + 'm ' + hotspots.engine.y + 'm ' + hotspots.engine.z + 'm'
-          "
-          data-normal="0m 1m 0m"
-          data-visibility-attribute="visible"
-        >
-          <div class="hotspot-annotation">Motor V8 Turbo</div>
-        </button>
+      <canvas #rendererCanvas id="webgl-canvas"></canvas>
 
-        <!-- Hotspot: Trunk/Cargo -->
-        <button
-          class="hotspot"
-          slot="hotspot-cargo"
-          [attr.data-position]="
-            hotspots.cargo.x + 'm ' + hotspots.cargo.y + 'm ' + hotspots.cargo.z + 'm'
-          "
-          data-normal="0m 1m 0m"
-          data-visibility-attribute="visible"
-        >
-          <div class="hotspot-annotation">Gran Capacidad</div>
-        </button>
-
-        <div class="progress-bar hide" slot="progress-bar">
-          <div class="update-bar"></div>
-        </div>
-
-        <!-- Color Picker Controls -->
-        <div class="controls">
-          <div class="color-picker">
-            <button
-              *ngFor="let color of colors"
-              class="color-btn"
-              [style.background-color]="color.hex"
-              [title]="color.name"
-              (click)="changeColor(color.hex)"
-            ></button>
-          </div>
-        </div>
-      </model-viewer>
-
-      <!-- Debug Controls -->
-      <div class="debug-panel" *ngIf="debugMode">
-        <h3>🔧 Ajuste de Hotspots</h3>
-
-        <div class="hotspot-controls">
-          <h4>🚗 Motor (Engine)</h4>
-          <div class="slider-group">
-            <label>X: {{ hotspots.engine.x }}</label>
-            <input
-              type="range"
-              min="-3"
-              max="3"
-              step="0.05"
-              [value]="hotspots.engine.x"
-              (input)="updateHotspot('engine', 'x', +$any($event.target).value)"
-            />
-          </div>
-          <div class="slider-group">
-            <label>Y: {{ hotspots.engine.y }}</label>
-            <input
-              type="range"
-              min="0"
-              max="2"
-              step="0.05"
-              [value]="hotspots.engine.y"
-              (input)="updateHotspot('engine', 'y', +$any($event.target).value)"
-            />
-          </div>
-          <div class="slider-group">
-            <label>Z: {{ hotspots.engine.z }}</label>
-            <input
-              type="range"
-              min="-3"
-              max="3"
-              step="0.05"
-              [value]="hotspots.engine.z"
-              (input)="updateHotspot('engine', 'z', +$any($event.target).value)"
-            />
-          </div>
-          <button class="copy-btn" (click)="copyCoordinates('engine')">
-            📋 Copiar Coordenadas
-          </button>
-        </div>
-
-        <div class="hotspot-controls">
-          <h4>📦 Capacidad (Cargo)</h4>
-          <div class="slider-group">
-            <label>X: {{ hotspots.cargo.x }}</label>
-            <input
-              type="range"
-              min="-3"
-              max="3"
-              step="0.05"
-              [value]="hotspots.cargo.x"
-              (input)="updateHotspot('cargo', 'x', +$any($event.target).value)"
-            />
-          </div>
-          <div class="slider-group">
-            <label>Y: {{ hotspots.cargo.y }}</label>
-            <input
-              type="range"
-              min="0"
-              max="2"
-              step="0.05"
-              [value]="hotspots.cargo.y"
-              (input)="updateHotspot('cargo', 'y', +$any($event.target).value)"
-            />
-          </div>
-          <div class="slider-group">
-            <label>Z: {{ hotspots.cargo.z }}</label>
-            <input
-              type="range"
-              min="-3"
-              max="3"
-              step="0.05"
-              [value]="hotspots.cargo.z"
-              (input)="updateHotspot('cargo', 'z', +$any($event.target).value)"
-            />
-          </div>
-          <button class="copy-btn" (click)="copyCoordinates('cargo')">📋 Copiar Coordenadas</button>
-        </div>
+      <!-- Loading Overlay -->
+      <div *ngIf="isLoading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Cargando experiencia 3D...</p>
       </div>
     </div>
   `,
@@ -171,290 +40,323 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
       .viewer-container {
         width: 100%;
         height: 100%;
-        min-height: 300px;
         position: relative;
-        background: transparent;
-        /* border-radius: 1rem; removed for floating effect */
-        /* overflow: hidden; removed for floating effect */
+        overflow: hidden;
       }
 
-      model-viewer {
-        width: 100%;
-        height: 100%;
-        --poster-color: transparent;
-      }
-
-      /* Hotspot Styles */
-      .hotspot {
+      canvas {
+        width: 100% !important;
+        height: 100% !important;
         display: block;
-        width: 20px;
-        height: 20px;
-        border-radius: 10px;
-        border: none;
-        background-color: rgba(255, 255, 255, 0.8);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-        position: relative;
-        cursor: pointer;
-        transition: transform 0.3s;
-      }
-
-      .hotspot:not([data-visible]) {
-        background: transparent;
-        border: 4px solid #fff;
-        box-shadow: none;
-        height: 32px;
-        pointer-events: none;
-        width: 32px;
-      }
-
-      .hotspot:focus {
-        border: 4px solid rgb(0, 128, 200);
-        height: 32px;
         outline: none;
-        width: 32px;
       }
 
-      .hotspot > * {
-        opacity: 1;
-        transform: translateY(-50%);
-      }
-
-      .hotspot-annotation {
-        background: #fff;
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-        color: rgba(0, 0, 0, 0.8);
-        display: block;
-        font-family:
-          Futura,
-          Helvetica Neue,
-          sans-serif;
-        font-size: 14px;
-        font-weight: 700;
-        left: calc(100% + 1em);
-        max-width: 128px;
-        padding: 0.5em 1em;
+      .loading-overlay {
         position: absolute;
-        top: 50%;
-        width: max-content;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s;
-      }
-
-      .hotspot:hover .hotspot-annotation,
-      .hotspot:focus .hotspot-annotation {
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      /* Color Picker Styles */
-      .controls {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(255, 255, 255, 0.9);
-        padding: 10px 15px;
-        border-radius: 30px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(5px);
-        z-index: 100;
-      }
-
-      .color-picker {
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(8px);
         display: flex;
-        gap: 10px;
-      }
-
-      .color-btn {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
-        padding: 0;
-      }
-
-      .color-btn:hover {
-        transform: scale(1.2);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      }
-
-      .color-btn:active {
-        transform: scale(0.95);
-      }
-
-      /* Debug Panel Styles */
-      .debug-panel {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: rgba(255, 255, 255, 0.95);
-        padding: 15px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(10px);
-        max-width: 300px;
-        max-height: 90%;
-        overflow-y: auto;
-        z-index: 1000;
-      }
-
-      .debug-panel h3 {
-        margin: 0 0 15px 0;
-        font-size: 16px;
-        font-weight: 700;
-        color: #333;
-      }
-
-      .hotspot-controls {
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      }
-
-      .hotspot-controls:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-      }
-
-      .hotspot-controls h4 {
-        margin: 0 0 10px 0;
-        font-size: 14px;
-        font-weight: 600;
-        color: #555;
-      }
-
-      .slider-group {
-        margin-bottom: 10px;
-      }
-
-      .slider-group label {
-        display: block;
-        font-size: 12px;
-        font-weight: 500;
-        color: #666;
-        margin-bottom: 5px;
-      }
-
-      .slider-group input[type='range'] {
-        width: 100%;
-        height: 6px;
-        border-radius: 3px;
-        background: linear-gradient(to right, #4caf50, #2196f3);
-        outline: none;
-        -webkit-appearance: none;
-      }
-
-      .slider-group input[type='range']::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: #2196f3;
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
-
-      .slider-group input[type='range']::-moz-range-thumb {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: #2196f3;
-        cursor: pointer;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
-
-      .copy-btn {
-        width: 100%;
-        padding: 8px 12px;
-        background: #4caf50;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         color: white;
-        border: none;
-        border-radius: 6px;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s;
-        margin-top: 5px;
+        z-index: 10;
       }
 
-      .copy-btn:hover {
-        background: #45a049;
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
       }
 
-      .copy-btn:active {
-        transform: scale(0.98);
+      @keyframes spin {
+        to { transform: rotate(360deg); }
       }
     `,
   ],
 })
-export class Car3dViewerComponent {
+export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() src = 'assets/models/car-model.glb';
   @Input() alt = 'A 3D model of a car';
-  @Input() debugMode = false; // Enable debug controls
+  @Input() debugMode = false;
+  @Input() selectedColor: string | null | undefined;
 
+  @ViewChild('rendererCanvas') rendererCanvas!: ElementRef<HTMLCanvasElement>;
+
+  isLoading = true;
+  private scene!: THREE.Scene;
+  private camera!: THREE.PerspectiveCamera;
+  private renderer!: THREE.WebGLRenderer;
+  private carModel: THREE.Group | null = null;
+  private animationId: number | null = null;
+  private resizeObserver: ResizeObserver | null = null;
+
+  // Colors for mapping
   colors = [
     { name: 'Rojo', hex: '#ff0000' },
     { name: 'Azul', hex: '#0000ff' },
     { name: 'Negro', hex: '#000000' },
     { name: 'Blanco', hex: '#ffffff' },
     { name: 'Plata', hex: '#c0c0c0' },
+    { name: 'Gris', hex: '#808080' },
+    { name: 'Amarillo', hex: '#ffff00' },
+    { name: 'Verde', hex: '#008000' },
   ];
 
-  // Hotspot positions for debugging
-  hotspots = {
-    engine: { x: 0, y: 0.85, z: 1.2 },
-    cargo: { x: 0, y: 0.9, z: -1.5 },
-  };
+  constructor(private ngZone: NgZone) { }
 
-  handleModelLoad(_event: Event) {
-    // Model loaded
+  ngAfterViewInit(): void {
+    this.initScene();
+    this.setupLights();
+    this.createRoad();
+    this.loadCar();
+    this.startAnimationLoop();
+    this.setupResizeObserver();
   }
 
-  changeColor(colorHex: string) {
-    const modelViewer = document.querySelector('model-viewer') as HTMLElement & { model: { materials: Array<{ name: string; pbrMetallicRoughness: { setBaseColorFactor: (hex: string) => void } }> } };
-    if (!modelViewer || !modelViewer.model) return;
-
-    // Material name identified via inspection script
-    const targetMaterialName = 'tripo_node_a41145e0-39be-4e18-8be5-4aba2aff666d_material.001';
-
-    const paintMaterial = modelViewer.model.materials.find(
-      (mat: { name: string }) => mat.name === targetMaterialName,
-    );
-
-    if (paintMaterial) {
-      paintMaterial.pbrMetallicRoughness.setBaseColorFactor(colorHex);
-    } else {
-      // Fallback: try to find the first material if exact match fails
-      if (modelViewer.model.materials.length > 0) {
-        modelViewer.model.materials[0].pbrMetallicRoughness.setBaseColorFactor(colorHex);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedColor'] && !changes['selectedColor'].firstChange) {
+      if (this.selectedColor) {
+        this.applyColor(this.selectedColor);
       }
     }
   }
 
-  updateHotspot(hotspotName: 'engine' | 'cargo', axis: 'x' | 'y' | 'z', value: number) {
-    this.hotspots[hotspotName][axis] = value;
-    const modelViewer = document.querySelector('model-viewer') as HTMLElement & { querySelector: (s: string) => HTMLElement | null };
-    const hotspot = modelViewer?.querySelector(`[slot="hotspot-${hotspotName}"]`);
-    if (hotspot) {
-      const pos = this.hotspots[hotspotName];
-      hotspot.setAttribute('data-position', `${pos.x}m ${pos.y}m ${pos.z}m`);
+  ngOnDestroy(): void {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+    }
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+    if (this.renderer) {
+      this.renderer.dispose();
     }
   }
 
-  copyCoordinates(hotspotName: 'engine' | 'cargo') {
-    const pos = this.hotspots[hotspotName];
-    const coords = `${pos.x}m ${pos.y}m ${pos.z}m`;
-    navigator.clipboard.writeText(coords);
-    console.log(`Coordenadas copiadas para ${hotspotName}:`, coords);
-    alert(`Coordenadas copiadas: ${coords}`);
+  private initScene() {
+    // 1. Scene
+    this.scene = new THREE.Scene();
+    // Background color (transparent or sky color if needed, but we use CSS bg mostly)
+    // this.scene.background = new THREE.Color(0xa0a0a0);
+    // We'll leave background transparent to let the CSS gradient show through
+
+    // Fog for depth
+    this.scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
+
+    // 2. Camera
+    const width = this.rendererCanvas.nativeElement.clientWidth;
+    const height = this.rendererCanvas.nativeElement.clientHeight;
+    this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+    this.camera.position.set(3, 2, 5);
+    this.camera.lookAt(0, 0.5, 0);
+
+    // 3. Renderer
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.rendererCanvas.nativeElement,
+      antialias: true,
+      alpha: true, // Transparent background
+    });
+    this.renderer.setSize(width, height);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.0;
+  }
+
+  private setupLights() {
+    // Sunset Simulation
+
+    // Ambient Light (Warm base)
+    const ambientLight = new THREE.AmbientLight(0xffe0b5, 0.5);
+    this.scene.add(ambientLight);
+
+    // Hemisphere Light (Sky vs Ground)
+    const hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 0.8);
+    this.scene.add(hemiLight);
+
+    // Directional Light (Sun)
+    const sunLight = new THREE.DirectionalLight(0xffaa00, 2.5);
+    sunLight.position.set(-5, 5, 5);
+    sunLight.castShadow = true;
+
+    // Shadow properties
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
+    sunLight.shadow.camera.near = 0.5;
+    sunLight.shadow.camera.far = 50;
+    sunLight.shadow.bias = -0.0001;
+
+    this.scene.add(sunLight);
+
+    // Rim Light (for that premium edge glow)
+    const rimLight = new THREE.SpotLight(0x4455ff, 5);
+    rimLight.position.set(5, 2, -5);
+    rimLight.lookAt(0, 0, 0);
+    this.scene.add(rimLight);
+  }
+
+  private createRoad() {
+    // Procedural Road (Gray Plane)
+    const geometry = new THREE.PlaneGeometry(100, 100);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x1a1a1a,
+      roughness: 0.8,
+      metalness: 0.2
+    });
+
+    const plane = new THREE.Mesh(geometry, material);
+    plane.rotation.x = -Math.PI / 2;
+    plane.receiveShadow = true;
+    this.scene.add(plane);
+
+    // Grid Helper (Optional, for tech feel)
+    const grid = new THREE.GridHelper(100, 100, 0x444444, 0x222222);
+    grid.position.y = 0.01; // Slightly above road
+    grid.material.opacity = 0.2;
+    grid.material.transparent = true;
+    this.scene.add(grid);
+  }
+
+  private loadCar() {
+    const loader = new GLTFLoader();
+
+    loader.load(
+      this.src,
+      (gltf) => {
+        this.carModel = gltf.scene;
+
+        // Center the model
+        const box = new THREE.Box3().setFromObject(this.carModel);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+
+        // Adjust position so it sits on the ground
+        this.carModel.position.x += (this.carModel.position.x - center.x);
+        this.carModel.position.y = 0; // On ground
+        this.carModel.position.z += (this.carModel.position.z - center.z);
+
+        // Scale if too big/small (normalize to ~4m length)
+        const maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 5 || maxDim < 2) {
+          const scale = 4 / maxDim;
+          this.carModel.scale.set(scale, scale, scale);
+        }
+
+        // Enable shadows
+        this.carModel.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+
+            // Enhance materials if needed
+            const mesh = child as THREE.Mesh;
+            if (mesh.material instanceof THREE.MeshStandardMaterial) {
+              mesh.material.envMapIntensity = 1.0;
+            }
+          }
+        });
+
+        this.scene.add(this.carModel);
+        this.isLoading = false;
+
+        // Apply initial color if set
+        if (this.selectedColor) {
+          this.applyColor(this.selectedColor);
+        }
+      },
+      (xhr) => {
+        // Progress
+        // console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      (error) => {
+        console.error('An error happened loading the car model', error);
+        this.isLoading = false;
+      }
+    );
+  }
+
+  private startAnimationLoop() {
+    this.ngZone.runOutsideAngular(() => {
+      const animate = () => {
+        this.animationId = requestAnimationFrame(animate);
+
+        if (this.carModel) {
+          // Gentle rotation
+          this.carModel.rotation.y += 0.002;
+        }
+
+        this.renderer.render(this.scene, this.camera);
+      };
+      animate();
+    });
+  }
+
+  private setupResizeObserver() {
+    this.resizeObserver = new ResizeObserver(() => {
+      this.ngZone.run(() => {
+        this.onWindowResize();
+      });
+    });
+    this.resizeObserver.observe(this.rendererCanvas.nativeElement.parentElement!);
+  }
+
+  private onWindowResize() {
+    if (!this.rendererCanvas) return;
+
+    const parent = this.rendererCanvas.nativeElement.parentElement;
+    if (parent) {
+      const width = parent.clientWidth;
+      const height = parent.clientHeight;
+
+      this.camera.aspect = width / height;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(width, height);
+    }
+  }
+
+  private applyColor(colorNameOrHex: string) {
+    if (!this.carModel) return;
+
+    let hexColor = colorNameOrHex;
+
+    // Check predefined colors
+    const predefined = this.colors.find(
+      (c) => c.name.toLowerCase() === colorNameOrHex.toLowerCase(),
+    );
+    if (predefined) {
+      hexColor = predefined.hex;
+    }
+
+    if (!hexColor.startsWith('#')) return;
+
+    // Traverse model to find body paint material
+    // Heuristic: usually the material with the largest surface area or specific name
+    // For now, we'll try to find materials that look like car paint (StandardMaterial)
+
+    this.carModel.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        // Simple heuristic: change all standard materials that aren't black (tires/windows)
+        // This is a simplification. Ideally we'd know the material name.
+        if (mesh.material instanceof THREE.MeshStandardMaterial) {
+          const color = mesh.material.color;
+          // If it's not very dark (tires) and not transparent (glass)
+          if (color.r > 0.1 || color.g > 0.1 || color.b > 0.1) {
+            if (mesh.material.opacity > 0.9) {
+              mesh.material.color.set(hexColor);
+            }
+          }
+        }
+      }
+    });
   }
 }
+

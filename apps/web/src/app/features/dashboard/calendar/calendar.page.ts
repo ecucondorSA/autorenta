@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BookingsService } from '../../../core/services/bookings.service';
 
@@ -71,8 +71,8 @@ export class DashboardCalendarPage implements OnInit {
     this.error.set(null);
 
     try {
-      const ownerBookings = await this.bookingsService.getOwnerBookings();
-      const myBookings = await this.bookingsService.getMyBookings();
+      const { bookings: ownerBookings } = await this.bookingsService.getOwnerBookings();
+      const { bookings: myBookings } = await this.bookingsService.getMyBookings();
       const allBookings = [...ownerBookings, ...myBookings];
 
       const events: BookingEvent[] = allBookings.map((booking) => ({

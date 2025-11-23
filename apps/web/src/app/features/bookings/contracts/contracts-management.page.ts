@@ -48,7 +48,7 @@ export class ContractsManagementPage implements OnInit {
 
     try {
       // Obtener todos los bookings con contratos
-      const bookings = await this.bookingsService.getMyBookings();
+      const { bookings } = await this.bookingsService.getMyBookings();
       if (!bookings) {
         this.contracts.set([]);
         return;

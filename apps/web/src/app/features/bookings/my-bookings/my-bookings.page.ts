@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
-import { formatDateRange } from '../../../shared/utils/date.utils';
-import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import { BookingsService } from '../../../core/services/bookings.service';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
+import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import { formatDateRange } from '../../../shared/utils/date.utils';
 
 type BookingStatusFilter =
   | 'all'
@@ -65,7 +65,7 @@ export class MyBookingsPage implements OnInit {
     };
   });
 
-  constructor(private readonly bookingsService: BookingsService) {}
+  constructor(private readonly bookingsService: BookingsService) { }
 
   ngOnInit(): void {
     void this.loadBookings();
@@ -75,8 +75,8 @@ export class MyBookingsPage implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const items = await this.bookingsService.getMyBookings();
-      this.bookings.set(items);
+      const { bookings } = await this.bookingsService.getMyBookings();
+      this.bookings.set(bookings);
     } catch {
       this.error.set('No pudimos cargar tus reservas. Por favor intentá de nuevo más tarde.');
     } finally {
@@ -254,9 +254,9 @@ export class MyBookingsPage implements OnInit {
         // Fallback: mostrar email
         alert(
           `📧 Contacto del propietario:\n\n` +
-            `${contact.name || 'Propietario'}\n` +
-            `Email: ${contact.email || 'No disponible'}\n\n` +
-            `Puedes contactarlo por email para coordinar el retiro.`,
+          `${contact.name || 'Propietario'}\n` +
+          `Email: ${contact.email || 'No disponible'}\n\n` +
+          `Puedes contactarlo por email para coordinar el retiro.`,
         );
         return;
       }

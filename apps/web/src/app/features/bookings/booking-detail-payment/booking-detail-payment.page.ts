@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { FxService } from '../../../core/services/fx.service';
 import { PdfGeneratorService } from '../../../core/services/pdf-generator.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { LoggerService } from '../../../core/services/logger.service';
 import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booking.gateway';
 
 // Components
@@ -44,6 +45,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private supabaseClient = inject(SupabaseClientService).getClient();
   private mpGateway = inject(MercadoPagoBookingGateway);
   private pdfGenerator = inject(PdfGeneratorService);
+  private logger = inject(LoggerService).createChildLogger('BookingDetailPaymentPage');
 
   // State
   readonly car = signal<Car | null>(null);
@@ -90,7 +92,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     } else if (car.currency === 'BRL' || car.currency === 'UYU') {
       // For other currencies, convert to USD first, then to ARS
       // For now, just log warning - proper implementation requires BRL/UYU rates
-      console.warn(`⚠️ Currency ${car.currency} not fully supported yet. Showing as ARS.`);
+      this.logger.warn(`Currency ${car.currency} not fully supported yet. Showing as ARS.`);
       return dailyRate * days;
     }
 
@@ -172,7 +174,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         )
         .sort();
     } catch (error) {
-      console.error('Error parsing car features:', error);
+      this.logger.error('Error parsing car features', { error });
       return [];
     }
   }
@@ -232,7 +234,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       if (error) throw error;
       if (data) this.car.set(data as Car);
     } catch (err) {
-      console.error('Error loading car:', err);
+      this.logger.error('Error loading car', { error: err });
       this.error.set('Error al cargar información del vehículo');
     }
   }
@@ -277,11 +279,12 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       };
 
       this.fxSnapshot.set(snapshot);
-      console.log(`🔄 Tasas actualizadas en UI:
-        💰 Binance (precios): ${binanceRate.toFixed(2)} ARS/USD
-        🛡️ Platform (garantías): ${platformRate.toFixed(2)} ARS/USD (+10%)`);
+      this.logger.info('Exchange rates updated', {
+        binanceRate: binanceRate.toFixed(2),
+        platformRate: platformRate.toFixed(2),
+      });
     } catch (err) {
-      console.error('Error updating FX rate:', err);
+      this.logger.error('Error updating FX rate', { error: err });
       // Don't clear error signal here to avoid flashing error on transient failures if we already have a rate
       if (!this.fxSnapshot()) {
         this.error.set('No se pudo obtener la cotización actualizada.');
@@ -294,7 +297,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const car = this.car();
 
     if (!input || !car) {
-      console.error('Cannot generate PDF: missing booking or car data');
+      this.logger.error('Cannot generate PDF: missing booking or car data');
       return;
     }
 
@@ -313,9 +316,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         quality: 0.95,
       });
 
-      console.log(`✅ PDF generado: ${filename}`);
+      this.logger.info('PDF generated successfully', { filename });
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      this.logger.error('Error generating PDF', { error });
       this.error.set('No se pudo generar el PDF. Por favor, intente nuevamente.');
     }
   }
@@ -407,15 +410,13 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         );
       }
 
-      console.log('✅ Pago procesado exitosamente:', {
-        paymentId: paymentResult.payment_id,
+      this.logger.info('Payment processed successfully', {
         status: paymentResult.status,
-        bookingStatus: paymentResult.booking_status,
       });
 
       // If payment is approved, auto-approve the booking
       if (paymentResult.status === 'approved') {
-        console.log('💰 Pago aprobado, aprobando booking automáticamente...');
+        this.logger.info('Payment approved, auto-approving booking');
 
         // Note: In production, this would be handled by the backend
         // but for now we can update the booking status directly
@@ -428,10 +429,10 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           .eq('id', bId);
 
         if (approvalError) {
-          console.warn('⚠️ No se pudo aprobar automáticamente el booking:', approvalError);
+          this.logger.warn('Could not auto-approve booking');
           // No fallar el flujo, el webhook lo hará
         } else {
-          console.log('✅ Booking aprobado automáticamente');
+          this.logger.info('Booking auto-approved successfully');
         }
       }
 
@@ -443,7 +444,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         },
       });
     } catch (err) {
-      console.error('❌ Error procesando pago:', err);
+      this.logger.error('Error processing payment', { error: err });
       this.error.set(err instanceof Error ? err.message : 'Error al procesar el pago');
     } finally {
       this.paymentProcessing.set(false);
@@ -454,7 +455,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
    * Handle card form errors
    */
   onCardError(errorMessage: string): void {
-    console.error('❌ Error del formulario de tarjeta:', errorMessage);
+    this.logger.error('Card form error', { errorMessage });
     this.error.set(errorMessage);
     this.paymentProcessing.set(false);
   }
@@ -492,13 +493,12 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       this.bookingId.set(booking.id);
       this.bookingCreated.set(true);
 
-      console.log('✅ Reserva creada:', {
-        id: booking.id,
+      this.logger.info('Booking created successfully', {
         total: this.totalArs(),
         currency: 'ARS',
       });
     } catch (err) {
-      console.error('❌ Error creando reserva:', err);
+      this.logger.error('Error creating booking', { error: err });
       throw err;
     }
   }

@@ -1,1 +1,20 @@
-❯ Building...
+ [1mPort 4200 is already in use.
+Would you like to use a different port?[22m [2m(Y/n)[22m[47Gnode:events:497
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: read EIO
+[90m    at TTY.onStreamRead (node:internal/stream_base_commons:216:20)[39m
+[90m    at TTY.callbackTrampoline (node:internal/async_hooks:130:17)[39m
+Emitted 'error' event on Interface instance at:
+[90m    at ReadStream.onerror (node:internal/readline/interface:246:10)[39m
+[90m    at ReadStream.emit (node:events:519:28)[39m
+[90m    at emitErrorNT (node:internal/streams/destroy:170:8)[39m
+[90m    at emitErrorCloseNT (node:internal/streams/destroy:129:3)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)[39m {
+  errno: [33m-5[39m,
+  code: [32m'EIO'[39m,
+  syscall: [32m'read'[39m
+}
+
+Node.js v22.21.0
