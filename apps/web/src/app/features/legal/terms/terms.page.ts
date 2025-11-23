@@ -9,4 +9,4 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './terms.page.html',
   styleUrls: ['../legal-shared.css'],
 })
-export class TermsPage { }
+export class TermsPage {}

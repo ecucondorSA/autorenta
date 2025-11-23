@@ -89,18 +89,18 @@ export class DepositModalComponent implements OnInit {
     label: string;
     description: string;
   }> = [
-      {
-        value: 'mercadopago',
-        label: 'Mercado Pago',
-        description: 'Tarjeta de crédito/débito, Rapipago, Pago Fácil',
-      },
-      { value: 'stripe', label: 'Stripe', description: 'Tarjeta de crédito internacional' },
-      {
-        value: 'bank_transfer',
-        label: 'Transferencia Bancaria',
-        description: 'Transferencia o depósito directo',
-      },
-    ];
+    {
+      value: 'mercadopago',
+      label: 'Mercado Pago',
+      description: 'Tarjeta de crédito/débito, Rapipago, Pago Fácil',
+    },
+    { value: 'stripe', label: 'Stripe', description: 'Tarjeta de crédito internacional' },
+    {
+      value: 'bank_transfer',
+      label: 'Transferencia Bancaria',
+      description: 'Transferencia o depósito directo',
+    },
+  ];
 
   async loadExchangeRate(): Promise<void> {
     this.loadingRate.set(true);

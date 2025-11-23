@@ -1,31 +1,29 @@
 <section
-  class="cars-marketplace bg-surface-base dark:bg-surface-base transition-colors duration-300 min-h-screen"
->
+  class="cars-marketplace bg-surface-base dark:bg-surface-base transition-colors duration-300 min-h-screen">
   <!-- Barra superior fija -->
   <app-pwa-titlebar />
 
   <!-- Desktop Header with View Toggles -->
-  <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+  <div
+    class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
     <div
       class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 py-3 pt-[calc(0.75rem+env(safe-area-inset-top))]">
-
       <!-- Header Left -->
       <div class="header-left">
         <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Alquila tu próximo auto</h1>
-        <p class="text-sm text-slate-600 dark:text-slate-400">{{ premiumCars().length }} vehículos disponibles</p>
+        <p class="text-sm text-slate-600 dark:text-slate-400">
+          {{ premiumCars().length }} vehículos disponibles
+        </p>
       </div>
 
       <!-- View Toggle -->
       <div
         class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700">
-        <button
-          [class.bg-white]="viewMode() === 'map'"
-          [class.dark:bg-slate-700]="viewMode() === 'map'"
-          [class.shadow-sm]="viewMode() === 'map'"
+        <button [class.bg-white]="viewMode() === 'map'"
+          [class.dark:bg-slate-700]="viewMode() === 'map'" [class.shadow-sm]="viewMode() === 'map'"
           [class.text-slate-900]="viewMode() === 'map'"
           [class.dark:text-white]="viewMode() === 'map'"
-          [class.text-slate-500]="viewMode() !== 'map'"
-          (click)="viewMode.set('map')"
+          [class.text-slate-500]="viewMode() !== 'map'" (click)="viewMode.set('map')"
           class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
           title="Vista Mapa">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,14 +32,11 @@
           </svg>
           <span class="hidden sm:inline">Mapa</span>
         </button>
-        <button
-          [class.bg-white]="viewMode() === 'grid'"
+        <button [class.bg-white]="viewMode() === 'grid'"
           [class.dark:bg-slate-700]="viewMode() === 'grid'"
-          [class.shadow-sm]="viewMode() === 'grid'"
-          [class.text-slate-900]="viewMode() === 'grid'"
+          [class.shadow-sm]="viewMode() === 'grid'" [class.text-slate-900]="viewMode() === 'grid'"
           [class.dark:text-white]="viewMode() === 'grid'"
-          [class.text-slate-500]="viewMode() !== 'grid'"
-          (click)="viewMode.set('grid')"
+          [class.text-slate-500]="viewMode() !== 'grid'" (click)="viewMode.set('grid')"
           class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
           title="Vista Cuadrícula">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,14 +45,11 @@
           </svg>
           <span class="hidden sm:inline">Cuadrícula</span>
         </button>
-        <button
-          [class.bg-white]="viewMode() === 'list'"
+        <button [class.bg-white]="viewMode() === 'list'"
           [class.dark:bg-slate-700]="viewMode() === 'list'"
-          [class.shadow-sm]="viewMode() === 'list'"
-          [class.text-slate-900]="viewMode() === 'list'"
+          [class.shadow-sm]="viewMode() === 'list'" [class.text-slate-900]="viewMode() === 'list'"
           [class.dark:text-white]="viewMode() === 'list'"
-          [class.text-slate-500]="viewMode() !== 'list'"
-          (click)="viewMode.set('list')"
+          [class.text-slate-500]="viewMode() !== 'list'" (click)="viewMode.set('list')"
           class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
           title="Vista Lista">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,39 +64,26 @@
 
   <!-- 🗺️ MAP VIEW -->
   <div *ngIf="viewMode() === 'map'" class="h-[calc(100vh-10rem)] w-full relative">
-    <app-cars-map
-      [cars]="carMapLocations()"
-      [selectedCarId]="selectedCarId()"
-      [userLocation]="userLocation()"
-      (carSelected)="onMapCarSelected($event)"
-      (userLocationChange)="onUserLocationChange($event)"
-      class="w-full h-full"
-    ></app-cars-map>
+    <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
+      [userLocation]="userLocation()" (carSelected)="onMapCarSelected($event)"
+      (userLocationChange)="onUserLocationChange($event)" class="w-full h-full"></app-cars-map>
 
     <!-- Floating Map Filters -->
-    <app-map-filters
-      (filterChange)="onFiltersChange($event)"
-      class="absolute top-4 left-4 z-[400]"
-    />
+    <app-map-filters (filterChange)="onFiltersChange($event)"
+      class="absolute top-4 left-4 z-[400]" />
 
     <!-- Urgent Banner over map -->
-    <div
-      *ngIf="selectedCarId() && urgentAvailability()?.available"
-      class="absolute bottom-6 left-0 right-0 px-4 z-[400] pointer-events-none"
-    >
+    <div *ngIf="selectedCarId() && urgentAvailability()?.available"
+      class="absolute bottom-6 left-0 right-0 px-4 z-[400] pointer-events-none">
       <div class="max-w-2xl mx-auto pointer-events-auto">
-        <app-urgent-rental-banner
-          [carId]="selectedCarId()!"
-          [regionId]="selectedCar()?.region_id || ''"
-          [expressMode]="expressModeSignal"
-        />
+        <app-urgent-rental-banner [carId]="selectedCarId()!"
+          [regionId]="selectedCar()?.region_id || ''" [expressMode]="expressModeSignal" />
       </div>
     </div>
   </div>
 
   <!-- 📦 GRID & LIST VIEW CONTAINER -->
   <div *ngIf="viewMode() !== 'map'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
     <!-- Filters Section -->
     <div class="mb-6">
       <app-map-filters (filterChange)="onFiltersChange($event)" />
@@ -115,21 +94,18 @@
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <div *ngFor="let car of premiumCars(); trackBy: trackByCar"
         class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer"
-        (click)="onCarSelected(car.id)"
-        [class.ring-2]="selectedCarId() === car.id"
+        (click)="onCarSelected(car.id)" [class.ring-2]="selectedCarId() === car.id"
         [class.ring-cyan-500]="selectedCarId() === car.id">
-
         <!-- Image -->
         <div class="aspect-[4/3] relative overflow-hidden bg-slate-100 dark:bg-slate-700">
-          <img
-            [src]="car.image_url || '/assets/images/car-placeholder.svg'"
+          <img [src]="car.image_url || '/assets/images/car-placeholder.svg'"
             [alt]="car.brand + ' ' + car.model"
             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy" />
           <div
             class="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-3 py-1 rounded-full text-sm font-bold text-slate-900 dark:text-white shadow-sm">
-            ${{ car.price_per_day | number:'1.0-0' }} <span
-              class="text-xs font-normal text-slate-500">/día</span>
+            ${{ car.price_per_day | number: '1.0-0' }}
+            <span class="text-xs font-normal text-slate-500">/día</span>
           </div>
         </div>
 
@@ -143,7 +119,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             </svg>
-            {{ car.location?.city || 'Ubicación no disponible' }}
+            {{ car.location_city || 'Ubicación no disponible' }}
           </p>
 
           <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 flex-wrap">
@@ -164,17 +140,12 @@
     <div *ngIf="viewMode() === 'list'" class="flex flex-col gap-4 max-w-5xl mx-auto">
       <div *ngFor="let car of premiumCars(); trackBy: trackByCar"
         class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row"
-        (click)="onCarSelected(car.id)"
-        [class.ring-2]="selectedCarId() === car.id"
+        (click)="onCarSelected(car.id)" [class.ring-2]="selectedCarId() === car.id"
         [class.ring-cyan-500]="selectedCarId() === car.id">
-
         <!-- Image -->
         <div class="md:w-72 aspect-video md:aspect-auto relative bg-slate-100 dark:bg-slate-700">
-          <img
-            [src]="car.image_url || '/assets/images/car-placeholder.svg'"
-            [alt]="car.brand + ' ' + car.model"
-            class="w-full h-full object-cover"
-            loading="lazy" />
+          <img [src]="car.image_url || '/assets/images/car-placeholder.svg'"
+            [alt]="car.brand + ' ' + car.model" class="w-full h-full object-cover" loading="lazy" />
         </div>
 
         <!-- Content -->
@@ -186,12 +157,12 @@
                   {{ car.brand }} {{ car.model }}
                 </h3>
                 <p class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1">
-                  📍 {{ car.location?.city || 'Ubicación no disponible' }}
+                  📍 {{ car.location_city || 'Ubicación no disponible' }}
                 </p>
               </div>
               <div class="text-right">
                 <div class="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
-                  ${{ car.price_per_day | number:'1.0-0' }}
+                  ${{ car.price_per_day | number: '1.0-0' }}
                 </div>
                 <div class="text-xs text-slate-500">por día</div>
               </div>
@@ -227,37 +198,27 @@
         class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">
         🔍
       </div>
-      <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">No encontramos vehículos
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
+        No encontramos vehículos
       </h3>
       <p class="text-slate-500 dark:text-slate-400">Intenta ajustar tu búsqueda o filtros.</p>
     </div>
-
   </div>
 
   <!-- Sticky CTA Mobile -->
-  <app-sticky-cta-mobile
-    *ngIf="selectedCarId() && selectedCarPrice()"
-    [pricePerDay]="selectedCarPrice()!"
-    [ctaText]="'Rentar ahora'"
+  <app-sticky-cta-mobile *ngIf="selectedCarId() && selectedCarPrice()"
+    [pricePerDay]="selectedCarPrice()!" [ctaText]="'Rentar ahora'"
     [expressMode]="urgentAvailability()?.available || false"
-    (ctaClick)="onReserveClick(selectedCarId()!)"
-  />
+    (ctaClick)="onReserveClick(selectedCarId()!)" />
 
   <!-- WhatsApp FAB -->
-  <app-whatsapp-fab
-    *ngIf="selectedCar()"
-    [car]="selectedCar()!"
-    [ownerPhone]="null"
-    [ownerName]="selectedCar()?.owner?.full_name || null"
-  />
+  <app-whatsapp-fab *ngIf="selectedCar()" [car]="selectedCar()!" [ownerPhone]="null"
+    [ownerName]="selectedCar()?.owner?.full_name || null" />
 
   <!-- Filters FAB (Mobile only) -->
-  <button
-    type="button"
+  <button type="button"
     class="fixed bottom-24 right-6 md:hidden z-50 w-14 h-14 bg-cyan-600 hover:bg-cyan-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all duration-200 hover:scale-110"
-    (click)="toggleFiltersDrawer()"
-    aria-label="Abrir filtros"
-  >
+    (click)="toggleFiltersDrawer()" aria-label="Abrir filtros">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />

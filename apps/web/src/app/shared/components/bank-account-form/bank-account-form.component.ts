@@ -42,25 +42,25 @@ export class BankAccountFormComponent implements OnInit {
     placeholder: string;
     hint: string;
   }[] = [
-      {
-        value: 'cbu',
-        label: 'CBU',
-        placeholder: '0000003100010000000001',
-        hint: '22 dígitos numéricos',
-      },
-      {
-        value: 'cvu',
-        label: 'CVU',
-        placeholder: '0000003100010000000001',
-        hint: '22 dígitos numéricos',
-      },
-      {
-        value: 'alias',
-        label: 'Alias',
-        placeholder: 'mi.alias.banco',
-        hint: '6-20 caracteres alfanuméricos',
-      },
-    ];
+    {
+      value: 'cbu',
+      label: 'CBU',
+      placeholder: '0000003100010000000001',
+      hint: '22 dígitos numéricos',
+    },
+    {
+      value: 'cvu',
+      label: 'CVU',
+      placeholder: '0000003100010000000001',
+      hint: '22 dígitos numéricos',
+    },
+    {
+      value: 'alias',
+      label: 'Alias',
+      placeholder: 'mi.alias.banco',
+      hint: '6-20 caracteres alfanuméricos',
+    },
+  ];
 
   constructor(private readonly fb: FormBuilder) {
     this.form = this.fb.group({

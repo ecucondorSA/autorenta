@@ -289,7 +289,7 @@ export class CarsService {
    */
   async getBlockedDateRanges(carId: string): Promise<Array<{ from: string; to: string }>> {
     const ranges = await this.carAvailabilityService.getBlockedDates(carId);
-    return ranges.map(r => ({ from: r.from, to: r.to }));
+    return ranges.map((r) => ({ from: r.from, to: r.to }));
   }
 
   async deleteCar(carId: string): Promise<void> {

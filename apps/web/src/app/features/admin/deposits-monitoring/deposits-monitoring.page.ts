@@ -95,7 +95,7 @@ export class DepositsMonitoringPage implements OnInit, OnDestroy {
   constructor(
     private supabase: SupabaseClientService,
     private router: Router,
-  ) { }
+  ) {}
 
   async ngOnInit(): Promise<void> {
     await this.loadData();

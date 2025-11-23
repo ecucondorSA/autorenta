@@ -270,6 +270,19 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     return this.map;
   }
 
+  /**
+   * Fly to a specific location
+   */
+  flyTo(location: { lat: number; lng: number }, zoom = 15): void {
+    if (this.map) {
+      this.map.flyTo({
+        center: [location.lng, location.lat],
+        zoom,
+        essential: true,
+      });
+    }
+  }
+
   private mapboxgl: MapboxGL | null = null;
   private map: MapboxMap | null = null;
   private carMarkers = new Map<
@@ -1476,15 +1489,20 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const circleSize = 20 * this.circleSizeMultiplier();
     el.style.setProperty('--circle-size', `${circleSize}px`);
 
-    // Use user avatar if available, otherwise fallback to default icon
-    const avatarUrl = this.userAvatarUrl || 'assets/images/default-avatar.svg';
-    el.innerHTML = `
-      <div class="user-marker-halo"></div>
-      <img src="${avatarUrl}"
-           class="user-marker-avatar"
-           alt="Tu ubicación"
-           onerror="this.src='assets/images/default-avatar.svg'; this.onerror=null;" />
-    `;
+    // ✅ P0-005 FIX: Use safe DOM methods instead of innerHTML
+    const haloDiv = document.createElement('div');
+    haloDiv.className = 'user-marker-halo';
+
+    const imgElement = document.createElement('img');
+    imgElement.src = this.userAvatarUrl || 'assets/images/default-avatar.svg';
+    imgElement.className = 'user-marker-avatar';
+    imgElement.alt = 'Tu ubicación';
+    imgElement.addEventListener('error', function handleImageError(this: HTMLImageElement) {
+      this.src = 'assets/images/default-avatar.svg';
+    });
+
+    el.appendChild(haloDiv);
+    el.appendChild(imgElement);
 
     // Create marker
     this.userLocationMarker = new this.mapboxgl.Marker({

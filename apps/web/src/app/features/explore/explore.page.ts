@@ -19,7 +19,13 @@ import {
   ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { gridOutline, listOutline, locateOutline, mapOutline, optionsOutline } from 'ionicons/icons';
+import {
+  gridOutline,
+  listOutline,
+  locateOutline,
+  mapOutline,
+  optionsOutline,
+} from 'ionicons/icons';
 import { Car } from '../../core/models';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import type { CarMapLocation } from '../../core/services/car-locations.service';
@@ -99,8 +105,6 @@ export class ExplorePage implements OnInit, AfterViewInit {
     });
   });
 
-
-
   constructor(
     private carsService: CarsService,
     private router: Router,
@@ -155,7 +159,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
         duration: 3000,
         position: 'bottom',
         color: 'warning',
-        icon: 'location-outline'
+        icon: 'location-outline',
       });
       await toast.present();
     }
@@ -250,8 +254,6 @@ export class ExplorePage implements OnInit, AfterViewInit {
   onStickyCtaClick() {
     this.isDrawerOpen.set(true);
   }
-
-
 
   onUserLocationChange(location: { lat: number; lng: number }) {
     this.userLocation.set(location);

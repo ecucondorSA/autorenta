@@ -213,7 +213,8 @@ export class ErrorHandlerService {
       },
       {
         pattern: /invalid.*booking.*status|booking.*not.*pending|not.*pending.*payment/i,
-        message: 'El estado de la reserva no permite crear el pago. Por favor intenta crear una nueva reserva.',
+        message:
+          'El estado de la reserva no permite crear el pago. Por favor intenta crear una nueva reserva.',
       },
 
       // Supabase errors

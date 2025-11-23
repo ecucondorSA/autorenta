@@ -194,7 +194,7 @@ export class SplashLoaderComponent implements AfterViewInit {
 
     if (playPromise !== undefined) {
       playPromise
-        .then(() => { })
+        .then(() => {})
         .catch(() => {
           // Attempt 2: Retry after 100ms (video might still be loading)
           if (attempt === 1) {

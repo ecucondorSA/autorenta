@@ -48,6 +48,7 @@ import {
   MapControlsComponent,
   MapControlsEvent,
 } from '../../shared/components/map-controls/map-controls.component';
+import { FiltersDrawerComponent } from '../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
 import {
   QuickBookingData,
@@ -55,6 +56,13 @@ import {
 } from '../../shared/components/quick-booking-modal/quick-booking-modal.component';
 import { TooltipComponent } from '../../shared/components/tooltip/tooltip.component';
 import { SkeletonComponent } from './components/ui/skeleton.component';
+
+export interface LatLngBoundsLiteral {
+  north: number;
+  south: number;
+  east: number;
+  west: number;
+}
 
 export interface CarWithDistance extends Car {
   distance?: number;
@@ -87,7 +95,7 @@ export interface Stat {
     TooltipComponent,
     DateRangePickerComponent,
     DynamicPricingBadgeComponent,
-    // FiltersDrawerComponent,
+    FiltersDrawerComponent,
     MapControlsComponent,
     PriceTransparencyModalComponent,
     SkeletonComponent,
@@ -271,7 +279,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     // 1. Filter by Map Filters
     if (filters.priceRange) {
       cars = cars.filter(
-        (c) => c.price_per_day >= filters.priceRange!.min && c.price_per_day <= filters.priceRange!.max,
+        (c) =>
+          c.price_per_day >= filters.priceRange!.min && c.price_per_day <= filters.priceRange!.max,
       );
     }
 
@@ -296,9 +305,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     if (quickFilters.has('no-card')) {
       // Filter cars that accept other payment methods or don't require credit card
       // Assuming 'debit_card', 'cash', 'transfer' in payment_methods
-      cars = cars.filter((c) =>
-        c.payment_methods?.some(pm => ['debit_card', 'cash', 'transfer', 'wallet'].includes(pm)) ||
-        !c.payment_methods?.includes('credit_card')
+      cars = cars.filter(
+        (c) =>
+          c.payment_methods?.some((pm) =>
+            ['debit_card', 'cash', 'transfer', 'wallet'].includes(pm),
+          ) || !c.payment_methods?.includes('credit_card'),
       );
     }
 
@@ -331,8 +342,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       case 'rating':
         // Sort by rating (highest first)
         cars = cars.sort((a, b) => {
-          const ratingA = a.avg_rating ?? 0;
-          const ratingB = b.avg_rating ?? 0;
+          const ratingA = a.rating_avg ?? 0;
+          const ratingB = b.rating_avg ?? 0;
           return ratingB - ratingA;
         });
         break;
@@ -676,7 +687,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   /**
    * Handle map bounds change
    */
-  onBoundsChange(bounds: google.maps.LatLngBoundsLiteral): void {
+  onBoundsChange(bounds: LatLngBoundsLiteral): void {
     // Don't update immediately, just show the button
     // Only update if bounds are significantly different to avoid jitter
     this.mapBounds.set(bounds);
@@ -1093,12 +1104,12 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
     // Show user-friendly toast message
     const messages: Record<string, string> = {
-      'distance': 'Mostrando autos más cercanos primero',
-      'price_asc': 'Ordenado por precio: menor a mayor',
-      'price_desc': 'Ordenado por precio: mayor a menor',
-      'rating': 'Mostrando mejor valorados primero',
-      'score': 'Ordenado por relevancia',
-      'relevance': 'Ordenado por relevancia'
+      distance: 'Mostrando autos más cercanos primero',
+      price_asc: 'Ordenado por precio: menor a mayor',
+      price_desc: 'Ordenado por precio: mayor a menor',
+      rating: 'Mostrando mejor valorados primero',
+      score: 'Ordenado por relevancia',
+      relevance: 'Ordenado por relevancia',
     };
 
     const message = messages[value] || `Ordenado por: ${value}`;

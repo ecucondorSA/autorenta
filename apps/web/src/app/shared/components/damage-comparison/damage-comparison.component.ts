@@ -11,7 +11,6 @@ import {
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { DamageItem, SettlementService } from '../../../core/services/settlement.service';
 
-
 @Component({
   selector: 'app-damage-comparison',
   standalone: true,

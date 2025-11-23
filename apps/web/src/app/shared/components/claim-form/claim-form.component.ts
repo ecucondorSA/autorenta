@@ -10,7 +10,6 @@ import {
 } from '../../../core/services/settlement.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 
-
 /**
  * Componente para reportar daños y crear claims
  *
@@ -66,10 +65,10 @@ export class ClaimFormComponent implements OnInit {
     label: string;
     hint: string;
   }> = [
-      { value: 'minor', label: 'Menor', hint: 'Daño superficial, fácil de reparar' },
-      { value: 'moderate', label: 'Moderado', hint: 'Requiere reparación profesional' },
-      { value: 'severe', label: 'Severo', hint: 'Daño significativo o estructural' },
-    ];
+    { value: 'minor', label: 'Menor', hint: 'Daño superficial, fácil de reparar' },
+    { value: 'moderate', label: 'Moderado', hint: 'Requiere reparación profesional' },
+    { value: 'severe', label: 'Severo', hint: 'Daño significativo o estructural' },
+  ];
 
   // Computed properties
   readonly totalCost = computed(() => {

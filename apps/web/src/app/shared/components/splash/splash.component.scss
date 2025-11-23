@@ -9,7 +9,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: opacity 0.5s ease-out, visibility 0.5s;
+  transition:
+    opacity 0.5s ease-out,
+    visibility 0.5s;
 
   &.fade-out {
     opacity: 0;

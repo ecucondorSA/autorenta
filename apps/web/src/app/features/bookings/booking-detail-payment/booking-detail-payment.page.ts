@@ -385,34 +385,25 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         throw new Error('No se pudo crear la reserva');
       }
 
-      console.log('💳 Procesando pago con token:', {
-        bookingId: bId,
-        last4: event.last4,
-      });
-
       // Call Supabase Edge Function to process payment
-      const { data: paymentResult, error: paymentError } = await this.supabaseClient.functions.invoke(
-        'mercadopago-process-booking-payment',
-        {
+      const { data: paymentResult, error: paymentError } =
+        await this.supabaseClient.functions.invoke('mercadopago-process-booking-payment', {
           body: {
             booking_id: bId,
             card_token: event.cardToken,
             installments: 1,
           },
-        }
-      );
+        });
 
       if (paymentError) {
-        console.error('❌ Error llamando Edge Function:', paymentError);
         throw new Error(paymentError.message || 'Error al procesar el pago');
       }
 
       if (!paymentResult?.success) {
-        console.error('❌ Pago rechazado:', paymentResult);
         throw new Error(
           paymentResult?.details?.message ||
-          paymentResult?.error ||
-          'El pago fue rechazado. Por favor, verifica los datos de tu tarjeta.'
+            paymentResult?.error ||
+            'El pago fue rechazado. Por favor, verifica los datos de tu tarjeta.',
         );
       }
 

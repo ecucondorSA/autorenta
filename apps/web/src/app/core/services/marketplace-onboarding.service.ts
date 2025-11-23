@@ -257,8 +257,7 @@ export class MarketplaceOnboardingService {
 
       // Desencriptar token
       return await this.encryptionService.decrypt(data.mp_access_token_encrypted);
-    } catch (error) {
-      console.error('[MarketplaceOnboarding] Error decrypting access token:', error);
+    } catch (_error) {
       return null;
     }
   }
@@ -284,8 +283,7 @@ export class MarketplaceOnboardingService {
 
       // Desencriptar token
       return await this.encryptionService.decrypt(data.mp_refresh_token_encrypted);
-    } catch (error) {
-      console.error('[MarketplaceOnboarding] Error decrypting refresh token:', error);
+    } catch (_error) {
       return null;
     }
   }

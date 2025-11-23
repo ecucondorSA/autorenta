@@ -186,10 +186,10 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
         this.showDepositConfirmedToast(transaction as unknown as Record<string, unknown>);
 
         // Recargar pending deposits
-        this.loadPendingDeposits().catch(() => { });
+        this.loadPendingDeposits().catch(() => {});
       },
       // Callback para cualquier cambio en transacciones
-      () => { },
+      () => {},
     );
 
     // Iniciar auto-refresh si está habilitado
@@ -211,7 +211,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // Desuscribirse de cambios realtime
-    this.walletService.unsubscribeFromWalletChanges().catch(() => { });
+    this.walletService.unsubscribeFromWalletChanges().catch(() => {});
 
     // Limpiar interval al destruir componente
     if (this.refreshInterval) {

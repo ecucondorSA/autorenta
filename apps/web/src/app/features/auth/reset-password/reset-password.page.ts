@@ -16,7 +16,7 @@ export class ResetPasswordPage {
   readonly loading = signal(false);
   readonly message = signal<string | null>(null);
 
-  constructor(private readonly auth: AuthService) { }
+  constructor(private readonly auth: AuthService) {}
 
   async submit(): Promise<void> {
     this.loading.set(true);

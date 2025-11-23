@@ -295,10 +295,12 @@ export class PersonalizedDashboardComponent implements OnInit {
   }
 
   getCarPhotoUrl(car: Car): string {
-    const rawPhotos = car.photos || ((car as unknown as Record<string, unknown>)['car_photos'] as string[]);
-    const photos = Array.isArray(rawPhotos) && typeof rawPhotos[0] === 'string'
-      ? (rawPhotos as string[]).map(url => ({ url }))
-      : rawPhotos;
+    const rawPhotos =
+      car.photos || ((car as unknown as Record<string, unknown>)['car_photos'] as string[]);
+    const photos =
+      Array.isArray(rawPhotos) && typeof rawPhotos[0] === 'string'
+        ? (rawPhotos as string[]).map((url) => ({ url }))
+        : rawPhotos;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return getCarImageUrl(photos as any, {
       brand: car.brand || car.brand_name || '',

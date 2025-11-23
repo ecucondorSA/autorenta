@@ -42,7 +42,10 @@ export class OwnerCheckOutPage implements OnInit {
   readonly damageAmount = signal<number>(0);
 
   readonly canSubmitDamages = computed(() => {
-    return !this.hasDamages() || (this.damageAmount() > 0 && this.damageAmount() <= 250 && this.damagesNotes().length > 0);
+    return (
+      !this.hasDamages() ||
+      (this.damageAmount() > 0 && this.damageAmount() <= 250 && this.damagesNotes().length > 0)
+    );
   });
 
   readonly booking = signal<Booking | null>(null);
@@ -50,7 +53,6 @@ export class OwnerCheckOutPage implements OnInit {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly checkInData = signal<any>(null);
   readonly submitting = signal(false);
-
 
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');

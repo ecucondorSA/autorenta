@@ -230,8 +230,8 @@ export class AdminSettlementsPage implements OnInit {
         alert(
           `Claim procesado exitosamente. Total recuperado: ${this.formatCurrency(
             (result.waterfall?.breakdown.holdCaptured || 0) / 100 +
-            (result.waterfall?.breakdown.walletDebited || 0) / 100 +
-            (result.waterfall?.breakdown.fgoPaid || 0) / 100,
+              (result.waterfall?.breakdown.walletDebited || 0) / 100 +
+              (result.waterfall?.breakdown.fgoPaid || 0) / 100,
           )}`,
         );
         await this.loadClaims();

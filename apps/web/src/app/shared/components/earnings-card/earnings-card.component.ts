@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, computed, signal } from '@angular/core';
 
-
 /**
  * EarningsCardComponent
  *

@@ -899,16 +899,12 @@ export class CarDetailPage implements OnInit {
     // First create the booking, then navigate to payment page
     try {
       // Call booking service to create the booking (using requestBooking RPC)
-      const booking = await this.bookingsService.requestBooking(
-        car.id,
-        startDate,
-        endDate
-      );
+      const booking = await this.bookingsService.requestBooking(car.id, startDate, endDate);
 
       if (booking?.id) {
         // Navigate to new payment page with booking ID
         await this.router.navigate(['/bookings', booking.id, 'payment'], {
-          queryParams: { paymentMethod }
+          queryParams: { paymentMethod },
         });
       } else {
         // Fallback to old flow if booking creation fails

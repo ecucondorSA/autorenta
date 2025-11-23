@@ -191,8 +191,6 @@ export class AuthService implements OnDestroy {
         };
       }
 
-      console.log('🔐 Intercambiando código TikTok por sesión...');
-
       // Llamar Edge Function para intercambiar código
       const response = await fetch(
         `${environment.supabaseUrl}/functions/v1/tiktok-oauth-callback`,
@@ -202,13 +200,12 @@ export class AuthService implements OnDestroy {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ code }),
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        console.error('❌ Error del callback de TikTok:', data);
         return {
           data: null,
           error: new Error(data.error || 'Error al procesar autenticación de TikTok'),
@@ -222,8 +219,6 @@ export class AuthService implements OnDestroy {
           loading: false,
         });
 
-        console.log('✅ Usuario TikTok autenticado:', data.user.display_name);
-
         return {
           data: data.session,
           error: null,
@@ -235,7 +230,6 @@ export class AuthService implements OnDestroy {
         error: new Error('No se recibió sesión válida'),
       };
     } catch (err) {
-      console.error('❌ Error en handleTikTokCallback:', err);
       return {
         data: null,
         error: err instanceof Error ? err : new Error('Error procesando callback de TikTok'),
@@ -249,7 +243,7 @@ export class AuthService implements OnDestroy {
   private generateRandomState(): string {
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
   }
 
   /**

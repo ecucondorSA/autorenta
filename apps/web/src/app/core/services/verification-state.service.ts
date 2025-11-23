@@ -70,7 +70,6 @@ export class VerificationStateService implements OnDestroy {
       } = await this.supabase.auth.getUser();
 
       if (!user) {
-        console.log('[VerificationState] No user, skipping initialization');
         return;
       }
 
@@ -79,10 +78,7 @@ export class VerificationStateService implements OnDestroy {
 
       // Subscribe to changes
       this.subscribeToChanges(user.id);
-
-      console.log('[VerificationState] Initialized for user:', user.id);
     } catch (_error) {
-      console.error('[VerificationState] Initialization failed:', _error);
       this.error.set('No se pudo inicializar el estado de verificación');
     }
   }
@@ -100,7 +96,6 @@ export class VerificationStateService implements OnDestroy {
       this.verificationProgress() &&
       now - this.lastFetchTime < this.CACHE_DURATION_MS
     ) {
-      console.log('[VerificationState] Using cached progress');
       return this.verificationProgress();
     }
 
@@ -118,17 +113,11 @@ export class VerificationStateService implements OnDestroy {
       this.verificationProgress.set(progress);
       this.lastFetchTime = now;
 
-      console.log('[VerificationState] Progress updated:', {
-        level: progress.current_level,
-        percentage: progress.progress_percentage,
-      });
-
       return progress;
     } catch (_error) {
       const message =
         _error instanceof Error ? _error.message : 'Error al obtener progreso de verificación';
       this.error.set(message);
-      console.error('[VerificationState] Refresh failed:', _error);
       return null;
     } finally {
       this.loading.set(false);
@@ -154,8 +143,6 @@ export class VerificationStateService implements OnDestroy {
           filter: `user_id=eq.${userId}`,
         },
         async (payload: RealtimePostgresChangesPayload<VerificationStatusRow>) => {
-          console.log('[VerificationState] Realtime update:', payload);
-
           // Refresh progress when changes detected
           await this.refreshProgress(true);
 
@@ -164,14 +151,7 @@ export class VerificationStateService implements OnDestroy {
         },
       )
       .subscribe((status) => {
-        console.log('[VerificationState] Realtime status:', status);
-
-        if (status === 'SUBSCRIBED') {
-          console.log('[VerificationState] Successfully subscribed to changes');
-        }
-
         if (status === 'CHANNEL_ERROR') {
-          console.error('[VerificationState] Realtime channel error');
           this.error.set('Error en sincronización en tiempo real');
         }
       });
@@ -184,7 +164,6 @@ export class VerificationStateService implements OnDestroy {
     if (this.realtimeChannel) {
       this.supabase.removeChannel(this.realtimeChannel);
       this.realtimeChannel = undefined;
-      console.log('[VerificationState] Unsubscribed from Realtime');
     }
   }
 
@@ -240,7 +219,6 @@ export class VerificationStateService implements OnDestroy {
     });
 
     window.dispatchEvent(event);
-    console.log('[VerificationState] Event dispatched:', eventName);
   }
 
   /**

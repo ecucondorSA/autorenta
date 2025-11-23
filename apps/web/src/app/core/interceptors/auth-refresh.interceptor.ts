@@ -45,7 +45,7 @@ export const authRefreshInterceptor: HttpInterceptorFn = (req, next) => {
               isRefreshing = false;
               auth.signOut();
               return throwError(() => err);
-            })
+            }),
           );
         } else {
           // Wait for refresh to complete
@@ -54,11 +54,11 @@ export const authRefreshInterceptor: HttpInterceptorFn = (req, next) => {
             take(1),
             switchMap((token) => {
               return next(addToken(req, token!));
-            })
+            }),
           );
         }
       }
       return throwError(() => error);
-    })
+    }),
   );
 };

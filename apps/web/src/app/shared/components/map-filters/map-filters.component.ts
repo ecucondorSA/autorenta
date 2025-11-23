@@ -414,9 +414,9 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
         ...filter,
         dateRange: filter.dateRange
           ? {
-            start: filter.dateRange.start.toISOString(),
-            end: filter.dateRange.end.toISOString(),
-          }
+              start: filter.dateRange.start.toISOString(),
+              end: filter.dateRange.end.toISOString(),
+            }
           : null,
       };
       sessionStorage.setItem('mapFilters', JSON.stringify(serialized));

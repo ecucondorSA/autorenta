@@ -1,6 +1,8 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { BookingChatComponent } from '../../shared/components/booking-chat/booking-chat.component';
 import { AuthService } from '../../core/services/auth.service';
 import { BookingsService } from '../../core/services/bookings.service';
@@ -17,6 +19,7 @@ import { CarChatComponent } from './components/car-chat.component';
   selector: 'app-messages',
   standalone: true,
   imports: [CommonModule, RouterLink, BookingChatComponent, CarChatComponent],
+  hostDirectives: [],
   template: `
     <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
       <!-- Header -->
@@ -169,11 +172,14 @@ import { CarChatComponent } from './components/car-chat.component';
     </div>
   `,
 })
-export class MessagesPage implements OnInit {
+export class MessagesPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly authService = inject(AuthService);
   private readonly bookingsService = inject(BookingsService);
+
+  // ✅ P0-006 FIX: Destroy subject para limpiar subscriptions
+  private readonly destroy$ = new Subject<void>();
 
   // Query params
   readonly bookingId = signal<string | null>(null);
@@ -222,29 +228,36 @@ export class MessagesPage implements OnInit {
     }
 
     // Leer query params
-    this.route.queryParams.subscribe(async (params) => {
-      this.bookingId.set(params['bookingId'] ?? null);
-      this.carId.set(params['carId'] ?? null);
-      this.recipientId.set(params['userId'] ?? null);
-      this.recipientName.set(params['userName'] ?? params['carName'] ?? 'Usuario');
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (params) => {
+        this.bookingId.set(params['bookingId'] ?? null);
+        this.carId.set(params['carId'] ?? null);
+        this.recipientId.set(params['userId'] ?? null);
+        this.recipientName.set(params['userName'] ?? params['carName'] ?? 'Usuario');
 
-      // Validar que tenemos al menos booking o car ID
-      if (!this.bookingId() && !this.carId()) {
-        this.error.set('Falta información para iniciar el chat (booking o car ID)');
-      }
+        // Validar que tenemos al menos booking o car ID
+        if (!this.bookingId() && !this.carId()) {
+          this.error.set('Falta información para iniciar el chat (booking o car ID)');
+        }
 
-      // Validar que tenemos recipient
-      if (!this.recipientId()) {
-        this.error.set('Falta información del destinatario');
-      }
+        // Validar que tenemos recipient
+        if (!this.recipientId()) {
+          this.error.set('Falta información del destinatario');
+        }
 
-      // Cargar información del booking si está disponible
-      if (this.bookingId()) {
-        await this.loadBookingContext(this.bookingId()!);
-      }
+        // Cargar información del booking si está disponible
+        if (this.bookingId()) {
+          await this.loadBookingContext(this.bookingId()!);
+        }
 
-      this.loading.set(false);
-    });
+        this.loading.set(false);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**

@@ -100,7 +100,6 @@ export class BookingPaymentPage implements OnInit {
   readonly paymentOptions = computed<PaymentOption[]>(() => {
     const balance = this.walletBalance();
 
-
     return [
       {
         id: 'wallet',
@@ -143,7 +142,9 @@ export class BookingPaymentPage implements OnInit {
 
   ngOnInit(): void {
     const bookingId = this.route.snapshot.paramMap.get('bookingId');
-    const queryMethod = this.route.snapshot.queryParamMap.get('paymentMethod') as 'wallet' | 'credit_card';
+    const queryMethod = this.route.snapshot.queryParamMap.get('paymentMethod') as
+      | 'wallet'
+      | 'credit_card';
 
     if (!bookingId) {
       this.toastService.error('Error de reserva', 'ID de reserva no válido');
@@ -166,7 +167,7 @@ export class BookingPaymentPage implements OnInit {
 
     // Preload MercadoPago SDK if using credit card
     if (this.paymentMethod() === 'credit_card') {
-      this.mercadoPagoScriptService.preloadSDK().catch(error => {
+      this.mercadoPagoScriptService.preloadSDK().catch((error) => {
         console.warn('[BookingPayment] Failed to preload MercadoPago SDK:', error);
       });
     }
@@ -180,7 +181,10 @@ export class BookingPaymentPage implements OnInit {
       .subscribe({
         next: (booking) => {
           if (!booking) {
-            this.toastService.error('Reserva no encontrada', 'No se pudo encontrar la reserva solicitada');
+            this.toastService.error(
+              'Reserva no encontrada',
+              'No se pudo encontrar la reserva solicitada',
+            );
             this.router.navigate(['/']);
             return;
           }
@@ -194,7 +198,10 @@ export class BookingPaymentPage implements OnInit {
         },
         error: (error) => {
           console.error('[BookingPayment] Error loading booking:', error);
-          this.toastService.error('Error de carga', 'No se pudo cargar la información de la reserva');
+          this.toastService.error(
+            'Error de carga',
+            'No se pudo cargar la información de la reserva',
+          );
           this.router.navigate(['/']);
         },
       });
@@ -238,22 +245,19 @@ export class BookingPaymentPage implements OnInit {
 
     // Lock funds for the booking
     const depositUsd = (bookingData.deposit_amount_cents || 0) / 100;
-    this.walletService.lockRentalAndDeposit(
-      bookingData.id,
-      bookingData.total_amount || 0,
-      depositUsd
-    ).pipe(
-      finalize(() => this.processing.set(false))
-    ).subscribe({
-      next: () => {
-        this.toastService.success('Pago procesado', 'Tu pago ha sido procesado exitosamente');
-        this.router.navigate(['/bookings', bookingData.id, 'success']);
-      },
-      error: (error) => {
-        console.error('[BookingPayment] Wallet payment error:', error);
-        this.toastService.error('Error de pago', 'No se pudo procesar el pago con wallet');
-      },
-    });
+    this.walletService
+      .lockRentalAndDeposit(bookingData.id, bookingData.total_amount || 0, depositUsd)
+      .pipe(finalize(() => this.processing.set(false)))
+      .subscribe({
+        next: () => {
+          this.toastService.success('Pago procesado', 'Tu pago ha sido procesado exitosamente');
+          this.router.navigate(['/bookings', bookingData.id, 'success']);
+        },
+        error: (error) => {
+          console.error('[BookingPayment] Wallet payment error:', error);
+          this.toastService.error('Error de pago', 'No se pudo procesar el pago con wallet');
+        },
+      });
   }
 
   onCardTokenGenerated(tokenData: { cardToken: string; last4: string }): void {
@@ -263,30 +267,32 @@ export class BookingPaymentPage implements OnInit {
     this.processing.set(true);
 
     // Process card payment with the generated token
-    from(this.mercadopagoService.processBookingPayment({
-      booking_id: bookingData.id,
-      card_token: tokenData.cardToken,
-      issuer_id: '',
-      installments: 1,
-    })).pipe(
-      finalize(() => this.processing.set(false))
-    ).subscribe({
-      next: (result) => {
-        if (result.status === 'approved') {
-          this.toastService.success('Pago aprobado', 'Tu pago ha sido procesado exitosamente');
-          this.router.navigate(['/bookings', bookingData.id, 'success']);
-        } else if (result.status === 'in_process') {
-          this.toastService.info('Pago en proceso', 'Tu pago está siendo verificado');
-          this.router.navigate(['/bookings', bookingData.id, 'pending']);
-        } else {
-          this.toastService.error('Pago rechazado', 'El pago fue rechazado por el procesador');
-        }
-      },
-      error: (error) => {
-        console.error('[BookingPayment] Card payment error:', error);
-        this.toastService.error('Error de pago', 'No se pudo procesar el pago con tarjeta');
-      },
-    });
+    from(
+      this.mercadopagoService.processBookingPayment({
+        booking_id: bookingData.id,
+        card_token: tokenData.cardToken,
+        issuer_id: '',
+        installments: 1,
+      }),
+    )
+      .pipe(finalize(() => this.processing.set(false)))
+      .subscribe({
+        next: (result) => {
+          if (result.status === 'approved') {
+            this.toastService.success('Pago aprobado', 'Tu pago ha sido procesado exitosamente');
+            this.router.navigate(['/bookings', bookingData.id, 'success']);
+          } else if (result.status === 'in_process') {
+            this.toastService.info('Pago en proceso', 'Tu pago está siendo verificado');
+            this.router.navigate(['/bookings', bookingData.id, 'pending']);
+          } else {
+            this.toastService.error('Pago rechazado', 'El pago fue rechazado por el procesador');
+          }
+        },
+        error: (error) => {
+          console.error('[BookingPayment] Card payment error:', error);
+          this.toastService.error('Error de pago', 'No se pudo procesar el pago con tarjeta');
+        },
+      });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

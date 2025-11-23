@@ -1,41 +1,41 @@
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
   computed,
-  signal,
-  inject,
   effect,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
   PLATFORM_ID,
+  signal,
+  ViewChild,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
-import { CarsService } from '../../../core/services/cars.service';
+import { Car } from '../../../core/models';
+import { BreakpointService } from '../../../core/services/breakpoint.service';
 import { CarsCompareService } from '../../../core/services/cars-compare.service';
-import { MetaService } from '../../../core/services/meta.service';
-import { LoggerService } from '../../../core/services/logger.service';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { CarsService } from '../../../core/services/cars.service';
 import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
 import { LocationService } from '../../../core/services/location.service';
+import { LoggerService } from '../../../core/services/logger.service';
+import { MetaService } from '../../../core/services/meta.service';
+import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
-import { BreakpointService } from '../../../core/services/breakpoint.service';
-import { Car } from '../../../core/models';
-import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
-import { PullToRefreshComponent } from '../../../shared/components/pull-to-refresh/pull-to-refresh.component';
+import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import {
-  MapFiltersComponent,
   FilterState,
+  MapFiltersComponent,
 } from '../../../shared/components/map-filters/map-filters.component';
+import { PullToRefreshComponent } from '../../../shared/components/pull-to-refresh/pull-to-refresh.component';
+import { PwaTitlebarComponent } from '../../../shared/components/pwa-titlebar/pwa-titlebar.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/whatsapp-fab.component';
-import { PwaTitlebarComponent } from '../../../shared/components/pwa-titlebar/pwa-titlebar.component';
 // import { CarCardV3Component } from '../../../shared/components/marketplace/car-card-v3/car-card-v3.component';
 // import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 // import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
@@ -53,6 +53,7 @@ export interface CarWithDistance extends Car {
   distance?: number;
   distanceText?: string;
   body_type?: string | null;
+  image_url?: string;
 }
 
 interface PremiumSegmentation {
@@ -238,6 +239,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         ...car,
         distance: distanceKm,
         distanceText,
+        image_url: this.extractPhotoGallery(car)[0] || null,
       };
     });
   });
@@ -291,9 +293,9 @@ export class CarsListPage implements OnInit, OnDestroy {
     const list = !segmentation
       ? cars
       : cars.filter((car) => {
-          const score = segmentation.scores.get(car.id) ?? 0;
-          return score >= segmentation.threshold;
-        });
+        const score = segmentation.scores.get(car.id) ?? 0;
+        return score >= segmentation.threshold;
+      });
 
     const sorted = list.slice();
 

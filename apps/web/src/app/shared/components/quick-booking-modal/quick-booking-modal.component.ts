@@ -409,7 +409,9 @@ export class QuickBookingModalComponent implements OnInit {
     const photos = this.car.photos ?? this.car.car_photos ?? [];
     if (Array.isArray(photos) && photos.length > 0) {
       const firstPhoto = photos[0];
-      return typeof firstPhoto === 'string' ? firstPhoto : (((firstPhoto as unknown) as Record<string, unknown>)?.['url'] as string ?? null);
+      return typeof firstPhoto === 'string'
+        ? firstPhoto
+        : (((firstPhoto as unknown as Record<string, unknown>)?.['url'] as string) ?? null);
     }
     return null;
   });

@@ -232,11 +232,6 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
         return;
       }
 
-      console.log(
-        'Mercado Pago public key resolved (masked):',
-        runtimeEnvKey ? `${runtimeEnvKey.slice(0, 8)}…` : '(empty)',
-      );
-
       // Wait a bit to ensure DOM is ready
       await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -254,8 +249,6 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       }
 
       const normalizedAmount = this.amountArs > 0 ? Math.ceil(this.amountArs) : 1;
-
-      console.log('💳 Inicializando CardForm con amount:', normalizedAmount);
 
       // Ensure form element exists before creating CardForm
       const formElement = document.getElementById('form-checkout');
@@ -305,12 +298,9 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
         callbacks: {
           onFormMounted: (error: unknown) => {
             if (error) {
-              console.error('❌ Error al montar CardForm:', error);
               const errorMsg = this.extractErrorMessage(error) || 'Error al cargar el formulario';
               this.errorMessage.set(errorMsg);
               this.cardError.emit(errorMsg);
-            } else {
-              console.log('✅ CardForm montado correctamente');
             }
           },
           onSubmit: (event: Event) => {
@@ -322,19 +312,17 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
               this.isSubmitting.set(true);
               this.cardForm.createCardToken();
             } catch (err) {
-              console.error('❌ Error en onSubmit:', err);
               this.isSubmitting.set(false);
-              const errorMsg = err instanceof Error ? err.message : 'Error al procesar el formulario';
+              const errorMsg =
+                err instanceof Error ? err.message : 'Error al procesar el formulario';
               this.errorMessage.set(errorMsg);
               this.cardError.emit(errorMsg);
             }
           },
-          onFetching: (resource: string) => {
-            console.log('🔄 Fetching resource:', resource);
+          onFetching: (_resource: string) => {
             this.isSubmitting.set(true);
           },
           onError: (errors: unknown) => {
-            console.error('❌ CardForm onError:', errors);
             this.isSubmitting.set(false);
             this.handleMercadoPagoErrors(errors);
           },
@@ -342,7 +330,6 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
             this.isSubmitting.set(false);
 
             if (error) {
-              console.error('❌ Error recibiendo card token:', error);
               this.handleMercadoPagoErrors(error);
               return;
             }
@@ -353,11 +340,6 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
               this.cardError.emit(errorMsg);
               return;
             }
-
-            console.log('✅ Card token recibido:', {
-              id: token.id,
-              last4: token.last_four_digits,
-            });
 
             this.cardTokenGenerated.emit({
               cardToken: token.id,
@@ -370,10 +352,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       if (!this.cardForm) {
         throw new Error('CardForm no se creó correctamente');
       }
-
-      console.log('✅ CardForm inicializado exitosamente');
     } catch (error) {
-      console.error('❌ Error fatal inicializando Mercado Pago:', error);
       const errorDetails = error instanceof Error ? error.message : String(error);
       const userMessage = `No pudimos cargar Mercado Pago: ${errorDetails}. Intenta recargar la página.`;
       this.errorMessage.set(userMessage);

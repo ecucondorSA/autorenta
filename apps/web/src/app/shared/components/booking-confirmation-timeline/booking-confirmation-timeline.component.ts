@@ -185,9 +185,9 @@ export class BookingConfirmationTimelineComponent {
         actionDescription: 'Confirmar que recibiste el vehículo (con o sin daños)',
         metadata: booking.owner_reported_damages
           ? {
-            damageAmount: booking.owner_damage_amount || 0,
-            damageDescription: booking.owner_damage_description || undefined,
-          }
+              damageAmount: booking.owner_damage_amount || 0,
+              damageDescription: booking.owner_damage_description || undefined,
+            }
           : undefined,
       },
 

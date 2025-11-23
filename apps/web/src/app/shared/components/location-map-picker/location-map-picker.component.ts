@@ -117,7 +117,7 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
   coordinates = signal<LocationCoordinates | null>(null);
   currentAddress = signal<string>('');
 
-  constructor(private readonly geocodingService: GeocodingService) { }
+  constructor(private readonly geocodingService: GeocodingService) {}
 
   ngOnInit(): void {
     if (this.initialAddress) {

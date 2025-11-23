@@ -103,8 +103,6 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
     { label: '1 mes', days: 30, icon: '📆' },
   ];
 
-
-
   ngAfterViewInit(): void {
     this.initFlatpickr();
   }

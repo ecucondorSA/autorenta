@@ -48,7 +48,7 @@ export class CarBookingPage {
       const payload = await this.bookingService.requestBooking(
         this.carId,
         this.selectedRange.start,
-        this.selectedRange.end
+        this.selectedRange.end,
       );
       this.result = payload;
     } catch (err: unknown) {

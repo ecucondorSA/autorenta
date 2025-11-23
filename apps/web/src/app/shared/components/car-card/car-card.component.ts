@@ -16,12 +16,12 @@ import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Car } from '../../../core/models';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
-import { RealtimePricingService } from '../../../core/services/realtime-pricing.service';
-import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { RealtimePricingService } from '../../../core/services/realtime-pricing.service';
+import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
-import { getCarImageUrl } => '../../utils/car-placeholder.util';
+import { getCarImageUrl } from '../../utils/car-placeholder.util';
 
 @Component({
   selector: 'app-car-card',

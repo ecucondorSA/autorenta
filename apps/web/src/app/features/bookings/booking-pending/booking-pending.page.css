@@ -23,7 +23,8 @@
 
 /* Custom bounce animation for dots */
 @keyframes custom-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {

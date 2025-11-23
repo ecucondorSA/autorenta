@@ -1,14 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  effect,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, effect, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { AuthService } from '../../../core/services/auth.service';
@@ -424,7 +415,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
             m.body === message.body &&
             m.sender_id === message.sender_id &&
             Math.abs(new Date(m.created_at).getTime() - new Date(message.created_at).getTime()) <
-            5000,
+              5000,
         );
 
         if (optimisticIndex >= 0) {
@@ -452,7 +443,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
 
       if (message.sender_id !== this.currentUserId()) {
         this.showNotification(`Nuevo mensaje de ${ctx.recipientName}`);
-        this.notificationSound.playNotificationSound().catch(() => { });
+        this.notificationSound.playNotificationSound().catch(() => {});
         this.messageReceived.emit({ message, context: ctx });
       }
     };

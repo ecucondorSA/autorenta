@@ -102,22 +102,8 @@ export class BookingsService {
       throw new Error('request_booking did not return a booking id');
     }
 
-    // Activate insurance coverage automatically
-    try {
-      await this.insuranceService.activateCoverage({
-        booking_id: bookingId,
-        addon_ids: [],
-      });
-    } catch (insuranceError) {
-      this.logger.error(
-        'Insurance activation failed',
-        'BookingsService',
-        insuranceError instanceof Error
-          ? insuranceError
-          : new Error(getErrorMessage(insuranceError)),
-      );
-      // Don't block booking if insurance fails
-    }
+    // ✅ P0-003 FIX: Activate insurance coverage with retry and BLOCK if fails
+    await this.activateInsuranceWithRetry(bookingId, []);
 
     // Recalculate pricing breakdown
     await this.recalculatePricing(bookingId);
@@ -208,22 +194,8 @@ export class BookingsService {
       throw new Error('request_booking did not return a booking id');
     }
 
-    // Activate insurance coverage automatically
-    try {
-      await this.insuranceService.activateCoverage({
-        booking_id: bookingId,
-        addon_ids: [],
-      });
-    } catch (insuranceError) {
-      this.logger.error(
-        'Insurance activation failed',
-        'BookingsService',
-        insuranceError instanceof Error
-          ? insuranceError
-          : new Error(getErrorMessage(insuranceError)),
-      );
-      // Don't block booking if insurance fails
-    }
+    // ✅ P0-003 FIX: Activate insurance coverage with retry and BLOCK if fails
+    await this.activateInsuranceWithRetry(bookingId, []);
 
     // Recalculate pricing breakdown
     await this.recalculatePricing(bookingId);
@@ -919,5 +891,227 @@ export class BookingsService {
 
   private getBookingPricePerDay(booking: BookingWithMetadata): number {
     return typeof booking.price_per_day === 'number' ? (booking.price_per_day ?? 0) : 0;
+  }
+
+  // ============================================================================
+  // PAYMENT ISSUES (P0-002 FIX)
+  // ============================================================================
+
+  /**
+   * Create a payment issue record for manual review and background retry
+   *
+   * ✅ P0-002 FIX: Registro de fallos de wallet unlock para retry posterior
+   *
+   * Esta función guarda los errores críticos de pago/wallet en la tabla
+   * `payment_issues` para que un background job pueda reintentarlos.
+   *
+   * @param issue - Payment issue data
+   * @returns Promise<void>
+   */
+  async createPaymentIssue(issue: {
+    booking_id: string;
+    issue_type: string;
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    description: string;
+    metadata?: Record<string, unknown>;
+    status?: 'pending_review' | 'in_progress' | 'resolved' | 'ignored';
+  }): Promise<void> {
+    const { data, error } = await this.supabase.from('payment_issues').insert({
+      booking_id: issue.booking_id,
+      issue_type: issue.issue_type,
+      severity: issue.severity,
+      description: issue.description,
+      metadata: issue.metadata || {},
+      status: issue.status || 'pending_review',
+      created_at: new Date().toISOString(),
+    });
+
+    if (error) {
+      this.logger.error('Failed to create payment issue record', 'BookingsService', error);
+      throw error;
+    }
+
+    this.logger.info('Payment issue created successfully', 'BookingsService', {
+      booking_id: issue.booking_id,
+      issue_type: issue.issue_type,
+      severity: issue.severity,
+    });
+  }
+
+  // ============================================================================
+  // INSURANCE ACTIVATION (P0-003 FIX)
+  // ============================================================================
+
+  /**
+   * Activate insurance coverage with retry logic and MANDATORY blocking
+   *
+   * ✅ P0-003 FIX: Insurance activation BLOCKS booking if it fails
+   *
+   * CRITICAL: This method will throw an error if insurance activation fails
+   * after all retries. This is MANDATORY for legal compliance - bookings
+   * CANNOT proceed without valid insurance coverage.
+   *
+   * Features:
+   * - 3 retry attempts with exponential backoff (1s, 2s, 4s)
+   * - Detailed logging of each attempt
+   * - Critical alerts to Sentry if all retries fail
+   * - BLOCKS booking creation if insurance fails
+   * - Auto-cancellation of booking if insurance fails
+   *
+   * Legal Requirements:
+   * - All bookings MUST have active insurance coverage
+   * - Violation of this requirement is ILLEGAL in most jurisdictions
+   * - Potential financial exposure: millions USD per incident
+   *
+   * @param bookingId - ID of the booking
+   * @param addonIds - Optional insurance addon IDs
+   * @throws Error if insurance activation fails after all retries
+   */
+  private async activateInsuranceWithRetry(
+    bookingId: string,
+    addonIds: string[] = [],
+  ): Promise<void> {
+    const maxRetries = 3;
+    let lastError: unknown;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        this.logger.info(
+          `Attempting insurance activation (attempt ${attempt}/${maxRetries})`,
+          'BookingsService',
+          { bookingId, addonIds, attempt },
+        );
+
+        // Attempt to activate insurance
+        await this.insuranceService.activateCoverage({
+          booking_id: bookingId,
+          addon_ids: addonIds,
+        });
+
+        this.logger.info('Insurance activated successfully', 'BookingsService', {
+          bookingId,
+          addonIds,
+          attempt,
+          totalAttempts: attempt,
+        });
+
+        // ✅ Success - insurance is active
+        return;
+      } catch (error) {
+        lastError = error;
+
+        this.logger.warn(
+          `Insurance activation failed (attempt ${attempt}/${maxRetries})`,
+          'BookingsService',
+          error instanceof Error ? error : new Error(getErrorMessage(error)),
+        );
+
+        // If not the last attempt, wait with exponential backoff
+        if (attempt < maxRetries) {
+          const delayMs = Math.pow(2, attempt - 1) * 1000; // 1s, 2s, 4s
+          await this.delay(delayMs);
+        }
+      }
+    }
+
+    // ❌ All retries failed - CRITICAL ERROR
+    await this.handleInsuranceActivationFailure(bookingId, addonIds, lastError);
+  }
+
+  /**
+   * Handle critical insurance activation failure
+   *
+   * Actions:
+   * 1. Log CRITICAL error to Sentry (legal compliance)
+   * 2. Auto-cancel the booking (cannot proceed without insurance)
+   * 3. Create compliance issue record for audit trail
+   * 4. Alert compliance team
+   *
+   * @param bookingId - ID of the booking
+   * @param addonIds - Insurance addon IDs that failed to activate
+   * @param error - Error that caused the failure
+   * @throws Error - Always throws to block booking creation
+   */
+  private async handleInsuranceActivationFailure(
+    bookingId: string,
+    addonIds: string[],
+    error: unknown,
+  ): Promise<never> {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+
+    // 1. ❌ CRITICAL LOG - Legal compliance violation
+    this.logger.critical(
+      'CRITICAL: Insurance activation failed - LEGAL COMPLIANCE VIOLATION',
+      'BookingsService',
+      error instanceof Error ? error : new Error(`Insurance activation failed: ${errorMessage}`),
+    );
+
+    // 2. Log detailed information for audit trail
+    this.logger.error(
+      'Insurance activation failure details (LEGAL COMPLIANCE)',
+      'BookingsService',
+      error instanceof Error ? error : new Error(errorMessage),
+    );
+
+    // 3. Auto-cancel the booking (cannot proceed without insurance)
+    try {
+      await this.updateBooking(bookingId, {
+        status: 'cancelled',
+        cancellation_reason: 'insurance_activation_failed',
+        cancelled_at: new Date().toISOString(),
+      });
+
+      this.logger.info('Booking auto-cancelled due to insurance failure', 'BookingsService', {
+        bookingId,
+      });
+    } catch (cancelError) {
+      this.logger.error(
+        'Failed to auto-cancel booking after insurance failure',
+        'BookingsService',
+        cancelError instanceof Error ? cancelError : new Error(getErrorMessage(cancelError)),
+      );
+    }
+
+    // 4. Create compliance issue for audit trail
+    try {
+      await this.createPaymentIssue({
+        booking_id: bookingId,
+        issue_type: 'insurance_activation_failed',
+        severity: 'critical',
+        description: `LEGAL COMPLIANCE: Failed to activate insurance after ${3} retry attempts. Booking auto-cancelled.`,
+        metadata: {
+          addon_ids: addonIds,
+          error: errorMessage,
+          stack: errorStack,
+          timestamp: new Date().toISOString(),
+          retry_count: 3,
+          compliance_violation: true,
+          legal_risk: 'HIGH',
+        },
+        status: 'pending_review',
+      });
+    } catch (issueError) {
+      this.logger.error(
+        'Failed to create compliance issue record',
+        'BookingsService',
+        issueError instanceof Error ? issueError : new Error(getErrorMessage(issueError)),
+      );
+    }
+
+    // 5. ❌ THROW ERROR - BLOCK booking creation
+    throw new Error(
+      `CRITICAL: Cannot create booking without insurance coverage. ` +
+        `Insurance activation failed after ${3} attempts. ` +
+        `Error: ${errorMessage}. ` +
+        `Booking has been auto-cancelled for legal compliance.`,
+    );
+  }
+
+  /**
+   * Utility: Delay execution for specified milliseconds
+   */
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

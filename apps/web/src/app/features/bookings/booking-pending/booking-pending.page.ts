@@ -31,13 +31,7 @@ type Car = Database['public']['Tables']['cars']['Row'];
 @Component({
   selector: 'app-booking-pending',
   standalone: true,
-  imports: [
-    CommonModule,
-    TranslateModule,
-    LoadingStateComponent,
-    ButtonComponent,
-    MoneyPipe,
-  ],
+  imports: [CommonModule, TranslateModule, LoadingStateComponent, ButtonComponent, MoneyPipe],
   templateUrl: './booking-pending.page.html',
   styleUrls: ['./booking-pending.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,37 +71,39 @@ export class BookingPendingPage implements OnInit, OnDestroy {
   private loadBookingData(bookingId: string): void {
     this.loading.set(true);
 
-    from(this.bookingService.getBookingById(bookingId))
-      .subscribe({
-        next: (booking) => {
-          if (!booking) {
-            this.toastService.error('Reserva no encontrada', 'No se pudo encontrar la reserva solicitada');
-            this.router.navigate(['/']);
-            return;
-          }
-
-          this.booking.set(booking as unknown as Booking);
-
-          // Load car data if available
-          if (booking.car) {
-            this.car.set(booking.car as Car);
-          }
-
-          // Check if payment is already processed
-          if (booking.payment_status === 'approved') {
-            this.handlePaymentApproved(bookingId);
-          } else if (booking.payment_status === 'rejected') {
-            this.handlePaymentRejected(bookingId);
-          }
-
-          this.loading.set(false);
-        },
-        error: (error) => {
-          console.error('[BookingPending] Error loading booking:', error);
-          this.toastService.error('Error de carga', 'No se pudo cargar la información de la reserva');
+    from(this.bookingService.getBookingById(bookingId)).subscribe({
+      next: (booking) => {
+        if (!booking) {
+          this.toastService.error(
+            'Reserva no encontrada',
+            'No se pudo encontrar la reserva solicitada',
+          );
           this.router.navigate(['/']);
-        },
-      });
+          return;
+        }
+
+        this.booking.set(booking as unknown as Booking);
+
+        // Load car data if available
+        if (booking.car) {
+          this.car.set(booking.car as Car);
+        }
+
+        // Check if payment is already processed
+        if (booking.payment_status === 'approved') {
+          this.handlePaymentApproved(bookingId);
+        } else if (booking.payment_status === 'rejected') {
+          this.handlePaymentRejected(bookingId);
+        }
+
+        this.loading.set(false);
+      },
+      error: (error) => {
+        console.error('[BookingPending] Error loading booking:', error);
+        this.toastService.error('Error de carga', 'No se pudo cargar la información de la reserva');
+        this.router.navigate(['/']);
+      },
+    });
   }
 
   private startPolling(bookingId: string): void {
@@ -115,14 +111,14 @@ export class BookingPendingPage implements OnInit, OnDestroy {
     interval(10000)
       .pipe(
         takeUntil(this.destroy$),
-        switchMap(() => this.bookingService.getBookingById(bookingId))
+        switchMap(() => this.bookingService.getBookingById(bookingId)),
       )
       .subscribe({
         next: (booking) => {
           if (!booking) return;
 
           this.booking.set(booking as unknown as Booking);
-          this.checkCount.update(count => count + 1);
+          this.checkCount.update((count) => count + 1);
 
           // Check payment status
           if (booking.payment_status === 'approved') {
@@ -149,27 +145,33 @@ export class BookingPendingPage implements OnInit, OnDestroy {
     this.destroy$.next(); // Stop polling
     this.toastService.error('Pago rechazado', 'El pago fue rechazado por el procesador');
     this.router.navigate(['/bookings', bookingId, 'payment'], {
-      queryParams: { retry: 'true' }
+      queryParams: { retry: 'true' },
     });
   }
 
   private handleTimeout(_bookingId: string): void {
     this.destroy$.next(); // Stop polling
-    this.toastService.warning('Verificación pendiente', 'La verificación del pago está tardando más de lo esperado');
+    this.toastService.warning(
+      'Verificación pendiente',
+      'La verificación del pago está tardando más de lo esperado',
+    );
   }
 
   retryPayment(): void {
     const bookingId = this.booking()?.id;
     if (bookingId) {
       this.router.navigate(['/bookings', bookingId, 'payment'], {
-        queryParams: { retry: 'true' }
+        queryParams: { retry: 'true' },
       });
     }
   }
 
   contactSupport(): void {
     // Open support chat or email
-    window.open('mailto:soporte@autorenta.com?subject=Pago pendiente - Reserva ' + this.booking()?.id, '_blank');
+    window.open(
+      'mailto:soporte@autorenta.com?subject=Pago pendiente - Reserva ' + this.booking()?.id,
+      '_blank',
+    );
   }
 
   goToBookingDetail(): void {

@@ -51,11 +51,7 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     provideHttpClient(
-      withInterceptors([
-        SupabaseAuthInterceptor,
-        authRefreshInterceptor,
-        httpErrorInterceptor,
-      ]),
+      withInterceptors([SupabaseAuthInterceptor, authRefreshInterceptor, httpErrorInterceptor]),
     ),
     provideAnimationsAsync(),
     provideIonicAngular({
@@ -79,11 +75,11 @@ export const appConfig: ApplicationConfig = {
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode()
       ? {
-        provide: APP_INITIALIZER,
-        useFactory: initializePerformanceMonitoring,
-        deps: [PerformanceMonitoringService],
-        multi: true,
-      }
+          provide: APP_INITIALIZER,
+          useFactory: initializePerformanceMonitoring,
+          deps: [PerformanceMonitoringService],
+          multi: true,
+        }
       : [],
   ],
 };

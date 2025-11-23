@@ -6,7 +6,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
   standalone: true,
   imports: [CommonModule],
   templateUrl: './splash.component.html',
-  styleUrls: ['./splash.component.scss']
+  styleUrls: ['./splash.component.scss'],
 })
 export class SplashComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('splashVideo') splashVideo!: ElementRef<HTMLVideoElement>;
@@ -18,7 +18,7 @@ export class SplashComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     if (this.splashVideo?.nativeElement) {
       this.splashVideo.nativeElement.muted = true; // Ensure muted for autoplay policy
-      this.splashVideo.nativeElement.play().catch(err => {
+      this.splashVideo.nativeElement.play().catch((err) => {
         console.error('Splash video autoplay failed:', err);
       });
     }

@@ -7,6 +7,6 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './insurance-policy.page.html',
-  styleUrls: ['../legal-shared.css']
+  styleUrls: ['../legal-shared.css'],
 })
-export class InsurancePolicyPage { }
+export class InsurancePolicyPage {}

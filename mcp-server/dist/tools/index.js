@@ -1,10 +1,13 @@
 import { registerAuditTools } from './audit.js';
+import { registerCodeAnalysisTools } from './code-analysis.js';
 import { z } from 'zod';
 export function registerTools(server, supabase, audit) {
     // Register audit tools if audit client is provided
     if (audit) {
         registerAuditTools(server, audit);
     }
+    // Register code analysis and auto-fix tools
+    registerCodeAnalysisTools(server);
     // Tool: Aprobar una reserva pendiente
     server.registerTool('approve_booking', async (args) => {
         const schema = z.object({

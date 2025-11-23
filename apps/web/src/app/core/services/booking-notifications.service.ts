@@ -40,7 +40,6 @@ export class BookingNotificationsService {
         bookingData.cars?.title || `${bookingData.cars?.brand} ${bookingData.cars?.model}`;
       const renterName = bookingData.renter?.full_name || 'el locatario';
 
-
       // Notificar según el cambio de estado
       switch (newStatus) {
         case 'confirmed':
@@ -370,9 +369,3 @@ export class BookingNotificationsService {
     }
   }
 }
-
-
-
-
-
-

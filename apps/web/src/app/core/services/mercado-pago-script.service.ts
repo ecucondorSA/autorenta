@@ -39,7 +39,9 @@ export class MercadoPagoScriptService {
     }
 
     // Check if hints already exist
-    const existingPreconnect = this.document.querySelector('link[href="https://sdk.mercadopago.com"]');
+    const existingPreconnect = this.document.querySelector(
+      'link[href="https://sdk.mercadopago.com"]',
+    );
     if (existingPreconnect) {
       this.preloadAdded = true;
       return;
@@ -131,13 +133,15 @@ export class MercadoPagoScriptService {
         this.scriptLoaded = true;
 
         // Wait for SDK to be available on window (with retry logic)
-        this.waitForMercadoPagoSDK().then(() => {
-          console.log('✅ MercadoPago SDK loaded and available on window');
-          resolve();
-        }).catch((error) => {
-          console.error('❌ Failed to initialize MercadoPago SDK', error);
-          reject(error);
-        });
+        this.waitForMercadoPagoSDK()
+          .then(() => {
+            console.log('✅ MercadoPago SDK loaded and available on window');
+            resolve();
+          })
+          .catch((error) => {
+            console.error('❌ Failed to initialize MercadoPago SDK', error);
+            reject(error);
+          });
       };
 
       script.onerror = (error: unknown) => {
@@ -176,8 +180,13 @@ export class MercadoPagoScriptService {
 
       if (typeof MercadoPagoGlobal === 'undefined') {
         console.error('❌ MercadoPago not found on window after waiting');
-        console.log('Available window properties:', Object.keys(windowWithMP).filter(k => k.toLowerCase().includes('mercado')));
-        throw new Error('Mercado Pago object not found after script load. The SDK may not have loaded correctly.');
+        console.log(
+          'Available window properties:',
+          Object.keys(windowWithMP).filter((k) => k.toLowerCase().includes('mercado')),
+        );
+        throw new Error(
+          'Mercado Pago object not found after script load. The SDK may not have loaded correctly.',
+        );
       }
 
       // Validate constructor

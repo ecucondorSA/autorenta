@@ -146,9 +146,9 @@ export class NotificationsSettingsPage implements OnInit {
     // Instrucciones para abrir configuración del navegador
     alert(
       'Para cambiar los permisos de notificaciones:\n\n' +
-      '1. Chrome/Edge: Haz clic en el ícono de candado en la barra de direcciones\n' +
-      '2. Firefox: Haz clic en el ícono de escudo\n' +
-      '3. Safari: Preferencias > Sitios web > Notificaciones',
+        '1. Chrome/Edge: Haz clic en el ícono de candado en la barra de direcciones\n' +
+        '2. Firefox: Haz clic en el ícono de escudo\n' +
+        '3. Safari: Preferencias > Sitios web > Notificaciones',
     );
   }
 }

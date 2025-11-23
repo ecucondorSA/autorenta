@@ -82,10 +82,10 @@ export class BreakpointService {
     // Observable del resize con throttle para performance
     const resize$ = isBrowser
       ? fromEvent(window, 'resize').pipe(
-        throttleTime(150, undefined, { leading: true, trailing: true }),
-        map(() => window.innerWidth),
-        startWith(window.innerWidth),
-      )
+          throttleTime(150, undefined, { leading: true, trailing: true }),
+          map(() => window.innerWidth),
+          startWith(window.innerWidth),
+        )
       : of(defaultWidth); // Static value for SSR
 
     // Convertir a signal

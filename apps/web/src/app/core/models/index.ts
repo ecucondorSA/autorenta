@@ -11,11 +11,25 @@ import type {
 
 // Re-export Supabase types for use throughout the app
 export type {
-  BankAccount as BankAccountDB, Booking as BookingDB, Car as CarDB, PaymentAuthorization, Payment as PaymentDB, Profile, Review as ReviewDB, WalletBalance, WalletLedger, WalletTransaction as WalletTransactionDB
+  BankAccount as BankAccountDB,
+  Booking as BookingDB,
+  Car as CarDB,
+  PaymentAuthorization,
+  Payment as PaymentDB,
+  Profile,
+  Review as ReviewDB,
+  WalletBalance,
+  WalletLedger,
+  WalletTransaction as WalletTransactionDB,
 } from '../types/supabase-types';
 export type {
-  BookingStatus, CancelPolicy, CarStatus,
-  FuelType, PaymentProvider, PaymentStatus, Transmission
+  BookingStatus,
+  CancelPolicy,
+  CarStatus,
+  FuelType,
+  PaymentProvider,
+  PaymentStatus,
+  Transmission,
 };
 
 // Re-export for backward compatibility

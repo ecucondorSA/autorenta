@@ -40,14 +40,17 @@
     </div>
 
     <!-- Check-In Comparison Card -->
-    <div *ngIf="checkInData()"
-      class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-4 mb-6">
+    <div
+      *ngIf="checkInData()"
+      class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-4 mb-6"
+    >
       <h3 class="font-semibold text-cta-default mb-3">📋 Estado al Check-In</h3>
       <div class="space-y-2 text-sm">
         <div class="flex justify-between">
           <span class="text-cta-default">Kilometraje:</span>
-          <span class="font-semibold text-cta-default">{{ checkInData().odometer_reading | number }}
-            km</span>
+          <span class="font-semibold text-cta-default"
+            >{{ checkInData().odometer_reading | number }} km</span
+          >
         </div>
         <div class="flex justify-between">
           <span class="text-cta-default">Combustible:</span>
@@ -65,9 +68,12 @@
         </p>
       </div>
 
-      <app-inspection-uploader [bookingId]="booking()!.id" [stage]="'check_out'"
+      <app-inspection-uploader
+        [bookingId]="booking()!.id"
+        [stage]="'check_out'"
         (inspectionCompleted)="onInspectionCompleted($event)"
-        (inspectionCancelled)="cancel()"></app-inspection-uploader>
+        (inspectionCancelled)="cancel()"
+      ></app-inspection-uploader>
     </div>
 
     <!-- Step 2: Damage Claim -->
@@ -75,8 +81,11 @@
       <div class="card-premium p-6">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-bold text-text-primary">¿Hay daños nuevos que reportar?</h3>
-          <ion-toggle [checked]="hasDamages()" (ionChange)="toggleDamages()"
-            color="danger"></ion-toggle>
+          <ion-toggle
+            [checked]="hasDamages()"
+            (ionChange)="toggleDamages()"
+            color="danger"
+          ></ion-toggle>
         </div>
 
         <!-- Damages Form (if hasDamages) -->
@@ -89,41 +98,60 @@
 
           <ion-item>
             <ion-label position="stacked">Monto del daño (USD) *</ion-label>
-            <ion-input type="number" [value]="damageAmount()"
-              (ionInput)="damageAmount.set($any($event.target).value)" placeholder="Ej: 50" min="1"
-              max="250" required></ion-input>
+            <ion-input
+              type="number"
+              [value]="damageAmount()"
+              (ionInput)="damageAmount.set($any($event.target).value)"
+              placeholder="Ej: 50"
+              min="1"
+              max="250"
+              required
+            ></ion-input>
             <ion-note slot="helper">Máximo: $250 USD</ion-note>
           </ion-item>
 
           <ion-item>
             <ion-label position="stacked">Descripción del daño *</ion-label>
-            <ion-textarea [value]="damagesNotes()"
-              (ionInput)="damagesNotes.set($any($event.target).value)" rows="4"
-              placeholder="Describe el daño en detalle..." required></ion-textarea>
+            <ion-textarea
+              [value]="damagesNotes()"
+              (ionInput)="damagesNotes.set($any($event.target).value)"
+              rows="4"
+              placeholder="Describe el daño en detalle..."
+              required
+            ></ion-textarea>
           </ion-item>
         </div>
 
         <!-- No Damages (if !hasDamages) -->
-        <div *ngIf="!hasDamages()"
-          class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mt-4">
+        <div
+          *ngIf="!hasDamages()"
+          class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mt-4"
+        >
           <div class="flex items-center gap-2">
             <ion-icon name="checkmark-circle" class="text-success-light text-2xl"></ion-icon>
-            <span class="text-sm text-success-light">El auto fue devuelto en buenas
-              condiciones</span>
+            <span class="text-sm text-success-light"
+              >El auto fue devuelto en buenas condiciones</span
+            >
           </div>
         </div>
       </div>
 
       <!-- Submit Buttons -->
       <div class="flex gap-4 mt-6">
-        <button type="button" (click)="step.set('inspection')"
+        <button
+          type="button"
+          (click)="step.set('inspection')"
           class="flex-1 px-6 py-3 rounded-xl border-2 border-border-default text-text-secondary font-semibold hover:bg-surface-secondary transition-all"
-          [disabled]="submitting()">
+          [disabled]="submitting()"
+        >
           Volver a Fotos
         </button>
-        <button type="button" (click)="submitCheckOut()"
+        <button
+          type="button"
+          (click)="submitCheckOut()"
           [disabled]="!canSubmitDamages() || submitting()"
-          class="flex-1 px-6 py-3 rounded-xl bg-cta-default text-cta-text-pure font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+          class="flex-1 px-6 py-3 rounded-xl bg-cta-default text-cta-text-pure font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           <ion-spinner *ngIf="submitting()" name="crescent" class="mr-2"></ion-spinner>
           {{ submitting() ? 'Procesando...' : 'Finalizar Check-Out' }}
         </button>

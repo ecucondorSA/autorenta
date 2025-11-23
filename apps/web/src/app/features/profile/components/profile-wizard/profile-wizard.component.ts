@@ -18,8 +18,6 @@ import { ProfileStore } from '../../../../core/stores/profile.store';
 
 export type WizardStep = 'general' | 'contact' | 'address' | 'license';
 
-
-
 /**
  * ProfileWizardComponent - Wizard de edición de perfil por pasos
  *

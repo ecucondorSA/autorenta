@@ -81,9 +81,7 @@ export class LoginPage {
       await this.auth.signInWithTikTok();
     } catch (err) {
       this.error.set(
-        err instanceof Error
-          ? err.message
-          : 'No pudimos conectar con TikTok. Intentá nuevamente.',
+        err instanceof Error ? err.message : 'No pudimos conectar con TikTok. Intentá nuevamente.',
       );
       this.loading.set(false);
     }

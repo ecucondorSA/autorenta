@@ -24,7 +24,7 @@ export class PendingReviewsBannerComponent implements OnInit {
   loading = signal(false);
   isDismissed = signal(false);
 
-  constructor(private reviewsService: ReviewsService) { }
+  constructor(private reviewsService: ReviewsService) {}
 
   async ngOnInit(): Promise<void> {
     // Check if banner was dismissed in this session

@@ -131,7 +131,7 @@ export class ChatShellComponent implements OnInit, OnDestroy {
 
       if (message.sender_id !== this.currentUserId()) {
         this.showNotification(`Nuevo mensaje de ${ctx.recipientName}`);
-        this.notificationSound.playNotificationSound().catch(() => { });
+        this.notificationSound.playNotificationSound().catch(() => {});
         this.messageReceived.emit({ message, context: ctx });
       }
     };

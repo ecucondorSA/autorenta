@@ -5,7 +5,6 @@ import { TransferResponse, WalletLedgerService } from '@app/core/services/wallet
 import { WalletService } from '@app/core/services/wallet.service';
 import { toSignalOrNull } from '@app/core/utils/signal-helpers';
 
-
 interface UserSearchResult {
   id: string;
   full_name: string;

@@ -51,15 +51,13 @@ export class WalletService {
     this.supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         this.getBalance().subscribe({
-          error: (err) => {
-            // Log error but don't block page - wallet page will show error state
-            console.warn('Failed to load wallet balance on init:', err);
+          error: (_err) => {
+            // Silent error - wallet page will show error state
           },
         });
         this.getTransactions().subscribe({
-          error: (err) => {
-            // Log error but don't block page - wallet page will show error state
-            console.warn('Failed to load wallet transactions on init:', err);
+          error: (_err) => {
+            // Silent error - wallet page will show error state
           },
         });
       }

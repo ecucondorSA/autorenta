@@ -114,8 +114,6 @@ export interface MapControlsEvent {
           background-color: #f3f4f6;
         }
       }
-
-
     `,
   ],
 })

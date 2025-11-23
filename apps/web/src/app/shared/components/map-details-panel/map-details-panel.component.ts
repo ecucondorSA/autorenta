@@ -32,7 +32,8 @@ export class MapDetailsPanelComponent {
     this.navigationService.navigateWithWaze({
       lat: this.carLocation.lat,
       lng: this.carLocation.lng,
-      destinationName: this.carLocation.title || 'Auto en ' + (this.carLocation.locationLabel || 'AutoRenta'),
+      destinationName:
+        this.carLocation.title || 'Auto en ' + (this.carLocation.locationLabel || 'AutoRenta'),
     });
   }
 
@@ -47,7 +48,8 @@ export class MapDetailsPanelComponent {
     this.navigationService.navigateWithGoogleMaps({
       lat: this.carLocation.lat,
       lng: this.carLocation.lng,
-      destinationName: this.carLocation.title || 'Auto en ' + (this.carLocation.locationLabel || 'AutoRenta'),
+      destinationName:
+        this.carLocation.title || 'Auto en ' + (this.carLocation.locationLabel || 'AutoRenta'),
     });
   }
 }

@@ -2,6 +2,7 @@ import type { MCPServer } from '../lib/server.js';
 import type { SupabaseClient } from '../lib/supabase.js';
 import type { AuditClient } from '../lib/audit-client.js';
 import { registerAuditTools } from './audit.js';
+import { registerCodeAnalysisTools } from './code-analysis.js';
 import { z } from 'zod';
 
 // Types for Cloudflare API responses
@@ -38,6 +39,9 @@ export function registerTools(server: MCPServer, supabase: SupabaseClient, audit
   if (audit) {
     registerAuditTools(server, audit);
   }
+
+  // Register code analysis and auto-fix tools
+  registerCodeAnalysisTools(server);
   // Tool: Aprobar una reserva pendiente
   server.registerTool(
     'approve_booking',

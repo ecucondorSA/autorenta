@@ -343,10 +343,7 @@ export class BookingConfirmationPage implements OnInit {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const b = booking as any;
     const confirmDate = this.formatDate(this.confirmedAt());
-    const totalAmount = this.formatCurrency(
-      b.total_price,
-      b.currency || 'ARS',
-    );
+    const totalAmount = this.formatCurrency(b.total_price, b.currency || 'ARS');
 
     return `
 <!DOCTYPE html>

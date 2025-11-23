@@ -15,8 +15,6 @@ import {
 } from '../../shared/components/review-radar-chart/review-radar-chart.component';
 import { getCarImageUrl } from '../../shared/utils/car-placeholder.util';
 
-
-
 @Component({
   selector: 'app-public-profile',
   standalone: true,
