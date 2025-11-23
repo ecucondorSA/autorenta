@@ -120,15 +120,46 @@ export class AnalyticsService {
 
   /**
    * Track de evento principal - envía a GA4 y Supabase
+   * P0-033 FIX: Only track if user has accepted cookies
    */
   trackEvent(eventType: ConversionEventType, data: ConversionEventData = {}): void {
     if (!this.isEnabled) return;
+
+    // P0-033 FIX: Check for cookie consent before tracking
+    if (!this.hasConsentForTracking()) {
+      console.log('[Analytics] Tracking blocked - no cookie consent');
+      return;
+    }
 
     // Track en GA4
     this.trackGA4Event(eventType, data);
 
     // Track en Supabase (async, no bloqueante)
     void this.trackSupabaseEvent(eventType, data);
+  }
+
+  /**
+   * P0-033 FIX: Check if user has given consent for analytics tracking
+   * Reads from localStorage['cookies_consent']
+   */
+  private hasConsentForTracking(): boolean {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return false; // No consent in SSR or environments without localStorage
+    }
+
+    try {
+      const consent = localStorage.getItem('cookies_consent');
+      if (!consent) {
+        return false; // No consent given yet
+      }
+
+      const consentData = JSON.parse(consent);
+      // Check if analytics cookies are accepted
+      return consentData.analytics === true || consentData.all === true;
+    } catch {
+      // If parsing fails, assume no consent
+      return false;
+    }
   }
 
   /**

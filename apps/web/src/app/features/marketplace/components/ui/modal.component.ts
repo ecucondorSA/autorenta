@@ -1,6 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, input, output, ViewChild } from '@angular/core';
+import { Component, ElementRef, input, output, ViewChild, effect } from '@angular/core';
+import { FocusTrapDirective } from '../../../core/directives/focus-trap.directive';
 
 /**
  * Modal Component V2
@@ -16,11 +17,12 @@ import { Component, ElementRef, input, output, ViewChild } from '@angular/core';
  * - Header with title and close button
  * - Footer for actions
  * - Haptic feedback on open/close
+ * - ✅ P1-016: Focus trap for accessibility
  */
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FocusTrapDirective],
   animations: [
     trigger('backdrop', [
       transition(':enter', [
@@ -64,6 +66,7 @@ import { Component, ElementRef, input, output, ViewChild } from '@angular/core';
         role="dialog"
         [attr.aria-modal]="true"
         [attr.aria-labelledby]="titleId()"
+        [appFocusTrap]="isOpen()"
         #modalElement
       >
         <!-- Handle (for visual affordance) -->
@@ -275,6 +278,13 @@ export class ModalComponent {
         }
       });
     }
+
+    // ✅ P1-016: Auto-lock scroll and manage focus when modal opens
+    effect(() => {
+      if (this.isOpen()) {
+        this.open();
+      }
+    });
   }
 
   modalClasses(): string {

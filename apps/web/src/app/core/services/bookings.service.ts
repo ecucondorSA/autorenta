@@ -218,32 +218,71 @@ export class BookingsService {
 
   /**
    * Get bookings for current user using the my_bookings view
+   * ✅ P1-025: Now supports pagination
    */
-  async getMyBookings(): Promise<Booking[]> {
-    const { data, error } = await this.supabase
+  async getMyBookings(options?: {
+    limit?: number;
+    offset?: number;
+    status?: string;
+  }): Promise<{ bookings: Booking[]; total: number }> {
+    const limit = options?.limit ?? 20; // Default: 20 items per page
+    const offset = options?.offset ?? 0;
+
+    let query = this.supabase
       .from('my_bookings')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    // Optional status filter
+    if (options?.status) {
+      query = query.eq('status', options.status);
+    }
+
+    const { data, error, count } = await query;
 
     if (error) throw error;
 
     const bookings = (data ?? []) as Booking[];
     await this.updateAppBadge(bookings);
 
-    return bookings;
+    return {
+      bookings,
+      total: count ?? 0,
+    };
   }
 
   /**
    * Get bookings for cars owned by current user
+   * ✅ P1-025: Now supports pagination
    */
-  async getOwnerBookings(): Promise<Booking[]> {
-    const { data, error } = await this.supabase
+  async getOwnerBookings(options?: {
+    limit?: number;
+    offset?: number;
+    status?: string;
+  }): Promise<{ bookings: Booking[]; total: number }> {
+    const limit = options?.limit ?? 20; // Default: 20 items per page
+    const offset = options?.offset ?? 0;
+
+    let query = this.supabase
       .from('owner_bookings')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    // Optional status filter
+    if (options?.status) {
+      query = query.eq('status', options.status);
+    }
+
+    const { data, error, count } = await query;
 
     if (error) throw error;
-    return (data ?? []) as Booking[];
+
+    return {
+      bookings: (data ?? []) as Booking[],
+      total: count ?? 0,
+    };
   }
 
   /**
@@ -916,7 +955,7 @@ export class BookingsService {
     metadata?: Record<string, unknown>;
     status?: 'pending_review' | 'in_progress' | 'resolved' | 'ignored';
   }): Promise<void> {
-    const { data, error } = await this.supabase.from('payment_issues').insert({
+    const { error } = await this.supabase.from('payment_issues').insert({
       booking_id: issue.booking_id,
       issue_type: issue.issue_type,
       severity: issue.severity,

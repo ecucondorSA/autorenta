@@ -11,6 +11,15 @@
     style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 32px 32px;">
   </div>
 
+  <!-- Floating 3D Model -->
+  <div
+    class="absolute inset-0 z-0 flex items-center justify-center md:justify-end md:pr-10 opacity-90 pointer-events-none">
+    <div class="w-full md:w-3/4 h-full pointer-events-auto">
+      <app-car-3d-viewer src="assets/models/car-3d-model.glb"
+        alt="Featured Car 3D Model"></app-car-3d-viewer>
+    </div>
+  </div>
+
   <div
     class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[calc(3rem+env(safe-area-inset-top))] pb-10 lg:py-20 w-full">
     <!-- Hero Title Section -->
@@ -42,11 +51,7 @@
         Miles de vehículos verificados listos para tu próxima aventura
       </p>
 
-      <!-- 3D Model Hero -->
-      <div class="w-full h-[400px] md:h-[500px] mb-8 relative z-20">
-        <app-car-3d-viewer src="assets/models/blue_pickup_optimized.glb"
-          alt="Featured Car 3D Model"></app-car-3d-viewer>
-      </div>
+      <!-- 3D Model Hero (Removed - Floating now) -->
 
       <!-- Stats bar -->
       <div class="flex items-center justify-center gap-2 md:gap-8 mb-6 md:mb-8 flex-wrap px-2">

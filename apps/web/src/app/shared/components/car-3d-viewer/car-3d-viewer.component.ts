@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 
@@ -172,9 +173,9 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
         height: 100%;
         min-height: 300px;
         position: relative;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.05) 100%);
-        border-radius: 1rem;
-        overflow: hidden;
+        background: transparent;
+        /* border-radius: 1rem; removed for floating effect */
+        /* overflow: hidden; removed for floating effect */
       }
 
       model-viewer {

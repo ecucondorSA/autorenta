@@ -10,9 +10,11 @@ import {
 } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
+  PreloadAllModules,
   provideRouter,
   withEnabledBlockingInitialNavigation,
   withInMemoryScrolling,
+  withPreloading,
 } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideIonicAngular } from '@ionic/angular/standalone';
@@ -23,6 +25,7 @@ import { routes } from './app.routes';
 import { authRefreshInterceptor } from './core/interceptors/auth-refresh.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
+import { httpCacheInterceptor } from './core/interceptors/http-cache.interceptor';
 import { GlobalErrorHandler } from './core/services/global-error-handler';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
 import { SupabaseClientService } from './core/services/supabase-client.service';
@@ -44,6 +47,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       routes,
+      withPreloading(PreloadAllModules),
       withEnabledBlockingInitialNavigation(),
       withInMemoryScrolling({
         scrollPositionRestoration: 'enabled',
@@ -51,7 +55,12 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     provideHttpClient(
-      withInterceptors([SupabaseAuthInterceptor, authRefreshInterceptor, httpErrorInterceptor]),
+      withInterceptors([
+        SupabaseAuthInterceptor,
+        authRefreshInterceptor,
+        httpCacheInterceptor, // ✅ P1-021: HTTP caching
+        httpErrorInterceptor,
+      ]),
     ),
     provideAnimationsAsync(),
     provideIonicAngular({

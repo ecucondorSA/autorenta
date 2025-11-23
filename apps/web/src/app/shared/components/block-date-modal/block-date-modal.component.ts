@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { FocusTrapDirective } from '../../../core/directives/focus-trap.directive';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import type { Instance } from 'flatpickr/dist/types/instance';
@@ -27,7 +28,7 @@ export interface BlockDateRequest {
 @Component({
   selector: 'app-block-date-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FocusTrapDirective],
   template: `
     <div
       *ngIf="isOpen()"
@@ -37,10 +38,14 @@ export interface BlockDateRequest {
       <div
         class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all"
         (click)="$event.stopPropagation()"
+        [appFocusTrap]="isOpen()"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-labelledby]="'block-date-modal-title'"
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary">
+          <h2 id="block-date-modal-title" class="text-xl font-bold text-text-primary dark:text-text-secondary">
             {{ title() || 'Bloquear Fechas' }}
           </h2>
           <button

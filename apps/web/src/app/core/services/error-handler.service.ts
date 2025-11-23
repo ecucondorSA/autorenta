@@ -146,7 +146,7 @@ export class ErrorHandlerService {
     // If it's already a user-friendly string (no technical jargon), return it
     if (typeof error === 'string') {
       // In production, check if message contains technical terms
-      if (environment.production && this.containsTechnicalJargon(error)) {
+      if (environment.production && this.isTechnicalJargon(error)) {
         return 'Ocurrió un error inesperado. Por favor intenta nuevamente.';
       }
       return error;
@@ -158,7 +158,7 @@ export class ErrorHandlerService {
       errorMessage = error.message.toLowerCase();
 
       // ✅ P0-020: In production, NEVER expose Error objects directly
-      if (environment.production && this.containsTechnicalJargon(error.message)) {
+      if (environment.production && this.isTechnicalJargon(error.message)) {
         // Return generic message, log details to Sentry only
         this.logger.error('Technical error hidden from user (production)', 'ErrorHandlerService', error);
         errorMessage = ''; // Clear to force mapping to user-friendly message
@@ -167,7 +167,7 @@ export class ErrorHandlerService {
       errorMessage = String(error.message).toLowerCase();
 
       // ✅ P0-020: Same protection for error-like objects
-      if (environment.production && this.containsTechnicalJargon(String(error.message))) {
+      if (environment.production && this.isTechnicalJargon(String(error.message))) {
         this.logger.error('Technical error hidden from user (production)', 'ErrorHandlerService',
           error instanceof Error ? error : new Error(String(error.message)));
         errorMessage = '';
@@ -317,7 +317,7 @@ export class ErrorHandlerService {
    * Technical terms should never be shown to users in production
    * @private
    */
-  private containsTechnicalJargon(message: string): boolean {
+  private isTechnicalJargon(message: string): boolean {
     const technicalPatterns = [
       /Error:/i,
       /Exception/i,

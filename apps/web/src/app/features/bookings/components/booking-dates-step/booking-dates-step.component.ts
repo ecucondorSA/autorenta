@@ -84,8 +84,40 @@ export class BookingDatesStepComponent implements OnInit {
   }
 
   onDateRangeChange(dateRange: { from: string | null; to: string | null }) {
-    this.startDate.set(dateRange.from ? new Date(dateRange.from) : null);
-    this.endDate.set(dateRange.to ? new Date(dateRange.to) : null);
+    // P0-029 FIX: Validate dates are not in the past
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for comparison
+
+    const startDate = dateRange.from ? new Date(dateRange.from) : null;
+    const endDate = dateRange.to ? new Date(dateRange.to) : null;
+
+    // Validate start date is not in the past
+    if (startDate && startDate < today) {
+      console.warn('[P0-029] Start date cannot be in the past');
+      this.startDate.set(null);
+      this.endDate.set(null);
+      alert('La fecha de inicio no puede ser en el pasado');
+      return;
+    }
+
+    // Validate end date is after start date and not in the past
+    if (endDate) {
+      if (endDate < today) {
+        console.warn('[P0-029] End date cannot be in the past');
+        this.endDate.set(null);
+        alert('La fecha de fin no puede ser en el pasado');
+        return;
+      }
+      if (startDate && endDate <= startDate) {
+        console.warn('[P0-029] End date must be after start date');
+        this.endDate.set(null);
+        alert('La fecha de fin debe ser posterior a la fecha de inicio');
+        return;
+      }
+    }
+
+    this.startDate.set(startDate);
+    this.endDate.set(endDate);
     this.emitChanges();
   }
 

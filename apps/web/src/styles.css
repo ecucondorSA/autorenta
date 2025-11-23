@@ -96,6 +96,33 @@ body.no-scroll {
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════
+   ✅ P1-020: DISABLED BUTTON STYLES
+   ═══════════════════════════════════════════════════════════════ */
+@layer components {
+  /* Universal disabled state for all buttons */
+  button:disabled,
+  button[disabled],
+  a[disabled],
+  .btn:disabled,
+  .btn[disabled] {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    filter: grayscale(30%) !important;
+  }
+
+  /* Disabled state for input elements */
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    background-color: var(--surface-secondary) !important;
+    color: var(--text-muted) !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
    🎨 SISTEMA DE DISEÑO - AUTORENTAR
    ═══════════════════════════════════════════════════════════════ */
 
