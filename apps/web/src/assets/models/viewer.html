@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autorenta - Visor 3D de Autos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            padding: 30px;
+            min-height: 600px;
+        }
+
+        #canvas {
+            background: linear-gradient(180deg, #e0e7ff 0%, #f3e7ff 100%);
+            border-radius: 10px;
+            width: 100%;
+            min-height: 500px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .color-selector {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .color-selector h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .color-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .color-btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 0.95em;
+        }
+
+        .color-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-btn.rojo {
+            background: linear-gradient(135deg, #FF6B6B 0%, #C92A2A 100%);
+        }
+
+        .color-btn.azul {
+            background: linear-gradient(135deg, #4DABF7 0%, #1971C2 100%);
+        }
+
+        .color-btn.blanco {
+            background: linear-gradient(135deg, #F1F3F5 0%, #DEE2E6 100%);
+            color: #333;
+            border: 2px solid #dee2e6;
+        }
+
+        .color-btn.negro {
+            background: linear-gradient(135deg, #2C3E50 0%, #000000 100%);
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .controls h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+
+        .controls-text {
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .controls-text strong {
+            color: #333;
+        }
+
+        .controls-text span {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .info {
+            background: #e7f5ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #4DABF7;
+        }
+
+        .info h3 {
+            color: #1971C2;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .info p {
+            color: #1971C2;
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .color-buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .color-btn {
+                flex: 1;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 Autorenta</h1>
+            <p>Visor 3D de Autos - Selector de Colores</p>
+        </div>
+
+        <div class="content">
+            <div id="canvas-container" class="loading">
+                <div class="spinner"></div>
+                <div>Cargando modelo 3D...</div>
+            </div>
+
+            <div class="sidebar">
+                <div class="color-selector">
+                    <h3>🎨 Colores</h3>
+                    <div class="color-buttons">
+                        <button class="color-btn rojo" onclick="changeColor(0xFF0000)">
+                            <span>●</span> Rojo
+                        </button>
+                        <button class="color-btn azul" onclick="changeColor(0x0033FF)">
+                            <span>●</span> Azul
+                        </button>
+                        <button class="color-btn blanco" onclick="changeColor(0xFFFFFF)">
+                            <span>●</span> Blanco
+                        </button>
+                        <button class="color-btn negro" onclick="changeColor(0x1A1A1A)">
+                            <span>●</span> Negro
+                        </button>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <h3>🎮 Controles</h3>
+                    <div class="controls-text">
+                        <span><strong>Mouse:</strong> Rotar</span>
+                        <span><strong>Scroll:</strong> Zoom</span>
+                        <span><strong>Click+Drag:</strong> Panorámica</span>
+                    </div>
+                </div>
+
+                <div class="info">
+                    <h3>ℹ️ Información</h3>
+                    <p>Modelo 3D optimizado con compresión Draco. Renderizado en tiempo real con Three.js.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/GLTFLoader.js"></script>
+
+    <script>
+        // Variables globales
+        let scene, camera, renderer, car, controls;
+
+        // Inicializar escena
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xe0e7ff);
+
+            // Camera
+            const container = document.getElementById('canvas-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.set(5, 3, 5);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            container.innerHTML = '';
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 15, 10);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            // Controls
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 2;
+
+            // Cargar modelo
+            loadModel();
+
+            // Handle resize
+            window.addEventListener('resize', onWindowResize);
+
+            // Render loop
+            animate();
+        }
+
+        // Cargar modelo GLB
+        function loadModel() {
+            const loader = new THREE.GLTFLoader();
+
+            loader.load('./car-3d-model-pbr-optimized.glb', (gltf) => {
+                car = gltf.scene;
+
+                // Escalar y posicionar
+                car.scale.set(1, 1, 1);
+                car.position.set(0, 0, 0);
+
+                // Mejorar materiales
+                car.traverse((node) => {
+                    if (node.isMesh) {
+                        node.castShadow = true;
+                        node.receiveShadow = true;
+
+                        // Mejorar material
+                        if (node.material) {
+                            node.material.envMapIntensity = 0.8;
+                        }
+                    }
+                });
+
+                scene.add(car);
+
+                // Reemplazar spinner por canvas
+                const container = document.getElementById('canvas-container');
+                container.innerHTML = '';
+                container.appendChild(renderer.domElement);
+
+                console.log('✓ Modelo cargado exitosamente');
+            },
+            (progress) => {
+                const percent = Math.round((progress.loaded / progress.total) * 100);
+                console.log(`Cargando: ${percent}%`);
+            },
+            (error) => {
+                console.error('Error cargando modelo:', error);
+                document.getElementById('canvas-container').innerHTML =
+                    '<div class="loading" style="color: red;">Error: No se puede cargar el modelo. Verifica la ruta.</div>';
+            });
+        }
+
+        // Cambiar color del auto
+        function changeColor(hexColor) {
+            if (!car) return;
+
+            car.traverse((child) => {
+                if (child.isMesh && child.material) {
+                    child.material.color.setHex(hexColor);
+                }
+            });
+        }
+
+        // Animar
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (controls) {
+                controls.update();
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Resize
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        // Iniciar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

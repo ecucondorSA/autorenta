@@ -204,7 +204,11 @@ export class BookingWalletService {
 
   /**
    * Deduct from security deposit for damages
-   * Charges a portion (or all) of the locked security deposit
+   * P0-SECURITY: Uses atomic RPC function to prevent partial state
+   *
+   * All operations (deduct from renter, pay to owner, update booking)
+   * happen in a single database transaction. If any step fails,
+   * everything is rolled back automatically.
    */
   async deductFromSecurityDeposit(
     booking: Booking,
@@ -220,88 +224,59 @@ export class BookingWalletService {
         return { ok: false, error: 'No security deposit is locked for this booking' };
       }
 
-      // Get locked amount from consolidated view
-      // ACTUALIZADO (2025-10-22): Usa vista consolidada que incluye legacy + ledger
-      const { data: lockTx, error: lockTxError } = await this.supabase
-        .from('v_wallet_history')
-        .select('amount_cents')
-        .eq('id', booking.wallet_lock_transaction_id)
-        .in('transaction_type', ['lock', 'security_deposit_lock', 'rental_payment_lock'])
-        .single();
+      // P0-SECURITY: Use atomic RPC function instead of multiple inserts
+      // This ensures all operations succeed or fail together
+      const { data, error } = await this.supabase.rpc('wallet_deduct_damage_atomic', {
+        p_booking_id: booking.id,
+        p_renter_id: booking.user_id,
+        p_owner_id: booking.owner_id,
+        p_damage_amount_cents: damageAmountCents,
+        p_damage_description: damageDescription,
+        p_car_id: booking.car_id,
+      });
 
-      if (lockTxError || !lockTx) {
-        return { ok: false, error: 'Lock transaction not found' };
+      if (error) {
+        this.logger.error(
+          'Atomic damage deduction failed',
+          'BookingWalletService',
+          error as Error,
+        );
+        return { ok: false, error: error.message };
       }
 
-      // Vista consolidada retorna amount_cents, convertir a centavos si es necesario
-      const lockedAmount = lockTx.amount_cents;
+      // Parse the JSONB result from the RPC
+      const result = data as {
+        ok: boolean;
+        remaining_deposit?: number;
+        damage_charged?: number;
+        original_deposit?: number;
+        error?: string;
+        error_code?: string;
+      };
 
-      if (damageAmountCents > lockedAmount) {
+      if (!result.ok) {
         return {
           ok: false,
-          error: `Damage amount (${damageAmountCents / 100}) exceeds locked deposit (${lockedAmount / 100})`,
+          error: result.error || 'Error en transacción atómica de deducción',
         };
       }
 
-      // Generate unique ref
-      const ref = `damage-deduction-${booking.id}-${Date.now()}`;
-
-      // 1. Deduct from renter's locked funds (rental_charge kind)
-      const { error: deductError } = await this.supabase.from('wallet_ledger').insert({
-        user_id: booking.user_id,
-        kind: 'rental_charge',
-        amount_cents: damageAmountCents,
-        ref: `${ref}-charge`,
-        booking_id: booking.id,
-        meta: {
-          damage_description: damageDescription,
-          deducted_at: new Date().toISOString(),
-          car_id: booking.car_id,
-          original_deposit: lockedAmount,
-        },
-      });
-
-      if (deductError) {
-        return { ok: false, error: deductError.message };
-      }
-
-      // 2. Pay to owner (rental_payment kind)
-      const { error: paymentError } = await this.supabase.from('wallet_ledger').insert({
-        user_id: booking.owner_id,
-        kind: 'rental_payment',
-        amount_cents: damageAmountCents,
-        ref: `${ref}-payment`,
-        booking_id: booking.id,
-        meta: {
-          damage_description: damageDescription,
-          received_at: new Date().toISOString(),
-          car_id: booking.car_id,
-          renter_id: booking.user_id,
-        },
-      });
-
-      if (paymentError) {
-        return { ok: false, error: paymentError.message };
-      }
-
-      // 3. Calculate remaining deposit
-      const remainingDeposit = lockedAmount - damageAmountCents;
-
-      // 4. Release remaining deposit (if any)
-      if (remainingDeposit > 0) {
-        // Unlock remaining funds
-        await this.walletService.unlockFunds(
-          booking.id,
-          `Garantía parcialmente liberada - Daños: ${damageAmountCents / 100} - Reserva ${booking.id.substring(0, 8)}`,
-        );
-      }
+      this.logger.info(
+        `Atomic damage deduction successful: ${damageAmountCents / 100} charged, ` +
+        `${(result.remaining_deposit ?? 0) / 100} remaining`,
+      );
 
       return {
         ok: true,
-        remaining_deposit: remainingDeposit,
+        remaining_deposit: result.remaining_deposit,
       };
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error inesperado';
+      this.logger.error(
+        'deductFromSecurityDeposit exception',
+        'BookingWalletService',
+        err instanceof Error ? err : new Error(errorMsg),
+      );
       return { ok: false, error: errorMsg };
     }
   }

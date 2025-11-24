@@ -162,6 +162,7 @@ export class AdminSettlementsPage implements OnInit {
       approved: 'Aprobado',
       rejected: 'Rechazado',
       paid: 'Pagado',
+      processing: 'Procesando',
     };
     return statusMap[status];
   }
@@ -174,6 +175,7 @@ export class AdminSettlementsPage implements OnInit {
       approved: 'status-approved',
       rejected: 'status-rejected',
       paid: 'status-paid',
+      processing: 'status-processing',
     };
     return classMap[status];
   }

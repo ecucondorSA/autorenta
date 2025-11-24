@@ -224,19 +224,25 @@ export class RefundService {
       );
     }
 
-    // Check for pending insurance claims
+    // Check for ANY active insurance claims (not just pending/under_review)
+    // P0-SECURITY: Block refund if claim exists in ANY non-terminal state
+    // This prevents race condition where user cancels while claim is being processed
     const { data: claims, error: claimsError } = await this.supabase
       .from('claims')
       .select('id, status')
       .eq('booking_id', bookingId)
-      .in('status', ['pending', 'under_review']);
+      .in('status', ['draft', 'submitted', 'pending', 'under_review', 'approved']);
 
     if (claimsError) {
       this.logger.error('Error checking claims', 'RefundService', claimsError as Error);
-      // Don't block refund on claims check error
-    } else if (claims && claims.length > 0) {
+      // P0-SECURITY: BLOCK refund on claims check error - fail safe
       throw new Error(
-        `Cannot refund booking with pending insurance claims. Please wait for claim resolution.`,
+        'Unable to verify claim status. Please try again or contact support.',
+      );
+    } else if (claims && claims.length > 0) {
+      const claimStatuses = claims.map(c => c.status).join(', ');
+      throw new Error(
+        `Cannot refund booking with active insurance claims (status: ${claimStatuses}). Please wait for claim resolution or rejection.`,
       );
     }
   }

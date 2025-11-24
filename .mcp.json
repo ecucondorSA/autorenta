@@ -26,6 +26,9 @@
     "supabase": {
       "type": "http",
       "url": "https://mcp.supabase.com/mcp?project_ref=pisqjmoklivzpwufhscx",
+      "headers": {
+        "Authorization": "Bearer ${SUPABASE_ACCESS_TOKEN}"
+      },
       "description": "Supabase MCP Server - Database queries, schema management, TypeScript generation, Edge Functions deployment for AutoRenta FIPE+Binance integration"
     },
     "autorenta-platform": {
