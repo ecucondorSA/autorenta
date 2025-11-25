@@ -98,6 +98,9 @@ export interface BookingRiskSnapshot {
   estimatedHoldAmount?: number;
   estimatedDeposit?: number;
 
+  // Payment authorization ID for partial capture
+  authorizedPaymentId?: string;
+
   // Franquicia (USD)
   franchiseUsd: number;
 
@@ -122,6 +125,7 @@ export interface BookingRiskSnapshotDb {
   currency: string;
   estimated_hold_amount?: number;
   estimated_deposit?: number;
+  authorized_payment_id?: string;
   franchise_usd: number;
   rollover_franchise_usd?: number | null;
   coverage_upgrade?: string | null;

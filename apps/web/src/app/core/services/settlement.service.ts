@@ -17,6 +17,7 @@ import { FgoV1_1Service } from './fgo-v1-1.service';
 import { RiskMatrixService } from './risk-matrix.service';
 import { FgoService } from './fgo.service';
 import { DamageDetectionService } from './damage-detection.service';
+import { PaymentAuthorizationService } from './payment-authorization.service';
 
 /**
  * Tipo de daño reportado
@@ -94,6 +95,7 @@ export class SettlementService {
   readonly error = signal<string | null>(null);
 
   private readonly damageDetectionService = inject(DamageDetectionService);
+  private readonly paymentAuthorizationService = inject(PaymentAuthorizationService);
 
   constructor(
     private readonly supabaseService: SupabaseClientService,
@@ -488,9 +490,51 @@ export class SettlementService {
         // With credit card
         const holdAmount = snapshot.estimatedHoldAmount ?? 0;
         const captureAmount = Math.min(remainingCents, holdAmount);
-        // TODO: Implement partial capture logic with payment provider
-        breakdown.holdCaptured = captureAmount;
-        remainingCents -= captureAmount;
+
+        // Implement partial capture logic with payment provider
+        if (captureAmount > 0 && snapshot.authorizedPaymentId) {
+          try {
+            // Convert cents to ARS for payment provider (MercadoPago uses ARS)
+            // Note: captureAmount is in USD cents, need to convert to ARS
+            const captureAmountArs = Math.round(captureAmount * snapshot.fxSnapshot / 100);
+
+            // Capture the partial amount from the credit card hold
+            const captureResult = await firstValueFrom(
+              this.paymentAuthorizationService.captureAuthorization(
+                snapshot.authorizedPaymentId,
+                captureAmountArs
+              )
+            );
+
+            if (captureResult.ok) {
+              breakdown.holdCaptured = captureAmount;
+              console.log(
+                `[Partial Capture] Successfully captured ${centsToUsd(captureAmount)} USD ` +
+                `(${captureAmountArs} ARS) from authorization ${snapshot.authorizedPaymentId}`
+              );
+            } else {
+              // If capture fails, log the error but continue with waterfall
+              console.error(
+                `[Partial Capture] Failed to capture from authorization ${snapshot.authorizedPaymentId}: `,
+                captureResult.error
+              );
+              // Don't mark as captured if it failed
+              breakdown.holdCaptured = 0;
+            }
+          } catch (error) {
+            console.error('[Partial Capture] Exception during capture:', error);
+            // Don't mark as captured if there was an exception
+            breakdown.holdCaptured = 0;
+          }
+        } else {
+          // If no authorization ID or amount is 0, just record what we would have captured
+          breakdown.holdCaptured = captureAmount;
+          if (!snapshot.authorizedPaymentId && captureAmount > 0) {
+            console.warn('[Partial Capture] No authorization ID available for capture');
+          }
+        }
+
+        remainingCents -= breakdown.holdCaptured;
       } else {
         // Without credit card
         const securityCredit = snapshot.estimatedDeposit ?? 0;
