@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { SupabaseClient } from '@supabase/supabase-js';
 import {
@@ -16,6 +16,7 @@ import { SupabaseClientService } from './supabase-client.service';
 import { FgoV1_1Service } from './fgo-v1-1.service';
 import { RiskMatrixService } from './risk-matrix.service';
 import { FgoService } from './fgo.service';
+import { DamageDetectionService } from './damage-detection.service';
 
 /**
  * Tipo de daño reportado
@@ -92,6 +93,8 @@ export class SettlementService {
   readonly currentClaim = signal<Claim | null>(null);
   readonly error = signal<string | null>(null);
 
+  private readonly damageDetectionService = inject(DamageDetectionService);
+
   constructor(
     private readonly supabaseService: SupabaseClientService,
     private readonly fgoV1_1Service: FgoV1_1Service,
@@ -133,7 +136,10 @@ export class SettlementService {
   }
 
   /**
-   * Compara check-in vs check-out para detectar daños nuevos
+   * Compara check-in vs check-out para detectar daños nuevos automáticamente
+   *
+   * Utiliza análisis de imágenes para detectar cambios entre inspecciones.
+   * Retorna array de daños detectados automáticamente.
    */
   async compareDamages(bookingId: string): Promise<DamageItem[]> {
     try {
@@ -143,17 +149,65 @@ export class SettlementService {
       const checkOut = inspections.find((i) => i.stage === 'check_out');
 
       if (!checkIn || !checkOut) {
+        console.warn(`compareDamages: Missing inspections for booking ${bookingId}`);
         return [];
       }
 
-      // TODO: Implementar detección automática de daños comparando fotos
-      // Por ahora retornamos array vacío - requiere análisis de imágenes
-      // En producción, se podría usar ML/CV para detectar diferencias
+      // Extraer URLs de fotos
+      const checkInImages = this.extractImageUrls(checkIn);
+      const checkOutImages = this.extractImageUrls(checkOut);
 
-      return [];
-    } catch {
+      if (checkInImages.length === 0 || checkOutImages.length === 0) {
+        console.warn(`compareDamages: No images to analyze for booking ${bookingId}`);
+        return [];
+      }
+
+      // Analizar imágenes con detección automática
+      const analysisResult = await this.damageDetectionService.analyzeImages(
+        checkInImages,
+        checkOutImages,
+      );
+
+      if (!analysisResult.success) {
+        console.error(`compareDamages: Analysis failed for booking ${bookingId}:`, analysisResult.error);
+        return [];
+      }
+
+      // Convertir resultados a DamageItem[]
+      return this.damageDetectionService.convertToDamageItems(analysisResult.damages);
+    } catch (error) {
+      console.error(`compareDamages: Error analyzing damages for booking ${bookingId}:`, error);
       return [];
     }
+  }
+
+  /**
+   * Extrae URLs de imágenes de una inspección
+   * @private
+   */
+  private extractImageUrls(inspection: InspectionStage | undefined): string[] {
+    if (!inspection) return [];
+
+    const images: string[] = [];
+
+    // Suportar diferentes estructuras de almacenamiento de fotos
+    if (Array.isArray((inspection as any).photos)) {
+      images.push(...(inspection as any).photos);
+    }
+
+    if (Array.isArray((inspection as any).images)) {
+      images.push(...(inspection as any).images);
+    }
+
+    if ((inspection as any).photo_urls) {
+      const urls = (inspection as any).photo_urls;
+      if (Array.isArray(urls)) {
+        images.push(...urls);
+      }
+    }
+
+    // Filtrar URLs vacías y duplicadas
+    return Array.from(new Set(images.filter((url) => url && typeof url === 'string')));
   }
 
   // ============================================================================
