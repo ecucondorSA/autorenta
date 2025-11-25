@@ -471,8 +471,8 @@ export class CarAvailabilityService {
           end: new Date(b.end_at),
         })),
         ...manualBlocks.map((m) => ({
-          start: new Date(m.from),
-          end: new Date(m.to),
+          start: new Date(m.blocked_from),
+          end: new Date(m.blocked_to),
         })),
       ].sort((a, b) => a.start.getTime() - b.start.getTime());
 
