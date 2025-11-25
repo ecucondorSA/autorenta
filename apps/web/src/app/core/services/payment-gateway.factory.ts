@@ -5,6 +5,7 @@ import {
   WalletPaymentGateway,
 } from '../interfaces/payment-gateway.interface';
 import { MercadoPagoBookingGatewayService } from './mercadopago-booking-gateway.service';
+import { MercadoPagoWalletGatewayService } from './mercadopago-wallet-gateway.service';
 import { PayPalBookingGatewayService } from './paypal-booking-gateway.service';
 import { PayPalWalletGatewayService } from './paypal-wallet-gateway.service';
 
@@ -38,6 +39,7 @@ import { PayPalWalletGatewayService } from './paypal-wallet-gateway.service';
 export class PaymentGatewayFactory {
   // Inject all available gateway services
   private readonly mercadoPagoBookingGateway = inject(MercadoPagoBookingGatewayService);
+  private readonly mercadoPagoWalletGateway = inject(MercadoPagoWalletGatewayService);
   private readonly payPalBookingGateway = inject(PayPalBookingGatewayService);
   private readonly payPalWalletGateway = inject(PayPalWalletGatewayService);
 
@@ -75,8 +77,7 @@ export class PaymentGatewayFactory {
   createWalletGateway(provider: PaymentProvider): WalletPaymentGateway {
     switch (provider) {
       case 'mercadopago':
-        // TODO: Implementar MercadoPagoWalletGatewayService cuando sea necesario
-        throw new Error('MercadoPago wallet gateway not yet implemented');
+        return this.mercadoPagoWalletGateway;
 
       case 'paypal':
         return this.payPalWalletGateway;
@@ -106,7 +107,7 @@ export class PaymentGatewayFactory {
    * @returns true si el provider está soportado
    */
   isWalletProviderAvailable(provider: PaymentProvider): boolean {
-    return ['paypal', 'mock'].includes(provider);
+    return ['mercadopago', 'paypal', 'mock'].includes(provider);
   }
 
   /**
@@ -124,7 +125,7 @@ export class PaymentGatewayFactory {
    * @returns Array de providers soportados
    */
   getAvailableWalletProviders(): PaymentProvider[] {
-    return ['paypal'];
+    return ['mercadopago', 'paypal'];
   }
 
   /**
