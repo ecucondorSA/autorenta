@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autorenta - Reporte de Tareas Pendientes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px; margin-bottom: 30px; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .stat-card h3 { color: #667eea; font-size: 0.9em; text-transform: uppercase; margin-bottom: 10px; }
+        .stat-card .value { font-size: 2.5em; font-weight: bold; color: #333; }
+        .stat-card .unit { font-size: 0.8em; color: #999; margin-left: 5px; }
+        .progress-bar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; margin-top: 10px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; }
+        .section { background: white; padding: 30px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .section h2 { color: #333; margin-bottom: 20px; border-bottom: 2px solid #667eea; padding-bottom: 10px; }
+        .task-list { list-style: none; }
+        .task-item { padding: 15px; border-left: 4px solid #667eea; background: #f9f9f9; margin-bottom: 10px; border-radius: 4px; }
+        .task-item.p0 { border-left-color: #ff6b6b; }
+        .task-item.p1 { border-left-color: #ffa500; }
+        .task-item.p2 { border-left-color: #4ecdc4; }
+        .task-item.p3 { border-left-color: #95e1d3; }
+        .task-priority { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; margin-right: 10px; }
+        .priority-p0 { background: #ffebee; color: #c62828; }
+        .priority-p1 { background: #fff3e0; color: #e65100; }
+        .priority-p2 { background: #e0f2f1; color: #00695c; }
+        .priority-p3 { background: #f1f8e9; color: #33691e; }
+        .task-status { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; background: #e3f2fd; color: #1565c0; }
+        .task-file { font-size: 0.85em; color: #999; margin-top: 8px; font-family: monospace; }
+        .chart { margin: 20px 0; }
+        .chart-bar { display: flex; align-items: center; margin-bottom: 15px; }
+        .chart-label { width: 150px; font-weight: bold; }
+        .chart-value { flex: 1; background: #e0e0e0; height: 30px; border-radius: 4px; position: relative; overflow: hidden; }
+        .chart-fill { background: linear-gradient(90deg, #667eea, #764ba2); height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; color: white; font-weight: bold; font-size: 0.9em; }
+        .recommendation { padding: 15px; background: #e3f2fd; border-left: 4px solid #667eea; border-radius: 4px; margin-bottom: 15px; }
+        .recommendation strong { color: #667eea; }
+        footer { text-align: center; color: #999; font-size: 0.9em; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; }
+        .warning { background: #fff3cd; border-left-color: #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Reporte de Tareas Pendientes</h1>
+            <p>Autorenta - 24/11/2025</p>
+            <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.9;">Rama: main</p>
+        </header>
+
+        <div class="summary">
+            <div class="stat-card">
+                <h3>Progreso General</h3>
+                <div class="value">0<span class="unit">%</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h3>Tareas Completadas</h3>
+                <div class="value">0<span class="unit">/146</span></div>
+            </div>
+            <div class="stat-card">
+                <h3>Tiempo Estimado</h3>
+                <div class="value">39<span class="unit">días</span></div>
+                <p style="font-size: 0.85em; color: #999; margin-top: 5px;">314 horas</p>
+            </div>
+            <div class="stat-card">
+                <h3>Bloqueadores Críticos</h3>
+                <div class="value" style="color: #ff6b6b;">0</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Distribución por Prioridad</h2>
+            <div class="chart">
+                <div class="chart-bar">
+                    <div class="chart-label">🔴 Críticas (P0)</div>
+                    <div class="chart-value">
+                        <div class="chart-fill" style="width: 0%">0</div>
+                    </div>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-label">🟠 Alta (P1)</div>
+                    <div class="chart-value">
+                        <div class="chart-fill" style="width: 0.684931506849315%">1</div>
+                    </div>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-label">🔵 Media (P2)</div>
+                    <div class="chart-value">
+                        <div class="chart-fill" style="width: 0%">0</div>
+                    </div>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-label">🟢 Baja (P3)</div>
+                    <div class="chart-value">
+                        <div class="chart-fill" style="width: 99.31506849315068%">145</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <div class="section">
+            <h2>🎯 Próximos Pasos Recomendados</h2>
+            <ul class="task-list">
+                
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>💡 Recomendaciones</h2>
+            
+        </div>
+
+        <footer>
+            <p>Generado automáticamente por Task Completion MCP</p>
+            <p style="margin-top: 10px; font-size: 0.8em;">Cambios sin guardar: 25 | Archivos sin rastrear: 2</p>
+        </footer>
+    </div>
+</body>
+</html>
+    
