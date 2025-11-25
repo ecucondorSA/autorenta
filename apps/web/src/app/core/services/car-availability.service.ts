@@ -418,6 +418,15 @@ export class CarAvailabilityService {
 
   /**
    * ✅ NUEVO: Obtener próximos rangos de fechas disponibles
+   *
+   * Busca huecos (gaps) disponibles en el calendario entre reservas existentes.
+   * Retorna los X rangos disponibles más próximos ordenados por fecha.
+   *
+   * @param carId - ID del auto
+   * @param startDate - Fecha inicial para buscar (ISO string)
+   * @param endDate - Fecha final para buscar (ISO string)
+   * @param _maxOptions - Máximo número de opciones a retornar (default: 3)
+   * @returns Array de rangos disponibles con duración en días
    */
   async getNextAvailableRange(
     carId: string,
@@ -432,15 +441,19 @@ export class CarAvailabilityService {
     }>
   > {
     try {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const searchStart = new Date(startDate);
+      const searchEnd = new Date(endDate);
+      searchStart.setHours(0, 0, 0, 0);
+      searchEnd.setHours(23, 59, 59, 999);
 
-      const { error } = await this.supabase
+      // Obtener todas las reservas y bloques manuales para este auto
+      const { data: bookings, error } = await this.supabase
         .from('bookings')
         .select('start_at, end_at')
         .eq('car_id', carId)
         .in('status', ['pending', 'confirmed', 'in_progress'])
-        .gte('end_at', today.toISOString())
+        .gte('end_at', searchStart.toISOString())
+        .lte('start_at', searchEnd.toISOString())
         .order('start_at', { ascending: true });
 
       if (error) {
@@ -448,9 +461,58 @@ export class CarAvailabilityService {
         return [];
       }
 
-      // TODO: Implementar lógica completa de búsqueda de huecos
-      // Por ahora retornamos array vacío para simplificar la migración inicial
-      return [];
+      // Obtener bloques manuales del propietario
+      const manualBlocks = await this.carBlockingService.getBlockedDates(carId);
+
+      // Combinar y ordenar todos los bloques (bookings + manual blocks)
+      const allBlocks = [
+        ...(bookings || []).map((b) => ({
+          start: new Date(b.start_at),
+          end: new Date(b.end_at),
+        })),
+        ...manualBlocks.map((m) => ({
+          start: new Date(m.from),
+          end: new Date(m.to),
+        })),
+      ].sort((a, b) => a.start.getTime() - b.start.getTime());
+
+      // Encontrar huecos (gaps) disponibles
+      const availableRanges: Array<{ startDate: string; endDate: string; daysCount: number }> = [];
+      let currentGapStart = searchStart;
+
+      for (const block of allBlocks) {
+        // Si hay espacio entre el gap actual y este bloque
+        if (currentGapStart < block.start) {
+          const gapEnd = new Date(Math.min(block.start.getTime(), searchEnd.getTime()));
+          const daysCount = Math.ceil((gapEnd.getTime() - currentGapStart.getTime()) / (1000 * 60 * 60 * 24));
+
+          if (daysCount > 0) {
+            availableRanges.push({
+              startDate: currentGapStart.toISOString().split('T')[0],
+              endDate: new Date(gapEnd.getTime() - 1).toISOString().split('T')[0],
+              daysCount,
+            });
+          }
+        }
+
+        // Mover el inicio del siguiente gap al final de este bloque
+        currentGapStart = new Date(Math.max(currentGapStart.getTime(), block.end.getTime()));
+      }
+
+      // Agregar gap final si existe
+      if (currentGapStart < searchEnd) {
+        const daysCount = Math.ceil((searchEnd.getTime() - currentGapStart.getTime()) / (1000 * 60 * 60 * 24));
+        if (daysCount > 0) {
+          availableRanges.push({
+            startDate: currentGapStart.toISOString().split('T')[0],
+            endDate: searchEnd.toISOString().split('T')[0],
+            daysCount,
+          });
+        }
+      }
+
+      // Retornar los primeros N rangos disponibles (máximo _maxOptions)
+      return availableRanges.slice(0, _maxOptions);
     } catch (error) {
       console.error('Error calculating next available range:', error);
       return [];
