@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { SupabaseClientService } from './supabase-client.service';
+import { GeocodingResult, GeocodingService } from './geocoding.service';
 import { ProfileService } from './profile.service';
-import { GeocodingService, GeocodingResult } from './geocoding.service';
+import { SupabaseClientService } from './supabase-client.service';
 
 /**
  * Location coordinates
@@ -9,6 +9,8 @@ import { GeocodingService, GeocodingResult } from './geocoding.service';
 export interface LocationCoordinates {
   lat: number;
   lng: number;
+  accuracy?: number;
+  timestamp?: number;
 }
 
 /**
@@ -115,6 +117,8 @@ export class LocationService {
           resolve({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            timestamp: position.timestamp,
           });
         },
         (error: GeolocationPositionError) => {
@@ -128,6 +132,47 @@ export class LocationService {
         },
       );
     });
+  }
+
+  /**
+   * Watch user's position for real-time updates
+   * @param callback Function to call with new location
+   * @returns Watch ID to clear later
+   */
+  watchPosition(callback: (location: LocationCoordinates) => void): number | null {
+    if (!navigator.geolocation) {
+      console.warn('Geolocation is not supported by this browser');
+      return null;
+    }
+
+    return navigator.geolocation.watchPosition(
+      (position) => {
+        callback({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+          timestamp: position.timestamp,
+        });
+      },
+      (error) => {
+        console.warn('Error watching position:', error.message);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0, // No cache for real-time
+      },
+    );
+  }
+
+  /**
+   * Clear position watch
+   * @param watchId ID returned by watchPosition
+   */
+  clearWatch(watchId: number): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.clearWatch(watchId);
+    }
   }
 
   /**

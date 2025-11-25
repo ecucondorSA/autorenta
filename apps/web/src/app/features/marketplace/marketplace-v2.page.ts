@@ -20,7 +20,9 @@ import { CarMapLocation } from '../../core/services/car-locations.service';
 import { CarsService } from '../../core/services/cars.service';
 import { DistanceCalculatorService } from '../../core/services/distance-calculator.service';
 import { GeocodingResult, GeocodingService } from '../../core/services/geocoding.service';
-import { LocationService } from '../../core/services/location.service';
+import {
+  LocationService
+} from '../../core/services/location.service';
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { UrgentRentalService } from '../../core/services/urgent-rental.service';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
@@ -130,7 +132,18 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly error = signal<string | null>(null);
   readonly cars = signal<Car[]>([]);
   readonly selectedCarId = signal<string | null>(null);
+  // User Location Signals
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
+  readonly locationAccuracy = signal<number | null>(null);
+  readonly lastLocationUpdate = signal<Date | null>(null);
+  private locationWatchId: number | null = null;
+
+  // UI State Signals
+  readonly viewMode = signal<'map' | 'list'>('map');
+  readonly showFilters = signal(false);
+  readonly showDatePicker = signal(false);
+  readonly showLocationPicker = signal(false);
+
   readonly drawerOpen = signal(false);
   readonly filtersVisible = signal(true);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
@@ -425,6 +438,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.locationWatchId !== null) {
+      this.locationService.clearWatch(this.locationWatchId);
+    }
     if (this.realtimeChannel) {
       this.supabase.removeChannel(this.realtimeChannel);
     }
