@@ -46,7 +46,7 @@ export class BookingFlowService {
   /**
    * Obtiene las acciones disponibles para un booking según su estado y el rol del usuario
    */
-  getAvailableActions(booking: Booking, _userRole: 'owner' | 'renter' | 'both'): BookingAction[] {
+  async getAvailableActions(booking: Booking, _userRole: 'owner' | 'renter' | 'both'): Promise<BookingAction[]> {
     const actions: BookingAction[] = [];
     const status = booking.status;
     const currentUserId = this.authService.session$()?.user?.id;
@@ -140,7 +140,7 @@ export class BookingFlowService {
 
     // FASE 4: COMPLETED - Finalizado, disponible para reseñas
     if (status === 'completed') {
-      const canReview = this.canLeaveReview(booking, currentUserId);
+      const canReview = await this.canLeaveReview(booking, currentUserId);
       if (canReview.canReview) {
         actions.push({
           label: 'Dejar Reseña',
@@ -158,14 +158,18 @@ export class BookingFlowService {
 
   /**
    * Verifica si el usuario puede dejar una reseña
+   * Comprueba:
+   * 1. Estado del booking es 'completed'
+   * 2. Está dentro de la ventana de 14 días
+   * 3. El usuario no ha dejado una reseña ya (via ReviewsService)
    */
-  private canLeaveReview(
+  private async canLeaveReview(
     booking: Booking,
-    _userId: string,
-  ): {
+    userId: string,
+  ): Promise<{
     canReview: boolean;
     description?: string;
-  } {
+  }> {
     if (booking.status !== 'completed') {
       return { canReview: false };
     }
@@ -186,8 +190,20 @@ export class BookingFlowService {
       };
     }
 
-    // Verificar si ya dejó reseña
-    // TODO: Implementar verificación real con ReviewsService
+    // Verificar con ReviewsService si el usuario ya dejó reseña
+    try {
+      const canReviewAccordingToService = await this.reviewsService.canReviewBooking(booking.id);
+      if (!canReviewAccordingToService) {
+        return {
+          canReview: false,
+          description: 'Ya has dejado tu reseña para esta reserva',
+        };
+      }
+    } catch (error) {
+      // Si hay error en la verificación, permitir ver la acción pero dejar que el servicio maneje el error al guardar
+      console.warn('Error checking review status:', error);
+    }
+
     return {
       canReview: true,
       description: `Tienes ${14 - daysSinceCompleted} días restantes para dejar tu reseña`,
@@ -197,7 +213,7 @@ export class BookingFlowService {
   /**
    * Obtiene el siguiente paso recomendado en el flujo
    */
-  getNextStep(booking: Booking, _userRole: 'owner' | 'renter'): NextStep | null {
+  async getNextStep(booking: Booking, _userRole: 'owner' | 'renter'): Promise<NextStep | null> {
     const status = booking.status;
     const currentUserId = this.authService.session$()?.user?.id;
     if (!currentUserId) return null;
@@ -235,7 +251,7 @@ export class BookingFlowService {
         };
       }
       if (status === 'completed') {
-        const canReview = this.canLeaveReview(booking, currentUserId);
+        const canReview = await this.canLeaveReview(booking, currentUserId);
         if (canReview.canReview) {
           return {
             title: 'Dejar Reseña',
@@ -279,7 +295,7 @@ export class BookingFlowService {
         };
       }
       if (status === 'completed') {
-        const canReview = this.canLeaveReview(booking, currentUserId);
+        const canReview = await this.canLeaveReview(booking, currentUserId);
         if (canReview.canReview) {
           return {
             title: 'Dejar Reseña',
