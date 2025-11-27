@@ -1,11 +1,14 @@
-// Background Service Worker
-console.log('[Claude Code Browser Control] Background worker started');
+// Background Service Worker v1.2 - Infinite Reconnect with Exponential Backoff
+console.log('[Claude Code Browser Control] Background worker v1.2 started');
 
 let connected = false;
 let bridgeSocket = null;
-let connectionAttempts = 0;
-const MAX_RECONNECT_ATTEMPTS = 10;
-const RECONNECT_DELAY = 3000;
+let reconnectAttempts = 0;
+
+// Exponential backoff config
+const BASE_RECONNECT_DELAY = 1000;  // Start at 1s
+const MAX_RECONNECT_DELAY = 30000;  // Cap at 30s
+const WATCHDOG_INTERVAL = 60000;    // Check connection every 60s
 
 // Listen for extension icon click
 chrome.action.onClicked.addListener((tab) => {
@@ -37,9 +40,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'bridge-status') {
     sendResponse({
       bridgeConnected: connected,
-      connectionAttempts,
+      connectionAttempts: reconnectAttempts,
       status: connected ? 'ready' : 'connecting'
     });
+    return true;
+  }
+
+  if (message.type === 'force-reconnect') {
+    forceReconnect();
+    sendResponse({ success: true });
     return true;
   }
 
@@ -63,21 +72,46 @@ function updateBadge() {
   chrome.action.setBadgeBackgroundColor({ color });
 }
 
-// Connect to bridge server
+// Calculate reconnect delay with exponential backoff
+function getReconnectDelay() {
+  const delay = Math.min(
+    MAX_RECONNECT_DELAY,
+    BASE_RECONNECT_DELAY * Math.pow(1.5, reconnectAttempts)
+  );
+  return delay;
+}
+
+// Schedule next reconnection attempt
+function scheduleReconnect() {
+  reconnectAttempts++;
+  const delay = getReconnectDelay();
+
+  // Log every 5 attempts to avoid spam
+  if (reconnectAttempts % 5 === 1 || reconnectAttempts <= 3) {
+    console.log(`[Background] Reconnecting in ${Math.round(delay/1000)}s (attempt ${reconnectAttempts})...`);
+  }
+
+  setTimeout(connectToBridge, delay);
+}
+
+// Connect to bridge server - INFINITE RETRY
 function connectToBridge() {
-  if (connectionAttempts >= MAX_RECONNECT_ATTEMPTS) {
-    console.error('[Background] Max reconnection attempts reached. Working in standalone mode.');
-    return;
+  // Close existing socket if any
+  if (bridgeSocket) {
+    try {
+      bridgeSocket.close();
+    } catch (e) { /* ignore */ }
+    bridgeSocket = null;
   }
 
   try {
-    console.log('[Background] Connecting to bridge server (attempt ' + (connectionAttempts + 1) + ')...');
+    console.log('[Background] Connecting to bridge server...');
     bridgeSocket = new WebSocket('ws://localhost:9223');
 
     bridgeSocket.onopen = () => {
       console.log('[Background] ✅ Connected to bridge server');
       connected = true;
-      connectionAttempts = 0;
+      reconnectAttempts = 0; // Reset on successful connection
       updateBadge();
 
       // Send handshake
@@ -140,19 +174,18 @@ function connectToBridge() {
       console.log('[Background] ❌ Disconnected from bridge');
       connected = false;
       updateBadge();
-      connectionAttempts++;
-
-      // Retry connection
-      setTimeout(connectToBridge, RECONNECT_DELAY);
+      scheduleReconnect(); // Infinite retry with backoff
     };
 
     bridgeSocket.onerror = (error) => {
-      console.error('[Background] Bridge connection error:', error);
+      // Only log non-connection-refused errors
+      if (error.message && !error.message.includes('ECONNREFUSED')) {
+        console.error('[Background] Bridge connection error:', error);
+      }
     };
   } catch (error) {
     console.error('[Background] Failed to create WebSocket:', error);
-    connectionAttempts++;
-    setTimeout(connectToBridge, RECONNECT_DELAY);
+    scheduleReconnect(); // Infinite retry with backoff
   }
 }
 
@@ -161,3 +194,31 @@ setTimeout(() => {
   console.log('[Background] Initializing bridge connection...');
   connectToBridge();
 }, 1000);
+
+// ========== Watchdog - Periodic Connection Check ==========
+// This ensures we reconnect even if the backoff gets stuck
+setInterval(() => {
+  if (!connected) {
+    console.log('[Watchdog] Connection lost, forcing reconnect...');
+    reconnectAttempts = 0; // Reset backoff
+    connectToBridge();
+  } else if (bridgeSocket && bridgeSocket.readyState !== 1) {
+    // WebSocket.OPEN = 1
+    console.log('[Watchdog] Socket not open, reconnecting...');
+    connected = false;
+    updateBadge();
+    reconnectAttempts = 0;
+    connectToBridge();
+  }
+}, WATCHDOG_INTERVAL);
+
+// Force reconnect API - can be called from popup or externally
+function forceReconnect() {
+  console.log('[Background] Force reconnect requested');
+  reconnectAttempts = 0;
+  connected = false;
+  connectToBridge();
+}
+
+// Expose for popup
+self.forceReconnect = forceReconnect;

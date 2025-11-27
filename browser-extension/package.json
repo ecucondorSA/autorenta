@@ -5,12 +5,14 @@
   "main": "mcp-server.js",
   "type": "module",
   "scripts": {
-    "mcp": "node mcp-server.js",
+    "start": "./start.sh",
+    "stop": "./stop.sh",
     "bridge": "node bridge-server.js",
     "bridge:dev": "node --watch bridge-server.js",
-    "start": "node bridge-server.js & node mcp-server.js",
-    "install-extension": "echo 'Chrome Extension instalada en chrome://extensions → Load unpacked'",
-    "test": "echo 'Bridge Server running on ws://localhost:9223'"
+    "mcp": "node mcp-server.js",
+    "status": "curl -s http://localhost:9223/status | jq",
+    "health": "curl -s http://localhost:9223/health | jq",
+    "test": "node test-integration.mjs"
   },
   "keywords": [
     "browser-automation",

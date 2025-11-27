@@ -4,8 +4,11 @@
  *
  * Conecta Claude Code con la extensión de Chrome via el bridge WebSocket.
  *
- * Flujo:
- * Claude Code (stdio) → MCP Server → WebSocket → Bridge (9223) → Extension → Browser
+ * Mejoras v1.1:
+ * - Reconexión infinita con backoff exponencial
+ * - Lazy connection: reconecta automáticamente en cada tool call
+ * - Health check que fuerza reconexión
+ * - Mejor manejo de errores
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -17,13 +20,15 @@ import {
 import WebSocket from 'ws';
 
 const BRIDGE_URL = 'ws://localhost:9223';
-const RECONNECT_DELAY = 3000;
-const ACTION_TIMEOUT = 10000;
+const BASE_RECONNECT_DELAY = 1000;
+const MAX_RECONNECT_DELAY = 30000;
+const ACTION_TIMEOUT = 15000;
+const CONNECTION_TIMEOUT = 5000;
 
 class BrowserExtensionMCP {
   constructor() {
     this.server = new Server(
-      { name: 'browser-extension', version: '1.0.0' },
+      { name: 'browser-extension', version: '1.1.0' },
       { capabilities: { tools: {} } }
     );
 
@@ -31,28 +36,59 @@ class BrowserExtensionMCP {
     this.bridgeConnected = false;
     this.pendingActions = new Map();
     this.reconnectAttempts = 0;
+    this.isReconnecting = false;
+    this.lastConnectionAttempt = 0;
 
     this.setupHandlers();
     this.connectToBridge();
   }
 
-  // ========== Bridge Connection ==========
+  // ========== Bridge Connection with Exponential Backoff ==========
 
-  connectToBridge() {
+  getReconnectDelay() {
+    // Exponential backoff: 1s, 1.5s, 2.25s, 3.4s, ... max 30s
+    const delay = Math.min(
+      MAX_RECONNECT_DELAY,
+      BASE_RECONNECT_DELAY * Math.pow(1.5, this.reconnectAttempts)
+    );
+    return delay;
+  }
+
+  async connectToBridge() {
+    // Prevent multiple simultaneous connection attempts
+    if (this.isReconnecting) return;
+
+    // Rate limit connection attempts
+    const now = Date.now();
+    if (now - this.lastConnectionAttempt < 500) return;
+    this.lastConnectionAttempt = now;
+
+    this.isReconnecting = true;
+
     try {
+      // Close existing socket if any
+      if (this.bridgeSocket) {
+        try {
+          this.bridgeSocket.terminate();
+        } catch (e) { /* ignore */ }
+        this.bridgeSocket = null;
+      }
+
       this.bridgeSocket = new WebSocket(BRIDGE_URL, {
-        headers: { 'x-client-type': 'claude-code' }
+        headers: { 'x-client-type': 'claude-code' },
+        handshakeTimeout: CONNECTION_TIMEOUT
       });
 
       this.bridgeSocket.on('open', () => {
         this.bridgeConnected = true;
-        this.reconnectAttempts = 0;
-        console.error('[MCP] Connected to bridge server');
+        this.reconnectAttempts = 0; // Reset on successful connection
+        this.isReconnecting = false;
+        console.error('[MCP] ✅ Connected to bridge server');
 
         // Handshake
         this.bridgeSocket.send(JSON.stringify({
           type: 'handshake',
-          data: { clientType: 'claude-code', version: '1.0.0' }
+          data: { clientType: 'claude-code', version: '1.1.0' }
         }));
       });
 
@@ -67,7 +103,8 @@ class BrowserExtensionMCP {
 
       this.bridgeSocket.on('close', () => {
         this.bridgeConnected = false;
-        console.error('[MCP] Disconnected from bridge');
+        this.isReconnecting = false;
+        console.error('[MCP] ❌ Disconnected from bridge');
 
         // Reject all pending actions
         for (const [sessionId, { reject }] of this.pendingActions) {
@@ -75,26 +112,52 @@ class BrowserExtensionMCP {
         }
         this.pendingActions.clear();
 
-        // Reconnect
-        if (this.reconnectAttempts < 5) {
-          this.reconnectAttempts++;
-          setTimeout(() => this.connectToBridge(), RECONNECT_DELAY);
-        }
+        // Schedule reconnection with exponential backoff
+        this.scheduleReconnect();
       });
 
       this.bridgeSocket.on('error', (error) => {
-        console.error('[MCP] Bridge connection error:', error.message);
+        this.isReconnecting = false;
+        // Only log if not a connection refused (expected when bridge is down)
+        if (!error.message.includes('ECONNREFUSED')) {
+          console.error('[MCP] Bridge error:', error.message);
+        }
       });
 
     } catch (error) {
-      console.error('[MCP] Failed to connect to bridge:', error.message);
-      setTimeout(() => this.connectToBridge(), RECONNECT_DELAY);
+      this.isReconnecting = false;
+      console.error('[MCP] Failed to connect:', error.message);
+      this.scheduleReconnect();
     }
+  }
+
+  scheduleReconnect() {
+    this.reconnectAttempts++;
+    const delay = this.getReconnectDelay();
+
+    // Log every 5 attempts
+    if (this.reconnectAttempts % 5 === 1) {
+      console.error(`[MCP] Reconnecting in ${Math.round(delay/1000)}s (attempt ${this.reconnectAttempts})...`);
+    }
+
+    setTimeout(() => this.connectToBridge(), delay);
+  }
+
+  // Force reconnection (called by health check)
+  async forceReconnect() {
+    this.reconnectAttempts = 0;
+    this.isReconnecting = false;
+    await this.connectToBridge();
+
+    // Wait a bit for connection to establish
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return this.bridgeConnected;
   }
 
   handleBridgeMessage(message) {
     if (message.type === 'handshake-ack') {
-      console.error('[MCP] Bridge acknowledged:', message.data?.status);
+      const extensionStatus = message.data?.extensionStatus || 'unknown';
+      console.error(`[MCP] Bridge acknowledged - Extension: ${extensionStatus}`);
       return;
     }
 
@@ -122,29 +185,55 @@ class BrowserExtensionMCP {
     }
   }
 
-  // ========== Send Action to Bridge ==========
+  // ========== Send Action to Bridge (with auto-reconnect) ==========
+
+  async ensureConnection() {
+    if (this.bridgeConnected && this.bridgeSocket?.readyState === WebSocket.OPEN) {
+      return true;
+    }
+
+    // Try to reconnect
+    console.error('[MCP] Not connected, attempting reconnection...');
+    const connected = await this.forceReconnect();
+
+    if (!connected) {
+      throw new Error(
+        'Bridge not connected. Ensure bridge is running:\n' +
+        '  cd browser-extension && npm run bridge\n' +
+        'Then load extension in Chrome:\n' +
+        '  chrome://extensions → Load unpacked'
+      );
+    }
+
+    return true;
+  }
 
   async sendAction(action) {
-    if (!this.bridgeConnected || !this.bridgeSocket) {
-      throw new Error('Bridge not connected. Start the bridge server: npm run bridge');
-    }
+    // Lazy connection: try to connect if not connected
+    await this.ensureConnection();
 
     return new Promise((resolve, reject) => {
       const sessionId = `mcp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
       const timeoutId = setTimeout(() => {
         this.pendingActions.delete(sessionId);
-        reject(new Error(`Action timeout: ${action.type}`));
+        reject(new Error(`Action timeout after ${ACTION_TIMEOUT}ms: ${action.type}`));
       }, ACTION_TIMEOUT);
 
       this.pendingActions.set(sessionId, { resolve, reject, timeout: timeoutId });
 
-      this.bridgeSocket.send(JSON.stringify({
-        type: 'action',
-        sessionId,
-        action,
-        timeout: ACTION_TIMEOUT
-      }));
+      try {
+        this.bridgeSocket.send(JSON.stringify({
+          type: 'action',
+          sessionId,
+          action,
+          timeout: ACTION_TIMEOUT
+        }));
+      } catch (error) {
+        clearTimeout(timeoutId);
+        this.pendingActions.delete(sessionId);
+        reject(new Error(`Failed to send action: ${error.message}`));
+      }
     });
   }
 
@@ -156,8 +245,16 @@ class BrowserExtensionMCP {
       tools: [
         {
           name: 'browser_status',
-          description: 'Check browser extension connection status',
-          inputSchema: { type: 'object', properties: {} }
+          description: 'Check browser extension connection status and force reconnect if needed',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              reconnect: {
+                type: 'boolean',
+                description: 'Force reconnection attempt (default: false)'
+              }
+            }
+          }
         },
         {
           name: 'browser_navigate',
@@ -188,7 +285,8 @@ class BrowserExtensionMCP {
             type: 'object',
             properties: {
               selector: { type: 'string', description: 'CSS selector of input element' },
-              text: { type: 'string', description: 'Text to type' }
+              text: { type: 'string', description: 'Text to type' },
+              clear: { type: 'boolean', description: 'Clear field before typing (default: true)' }
             },
             required: ['selector', 'text']
           }
@@ -207,7 +305,7 @@ class BrowserExtensionMCP {
         },
         {
           name: 'browser_screenshot',
-          description: 'Take a screenshot of the current page',
+          description: 'Take a screenshot of the current page (returns base64)',
           inputSchema: { type: 'object', properties: {} }
         },
         {
@@ -216,7 +314,46 @@ class BrowserExtensionMCP {
           inputSchema: {
             type: 'object',
             properties: {
-              ms: { type: 'number', description: 'Milliseconds to wait (default: 1000)' }
+              ms: { type: 'number', description: 'Milliseconds to wait (default: 1000, max: 30000)' }
+            }
+          }
+        },
+        {
+          name: 'browser_get_text',
+          description: 'Get text content of an element',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              selector: { type: 'string', description: 'CSS selector of element' }
+            },
+            required: ['selector']
+          }
+        },
+        {
+          name: 'browser_get_url',
+          description: 'Get the current page URL',
+          inputSchema: { type: 'object', properties: {} }
+        },
+        {
+          name: 'browser_wait_for',
+          description: 'Wait for an element to appear (with intelligent polling)',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              selector: { type: 'string', description: 'CSS selector to wait for' },
+              timeout: { type: 'number', description: 'Max wait time in ms (default: 10000)' }
+            },
+            required: ['selector']
+          }
+        },
+        {
+          name: 'browser_wait_network',
+          description: 'Wait for network to be idle (no pending requests)',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              idleTime: { type: 'number', description: 'Time with no requests to consider idle (default: 500ms)' },
+              timeout: { type: 'number', description: 'Max wait time (default: 10000ms)' }
             }
           }
         }
@@ -226,21 +363,31 @@ class BrowserExtensionMCP {
     // Handle tool calls
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const { name, arguments: args } = request.params;
+      const startTime = Date.now();
 
       try {
         let result;
 
         switch (name) {
-          case 'browser_status':
+          case 'browser_status': {
+            // Force reconnect if requested
+            if (args?.reconnect) {
+              console.error('[MCP] Forcing reconnection...');
+              await this.forceReconnect();
+            }
+
             result = {
-              bridgeConnected: this.bridgeConnected,
+              connected: this.bridgeConnected,
               bridgeUrl: BRIDGE_URL,
+              reconnectAttempts: this.reconnectAttempts,
               pendingActions: this.pendingActions.size,
+              socketState: this.bridgeSocket?.readyState ?? 'none',
               message: this.bridgeConnected
-                ? 'Extension ready'
-                : 'Bridge not connected - run: npm run bridge'
+                ? '✅ Bridge connected - Ready to use'
+                : '❌ Bridge not connected - Use reconnect:true or start bridge server'
             };
             break;
+          }
 
           case 'browser_navigate':
             result = await this.sendAction({
@@ -260,7 +407,8 @@ class BrowserExtensionMCP {
             result = await this.sendAction({
               type: 'type',
               selector: args.selector,
-              value: args.text
+              value: args.text,
+              clear: args.clear !== false
             });
             break;
 
@@ -274,38 +422,79 @@ class BrowserExtensionMCP {
             });
             break;
 
-          case 'browser_screenshot':
+          case 'browser_screenshot': {
+            const screenshotResult = await this.sendAction({ type: 'screenshot' });
+            // Truncate base64 for display, but note the full data was received
+            const hasScreenshot = !!screenshotResult?.screenshot;
+            result = {
+              success: hasScreenshot,
+              format: 'base64/png',
+              size: hasScreenshot ? `${Math.round(screenshotResult.screenshot.length / 1024)}KB` : 'N/A',
+              preview: hasScreenshot ? screenshotResult.screenshot.substring(0, 100) + '...' : null
+            };
+            break;
+          }
+
+          case 'browser_wait': {
+            const waitTime = Math.min(args?.ms || 1000, 30000);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+            result = { waited: waitTime, unit: 'ms' };
+            break;
+          }
+
+          case 'browser_get_text':
             result = await this.sendAction({
-              type: 'screenshot'
+              type: 'getText',
+              selector: args.selector
             });
             break;
 
-          case 'browser_wait':
-            await new Promise(resolve => setTimeout(resolve, args.ms || 1000));
-            result = { waited: args.ms || 1000 };
+          case 'browser_get_url':
+            result = await this.sendAction({
+              type: 'getUrl'
+            });
+            break;
+
+          case 'browser_wait_for':
+            result = await this.sendAction({
+              type: 'waitFor',
+              selector: args.selector,
+              timeout: args.timeout || 10000
+            });
+            break;
+
+          case 'browser_wait_network':
+            result = await this.sendAction({
+              type: 'waitForNetworkIdle',
+              idleTime: args.idleTime || 500,
+              timeout: args.timeout || 10000
+            });
             break;
 
           default:
             throw new Error(`Unknown tool: ${name}`);
         }
 
+        const elapsed = Date.now() - startTime;
+
         return {
           content: [{
             type: 'text',
-            text: JSON.stringify(result, null, 2)
+            text: JSON.stringify({ ...result, _elapsed: `${elapsed}ms` }, null, 2)
           }]
         };
 
       } catch (error) {
+        const elapsed = Date.now() - startTime;
+
         return {
           content: [{
             type: 'text',
             text: JSON.stringify({
               error: error.message,
               tool: name,
-              hint: error.message.includes('Bridge')
-                ? 'Start bridge server: cd browser-extension && npm run bridge'
-                : 'Check if extension is loaded in Chrome'
+              _elapsed: `${elapsed}ms`,
+              hint: this.getErrorHint(error.message)
             }, null, 2)
           }],
           isError: true
@@ -314,13 +503,29 @@ class BrowserExtensionMCP {
     });
   }
 
+  getErrorHint(errorMessage) {
+    if (errorMessage.includes('Bridge not connected')) {
+      return 'Run: cd browser-extension && npm run bridge';
+    }
+    if (errorMessage.includes('Extension not connected')) {
+      return 'Load extension in Chrome: chrome://extensions → Load unpacked';
+    }
+    if (errorMessage.includes('Element not found')) {
+      return 'Verify the CSS selector is correct and element exists on page';
+    }
+    if (errorMessage.includes('timeout')) {
+      return 'Action took too long. Check if Chrome is responsive and not minimized';
+    }
+    return 'Check bridge server logs for more details';
+  }
+
   // ========== Start Server ==========
 
   async start() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('[MCP] Browser Extension MCP Server started');
-    console.error('[MCP] Connecting to bridge at', BRIDGE_URL);
+    console.error('[MCP] Browser Extension MCP Server v1.1.0 started');
+    console.error('[MCP] Features: auto-reconnect, lazy connection, exponential backoff');
   }
 }
 

@@ -14,6 +14,14 @@
       font-size: 18px;
       color: #FF6B00;
       margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .version {
+      font-size: 11px;
+      color: #888;
+      font-weight: normal;
     }
     .card {
       background: white;
@@ -25,20 +33,44 @@
     .status {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 12px;
       font-size: 14px;
     }
+    .status:last-child { margin-bottom: 0; }
     .indicator {
       display: inline-block;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       margin-right: 8px;
+      transition: all 0.3s;
     }
-    .indicator.active { background: #00D084; box-shadow: 0 0 4px #00D084; }
+    .indicator.active {
+      background: #00D084;
+      box-shadow: 0 0 8px #00D084;
+      animation: pulse 2s infinite;
+    }
     .indicator.inactive { background: #ccc; }
+    .indicator.connecting {
+      background: #FFA500;
+      animation: blink 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
     button {
-      width: 100%;
+      flex: 1;
       padding: 12px;
       background: #FF6B00;
       color: white;
@@ -47,14 +79,22 @@
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      margin-bottom: 8px;
+      transition: background 0.2s;
     }
     button:hover { background: #E66000; }
+    button:active { transform: scale(0.98); }
     button.secondary {
       background: #e0e0e0;
       color: #333;
     }
     button.secondary:hover { background: #d0d0d0; }
+    button.success {
+      background: #00D084;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
     .info {
       font-size: 12px;
       color: #666;
@@ -67,15 +107,45 @@
       padding: 2px 6px;
       border-radius: 3px;
       font-size: 11px;
+      font-family: "SF Mono", Monaco, monospace;
+    }
+    .message {
+      background: #e8f5e9;
+      border: 1px solid #c8e6c9;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .message.error {
+      background: #ffebee;
+      border-color: #ffcdd2;
+      color: #c62828;
+    }
+    .message.success {
+      background: #e8f5e9;
+      border-color: #c8e6c9;
+      color: #2e7d32;
+    }
+    .attempts {
+      font-size: 11px;
+      color: #888;
+      margin-top: 4px;
     }
   </style>
 </head>
 <body>
-  <h1>🤖 Claude Code Browser Control</h1>
+  <h1>
+    Claude Code Browser Control
+    <span class="version">v1.2</span>
+  </h1>
+
+  <div id="message" class="message"></div>
 
   <div class="card">
     <div class="status">
-      <span>Extension Status</span>
+      <span>Extension</span>
       <span>
         <span class="indicator active"></span>
         <strong>Active</strong>
@@ -84,19 +154,23 @@
     <div class="status">
       <span>Bridge Server</span>
       <span id="bridge-status">
-        <span class="indicator inactive"></span>
-        Not Connected
+        <span class="indicator connecting"></span>
+        Checking...
       </span>
     </div>
+    <div id="attempts-info" class="attempts" style="display:none;"></div>
   </div>
 
-  <button id="test-btn">🧪 Test Extension</button>
-  <button id="docs-btn" class="secondary">📚 Documentation</button>
+  <div class="btn-row">
+    <button id="reconnect-btn">Reconnect</button>
+    <button id="test-btn" class="secondary">Test</button>
+  </div>
+  <button id="docs-btn" class="secondary" style="width:100%;">Documentation</button>
 
   <div class="info">
-    Extension is active and ready.<br>
-    Visit <code>localhost:4200</code> to see test button.<br><br>
-      <p>Bridge Server: <span id="bridge-status">Connecting...</span> (ws://localhost:9223)</p>code>
+    <strong>Quick Start:</strong><br>
+    1. Run <code>cd browser-extension && npm start</code><br>
+    2. Use <code>browser_status</code> in Claude Code
   </div>
 
   <script src="popup.js"></script>
