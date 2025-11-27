@@ -1,0 +1,16 @@
+[
+  {
+    "id": "test-booking-1",
+    "car_id": "test-car-1",
+    "start_at": "2025-12-01T10:00:00Z",
+    "end_at": "2025-12-05T10:00:00Z",
+    "status": "confirmed"
+  },
+  {
+    "id": "test-booking-2",
+    "car_id": "test-car-2",
+    "start_at": "2025-12-10T10:00:00Z",
+    "end_at": "2025-12-15T10:00:00Z",
+    "status": "pending"
+  }
+]

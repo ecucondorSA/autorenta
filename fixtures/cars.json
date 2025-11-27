@@ -1,0 +1,34 @@
+[
+  {
+    "id": "test-car-1",
+    "title": "Toyota Corolla 2022",
+    "brand_text_backup": "Toyota",
+    "model_text_backup": "Corolla",
+    "location_city": "Buenos Aires",
+    "location_state": "Buenos Aires",
+    "location_country": "Argentina",
+    "transmission": "automatic",
+    "price_per_day": 15000,
+    "currency": "ARS",
+    "deposit_amount": 50000,
+    "rating_avg": 4.5,
+    "rating_count": 10,
+    "photos": [{ "url": "https://example.com/car1.jpg" }]
+  },
+  {
+    "id": "test-car-2",
+    "title": "Honda Civic 2021",
+    "brand_text_backup": "Honda",
+    "model_text_backup": "Civic",
+    "location_city": "Córdoba",
+    "location_state": "Córdoba",
+    "location_country": "Argentina",
+    "transmission": "manual",
+    "price_per_day": 12000,
+    "currency": "ARS",
+    "deposit_amount": 40000,
+    "rating_avg": 4.2,
+    "rating_count": 5,
+    "photos": [{ "url": "https://example.com/car2.jpg" }]
+  }
+]
