@@ -1,23 +1,32 @@
 {
-  "name": "claude-code-browser-control-bridge",
-  "version": "1.0.0",
-  "description": "Bridge server connecting Claude Code MCP with Chrome Extension",
+  "name": "claude-code-browser-control",
+  "version": "1.2.0",
+  "description": "Professional browser automation for Claude Code via MCP",
   "main": "mcp-server.js",
   "type": "module",
+  "bin": {
+    "browser-ext": "./cli.js"
+  },
   "scripts": {
-    "start": "./start.sh",
-    "stop": "./stop.sh",
+    "start": "./cli.js start",
+    "stop": "./cli.js stop",
+    "restart": "./cli.js restart",
+    "status": "./cli.js status",
+    "doctor": "./cli.js doctor",
+    "test": "./cli.js test",
+    "logs": "./cli.js logs",
     "bridge": "node bridge-server.js",
-    "bridge:dev": "node --watch bridge-server.js",
     "mcp": "node mcp-server.js",
-    "status": "curl -s http://localhost:9223/status | jq",
-    "health": "curl -s http://localhost:9223/health | jq",
-    "test": "node test-integration.mjs"
+    "install:service": "sudo cp browser-extension-bridge.service /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable browser-extension-bridge",
+    "service:start": "sudo systemctl start browser-extension-bridge",
+    "service:stop": "sudo systemctl stop browser-extension-bridge",
+    "service:status": "sudo systemctl status browser-extension-bridge"
   },
   "keywords": [
     "browser-automation",
     "mcp",
     "chrome-extension",
+    "claude-code",
     "websocket"
   ],
   "author": "AutoRenta Development",

@@ -542,7 +542,8 @@ export class BottomSheetFiltersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Cleanup
+    // Required for Angular lifecycle - component cleanup handled by signals
+    void 0;
   }
 
   open(): void {
