@@ -6,6 +6,7 @@ import {
   WaterfallResult,
   WaterfallBreakdown,
   InspectionStage,
+  BookingInspection,
   CurrencyCode,
   centsToUsd,
   usdToCents,
@@ -18,6 +19,7 @@ import { RiskMatrixService } from './risk-matrix.service';
 import { FgoService } from './fgo.service';
 import { DamageDetectionService } from './damage-detection.service';
 import { PaymentAuthorizationService } from './payment-authorization.service';
+import { LoggerService } from './logger.service';
 
 /**
  * Tipo de daño reportado
@@ -96,6 +98,7 @@ export class SettlementService {
 
   private readonly damageDetectionService = inject(DamageDetectionService);
   private readonly paymentAuthorizationService = inject(PaymentAuthorizationService);
+  private readonly logger = inject(LoggerService).createChildLogger('Settlement');
 
   constructor(
     private readonly supabaseService: SupabaseClientService,
@@ -187,7 +190,7 @@ export class SettlementService {
    * Extrae URLs de imágenes de una inspección
    * @private
    */
-  private extractImageUrls(inspection: InspectionStage | undefined): string[] {
+  private extractImageUrls(inspection: BookingInspection | undefined): string[] {
     if (!inspection) return [];
 
     const images: string[] = [];
@@ -508,21 +511,21 @@ export class SettlementService {
 
             if (captureResult.ok) {
               breakdown.holdCaptured = captureAmount;
-              console.log(
-                `[Partial Capture] Successfully captured ${centsToUsd(captureAmount)} USD ` +
-                `(${captureAmountArs} ARS) from authorization ${snapshot.authorizedPaymentId}`
+              this.logger.info(
+                `Partial capture: ${centsToUsd(captureAmount)} USD ` +
+                `(${captureAmountArs} ARS) from auth ${snapshot.authorizedPaymentId}`,
               );
             } else {
               // If capture fails, log the error but continue with waterfall
-              console.error(
-                `[Partial Capture] Failed to capture from authorization ${snapshot.authorizedPaymentId}: `,
-                captureResult.error
+              this.logger.error(
+                `Partial capture failed for auth ${snapshot.authorizedPaymentId}`,
+                String(captureResult.error),
               );
               // Don't mark as captured if it failed
               breakdown.holdCaptured = 0;
             }
           } catch (error) {
-            console.error('[Partial Capture] Exception during capture:', error);
+            this.logger.error('Partial capture exception', String(error));
             // Don't mark as captured if there was an exception
             breakdown.holdCaptured = 0;
           }
@@ -530,61 +533,86 @@ export class SettlementService {
           // If no authorization ID or amount is 0, just record what we would have captured
           breakdown.holdCaptured = captureAmount;
           if (!snapshot.authorizedPaymentId && captureAmount > 0) {
-            console.warn('[Partial Capture] No authorization ID available for capture');
+            this.logger.warn('No authorization ID available for capture');
           }
         }
 
         remainingCents -= breakdown.holdCaptured;
       } else {
-        // Without credit card
+        // Without credit card - debit from wallet security deposit
         const securityCredit = snapshot.estimatedDeposit ?? 0;
-        const debitAmount = Math.min(remainingCents, securityCredit);
-        // TODO: Implement wallet debit logic
-        breakdown.walletDebited = debitAmount;
-        remainingCents -= debitAmount;
+        const maxDebitCents = Math.min(remainingCents, securityCredit);
 
-        if (remainingCents > 0) {
-          // TODO: Implement top-up/transfer logic
-        }
-      }
+        if (maxDebitCents > 0) {
+          // Call wallet debit RPC to actually debit from renter's wallet
+          const debitResult = await this.debitWalletForDamage(
+            claim.bookingId,
+            claim.id,
+            centsToUsd(maxDebitCents) // Convert cents to USD for RPC
+          );
 
-      if (remainingCents > 0) {
-        // FGO (Fleet & Guest Operations) Coverage
-        const fgoCoverage = Math.min(remainingCents, eligibility.maxCoverCents);
-
-        // Execute FGO payout if coverage is needed
-        if (fgoCoverage > 0) {
-          try {
-            // Convert from cents to USD for FGO service
-            const fgoAmountUsd = centsToUsd(fgoCoverage);
-
-            // Record the FGO payout in the ledger
-            // This creates an audit trail and updates the FGO reserve balance
-            await this.fgoService.addPayout(
-              fgoAmountUsd,
-              claim.bookingId,
-              snapshot.fxSnapshot, // Exchange rate at time of booking
+          if (debitResult.success) {
+            // Convert debited USD back to cents for breakdown
+            breakdown.walletDebited = usdToCents(debitResult.debitedAmountUsd);
+            remainingCents -= breakdown.walletDebited;
+            this.logger.info(
+              `Wallet debit: ${debitResult.debitedAmountUsd} USD for booking ${claim.bookingId}`,
             );
-
-            // Track successful FGO payout in breakdown
-            breakdown.fgoPaid = fgoCoverage;
-
-            // Log for audit trail
-            console.log(
-              `[FGO Payout] Processed ${fgoAmountUsd} USD for booking ${claim.bookingId}`,
+          } else {
+            // Wallet debit failed or insufficient funds
+            // FGO will cover everything (per user decision)
+            this.logger.warn(
+              `Wallet debit failed: ${debitResult.error}. FGO will cover full amount.`,
             );
-          } catch (fgoError) {
-            // If FGO payout fails, log error but continue with settlement
-            // The claim still needs to be processed even if FGO recording fails
-            console.error('[FGO Payout] Failed to record payout:', fgoError);
-
-            // Still mark as paid in breakdown (payment intent exists)
-            // Manual reconciliation may be needed
-            breakdown.fgoPaid = fgoCoverage;
+            breakdown.walletDebited = 0;
           }
         }
+        // Note: No top-up logic needed - FGO covers any remaining amount
+      }
 
-        remainingCents -= fgoCoverage;
+      // FGO Coverage - FGO covers ALL remaining (per business decision)
+      // This ensures renters are never left with uncovered damages
+      if (remainingCents > 0) {
+        // FGO covers the full remaining amount (not limited by maxCoverCents)
+        // Business decision: FGO absorbs all risk when renter wallet insufficient
+        const fgoCoverage = remainingCents;
+
+        // Log if exceeding normal coverage limits (for monitoring)
+        if (fgoCoverage > eligibility.maxCoverCents) {
+          this.logger.warn(
+            `FGO covering ${centsToUsd(fgoCoverage)} USD exceeds limit ` +
+            `${centsToUsd(eligibility.maxCoverCents)} USD for claim ${claim.id}`,
+          );
+        }
+
+        try {
+          // Convert from cents to USD for FGO service
+          const fgoAmountUsd = centsToUsd(fgoCoverage);
+
+          // Record the FGO payout in the ledger
+          // This creates an audit trail and updates the FGO reserve balance
+          await this.fgoService.addPayout(
+            fgoAmountUsd,
+            claim.bookingId,
+            snapshot.fxSnapshot, // Exchange rate at time of booking
+          );
+
+          // Track successful FGO payout in breakdown
+          breakdown.fgoPaid = fgoCoverage;
+          remainingCents = 0; // FGO covers everything
+
+          // Log for audit trail
+          this.logger.info(`FGO payout: ${fgoAmountUsd} USD for booking ${claim.bookingId}`);
+        } catch (fgoError) {
+          // If FGO payout fails, log error but continue with settlement
+          // The claim still needs to be processed even if FGO recording fails
+          this.logger.error('FGO payout recording failed', String(fgoError));
+
+          // Still mark as paid in breakdown (payment intent exists)
+          // Manual reconciliation may be needed
+          breakdown.fgoPaid = fgoCoverage;
+          remainingCents = 0; // Mark as covered for claim processing
+        }
       }
 
       breakdown.remainingUncovered = remainingCents;
@@ -866,7 +894,7 @@ export class SettlementService {
         .eq('id', claimId)
         .eq('status', 'processing'); // Only release if still in processing
     } catch (err) {
-      console.error('[SettlementService] Failed to release claim lock:', err);
+      this.logger.error('Failed to release claim lock', String(err));
     }
   }
 
@@ -885,7 +913,58 @@ export class SettlementService {
         })
         .eq('id', claimId);
     } catch (err) {
-      console.error('[SettlementService] Failed to mark claim as paid:', err);
+      this.logger.error('Failed to mark claim as paid', String(err));
+    }
+  }
+
+  // ============================================================================
+  // WALLET DEBIT FOR DAMAGES
+  // ============================================================================
+
+  /**
+   * Debit from renter's wallet for damage claim
+   * Uses the wallet_debit_for_damage RPC which handles:
+   * - Balance verification
+   * - Partial debit if insufficient funds
+   * - Transaction recording
+   *
+   * @param bookingId - Booking ID for audit trail
+   * @param claimId - Claim ID for audit trail
+   * @param amountUsd - Amount to debit in USD
+   * @returns Result with success status and amount actually debited
+   */
+  private async debitWalletForDamage(
+    bookingId: string,
+    claimId: string,
+    amountUsd: number,
+  ): Promise<{ success: boolean; debitedAmountUsd: number; error?: string }> {
+    try {
+      const { data, error } = await this.supabaseClient.rpc('wallet_debit_for_damage', {
+        p_booking_id: bookingId,
+        p_claim_id: claimId,
+        p_amount_usd: amountUsd,
+      });
+
+      if (error) {
+        this.logger.error('Wallet debit RPC error', error.message);
+        return { success: false, debitedAmountUsd: 0, error: error.message };
+      }
+
+      // RPC returns array with single row
+      const result = Array.isArray(data) ? data[0] : data;
+
+      return {
+        success: result?.success ?? false,
+        debitedAmountUsd: result?.debited_amount_usd ?? 0,
+        error: result?.error,
+      };
+    } catch (err) {
+      this.logger.error('Wallet debit exception', String(err));
+      return {
+        success: false,
+        debitedAmountUsd: 0,
+        error: err instanceof Error ? err.message : 'Unknown error',
+      };
     }
   }
 }
