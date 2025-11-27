@@ -71,7 +71,6 @@ const readEnv = (key: string): string | undefined => {
   }
 
   // import.meta.env (Angular 17+ builder exposes env vars at build time)
-  // @ts-expect-error - import.meta is supported at runtime even if TS config doesn't declare it
   const metaEnv =
     typeof import.meta !== 'undefined' && (import.meta as unknown as ImportMetaWithEnv).env
       ? (import.meta as unknown as ImportMetaWithEnv).env?.[key]

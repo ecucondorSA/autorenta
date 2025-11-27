@@ -292,39 +292,20 @@ async function cmdDoctor() {
 }
 
 async function ensureMcpRegistered() {
-  const configDir = path.join(process.env.HOME, '.claude');
-  const configPath = path.join(configDir, 'claude_desktop_config.json');
-
-  let config = { mcpServers: {} };
-
+  // Check if already registered using claude mcp list
   try {
-    if (fs.existsSync(configPath)) {
-      config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    const result = execSync('claude mcp list 2>/dev/null', { stdio: 'pipe' }).toString();
+    if (result.includes('browser-extension')) {
+      return 'exists';
     }
   } catch { }
 
-  if (!config.mcpServers) {
-    config.mcpServers = {};
-  }
-
-  if (config.mcpServers['browser-extension']) {
-    return 'exists';
-  }
-
-  // Add MCP server config
-  config.mcpServers['browser-extension'] = {
-    command: 'node',
-    args: [path.join(__dirname, 'mcp-server.js')],
-    cwd: __dirname
-  };
-
+  // Register using claude mcp add
   try {
-    if (!fs.existsSync(configDir)) {
-      fs.mkdirSync(configDir, { recursive: true });
-    }
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    const mcpServerPath = path.join(__dirname, 'mcp-server.js');
+    execSync(`claude mcp add browser-extension node ${mcpServerPath}`, { stdio: 'pipe' });
     return 'added';
-  } catch {
+  } catch (e) {
     return 'error';
   }
 }
