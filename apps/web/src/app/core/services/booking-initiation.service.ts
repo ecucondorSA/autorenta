@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { BookingLocationData } from '../../features/bookings/components/booking-location-form/booking-location-form.component';
 import { Booking } from '../models';
@@ -18,6 +19,8 @@ export class BookingInitiationService {
   private readonly bookings = inject(BookingsService);
   private readonly cars = inject(CarsService);
   private readonly router = inject(Router);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   private inProgress = false;
 
@@ -39,10 +42,12 @@ export class BookingInitiationService {
       const isAuth = await this.auth.isAuthenticated();
       if (!isAuth) {
         // Guardar intento breve para UX (opcional)
-        sessionStorage.setItem(
-          'booking_intent',
-          JSON.stringify({ carId, startDate, endDate, locationData }),
-        );
+        if (this.isBrowser) {
+          sessionStorage.setItem(
+            'booking_intent',
+            JSON.stringify({ carId, startDate, endDate, locationData }),
+          );
+        }
         await this.router.navigate(['/auth/login'], {
           queryParams: { returnUrl: this.router.url },
         });

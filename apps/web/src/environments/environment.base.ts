@@ -22,6 +22,7 @@ interface EnvDefaults {
   supabaseUrl?: string;
   supabaseAnonKey?: string;
   defaultCurrency?: string;
+  tripoApiKey?: string;
   paymentsWebhookUrl?: string;
   mapboxAccessToken?: string;
   carLocationsCacheTtlMs?: number;
@@ -121,6 +122,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     'NG_APP_CAR_LOCATIONS_EDGE_FUNCTION',
     defaults.carLocationsEdgeFunction,
   ),
+  tripoApiKey: resolve('NG_APP_TRIPO_API_KEY', defaults.tripoApiKey),
   mercadopagoPublicKey: resolve('NG_APP_MERCADOPAGO_PUBLIC_KEY', defaults.mercadopagoPublicKey),
   mercadopagoClientId: resolve('NG_APP_MERCADOPAGO_CLIENT_ID', defaults.mercadopagoClientId),
   // P0-027 FIX: Secrets removed from frontend - handled by backend only

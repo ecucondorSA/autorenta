@@ -1,4 +1,5 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, computed, inject, PLATFORM_ID, signal } from '@angular/core';
 import {
   MarketplaceService,
   MarketplaceStatus,
@@ -15,6 +16,8 @@ import {
  */
 @Injectable()
 export class PublishCarMpOnboardingService {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly marketplaceService = inject(MarketplaceService);
 
   // State
@@ -126,13 +129,14 @@ export class PublishCarMpOnboardingService {
   dismissOnboardingReminder(): void {
     this.dismissedOnboarding.set(true);
     // Save to localStorage to persist across reloads
-    localStorage.setItem('mp_onboarding_dismissed', 'true');
+    if (this.isBrowser) localStorage.setItem('mp_onboarding_dismissed', 'true');
   }
 
   /**
    * Check if onboarding was dismissed
    */
   wasOnboardingDismissed(): boolean {
+    if (!this.isBrowser) return false;
     return localStorage.getItem('mp_onboarding_dismissed') === 'true';
   }
 
@@ -141,7 +145,7 @@ export class PublishCarMpOnboardingService {
    */
   resetDismissal(): void {
     this.dismissedOnboarding.set(false);
-    localStorage.removeItem('mp_onboarding_dismissed');
+    if (this.isBrowser) localStorage.removeItem('mp_onboarding_dismissed');
   }
 
   /**

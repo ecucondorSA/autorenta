@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, from, map, catchError, of } from 'rxjs';
+import { Observable, from, map, catchError, of, shareReplay } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import {
   InsurancePolicy,
@@ -25,6 +25,10 @@ import { injectSupabase } from './supabase-client.service';
 })
 export class InsuranceService {
   private readonly supabase = injectSupabase();
+
+  // ✅ OPTIMIZED: Cached observables for static data
+  private addonsCache$: Observable<InsuranceAddon[]> | null = null;
+  private platformPolicyCache$: Observable<InsurancePolicy | null> | null = null;
 
   // ============================================
   // PÓLIZAS
@@ -53,9 +57,14 @@ export class InsuranceService {
 
   /**
    * Obtener la póliza flotante activa de la plataforma
+   * ✅ OPTIMIZED: Uses shareReplay to cache static policy data
    */
   getPlatformFloatingPolicy(): Observable<InsurancePolicy | null> {
-    return from(
+    if (this.platformPolicyCache$) {
+      return this.platformPolicyCache$;
+    }
+
+    this.platformPolicyCache$ = from(
       this.supabase
         .from('insurance_policies')
         .select('*')
@@ -71,9 +80,14 @@ export class InsuranceService {
         return data as InsurancePolicy;
       }),
       catchError((_err) => {
+        this.platformPolicyCache$ = null; // Clear cache on error
         return of(null);
       }),
+      // ✅ Cache the result, share among subscribers
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
+
+    return this.platformPolicyCache$;
   }
 
   /**
@@ -255,9 +269,14 @@ export class InsuranceService {
 
   /**
    * Obtener todos los add-ons disponibles
+   * ✅ OPTIMIZED: Uses shareReplay to cache static addon data
    */
   getAvailableAddons(): Observable<InsuranceAddon[]> {
-    return from(
+    if (this.addonsCache$) {
+      return this.addonsCache$;
+    }
+
+    this.addonsCache$ = from(
       this.supabase
         .from('insurance_addons')
         .select('*')
@@ -269,9 +288,14 @@ export class InsuranceService {
         return (data as InsuranceAddon[]) || [];
       }),
       catchError((_err) => {
+        this.addonsCache$ = null; // Clear cache on error
         return of([]);
       }),
+      // ✅ Cache the result, share among subscribers
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
+
+    return this.addonsCache$;
   }
 
   /**

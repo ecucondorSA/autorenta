@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 
 /**
  * P0-015: Client-side Rate Limiter Service
@@ -34,6 +35,8 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
 })
 export class RateLimiterService {
   private readonly STORAGE_PREFIX = 'ratelimit_';
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   /**
    * Check if an action is allowed under rate limiting
@@ -145,6 +148,7 @@ export class RateLimiterService {
    * @param userId - Optional user ID
    */
   reset(action: keyof typeof RATE_LIMITS, userId?: string): void {
+    if (!this.isBrowser) return;
     const key = this.getStorageKey(action, userId);
     localStorage.removeItem(key);
   }
@@ -186,7 +190,8 @@ export class RateLimiterService {
 
     console.warn('[RateLimiter] Rate limit exceeded:', logEntry);
 
-    // Store in sessionStorage for audit
+    // Store in sessionStorage for audit (browser only)
+    if (!this.isBrowser) return;
     try {
       const existingLogs = sessionStorage.getItem('ratelimit_violations');
       const logs = existingLogs ? JSON.parse(existingLogs) : [];
@@ -215,6 +220,9 @@ export class RateLimiterService {
    * Get rate limit entry from storage
    */
   private getEntry(key: string): RateLimitEntry {
+    if (!this.isBrowser) {
+      return { count: 0, resetAt: Date.now() };
+    }
     try {
       const stored = localStorage.getItem(key);
       if (stored) {
@@ -231,6 +239,7 @@ export class RateLimiterService {
    * Set rate limit entry in storage
    */
   private setEntry(key: string, entry: RateLimitEntry): void {
+    if (!this.isBrowser) return;
     try {
       localStorage.setItem(key, JSON.stringify(entry));
     } catch {

@@ -1,4 +1,4 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import {
   APP_INITIALIZER,
   ApplicationConfig,
@@ -23,9 +23,9 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MessageService } from 'primeng/api';
 import { routes } from './app.routes';
 import { authRefreshInterceptor } from './core/interceptors/auth-refresh.interceptor';
+import { httpCacheInterceptor } from './core/interceptors/http-cache.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
-import { httpCacheInterceptor } from './core/interceptors/http-cache.interceptor';
 import { GlobalErrorHandler } from './core/services/global-error-handler';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
 import { SupabaseClientService } from './core/services/supabase-client.service';
@@ -55,6 +55,7 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     provideHttpClient(
+      withFetch(),
       withInterceptors([
         SupabaseAuthInterceptor,
         authRefreshInterceptor,
@@ -84,11 +85,11 @@ export const appConfig: ApplicationConfig = {
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode()
       ? {
-          provide: APP_INITIALIZER,
-          useFactory: initializePerformanceMonitoring,
-          deps: [PerformanceMonitoringService],
-          multi: true,
-        }
+        provide: APP_INITIALIZER,
+        useFactory: initializePerformanceMonitoring,
+        deps: [PerformanceMonitoringService],
+        multi: true,
+      }
       : [],
   ],
 };

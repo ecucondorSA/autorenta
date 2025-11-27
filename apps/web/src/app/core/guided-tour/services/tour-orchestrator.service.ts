@@ -403,6 +403,12 @@ export class TourOrchestratorService implements OnDestroy {
   private loadCompletedTours(): void {
     const completed = new Set<string>();
 
+    // SSR guard
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      this.stateSignal.update((state) => ({ ...state, completedTours: completed }));
+      return;
+    }
+
     Object.keys(localStorage)
       .filter((key) => key.startsWith(this.STORAGE_PREFIX))
       .filter((key) => !key.includes(':dismissed'))

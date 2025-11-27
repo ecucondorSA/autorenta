@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { LoggerService } from './logger.service';
 import { injectSupabase } from './supabase-client.service';
@@ -419,7 +419,7 @@ export class TelemetryService {
       const result = (data?.[0] || null) as RecordTelemetryResult | null;
 
       // Refrescar resumen activo en background (no esperamos el resultado)
-      this.activeSummary(userId ?? undefined).subscribe({
+      this.activeSummary(userId ?? undefined).pipe(take(1)).subscribe({
         error: (err: unknown) =>
           this.logger.error('[TelemetryService] Error al refrescar summary', String(err)),
       });

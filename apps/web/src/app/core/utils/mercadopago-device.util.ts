@@ -23,6 +23,11 @@
 export function getOrCreateDeviceId(): string {
   const STORAGE_KEY = 'mp_device_id';
 
+  // SSR guard
+  if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+    return `ssr-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 15)}`;
+  }
+
   // Intentar obtener de localStorage
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored && stored.length > 0) {
@@ -73,6 +78,17 @@ export function getDeviceFingerprint(): {
   timezone: string;
   language: string;
 } {
+  // SSR guard
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return {
+      device_id: getOrCreateDeviceId(),
+      user_agent: 'ssr',
+      screen_resolution: '0x0',
+      timezone: 'UTC',
+      language: 'es',
+    };
+  }
+
   return {
     device_id: getOrCreateDeviceId(),
     user_agent: navigator.userAgent,

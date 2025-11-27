@@ -132,7 +132,7 @@ export class PublishCarV2Page implements OnInit {
   readonly selectedCategoryName = signal<string>('');
   readonly isCalculatingSuggestedPrice = signal(false);
 
-  // ✅ NEW: Control submit button availability - Solo requiere marca, modelo, año y 3 fotos
+  // ✅ NEW: Control submit button availability - Requiere marca, modelo, año, 3 fotos y ubicación
   // Verifica tanto valores del formulario (brand_id/model_id o brand_text_backup/model_text_backup) como signals FIPE
   readonly canSubmit = computed(() => {
     // Verificar valores del formulario tradicional (UUIDs)
@@ -154,8 +154,17 @@ export class PublishCarV2Page implements OnInit {
     const year = this.publishForm?.get('year')?.value;
     const hasPhotos = this.photoService.hasMinimumPhotos();
 
+    // ✅ CRITICAL: Ubicación es obligatoria para aparecer en búsquedas
+    const hasLocation = this.hasValidLocation();
+
     // Bloquear si falta alguno de los requisitos
-    return !!(hasBrand && hasModel && year && hasPhotos);
+    return !!(hasBrand && hasModel && year && hasPhotos && hasLocation);
+  });
+
+  // ✅ NEW: Check if we have valid location coordinates
+  readonly hasValidLocation = computed(() => {
+    const coordinates = this.locationService.getCoordinates();
+    return !!(coordinates?.latitude && coordinates?.longitude);
   });
 
   // Submit habilitado con datos mínimos; MP recomendado pero no bloquea
@@ -927,6 +936,15 @@ export class PublishCarV2Page implements OnInit {
       return;
     }
 
+    // ✅ CRITICAL: Validar ubicación antes de publicar
+    if (!this.hasValidLocation()) {
+      this.notificationManager.error(
+        'Ubicación requerida',
+        'Debes seleccionar una ubicación en el mapa o usar tu ubicación actual para que tu auto aparezca en las búsquedas.',
+      );
+      return;
+    }
+
     if (!this.mpReady()) {
       this.notificationManager.warning(
         'Conectá Mercado Pago',
@@ -1102,6 +1120,10 @@ export class PublishCarV2Page implements OnInit {
         if (error.message.includes('Marca y modelo son requeridos')) {
           errorTitle = 'Información incompleta';
           errorMessage = 'Por favor completa la marca y el modelo del vehículo.';
+        } else if (error.message.includes('Ubicación del vehículo requerida')) {
+          errorTitle = 'Ubicación requerida';
+          errorMessage =
+            'Selecciona una ubicación en el mapa o usa tu ubicación actual para que tu auto aparezca en las búsquedas.';
         } else if (error.message.includes('Precio por día debe ser mayor a 0')) {
           errorTitle = 'Precio inválido';
           errorMessage = 'El precio por día debe ser mayor a 0.';

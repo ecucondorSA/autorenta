@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal, effect, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
@@ -222,6 +222,8 @@ interface NotificationPreference {
   `,
 })
 export class NotificationPreferencesPage implements OnInit {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly supabase = injectSupabase();
   private readonly router = inject(Router);
   private readonly notificationSound = inject(NotificationSoundService);
@@ -318,6 +320,7 @@ export class NotificationPreferencesPage implements OnInit {
 
       // Load preferences from localStorage for now
       // TODO: Move to database table if needed
+      if (!this.isBrowser) return;
       const savedPrefs = localStorage.getItem(`notification_prefs_${user.id}`);
       if (savedPrefs) {
         const parsed = JSON.parse(savedPrefs);
@@ -414,7 +417,7 @@ export class NotificationPreferencesPage implements OnInit {
         ),
       };
 
-      localStorage.setItem(`notification_prefs_${user.id}`, JSON.stringify(prefsToSave));
+      if (this.isBrowser) localStorage.setItem(`notification_prefs_${user.id}`, JSON.stringify(prefsToSave));
 
       // Show success message
       alert('✅ Preferencias guardadas correctamente');

@@ -1,4 +1,5 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, inject, signal, PLATFORM_ID } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 export type SupportedLanguage = 'es' | 'pt';
@@ -29,6 +30,8 @@ export interface LanguageOption {
 })
 export class LanguageService {
   private readonly translate = inject(TranslateService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly STORAGE_KEY = 'preferred_language';
 
   /**
@@ -68,6 +71,7 @@ export class LanguageService {
    * Obtiene el idioma guardado en localStorage
    */
   private getSavedLanguage(): SupportedLanguage | null {
+    if (!this.isBrowser) return null;
     const saved = localStorage.getItem(this.STORAGE_KEY);
     if (saved === 'es' || saved === 'pt') {
       return saved;
@@ -79,6 +83,7 @@ export class LanguageService {
    * Detecta el idioma del navegador
    */
   private detectBrowserLanguage(): SupportedLanguage {
+    if (!this.isBrowser) return 'es';
     const browserLang = navigator.language.toLowerCase();
 
     if (browserLang.startsWith('pt')) {
@@ -95,7 +100,9 @@ export class LanguageService {
   setLanguage(lang: SupportedLanguage): void {
     this.translate.use(lang);
     this.currentLanguage.set(lang);
-    localStorage.setItem(this.STORAGE_KEY, lang);
+    if (this.isBrowser) {
+      localStorage.setItem(this.STORAGE_KEY, lang);
+    }
   }
 
   /**

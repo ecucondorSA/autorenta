@@ -328,7 +328,7 @@ export class BookingFlowService {
     }
 
     const userRole = this.getUserRole(booking, currentUserId);
-    const nextStep = this.getNextStep(booking, userRole);
+    const nextStep = await this.getNextStep(booking, userRole);
     if (nextStep) {
       await this.router.navigate([nextStep.route]);
     } else {

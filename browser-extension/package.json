@@ -1,24 +1,27 @@
 {
   "name": "claude-code-browser-control-bridge",
   "version": "1.0.0",
-  "description": "Bridge server connecting Playwright MCP with Chrome Extension",
-  "main": "bridge-server.js",
+  "description": "Bridge server connecting Claude Code MCP with Chrome Extension",
+  "main": "mcp-server.js",
   "type": "module",
   "scripts": {
+    "mcp": "node mcp-server.js",
     "bridge": "node bridge-server.js",
     "bridge:dev": "node --watch bridge-server.js",
+    "start": "node bridge-server.js & node mcp-server.js",
     "install-extension": "echo 'Chrome Extension instalada en chrome://extensions → Load unpacked'",
     "test": "echo 'Bridge Server running on ws://localhost:9223'"
   },
   "keywords": [
     "browser-automation",
-    "playwright",
+    "mcp",
     "chrome-extension",
     "websocket"
   ],
   "author": "AutoRenta Development",
   "license": "MIT",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.22.0",
     "ws": "^8.16.0"
   },
   "engines": {

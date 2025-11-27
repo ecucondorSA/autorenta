@@ -48,15 +48,15 @@ export class CarsService {
     // Check for coordinates (using type assertion since location_lat/location_lng come from form)
     const carInput = input as Record<string, unknown>;
 
-    // ✅ CRITICAL: Preparar datos limpios, excluyendo coordenadas null/undefined
-    // Esto evita errores de schema cache si las columnas no están disponibles
-    const cleanInput = { ...input };
+    // ✅ CRITICAL: Las coordenadas son OBLIGATORIAS para que el auto aparezca en búsquedas
+    // Si no hay coordenadas, el auto será invisible en el mapa y en búsquedas espaciales
     if (!carInput.location_lat || !carInput.location_lng) {
-      console.warn('⚠️ Auto sin coordenadas - no aparecerá en el mapa');
-      // Remover propiedades null/undefined para evitar errores de schema cache
-      delete (cleanInput as Record<string, unknown>).location_lat;
-      delete (cleanInput as Record<string, unknown>).location_lng;
+      throw new Error(
+        'Ubicación del vehículo requerida. Por favor selecciona una ubicación en el mapa o usa tu ubicación actual.',
+      );
     }
+
+    const cleanInput = { ...input };
 
     // ✅ CRITICAL: Mapear campos de ubicación legacy (city, province, country)
     // La base de datos requiere city/province/country (NOT NULL)

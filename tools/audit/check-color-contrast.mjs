@@ -65,19 +65,19 @@ const colorPairs = [
   {
     name: 'text-primary on surface-base',
     fg: '#2b1d14',
-    bg: '#f3e8d8',
+    bg: '#F8F4EC',
     sizes: ['normal', 'large']
   },
   {
     name: 'text-secondary on surface-base',
     fg: '#5c4736',
-    bg: '#f3e8d8',
+    bg: '#F8F4EC',
     sizes: ['normal', 'large']
   },
   {
     name: 'text-muted on surface-base',
     fg: '#8c7765',
-    bg: '#f3e8d8',
+    bg: '#F8F4EC',
     sizes: ['large'] // Solo large text
   },
 
@@ -98,14 +98,14 @@ const colorPairs = [
   // Brand colors sobre fondos
   {
     name: 'primary on surface-base',
-    fg: '#c66b3d',
-    bg: '#f3e8d8',
+    fg: '#2563EB',
+    bg: '#F8F4EC',
     sizes: ['normal', 'large']
   },
   {
     name: 'primary-dark on surface-base',
-    fg: '#a5532e',
-    bg: '#f3e8d8',
+    fg: '#1D4ED8',
+    bg: '#F8F4EC',
     sizes: ['normal', 'large']
   },
 
@@ -113,27 +113,27 @@ const colorPairs = [
   {
     name: 'white on primary',
     fg: '#ffffff',
-    bg: '#c66b3d',
+    bg: '#2563EB',
     sizes: ['normal', 'large']
   },
   {
     name: 'white on primary-dark',
     fg: '#ffffff',
-    bg: '#a5532e',
+    bg: '#1D4ED8',
     sizes: ['normal', 'large']
   },
 
   // Accent colors
   {
     name: 'accent-warm on surface-base',
-    fg: '#dc8c68',
-    bg: '#f3e8d8',
+    fg: '#705D44',
+    bg: '#F8F4EC',
     sizes: ['large'] // Usar solo en large text
   },
   {
-    name: 'text-primary on accent-warm',
-    fg: '#2b1d14',
-    bg: '#dc8c68',
+    name: 'white on accent-warm',
+    fg: '#ffffff',
+    bg: '#705D44',
     sizes: ['normal', 'large']
   },
 
@@ -141,25 +141,25 @@ const colorPairs = [
   {
     name: 'success-dark on surface-base',
     fg: '#2d6a4f',
-    bg: '#f3e8d8',
+    bg: '#F8F4EC',
     sizes: ['normal', 'large']
   },
   {
     name: 'error-dark on surface-base',
     fg: '#c1121f',
-    bg: '#f3e8d8',
+    bg: '#F8F4EC',
     sizes: ['normal', 'large']
   },
   {
     name: 'warning-dark on surface-base',
-    fg: '#ca6702',
-    bg: '#f3e8d8',
+    fg: '#854D0E',
+    bg: '#F8F4EC',
     sizes: ['normal', 'large']
   },
   {
     name: 'info-dark on surface-base',
     fg: '#00509d',
-    bg: '#f3e8d8',
+    bg: '#F8F4EC',
     sizes: ['normal', 'large']
   },
 ];
@@ -206,8 +206,8 @@ colorPairs.forEach(pair => {
 console.log('\n' + '═'.repeat(80));
 console.log('\n📈 RESULTADOS\n');
 console.log(`Total pares evaluados: ${totalPairs}`);
-console.log(`✅ Pasan WCAG AA:      ${passedAA}/${totalPairs} (${(passedAA/totalPairs*100).toFixed(1)}%)`);
-console.log(`🟢 Pasan WCAG AAA:     ${passedAAA}/${totalPairs} (${(passedAAA/totalPairs*100).toFixed(1)}%)`);
+console.log(`✅ Pasan WCAG AA:      ${passedAA}/${totalPairs} (${(passedAA / totalPairs * 100).toFixed(1)}%)`);
+console.log(`🟢 Pasan WCAG AAA:     ${passedAAA}/${totalPairs} (${(passedAAA / totalPairs * 100).toFixed(1)}%)`);
 
 if (failed.length > 0) {
   console.log(`\n❌ FALLOS (${failed.length}):n`);

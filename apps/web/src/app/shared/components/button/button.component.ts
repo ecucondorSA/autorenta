@@ -1,5 +1,5 @@
-import { Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, input, output } from '@angular/core';
 
 /**
  * ButtonComponent - Sistema de botones unificado
@@ -85,14 +85,14 @@ export class ButtonComponent {
 
     const variants = {
       primary:
-        'bg-cta-default hover:bg-cta-hover active:bg-cta-pressed text-cta-text focus-visible:ring-border-focus',
+        'bg-cta-default hover:bg-cta-hover active:bg-cta-pressed text-white focus-visible:ring-border-focus shadow-sm',
       secondary:
-        'bg-cta-secondary hover:bg-cta-secondary-hover text-cta-secondary-text focus-visible:ring-border-focus',
-      danger: 'bg-error-text hover:bg-error-strong text-white focus-visible:ring-error-border',
+        'bg-white border border-border-default hover:bg-surface-secondary text-text-primary focus-visible:ring-border-focus shadow-sm',
+      danger: 'bg-error-light hover:bg-red-700 text-white focus-visible:ring-error-light',
       ghost:
-        'bg-transparent hover:bg-surface-hover text-text-primary focus-visible:ring-border-focus',
+        'bg-transparent hover:bg-surface-secondary text-text-primary hover:text-cta-default focus-visible:ring-border-focus',
       outline:
-        'border-2 border-border-default hover:bg-surface-hover text-text-primary focus-visible:ring-border-focus',
+        'border-2 border-cta-default text-cta-default hover:bg-cta-default hover:text-white focus-visible:ring-border-focus',
     };
 
     const sizes = {

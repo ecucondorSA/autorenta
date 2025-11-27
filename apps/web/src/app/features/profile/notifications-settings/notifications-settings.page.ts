@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
@@ -26,6 +26,8 @@ import { NotificationsService } from '../../../core/services/user-notifications.
   styleUrls: ['./notifications-settings.page.css'],
 })
 export class NotificationsSettingsPage implements OnInit {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly router = inject(Router);
   private readonly notificationsService = inject(NotificationsService);
   private readonly toastService = inject(NotificationManagerService);
@@ -68,6 +70,7 @@ export class NotificationsSettingsPage implements OnInit {
   }
 
   private loadSettings() {
+    if (!this.isBrowser) return;
     // TODO: Cargar desde backend o localStorage
     const savedSettings = localStorage.getItem('notification_settings');
     if (savedSettings) {
@@ -123,7 +126,7 @@ export class NotificationsSettingsPage implements OnInit {
     try {
       // Guardar en localStorage (en producción, enviar a backend)
       const settings = this.settings();
-      localStorage.setItem('notification_settings', JSON.stringify(settings));
+      if (this.isBrowser) localStorage.setItem('notification_settings', JSON.stringify(settings));
 
       // TODO: Enviar a backend
       // await this.notificationsService.updateSettings(settings);

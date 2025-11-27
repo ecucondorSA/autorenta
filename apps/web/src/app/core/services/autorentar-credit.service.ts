@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, take, tap } from 'rxjs/operators';
 import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
@@ -69,7 +69,7 @@ export class AutorentarCreditService {
 
   constructor() {
     // Auto-load credit info on service init
-    this.getCreditInfo().subscribe();
+    this.getCreditInfo().pipe(take(1)).subscribe();
   }
 
   /**
@@ -129,7 +129,7 @@ export class AutorentarCreditService {
         const result = data[0] as AutorentarCreditIssueResult;
 
         // Refresh credit info after issuance
-        this.getCreditInfo().subscribe();
+        this.getCreditInfo().pipe(take(1)).subscribe();
 
         return result;
       }),
@@ -166,7 +166,7 @@ export class AutorentarCreditService {
         const result = data[0] as AutorentarCreditConsumeResult;
 
         // Refresh credit info after consumption
-        this.getCreditInfo().subscribe();
+        this.getCreditInfo().pipe(take(1)).subscribe();
 
         return result;
       }),
@@ -196,7 +196,7 @@ export class AutorentarCreditService {
 
         // Refresh credit info after renewal
         if (result.success && result.renewed) {
-          this.getCreditInfo().subscribe();
+          this.getCreditInfo().pipe(take(1)).subscribe();
         }
 
         return result;
@@ -237,7 +237,7 @@ export class AutorentarCreditService {
 
         // Refresh credit info after breakage
         if (result.success) {
-          this.getCreditInfo().subscribe();
+          this.getCreditInfo().pipe(take(1)).subscribe();
         }
 
         return result;
@@ -254,7 +254,7 @@ export class AutorentarCreditService {
    * Refresh credit info (useful after changes)
    */
   refresh(): void {
-    this.getCreditInfo().subscribe();
+    this.getCreditInfo().pipe(take(1)).subscribe();
   }
 
   /**

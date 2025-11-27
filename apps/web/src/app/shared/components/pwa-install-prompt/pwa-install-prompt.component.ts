@@ -1,5 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router, NavigationEnd } from '@angular/router';
@@ -25,6 +25,8 @@ import { PwaService } from '../../../core/services/pwa.service';
   ],
 })
 export class PwaInstallPromptComponent {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   readonly visible = signal(false);
   readonly installing = signal(false);
   private readonly router = inject(Router);
@@ -140,6 +142,6 @@ export class PwaInstallPromptComponent {
   dismiss(): void {
     this.visible.set(false);
     // Don't show again for 7 days
-    localStorage.setItem('pwa_install_dismissed', Date.now().toString());
+    if (this.isBrowser) localStorage.setItem('pwa_install_dismissed', Date.now().toString());
   }
 }

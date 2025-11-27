@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -18,6 +19,8 @@ type WindowWithMSStream = Window & { MSStream?: unknown };
   providedIn: 'root',
 })
 export class PwaInstallService {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
 
   // Señales reactivas
@@ -26,8 +29,10 @@ export class PwaInstallService {
   readonly showInstallPrompt = signal(false);
 
   constructor() {
-    this.initializeInstallPrompt();
-    this.checkIfInstalled();
+    if (this.isBrowser) {
+      this.initializeInstallPrompt();
+      this.checkIfInstalled();
+    }
   }
 
   /**
@@ -117,6 +122,8 @@ export class PwaInstallService {
   dismissPrompt(): void {
     this.showInstallPrompt.set(false);
 
+    if (!this.isBrowser) return;
+
     // No mostrar de nuevo en 7 días
     const dismissedUntil = new Date();
     dismissedUntil.setDate(dismissedUntil.getDate() + 7);
@@ -127,6 +134,7 @@ export class PwaInstallService {
    * Verifica si el prompt fue rechazado recientemente
    */
   private wasRecentlyDismissed(): boolean {
+    if (!this.isBrowser) return false;
     const dismissedUntil = localStorage.getItem('pwa-install-dismissed');
     if (!dismissedUntil) return false;
 

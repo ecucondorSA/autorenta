@@ -33,6 +33,7 @@ export type ConversionEventType =
   | 'review_section_clicked'
   // Marketplace Events
   | 'filters_opened'
+  | 'car_details_clicked'
   // Wallet Events
   | 'wallet_page_viewed'
   | 'wallet_onboarding_banner_viewed'
@@ -252,6 +253,7 @@ export class AnalyticsService {
 
       // Marketplace
       filters_opened: 'view_search_results',
+      car_details_clicked: 'select_item',
 
       // Wallet
       wallet_page_viewed: 'page_view',

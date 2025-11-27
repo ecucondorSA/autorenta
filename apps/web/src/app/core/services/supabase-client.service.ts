@@ -1,4 +1,5 @@
-import { EnvironmentProviders, Injectable, inject, makeEnvironmentProviders } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import { EnvironmentProviders, inject, Injectable, makeEnvironmentProviders, PLATFORM_ID } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 
@@ -66,6 +67,7 @@ const createResilientLock = (): SupabaseLock => {
 })
 export class SupabaseClientService {
   private readonly client: SupabaseClient;
+  private readonly platformId = inject(PLATFORM_ID);
 
   constructor() {
     const supabaseUrl = environment.supabaseUrl;
@@ -77,11 +79,14 @@ export class SupabaseClientService {
       throw new Error(message);
     }
 
+    const isServer = isPlatformServer(this.platformId);
+
     this.client = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        lock: createResilientLock(),
+        persistSession: !isServer, // Disable persistence on server
+        autoRefreshToken: !isServer,
+        lock: isServer ? undefined : createResilientLock(), // No locks on server
+        detectSessionInUrl: !isServer,
       },
       db: {
         schema: 'public',

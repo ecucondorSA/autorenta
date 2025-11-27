@@ -9,6 +9,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/marketplace/marketplace-v2.page').then((m) => m.MarketplaceV2Page),
   },
+
   {
     path: 'explore',
     loadComponent: () => import('./features/explore/explore.page').then((m) => m.ExplorePage),

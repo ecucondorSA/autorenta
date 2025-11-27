@@ -287,6 +287,7 @@ export class BookingsService {
 
   /**
    * Get booking by ID with full details
+   * ✅ OPTIMIZED: Parallel loading of car details and insurance coverage
    */
   async getBookingById(bookingId: string): Promise<Booking | null> {
     const { data, error } = await this.supabase
@@ -302,14 +303,19 @@ export class BookingsService {
 
     const booking = data as Booking;
 
-    // Load car details
+    // ✅ OPTIMIZED: Load car details and insurance coverage in parallel
+    const loadPromises: Promise<void>[] = [];
+
     if (booking?.car_id) {
-      await this.loadCarDetails(booking);
+      loadPromises.push(this.loadCarDetails(booking));
     }
 
-    // Load insurance coverage
     if (booking?.insurance_coverage_id) {
-      await this.loadInsuranceCoverage(booking);
+      loadPromises.push(this.loadInsuranceCoverage(booking));
+    }
+
+    if (loadPromises.length > 0) {
+      await Promise.all(loadPromises);
     }
 
     return booking;
@@ -1093,16 +1099,21 @@ export class BookingsService {
       error instanceof Error ? error : new Error(errorMessage),
     );
 
-    // 3. Auto-cancel the booking (cannot proceed without insurance)
+    // 3. Auto-cancel booking due to system failure (insurance activation)
+    // ✅ ATOMICITY FIX: Use cancellation_reason to distinguish from user cancellations
+    // Note: 'failed' status not in DB enum, using 'cancelled' with distinct reason
     try {
       await this.updateBooking(bookingId, {
         status: 'cancelled',
-        cancellation_reason: 'insurance_activation_failed',
+        cancellation_reason: 'system_failure:insurance_activation_failed',
         cancelled_at: new Date().toISOString(),
       });
 
-      this.logger.info('Booking auto-cancelled due to insurance failure', 'BookingsService', {
+      this.logger.info('Booking auto-cancelled due to insurance system failure', 'BookingsService', {
         bookingId,
+        status: 'cancelled',
+        reason: 'system_failure:insurance_activation_failed',
+        isSystemFailure: true,
       });
     } catch (cancelError) {
       this.logger.error(
@@ -1141,7 +1152,7 @@ export class BookingsService {
     // 5. ❌ THROW ERROR - BLOCK booking creation
     throw new Error(
       `CRITICAL: Cannot create booking without insurance coverage. ` +
-        `Insurance activation failed after ${3} attempts. ` +
+        `Insurance activation failed after 3 attempts. ` +
         `Error: ${errorMessage}. ` +
         `Booking has been auto-cancelled for legal compliance.`,
     );

@@ -1,4 +1,5 @@
-import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, OnDestroy, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
@@ -17,8 +18,17 @@ interface AuthState {
 })
 export class AuthService implements OnDestroy {
   private readonly supabase = injectSupabase();
-  private readonly router = inject(Router);
-  private readonly logger = inject(LoggerService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+
+  constructor(
+    private readonly router: Router,
+    private readonly logger: LoggerService,
+    private readonly rateLimiter: RateLimiterService,
+  ) {
+    void this.ensureSession();
+    this.listenToAuthChanges();
+  }
   private readonly state = signal<AuthState>({ session: null, loading: true });
   private restoreSessionPromise: Promise<void> | null = null;
   private authSubscription: { data: { subscription: { unsubscribe: () => void } } } | null = null;
@@ -28,11 +38,6 @@ export class AuthService implements OnDestroy {
   readonly isAuthenticated = computed(() => !!this.state().session);
   readonly loading = computed(() => this.state().loading);
   readonly userEmail = computed(() => this.state().session?.user?.email);
-
-  constructor() {
-    void this.ensureSession();
-    this.listenToAuthChanges();
-  }
 
   ngOnDestroy(): void {
     this.authSubscription?.data.subscription.unsubscribe();
@@ -120,17 +125,15 @@ export class AuthService implements OnDestroy {
 
   async signIn(email: string, password: string): Promise<void> {
     // P0-015: Check rate limit before attempting login
-    const rateLimiter = inject(RateLimiterService);
-
-    if (!rateLimiter.isAllowed('login', email)) {
-      rateLimiter.logViolation('login', email);
-      throw new Error(rateLimiter.getErrorMessage('login', email));
+    if (!this.rateLimiter.isAllowed('login', email)) {
+      this.rateLimiter.logViolation('login', email);
+      throw new Error(this.rateLimiter.getErrorMessage('login', email));
     }
 
     const { error } = await this.supabase.auth.signInWithPassword({ email, password });
 
     // Record attempt regardless of success/failure
-    rateLimiter.recordAttempt('login', email);
+    this.rateLimiter.recordAttempt('login', email);
 
     if (error) {
       throw this.mapError(error);
@@ -319,11 +322,9 @@ export class AuthService implements OnDestroy {
 
   async resetPassword(email: string, redirectTo?: string): Promise<void> {
     // P0-015: Check rate limit for password reset
-    const rateLimiter = inject(RateLimiterService);
-
-    if (!rateLimiter.isAllowed('passwordReset', email)) {
-      rateLimiter.logViolation('passwordReset', email);
-      throw new Error(rateLimiter.getErrorMessage('passwordReset', email));
+    if (!this.rateLimiter.isAllowed('passwordReset', email)) {
+      this.rateLimiter.logViolation('passwordReset', email);
+      throw new Error(this.rateLimiter.getErrorMessage('passwordReset', email));
     }
 
     const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
@@ -331,7 +332,7 @@ export class AuthService implements OnDestroy {
     });
 
     // Record attempt
-    rateLimiter.recordAttempt('passwordReset', email);
+    this.rateLimiter.recordAttempt('passwordReset', email);
 
     if (error) {
       throw this.mapError(error);

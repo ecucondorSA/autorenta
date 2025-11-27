@@ -1,4 +1,5 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, signal, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import {
   MessagesRepository,
@@ -25,29 +26,44 @@ export interface Message {
 @Injectable({
   providedIn: 'root',
 })
-export class MessagesService {
+export class MessagesService implements OnDestroy {
   private readonly supabase = injectSupabase();
   private readonly realtimeConnection = inject(RealtimeConnectionService);
   private readonly offlineMessages = inject(OfflineMessagesService);
   private readonly messagesRepository = inject(MessagesRepository);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+
+  // Bound event handlers for proper cleanup
+  private readonly handleOnline = () => {
+    this.isOnline.set(true);
+    this.syncOfflineMessages();
+  };
+  private readonly handleOffline = () => {
+    this.isOnline.set(false);
+  };
+
+  constructor(private readonly rateLimiter: RateLimiterService) {
+    // Monitor network connectivity with bound handlers for cleanup (browser only)
+    if (this.isBrowser) {
+      window.addEventListener('online', this.handleOnline);
+      window.addEventListener('offline', this.handleOffline);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.isBrowser) {
+      window.removeEventListener('online', this.handleOnline);
+      window.removeEventListener('offline', this.handleOffline);
+    }
+    this.unsubscribe();
+  }
 
   private realtimeChannel?: RealtimeChannel;
 
   // Online/offline status
-  readonly isOnline = signal<boolean>(navigator.onLine);
+  readonly isOnline = signal<boolean>(typeof navigator !== 'undefined' ? navigator.onLine : true);
   readonly isSyncing = signal<boolean>(false);
-
-  constructor() {
-    // Monitor network connectivity
-    window.addEventListener('online', () => {
-      this.isOnline.set(true);
-      this.syncOfflineMessages();
-    });
-
-    window.addEventListener('offline', () => {
-      this.isOnline.set(false);
-    });
-  }
 
   async listByBooking(bookingId: string): Promise<Message[]> {
     const { data, error } = await this.supabase
@@ -148,16 +164,14 @@ export class MessagesService {
     if (!user?.id) throw new Error('Usuario no autenticado');
 
     // P0-015: Check rate limit for messages
-    const rateLimiter = inject(RateLimiterService);
-
-    if (!rateLimiter.isAllowed('messageSend', user.id)) {
-      rateLimiter.logViolation('messageSend', user.id);
-      throw new Error(rateLimiter.getErrorMessage('messageSend', user.id));
+    if (!this.rateLimiter.isAllowed('messageSend', user.id)) {
+      this.rateLimiter.logViolation('messageSend', user.id);
+      throw new Error(this.rateLimiter.getErrorMessage('messageSend', user.id));
     }
 
     // Try to send immediately
     try {
-      rateLimiter.recordAttempt('messageSend', user.id);
+      this.rateLimiter.recordAttempt('messageSend', user.id);
       const { data, error } = await this.supabase
         .from('messages')
         .insert({

@@ -24,8 +24,8 @@ const palette = {
   },
   accent: {
     blue: {
-      primary: '#A7D8F4',
-      hover: '#8EC9EC',
+      primary: '#2563EB', // Blue 600 - WCAG AA Compliant
+      hover: '#1D4ED8',   // Blue 700
     },
   },
   feedback: {
@@ -41,25 +41,25 @@ const palette = {
 const lightTheme = {
   surfaceBase: palette.neutral.ivory,
   surfaceRaised: '#FFFFFF',
-  surfaceSecondary: palette.neutral.beige,
+  surfaceSecondary: '#F2EFE9', // Slightly darker beige for better separation
   surfaceElevated: palette.gray.G05,
-  textPrimary: palette.neutral.black,
-  textSecondary: palette.gray.G60,
-  textMuted: palette.gray.G40,
-  textInverse: palette.neutral.ivory,
-  borderDefault: palette.gray.G20,
-  borderMuted: palette.gray.G10,
-  borderFocus: '#3B6E8F',
-  ctaDefault: palette.accent.blue.primary,
-  ctaHover: palette.accent.blue.hover,
-  ctaText: palette.neutral.black,
-  infoLight: palette.accent.blue.primary,
-  infoDark: '#6BA8D4',
-  successLight: palette.feedback.success.olive,
-  warningLight: '#C4A882',
-  errorLight: palette.feedback.error.rust,
-  overlayDark: 'rgba(5, 5, 5, 0.7)',
-  overlayLight: 'rgba(248, 244, 236, 0.9)',
+  textPrimary: '#000000', // Pure black for maximum contrast
+  textSecondary: '#333333', // Darker gray for better readability
+  textMuted: '#555555', // Darker muted text
+  textInverse: '#FFFFFF',
+  borderDefault: '#D1D5DB', // Gray-300 equivalent for better visibility
+  borderMuted: '#E5E7EB',
+  borderFocus: '#2563EB', // Stronger blue
+  ctaDefault: '#2563EB', // Stronger blue for primary actions
+  ctaHover: '#1D4ED8', // Darker blue on hover
+  ctaText: '#FFFFFF', // White text on primary buttons
+  infoLight: '#3B82F6',
+  infoDark: '#1D4ED8',
+  successLight: '#15803D', // Darker green for text readability
+  warningLight: '#854D0E', // Darker yellow/brown (Yellow 800)
+  errorLight: '#B91C1C', // Darker red
+  overlayDark: 'rgba(0, 0, 0, 0.7)',
+  overlayLight: 'rgba(255, 255, 255, 0.9)',
 };
 
 /**
@@ -179,7 +179,7 @@ module.exports = {
   'ivory-luminous': '#FAF9F6',
   'pearl-light': '#E5E3DD',
   'accent-petrol': '#2C4A52', // Mantener para compatibilidad
-  'accent-warm': '#8B7355', // Mantener para compatibilidad
+  'accent-warm': '#705D44', // Mantener para compatibilidad (Darkened)
 
   // Sistema de grises legacy (para migración gradual)
   neutral: {

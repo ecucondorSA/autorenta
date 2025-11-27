@@ -14,21 +14,14 @@ import {
 import { FormsModule } from '@angular/forms';
 import { CarAvailabilityService } from '../../../core/services/car-availability.service';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
+import type { FilterState } from '../../../core/models/marketplace.model';
 import {
   BlockedDateRange,
   DateRangePickerComponent,
 } from '../date-range-picker/date-range-picker.component';
 
-/**
- * Filter state interface
- */
-export interface FilterState {
-  dateRange: { start: Date; end: Date } | null;
-  priceRange: { min: number; max: number } | null;
-  vehicleTypes: string[] | null;
-  immediateOnly: boolean;
-  transmission?: string[] | null;
-}
+// Re-export FilterState for backwards compatibility with existing imports
+export type { FilterState } from '../../../core/models/marketplace.model';
 
 /**
  * Map Filters Component

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, computed, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -130,6 +130,9 @@ interface PreparedBookingData {
   styleUrls: ['./booking-wizard.page.scss'],
 })
 export class BookingWizardPage implements OnInit {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+
   currentStep = signal(1);
   totalSteps = 6;
 
@@ -222,6 +225,7 @@ export class BookingWizardPage implements OnInit {
   }
 
   async loadDraft() {
+    if (!this.isBrowser) return;
     try {
       const carId = this.wizardData().carId;
       const draftKey = `booking_draft_${carId}`;
@@ -237,6 +241,7 @@ export class BookingWizardPage implements OnInit {
   }
 
   async saveDraft() {
+    if (!this.isBrowser) return;
     this.isSavingDraft.set(true);
     try {
       const carId = this.wizardData().carId;
@@ -320,7 +325,7 @@ export class BookingWizardPage implements OnInit {
 
       // Clear draft
       const carId = this.wizardData().carId;
-      localStorage.removeItem(`booking_draft_${carId}`);
+      if (this.isBrowser) localStorage.removeItem(`booking_draft_${carId}`);
 
       // Navigate to payment page
       this.router.navigate(['/bookings', booking.id, 'payment']);
@@ -353,7 +358,7 @@ export class BookingWizardPage implements OnInit {
   cancel() {
     if (confirm('¿Estás seguro de que quieres cancelar? Se perderá tu progreso.')) {
       const carId = this.wizardData().carId;
-      localStorage.removeItem(`booking_draft_${carId}`);
+      if (this.isBrowser) localStorage.removeItem(`booking_draft_${carId}`);
       this.router.navigate(['/cars', carId]);
     }
   }

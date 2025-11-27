@@ -235,6 +235,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   readonly bookingPanelOpen = signal(false);
   readonly selectedCarForBooking = signal<CarMapLocation | null>(null);
   readonly selectedCar = signal<CarMapLocation | null>(null);
+  readonly viewMode = signal<'map' | 'list'>('map');
 
   // Map Layers Control
   readonly showBaseMap = signal(true);
@@ -1531,7 +1532,13 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }
 
     // Create enhanced popup with contextual information
-    const popup = this.createUserLocationPopup();
+    const popupHTML = this.createUserLocationPopup();
+    const popup = new this.mapboxgl.Popup({
+      offset: 25,
+      closeButton: true,
+      closeOnClick: false,
+    }).setHTML(popupHTML);
+
     this.userLocationMarker.setPopup(popup);
 
     // Show popup initially with pulse animation (only if it's the first time)
@@ -1544,13 +1551,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
-   * Create enhanced popup with contextual information
+   * Create HTML content for user location popup
    */
-  private createUserLocationPopup(): MapboxPopup {
-    if (!this.mapboxgl) {
-      throw new Error('Mapbox GL not initialized');
-    }
-
+  private createUserLocationPopup(): string {
+    const modeText = this.viewMode() === 'map' ? 'Tu ubicación actual' : 'Estás aquí';
     const accuracyText = this.locationAccuracy
       ? `Precisión: ±${Math.round(this.locationAccuracy)}m`
       : 'Precisión: Desconocida';
@@ -1559,51 +1563,85 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       ? this.formatUpdateTime(this.lastLocationUpdate)
       : 'Actualizado ahora';
 
-    const modeText =
-      this.locationMode === 'searching'
-        ? 'Buscando autos cerca'
-        : this.locationMode === 'booking-confirmed'
-          ? 'Reserva confirmada'
-          : 'Tu ubicación';
+    // Calculate nearby cars
+    const nearbyCars = this.getNearbyCarsCount();
+    const carsText = nearbyCars > 0 ? `🚗 Hay <b>${nearbyCars}</b> autos cerca` : 'No hay autos cerca';
 
     const popupHTML = `
-      <div class="user-location-popup">
-        <p class="font-semibold text-text-primary">${modeText}</p>
-        <p class="text-xs text-text-secondary">${accuracyText}</p>
-        <p class="text-xs text-text-tertiary">${updateTime}</p>
-        <div class="user-location-popup-actions">
-          <button class="user-location-cta" data-action="search-nearby">
-            Buscar autos cerca
+      <div class="user-location-popup" style="font-family: 'Inter', sans-serif; padding: 4px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <div style="width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);"></div>
+          <p class="font-semibold text-slate-800 dark:text-white" style="margin: 0; font-size: 14px;">${modeText}</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; padding-left: 16px;">
+          <p class="text-xs text-slate-500 dark:text-slate-400" style="margin: 0;">${accuracyText}</p>
+          <p class="text-xs text-slate-400 dark:text-slate-500" style="margin: 0;">${updateTime}</p>
+          <p class="text-xs text-cyan-600 dark:text-cyan-400 font-medium" style="margin: 4px 0 0 0;">${carsText}</p>
+        </div>
+
+        <div class="user-location-popup-actions" style="display: flex; gap: 8px; margin-top: 8px;">
+          <button class="user-location-cta" data-action="search-nearby"
+            style="flex: 1; background: #06b6d4; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
+            Buscar aquí
           </button>
-          <button class="user-location-cta" data-action="view-routes">
+          <button class="user-location-cta" data-action="view-routes"
+            style="flex: 1; background: rgba(6, 182, 212, 0.1); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.2); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
             Ver rutas
           </button>
         </div>
       </div>
     `;
 
-    const popup = new this.mapboxgl.Popup({
-      offset: 25,
-      closeButton: true,
-      closeOnClick: false,
-    }).setHTML(popupHTML);
+    return popupHTML;
+  }
 
-    // Attach event listeners after popup is created
-    popup.on('open', () => {
-      const searchBtn = popup.getElement()?.querySelector('[data-action="search-nearby"]');
-      const routesBtn = popup.getElement()?.querySelector('[data-action="view-routes"]');
+  /**
+   * Calculate distance between two points in km
+   */
+  private calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371; // Radius of the earth in km
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) *
+      Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in km
+    return d;
+  }
 
-      searchBtn?.addEventListener('click', () => {
-        this.carSelected.emit('nearby-search');
-      });
+  private deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
+  }
 
-      routesBtn?.addEventListener('click', () => {
-        // Emit event for routes view
-        console.log('View routes clicked');
-      });
-    });
+  /**
+   * Get count of cars near user location
+   */
+  /**
+   * Get count of cars near user location
+   */
+  private getNearbyCarsCount(): number {
+    const userLoc = this.userLocation;
+    if (!userLoc) return 0;
 
-    return popup;
+    const radius = this.searchRadiusKm || 5; // Default 5km if not set
+
+    return this.cars.filter(car => {
+      if (!car.lat || !car.lng) return false;
+
+      const dist = this.calculateDistanceKm(
+        userLoc.lat,
+        userLoc.lng,
+        car.lat,
+        car.lng
+      );
+
+      return dist <= radius;
+    }).length;
   }
 
   /**

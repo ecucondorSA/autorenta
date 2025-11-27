@@ -2,42 +2,41 @@
   "mcpServers": {
     "cloudflare-builds": {
       "type": "http",
-      "url": "https://builds.mcp.cloudflare.com/mcp",
-      "description": "Deploy and manage Cloudflare Pages and Workers builds"
+      "url": "https://builds.mcp.cloudflare.com/mcp"
     },
     "cloudflare-docs": {
       "type": "http",
-      "url": "https://docs.mcp.cloudflare.com/mcp",
-      "description": "Quick reference for Cloudflare documentation"
+      "url": "https://docs.mcp.cloudflare.com/mcp"
     },
     "cloudflare-bindings": {
       "type": "http",
-      "url": "https://bindings.mcp.cloudflare.com/mcp",
-      "description": "Manage Workers bindings (R2, KV, D1, AI, etc.)"
+      "url": "https://bindings.mcp.cloudflare.com/mcp"
     },
     "mercadopago-mcp-server-prod": {
       "type": "http",
       "url": "https://mcp.mercadopago.com/mcp",
       "headers": {
         "Authorization": "Bearer ${MERCADOPAGO_ACCESS_TOKEN}"
-      },
-      "description": "MercadoPago MCP Server - Integraciones con IA, documentación y optimización de pagos"
-    },
-    "supabase": {
-      "type": "http",
-      "url": "https://mcp.supabase.com/mcp?project_ref=pisqjmoklivzpwufhscx",
-      "headers": {
-        "Authorization": "Bearer ${SUPABASE_ACCESS_TOKEN}"
-      },
-      "description": "Supabase MCP Server - Database queries, schema management, TypeScript generation, Edge Functions deployment for AutoRenta FIPE+Binance integration"
+      }
     },
     "autorenta-platform": {
       "command": "node",
-      "args": ["/home/edu/autorenta/mcp-server/dist/index.js"],
+      "args": [
+        "/home/edu/autorenta/mcp-server/dist/index.js"
+      ],
       "env": {
         "NODE_ENV": "production"
-      },
-      "description": "AutoRenta Platform MCP - Real-time access to cars, bookings, users, platform operations + Specialized DB Security Audit Module (SECURITY_DEFINER functions, RLS policies, performance analysis)"
+      }
+    },
+    "browser-extension": {
+      "command": "node",
+      "args": [
+        "/home/edu/autorenta/browser-extension/mcp-server.js"
+      ]
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=pisqjmoklivzpwufhscx"
     }
   }
 }

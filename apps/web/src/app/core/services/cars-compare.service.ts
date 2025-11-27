@@ -1,4 +1,5 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
 import { Car, CarComparison, ComparisonRow } from '../models';
 import { CarsService } from './cars.service';
 import { NotificationManagerService } from './notification-manager.service';
@@ -14,9 +15,13 @@ export class CarsCompareService {
   readonly comparedCars = signal<Car[]>([]);
   readonly count = signal<number>(0);
   private readonly toastService = inject(NotificationManagerService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   constructor(private readonly carsService: CarsService) {
-    this.loadFromStorage();
+    if (this.isBrowser) {
+      this.loadFromStorage();
+    }
   }
 
   /**
@@ -77,7 +82,9 @@ export class CarsCompareService {
     this.comparedCarIds.set([]);
     this.comparedCars.set([]);
     this.count.set(0);
-    sessionStorage.removeItem(STORAGE_KEY);
+    if (this.isBrowser) {
+      sessionStorage.removeItem(STORAGE_KEY);
+    }
   }
 
   /**
@@ -229,6 +236,7 @@ export class CarsCompareService {
    * Persistir en sessionStorage
    */
   private saveToStorage(carIds: string[]): void {
+    if (!this.isBrowser) return;
     const comparison: CarComparison = {
       carIds,
       timestamp: new Date().toISOString(),
@@ -240,6 +248,7 @@ export class CarsCompareService {
    * Cargar desde sessionStorage
    */
   private loadFromStorage(): void {
+    if (!this.isBrowser) return;
     const stored = sessionStorage.getItem(STORAGE_KEY);
     if (!stored) return;
 

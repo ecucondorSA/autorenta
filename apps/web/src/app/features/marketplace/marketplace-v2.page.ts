@@ -12,6 +12,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
@@ -40,24 +41,30 @@ import { BookingsService } from '../../core/services/bookings.service';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { TikTokEventsService } from '../../core/services/tiktok-events.service';
-import { Car3dViewerComponent } from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
+import { Car3dViewerComponent, CarPartInfo } from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
 import {
   DateRange,
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
-import { DynamicPricingBadgeComponent } from '../../shared/components/dynamic-pricing-badge/dynamic-pricing-badge.component';
+// DynamicPricingBadgeComponent - available for car cards when needed
 import {
   MapControlsComponent,
   MapControlsEvent,
 } from '../../shared/components/map-controls/map-controls.component';
 import { MapFiltersComponent } from '../../shared/components/map-filters/map-filters.component';
 import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
+
+// TooltipComponent - available for interactive hints when needed
+import { DarkModeToggleComponent } from '../../shared/components/dark-mode-toggle/dark-mode-toggle.component';
+// SkeletonComponent - available for loading states when needed
+import { SeoSchemaService } from '../../core/services/seo-schema.service';
+import { ThemeService } from '../../core/services/theme.service';
 import {
-  QuickBookingData,
-  QuickBookingModalComponent,
-} from '../../shared/components/quick-booking-modal/quick-booking-modal.component';
-import { TooltipComponent } from '../../shared/components/tooltip/tooltip.component';
-import { SkeletonComponent } from './components/ui/skeleton.component';
+  FAQSectionComponent,
+  FinalCTABannerComponent,
+  SocialProofBarComponent,
+  TestimonialsSectionComponent,
+} from './components';
 
 export interface LatLngBoundsLiteral {
   north: number;
@@ -90,18 +97,24 @@ export interface Stat {
     CarsMapComponent,
 
     WhatsappFabComponent,
-    QuickBookingModalComponent,
+
     FloatingActionFabComponent,
     // NotificationToastComponent, // REMOVED: Using PrimeNG Toast now
 
-    TooltipComponent,
     DateRangePickerComponent,
-    DynamicPricingBadgeComponent,
     MapFiltersComponent,
     MapControlsComponent,
     PriceTransparencyModalComponent,
-    SkeletonComponent,
     Car3dViewerComponent,
+
+    // Landing page conversion components
+    SocialProofBarComponent,
+    FAQSectionComponent,
+    TestimonialsSectionComponent,
+    FinalCTABannerComponent,
+    DarkModeToggleComponent,
+    // UrgencyBannerComponent - ready for real-time stock alerts
+    // BottomSheetFiltersComponent - ready for mobile filter UX
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -110,6 +123,7 @@ export interface Stat {
 export class MarketplaceV2Page implements OnInit, OnDestroy {
   @ViewChild(CarsMapComponent) carsMapComponent!: CarsMapComponent;
   @ViewChild('drawerContent', { read: ElementRef }) drawerContent?: ElementRef<HTMLDivElement>;
+  @ViewChild('carViewer') carViewer?: Car3dViewerComponent;
 
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -125,6 +139,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly meta = inject(Meta);
+  private readonly titleService = inject(Title);
+  private readonly seoSchemaService = inject(SeoSchemaService);
+  readonly themeService = inject(ThemeService);
   private locationSearchTimeout?: ReturnType<typeof setTimeout>;
 
   // State
@@ -139,10 +157,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private locationWatchId: number | null = null;
 
   // UI State Signals
-  readonly viewMode = signal<'map' | 'list'>('map');
-  readonly showFilters = signal(false);
-  readonly showDatePicker = signal(false);
-  readonly showLocationPicker = signal(false);
+
 
   readonly drawerOpen = signal(false);
   readonly filtersVisible = signal(true);
@@ -160,8 +175,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     eta?: number;
   } | null>(null);
   readonly expressMode = signal(true);
-  readonly quickBookingModalOpen = signal(false);
-  readonly quickBookingCar = signal<Car | null>(null);
+
   readonly searchValue = signal('');
   readonly showFilters = signal(false);
   readonly viewMode = signal<ViewMode>('list');
@@ -181,6 +195,19 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     null,
   );
   readonly showSearchAreaButton = signal(false); // Botón "Buscar en esta zona"
+
+  // 3D Model State
+  current3DView: 'default' | 'front' | 'side' | 'interior' | 'top' = 'default';
+  modelLoaded = false;
+
+  // 3D Part Interaction State
+  readonly hoveredPart = signal<CarPartInfo | null>(null);
+  readonly hoveredPartPosition = signal<{ x: number; y: number } | null>(null);
+  readonly selectedPart = signal<CarPartInfo | null>(null);
+
+  // Quick Booking State
+  readonly quickBookingCar = signal<Car | null>(null);
+  readonly quickBookingModalOpen = signal(false);
 
   // Computed - Ahora usa BreakpointService
   readonly isMobile = this.breakpoint.isMobile;
@@ -203,7 +230,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   readonly fabActions: FabAction[] = [
     { id: 'filter', label: 'Filtros', icon: '🔍', color: 'primary' },
-    { id: 'quick-rent', label: 'Reserva rápida', icon: '⚡', color: 'accent' },
+
     { id: 'location', label: 'Mi ubicación', icon: '📍', color: 'secondary' },
   ];
 
@@ -419,6 +446,22 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
+    // SEO Meta Tags
+    this.titleService.setTitle('Alquiler de Autos P2P | Autorentar - Renta Segura sin Intermediarios');
+    this.meta.updateTag({ name: 'description', content: 'Alquila autos verificados directamente de dueños. 100% asegurado, pagos seguros con MercadoPago, entrega express. Sin intermediarios, sin tarjeta de crédito requerida.' });
+    this.meta.updateTag({ name: 'keywords', content: 'alquiler autos, renta de autos, alquiler sin tarjeta, autos particulares, P2P, Argentina' });
+    this.meta.updateTag({ property: 'og:title', content: 'Autorentar - Alquiler de Autos P2P' });
+    this.meta.updateTag({ property: 'og:description', content: 'Conectamos personas con vehículos verificados. Sin intermediarios, 100% asegurado.' });
+    this.meta.updateTag({ property: 'og:type', content: 'website' });
+    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+
+    // Initialize JSON-LD structured data schemas for SEO
+    if (this.isBrowser) {
+      this.seoSchemaService.setOrganizationSchema();
+      this.seoSchemaService.setLocalBusinessSchema();
+      this.seoSchemaService.setWebSiteSchema();
+    }
+
     // Set default view mode: 'map' for mobile, 'list' for desktop
     if (this.isMobile()) {
       this.viewMode.set('map');
@@ -565,94 +608,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Handle quick booking from map tooltip
-   */
-  onQuickBook(carId: string): void {
-    const car = this.cars().find((c) => c.id === carId);
-    if (!car) {
-      console.warn('Car not found for quick booking:', carId);
-      return;
-    }
 
-    this.quickBookingCar.set(car);
-    this.quickBookingModalOpen.set(true);
-
-    // Track analytics event
-    this.analyticsService.trackEvent('cta_clicked', {
-      car_id: carId,
-      source: 'quick_book_button',
-      cta_type: 'quick_book',
-    });
-  }
-
-  /**
-   * Handle quick booking confirmation
-   */
-  async onQuickBookingConfirm(data: QuickBookingData): Promise<void> {
-    try {
-      this.showToast('Procesando tu reserva...', 'info');
-
-      // Track analytics event
-      this.analyticsService.trackEvent('booking_initiated', {
-        car_id: data.carId,
-        payment_method: data.paymentMethod,
-        total_amount: data.totalPrice,
-      });
-
-      // Create booking
-      const booking = await this.bookingsService.requestBooking(
-        data.carId,
-        data.startDate.toISOString(),
-        data.endDate.toISOString(),
-      );
-
-      // Track success
-      this.analyticsService.trackEvent('booking_completed', {
-        car_id: data.carId,
-        booking_id: booking.id,
-        payment_method: data.paymentMethod,
-        total_amount: data.totalPrice,
-      });
-
-      // Close modal
-      this.quickBookingModalOpen.set(false);
-      this.quickBookingCar.set(null);
-
-      this.showToast('¡Reserva confirmada! 🎉', 'success');
-
-      // Navigate to booking success page
-      await this.router.navigate(['/bookings', booking.id, 'success']);
-    } catch (error) {
-      console.error('Error creating quick booking:', error);
-
-      // Track error
-      this.analyticsService.trackEvent('booking_failed', {
-        car_id: data.carId,
-        error_message: error instanceof Error ? error.message : 'Unknown error',
-      });
-
-      this.showToast('Error al crear la reserva. Por favor intenta de nuevo.', 'error');
-    }
-  }
-
-  /**
-   * Handle quick booking cancellation
-   */
-  onQuickBookingCancel(): void {
-    const carId = this.quickBookingCar()?.id;
-
-    // Track analytics event
-    if (carId) {
-      this.analyticsService.trackEvent('cta_hovered', {
-        car_id: carId,
-        cta_type: 'quick_booking_cancelled',
-      });
-    }
-
-    this.quickBookingModalOpen.set(false);
-    this.quickBookingCar.set(null);
-  }
 
   /**
    * Handle map filters change
@@ -1100,9 +1056,79 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   handleHeroQuickBook(): void {
     const firstCar = this.visibleCars()[0];
     if (firstCar) {
-      this.onQuickBook(firstCar.id);
+      this.openQuickBooking();
     } else {
       this.showToast('No hay autos disponibles para reservar', 'warning');
+    }
+  }
+
+  // ===== 3D MODEL CONTROLS =====
+
+  /**
+   * Set 3D view mode
+   */
+  set3DView(view: 'default' | 'front' | 'side' | 'interior' | 'top'): void {
+    this.current3DView = view;
+    if (this.carViewer) {
+      this.carViewer.setViewMode(view);
+    }
+  }
+
+  /**
+   * Handle model loaded event
+   */
+  onModelLoaded(): void {
+    this.modelLoaded = true;
+  }
+
+  /**
+   * Handle view mode change from 3D viewer
+   */
+  onViewModeChange(mode: string): void {
+    this.current3DView = mode as 'default' | 'front' | 'side' | 'interior' | 'top';
+  }
+
+  /**
+   * Handle part hover from 3D viewer
+   */
+  onPartHovered(event: { part: string; info: CarPartInfo | undefined; position: { x: number; y: number } }): void {
+    if (event.info) {
+      this.hoveredPart.set(event.info);
+      this.hoveredPartPosition.set(event.position);
+    } else {
+      this.hoveredPart.set(null);
+      this.hoveredPartPosition.set(null);
+    }
+  }
+
+  /**
+   * Handle part selection from 3D viewer
+   */
+  onPartSelected(event: { part: string; info: CarPartInfo | undefined }): void {
+    if (event.info) {
+      this.selectedPart.set(event.info);
+      // Track analytics - using cta_clicked for 3D part interaction
+      this.analyticsService.trackEvent('cta_clicked', {
+        cta_type: '3d_part_selected',
+        source: event.part,
+      });
+    }
+  }
+
+  /**
+   * Handle part deselection from 3D viewer
+   */
+  onPartDeselected(): void {
+    this.selectedPart.set(null);
+  }
+
+  /**
+   * Close the selected part panel
+   */
+  closePartPanel(): void {
+    this.selectedPart.set(null);
+    if (this.carViewer) {
+      this.carViewer.deselectPart();
     }
   }
 

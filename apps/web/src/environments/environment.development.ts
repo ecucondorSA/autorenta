@@ -24,6 +24,7 @@ export const environment = buildEnvironment({
   supabaseAnonKey: undefined, // Lee de NG_APP_SUPABASE_ANON_KEY
   defaultCurrency: 'ARS',
   mapboxAccessToken: undefined, // Lee de NG_APP_MAPBOX_ACCESS_TOKEN
+  tripoApiKey: undefined, // Lee de NG_APP_TRIPO_API_KEY
   paymentsWebhookUrl: 'http://localhost:8787/webhooks/payments',
   appUrl: 'http://localhost:4200',
   // PayPal Sandbox Credentials

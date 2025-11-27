@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { isPlatformBrowser, registerLocaleData } from '@angular/common';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
 import localePtBr from '@angular/common/locales/pt';
 import localeEn from '@angular/common/locales/en';
@@ -21,6 +21,8 @@ import localeEn from '@angular/common/locales/en';
 })
 export class LocaleManagerService {
   private readonly translateService = inject(TranslateService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private currentLocale: string = 'es-AR';
 
   constructor() {
@@ -49,11 +51,13 @@ export class LocaleManagerService {
     this.translateService.use(lang);
     this.currentLocale = this.getLocaleFromLang(lang);
 
-    // Persistir en localStorage
-    localStorage.setItem('app_lang', lang);
+    if (this.isBrowser) {
+      // Persistir en localStorage
+      localStorage.setItem('app_lang', lang);
 
-    // Actualizar atributo HTML lang
-    document.documentElement.lang = lang;
+      // Actualizar atributo HTML lang
+      document.documentElement.lang = lang;
+    }
   }
 
   /**
@@ -87,6 +91,8 @@ export class LocaleManagerService {
    * Obtiene el idioma guardado en localStorage
    */
   private getSavedLanguage(): 'es' | 'pt' | 'en' {
+    if (!this.isBrowser) return 'es';
+
     const saved = localStorage.getItem('app_lang');
 
     if (saved === 'es' || saved === 'pt' || saved === 'en') {

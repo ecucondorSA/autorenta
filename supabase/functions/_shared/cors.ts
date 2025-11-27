@@ -45,11 +45,13 @@ export function getCorsHeaders(req: Request): HeadersInit {
 
 /**
  * Legacy export para backward compatibility
- * ⚠️ DEPRECATED: Usar getCorsHeaders() en su lugar
+ * ✅ FIXED: Ya no usa '*', usa el dominio de producción como default
  *
- * @deprecated
+ * @deprecated Preferir getCorsHeaders(req) para validación dinámica de Origin
  */
 export const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Origin': 'https://autorentar.com',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-signature, x-request-id',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Credentials': 'true',
 };

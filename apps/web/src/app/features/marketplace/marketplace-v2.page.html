@@ -1,130 +1,289 @@
-<!-- 🎨 MARKETPLACE V2 - PREMIUM AIRBNB-STYLE DESIGN -->
+<!-- 🎨 MARKETPLACE V2 - IMMERSIVE 3D EXPERIENCE -->
 
-<!-- Hero Header with Search -->
-<div
-  class="hero-header relative hero-animated-bg text-white overflow-hidden min-h-[500px] md:min-h-[600px] flex items-center">
-  <!-- Clean Gradient Background (Removed in favor of animated bg) -->
-  <!-- <div class="absolute inset-0 bg-gradient-to-br from-cyan-400 via-cyan-300 to-blue-300"></div> -->
+<!-- Hero Header - Full 3D Immersion -->
+<div class="hero-immersive relative overflow-hidden min-h-[100svh] flex flex-col">
 
-  <!-- Floating Orbs -->
-  <div class="floating-orb orb-1"></div>
-  <div class="floating-orb orb-2"></div>
-  <div class="floating-orb orb-3"></div>
-
-  <!-- Subtle Pattern Overlay -->
-  <div class="absolute inset-0 opacity-[0.03]"
-    style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 32px 32px;">
+  <!-- Pure Background - Autorentar neutral gradient -->
+  <div class="absolute inset-0 bg-gradient-to-b from-[#f8f4ec] via-[#f0ebe2] to-[#e8e4dc] -z-10">
   </div>
 
-  <!-- Floating 3D Model -->
-  <div
-    class="absolute inset-0 z-0 flex items-center justify-center md:justify-end md:pr-10 opacity-90 pointer-events-none">
-    <div class="w-full md:w-3/4 h-full pointer-events-auto">
-      <app-car-3d-viewer src="assets/models/car-3d-model.glb" [selectedColor]="selectedCar()?.color"
-        alt="Featured Car 3D Model"></app-car-3d-viewer>
+  <!-- Subtle Grid Pattern (very subtle, doesn't block 3D) -->
+  <div class="absolute inset-0 -z-5 opacity-[0.03]"
+    style="background-image: linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px); background-size: 80px 80px;">
+  </div>
+
+  <!-- TOP NAV AREA - REMOVED DUPLICATE HEADER -->
+  <!-- The main app-header handles navigation. Keeping only necessary controls if needed, but removing full header to avoid duplication -->
+  <div class="relative z-50 w-full pointer-events-none">
+    <div
+      class="max-w-[1800px] mx-auto px-6 lg:px-12 pt-6 lg:pt-8 flex justify-end">
+      <!-- Live Stats Pills & Dark Mode Only -->
+      <div class="hidden lg:flex items-center gap-3 pointer-events-auto">
+        <div class="stat-pill-light">
+          <span class="stat-dot bg-emerald-500"></span>
+          <span class="font-mono text-sm text-[#050505]/80">{{ visibleCars().length }}+ autos</span>
+        </div>
+        <div class="stat-pill-light">
+          <span class="text-amber-500">★</span>
+          <span class="font-mono text-sm text-[#050505]/80">4.8</span>
+        </div>
+        <div class="stat-pill-light">
+          <span class="text-emerald-500">✓</span>
+          <span class="font-mono text-sm text-[#050505]/80">Asegurado</span>
+        </div>
+        <!-- Dark Mode Toggle -->
+        <app-dark-mode-toggle class="ml-2" />
+      </div>
     </div>
   </div>
 
-  <div
-    class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[calc(3rem+env(safe-area-inset-top))] pb-10 lg:py-20 w-full">
-    <!-- Hero Title Section -->
-    <div class="text-center mb-12">
-      <!-- Logo y título -->
-      <div
-        class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 mb-4 md:mb-6">
-        <div (click)="onLogoClick()"
-          class="w-20 h-20 md:w-36 md:h-36 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg border border-white/20 overflow-hidden cursor-pointer hover:bg-white/20 hover:shadow-xl hover:border-white/30 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent transition-all duration-200"
-          role="button" tabindex="0" (keydown.enter)="onLogoClick()" (keydown.space)="onLogoClick()"
-          aria-label="Ver mapa del marketplace">
-          <img src="/assets/images/c40-logo.png" alt="Autorentar Logo" width="144" height="144"
-            class="w-full h-full object-contain p-2 pointer-events-none" loading="eager"
-            fetchpriority="high" decoding="async" onerror="this.style.display='none'" />
-        </div>
-        <h1
-          class="text-3xl md:text-6xl font-bold text-white drop-shadow-2xl mt-2 md:mt-0 text-reveal">
-          Autorentar</h1>
-      </div>
-
-      <!-- Título principal -->
-      <h2
-        class="text-2xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight leading-tight px-2 text-reveal text-reveal-delay-1">
-        Encuentra tu auto ideal
-      </h2>
-
-      <!-- Subtítulo descriptivo -->
-      <p
-        class="text-base md:text-xl text-slate-800 dark:text-slate-100 mb-6 md:mb-10 max-w-2xl mx-auto font-light px-4 text-reveal text-reveal-delay-2">
-        Miles de vehículos verificados listos para tu próxima aventura
-      </p>
-
-      <!-- 3D Model Hero (Removed - Floating now) -->
-
-      <!-- Stats bar -->
-      <div class="flex items-center justify-center gap-2 md:gap-8 mb-6 md:mb-8 flex-wrap px-2">
+  <!-- MAIN HERO CONTENT -->
+  <div class="flex-1 flex items-center relative">
+    <!-- 3D Model - FULL WIDTH, NO OVERLAY, CRISP - Lazy loaded -->
+    <div class="absolute inset-0 z-0">
+      <div class="w-full h-full model-3d-container">
+        @defer (on idle) {
+        <app-car-3d-viewer #carViewer src="/camaro.glb" [selectedColor]="selectedCar()?.color"
+          alt="Chevrolet Camaro ZL1 3D Model" class="w-full h-full" (modelLoaded)="onModelLoaded()"
+          (viewModeChange)="onViewModeChange($event)" (partHovered)="onPartHovered($event)"
+          (partSelected)="onPartSelected($event)"
+          (partDeselected)="onPartDeselected()"></app-car-3d-viewer>
+        } @placeholder {
         <div
-          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg stats-badge-interactive">
-          <img src="assets/images/MB.png" alt="Auto" width="48" height="48"
-            class="h-8 w-8 md:h-12 md:w-12 object-contain" loading="eager" decoding="async" />
-          <span class="text-xs md:text-base font-semibold text-white">{{ visibleCars().length }}+
-            autos</span>
+          class="w-full h-full flex items-center justify-center bg-gradient-to-b from-slate-900 to-slate-950">
+          <div class="text-center">
+            <div
+              class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center animate-pulse">
+              <svg class="w-10 h-10 text-cyan-400/50" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+              </svg>
+            </div>
+            <p class="text-sm text-white/30">Cargando modelo 3D...</p>
+          </div>
         </div>
+        } @loading (minimum 300ms) {
         <div
-          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg stats-badge-interactive">
-          <span class="text-lg md:text-2xl">⭐</span>
-          <span class="text-xs md:text-base font-semibold text-white">4.8/5 rating</span>
-        </div>
-        <div
-          class="flex items-center gap-1.5 md:gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg stats-badge-interactive">
-          <span class="text-lg md:text-2xl">🛡️</span>
-          <span class="text-xs md:text-base font-semibold text-white">100% asegurado</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Quick Actions (replacing old quick stats) -->
-    <div
-      class="hidden md:flex items-center justify-center gap-4 mb-8 text-reveal text-reveal-delay-2">
-      <button
-        class="px-6 py-3 bg-white text-cyan-700 font-semibold rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transform transition-all duration-200"
-        type="button" (click)="handleHeroQuickBook()">
-        ⚡ Reserva instantánea
-      </button>
-      <button (click)="onLogoClick()"
-        class="px-6 py-3 bg-white/10 backdrop-blur-md text-white border-2 border-white/30 font-semibold rounded-xl hover:bg-white/20 hover:scale-105 transform transition-all duration-200">
-        Explora el marketplace
-      </button>
-    </div>
-
-
-
-    <!-- Enhanced Search Card -->
-    <div
-      class="max-w-5xl mx-auto transform translate-y-4 md:translate-y-8 relative z-20 px-2 md:px-0">
-      <div class="glass-premium rounded-2xl md:rounded-3xl shadow-2xl p-4 md:p-8">
-        <!-- Search Header -->
-        <div class="flex items-center justify-between mb-8">
-          <h3 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">
-            Comienza tu viaje
-          </h3>
+          class="w-full h-full flex items-center justify-center bg-gradient-to-b from-slate-900 to-slate-950">
           <div
-            class="hidden md:flex items-center gap-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 px-3 py-1 rounded-full">
-            <span class="animate-pulse">●</span>
-            <span>{{ visibleCars().length }} autos disponibles</span>
+            class="animate-spin rounded-full h-12 w-12 border-2 border-cyan-400 border-t-transparent">
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- 3D Part Hover Tooltip -->
+    @if (hoveredPart() && hoveredPartPosition()) {
+    <div class="part-hover-tooltip" [style.left.px]="hoveredPartPosition()!.x + 15"
+      [style.top.px]="hoveredPartPosition()!.y - 10" role="tooltip">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">{{ hoveredPart()!.icon }}</span>
+        <span class="font-medium text-[#050505]">{{ hoveredPart()!.name }}</span>
+      </div>
+    </div>
+    }
+
+    <!-- 3D Part Info Panel (on selection) -->
+    @if (selectedPart()) {
+    <div class="part-info-panel">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">{{ selectedPart()!.icon }}</span>
+          <h4 class="font-bold text-lg text-[#050505]">{{ selectedPart()!.name }}</h4>
+        </div>
+        <button (click)="closePartPanel()"
+          class="p-1.5 rounded-lg hover:bg-[#a7d8f4]/20 transition-colors"
+          aria-label="Cerrar panel de información">
+          <svg class="w-5 h-5 text-[#4e4e4e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <p class="text-sm text-[#4e4e4e] leading-relaxed">{{ selectedPart()!.description }}</p>
+      @if (selectedPart()!.category) {
+      <div class="mt-3 pt-3 border-t border-[#a7d8f4]/20">
+        <span class="text-xs font-medium text-[#3b6e8f] uppercase tracking-wide">
+          {{ selectedPart()!.category }}
+        </span>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- 3D View Controls - Right Side -->
+    <div
+      class="absolute right-6 lg:right-12 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-3 hero-fade-in hero-delay-2"
+      role="group" aria-label="Controles de vista 3D del vehículo">
+      <button (click)="set3DView('front')" class="view-control-btn"
+        [class.active]="current3DView === 'front'" [attr.aria-pressed]="current3DView === 'front'"
+        aria-label="Vista frontal del vehículo">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+      </button>
+      <button (click)="set3DView('side')" class="view-control-btn"
+        [class.active]="current3DView === 'side'" [attr.aria-pressed]="current3DView === 'side'"
+        aria-label="Vista lateral del vehículo">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+        </svg>
+      </button>
+      <button (click)="set3DView('top')" class="view-control-btn"
+        [class.active]="current3DView === 'top'" [attr.aria-pressed]="current3DView === 'top'"
+        aria-label="Vista superior del vehículo">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
+      <div class="h-px w-full bg-white/10 my-1" aria-hidden="true"></div>
+      <button (click)="set3DView('default')" class="view-control-btn"
+        [class.active]="current3DView === 'default'"
+        [attr.aria-pressed]="current3DView === 'default'" aria-label="Vista general del vehículo">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Hero Text Content - Left Side -->
+    <div class="relative z-10 max-w-[1800px] mx-auto px-6 lg:px-12 w-full pointer-events-none">
+      <div class="max-w-2xl pointer-events-auto">
+        <!-- Eyebrow -->
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 border border-[#a7d8f4]/40 mb-6 hero-fade-in shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-[#3b6e8f] animate-pulse"></span>
+          <span class="text-sm font-medium text-[#050505]/70 tracking-wide">Plataforma P2P de
+            Alquiler</span>
+        </div>
+
+        <!-- Main Headline -->
+        <h2
+          class="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-[#050505] leading-[0.9] tracking-tight mb-6 hero-fade-in hero-delay-1">
+          Maneja tu
+          <span class="text-gradient-celeste block sm:inline">proxima</span>
+          aventura
+        </h2>
+
+        <!-- Subheadline -->
+        <p
+          class="text-lg lg:text-xl text-[#4e4e4e] font-light leading-relaxed max-w-lg mb-8 hero-fade-in hero-delay-2">
+          Conectamos personas con vehiculos verificados. Sin intermediarios,
+          <span class="text-[#050505] font-medium">100% asegurado</span>.
+        </p>
+
+        <!-- Feature Pills -->
+        <div class="flex flex-wrap gap-3 mb-10 hero-fade-in hero-delay-2">
+          <div class="feature-pill">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Verificación instantánea</span>
+          </div>
+          <div class="feature-pill">
+            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span>Pago seguro</span>
+          </div>
+          <div class="feature-pill">
+            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span>Entrega express</span>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+        <!-- CTA Buttons Mobile -->
+        <div class="flex flex-col sm:flex-row gap-4 hero-fade-in hero-delay-3 md:hidden">
+          <button (click)="handleHeroQuickBook()" class="btn-primary-glow w-full sm:w-auto">
+            <span class="relative z-10 flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Reserva Instantánea
+            </span>
+          </button>
+          <button (click)="onLogoClick()" class="btn-outline-light w-full sm:w-auto">
+            Explorar Mapa
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Stats - Bottom Left -->
+    <div
+      class="absolute bottom-32 lg:bottom-40 left-6 lg:left-12 z-10 hidden lg:block hero-fade-in hero-delay-3">
+      <div class="floating-stats-card">
+        <div class="flex items-center gap-4">
+          <div class="stat-item">
+            <span class="stat-value">{{ visibleCars().length }}+</span>
+            <span class="stat-label">Autos</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">4.8</span>
+            <span class="stat-label">Rating</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">24/7</span>
+            <span class="stat-label">Soporte</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH BAR - Bottom Floating -->
+  <div class="relative z-20 pb-8 lg:pb-12">
+    <div class="max-w-6xl mx-auto px-4 lg:px-8">
+      <div class="search-card-premium">
+        <!-- Search Header -->
+        <div class="flex items-center justify-between mb-6 lg:mb-8">
+          <div>
+            <h3 class="font-display text-xl lg:text-2xl font-bold text-[#050505] tracking-tight">
+              Encuentra tu vehículo
+            </h3>
+            <p class="text-sm text-[#4e4e4e] mt-1">Busca por ubicación o fecha</p>
+          </div>
+          <div
+            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-sm font-medium text-emerald-400">{{ visibleCars().length }}
+              disponibles</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-end">
           <!-- Location Search -->
           <div class="lg:col-span-5 relative group z-30">
-            <label
-              class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1">
+            <label class="input-label-premium">
               Ubicación
             </label>
-            <div
-              class="relative transition-all duration-200 group-focus-within:transform group-focus-within:-translate-y-1">
+            <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg
-                  class="w-6 h-6 text-slate-400 group-focus-within:text-cyan-500 transition-colors duration-200"
+                  class="w-5 h-5 text-[#7b7b7b] group-focus-within:text-cyan-500 transition-colors"
                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -136,660 +295,990 @@
                 [value]="selectedLocation() || searchValue()"
                 (input)="onLocationInputChange($event)" (focus)="showLocationSuggestions.set(true)"
                 (blur)="onLocationInputBlur()" (keydown.escape)="closeLocationSuggestions()"
-                class="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 dark:focus:border-cyan-400 text-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200 shadow-sm group-hover:border-slate-300 dark:group-hover:border-slate-600" />
+                class="input-premium pl-12" />
 
               <!-- Loading indicator -->
               <div *ngIf="locationSearchLoading()"
                 class="absolute right-4 top-1/2 -translate-y-1/2">
                 <div
-                  class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-500 border-t-transparent">
+                  class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-400 border-t-transparent">
                 </div>
               </div>
 
               <!-- Dropdown de sugerencias -->
               <div *ngIf="showLocationSuggestions() && locationSuggestions().length > 0"
-                class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-700 max-h-80 overflow-y-auto overflow-hidden ring-1 ring-black/5">
-                <div class="py-2">
+                class="absolute z-50 w-full mt-2 bg-slate-900/95 backdrop-blur-xl rounded-xl border border-white/10 max-h-80 overflow-y-auto shadow-2xl">
+                <div class="py-1">
                   <button
                     *ngFor="let suggestion of locationSuggestions(); trackBy: trackBySuggestion"
                     (click)="onLocationSuggestionSelect(suggestion)"
-                    class="w-full px-5 py-3.5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex items-start gap-3 group border-b border-slate-50 dark:border-slate-700/50 last:border-0">
+                    class="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-start gap-3 group">
                     <div
-                      class="p-2 bg-cyan-50 dark:bg-cyan-900/20 rounded-full group-hover:bg-cyan-100 dark:group-hover:bg-cyan-900/40 transition-colors">
-                      <svg class="w-4 h-4 text-cyan-600 dark:text-cyan-400" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
+                      class="p-2 bg-cyan-500/10 rounded-lg group-hover:bg-cyan-500/20 transition-colors">
+                      <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </div>
-                    <div class="flex-1 min-w-0 pt-0.5">
+                    <div class="flex-1 min-w-0">
                       <p
-                        class="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors">
-                        {{ suggestion.placeName }}
-                      </p>
-                      <p class="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
-                        {{ suggestion.fullAddress }}
+                        class="text-sm font-medium text-white group-hover:text-cyan-400 transition-colors">
+                        {{ suggestion.placeName }}</p>
+                      <p class="text-xs text-white/40 truncate mt-0.5">{{ suggestion.fullAddress }}
                       </p>
                     </div>
                   </button>
                 </div>
               </div>
 
-              <!-- Mensaje cuando no hay resultados -->
-              <div *ngIf="
-                  showLocationSuggestions() &&
-                  !locationSearchLoading() &&
-                  locationSuggestions().length === 0 &&
-                  (selectedLocation() || searchValue()).length >= 2
-                "
-                class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 p-6 text-center">
+              <!-- No results message -->
+              <div
+                *ngIf="showLocationSuggestions() && !locationSearchLoading() && locationSuggestions().length === 0 && (selectedLocation() || searchValue()).length >= 2"
+                class="absolute z-50 w-full mt-2 bg-slate-900/95 backdrop-blur-xl rounded-xl border border-white/10 p-6 text-center">
                 <div
-                  class="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor"
+                  class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg class="w-6 h-6 text-white/40" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <p class="text-sm font-medium text-slate-900 dark:text-white">No encontramos esa
-                  ubicación</p>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Intenta con una dirección
-                  más específica</p>
+                <p class="text-sm font-medium text-white">No encontramos esa ubicación</p>
+                <p class="text-xs text-white/40 mt-1">Intenta con otra dirección</p>
               </div>
             </div>
           </div>
 
           <!-- Date Range Calendar -->
           <div class="lg:col-span-4 relative group z-20">
-            <label
-              class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1">
-              Fechas
-            </label>
-            <div
-              class="relative transition-all duration-200 group-focus-within:transform group-focus-within:-translate-y-1">
+            <label class="input-label-premium">Fechas</label>
+            <div class="relative">
               <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
                 (rangeChange)="onDateRangeChange($event)" (calendarClick)="openDatePicker()" />
             </div>
           </div>
 
           <!-- Search Button -->
-          <div class="lg:col-span-3 pt-6 lg:pt-8">
-            <button (click)="onSearchSubmit(searchValue())"
-              class="w-full h-[60px] bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-cyan-500/30 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-3 group">
+          <div class="lg:col-span-3">
+            <button (click)="onSearchSubmit(searchValue())" class="btn-search-premium w-full">
               <span>Buscar</span>
-              <div class="bg-white/20 rounded-full p-1 group-hover:bg-white/30 transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </button>
           </div>
         </div>
 
-        <!-- Quick Filters Pills - Modernized -->
-        <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700/50">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">
-              Filtros rápidos:</p>
-            <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full scrollbar-hide">
-              <app-tooltip *ngFor="let filter of quickFilters"
-                [text]="filter.tooltip || 'Filtrar autos por ' + filter.label.toLowerCase()"
-                position="top">
-                <button type="button" (click)="onQuickFilterClick(filter.id)"
-                  class="group flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 hover:border-cyan-200 dark:hover:border-cyan-800 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-cyan-700 dark:hover:text-cyan-300 hover:shadow-md transition-all duration-200 flex-shrink-0"
-                  [class.bg-cyan-50]="isQuickFilterActive(filter.id)"
-                  [class.dark:bg-cyan-900/30]="isQuickFilterActive(filter.id)"
-                  [class.border-cyan-200]="isQuickFilterActive(filter.id)"
-                  [class.dark:border-cyan-800]="isQuickFilterActive(filter.id)"
-                  [class.text-cyan-700]="isQuickFilterActive(filter.id)"
-                  [class.dark:text-cyan-300]="isQuickFilterActive(filter.id)"
-                  [class.shadow-sm]="isQuickFilterActive(filter.id)">
-                  <!-- Icon SVG based on filter.id -->
-                  <svg *ngIf="filter.id === 'immediate'"
-                    class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
-                    [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  <svg *ngIf="filter.id === 'verified'"
-                    class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
-                    [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <svg *ngIf="filter.id === 'no-card'"
-                    class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
-                    [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                  </svg>
-                  <svg *ngIf="filter.id === 'near-me'"
-                    class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
-                    [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <svg *ngIf="filter.id === 'electric'"
-                    class="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
-                    [class.text-cyan-500]="isQuickFilterActive(filter.id)"
-                    [class.text-slate-400]="!isQuickFilterActive(filter.id)" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  <span class="whitespace-nowrap">{{ filter.label }}</span>
-                </button>
-              </app-tooltip>
-            </div>
-          </div>
-        </div>
+
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Wave separator REMOVED -->
+<!-- Mobile 3D View Controls Bar -->
+<div class="mobile-3d-controls md:hidden">
+  <button (click)="set3DView('front')" class="mobile-view-btn"
+    [class.active]="current3DView === 'front'" aria-label="Vista frontal">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+    <span>Frontal</span>
+  </button>
+  <button (click)="set3DView('side')" class="mobile-view-btn"
+    [class.active]="current3DView === 'side'" aria-label="Vista lateral">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+    </svg>
+    <span>Lateral</span>
+  </button>
+  <button (click)="set3DView('top')" class="mobile-view-btn"
+    [class.active]="current3DView === 'top'" aria-label="Vista superior">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 15l7-7 7 7" />
+    </svg>
+    <span>Superior</span>
+  </button>
+  <button (click)="set3DView('interior')" class="mobile-view-btn"
+    [class.active]="current3DView === 'interior'" aria-label="Vista interior">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+    </svg>
+    <span>Interior</span>
+  </button>
+  <button (click)="set3DView('default')" class="mobile-view-btn reset-btn"
+    aria-label="Restablecer vista">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+    </svg>
+  </button>
 </div>
 
 <!-- Main Content Area -->
-<div class="marketplace-content bg-surface-secondary/30 dark:bg-surface-secondary min-h-screen">
-  <div class="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-    <!-- How It Works Section -->
-    <div class="mb-16">
-      <div class="text-center mb-10">
-        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4">
-          Tu viaje comienza aquí
+<div class="marketplace-content bg-[#0f0f0f] min-h-screen">
+
+  <!-- COLABORADORES / PARTNERS SECTION - PREMIUM -->
+  <section class="partners-section py-12 lg:py-16 relative overflow-hidden">
+    <!-- Background Effects -->
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950">
+    </div>
+    <div class="absolute inset-0 opacity-[0.015]"
+      style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0); background-size: 40px 40px;">
+    </div>
+
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
+      <!-- Section Header -->
+      <div class="text-center mb-16">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/10 to-cyan-500/10 border border-cyan-500/20 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span class="text-xs font-semibold text-cyan-400 uppercase tracking-widest">Tecnología de
+            Clase Mundial</span>
+        </div>
+        <h2 class="font-display text-3xl lg:text-4xl xl:text-5xl font-black text-white mb-4">
+          Respaldados por
+          <span class="text-gradient-cyan">los mejores</span>
         </h2>
-        <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-          Alquilar un auto nunca fue tan fácil y seguro
+        <p class="text-lg text-white/50 max-w-2xl mx-auto">
+          Integramos las mejores soluciones tecnológicas para brindarte una experiencia segura y
+          confiable.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-        <!-- Connector Line (Desktop) -->
+      <!-- Partner Logos Grid -->
+      <div class="partners-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-8">
+        <!-- MercadoPago -->
+        <div class="partner-card group">
+          <div class="partner-card-inner">
+            <div class="partner-icon-wrapper bg-[#00B1EA]/10 group-hover:bg-[#00B1EA]/20">
+              <svg class="h-8 w-auto text-[#00B1EA]" viewBox="0 0 100 30" fill="currentColor">
+                <text x="0" y="22" font-family="system-ui" font-weight="800"
+                  font-size="18">MercadoPago</text>
+              </svg>
+            </div>
+            <span class="partner-name">Pagos Seguros</span>
+          </div>
+        </div>
+
+        <!-- Supabase -->
+        <div class="partner-card group">
+          <div class="partner-card-inner">
+            <div class="partner-icon-wrapper bg-[#3ECF8E]/10 group-hover:bg-[#3ECF8E]/20">
+              <svg class="h-8 w-8 text-[#3ECF8E]" viewBox="0 0 109 113" fill="currentColor">
+                <path
+                  d="M63.7 110.3c-2.5 3.3-7.9 1.5-7.9-2.7V71.4h45.1c5.8 0 9 6.8 5.4 11.3l-42.6 27.6z" />
+                <path
+                  d="M63.7 110.3c-2.5 3.3-7.9 1.5-7.9-2.7V71.4h45.1c5.8 0 9 6.8 5.4 11.3l-42.6 27.6z"
+                  fill-opacity=".2" />
+                <path
+                  d="M45.3 2.7c2.5-3.3 7.9-1.5 7.9 2.7v36.2H8.1c-5.8 0-9-6.8-5.4-11.3L45.3 2.7z" />
+              </svg>
+            </div>
+            <span class="partner-name">Base de Datos</span>
+          </div>
+        </div>
+
+        <!-- Cloudflare -->
+        <div class="partner-card group">
+          <div class="partner-card-inner">
+            <div class="partner-icon-wrapper bg-[#F6821F]/10 group-hover:bg-[#F6821F]/20">
+              <svg class="h-7 w-auto text-[#F6821F]" viewBox="0 0 100 30" fill="currentColor">
+                <text x="0" y="22" font-family="system-ui" font-weight="800"
+                  font-size="16">Cloudflare</text>
+              </svg>
+            </div>
+            <span class="partner-name">CDN & Seguridad</span>
+          </div>
+        </div>
+
+        <!-- Angular -->
+        <div class="partner-card group">
+          <div class="partner-card-inner">
+            <div class="partner-icon-wrapper bg-[#DD0031]/10 group-hover:bg-[#DD0031]/20">
+              <svg class="h-9 w-9 text-[#DD0031]" viewBox="0 0 250 250" fill="currentColor">
+                <path
+                  d="M125 30L31.9 63.2l14.2 123.1L125 230l78.9-43.7 14.2-123.1L125 30zm0 22.2l63.1 145.6h-23.5l-12.7-31.8h-54l-12.7 31.8H61.9L125 52.2z" />
+                <path d="M145.6 156.2L125 106.6l-20.6 49.6h41.2z" />
+              </svg>
+            </div>
+            <span class="partner-name">Framework</span>
+          </div>
+        </div>
+
+        <!-- Google Maps -->
+        <div class="partner-card group">
+          <div class="partner-card-inner">
+            <div class="partner-icon-wrapper bg-[#4285F4]/10 group-hover:bg-[#4285F4]/20">
+              <svg class="h-8 w-8 text-[#4285F4]" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+            </div>
+            <span class="partner-name">Mapas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Badge -->
+      <div class="mt-16 flex justify-center">
         <div
-          class="hidden lg:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-cyan-200 via-blue-200 to-purple-200 dark:from-slate-700 dark:via-slate-700 dark:to-slate-700 z-0">
-        </div>
-
-        <!-- Step 1 -->
-        <div class="relative z-10 flex flex-col items-center text-center group">
-          <div
-            class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-cyan-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
-            <span class="text-4xl">🗺️</span>
-            <div
-              class="absolute -top-2 -right-2 w-8 h-8 bg-cyan-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">
-              1</div>
+          class="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-white/[0.02] border border-white/5">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <span class="text-sm text-white/60">Datos encriptados</span>
           </div>
-          <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Explora y Elige</h3>
-          <p class="text-slate-600 dark:text-slate-400 px-4">
-            Encuentra tu auto ideal navegando por el mapa o nuestra lista de vehículos verificados.
-          </p>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="relative z-10 flex flex-col items-center text-center group">
-          <div
-            class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-blue-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
-            <span class="text-4xl">📅</span>
-            <div
-              class="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">
-              2</div>
+          <div class="w-px h-4 bg-white/10"></div>
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span class="text-sm text-white/60">SSL Certificado</span>
           </div>
-          <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Reserva y Coordina</h3>
-          <p class="text-slate-600 dark:text-slate-400 px-4">
-            Selecciona tus fechas, envía tu solicitud y chatea directamente con el dueño.
-          </p>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="relative z-10 flex flex-col items-center text-center group">
-          <div
-            class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-purple-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
-            <span class="text-4xl">🆔</span>
-            <div
-              class="absolute -top-2 -right-2 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">
-              3</div>
+          <div class="w-px h-4 bg-white/10"></div>
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-sm text-white/60">99.9% Uptime</span>
           </div>
-          <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Verifícate</h3>
-          <p class="text-slate-600 dark:text-slate-400 px-4">
-            Carga tu licencia de conducir y DNI en minutos para validar tu identidad.
-          </p>
-        </div>
-
-        <!-- Step 4 -->
-        <div class="relative z-10 flex flex-col items-center text-center group">
-          <div
-            class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-green-50 dark:border-slate-700 mb-6 group-hover:scale-110 transition-transform duration-300 relative">
-            <span class="text-4xl">💳</span>
-            <div
-              class="absolute -top-2 -right-2 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold shadow-md">
-              4</div>
-          </div>
-          <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Paga y Viaja</h3>
-          <p class="text-slate-600 dark:text-slate-400 px-4">
-            Realiza el pago de forma segura por MercadoPago o Wallet y ¡disfruta el viaje!
-          </p>
         </div>
       </div>
     </div>
-    <!-- Stats Strip -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative h-[calc(100vh-100px)]">
-      <!-- LEFT PANEL: List/Grid Content (35% width approx) -->
-      <div class="lg:col-span-4 xl:col-span-4 w-full h-full overflow-y-auto pr-2 custom-scrollbar"
-        [class.hidden]="viewMode() === 'map' && !isDesktop()">
+  </section>
 
+  <!-- HOW IT WORKS - PREMIUM REDESIGNED -->
+  <section class="steps-section py-14 lg:py-20 relative overflow-hidden">
+    <!-- Background Gradient Orbs -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
 
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
+      <!-- Section Header -->
+      <div class="text-center mb-20 lg:mb-24">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 mb-6">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <span class="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Proceso
+            Simple</span>
+        </div>
+        <h2 class="font-display text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-6">
+          Alquila en
+          <span class="relative">
+            <span class="text-gradient-cyan">4 pasos</span>
+            <svg class="absolute -bottom-2 left-0 w-full h-3 text-cyan-500/30" viewBox="0 0 200 12"
+              preserveAspectRatio="none">
+              <path d="M0 6c50-6 100-6 200 0" stroke="currentColor" stroke-width="3" fill="none"
+                stroke-linecap="round" />
+            </svg>
+          </span>
+        </h2>
+        <p class="text-lg lg:text-xl text-white/50 max-w-2xl mx-auto">
+          Sin complicaciones. Sin intermediarios. Todo desde tu celular en minutos.
+        </p>
+      </div>
 
-        <!-- Trust Badges Strip -->
-        <div class="mb-12 grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div
-            class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
-            <div
-              class="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center text-2xl">
-              ✓
-            </div>
-            <div>
-              <h3 class="font-bold text-slate-900 dark:text-white text-sm">Verificación 100%</h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Locadores validados</p>
-            </div>
-          </div>
-
-          <div
-            class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
-            <div
-              class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
-              🛡️
-            </div>
-            <div>
-              <h3 class="font-bold text-slate-900 dark:text-white text-sm">Seguro Incluido</h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Cobertura total</p>
-            </div>
-          </div>
-
-          <div
-            class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
-            <div
-              class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center text-2xl">
-              💳
-            </div>
-            <div>
-              <h3 class="font-bold text-slate-900 dark:text-white text-sm">Sin Tarjeta</h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Múltiples pagos</p>
-            </div>
-          </div>
-
-          <div
-            class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center gap-3 hover:bg-white dark:hover:bg-slate-700 transition-colors duration-200">
-            <div
-              class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 rounded-full flex items-center justify-center text-2xl">
-              ⚡
-            </div>
-            <div>
-              <h3 class="font-bold text-slate-900 dark:text-white text-sm">Entrega Rápida</h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">En minutos</p>
-            </div>
-          </div>
+      <!-- Steps Timeline -->
+      <div class="relative">
+        <!-- Connection Line (Desktop) -->
+        <div
+          class="hidden lg:block absolute top-[80px] left-[calc(12.5%+32px)] right-[calc(12.5%+32px)] h-0.5 bg-gradient-to-r from-cyan-500/20 via-cyan-500/20 to-amber-500/20">
         </div>
 
-        <!-- View Toggle & Sort -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-          <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            Autos cerca de ti
-            <span
-              class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs rounded-full">{{
-              visibleCars().length }}</span>
-          </h2>
-
-          <div class="flex items-center gap-3">
-            <!-- Custom Sort Dropdown -->
-            <div class="relative group">
-              <select [value]="sortOrder()" (change)="onSortOrderChange($event)"
-                class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 pr-10 text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
-                <option value="distance">Más cercanos</option>
-                <option value="score">Relevancia</option>
-                <option value="price_asc">Precio: menor a mayor</option>
-                <option value="price_desc">Precio: mayor a menor</option>
-                <option value="rating">Mejor valorados</option>
-              </select>
-              <div
-                class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
+        <!-- Steps Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+          <!-- Step 1 -->
+          <div class="step-card-premium group">
+            <div class="step-number-badge">
+              <span class="step-number-text">01</span>
             </div>
-
-            <!-- Segmented View Toggle -->
-            <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center">
-              <button
-                [class.bg-white]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-                [class.dark:bg-slate-700]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-                [class.shadow-sm]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-                [class.text-slate-900]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-                [class.dark:text-white]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-                [class.text-slate-500]="!(viewMode() === 'grid' || (isDesktop() && viewMode() === 'map'))"
-                (click)="viewMode.set('grid')"
-                class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-                <span class="hidden sm:inline">Cuadrícula</span>
-              </button>
-              <button [class.bg-white]="viewMode() === 'list'"
-                [class.dark:bg-slate-700]="viewMode() === 'list'"
-                [class.shadow-sm]="viewMode() === 'list'"
-                [class.text-slate-900]="viewMode() === 'list'"
-                [class.dark:text-white]="viewMode() === 'list'"
-                [class.text-slate-500]="viewMode() !== 'list'" (click)="viewMode.set('list')"
-                class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <span class="hidden sm:inline">Lista</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Grid View - Video Game Style -->
-        <div *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-          class="flex flex-col gap-6">
-          <div *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
-            class="car-card-game group relative transition-all duration-300"
-            [class.scale-105]="selectedCarId() === car.id" [class.z-10]="selectedCarId() === car.id"
-            (click)="onCarSelected(car.id)" role="button"
-            [attr.aria-label]="'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup"
-            tabindex="0" (keydown.enter)="onCarSelected(car.id)"
-            (keydown.space)="onCarSelected(car.id)">
-            <!-- Game Card -->
             <div
-              class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-lg overflow-hidden cursor-pointer border-2 transition-all duration-300"
-              [class.border-cyan-400]="selectedCarId() === car.id"
-              [class.shadow-cyan-500/50]="selectedCarId() === car.id"
-              [class.border-transparent]="selectedCarId() !== car.id">
-              <!-- Image Container -->
-              <div class="relative h-48 overflow-hidden">
-                <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
-                  [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
-                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  [loading]="i < 2 ? 'eager' : 'lazy'"
-                  [attr.fetchpriority]="i < 2 ? 'high' : 'auto'" />
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
-                </div>
-
-                <!-- Price Badge (Circular) -->
-                <div
-                  class="absolute top-4 right-4 w-16 h-16 bg-cyan-500 rounded-full flex flex-col items-center justify-center text-white shadow-lg border-2 border-white transform group-hover:scale-110 transition-transform">
-                  <span class="text-xs font-bold">USD</span>
-                  <span class="text-lg font-black leading-none">{{ car.price_per_day | number:
-                    '1.0-0' }}</span>
-                </div>
-              </div>
-
-              <!-- Content -->
-              <div class="p-5">
-                <h3 class="text-xl font-black text-slate-800 dark:text-white mb-3 truncate">
-                  {{ car.brand_text_backup }} {{ car.model_text_backup }}
-                </h3>
-
-                <!-- Circular Specs -->
-                <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg"
-                      title="Transmisión" aria-label="Transmisión">
-                      ⚙️
-                    </div>
-                    <div
-                      class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg"
-                      title="Asientos" aria-label="Asientos">
-                      👥
-                    </div>
-                    <div
-                      class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg"
-                      title="Combustible" aria-label="Combustible">
-                      ⛽
-                    </div>
-                  </div>
-
-                  <!-- Action Button -->
-                  <button
-                    class="w-10 h-10 rounded-full bg-cyan-500 text-white flex items-center justify-center hover:bg-cyan-400 transition-colors"
-                    aria-label="Seleccionar vehículo">
-                    ➜
-                  </button>
-                </div>
-              </div>
+              class="step-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
+              <svg class="w-8 h-8 text-cyan-400 group-hover:text-white transition-colors"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <h3 class="step-title-premium">Explora</h3>
+            <p class="step-description-premium">
+              Navega el mapa interactivo o la lista de autos verificados cerca de ti.
+            </p>
+            <div class="step-cta">
+              <span class="text-xs text-cyan-400 font-medium group-hover:text-cyan-300">Ver autos
+                disponibles</span>
+              <svg class="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 5l7 7-7 7" />
+              </svg>
             </div>
           </div>
 
-
-          <!-- Loading skeleton -->
-          <ng-container *ngIf="loading()">
-            <div *ngFor="let _ of [].constructor(8)"
-              class="col-span-1 bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md overflow-hidden">
-              <app-skeleton variant="rectangle" height="180px" />
-              <div class="p-4">
-                <app-skeleton variant="text" width="80%" height="20px" className="mb-2" />
-                <app-skeleton variant="text" width="60%" height="16px" />
-                <div class="flex items-center justify-between mt-4">
-                  <app-skeleton variant="text" width="40%" height="24px" />
-                  <app-skeleton variant="button" width="80px" height="36px" />
-                </div>
-              </div>
+          <!-- Step 2 -->
+          <div class="step-card-premium group">
+            <div class="step-number-badge">
+              <span class="step-number-text">02</span>
             </div>
-          </ng-container>
-
-          <!-- Empty state -->
-          <div *ngIf="!loading() && !error() && visibleCars().length === 0" class="col-span-full">
             <div
-              class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-12 text-center border border-border-default dark:border-border-muted">
-              <div
-                class="w-24 h-24 bg-surface-secondary dark:bg-surface-base rounded-full flex items-center justify-center mx-auto mb-6">
-                <span class="text-5xl">🏜️</span>
-              </div>
-              <h3 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2">
-                No hay autos para esta búsqueda
-              </h3>
-              <p class="text-text-secondary mb-8 max-w-md mx-auto">
-                Prueba a cambiar los filtros, las fechas o a buscar en otra ubicación para encontrar
-                tu
-                auto ideal.
-              </p>
-              <button
-                class="px-6 py-3 bg-cta-default hover:bg-cta-default/90 text-cta-text font-semibold rounded-lg transition-colors shadow-lg hover:shadow-xl"
-                type="button" (click)="clearQuickFilters()">
-                Limpiar filtros
-              </button>
+              class="step-icon-premium bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600">
+              <svg class="w-8 h-8 text-emerald-400 group-hover:text-white transition-colors"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 class="step-title-premium">Reserva</h3>
+            <p class="step-description-premium">
+              Elige tus fechas y chatea directo con el dueño para coordinar.
+            </p>
+            <div class="step-cta">
+              <span class="text-xs text-emerald-400 font-medium group-hover:text-emerald-300">Sin
+                compromiso</span>
+              <svg class="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 5l7 7-7 7" />
+              </svg>
             </div>
           </div>
 
-          <!-- Error state -->
-          <div *ngIf="!loading() && error()" class="col-span-full">
+          <!-- Step 3 -->
+          <div class="step-card-premium group">
+            <div class="step-number-badge">
+              <span class="step-number-text">03</span>
+            </div>
             <div
-              class="bg-danger-light/10 dark:bg-danger-light/10 rounded-2xl p-12 text-center border border-danger-light">
-              <div
-                class="w-24 h-24 bg-danger-light/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span class="text-5xl">🤯</span>
-              </div>
-              <h3 class="text-2xl font-bold text-danger-dark dark:text-danger-light mb-2">
-                ¡Ups! Algo salió mal
-              </h3>
-              <p class="text-danger-dark/80 dark:text-danger-light/80 mb-8 max-w-md mx-auto">
-                {{ error() }}
-              </p>
-              <button
-                class="px-6 py-3 bg-cta-default hover:bg-cta-default/90 text-cta-text font-semibold rounded-lg transition-colors shadow-lg hover:shadow-xl"
-                type="button" (click)="loadCars()">
-                Reintentar
-              </button>
+              class="step-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
+              <svg class="w-8 h-8 text-cyan-400 group-hover:text-white transition-colors"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h3 class="step-title-premium">Verifica</h3>
+            <p class="step-description-premium">
+              Sube tu licencia y DNI. Verificación automática con IA en minutos.
+            </p>
+            <div class="step-cta">
+              <span class="text-xs text-cyan-400 font-medium group-hover:text-cyan-300">100%
+                seguro</span>
+              <svg class="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 5l7 7-7 7" />
+              </svg>
             </div>
           </div>
-        </div>
 
-        <!-- List View -->
-        <div *ngIf="viewMode() === 'list'" class="space-y-6 lg:space-y-8">
-          <div *ngFor="let car of visibleCars(); trackBy: trackByCarId"
-            (click)="onCarSelected(car.id)"
-            class="bg-surface-raised dark:bg-surface-raised text-text-primary rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
-            <div class="flex flex-col md:flex-row">
-              <!-- Image -->
-              <div
-                class="relative md:w-80 aspect-[16/9] md:aspect-auto overflow-hidden flex-shrink-0">
-                <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
-                  [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
-                  class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                  loading="lazy" />
-              </div>
-
-              <!-- Content -->
-              <div class="flex-1 p-6 flex flex-col justify-between text-text-primary">
-                <div>
-                  <div class="flex flex-col xs:flex-row items-start xs:justify-between mb-3 gap-2">
-                    <div>
-                      <div class="flex items-center gap-2 mb-1">
-                        <h3 class="text-xl font-bold text-text-primary dark:text-text-primary">
-                          {{ car.brand_text_backup }} {{ car.model_text_backup }}
-                        </h3>
-                        <!-- ✅ NEW: Dynamic pricing badge -->
-                        @if (car.uses_dynamic_pricing) {
-                        <app-dynamic-pricing-badge />
-                        }
-                      </div>
-                      <div class="flex items-center gap-3 text-sm text-text-secondary">
-                        <span class="flex items-center gap-1">
-                          <span class="text-warning-500">⭐</span>
-                          <span class="font-semibold">4.8</span>
-                        </span>
-                        <span>•</span>
-                        <span>📍 {{ car.distanceText }}</span>
-                        <span>•</span>
-                        <span>{{ car.location_city }}</span>
-                      </div>
-                    </div>
-                    <div class="text-right">
-                      <p class="text-3xl font-bold text-cta-default">
-                        ${{ car.price_per_day | number: '1.0-0' }}
-                      </p>
-                      <p class="text-sm text-text-secondary">por día</p>
-                    </div>
-                  </div>
-
-                  <p *ngIf="car.description" class="text-text-secondary text-sm mb-4 line-clamp-2">
-                    {{ car.description }}
-                  </p>
-
-                  <div class="flex items-center gap-4 mb-4 flex-wrap">
-                    <span class="flex items-center gap-1.5 text-sm text-text-secondary">
-                      <span>⚙️</span>
-                      <span>{{ car.transmission || 'Manual' }}</span>
-                    </span>
-                    <span class="flex items-center gap-1.5 text-sm text-text-secondary">
-                      <span>👥</span>
-                      <span>{{ car.seats || 5 }} asientos</span>
-                    </span>
-                    <span class="flex items-center gap-1.5 text-sm text-text-secondary">
-                      <span>⛽</span>
-                      <span>{{ car.fuel_type || 'Nafta' }}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-3">
-                  <button (click)="onCarSelected(car.id); $event.stopPropagation()"
-                    class="flex-1 px-6 py-3 bg-surface-secondary dark:bg-surface-base hover:bg-border-default text-text-primary dark:text-text-primary font-semibold rounded-lg transition-colors">
-                    Ver detalles
-                  </button>
-                  <button (click)="onQuickBook(car.id); $event.stopPropagation()"
-                    class="flex-1 px-6 py-3 bg-cta-default hover:bg-cta-default/90 text-cta-text font-semibold rounded-lg transition-colors shadow-md">
-                    Reservar ahora
-                  </button>
-                </div>
-              </div>
+          <!-- Step 4 -->
+          <div class="step-card-premium group">
+            <div class="step-number-badge">
+              <span class="step-number-text">04</span>
+            </div>
+            <div
+              class="step-icon-premium bg-gradient-to-br from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600">
+              <svg class="w-8 h-8 text-amber-400 group-hover:text-white transition-colors"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="step-title-premium">Maneja</h3>
+            <p class="step-description-premium">
+              Paga seguro por MercadoPago o Wallet. ¡Disfruta tu viaje!
+            </p>
+            <div class="step-cta">
+              <span class="text-xs text-amber-400 font-medium group-hover:text-amber-300">Múltiples
+                pagos</span>
+              <svg class="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 5l7 7-7 7" />
+              </svg>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT PANEL: Map (65% width approx) -->
-      <div class="lg:col-span-8 xl:col-span-8 hidden lg:block h-full sticky top-24">
+      <!-- CTA Banner -->
+      <div class="mt-20 text-center">
         <div
-          class="h-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-700 relative">
-          <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
-            [userLocation]="userLocation()" [markerVariant]="contextualMarkerVariant()"
-            [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
-            (carSelected)="onCarSelected($event)" (quickBook)="onQuickBook($event)"
-            (userLocationChange)="onUserLocationChange($event)"
-            (searchRadiusChange)="onSearchRadiusChange($event)"
-            (boundsChange)="onBoundsChange($event)" class="w-full h-full" />
-          <app-map-controls (controlEvent)="onMapControlEvent($event)" />
-
-          <!-- Search in this area button -->
-          <div *ngIf="showSearchAreaButton()"
-            class="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-            <button (click)="searchInArea()"
-              class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-4 py-2 rounded-full shadow-lg font-semibold text-sm flex items-center gap-2 hover:scale-105 transition-transform animate-fade-in-up border border-slate-200 dark:border-slate-700">
-              <span class="text-cyan-500">🔍</span>
-              Buscar en esta zona
+          class="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-cyan-500/10 to-amber-500/10 border border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+              <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="text-left">
+              <p class="text-white font-semibold">Tiempo promedio: 5 minutos</p>
+              <p class="text-sm text-white/50">Desde búsqueda hasta reserva confirmada</p>
+            </div>
+          </div>
+          <div class="sm:pl-6 sm:border-l border-white/10">
+            <button (click)="handleHeroQuickBook()" class="btn-primary-glow">
+              <span class="relative z-10 flex items-center gap-2">
+                Comenzar ahora
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </span>
             </button>
           </div>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- Map View (Mobile Only) -->
-    <div *ngIf="viewMode() === 'map' && !isDesktop()"
-      class="relative h-[calc(100vh-400px)] min-h-[600px] rounded-2xl overflow-hidden shadow-2xl">
-      <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
-        [userLocation]="userLocation()" [markerVariant]="contextualMarkerVariant()"
-        [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
-        (carSelected)="onCarSelected($event)" (quickBook)="onQuickBook($event)"
-        (userLocationChange)="onUserLocationChange($event)"
-        (searchRadiusChange)="onSearchRadiusChange($event)" (boundsChange)="onBoundsChange($event)"
-        class="w-full h-full" />
-      <app-map-controls (controlEvent)="onMapControlEvent($event)" />
+  <!-- TRUST FEATURES - PREMIUM REDESIGNED -->
+  <section
+    class="trust-section py-12 lg:py-16 relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900/80 to-slate-950">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-[0.02]"
+      style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0); background-size: 40px 40px;">
+    </div>
 
-      <!-- Search in this area button (Mobile) -->
-      <div *ngIf="showSearchAreaButton()"
-        class="absolute top-20 left-1/2 transform -translate-x-1/2 z-10">
-        <button (click)="searchInArea()"
-          class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-4 py-2 rounded-full shadow-lg font-semibold text-sm flex items-center gap-2 hover:scale-105 transition-transform animate-fade-in-up border border-slate-200 dark:border-slate-700">
-          <span class="text-cyan-500">🔍</span>
-          Buscar en esta zona
-        </button>
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
+      <!-- Section Header -->
+      <div class="text-center mb-16">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 mb-6">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <span class="text-xs font-semibold text-emerald-400 uppercase tracking-widest">¿Por qué
+            elegirnos?</span>
+        </div>
+        <h2 class="font-display text-3xl lg:text-4xl xl:text-5xl font-black text-white mb-4">
+          Confianza en cada
+          <span class="text-gradient-cyan">kilómetro</span>
+        </h2>
+        <p class="text-lg text-white/50 max-w-2xl mx-auto">
+          Tu seguridad es nuestra prioridad. Cada detalle está pensado para brindarte tranquilidad.
+        </p>
+      </div>
+
+      <!-- Trust Features Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <!-- Feature 1: Verificado -->
+        <div class="trust-card-premium group">
+          <div class="trust-card-glow bg-emerald-500/20"></div>
+          <div class="trust-card-content">
+            <div
+              class="trust-icon-premium bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600">
+              <svg class="w-7 h-7 text-emerald-400 group-hover:text-white transition-colors"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h4 class="trust-title-premium">100% Verificado</h4>
+            <p class="trust-desc-premium">
+              Todos los locadores pasan por verificación de identidad con IA y validación
+              documental.
+            </p>
+            <div class="trust-stat">
+              <span class="trust-stat-number text-emerald-400">+5,000</span>
+              <span class="trust-stat-label">usuarios verificados</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 2: Seguro -->
+        <div class="trust-card-premium group">
+          <div class="trust-card-glow bg-blue-500/20"></div>
+          <div class="trust-card-content">
+            <div
+              class="trust-icon-premium bg-gradient-to-br from-blue-500/20 to-blue-500/5 group-hover:from-blue-500 group-hover:to-blue-600">
+              <svg class="w-7 h-7 text-blue-400 group-hover:text-white transition-colors"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h4 class="trust-title-premium">Seguro Incluido</h4>
+            <p class="trust-desc-premium">
+              Cobertura total contra daños, robo y responsabilidad civil en cada reserva.
+            </p>
+            <div class="trust-stat">
+              <span class="trust-stat-number text-blue-400">100%</span>
+              <span class="trust-stat-label">cobertura incluida</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 3: Pagos -->
+        <div class="trust-card-premium group">
+          <div class="trust-card-glow bg-cyan-500/20"></div>
+          <div class="trust-card-content">
+            <div
+              class="trust-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
+              <svg class="w-7 h-7 text-cyan-400 group-hover:text-white transition-colors"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+            </div>
+            <h4 class="trust-title-premium">Sin Tarjeta</h4>
+            <p class="trust-desc-premium">
+              Paga con MercadoPago, transferencia, efectivo o nuestra Wallet digital.
+            </p>
+            <div class="trust-stat">
+              <span class="trust-stat-number text-cyan-400">6+</span>
+              <span class="trust-stat-label">métodos de pago</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 4: Entrega -->
+        <div class="trust-card-premium group">
+          <div class="trust-card-glow bg-amber-500/20"></div>
+          <div class="trust-card-content">
+            <div
+              class="trust-icon-premium bg-gradient-to-br from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600">
+              <svg class="w-7 h-7 text-amber-400 group-hover:text-white transition-colors"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h4 class="trust-title-premium">Entrega Rápida</h4>
+            <p class="trust-desc-premium">
+              Recibe el auto donde estés. Entrega y devolución flexible en minutos.
+            </p>
+            <div class="trust-stat">
+              <span class="trust-stat-number text-amber-400">15 min</span>
+              <span class="trust-stat-label">tiempo promedio</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust Badges Row -->
+      <div class="mt-16 flex flex-wrap justify-center gap-4">
+        <div class="trust-badge">
+          <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+          <span>Encriptación SSL</span>
+        </div>
+        <div class="trust-badge">
+          <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <span>Verificación KYC</span>
+        </div>
+        <div class="trust-badge">
+          <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <span>Soporte 24/7</span>
+        </div>
+        <div class="trust-badge">
+          <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+          </svg>
+          <span>4.8/5 Rating</span>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- CARS LISTING SECTION -->
+  <section class="py-16 lg:py-24">
+    <div class="max-w-[2000px] mx-auto px-6 lg:px-12">
+      <!-- Section Header -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6">
+        <div>
+          <span
+            class="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-white/50 uppercase tracking-widest mb-3">
+            Marketplace
+          </span>
+          <h2 class="font-display text-3xl lg:text-4xl font-bold text-white">
+            Autos cerca de ti
+          </h2>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <!-- Sort Dropdown -->
+          <div class="relative">
+            <label for="sort-order" class="sr-only">Ordenar autos por</label>
+            <select id="sort-order" [value]="sortOrder()" (change)="onSortOrderChange($event)"
+              class="select-premium" aria-label="Ordenar lista de autos">
+              <option value="distance">Más cercanos</option>
+              <option value="score">Relevancia</option>
+              <option value="price_asc">Menor precio</option>
+              <option value="price_desc">Mayor precio</option>
+              <option value="rating">Mejor valorados</option>
+            </select>
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/40"
+              aria-hidden="true">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- View Toggle -->
+          <div class="view-toggle-premium" role="group" aria-label="Cambiar modo de visualización">
+            <button [class.active]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+              (click)="viewMode.set('grid')"
+              [attr.aria-pressed]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+              aria-label="Vista de cuadrícula">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+              </svg>
+            </button>
+            <button [class.active]="viewMode() === 'list'" (click)="viewMode.set('list')"
+              [attr.aria-pressed]="viewMode() === 'list'" aria-label="Vista de lista">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <button [class.active]="viewMode() === 'map' && !isDesktop()"
+              (click)="viewMode.set('map')" class="lg:hidden"
+              [attr.aria-pressed]="viewMode() === 'map' && !isDesktop()" aria-label="Vista de mapa">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Results Count -->
+          <div
+            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            <span class="text-sm font-medium text-white/70">{{ visibleCars().length }}
+              resultados</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <!-- LEFT PANEL: Car Cards -->
+        <div class="lg:col-span-5 xl:col-span-4 space-y-6"
+          [class.hidden]="viewMode() === 'map' && !isDesktop()">
+
+          <!-- Grid View - Premium Cards -->
+          <div *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+            class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
+              class="car-card-premium group" [class.car-card-selected]="selectedCarId() === car.id"
+              (click)="onCarSelected(car.id)" role="button"
+              [attr.aria-label]="'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup"
+              tabindex="0" (keydown.enter)="onCarSelected(car.id)"
+              (keydown.space)="onCarSelected(car.id)">
+
+              <!-- Image -->
+              <div class="car-card-image">
+                <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
+                  [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
+                  class="w-full h-full object-cover" [loading]="i < 3 ? 'eager' : 'lazy'"
+                  [attr.fetchpriority]="i < 3 ? 'high' : 'auto'" />
+
+                <!-- Overlay -->
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                </div>
+
+
+
+                <!-- Badges -->
+                <div class="absolute top-3 left-3 flex items-center gap-2">
+                  <span *ngIf="getCarInstantBooking(car)" class="badge-instant">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Inmediato
+                  </span>
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="car-card-content">
+                <div class="flex items-start justify-between gap-3 mb-2">
+                  <div class="flex-1 min-w-0">
+                    <h3 class="font-display text-lg font-bold text-white truncate">
+                      {{ car.brand_text_backup }} {{ car.model_text_backup }}
+                    </h3>
+                    <div class="flex items-center gap-2 text-sm text-white/50 mt-1">
+                      <span class="flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                          viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        </svg>
+                        {{ car.distanceText || car.location_city || 'N/A' }}
+                      </span>
+                      <span>•</span>
+                      <span class="flex items-center gap-1">
+                        <span class="text-amber-400">★</span>
+                        4.8
+                      </span>
+                    </div>
+                  </div>
+                  <div class="text-right flex-shrink-0">
+                    <span class="text-xl font-bold text-white">${{ car.price_per_day | number:
+                      '1.0-0' }}</span>
+                    <span class="text-sm text-white/40 block">/ día</span>
+                  </div>
+                </div>
+
+                <!-- Specs Row -->
+                <div class="flex items-center gap-3 pt-3 border-t border-white/5">
+                  <span class="car-spec">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    {{ car.transmission || 'Manual' }}
+                  </span>
+                  <span class="car-spec">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    {{ car.seats || 5 }}
+                  </span>
+                  <span class="car-spec">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    {{ car.fuel_type || 'Nafta' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Loading skeleton -->
+            <ng-container *ngIf="loading()">
+              <div *ngFor="let _ of [].constructor(4)" class="car-card-premium animate-pulse">
+                <div class="car-card-image bg-white/5"></div>
+                <div class="car-card-content space-y-3">
+                  <div class="h-5 bg-white/10 rounded w-3/4"></div>
+                  <div class="h-4 bg-white/5 rounded w-1/2"></div>
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- Empty state -->
+            <div *ngIf="!loading() && !error() && visibleCars().length === 0"
+              class="empty-state-card">
+              <div
+                class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-white/30" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white mb-2">No encontramos autos</h3>
+              <p class="text-white/50 mb-6 max-w-sm mx-auto">
+                Intenta cambiar los filtros o buscar en otra ubicación.
+              </p>
+              <button (click)="clearQuickFilters()" class="btn-outline-light">
+                Limpiar filtros
+              </button>
+            </div>
+
+            <!-- Error state -->
+            <div *ngIf="!loading() && error()" class="empty-state-card border-red-500/20">
+              <div
+                class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white mb-2">Algo salió mal</h3>
+              <p class="text-white/50 mb-6">{{ error() }}</p>
+              <button (click)="loadCars()" class="btn-primary-glow">Reintentar</button>
+            </div>
+          </div>
+
+          <!-- List View -->
+          <div *ngIf="viewMode() === 'list'" class="space-y-4">
+            <div *ngFor="let car of visibleCars(); trackBy: trackByCarId"
+              (click)="onCarSelected(car.id)" class="car-card-list group">
+              <!-- Image -->
+              <div class="car-card-list-image">
+                <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
+                  [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
+                  class="w-full h-full object-cover" loading="lazy" />
+              </div>
+
+              <!-- Content -->
+              <div class="car-card-list-content">
+                <div class="flex items-start justify-between gap-4 mb-3">
+                  <div>
+                    <h3
+                      class="font-display text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">
+                      {{ car.brand_text_backup }} {{ car.model_text_backup }}
+                    </h3>
+                    <div class="flex items-center gap-2 text-sm text-white/50 mt-1">
+                      <span class="text-amber-400">★</span> 4.8
+                      <span class="mx-1">•</span>
+                      {{ car.distanceText || car.location_city }}
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-2xl font-bold text-white">${{ car.price_per_day | number:
+                      '1.0-0' }}</span>
+                    <span class="text-sm text-white/40 block">/ día</span>
+                  </div>
+                </div>
+
+                <p *ngIf="car.description" class="text-sm text-white/40 line-clamp-2 mb-4">{{
+                  car.description }}</p>
+
+                <div class="flex items-center gap-3">
+                    <span class="car-spec">{{ car.transmission || 'Manual' }}</span>
+                    <span class="car-spec">{{ car.seats || 5 }} plazas</span>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: Map - Lazy loaded -->
+        <div
+          class="lg:col-span-7 xl:col-span-8 hidden lg:block sticky top-24 h-[calc(100vh-180px)]">
+          <div class="map-container-premium h-full">
+            @defer (on viewport) {
+            <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
+              [userLocation]="userLocation()" [markerVariant]="contextualMarkerVariant()"
+              [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
+              (carSelected)="onCarSelected($event)"
+              (userLocationChange)="onUserLocationChange($event)"
+              (searchRadiusChange)="onSearchRadiusChange($event)"
+              (boundsChange)="onBoundsChange($event)" class="w-full h-full" />
+
+            <app-map-controls (controlEvent)="onMapControlEvent($event)" />
+
+            <!-- Search in area button -->
+            @if (showSearchAreaButton()) {
+            <div class="absolute top-4 left-1/2 -translate-x-1/2 z-10">
+              <button (click)="searchInArea()" class="btn-search-area"
+                aria-label="Buscar autos en esta zona del mapa">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Buscar en esta zona
+              </button>
+            </div>
+            }
+            } @placeholder {
+            <div
+              class="w-full h-full flex items-center justify-center bg-slate-900/50 rounded-xl border border-white/5">
+              <div class="text-center p-8">
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-xl bg-white/5 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-cyan-400/40" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                </div>
+                <p class="text-sm text-white/40">Cargando mapa...</p>
+              </div>
+            </div>
+            } @loading (minimum 200ms) {
+            <div class="w-full h-full flex items-center justify-center bg-slate-900/50 rounded-xl">
+              <div
+                class="animate-spin rounded-full h-10 w-10 border-2 border-cyan-400 border-t-transparent">
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Map View (Mobile Only) -->
+      @if (viewMode() === 'map' && !isDesktop()) {
+      <div class="map-container-premium h-[70vh] mt-6">
+        @defer (on viewport) {
+        <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
+          [userLocation]="userLocation()" [markerVariant]="contextualMarkerVariant()"
+          [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
+          (carSelected)="onCarSelected($event)"
+          (userLocationChange)="onUserLocationChange($event)"
+          (searchRadiusChange)="onSearchRadiusChange($event)"
+          (boundsChange)="onBoundsChange($event)" class="w-full h-full" />
+
+        <app-map-controls (controlEvent)="onMapControlEvent($event)" />
+
+        @if (showSearchAreaButton()) {
+        <div class="absolute top-4 left-1/2 -translate-x-1/2 z-10">
+          <button (click)="searchInArea()" class="btn-search-area"
+            aria-label="Buscar autos en esta zona">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Buscar en esta zona
+          </button>
+        </div>
+        }
+        } @placeholder {
+        <div class="w-full h-full flex items-center justify-center bg-slate-900/50 rounded-xl">
+          <div class="animate-pulse text-center">
+            <svg class="w-12 h-12 mx-auto text-cyan-400/30 mb-3" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+            <p class="text-sm text-white/30">Cargando mapa...</p>
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </section>
 </div>
 
-<!-- Quick Booking Modal -->
-<app-quick-booking-modal *ngIf="quickBookingCar()" [car]="quickBookingCar()!"
-  [userLocation]="userLocation() || undefined" [isOpen]="quickBookingModalOpen()"
-  (confirmBooking)="onQuickBookingConfirm($event)" (cancelBooking)="onQuickBookingCancel()" />
-
-<!-- Responsive Filters Drawer (Desktop Sidebar + Mobile Bottom Sheet) -->
-<app-map-filters [availableCars]="mapFilterSourceLocations()"
-  (filterChange)="onFiltersChange($event)"></app-map-filters>
-
-<!-- Mobile Filters Overlay Backdrop (click to close) -->
-<div *ngIf="showFilters()" class="fixed inset-0 z-30 md:hidden bg-black/40 backdrop-blur-sm"
-  (click)="closeFiltersPanel()"></div>
 
 <!-- Floating Action Button -->
 <app-floating-action-fab [actions]="fabActions" position="bottom-right"
@@ -907,6 +1396,30 @@
     </div>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- CONVERSION SECTIONS - Landing Page Optimization -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+<!-- Social Proof Bar - Animated stats -->
+<app-social-proof-bar [stats]="[
+    { id: 'cars', value: visibleCars().length || 500, label: 'Autos disponibles', icon: '🚗', suffix: '+' },
+    { id: 'users', value: 10000, label: 'Usuarios activos', icon: '👥', suffix: '+' },
+    { id: 'rentals', value: 25000, label: 'Alquileres completados', icon: '✅', suffix: '+' },
+    { id: 'rating', value: 4.8, label: 'Calificación promedio', icon: '⭐' }
+  ]" />
+
+<!-- Testimonials Section -->
+<app-testimonials-section />
+
+<!-- FAQ Section with JSON-LD Schema -->
+<app-faq-section />
+
+<!-- Final CTA Banner -->
+<app-final-cta-banner title="¿Listo para tu próxima aventura?"
+  subtitle="Únete a miles de usuarios que ya disfrutan de la libertad de alquilar sin intermediarios."
+  [primaryCta]="{ label: 'Buscar autos', link: '/cars/list' }"
+  [secondaryCta]="{ label: 'Publicar mi auto', link: '/cars/publish' }" />
 
 <!-- WhatsApp FAB -->
 <app-whatsapp-fab />

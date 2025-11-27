@@ -131,6 +131,40 @@ import { VerificationPromptBannerComponent } from './shared/components/verificat
           scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
         }
       }
+
+      /* Header transparente para homepage con hero 3D */
+      .header-transparent {
+        color: white !important;
+      }
+
+      .header-transparent * {
+        color: white !important;
+      }
+
+      .header-transparent svg {
+        stroke: white !important;
+      }
+
+      .header-transparent img {
+        filter: brightness(0) invert(1) !important;
+      }
+
+      .header-transparent .nav-link,
+      .header-transparent .nav-link-primary,
+      .header-transparent .nav-link-highlight,
+      .header-transparent .icon-button {
+        color: white !important;
+      }
+
+      .header-transparent .nav-link:hover,
+      .header-transparent .nav-link-primary:hover,
+      .header-transparent .icon-button:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      .header-transparent .nav-link-highlight {
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.8), rgba(59, 130, 246, 0.8)) !important;
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -162,6 +196,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   readonly fullBleedLayout = signal(false);
   readonly userProfile = signal<UserProfile | null>(null);
   readonly isOnVerificationPage = signal(false);
+  readonly isHomePage = signal(false); // Header transparente en homepage
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('sidebarPanel', { read: ElementRef }) sidebarPanel?: ElementRef<HTMLElement>;
@@ -377,6 +412,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     const layout = current?.snapshot.data?.['layout'];
     this.fullBleedLayout.set(layout === 'full-bleed');
+
+    // Detectar si estamos en el homepage para header transparente
+    const currentUrl = this.router.url.split('?')[0]; // Ignorar query params
+    const isHome = currentUrl === '/' || currentUrl === '';
+    console.log('[DEBUG] syncLayoutFromRoute - url:', currentUrl, 'isHome:', isHome);
+    this.isHomePage.set(isHome);
   }
 
   private syncSidebarSideEffects(open: boolean): void {

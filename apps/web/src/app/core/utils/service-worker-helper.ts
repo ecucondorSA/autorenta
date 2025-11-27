@@ -7,6 +7,11 @@
  * This should be called when we detect issues with cached API calls
  */
 export async function forceServiceWorkerUpdate(): Promise<void> {
+  // SSR guard
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return;
+  }
+
   if (!('serviceWorker' in navigator)) {
     return;
   }
@@ -30,8 +35,8 @@ export async function forceServiceWorkerUpdate(): Promise<void> {
     }
 
     // 4. Clear local storage and session storage
-    localStorage.clear();
-    sessionStorage.clear();
+    if (typeof localStorage !== 'undefined') localStorage.clear();
+    if (typeof sessionStorage !== 'undefined') sessionStorage.clear();
 
     // 5. Reload the page to get fresh content
     window.location.reload();
@@ -44,6 +49,11 @@ export async function forceServiceWorkerUpdate(): Promise<void> {
  * Check if service worker needs update due to API issues
  */
 export async function checkServiceWorkerHealth(): Promise<boolean> {
+  // SSR guard
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return true;
+  }
+
   if (!('serviceWorker' in navigator)) {
     return true; // No SW, so it's "healthy"
   }
@@ -79,6 +89,11 @@ export async function checkServiceWorkerHealth(): Promise<boolean> {
  * Initialize service worker with auto-recovery
  */
 export async function initializeServiceWorker(): Promise<void> {
+  // SSR guard
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return;
+  }
+
   if (!('serviceWorker' in navigator)) {
     return;
   }
@@ -98,6 +113,11 @@ export async function initializeServiceWorker(): Promise<void> {
  * Add version check to detect when SW config has changed
  */
 export function checkServiceWorkerVersion(): void {
+  // SSR guard
+  if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+    return;
+  }
+
   const SW_VERSION = '2.1.0'; // Increment this when ngsw-config.json changes
   const STORAGE_KEY = 'sw-version';
 

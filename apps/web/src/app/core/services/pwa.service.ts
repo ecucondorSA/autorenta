@@ -1,6 +1,8 @@
-import { Injectable, Optional, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, Optional, signal, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 // Types for experimental PWA APIs
 interface BeforeInstallPromptEvent extends Event {
@@ -46,42 +48,60 @@ type ScreenOrientationWithLock = ScreenOrientation & {
 @Injectable({
   providedIn: 'root',
 })
-export class PwaService {
+export class PwaService implements OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
   readonly installable = signal(false);
   readonly updateAvailable = signal(false);
   readonly isStandalone = signal(false);
 
+  // Cleanup references
+  private updateCheckInterval?: ReturnType<typeof setInterval>;
+  private versionUpdateSubscription?: Subscription;
+
+  // Bound event handlers for proper cleanup
+  private readonly handleBeforeInstallPrompt = (e: Event) => {
+    e.preventDefault();
+    this.deferredPrompt = e as BeforeInstallPromptEvent;
+    this.installable.set(true);
+  };
+  private readonly handleAppInstalled = () => {
+    this.deferredPrompt = null;
+    this.installable.set(false);
+    this.trackInstallation();
+  };
+
   constructor(@Optional() private swUpdate: SwUpdate | null) {
-    this.initPwa();
-    this.checkStandaloneMode();
+    if (this.isBrowser) {
+      this.initPwa();
+      this.checkStandaloneMode();
+    }
     this.listenForUpdates();
   }
 
+  ngOnDestroy(): void {
+    if (this.isBrowser) {
+      window.removeEventListener('beforeinstallprompt', this.handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', this.handleAppInstalled);
+    }
+    if (this.updateCheckInterval) {
+      clearInterval(this.updateCheckInterval);
+    }
+    this.versionUpdateSubscription?.unsubscribe();
+  }
+
   private initPwa(): void {
-    // Listen for beforeinstallprompt event
-    window.addEventListener('beforeinstallprompt', (e: Event) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
-      // Stash the event so it can be triggered later
-      this.deferredPrompt = e as BeforeInstallPromptEvent;
-      // Update installable state
-      this.installable.set(true);
-    });
+    // Listen for beforeinstallprompt event with bound handler for cleanup
+    window.addEventListener('beforeinstallprompt', this.handleBeforeInstallPrompt);
 
-    // Listen for app installed event
-    window.addEventListener('appinstalled', () => {
-      // Clear the deferredPrompt
-      this.deferredPrompt = null;
-      this.installable.set(false);
-
-      // Track installation (opcional: enviar a analytics)
-      this.trackInstallation();
-    });
+    // Listen for app installed event with bound handler for cleanup
+    window.addEventListener('appinstalled', this.handleAppInstalled);
   }
 
   private checkStandaloneMode(): void {
-    // Check if app is running in standalone mode
+    // Check if app is running in standalone mode (browser only)
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
       (window.navigator as NavigatorWithExperimentalAPIs).standalone ||
@@ -95,15 +115,15 @@ export class PwaService {
       return;
     }
 
-    // Listen for version updates
-    this.swUpdate.versionUpdates
+    // Listen for version updates with subscription tracking
+    this.versionUpdateSubscription = this.swUpdate.versionUpdates
       .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
       .subscribe((_event) => {
         this.updateAvailable.set(true);
       });
 
-    // Check for updates every 30 minutes
-    setInterval(
+    // Check for updates every 30 minutes with interval tracking
+    this.updateCheckInterval = setInterval(
       () => {
         this.swUpdate?.checkForUpdate();
       },

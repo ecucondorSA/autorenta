@@ -22,11 +22,13 @@ export class WalletService {
   private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
   private readonly logger = inject(LoggerService);
 
+  // ✅ SIGNALS: Single source of truth for wallet state
   readonly balance = signal<WalletBalance | null>(null);
   readonly transactions = signal<WalletTransaction[]>([]);
   readonly loading = signal(false);
   readonly error = signal<{ message: string } | null>(null);
 
+  // Computed signals for derived state
   readonly availableBalance = computed(() => this.balance()?.available_balance ?? 0);
   readonly lockedBalance = computed(() => this.balance()?.locked_balance ?? 0);
   readonly totalBalance = computed(() => this.balance()?.total_balance ?? 0);
@@ -46,89 +48,122 @@ export class WalletService {
   readonly pendingDepositsCount = signal(0);
 
   constructor() {
-    // ✅ FIX: Only fetch balance and transactions if user is authenticated
-    // Handle errors gracefully to prevent silent failures on page load
+    // Initialize wallet data if user is authenticated
     this.supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
-        this.getBalance().subscribe({
-          error: (_err) => {
-            // Silent error - wallet page will show error state
-          },
+        this.fetchBalance().catch(() => {
+          // Silent error - wallet page will show error state
         });
-        this.getTransactions().subscribe({
-          error: (_err) => {
-            // Silent error - wallet page will show error state
-          },
+        this.fetchTransactions().catch(() => {
+          // Silent error - wallet page will show error state
         });
       }
     });
   }
 
+  // ============================================================================
+  // ASYNC METHODS - Primary API (Signal-based)
+  // ============================================================================
+
+  /**
+   * Fetch wallet balance and update signal
+   * @returns Promise with the balance
+   */
+  async fetchBalance(): Promise<WalletBalance> {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const { data: { session } } = await this.supabase.auth.getSession();
+      if (!session?.user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      const { data, error } = await this.supabase.rpc('wallet_get_balance');
+      if (error) throw error;
+      if (!data) throw new Error('No se pudo obtener el balance');
+
+      const balance = data[0] as WalletBalance;
+      this.balance.set(balance);
+      return balance;
+    } catch (err) {
+      this.handleError(err, 'Error al obtener balance');
+      throw err;
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  /**
+   * Fetch wallet transactions and update signal
+   * @returns Promise with transactions array
+   */
+  async fetchTransactions(_filters?: WalletTransactionFilters): Promise<WalletTransaction[]> {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const { data: { session } } = await this.supabase.auth.getSession();
+      if (!session?.user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      const { data, error } = await this.supabase
+        .from('v_wallet_history')
+        .select('*')
+        .order('transaction_date', { ascending: false });
+
+      if (error) throw error;
+
+      const transactions = (data ?? []) as WalletTransaction[];
+      this.transactions.set(transactions);
+      return transactions;
+    } catch (err) {
+      this.handleError(err, 'Error al obtener transacciones');
+      throw err;
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  /**
+   * Force refresh balance (fetches fresh data)
+   */
+  async refreshBalanceAsync(): Promise<WalletBalance> {
+    return this.fetchBalance();
+  }
+
+  // ============================================================================
+  // OBSERVABLE METHODS - For backward compatibility
+  // ============================================================================
+
+  /**
+   * Get wallet balance (Observable wrapper)
+   * @deprecated Use fetchBalance() for async/await pattern
+   */
   getBalance(): Observable<WalletBalance> {
-    this.loading.set(true);
-    this.error.set(null);
-
-    // Check authentication before making RPC call
-    return from(this.supabase.auth.getSession()).pipe(
-      switchMap(({ data: { session } }) => {
-        if (!session?.user) {
-          this.loading.set(false);
-          return throwError(() => new Error('Usuario no autenticado'));
-        }
-        return from(this.supabase.rpc('wallet_get_balance'));
-      }),
-      map(({ data, error }) => {
-        if (error) throw error;
-        if (!data) throw new Error('No se pudo obtener el balance');
-        const balance = data[0] as WalletBalance;
-        this.balance.set(balance);
-        return balance;
-      }),
-      catchError((err) => {
-        this.handleError(err, 'Error al obtener balance');
-        return throwError(() => err);
-      }),
-      map((balance) => {
-        this.loading.set(false);
-        return balance;
-      }),
-    );
+    return from(this.fetchBalance());
   }
 
-  getTransactions(_filters?: WalletTransactionFilters): Observable<WalletTransaction[]> {
-    this.loading.set(true);
-    this.error.set(null);
-
-    // Check authentication before querying transactions
-    return from(this.supabase.auth.getSession()).pipe(
-      switchMap(({ data: { session } }) => {
-        if (!session?.user) {
-          this.loading.set(false);
-          return throwError(() => new Error('Usuario no autenticado'));
-        }
-        return from(
-          this.supabase
-            .from('v_wallet_history')
-            .select('*')
-            .order('transaction_date', { ascending: false }),
-        );
-      }),
-      map(({ data, error }) => {
-        if (error) throw error;
-        const transactions = (data ?? []) as WalletTransaction[];
-        this.transactions.set(transactions);
-        return transactions;
-      }),
-      catchError((err) => {
-        this.handleError(err, 'Error al obtener transacciones');
-        return throwError(() => err);
-      }),
-      map((transactions) => {
-        this.loading.set(false);
-        return transactions;
-      }),
-    );
+  /**
+   * Force refresh balance (Observable wrapper)
+   * @deprecated Use refreshBalanceAsync() for async/await pattern
+   */
+  refreshBalance(): Observable<WalletBalance> {
+    return from(this.fetchBalance());
   }
+
+  /**
+   * Get transactions (Observable wrapper)
+   * @deprecated Use fetchTransactions() for async/await pattern
+   */
+  getTransactions(filters?: WalletTransactionFilters): Observable<WalletTransaction[]> {
+    return from(this.fetchTransactions(filters));
+  }
+
+  // ============================================================================
+  // DEPOSIT METHODS
+  // ============================================================================
 
   initiateDeposit(params: InitiateDepositParams): Observable<WalletInitiateDepositResponse> {
     this.loading.set(true);
@@ -232,7 +267,7 @@ export class WalletService {
   }
 
   // ============================================================================
-  // MISSING METHODS - Added 2025-11-01
+  // LOCK/UNLOCK FUNDS METHODS
   // ============================================================================
 
   /**
@@ -253,7 +288,7 @@ export class WalletService {
       tap((response: PostgrestSingleResponse<WalletLockFundsResponse[]>) => {
         if (response.error) throw response.error;
         // Side effect: refresh balance after locking funds
-        this.getBalance().subscribe();
+        this.fetchBalance().catch(() => {});
       }),
       map((response: PostgrestSingleResponse<WalletLockFundsResponse[]>) => {
         if (!response.data) throw new Error('No data returned');
@@ -279,7 +314,7 @@ export class WalletService {
       tap((response: PostgrestSingleResponse<WalletUnlockFundsResponse[]>) => {
         if (response.error) throw response.error;
         // Side effect: refresh balance after unlocking funds
-        this.getBalance().subscribe();
+        this.fetchBalance().catch(() => {});
       }),
       map((response: PostgrestSingleResponse<WalletUnlockFundsResponse[]>) => {
         if (!response.data) throw new Error('No data returned');
@@ -310,7 +345,7 @@ export class WalletService {
       tap((response: PostgrestSingleResponse<WalletLockRentalAndDepositResponse[]>) => {
         if (response.error) throw response.error;
         // Side effect: refresh balance after locking funds
-        this.getBalance().subscribe();
+        this.fetchBalance().catch(() => {});
       }),
       map((response: PostgrestSingleResponse<WalletLockRentalAndDepositResponse[]>) => {
         if (!response.data) throw new Error('No data returned');
@@ -322,6 +357,10 @@ export class WalletService {
       }),
     );
   }
+
+  // ============================================================================
+  // REALTIME SUBSCRIPTIONS
+  // ============================================================================
 
   /**
    * Subscribe to wallet changes via Realtime
@@ -345,14 +384,14 @@ export class WalletService {
           table: 'wallet_ledger',
           filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
+        async (payload) => {
           onTransaction(payload.new as WalletTransaction);
-          this.getBalance().subscribe({
-            next: (balance) => onBalanceChange(balance),
-            error: (error) => {
-              this.logger.warn('Failed to refresh wallet balance after transaction', error);
-            },
-          });
+          try {
+            const balance = await this.fetchBalance();
+            onBalanceChange(balance);
+          } catch (error) {
+            this.logger.warn('Failed to refresh wallet balance after transaction', error);
+          }
         },
       )
       .subscribe();
@@ -373,6 +412,10 @@ export class WalletService {
     await this.supabase.removeChannel(channel);
   }
 
+  // ============================================================================
+  // UTILITY METHODS
+  // ============================================================================
+
   /**
    * Force poll pending payments from MercadoPago
    */
@@ -385,8 +428,11 @@ export class WalletService {
     try {
       const { data, error } = await this.supabase.rpc('wallet_poll_pending_payments');
       if (error) throw error;
-      this.getBalance().subscribe();
-      this.getTransactions().subscribe();
+
+      // Refresh balance and transactions in background
+      this.fetchBalance().catch(() => {});
+      this.fetchTransactions().catch(() => {});
+
       return (data ?? { success: false, confirmed: 0, message: 'No data returned' }) as {
         success: boolean;
         confirmed: number;
@@ -419,12 +465,11 @@ export class WalletService {
   }
 
   // ============================================================================
-  // PROTECTION CREDIT METHODS - Added 2025-11-05
+  // PROTECTION CREDIT METHODS
   // ============================================================================
 
   /**
    * Get Protection Credit balance
-   * Nota: Ya existe protectedCreditBalance computed, pero este método llama al RPC actualizado
    */
   async getProtectionCreditBalance(): Promise<{
     balance_cents: number;
@@ -454,7 +499,6 @@ export class WalletService {
 
   /**
    * Issue Protection Credit to a new user ($300 USD)
-   * Only callable by service role, but exposed for admin operations
    */
   async issueProtectionCredit(
     userId: string,
@@ -471,7 +515,7 @@ export class WalletService {
       if (error) throw error;
 
       // Refresh balance after issuing CP
-      this.getBalance().subscribe();
+      this.fetchBalance().catch(() => {});
 
       return data;
     } catch (err: unknown) {
@@ -534,7 +578,6 @@ export class WalletService {
 
   /**
    * Get total available funds (including Protection Credit)
-   * Para cálculos de cobertura de siniestros
    */
   getTotalCoverageBalance(): number {
     return this.availableBalance() + this.protectedCreditBalance();

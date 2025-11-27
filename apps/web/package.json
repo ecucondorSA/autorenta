@@ -27,7 +27,8 @@
     "worker:deploy": "cd ../../functions/workers/payments_webhook && npm run deploy",
     "validate": "npm run lint && npm run build",
     "analyze": "node_modules/.bin/ng build --stats-json && npx -y webpack-bundle-analyzer dist/web/stats.json -m static -r dist/web/report.html",
-    "preview": "npm run build && npx -y wrangler pages dev dist/web/browser"
+    "preview": "npm run build && npx -y wrangler pages dev dist/web/browser",
+    "serve:ssr:web": "node dist/web/server/server.mjs"
   },
   "lint-staged": {
     "src/**/*.{ts,js,html,css,scss}": [
@@ -55,8 +56,11 @@
     "@angular/core": "~20.3.7",
     "@angular/forms": "~20.3.7",
     "@angular/platform-browser": "~20.3.7",
+    "@angular/platform-server": "^20.3.7",
     "@angular/router": "~20.3.7",
     "@angular/service-worker": "~20.3.7",
+    "@angular/ssr": "^20.3.8",
+    "@capacitor/core": "^7.4.4",
     "@capacitor/geolocation": "^7.1.5",
     "@ionic/angular": "^8.7.7",
     "@ngx-translate/core": "^17.0.0",
@@ -70,6 +74,7 @@
     "@types/mercadopago": "^1.5.11",
     "@types/uuid": "^10.0.0",
     "date-fns": "^4.1.0",
+    "express": "^5.1.0",
     "flatpickr": "^4.6.13",
     "ionicons": "^8.0.13",
     "mapbox-gl": "^3.16.0",
@@ -94,10 +99,13 @@
     "@angular/build": "~20.3.7",
     "@angular/cli": "^20.3.7",
     "@angular/compiler-cli": "~20.3.7",
+    "@angular/ssr": "^20.3.7",
     "@cloudflare/workers-types": "^4.20251119.0",
     "@sentry/cli": "^2.58.0",
+    "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
     "@types/mercadopago-sdk-js": "^2.0.17",
+    "@types/node": "^20.17.19",
     "@types/three": "^0.181.0",
     "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.46.1",

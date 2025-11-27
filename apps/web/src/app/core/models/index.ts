@@ -47,6 +47,9 @@ export * from './dashboard.model';
 // Export Dynamic Pricing models
 export * from './dynamic-pricing.model';
 
+// Export Marketplace models
+export * from './marketplace.model';
+
 // Export ProfileService types
 export type { UpdateProfileData } from '../services/profile.service';
 

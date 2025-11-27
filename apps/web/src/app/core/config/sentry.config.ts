@@ -96,7 +96,9 @@ export function initializeSentry(): void {
       hint: EventHint,
     ): ErrorEvent | PromiseLike<ErrorEvent | null> | null {
       // Don't send errors in development unless explicitly testing
-      if (!environment.production && !localStorage.getItem('sentry-test-mode')) {
+      const testMode =
+        typeof localStorage !== 'undefined' ? localStorage.getItem('sentry-test-mode') : null;
+      if (!environment.production && !testMode) {
         console.warn('🚫 Sentry error blocked in development:', hint.originalException);
         return null;
       }
