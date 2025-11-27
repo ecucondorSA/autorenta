@@ -35,7 +35,9 @@ xdescribe('Bonus-Malus Integration Tests', () => {
   let testBookingId: string;
 
   // Skip these tests if not running in integration test mode
-  const isIntegrationTest = !!process.env['TEST_SUPABASE_URL'];
+  // Guard against 'process is not defined' in browser tests
+  const isIntegrationTest =
+    typeof process !== 'undefined' && !!process.env?.['TEST_SUPABASE_URL'];
 
   beforeAll(() => {
     if (!isIntegrationTest) {
@@ -45,8 +47,8 @@ xdescribe('Bonus-Malus Integration Tests', () => {
       return;
     }
 
-    const testUrl = process.env['TEST_SUPABASE_URL'];
-    const testKey = process.env['TEST_SUPABASE_SERVICE_ROLE_KEY'];
+    const testUrl = process.env?.['TEST_SUPABASE_URL'];
+    const testKey = process.env?.['TEST_SUPABASE_SERVICE_ROLE_KEY'];
 
     if (!testUrl || !testKey) {
       throw new Error('Test environment variables not configured');
