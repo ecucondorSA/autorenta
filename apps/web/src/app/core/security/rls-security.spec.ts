@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Tests need rewrite: SupabaseClient mock missing 25+ required properties
 import { TestBed } from '@angular/core/testing';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';

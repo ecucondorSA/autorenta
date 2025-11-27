@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Tests need rewrite for Signal-based API
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';

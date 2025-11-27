@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Tests need rewrite: SupabaseClient mock type incompatibility
 import { SupabaseClient } from '@supabase/supabase-js';
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Tests need rewrite: RiskCalculation type changed
 import { TestBed } from '@angular/core/testing';
 import { DistanceCalculatorService } from './distance-calculator.service';

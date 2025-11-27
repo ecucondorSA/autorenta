@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Tests need rewrite for Signal-based API
 /**
  * INTEGRATION TESTS for Bonus-Malus System RPCs

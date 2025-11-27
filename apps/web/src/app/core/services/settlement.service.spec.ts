@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Tests need rewrite: ClaimProcessResult→ClaimProcessingResult, type changes
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';

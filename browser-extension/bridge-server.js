@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 /**
- * Bridge Server - Conecta Playwright MCP con Chrome Extension
- * Puerto: 9222
+ * Bridge Server v1.2 - Professional Browser Extension Bridge
  *
- * Flujo:
- * 1. Playwright MCP (Claude Code) → HTTP/WS → Bridge Server → WebSocket → Chrome Extension
- * 2. Chrome Extension ejecuta acciones en el navegador
- * 3. Resultados vuelven a Bridge Server → Playwright MCP
+ * Conecta Claude Code MCP con Chrome Extension via WebSocket.
+ * Identificación de clientes por handshake (no headers).
  */
 
 import http from 'http';
@@ -14,79 +11,67 @@ import { URL } from 'url';
 import { WebSocketServer } from 'ws';
 
 const PORT = 9223;
-const WS_OPEN = 1; // WebSocket.OPEN
+const WS_OPEN = 1;
 const wss = new WebSocketServer({ noServer: true });
 
-let extensionConnected = false;
+// State
 let extensionSocket = null;
-let activeSessions = new Map();
+let extensionConnected = false;
+const mcpClients = new Map();
+const activeSessions = new Map();
 
-console.log('[Bridge Server] Iniciando en puerto ' + PORT);
-console.log('[Bridge Server] Esperando conexiones de Extension y Playwright MCP...');
+console.log('[Bridge v1.2] Starting on port ' + PORT);
 
-// ========== WebSocket Server ==========
+// ========== WebSocket Connection Handler ==========
 wss.on('connection', (ws, request) => {
-  const clientType = request.headers['x-client-type'] || 'unknown';
-  console.log('[Bridge] Nuevo cliente conectado:', clientType);
+  const clientId = `client_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+  let clientType = 'unknown';
+  let identified = false;
 
-  if (clientType === 'extension') {
-    // Chrome Extension conectada
-    extensionSocket = ws;
-    extensionConnected = true;
-    console.log('[Bridge] ✅ Chrome Extension conectada');
+  console.log(`[Bridge] New connection: ${clientId}`);
 
-    ws.send(JSON.stringify({
-      type: 'handshake-ack',
-      data: { status: 'connected', serverVersion: '1.0.0' }
-    }));
+  // Handle messages
+  ws.on('message', (data) => {
+    try {
+      const message = JSON.parse(data.toString());
 
-    ws.on('message', (data) => {
-      try {
-        const message = JSON.parse(data);
-        console.log('[Bridge] Extension → Message:', message.type);
+      // ===== HANDSHAKE - Identify client type =====
+      if (message.type === 'handshake' && !identified) {
+        clientType = message.data?.clientType || 'unknown';
+        identified = true;
 
-        // Si viene con sessionId, enviar respuesta al cliente original
-        if (message.sessionId && activeSessions.has(message.sessionId)) {
-          const clientSocket = activeSessions.get(message.sessionId);
-          if (clientSocket && clientSocket.readyState === WS_OPEN) {
-            clientSocket.send(JSON.stringify({
-              type: 'action-result',
-              sessionId: message.sessionId,
-              data: message
-            }));
-            activeSessions.delete(message.sessionId);
-          }
+        if (clientType === 'extension') {
+          // Chrome Extension connected
+          extensionSocket = ws;
+          extensionConnected = true;
+          console.log('[Bridge] ✅ Chrome Extension connected');
+
+          ws.send(JSON.stringify({
+            type: 'handshake-ack',
+            data: { status: 'connected', serverVersion: '1.2.0' }
+          }));
+
+        } else if (clientType === 'claude-code' || clientType === 'mcp') {
+          // MCP Client connected
+          mcpClients.set(clientId, ws);
+          console.log('[Bridge] ✅ MCP Client connected');
+
+          ws.send(JSON.stringify({
+            type: 'handshake-ack',
+            data: {
+              status: 'connected',
+              extensionStatus: extensionConnected ? 'ready' : 'waiting'
+            }
+          }));
         }
-      } catch (error) {
-        console.error('[Bridge] Error parsing extension message:', error);
+        return;
       }
-    });
 
-    ws.on('close', () => {
-      console.log('[Bridge] ❌ Chrome Extension desconectada');
-      extensionConnected = false;
-      extensionSocket = null;
-    });
+      // ===== ACTION from MCP =====
+      if (message.type === 'action' && clientType !== 'extension') {
+        console.log('[Bridge] MCP → Action:', message.action?.type);
 
-  } else if (clientType === 'playwright' || clientType === 'claude-code') {
-    // Cliente Playwright/Claude Code
-    console.log('[Bridge] ✅ Cliente Playwright MCP conectado');
-
-    ws.send(JSON.stringify({
-      type: 'handshake-ack',
-      data: {
-        status: 'connected',
-        extensionStatus: extensionConnected ? 'ready' : 'waiting'
-      }
-    }));
-
-    ws.on('message', (data) => {
-      try {
-        const message = JSON.parse(data);
-        console.log('[Bridge] Playwright → Action:', message.action?.type);
-
-        // Validar que extension está conectada
-        if (!extensionConnected || !extensionSocket) {
+        if (!extensionConnected || !extensionSocket || extensionSocket.readyState !== WS_OPEN) {
           ws.send(JSON.stringify({
             type: 'error',
             sessionId: message.sessionId,
@@ -95,115 +80,134 @@ wss.on('connection', (ws, request) => {
           return;
         }
 
-        // Generar sessionId si no existe
-        const sessionId = message.sessionId || 'session_' + Date.now() + '_' + Math.random();
+        const sessionId = message.sessionId || `session_${Date.now()}`;
+        activeSessions.set(sessionId, { ws, timestamp: Date.now() });
 
-        // Guardar socket del cliente para respuesta
-        activeSessions.set(sessionId, ws);
-
-        // Enviar acción a extension
+        // Forward to extension
         extensionSocket.send(JSON.stringify({
           type: 'execute',
           sessionId,
           action: message.action,
-          timeout: message.timeout || 5000
+          timeout: message.timeout || 10000
         }));
 
-        // Timeout si no hay respuesta
+        // Timeout handler
         setTimeout(() => {
           if (activeSessions.has(sessionId)) {
-            ws.send(JSON.stringify({
-              type: 'error',
-              sessionId,
-              error: 'Action timeout'
-            }));
+            const session = activeSessions.get(sessionId);
+            if (session.ws.readyState === WS_OPEN) {
+              session.ws.send(JSON.stringify({
+                type: 'action-result',
+                sessionId,
+                data: { error: 'Action timeout' }
+              }));
+            }
             activeSessions.delete(sessionId);
           }
-        }, (message.timeout || 5000) + 1000);
+        }, (message.timeout || 10000) + 2000);
 
-      } catch (error) {
-        console.error('[Bridge] Error parsing playwright message:', error);
-        ws.send(JSON.stringify({
-          type: 'error',
-          error: 'Invalid message format'
-        }));
+        return;
       }
-    });
 
-    ws.on('close', () => {
-      console.log('[Bridge] Cliente Playwright desconectado');
-    });
-  }
+      // ===== RESULT from Extension =====
+      if (clientType === 'extension') {
+        // Action result
+        if (message.sessionId && activeSessions.has(message.sessionId)) {
+          const session = activeSessions.get(message.sessionId);
+          if (session.ws.readyState === WS_OPEN) {
+            session.ws.send(JSON.stringify({
+              type: 'action-result',
+              sessionId: message.sessionId,
+              data: message.result || message
+            }));
+          }
+          activeSessions.delete(message.sessionId);
+          console.log('[Bridge] Extension → Result for:', message.sessionId);
+        }
+      }
+
+    } catch (error) {
+      console.error('[Bridge] Message parse error:', error.message);
+    }
+  });
+
+  // Handle disconnect
+  ws.on('close', () => {
+    if (clientType === 'extension') {
+      console.log('[Bridge] ❌ Chrome Extension disconnected');
+      extensionConnected = false;
+      extensionSocket = null;
+    } else if (mcpClients.has(clientId)) {
+      console.log('[Bridge] MCP Client disconnected');
+      mcpClients.delete(clientId);
+    }
+  });
+
+  ws.on('error', (err) => {
+    console.error('[Bridge] WebSocket error:', err.message);
+  });
 });
 
 // ========== HTTP Server ==========
 const server = http.createServer((req, res) => {
-  const parsedUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
-  const pathname = parsedUrl.pathname;
+  const url = new URL(req.url || '/', `http://localhost:${PORT}`);
 
-  // Health check endpoint
-  if (pathname === '/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Content-Type', 'application/json');
+
+  if (url.pathname === '/health') {
+    res.writeHead(200);
     res.end(JSON.stringify({
       status: 'ok',
       extensionConnected,
-      timestamp: new Date().toISOString()
-    }));
-    return;
-  }
-
-  // Status endpoint
-  if (pathname === '/status') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({
-      server: 'Bridge Server v1.0.0',
-      port: PORT,
-      extensionConnected,
+      mcpClients: mcpClients.size,
       activeSessions: activeSessions.size,
       timestamp: new Date().toISOString()
     }));
     return;
   }
 
-  // WebSocket upgrade
-  if (req.headers['upgrade'] === 'websocket') {
+  if (url.pathname === '/status') {
+    res.writeHead(200);
+    res.end(JSON.stringify({
+      server: 'Bridge Server v1.2.0',
+      port: PORT,
+      extensionConnected,
+      mcpClients: mcpClients.size,
+      activeSessions: activeSessions.size,
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString()
+    }));
     return;
   }
 
-  // Default response
-  res.writeHead(404, { 'Content-Type': 'text/plain' });
-  res.end('Bridge Server - Use WebSocket to connect');
+  res.writeHead(404);
+  res.end(JSON.stringify({ error: 'Not found' }));
 });
 
-// ========== WebSocket Upgrade Handler ==========
+// WebSocket upgrade
 server.on('upgrade', (req, socket, head) => {
   wss.handleUpgrade(req, socket, head, (ws) => {
     wss.emit('connection', ws, req);
   });
 });
 
-// ========== Error Handling ==========
-server.on('error', (error) => {
-  console.error('[Bridge] Server error:', error);
-});
+// Error handling
+server.on('error', (err) => console.error('[Bridge] Server error:', err));
+process.on('uncaughtException', (err) => console.error('[Bridge] Uncaught:', err));
 
-process.on('uncaughtException', (error) => {
-  console.error('[Bridge] Uncaught exception:', error);
-});
-
-// ========== Start Server ==========
+// Start
 server.listen(PORT, () => {
-  console.log(`[Bridge Server] Escuchando en ws://localhost:${PORT}`);
-  console.log('[Bridge Server] Esperando:');
-  console.log('  - Chrome Extension (chrome://extensions → Load unpacked)');
-  console.log('  - Claude Code con Playwright MCP');
+  console.log(`[Bridge v1.2] Listening on ws://localhost:${PORT}`);
+  console.log('[Bridge v1.2] Waiting for connections...');
 });
 
-// ========== Graceful Shutdown ==========
+// Graceful shutdown
 process.on('SIGINT', () => {
-  console.log('[Bridge Server] Apagando...');
-  server.close(() => {
-    console.log('[Bridge Server] Cerrado');
-    process.exit(0);
-  });
+  console.log('[Bridge] Shutting down...');
+  server.close(() => process.exit(0));
+});
+process.on('SIGTERM', () => {
+  console.log('[Bridge] Shutting down...');
+  server.close(() => process.exit(0));
 });

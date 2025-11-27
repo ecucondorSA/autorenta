@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Tests need rewrite: getMyBookings return type changed
 /**
  * Sprint 5.1 - E2E Booking Flow Test

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Tests need rewrite: Jasmine API changes, score property, lat/lng params
 import { TestBed } from '@angular/core/testing';
 import { makeSupabaseMock } from '../../../test-helpers/supabase.mock';

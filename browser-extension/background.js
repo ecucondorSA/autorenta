@@ -130,35 +130,9 @@ function connectToBridge() {
         const message = JSON.parse(event.data);
         console.log('[Background] Bridge message:', message.type);
 
-        // Forward execution request to content script
+        // Handle execute requests
         if (message.type === 'execute') {
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            if (tabs && tabs[0]) {
-              console.log('[Background] Forwarding action to content script:', message.action?.type);
-              chrome.tabs.sendMessage(tabs[0].id, message, (response) => {
-                if (chrome.runtime.lastError) {
-                  console.error('[Background] Content script error:', chrome.runtime.lastError);
-                  // Send error back to bridge
-                  if (bridgeSocket && bridgeSocket.readyState === 1) {
-                    bridgeSocket.send(JSON.stringify({
-                      type: 'action-result',
-                      sessionId: message.sessionId,
-                      error: chrome.runtime.lastError.message
-                    }));
-                  }
-                }
-              });
-            } else {
-              console.warn('[Background] No active tab found');
-              if (bridgeSocket && bridgeSocket.readyState === 1) {
-                bridgeSocket.send(JSON.stringify({
-                  type: 'action-result',
-                  sessionId: message.sessionId,
-                  error: 'No active tab found'
-                }));
-              }
-            }
-          });
+          handleExecute(message);
         }
 
         // Acknowledge handshake
@@ -169,6 +143,98 @@ function connectToBridge() {
         console.error('[Background] Error parsing bridge message:', error);
       }
     };
+
+// ========== Action Handler ==========
+async function handleExecute(message) {
+  const { action, sessionId } = message;
+  const actionType = action?.type;
+
+  console.log('[Background] Executing action:', actionType);
+
+  // Actions that can run in background (no content script needed)
+  const backgroundActions = ['navigate', 'screenshot', 'getUrl'];
+
+  if (backgroundActions.includes(actionType)) {
+    try {
+      let result;
+
+      if (actionType === 'navigate') {
+        // Navigate using chrome.tabs API
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tabs[0]) {
+          await chrome.tabs.update(tabs[0].id, { url: action.value });
+          result = { navigating: true, url: action.value };
+        } else {
+          // Create new tab if no active tab
+          await chrome.tabs.create({ url: action.value });
+          result = { navigating: true, url: action.value, newTab: true };
+        }
+      }
+
+      else if (actionType === 'screenshot') {
+        const dataUrl = await chrome.tabs.captureVisibleTab(null, { format: 'png' });
+        result = { success: true, screenshot: dataUrl };
+      }
+
+      else if (actionType === 'getUrl') {
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tabs[0]) {
+          result = {
+            url: tabs[0].url,
+            title: tabs[0].title,
+            tabId: tabs[0].id
+          };
+        } else {
+          result = { error: 'No active tab' };
+        }
+      }
+
+      // Send result back to bridge
+      sendResult(sessionId, result);
+
+    } catch (error) {
+      console.error('[Background] Action error:', error);
+      sendResult(sessionId, { error: error.message });
+    }
+    return;
+  }
+
+  // Actions that need content script
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs && tabs[0]) {
+      // Check if we can inject into this tab
+      const url = tabs[0].url || '';
+      if (url.startsWith('chrome://') || url.startsWith('chrome-extension://') || url.startsWith('about:')) {
+        sendResult(sessionId, {
+          error: 'Cannot run on this page. Navigate to a regular webpage first.',
+          hint: 'Use browser_navigate to go to a normal URL'
+        });
+        return;
+      }
+
+      console.log('[Background] Forwarding to content script:', actionType);
+      chrome.tabs.sendMessage(tabs[0].id, message, (response) => {
+        if (chrome.runtime.lastError) {
+          console.error('[Background] Content script error:', chrome.runtime.lastError);
+          sendResult(sessionId, { error: chrome.runtime.lastError.message });
+        }
+        // Response comes back via content script → background → bridge
+      });
+    } else {
+      sendResult(sessionId, { error: 'No active tab found' });
+    }
+  });
+}
+
+function sendResult(sessionId, result) {
+  if (bridgeSocket && bridgeSocket.readyState === 1) {
+    bridgeSocket.send(JSON.stringify({
+      type: 'action-result',
+      sessionId,
+      result
+    }));
+  }
+}
 
     bridgeSocket.onclose = () => {
       console.log('[Background] ❌ Disconnected from bridge');

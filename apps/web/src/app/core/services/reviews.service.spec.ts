@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck - Tests need rewrite: CarStats type mismatch, missing module
 import { TestBed } from '@angular/core/testing';
 import { createSupabaseMock } from '../../../testing/mocks/supabase-mock';
