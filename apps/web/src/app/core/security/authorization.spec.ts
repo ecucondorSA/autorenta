@@ -212,15 +212,15 @@ describe('Authorization - Autorización de Acciones Críticas', () => {
       ];
 
       (bookingsService.getMyBookings as jasmine.Spy).and.returnValue(
-        Promise.resolve(mockOwnBookings),
+        Promise.resolve({ bookings: mockOwnBookings, total: 2 }),
       );
 
       // Act
       const result = await bookingsService.getMyBookings();
 
-      // Assert
-      expect(result.length).toBe(2);
-      expect(result.every((b) => b.user_id === mockUser1.id)).toBe(true);
+      // Assert - getMyBookings now returns { bookings, total }
+      expect(result.bookings.length).toBe(2);
+      expect(result.bookings.every((b) => b.user_id === mockUser1.id)).toBe(true);
     });
 
     it('debería bloquear a usuario normal acceso a todas las bookings', async () => {
