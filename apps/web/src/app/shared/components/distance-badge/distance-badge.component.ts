@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, computed } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 /**
  * Distance badge component
@@ -78,11 +78,11 @@ import { Component, Input, computed } from '@angular/core';
   ],
 })
 export class DistanceBadgeComponent {
-  @Input({ required: true }) distanceKm!: number;
-  @Input() showTier: boolean = true;
+  readonly distanceKm = input.required<number>();
+  readonly showTier = input<boolean>(true);
 
   protected readonly distanceText = computed(() => {
-    const km = this.distanceKm;
+    const km = this.distanceKm();
     if (km < 1) {
       const meters = Math.round(km * 1000);
       return `${meters} m`;
@@ -92,11 +92,11 @@ export class DistanceBadgeComponent {
   });
 
   protected readonly isNearby = computed(() => {
-    return this.distanceKm < 5;
+    return this.distanceKm() < 5;
   });
 
   protected readonly badgeClass = computed(() => {
-    const km = this.distanceKm;
+    const km = this.distanceKm();
     if (km < 5) {
       return 'nearby';
     } else if (km < 20) {

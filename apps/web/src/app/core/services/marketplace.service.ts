@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { injectSupabase } from '../utils/inject-supabase';
+import { injectSupabase } from './supabase-client.service';
 
 export interface MarketplaceConfig {
   marketplaceId: string;

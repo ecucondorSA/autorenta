@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
 import { SupabaseClientService } from './supabase-client.service';
 import { AuthService } from './auth.service';
@@ -7,6 +8,8 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class PushNotificationService {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly supabase = inject(SupabaseClientService).getClient();
   private readonly authService = inject(AuthService);
   private readonly swPush = inject(SwPush);
@@ -41,7 +44,7 @@ export class PushNotificationService {
    * This should be called once when the application bootstraps.
    */
   public async initializePushNotifications(): Promise<void> {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    if (!this.isBrowser || !('serviceWorker' in navigator) || !('PushManager' in window)) {
       return;
     }
 

@@ -1,0 +1,24 @@
+{
+  "name": "playwright-streaming-mcp",
+  "version": "1.0.0",
+  "description": "MCP Server with real-time browser streaming via CDP events",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "mcp",
+    "playwright",
+    "streaming",
+    "cdp",
+    "browser-automation"
+  ],
+  "author": "AutoRenta",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.22.0",
+    "playwright": "^1.40.0"
+  }
+}

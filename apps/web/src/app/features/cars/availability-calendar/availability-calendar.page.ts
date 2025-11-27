@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -6,6 +6,7 @@ import {
   ElementRef,
   inject,
   OnDestroy,
+  PLATFORM_ID,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -36,6 +37,8 @@ import {
 export class AvailabilityCalendarPage implements AfterViewInit, OnDestroy {
   @ViewChild('calendarDiv') calendarDiv!: ElementRef<HTMLDivElement>;
 
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly availabilityService = inject(CarAvailabilityService);
@@ -69,6 +72,8 @@ export class AvailabilityCalendarPage implements AfterViewInit, OnDestroy {
   private flatpickrInstance: Instance | null = null;
 
   ngAfterViewInit(): void {
+    if (!this.isBrowser) return;
+
     // Get car ID from route
     const carIdParam = this.route.snapshot.paramMap.get('id');
     if (!carIdParam) {

@@ -8,8 +8,10 @@ import {
   AfterViewInit,
   OnDestroy,
   effect,
+  inject,
+  PLATFORM_ID,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es';
@@ -211,6 +213,9 @@ export interface BlockDateRequest {
   ],
 })
 export class BlockDateModalComponent implements AfterViewInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+
   // Inputs
   readonly isOpen = input.required<boolean>();
   readonly title = input<string>();
@@ -247,7 +252,9 @@ export class BlockDateModalComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.initFlatpickr();
+    if (this.isBrowser) {
+      this.initFlatpickr();
+    }
   }
 
   ngOnDestroy(): void {

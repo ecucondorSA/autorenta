@@ -228,6 +228,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'feature-flags',
+        loadComponent: () =>
+          import('./features/admin/feature-flags/admin-feature-flags.page').then(
+            (m) => m.AdminFeatureFlagsPage,
+          ),
+      },
+      {
         path: 'pricing',
         loadComponent: () =>
           import('./features/admin/pricing/admin-pricing.page').then((m) => m.AdminPricingPage),

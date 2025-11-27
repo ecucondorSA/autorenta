@@ -93,22 +93,9 @@ export interface CarWithDistance extends Car {
   distanceText?: string;
 }
 
-export interface CarMapLocation {
-  carId: string;
-  title: string;
-  pricePerDay: number;
-  currency: string;
-  lat: number;
-  lng: number;
-  updatedAt: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  locationLabel: string;
-  photoUrl: string | null;
-  photoGallery: string[];
-  description?: string;
-}
+// CarMapLocation is exported from car-locations.service.ts
+// Re-export for backward compatibility
+export type { CarMapLocation } from '../services/car-locations.service';
 
 // ============================================
 // UI STATE

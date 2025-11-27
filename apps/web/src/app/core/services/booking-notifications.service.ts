@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import type { Booking } from '../models';
-import { injectSupabase } from '../utils/inject-supabase';
+import { injectSupabase } from './supabase-client.service';
 import { getErrorMessage } from '../utils/type-guards';
 
 /**

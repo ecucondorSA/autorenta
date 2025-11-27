@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -10,6 +10,7 @@ import {
   Input,
   OnDestroy,
   Output,
+  PLATFORM_ID,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -55,6 +56,8 @@ export interface AlternativeDateSuggestion {
 })
 export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
   private readonly analytics = inject(AnalyticsService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   @Input() label = 'Fechas';
   @Input() initialFrom: string | null = null;
@@ -104,7 +107,9 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
   ];
 
   ngAfterViewInit(): void {
-    this.initFlatpickr();
+    if (this.isBrowser) {
+      this.initFlatpickr();
+    }
   }
 
   ngOnDestroy(): void {

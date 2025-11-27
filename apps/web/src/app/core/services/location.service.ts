@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { GeocodingResult, GeocodingService } from './geocoding.service';
 import { ProfileService } from './profile.service';
 import { SupabaseClientService } from './supabase-client.service';
@@ -34,6 +35,8 @@ export interface LocationData extends LocationCoordinates {
   providedIn: 'root',
 })
 export class LocationService {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly supabase = inject(SupabaseClientService).getClient();
   private readonly profileService = inject(ProfileService);
   private readonly geocodingService = inject(GeocodingService);
@@ -106,7 +109,7 @@ export class LocationService {
    */
   async getCurrentPosition(): Promise<LocationCoordinates | null> {
     return new Promise((resolve) => {
-      if (!navigator.geolocation) {
+      if (!this.isBrowser || !navigator.geolocation) {
         console.warn('Geolocation is not supported by this browser');
         resolve(null);
         return;
@@ -140,7 +143,7 @@ export class LocationService {
    * @returns Watch ID to clear later
    */
   watchPosition(callback: (location: LocationCoordinates) => void): number | null {
-    if (!navigator.geolocation) {
+    if (!this.isBrowser || !navigator.geolocation) {
       console.warn('Geolocation is not supported by this browser');
       return null;
     }
@@ -170,7 +173,7 @@ export class LocationService {
    * @param watchId ID returned by watchPosition
    */
   clearWatch(watchId: number): void {
-    if (navigator.geolocation) {
+    if (this.isBrowser && navigator.geolocation) {
       navigator.geolocation.clearWatch(watchId);
     }
   }

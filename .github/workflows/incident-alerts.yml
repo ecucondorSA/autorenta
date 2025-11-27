@@ -1,0 +1,167 @@
+name: Incident Alerts
+
+on:
+  # Trigger on workflow failures
+  workflow_run:
+    workflows:
+      - 'CI'
+      - 'Build & Deploy'
+      - 'E2E Tests'
+    types:
+      - completed
+
+  # Manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      severity:
+        description: 'Alert severity'
+        required: true
+        default: 'medium'
+        type: choice
+        options:
+          - critical
+          - high
+          - medium
+          - low
+      title:
+        description: 'Alert title'
+        required: true
+        default: 'Manual Test Alert'
+      message:
+        description: 'Alert message'
+        required: true
+        default: 'This is a test alert from GitHub Actions'
+
+jobs:
+  check-failure:
+    name: Check Workflow Failure
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Send Failure Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+
+            if (!webhookUrl) {
+              console.log('INCIDENT_WEBHOOK_URL not configured, skipping alert');
+              return;
+            }
+
+            const workflowName = '${{ github.event.workflow_run.name }}';
+            const branch = '${{ github.event.workflow_run.head_branch }}';
+            const sha = '${{ github.event.workflow_run.head_sha }}';
+            const runUrl = '${{ github.event.workflow_run.html_url }}';
+            const actor = '${{ github.event.workflow_run.actor.login }}';
+
+            const alert = {
+              source: 'github',
+              severity: workflowName.includes('Deploy') ? 'high' : 'medium',
+              title: `Workflow Failed: ${workflowName}`,
+              message: `The ${workflowName} workflow failed on branch \`${branch}\`.\n\n[View Run](${runUrl})`,
+              metadata: {
+                workflow: workflowName,
+                branch: branch,
+                commit: sha.substring(0, 7),
+                triggered_by: actor,
+                run_url: runUrl
+              },
+              timestamp: new Date().toISOString()
+            };
+
+            try {
+              const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(alert)
+              });
+
+              if (!response.ok) {
+                console.error(`Webhook failed: ${response.status}`);
+              } else {
+                console.log('Alert sent successfully');
+              }
+            } catch (error) {
+              console.error('Failed to send alert:', error);
+            }
+
+  manual-alert:
+    name: Send Manual Alert
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: Send Manual Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+
+            if (!webhookUrl) {
+              core.setFailed('INCIDENT_WEBHOOK_URL not configured');
+              return;
+            }
+
+            const alert = {
+              source: 'github',
+              severity: '${{ inputs.severity }}',
+              title: '${{ inputs.title }}',
+              message: '${{ inputs.message }}',
+              metadata: {
+                triggered_by: '${{ github.actor }}',
+                workflow_run: '${{ github.run_id }}'
+              },
+              timestamp: new Date().toISOString()
+            };
+
+            try {
+              const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(alert)
+              });
+
+              if (!response.ok) {
+                core.setFailed(`Webhook failed: ${response.status}`);
+              } else {
+                console.log('Manual alert sent successfully');
+              }
+            } catch (error) {
+              core.setFailed(`Failed to send alert: ${error}`);
+            }
+
+  # Alert on security scan findings
+  security-alert:
+    name: Check Security Findings
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.name == 'Security Scan' && github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Send Security Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+
+            if (!webhookUrl) {
+              console.log('INCIDENT_WEBHOOK_URL not configured');
+              return;
+            }
+
+            const alert = {
+              source: 'github',
+              severity: 'critical',
+              title: 'Security Scan Failed',
+              message: 'The security scan workflow has detected issues that require immediate attention.',
+              metadata: {
+                workflow: 'Security Scan',
+                run_url: '${{ github.event.workflow_run.html_url }}',
+                triggered_by: '${{ github.event.workflow_run.actor.login }}'
+              },
+              timestamp: new Date().toISOString()
+            };
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(alert)
+            });
