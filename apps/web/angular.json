@@ -36,7 +36,14 @@
               {
                 "glob": "**/*",
                 "input": "src/assets",
-                "output": "/assets"
+                "output": "/assets",
+                "ignore": [
+                  "**/models/car-3d-model.glb",
+                  "**/models/car-negro-final.glb",
+                  "**/models/user-car-model.glb",
+                  "**/models/*.blend",
+                  "**/models/*.blend1"
+                ]
               },
               {
                 "glob": "**/*.svg",
@@ -50,7 +57,13 @@
             ],
             "allowedCommonJsDependencies": [
               "mapbox-gl"
-            ]
+            ],
+            "server": "src/main.server.ts",
+            "prerender": false,
+            "outputMode": "server",
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {
