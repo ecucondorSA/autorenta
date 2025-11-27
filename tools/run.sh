@@ -158,13 +158,13 @@ cmd_test_coverage() {
 cmd_test_e2e() {
     header "🎭 Running E2E Tests"
     cd "$PROJECT_ROOT"
-    npx playwright test "$@"
+    npx playwright test -c e2e/playwright.config.ts "$@"
 }
 
 cmd_test_e2e_ui() {
     header "🎭 Running E2E Tests (UI Mode)"
     cd "$PROJECT_ROOT"
-    npx playwright test --ui
+    npx playwright test -c e2e/playwright.config.ts --ui
 }
 
 ###############################################################################

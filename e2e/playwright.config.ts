@@ -17,6 +17,7 @@ const baseURL =
 
 export default defineConfig({
   testDir: resolve(__dirname, 'specs'),
+  testIgnore: ['**/apps/**', '**/node_modules/**'],
   timeout: 120 * 1000,
   expect: {
     timeout: 10 * 1000,
