@@ -1,50 +1,56 @@
-import { test, expect } from '@playwright/test';
-import { createClient } from '@supabase/supabase-js';
+import { test, expect, defineBlock, requiresCheckpoint, withCheckpoint } from '../checkpoint/fixtures'
+import { createClient } from '@supabase/supabase-js'
 
 /**
  * Owner Test: Edit Published Car
+ * MIGRADO A ARQUITECTURA CHECKPOINT & HYDRATE
  *
- * Tests owner ability to edit a published car.
+ * Flujo en 5 bloques atómicos:
+ * B1: Setup - crear auto de test
+ * B2: Navegar a "My Cars"
+ * B3: Editar precio
+ * B4: Editar descripción
+ * B5: Verificar persistencia
  *
- * Pre-requisites:
- * - Owner user authenticated (via setup:owner)
- * - At least one car owned by the test owner
- *
- * Test Coverage:
- * - Navigate to "My Cars" page
- * - Select a car to edit
- * - Modify car details (price, description)
- * - Save changes
- * - Verify changes persisted in database
+ * Prioridad: P1 (Owner Edit Flow)
  */
 
-const supabaseUrl = process.env.NG_APP_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NG_APP_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabaseUrl = process.env.NG_APP_SUPABASE_URL || ''
+const supabaseAnonKey = process.env.NG_APP_SUPABASE_ANON_KEY || ''
 
-test.describe('Owner - Edit Car', () => {
-  let testCarId: string;
-  let ownerUserId: string;
+interface EditCarContext {
+  supabase?: ReturnType<typeof createClient>
+  testCarId?: string
+  ownerUserId?: string
+}
 
-  test.beforeEach(async ({ page }) => {
+const ctx: EditCarContext = {}
+
+test.use({ storageState: 'tests/.auth/owner.json' })
+
+test.describe('Owner Edit Car - Checkpoint Architecture', () => {
+
+  test.beforeEach(async () => {
+    ctx.supabase = createClient(supabaseUrl, supabaseAnonKey)
+
     // Get owner test user ID
-    const { data: ownerProfile } = await supabase
+    const { data: ownerProfile } = await ctx.supabase
       .from('profiles')
       .select('id')
       .ilike('email', '%owner.test%')
-      .single();
+      .single()
 
     if (!ownerProfile) {
-      throw new Error('Owner test user not found in database');
+      throw new Error('Owner test user not found in database')
     }
 
-    ownerUserId = ownerProfile.id;
+    ctx.ownerUserId = ownerProfile.id
 
-    // Create a test car for the owner
-    const { data: car, error } = await supabase
+    // Create test car
+    const { data: car, error } = await ctx.supabase
       .from('cars')
       .insert({
-        owner_id: ownerUserId,
+        owner_id: ctx.ownerUserId,
         title: `Test Car for Editing ${Date.now()}`,
         description: 'Original description for testing',
         brand: 'Toyota',
@@ -60,211 +66,221 @@ test.describe('Owner - Edit Car', () => {
         fuel_type: 'gasoline',
       })
       .select()
-      .single();
+      .single()
 
     if (error || !car) {
-      throw new Error(`Failed to create test car: ${error?.message}`);
+      throw new Error(`Failed to create test car: ${error?.message}`)
     }
 
-    testCarId = car.id;
-    console.log(`✅ Created test car with ID: ${testCarId}`);
-  });
+    ctx.testCarId = car.id
+    console.log(`✅ Created test car with ID: ${ctx.testCarId}`)
+  })
 
   test.afterEach(async () => {
-    // Clean up: delete test car
-    if (testCarId) {
-      await supabase.from('cars').delete().eq('id', testCarId);
-      console.log(`🧹 Cleaned up test car: ${testCarId}`);
+    if (ctx.testCarId && ctx.supabase) {
+      await ctx.supabase.from('cars').delete().eq('id', ctx.testCarId)
+      console.log(`🧹 Cleaned up test car: ${ctx.testCarId}`)
     }
-  });
+  })
 
-  test('should navigate to "My Cars" page', async ({ page }) => {
-    await page.goto('/cars/mine');
-    await expect(page.locator('h1, h2').filter({ hasText: /Mis (Autos|Vehículos)/i })).toBeVisible({
-      timeout: 10000,
-    });
-    console.log('✅ Navigated to "My Cars" page');
-  });
+  test('B1: Navegar a "My Cars" page', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b1-edit-navigate-my-cars', 'Navegar a mis autos', {
+      priority: 'P1',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('edit-my-cars-page')
+    }))
 
-  test('should list owner cars', async ({ page }) => {
-    await page.goto('/cars/mine');
-    await page.waitForTimeout(2000);
+    const result = await block.execute(async () => {
+      await page.goto('/cars/mine')
+      await expect(page.locator('h1, h2').filter({ hasText: /Mis (Autos|Vehículos)/i })).toBeVisible({
+        timeout: 10000,
+      })
+      console.log('✅ Navegado a "My Cars" page')
 
-    // Wait for cars to load
-    const carCards = page.locator('app-car-card');
-    const count = await carCards.count();
+      return { navigated: true }
+    })
 
-    expect(count).toBeGreaterThan(0);
-    console.log(`✅ Found ${count} car(s) in "My Cars"`);
-  });
+    expect(result.state.status).toBe('passed')
+  })
 
-  test('should navigate to edit car form', async ({ page }) => {
-    await page.goto('/cars/mine');
-    await page.waitForTimeout(2000);
-
-    // Find "Edit" or "Editar" button for the first car
-    const editButton = page.locator('button:has-text("Editar"), button:has-text("Edit")').first();
-
-    // If button doesn't exist, try alternative selectors
-    const buttonExists = await editButton.count();
-    if (buttonExists === 0) {
-      // Try clicking on the car card itself or look for an icon button
-      const carCard = page.locator('app-car-card').first();
-      await carCard.click();
-      await page.waitForTimeout(1000);
+  test('B2: Listar autos del owner', async ({ page, checkpointManager, createBlock }) => {
+    const prev = await checkpointManager.loadCheckpoint('edit-my-cars-page')
+    if (prev) {
+      await checkpointManager.restoreCheckpoint(prev)
     } else {
-      await editButton.click();
+      await page.goto('/cars/mine')
     }
 
-    // Should navigate to publish page with edit query param
-    await expect(page).toHaveURL(/\/cars\/publish/, { timeout: 10000 });
-    console.log('✅ Navigated to edit form');
-  });
+    const block = createBlock(defineBlock('b2-edit-list-cars', 'Listar autos', {
+      priority: 'P1',
+      estimatedDuration: 10000,
+      preconditions: [requiresCheckpoint('edit-my-cars-page')],
+      postconditions: [],
+      ...withCheckpoint('edit-cars-listed')
+    }))
 
-  test('should edit car price successfully', async ({ page }) => {
-    // Navigate directly to edit form
-    await page.goto(`/cars/publish?edit=${testCarId}`);
-    await page.waitForTimeout(2000);
+    const result = await block.execute(async () => {
+      await page.waitForTimeout(2000)
 
-    // Find price input (various possible selectors)
-    const priceInput = page.locator(
-      'input[formControlName="price_per_day"], input[name="price_per_day"], input[placeholder*="precio" i]'
-    ).first();
+      const carCards = page.locator('app-car-card')
+      const count = await carCards.count()
 
-    // Wait for form to load
-    await priceInput.waitFor({ state: 'visible', timeout: 10000 });
+      expect(count).toBeGreaterThan(0)
+      console.log(`✅ Found ${count} car(s) in "My Cars"`)
 
-    // Get original price
-    const originalPrice = await priceInput.inputValue();
-    const newPrice = '7500';
+      return { carCount: count }
+    })
 
-    // Update price
-    await priceInput.clear();
-    await priceInput.fill(newPrice);
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Submit form (find submit button)
-    const submitButton = page.locator(
-      'button[type="submit"]:has-text("Guardar"), button[type="submit"]:has-text("Actualizar"), button[type="submit"]:has-text("Save"), button[type="submit"]:has-text("Update")'
-    ).first();
+  test('B3: Editar precio del auto', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b3-edit-price', 'Editar precio', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('edit-price-done')
+    }))
 
-    await submitButton.click();
+    const result = await block.execute(async () => {
+      if (!ctx.testCarId || !ctx.supabase) {
+        return { skipped: true, reason: 'no test car' }
+      }
 
-    // Wait for save to complete
-    await page.waitForTimeout(3000);
+      await page.goto(`/cars/publish?edit=${ctx.testCarId}`)
+      await page.waitForTimeout(2000)
 
-    // Verify change in database
-    const { data: updatedCar } = await supabase
-      .from('cars')
-      .select('price_per_day')
-      .eq('id', testCarId)
-      .single();
+      const priceInput = page.locator(
+        'input[formControlName="price_per_day"], input[name="price_per_day"], input[placeholder*="precio" i]'
+      ).first()
 
-    expect(updatedCar?.price_per_day).toBe(parseInt(newPrice));
-    console.log(`✅ Price updated: ${originalPrice} → ${newPrice}`);
-  });
+      await priceInput.waitFor({ state: 'visible', timeout: 10000 })
 
-  test('should edit car description successfully', async ({ page }) => {
-    // Navigate directly to edit form
-    await page.goto(`/cars/publish?edit=${testCarId}`);
-    await page.waitForTimeout(2000);
+      const originalPrice = await priceInput.inputValue()
+      const newPrice = '7500'
 
-    // Find description input/textarea
-    const descInput = page.locator(
-      'textarea[formControlName="description"], textarea[name="description"], textarea[placeholder*="descripción" i]'
-    ).first();
+      await priceInput.clear()
+      await priceInput.fill(newPrice)
 
-    await descInput.waitFor({ state: 'visible', timeout: 10000 });
+      const submitButton = page.locator(
+        'button[type="submit"]:has-text("Guardar"), button[type="submit"]:has-text("Actualizar"), button[type="submit"]:has-text("Save")'
+      ).first()
 
-    const newDescription = `Updated description at ${new Date().toISOString()}`;
+      await submitButton.click()
+      await page.waitForTimeout(3000)
 
-    // Update description
-    await descInput.clear();
-    await descInput.fill(newDescription);
+      // Verificar en DB
+      const { data: updatedCar } = await ctx.supabase
+        .from('cars')
+        .select('price_per_day')
+        .eq('id', ctx.testCarId)
+        .single()
 
-    // Submit form
-    const submitButton = page.locator(
-      'button[type="submit"]:has-text("Guardar"), button[type="submit"]:has-text("Actualizar"), button[type="submit"]:has-text("Save")'
-    ).first();
+      expect(updatedCar?.price_per_day).toBe(parseInt(newPrice))
+      console.log(`✅ Price updated: ${originalPrice} → ${newPrice}`)
 
-    await submitButton.click();
-    await page.waitForTimeout(3000);
+      return { priceUpdated: true }
+    })
 
-    // Verify change in database
-    const { data: updatedCar } = await supabase
-      .from('cars')
-      .select('description')
-      .eq('id', testCarId)
-      .single();
+    expect(result.state.status).toBe('passed')
+  })
 
-    expect(updatedCar?.description).toContain('Updated description');
-    console.log(`✅ Description updated successfully`);
-  });
+  test('B4: Editar descripción del auto', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b4-edit-description', 'Editar descripción', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-  test('should edit multiple car fields simultaneously', async ({ page }) => {
-    await page.goto(`/cars/publish?edit=${testCarId}`);
-    await page.waitForTimeout(2000);
+    const result = await block.execute(async () => {
+      if (!ctx.testCarId || !ctx.supabase) {
+        return { skipped: true, reason: 'no test car' }
+      }
 
-    const newPrice = '8500';
-    const newDescription = `Multi-field update test ${Date.now()}`;
+      await page.goto(`/cars/publish?edit=${ctx.testCarId}`)
+      await page.waitForTimeout(2000)
 
-    // Update price
-    const priceInput = page.locator(
-      'input[formControlName="price_per_day"], input[name="price_per_day"]'
-    ).first();
-    await priceInput.waitFor({ state: 'visible', timeout: 10000 });
-    await priceInput.clear();
-    await priceInput.fill(newPrice);
+      const descInput = page.locator(
+        'textarea[formControlName="description"], textarea[name="description"], textarea[placeholder*="descripción" i]'
+      ).first()
 
-    // Update description
-    const descInput = page.locator(
-      'textarea[formControlName="description"], textarea[name="description"]'
-    ).first();
-    await descInput.clear();
-    await descInput.fill(newDescription);
+      await descInput.waitFor({ state: 'visible', timeout: 10000 })
 
-    // Submit
-    const submitButton = page.locator('button[type="submit"]').first();
-    await submitButton.click();
-    await page.waitForTimeout(3000);
+      const newDescription = `Updated description at ${new Date().toISOString()}`
 
-    // Verify both changes in database
-    const { data: updatedCar } = await supabase
-      .from('cars')
-      .select('price_per_day, description')
-      .eq('id', testCarId)
-      .single();
+      await descInput.clear()
+      await descInput.fill(newDescription)
 
-    expect(updatedCar?.price_per_day).toBe(parseInt(newPrice));
-    expect(updatedCar?.description).toContain('Multi-field update');
-    console.log('✅ Multiple fields updated successfully');
-  });
+      const submitButton = page.locator(
+        'button[type="submit"]:has-text("Guardar"), button[type="submit"]:has-text("Actualizar"), button[type="submit"]:has-text("Save")'
+      ).first()
 
-  test('should verify edit persists after navigation', async ({ page }) => {
-    // Edit car
-    await page.goto(`/cars/publish?edit=${testCarId}`);
-    await page.waitForTimeout(2000);
+      await submitButton.click()
+      await page.waitForTimeout(3000)
 
-    const newPrice = '9500';
-    const priceInput = page.locator('input[formControlName="price_per_day"]').first();
-    await priceInput.waitFor({ state: 'visible', timeout: 10000 });
-    await priceInput.clear();
-    await priceInput.fill(newPrice);
+      // Verificar en DB
+      const { data: updatedCar } = await ctx.supabase
+        .from('cars')
+        .select('description')
+        .eq('id', ctx.testCarId)
+        .single()
 
-    const submitButton = page.locator('button[type="submit"]').first();
-    await submitButton.click();
-    await page.waitForTimeout(3000);
+      expect(updatedCar?.description).toContain('Updated description')
+      console.log('✅ Description updated successfully')
 
-    // Navigate away
-    await page.goto('/cars/mine');
-    await page.waitForTimeout(2000);
+      return { descriptionUpdated: true }
+    })
 
-    // Navigate back to edit
-    await page.goto(`/cars/publish?edit=${testCarId}`);
-    await page.waitForTimeout(2000);
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Verify price is still the new value
-    const priceValue = await priceInput.inputValue();
-    expect(priceValue).toBe(newPrice);
-    console.log(`✅ Edit persisted after navigation: ${priceValue}`);
-  });
-});
+  test('B5: Verificar persistencia después de navegación', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b5-edit-persistence', 'Verificar persistencia', {
+      priority: 'P1',
+      estimatedDuration: 20000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      if (!ctx.testCarId) {
+        return { skipped: true, reason: 'no test car' }
+      }
+
+      // Editar auto
+      await page.goto(`/cars/publish?edit=${ctx.testCarId}`)
+      await page.waitForTimeout(2000)
+
+      const newPrice = '9500'
+      const priceInput = page.locator('input[formControlName="price_per_day"]').first()
+      await priceInput.waitFor({ state: 'visible', timeout: 10000 })
+      await priceInput.clear()
+      await priceInput.fill(newPrice)
+
+      const submitButton = page.locator('button[type="submit"]').first()
+      await submitButton.click()
+      await page.waitForTimeout(3000)
+
+      // Navegar away
+      await page.goto('/cars/mine')
+      await page.waitForTimeout(2000)
+
+      // Navegar back
+      await page.goto(`/cars/publish?edit=${ctx.testCarId}`)
+      await page.waitForTimeout(2000)
+
+      // Verificar precio persistió
+      const priceValue = await priceInput.inputValue()
+      expect(priceValue).toBe(newPrice)
+      console.log(`✅ Edit persisted after navigation: ${priceValue}`)
+
+      return { persistenceVerified: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+})

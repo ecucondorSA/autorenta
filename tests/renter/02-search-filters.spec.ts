@@ -1,63 +1,99 @@
-import { expect, test } from '@playwright/test';
+import { test, expect, defineBlock, withCheckpoint } from '../checkpoint/fixtures'
 
-test.describe('Search Results', () => {
-  test.beforeEach(async ({ page }) => {
-    // Navigate directly to search results with some query params if possible,
-    // or go through homepage. Direct navigation is faster for testing this specific page.
-    await page.goto('/explore?location=Buenos%20Aires');
-  });
+/**
+ * Search Results & Filters Test
+ * MIGRADO A ARQUITECTURA CHECKPOINT & HYDRATE
+ *
+ * Flujo en 2 bloques atómicos:
+ * B1: Mostrar resultados y filtrar
+ * B2: Cambiar vistas (grid/list/map)
+ *
+ * Prioridad: P1 (Renter Flow)
+ */
 
-  test('should display search results', async ({ page }) => {
-    // Wait for results to load - check for grid items or list items
-    // Using a more generic selector that matches the car cards in grid view
-    await expect(page.locator('.grid > div.group').first()).toBeVisible({ timeout: 10000 });
+test.describe('Search Results - Checkpoint Architecture', () => {
 
-    // Check if at least one car is shown
-    const count = await page.locator('.grid > div.group').count();
-    expect(count).toBeGreaterThan(0);
-  });
+  test('B1: Mostrar resultados y filtrar', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b1-search-results', 'Mostrar y filtrar resultados', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('search-results-ready')
+    }))
 
-  test('should allow filtering', async ({ page }) => {
-    // Verify search input exists
-    const searchInput = page.getByPlaceholder('Buscar por marca, modelo o ciudad...');
-    await expect(searchInput).toBeVisible();
+    const result = await block.execute(async () => {
+      // Navegar a búsqueda
+      await page.goto('/explore?location=Buenos%20Aires')
+      await page.waitForLoadState('domcontentloaded')
+      await page.waitForTimeout(3000)
 
-    // Type in search
-    await searchInput.fill('Toyota');
+      // Esperar resultados
+      const gridItem = page.locator('.grid > div.group').first()
+      await expect(gridItem).toBeVisible({ timeout: 10000 })
 
-    // Verify URL or results update (depending on implementation)
-    // For now just verifying the input works
-    await expect(searchInput).toHaveValue('Toyota');
-  });
+      // Contar resultados
+      const count = await page.locator('.grid > div.group').count()
+      expect(count).toBeGreaterThan(0)
+      console.log(`✅ Search results loaded: ${count} cars found`)
 
-  test('should switch views', async ({ page }) => {
-    // Check for view switcher buttons
-    const mapButton = page.getByTitle('Vista Mapa');
-    const gridButton = page.getByTitle('Vista Cuadrícula');
-    const listButton = page.getByTitle('Vista Lista');
+      // Verificar input de búsqueda
+      const searchInput = page.getByPlaceholder('Buscar por marca, modelo o ciudad...')
+      await expect(searchInput).toBeVisible()
 
-    // Ensure buttons are visible
-    await expect(mapButton).toBeVisible();
-    await expect(gridButton).toBeVisible();
-    await expect(listButton).toBeVisible();
+      // Probar filtro
+      await searchInput.fill('Toyota')
+      await expect(searchInput).toHaveValue('Toyota')
+      console.log('✅ Search filter works')
 
-    // Switch to Map View
-    await mapButton.click();
-    // Verify map container is visible
-    // The map view container has a specific structure in explore.page.html
-    // We check for the canvas because the custom element app-cars-map might report as hidden (0x0)
-    await expect(page.locator('app-cars-map canvas, app-waze-live-map iframe').first()).toBeVisible({ timeout: 10000 });
+      return { resultCount: count, filterWorks: true }
+    })
 
-    // Switch to List View
-    await listButton.click();
-    // Verify list view container - looking for the specific list structure
-    // In HTML: <div *ngIf="viewMode() === 'list'" class="flex flex-col gap-4 ...">
-    await expect(page.locator('.flex.flex-col.gap-4.max-w-5xl')).toBeVisible();
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Switch back to Grid View
-    await gridButton.click();
-    // Verify grid view container
-    // In HTML: <div *ngIf="viewMode() === 'grid'" class="grid grid-cols-1 ...">
-    await expect(page.locator('.grid.grid-cols-1')).toBeVisible();
-  });
-});
+  test('B2: Cambiar vistas (grid/list/map)', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b2-search-views', 'Cambiar vistas', {
+      priority: 'P1',
+      estimatedDuration: 20000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      await page.goto('/explore?location=Buenos%20Aires')
+      await page.waitForLoadState('domcontentloaded')
+      await page.waitForTimeout(3000)
+
+      // Verificar botones de vista
+      const mapButton = page.getByTitle('Vista Mapa')
+      const gridButton = page.getByTitle('Vista Cuadrícula')
+      const listButton = page.getByTitle('Vista Lista')
+
+      await expect(mapButton).toBeVisible()
+      await expect(gridButton).toBeVisible()
+      await expect(listButton).toBeVisible()
+      console.log('✅ View buttons visible')
+
+      // Cambiar a vista de mapa
+      await mapButton.click()
+      const mapCanvas = page.locator('app-cars-map canvas, app-waze-live-map iframe').first()
+      await expect(mapCanvas).toBeVisible({ timeout: 10000 })
+      console.log('✅ Map view works')
+
+      // Cambiar a vista de lista
+      await listButton.click()
+      await expect(page.locator('.flex.flex-col.gap-4.max-w-5xl')).toBeVisible()
+      console.log('✅ List view works')
+
+      // Cambiar a vista de grid
+      await gridButton.click()
+      await expect(page.locator('.grid.grid-cols-1')).toBeVisible()
+      console.log('✅ Grid view works')
+
+      return { viewsWork: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+})

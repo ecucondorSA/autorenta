@@ -1,122 +1,202 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, defineBlock } from '../checkpoint/fixtures'
 
 /**
- * Test Suite: User Logout
+ * E2E Test: User Logout
+ * MIGRADO A ARQUITECTURA CHECKPOINT & HYDRATE
+ *
+ * Flujo en 7 bloques atómicos (todos skip - requieren autenticación):
+ * B1: Verificar botón logout en menú perfil
+ * B2: Logout exitoso y redirección
+ * B3: Limpiar autenticación después de logout
+ * B4: Mostrar diálogo de confirmación
+ * B5: Mantener preferencia de dark mode
+ * B6: Limpiar datos de localStorage
+ * B7: Prevenir navegación a rutas protegidas
  *
  * Priority: P0 (Critical)
- * Duration: ~1 minute
- * Coverage:
- * - Logout functionality
- * - Session cleanup
- * - Redirect after logout
- * - Protected routes after logout
- *
- * Note: These tests are skipped until authentication setup is complete
+ * Note: Tests skip hasta que configuración de auth esté completa
  */
 
-test.describe('User Logout', () => {
-  test.skip('should have logout button in profile menu', async ({ page }) => {
-    // This test requires authentication
-    // Navigate to profile page
-    await page.goto('/profile');
+test.describe('User Logout - Checkpoint Architecture', () => {
 
-    // Should see sign out button
-    const signOutButton = page.getByRole('button', { name: /cerrar sesión|salir/i });
-    await expect(signOutButton).toBeVisible();
-  });
+  test.skip('B1: Verificar botón logout en menú perfil', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b1-logout-button-visible', 'Botón logout visible', {
+      priority: 'P0',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-  test.skip('should successfully logout and redirect to home', async ({ page }) => {
-    // This test requires authentication
-    await page.goto('/profile');
+    const result = await block.execute(async () => {
+      await page.goto('/profile')
 
-    // Click logout button
-    const signOutButton = page.getByRole('button', { name: /cerrar sesión|salir/i });
-    await signOutButton.click();
+      const signOutButton = page.getByRole('button', { name: /cerrar sesión|salir/i })
+      await expect(signOutButton).toBeVisible()
+      console.log('✅ Botón de logout visible')
 
-    // Should redirect to home or login page
-    await page.waitForURL(/\/(auth\/login|home|cars)?$/);
-    expect(page.url()).toMatch(/\/(auth\/login|home|cars)?$/);
-  });
+      return { buttonVisible: true }
+    })
 
-  test.skip('should clear authentication after logout', async ({ page }) => {
-    // This test requires authentication
-    await page.goto('/profile');
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Logout
-    await page.getByRole('button', { name: /cerrar sesión|salir/i }).click();
+  test.skip('B2: Logout exitoso y redirección', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b2-logout-redirect', 'Logout y redirección', {
+      priority: 'P0',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-    // Try to access protected route
-    await page.goto('/wallet');
+    const result = await block.execute(async () => {
+      await page.goto('/profile')
 
-    // Should redirect to login
-    await page.waitForURL('/auth/login');
-    expect(page.url()).toContain('/auth/login');
-  });
+      const signOutButton = page.getByRole('button', { name: /cerrar sesión|salir/i })
+      await signOutButton.click()
 
-  test.skip('should show confirmation dialog before logout (if implemented)', async ({ page }) => {
-    // This test requires authentication
-    await page.goto('/profile');
+      await page.waitForURL(/\/(auth\/login|home|cars)?$/)
+      expect(page.url()).toMatch(/\/(auth\/login|home|cars)?$/)
+      console.log('✅ Logout exitoso y redirección correcta')
 
-    // Click logout button
-    await page.getByRole('button', { name: /cerrar sesión|salir/i }).click();
+      return { logoutSuccessful: true }
+    })
 
-    // May show confirmation dialog (optional feature)
-    const confirmDialog = page.getByRole('dialog');
-    if (await confirmDialog.isVisible()) {
-      await expect(confirmDialog).toContainText(/cerrar sesión|confirmar/i);
-      await page.getByRole('button', { name: /confirmar|sí|aceptar/i }).click();
-    }
-  });
+    expect(result.state.status).toBe('passed')
+  })
 
-  test.skip('should maintain dark mode preference after logout', async ({ page }) => {
-    // This test requires authentication and theme toggle
-    await page.goto('/profile');
+  test.skip('B3: Limpiar autenticación después de logout', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b3-logout-clear-auth', 'Limpiar autenticación', {
+      priority: 'P0',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-    // Enable dark mode if not already
-    const darkModeToggle = page.locator('[data-theme-toggle]');
-    if (await darkModeToggle.isVisible()) {
-      await darkModeToggle.click();
-    }
+    const result = await block.execute(async () => {
+      await page.goto('/profile')
 
-    // Logout
-    await page.getByRole('button', { name: /cerrar sesión|salir/i }).click();
+      await page.getByRole('button', { name: /cerrar sesión|salir/i }).click()
 
-    // Dark mode should persist
-    const html = page.locator('html');
-    const htmlClass = await html.getAttribute('class');
-    expect(htmlClass).toContain('dark');
-  });
+      await page.goto('/wallet')
 
-  test.skip('should clear user-specific data from localStorage after logout', async ({ page }) => {
-    // This test requires authentication
-    await page.goto('/profile');
+      await page.waitForURL('/auth/login')
+      expect(page.url()).toContain('/auth/login')
+      console.log('✅ Autenticación limpiada correctamente')
 
-    // Logout
-    await page.getByRole('button', { name: /cerrar sesión|salir/i }).click();
+      return { authCleared: true }
+    })
 
-    // Check that auth tokens are cleared
-    const authToken = await page.evaluate(() => {
-      return localStorage.getItem('supabase.auth.token');
-    });
+    expect(result.state.status).toBe('passed')
+  })
 
-    expect(authToken).toBeNull();
-  });
+  test.skip('B4: Mostrar diálogo de confirmación', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b4-logout-confirm-dialog', 'Diálogo confirmación', {
+      priority: 'P2',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-  test.skip('should prevent navigation to protected routes after logout', async ({ page }) => {
-    // This test requires authentication
-    await page.goto('/profile');
+    const result = await block.execute(async () => {
+      await page.goto('/profile')
 
-    // Logout
-    await page.getByRole('button', { name: /cerrar sesión|salir/i }).click();
+      await page.getByRole('button', { name: /cerrar sesión|salir/i }).click()
 
-    // Try to access various protected routes
-    const protectedRoutes = ['/profile', '/wallet', '/cars/publish', '/admin'];
+      const confirmDialog = page.getByRole('dialog')
+      if (await confirmDialog.isVisible()) {
+        await expect(confirmDialog).toContainText(/cerrar sesión|confirmar/i)
+        await page.getByRole('button', { name: /confirmar|sí|aceptar/i }).click()
+        console.log('✅ Diálogo de confirmación mostrado')
+      } else {
+        console.log('⚠️ No hay diálogo de confirmación implementado')
+      }
 
-    for (const route of protectedRoutes) {
-      await page.goto(route);
-      // Should redirect to login
-      await page.waitForURL('/auth/login');
-      expect(page.url()).toContain('/auth/login');
-    }
-  });
-});
+      return { dialogChecked: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test.skip('B5: Mantener preferencia de dark mode', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b5-logout-dark-mode', 'Mantener dark mode', {
+      priority: 'P2',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      await page.goto('/profile')
+
+      const darkModeToggle = page.locator('[data-theme-toggle]')
+      if (await darkModeToggle.isVisible()) {
+        await darkModeToggle.click()
+      }
+
+      await page.getByRole('button', { name: /cerrar sesión|salir/i }).click()
+
+      const html = page.locator('html')
+      const htmlClass = await html.getAttribute('class')
+      expect(htmlClass).toContain('dark')
+      console.log('✅ Preferencia de dark mode mantenida')
+
+      return { darkModeMaintained: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test.skip('B6: Limpiar datos de localStorage', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b6-logout-clear-storage', 'Limpiar localStorage', {
+      priority: 'P1',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      await page.goto('/profile')
+
+      await page.getByRole('button', { name: /cerrar sesión|salir/i }).click()
+
+      const authToken = await page.evaluate(() => {
+        return localStorage.getItem('supabase.auth.token')
+      })
+
+      expect(authToken).toBeNull()
+      console.log('✅ Datos de localStorage limpiados')
+
+      return { storageCleared: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test.skip('B7: Prevenir navegación a rutas protegidas', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b7-logout-protected-routes', 'Rutas protegidas', {
+      priority: 'P0',
+      estimatedDuration: 20000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      await page.goto('/profile')
+
+      await page.getByRole('button', { name: /cerrar sesión|salir/i }).click()
+
+      const protectedRoutes = ['/profile', '/wallet', '/cars/publish', '/admin']
+
+      for (const route of protectedRoutes) {
+        await page.goto(route)
+        await page.waitForURL('/auth/login')
+        expect(page.url()).toContain('/auth/login')
+      }
+      console.log('✅ Navegación a rutas protegidas bloqueada')
+
+      return { routesProtected: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+})

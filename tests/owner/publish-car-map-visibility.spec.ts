@@ -1,220 +1,242 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, defineBlock, requiresCheckpoint, withCheckpoint } from '../checkpoint/fixtures'
 
 /**
- * E2E Test: Verify Published Cars Appear on Map
+ * E2E Test: Published Cars Map Visibility
+ * MIGRADO A ARQUITECTURA CHECKPOINT & HYDRATE
  *
- * This test validates the fix for car publication status.
- * Cars should be published with status='active' and appear
- * immediately on the explore map.
+ * Flujo en 5 bloques atómicos:
+ * B1: Cargar autos activos desde API
+ * B2: Verificar autos en mapa
+ * B3: Verificar status en base de datos
+ * B4: Navegar a detalle desde mapa
+ * B5: Verificar deployment (opcional)
  *
- * Test Flow:
- * 1. Navigate to Explore page
- * 2. Count existing cars on map
- * 3. Verify cars have status='active' in API response
- * 4. Verify cars have coordinates (location_lat, location_lng)
+ * Prioridad: P1 (Map Visibility)
  */
 
-test.describe('Published Cars Map Visibility', () => {
-  test.beforeEach(async ({ page }) => {
-    // Enable request interception to monitor API calls
-    await page.route('**/rest/v1/cars*', async (route) => {
-      const response = await route.fetch();
-      const data = await response.json();
+test.describe('Published Cars Map Visibility - Checkpoint Architecture', () => {
 
-      // Log the data for debugging
+  test.beforeEach(async ({ page }) => {
+    // Interceptar API de autos para debugging
+    await page.route('**/rest/v1/cars*', async (route) => {
+      const response = await route.fetch()
+      const data = await response.json()
       console.log('📊 Cars API Response:', {
         count: Array.isArray(data) ? data.length : 1,
         sample: Array.isArray(data) ? data[0] : data,
-      });
+      })
+      await route.fulfill({ response, json: data })
+    })
+  })
 
-      await route.fulfill({ response, json: data });
-    });
-  });
+  test('B1: Cargar autos activos desde API', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b1-map-load-cars', 'Cargar autos desde API', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('map-cars-loaded')
+    }))
 
-  test('should load active cars from API', async ({ page }) => {
-    console.log('🧪 Test: Verify active cars are loaded from API');
+    const result = await block.execute(async () => {
+      await page.goto('/explore', { waitUntil: 'networkidle' })
+      await page.waitForTimeout(3000)
 
-    // Navigate to explore page
-    await page.goto('/explore', { waitUntil: 'networkidle' });
+      const apiResponse = await page.waitForResponse(
+        (response) => response.url().includes('/rest/v1/cars') && response.status() === 200,
+        { timeout: 10000 }
+      ).catch(() => null)
 
-    // Wait for map to load
-    await page.waitForTimeout(3000);
+      if (apiResponse) {
+        const cars = await apiResponse.json()
+        console.log('✅ Cars loaded:', cars.length)
 
-    // Intercept the API call to get cars
-    const apiResponse = await page.waitForResponse(
-      (response) => response.url().includes('/rest/v1/cars') && response.status() === 200,
-      { timeout: 10000 }
-    ).catch(() => null);
+        expect(cars.length).toBeGreaterThan(0)
 
-    if (apiResponse) {
-      const cars = await apiResponse.json();
-      console.log('✅ Cars loaded:', cars.length);
+        // Verificar todos status='active'
+        const activeCars = cars.filter((car: any) => car.status === 'active')
+        console.log('📊 Active cars:', activeCars.length)
+        expect(activeCars.length).toBe(cars.length)
 
-      // Verify we have cars
-      expect(cars.length).toBeGreaterThan(0);
+        // Verificar coordenadas
+        const carsWithCoords = cars.filter(
+          (car: any) => car.location_lat !== null && car.location_lng !== null
+        )
+        console.log('📍 Cars with coordinates:', carsWithCoords.length)
+        expect(carsWithCoords.length).toBeGreaterThan(0)
 
-      // Verify all cars have status='active'
-      const activeCars = cars.filter((car: any) => car.status === 'active');
-      console.log('📊 Active cars:', activeCars.length);
-      expect(activeCars.length).toBe(cars.length);
+        return { carsLoaded: cars.length, activeCars: activeCars.length }
+      }
 
-      // Verify all cars have coordinates
-      const carsWithCoords = cars.filter(
-        (car: any) => car.location_lat !== null && car.location_lng !== null
-      );
-      console.log('📍 Cars with coordinates:', carsWithCoords.length);
-      expect(carsWithCoords.length).toBeGreaterThan(0);
+      return { carsLoaded: 0 }
+    })
 
-      // Sample first car
-      const firstCar = cars[0];
-      console.log('🚗 Sample car:', {
-        id: firstCar.id,
-        title: firstCar.title,
-        status: firstCar.status,
-        hasCoords: !!(firstCar.location_lat && firstCar.location_lng),
-      });
+    expect(result.state.status).toBe('passed')
+  })
+
+  test('B2: Verificar autos en mapa', async ({ page, checkpointManager, createBlock }) => {
+    const prev = await checkpointManager.loadCheckpoint('map-cars-loaded')
+    if (prev) {
+      await checkpointManager.restoreCheckpoint(prev)
+    } else {
+      await page.goto('/explore', { waitUntil: 'domcontentloaded' })
     }
-  });
 
-  test('should display cars on map', async ({ page }) => {
-    console.log('🧪 Test: Verify cars appear on map component');
+    const block = createBlock(defineBlock('b2-map-display', 'Verificar mapa', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [requiresCheckpoint('map-cars-loaded')],
+      postconditions: [],
+      ...withCheckpoint('map-display-verified')
+    }))
 
-    // Navigate to explore page
-    await page.goto('/explore', { waitUntil: 'domcontentloaded' });
+    const result = await block.execute(async () => {
+      // Verificar componente de mapa
+      const mapComponent = page.locator('app-cars-map').first()
+      await expect(mapComponent).toBeVisible({ timeout: 15000 })
+      console.log('✅ Componente de mapa visible')
 
-    // Wait for map component to be visible
-    const mapComponent = page.locator('app-cars-map').first();
-    await expect(mapComponent).toBeVisible({ timeout: 15000 });
+      await page.waitForTimeout(5000)
 
-    // Wait for map to initialize
-    await page.waitForTimeout(5000);
+      // Verificar contenedor de mapa
+      const mapContainer = page.locator('#map-container, .map-container').first()
+      await expect(mapContainer).toBeVisible()
 
-    // Verify map container exists
-    const mapContainer = page.locator('#map-container, .map-container').first();
-    await expect(mapContainer).toBeVisible();
+      const mapBox = await mapContainer.boundingBox()
+      expect(mapBox).not.toBeNull()
+      expect(mapBox?.width).toBeGreaterThan(0)
+      expect(mapBox?.height).toBeGreaterThan(0)
 
-    // Get bounding box to verify map rendered
-    const mapBox = await mapContainer.boundingBox();
-    expect(mapBox).not.toBeNull();
-    expect(mapBox?.width).toBeGreaterThan(0);
-    expect(mapBox?.height).toBeGreaterThan(0);
+      console.log('✅ Map rendered successfully')
+      return { mapRendered: true }
+    })
 
-    console.log('✅ Map rendered successfully');
-  });
+    expect(result.state.status).toBe('passed')
+  })
 
-  test('should verify car status in database', async ({ page }) => {
-    console.log('🧪 Test: Verify cars in DB have status=active');
+  test('B3: Verificar status en base de datos', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b3-map-verify-status', 'Verificar status en DB', {
+      priority: 'P1',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-    // Navigate to explore
-    await page.goto('/explore');
+    const result = await block.execute(async () => {
+      await page.goto('/explore')
 
-    // Wait for API response
-    const response = await page.waitForResponse(
-      (res) => res.url().includes('/rest/v1/cars') && res.status() === 200
-    );
+      const response = await page.waitForResponse(
+        (res) => res.url().includes('/rest/v1/cars') && res.status() === 200
+      )
 
-    const cars = await response.json();
+      const cars = await response.json()
 
-    // Detailed status check
-    const statusCounts = cars.reduce((acc: any, car: any) => {
-      acc[car.status] = (acc[car.status] || 0) + 1;
-      return acc;
-    }, {});
+      const statusCounts = cars.reduce((acc: any, car: any) => {
+        acc[car.status] = (acc[car.status] || 0) + 1
+        return acc
+      }, {})
 
-    console.log('📊 Status distribution:', statusCounts);
+      console.log('📊 Status distribution:', statusCounts)
 
-    // All cars should be active
-    expect(statusCounts.active).toBeGreaterThan(0);
-    expect(statusCounts.draft || 0).toBe(0);
-    expect(statusCounts.pending || 0).toBe(0);
-  });
+      expect(statusCounts.active).toBeGreaterThan(0)
+      expect(statusCounts.draft || 0).toBe(0)
+      expect(statusCounts.pending || 0).toBe(0)
 
-  test('should navigate to car detail from map', async ({ page }) => {
-    console.log('🧪 Test: Navigate to car detail from map marker');
+      console.log('✅ Todos los autos están activos')
+      return { statusVerified: true, distribution: statusCounts }
+    })
 
-    // Navigate to explore
-    await page.goto('/explore', { waitUntil: 'domcontentloaded' });
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Wait for map to load
-    await page.waitForTimeout(5000);
+  test('B4: Navegar a detalle desde mapa', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b4-map-navigate-detail', 'Navegar a detalle', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-    // Try to find and click a car card (map markers are canvas-based, hard to click)
-    const carCards = page.locator('app-car-card, .car-card');
-    const carCount = await carCards.count();
+    const result = await block.execute(async () => {
+      await page.goto('/explore', { waitUntil: 'domcontentloaded' })
+      await page.waitForTimeout(5000)
 
-    console.log('🚗 Car cards found:', carCount);
+      const carCards = page.locator('app-car-card, .car-card')
+      const carCount = await carCards.count()
 
-    if (carCount > 0) {
-      // Click first car card
-      await carCards.first().click();
+      console.log('🚗 Car cards found:', carCount)
 
-      // Should navigate to car detail or show modal
-      await page.waitForTimeout(2000);
+      if (carCount > 0) {
+        await carCards.first().click()
+        await page.waitForTimeout(2000)
 
-      // Verify URL changed or modal appeared
-      const currentUrl = page.url();
-      console.log('📍 Current URL:', currentUrl);
+        const currentUrl = page.url()
+        console.log('📍 Current URL:', currentUrl)
 
-      // Either we're on car detail page or a modal opened
-      const isDetailPage = currentUrl.includes('/cars/');
-      const hasModal = await page.locator('.modal, ion-modal').isVisible().catch(() => false);
+        const isDetailPage = currentUrl.includes('/cars/')
+        const hasModal = await page.locator('.modal, ion-modal').isVisible().catch(() => false)
 
-      expect(isDetailPage || hasModal).toBe(true);
-      console.log('✅ Navigation successful');
-    }
-  });
-});
+        expect(isDetailPage || hasModal).toBe(true)
+        console.log('✅ Navigation successful')
+        return { navigated: true }
+      }
 
-/**
- * DEPLOYMENT VERIFICATION TEST
- *
- * This test should be run against the deployed URL to verify
- * that the fixes are working in production.
- */
-test.describe('Deployment Verification', () => {
-  test('should verify deployment URL is accessible', async ({ page }) => {
-    const deploymentUrl = 'https://ca6618ec.autorenta-web.pages.dev';
+      return { navigated: false, reason: 'no car cards found' }
+    })
 
-    console.log('🧪 Test: Verify deployment at', deploymentUrl);
+    expect(result.state.status).toBe('passed')
+  })
+})
 
-    const response = await page.goto(deploymentUrl, {
-      waitUntil: 'domcontentloaded',
-      timeout: 30000
-    });
+test.describe('Deployment Verification - Checkpoint Architecture', () => {
 
-    expect(response?.status()).toBe(200);
-    console.log('✅ Deployment is accessible');
-  });
+  test('B5: Verificar deployment URL', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b5-deployment-verify', 'Verificar deployment', {
+      priority: 'P2',
+      estimatedDuration: 30000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-  test('should verify active cars on deployed site', async ({ page }) => {
-    const deploymentUrl = 'https://ca6618ec.autorenta-web.pages.dev';
+    const result = await block.execute(async () => {
+      const deploymentUrl = 'https://ca6618ec.autorenta-web.pages.dev'
 
-    console.log('🧪 Test: Verify cars on deployed site');
+      console.log('🧪 Verificando deployment:', deploymentUrl)
 
-    // Navigate to explore on deployed site
-    await page.goto(`${deploymentUrl}/explore`, {
-      waitUntil: 'networkidle',
-      timeout: 30000
-    });
+      const response = await page.goto(deploymentUrl, {
+        waitUntil: 'domcontentloaded',
+        timeout: 30000
+      })
 
-    // Wait for API response
-    const response = await page.waitForResponse(
-      (res) => res.url().includes('/rest/v1/cars') && res.status() === 200,
-      { timeout: 15000 }
-    ).catch(() => null);
+      expect(response?.status()).toBe(200)
+      console.log('✅ Deployment accesible')
 
-    if (response) {
-      const cars = await response.json();
-      console.log('📊 Deployed site - Cars loaded:', cars.length);
+      // Verificar autos en sitio desplegado
+      await page.goto(`${deploymentUrl}/explore`, {
+        waitUntil: 'networkidle',
+        timeout: 30000
+      })
 
-      // Verify cars exist
-      expect(cars.length).toBeGreaterThan(0);
+      const apiResponse = await page.waitForResponse(
+        (res) => res.url().includes('/rest/v1/cars') && res.status() === 200,
+        { timeout: 15000 }
+      ).catch(() => null)
 
-      // Verify all are active
-      const activeCars = cars.filter((car: any) => car.status === 'active');
-      expect(activeCars.length).toBe(cars.length);
+      if (apiResponse) {
+        const cars = await apiResponse.json()
+        console.log('📊 Deployed site - Cars loaded:', cars.length)
 
-      console.log('✅ All cars on deployed site are active');
-    }
-  });
-});
+        expect(cars.length).toBeGreaterThan(0)
+
+        const activeCars = cars.filter((car: any) => car.status === 'active')
+        expect(activeCars.length).toBe(cars.length)
+
+        console.log('✅ Todos los autos en deployment están activos')
+      }
+
+      return { deploymentVerified: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+})

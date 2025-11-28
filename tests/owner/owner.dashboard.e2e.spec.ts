@@ -1,37 +1,67 @@
-import { existsSync } from 'node:fs';
-import { expect, test } from '@playwright/test';
-import { runOwnerSeed } from '../helpers/seed';
+import { existsSync } from 'node:fs'
+import { test, expect, defineBlock, withCheckpoint } from '../checkpoint/fixtures'
 
-// Auth persistente via storageState SI existe (generado por tests/global-setup.ts)
-// Si no existe, el test hace login manual en beforeEach
-const ownerAuthFile = 'tests/.auth/owner.json';
-const hasOwnerAuth = existsSync(ownerAuthFile);
+/**
+ * E2E Test: Owner Dashboard
+ * MIGRADO A ARQUITECTURA CHECKPOINT & HYDRATE
+ *
+ * Flujo en 1 bloque atómico:
+ * B1: Verificar widgets de estadísticas y payouts
+ *
+ * Prioridad: P1 (Owner Dashboard)
+ */
+
+const ownerAuthFile = 'tests/.auth/owner.json'
+const hasOwnerAuth = existsSync(ownerAuthFile)
 
 if (hasOwnerAuth) {
-  test.use({ storageState: ownerAuthFile });
+  test.use({ storageState: ownerAuthFile })
 }
 
-test.describe('Owner dashboard (smoke)', () => {
-  test.beforeEach(async ({ page }) => {
-    // Seed datos del owner (idempotente)
-    await runOwnerSeed();
+test.describe('Owner Dashboard - Checkpoint Architecture', () => {
 
-    // Si no hay storageState, hacer login manual
-    if (!hasOwnerAuth) {
-      await page.goto('/auth/login');
-      await page.fill('input[type="email"]', 'owner.dashboard@example.com');
-      await page.fill('input[type="password"]', 'TestOwnerDashboard123!');
-      await page.click('button[type="submit"]');
-      await page.waitForURL(/\//, { timeout: 15000 });
-    }
-  });
+  test('B1: Verificar widgets de estadísticas y payouts', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b1-dashboard-widgets', 'Verificar widgets', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('owner-dashboard-verified')
+    }))
 
-  test('shows statistics and payouts widgets', async ({ page }) => {
-    await page.goto('/dashboard');
+    const result = await block.execute(async () => {
+      // Si no hay storageState, hacer login manual
+      if (!hasOwnerAuth) {
+        await page.goto('/auth/login')
+        await page.fill('input[type="email"]', 'owner.dashboard@example.com')
+        await page.fill('input[type="password"]', 'TestOwnerDashboard123!')
+        await page.click('button[type="submit"]')
+        await page.waitForURL(/\//, { timeout: 15000 })
+        console.log('✅ Login manual completado')
+      }
 
-    // Basic smoke assertions on placeholder content
-    await expect(page.locator('h1')).toHaveText(/Dashboard/i);
-    await expect(page.locator('text=Estadísticas')).toBeVisible();
-    await expect(page.locator('text=Ganancias y Payouts')).toBeVisible();
-  });
-});
+      await page.goto('/dashboard')
+      await page.waitForLoadState('domcontentloaded')
+      await page.waitForTimeout(2000)
+
+      // Verificar título
+      const dashboardTitle = page.locator('h1')
+      await expect(dashboardTitle).toHaveText(/Dashboard/i)
+      console.log('✅ Título Dashboard visible')
+
+      // Verificar widget de estadísticas
+      const statsWidget = page.locator('text=Estadísticas')
+      await expect(statsWidget).toBeVisible()
+      console.log('✅ Widget de estadísticas visible')
+
+      // Verificar widget de ganancias y payouts
+      const payoutsWidget = page.locator('text=Ganancias y Payouts')
+      await expect(payoutsWidget).toBeVisible()
+      console.log('✅ Widget de ganancias visible')
+
+      return { widgetsVerified: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+})

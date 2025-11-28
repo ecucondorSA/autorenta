@@ -1,33 +1,89 @@
-import { expect, test } from '@playwright/test';
+import { test, expect, defineBlock, withCheckpoint } from '../checkpoint/fixtures'
 
-test.describe('Homepage', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-  });
+/**
+ * Homepage Test
+ * MIGRADO A ARQUITECTURA CHECKPOINT & HYDRATE
+ *
+ * Flujo en 2 bloques atómicos:
+ * B1: Cargar homepage y verificar elementos
+ * B2: Probar búsqueda y navegación
+ *
+ * Prioridad: P1 (Discovery Flow)
+ */
 
-  test('should load the homepage', async ({ page }) => {
-    await expect(page).toHaveTitle(/AutoRenta/);
-    await expect(page.locator('app-hero-search')).toBeVisible();
-  });
+test.describe('Homepage - Checkpoint Architecture', () => {
 
-  test('should have a search form', async ({ page }) => {
-    await expect(page.locator('app-hero-search input[placeholder*="Ubicación"]')).toBeVisible();
-    await expect(page.locator('app-hero-search button')).toContainText('Buscar');
-  });
+  test('B1: Cargar homepage y verificar elementos', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b1-homepage-load', 'Cargar homepage', {
+      priority: 'P1',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('homepage-ready')
+    }))
 
-  test('should navigate to search results when searching', async ({ page }) => {
-    // Fill in location
-    const locationInput = page.locator('app-hero-search input[placeholder*="Ubicación"]');
-    await locationInput.fill('Buenos Aires');
+    const result = await block.execute(async () => {
+      await page.goto('/')
+      await page.waitForLoadState('domcontentloaded')
+      await page.waitForTimeout(2000)
 
-    // Select dates (assuming a simplified flow or just clicking search for now if dates are pre-filled or optional)
-    // If dates are required, we might need to interact with the date picker.
-    // For now, let's try to just click search and see if it redirects or shows validation error.
+      // Verificar título
+      await expect(page).toHaveTitle(/AutoRenta/)
+      console.log('✅ Page title correct')
 
-    const searchButton = page.locator('app-hero-search button.primary-button');
-    await searchButton.click();
+      // Verificar hero search
+      await expect(page.locator('app-hero-search')).toBeVisible()
+      console.log('✅ Hero search visible')
 
-    // Expect to navigate to /explore
-    await expect(page).toHaveURL(/\/explore/);
-  });
-});
+      // Verificar formulario de búsqueda
+      const locationInput = page.locator('app-hero-search input[placeholder*="Ubicación"]')
+      await expect(locationInput).toBeVisible()
+      console.log('✅ Location input visible')
+
+      const searchButton = page.locator('app-hero-search button')
+      await expect(searchButton).toContainText('Buscar')
+      console.log('✅ Search button visible')
+
+      return { loaded: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test('B2: Probar búsqueda y navegación', async ({ page, checkpointManager, createBlock }) => {
+    // Restaurar checkpoint
+    const prev = await checkpointManager.loadCheckpoint('homepage-ready')
+    if (prev) {
+      await checkpointManager.restoreCheckpoint(prev)
+    } else {
+      await page.goto('/')
+      await page.waitForTimeout(2000)
+    }
+
+    const block = createBlock(defineBlock('b2-homepage-search', 'Búsqueda desde homepage', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      // Llenar ubicación
+      const locationInput = page.locator('app-hero-search input[placeholder*="Ubicación"]')
+      await locationInput.fill('Buenos Aires')
+      console.log('✅ Location filled')
+
+      // Click en buscar
+      const searchButton = page.locator('app-hero-search button.primary-button')
+      await searchButton.click()
+
+      // Verificar navegación a /explore
+      await expect(page).toHaveURL(/\/explore/)
+      console.log('✅ Navigated to explore page')
+
+      return { searchWorks: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+})

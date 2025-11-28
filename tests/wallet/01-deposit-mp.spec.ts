@@ -1,263 +1,397 @@
-import { test, expect } from '@playwright/test';
-import { WalletPage } from '../pages/wallet/WalletPage';
-import { WALLET_AMOUNTS } from '../helpers/test-data';
+import { test, expect, defineBlock, requiresCheckpoint, withCheckpoint } from '../checkpoint/fixtures'
+import { WalletPage } from '../pages/wallet/WalletPage'
+import { WALLET_AMOUNTS } from '../helpers/test-data'
 
 /**
- * Test Suite: Wallet Deposit via MercadoPago
+ * E2E Test: Wallet Deposit via MercadoPago
+ * MIGRADO A ARQUITECTURA CHECKPOINT & HYDRATE
  *
- * Priority: P0 (Critical - payment flow)
- * Duration: ~6 minutes
- * Coverage:
- * - Deposit initiation
- * - MercadoPago preference creation
- * - Payment redirect flow
- * - Webhook processing (mock)
- * - Balance update
- * - Transaction history
+ * Flujo en 10 bloques atómicos:
+ * B1: Verificar UI de wallet
+ * B2: Navegar a página de depósito
+ * B3: Validar requisitos de monto
+ * B4: Crear preferencia de MercadoPago
+ * B5: Completar flujo de depósito con mock
+ * B6: Manejar pago pendiente
+ * B7: Manejar pago rechazado
+ * B8: Mostrar historial de transacciones
+ * B9: Prevenir depósitos concurrentes
+ * B10: Manejar errores de red
+ *
+ * Prioridad: P0 (Critical Payment Flow)
  */
 
-test.describe('Wallet Deposit - MercadoPago', () => {
-  let walletPage: WalletPage;
-  let initialBalance: number;
+interface DepositContext {
+  walletPage?: WalletPage
+  initialBalance?: number
+}
+
+const ctx: DepositContext = {}
+
+test.describe('Wallet Deposit MercadoPago - Checkpoint Architecture', () => {
 
   test.beforeEach(async ({ page }) => {
-    walletPage = new WalletPage(page);
-    await walletPage.goto();
+    ctx.walletPage = new WalletPage(page)
+    await ctx.walletPage.goto()
+    ctx.initialBalance = await ctx.walletPage.getBalance()
+  })
 
-    // Store initial balance
-    initialBalance = await walletPage.getBalance();
-  });
+  test('B1: Verificar UI de wallet', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b1-deposit-wallet-ui', 'Verificar UI wallet', {
+      priority: 'P0',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('deposit-wallet-ui-verified')
+    }))
 
-  test('should display deposit button and wallet info', async ({ page }) => {
-    await expect(walletPage.balanceDisplay).toBeVisible();
-    await expect(walletPage.depositButton).toBeVisible();
-    await expect(walletPage.withdrawButton).toBeVisible();
+    const result = await block.execute(async () => {
+      if (!ctx.walletPage || ctx.initialBalance === undefined) {
+        return { skipped: true, reason: 'wallet page not initialized' }
+      }
 
-    // Balance should be positive (from seed data: 50,000 ARS)
-    expect(initialBalance).toBeGreaterThan(0);
-  });
+      await expect(ctx.walletPage.balanceDisplay).toBeVisible()
+      await expect(ctx.walletPage.depositButton).toBeVisible()
+      await expect(ctx.walletPage.withdrawButton).toBeVisible()
 
-  test('should navigate to deposit page', async ({ page }) => {
-    await walletPage.clickDeposit();
+      expect(ctx.initialBalance).toBeGreaterThan(0)
+      console.log(`✅ Wallet UI verificada, balance: ${ctx.initialBalance}`)
 
-    // Should be on deposit page
-    await expect(page.getByTestId('deposit-form')).toBeVisible();
-    await expect(page.getByTestId('amount-input')).toBeVisible();
-    await expect(page.getByTestId('deposit-submit')).toBeVisible();
-  });
+      return { uiVerified: true, balance: ctx.initialBalance }
+    })
 
-  test('should validate deposit amount requirements', async ({ page }) => {
-    await walletPage.clickDeposit();
+    expect(result.state.status).toBe('passed')
+  })
 
-    const testCases = [
-      { amount: '0', error: 'monto mínimo' },
-      { amount: '-100', error: 'monto positivo' },
-      { amount: '500', error: 'mínimo 1000' }, // Min 1,000 ARS
-      { amount: '1000000', error: 'máximo' }, // Max deposit
-    ];
-
-    for (const { amount, error } of testCases) {
-      await page.getByTestId('amount-input').fill(amount);
-      await page.getByTestId('deposit-submit').click();
-
-      await expect(page.getByTestId('amount-error')).toContainText(error, {
-        ignoreCase: true,
-      });
-
-      await page.getByTestId('amount-input').clear();
+  test('B2: Navegar a página de depósito', async ({ page, checkpointManager, createBlock }) => {
+    const prev = await checkpointManager.loadCheckpoint('deposit-wallet-ui-verified')
+    if (prev) {
+      await checkpointManager.restoreCheckpoint(prev)
     }
-  });
 
-  test('should create MercadoPago preference for valid amount', async ({ page }) => {
-    await walletPage.clickDeposit();
+    const block = createBlock(defineBlock('b2-deposit-navigate', 'Navegar a depósito', {
+      priority: 'P0',
+      estimatedDuration: 10000,
+      preconditions: [requiresCheckpoint('deposit-wallet-ui-verified')],
+      postconditions: [],
+      ...withCheckpoint('deposit-page-loaded')
+    }))
 
-    const depositAmount = WALLET_AMOUNTS.small; // 10,000 ARS
+    const result = await block.execute(async () => {
+      if (!ctx.walletPage) {
+        return { skipped: true, reason: 'wallet page not initialized' }
+      }
 
-    // Fill amount
-    await page.getByTestId('amount-input').fill(depositAmount.toString());
+      await ctx.walletPage.clickDeposit()
 
-    // Submit deposit request
-    await page.getByTestId('deposit-submit').click();
+      await expect(page.getByTestId('deposit-form')).toBeVisible()
+      await expect(page.getByTestId('amount-input')).toBeVisible()
+      await expect(page.getByTestId('deposit-submit')).toBeVisible()
+      console.log('✅ Página de depósito cargada')
 
-    // Should show loading state
-    await expect(page.getByTestId('creating-preference')).toBeVisible();
+      return { depositPageLoaded: true }
+    })
 
-    // Wait for MercadoPago redirect or init_point
-    const initPointButton = page.getByTestId('mercadopago-init-point');
-    await expect(initPointButton).toBeVisible({ timeout: 10000 });
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Verify init_point is a valid URL
-    const href = await initPointButton.getAttribute('href');
-    expect(href).toMatch(/^https:\/\/(www\.)?mercadopago\.com/);
-  });
+  test('B3: Validar requisitos de monto', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b3-deposit-validate-amount', 'Validar montos', {
+      priority: 'P0',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-  test('should complete full deposit flow with mock payment', async ({ page, context }) => {
-    await walletPage.clickDeposit();
+    const result = await block.execute(async () => {
+      if (!ctx.walletPage) {
+        return { skipped: true, reason: 'wallet page not initialized' }
+      }
 
-    const depositAmount = WALLET_AMOUNTS.small; // 10,000 ARS
+      await ctx.walletPage.clickDeposit()
 
-    await page.getByTestId('amount-input').fill(depositAmount.toString());
-    await page.getByTestId('deposit-submit').click();
+      const testCases = [
+        { amount: '0', error: 'monto mínimo' },
+        { amount: '-100', error: 'monto positivo' },
+        { amount: '500', error: 'mínimo 1000' },
+        { amount: '1000000', error: 'máximo' },
+      ]
 
-    // Get the payment URL
-    const initPointButton = page.getByTestId('mercadopago-init-point');
-    await expect(initPointButton).toBeVisible({ timeout: 10000 });
+      for (const { amount, error } of testCases) {
+        await page.getByTestId('amount-input').fill(amount)
+        await page.getByTestId('deposit-submit').click()
 
-    // In test environment, we skip the actual MercadoPago flow
-    // and simulate the webhook callback directly
+        await expect(page.getByTestId('amount-error')).toContainText(error, {
+          ignoreCase: true,
+        })
 
-    // Get transaction ID from URL or page data
-    const transactionId = await page.getAttribute('[data-transaction-id]', 'data-transaction-id');
-    expect(transactionId).toBeTruthy();
+        await page.getByTestId('amount-input').clear()
+        console.log(`✅ Validación correcta para monto: ${amount}`)
+      }
 
-    // Simulate MercadoPago success webhook
-    const response = await page.request.post('/api/webhooks/mercadopago', {
-      data: {
-        action: 'payment.created',
+      return { validationsPassed: testCases.length }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test('B4: Crear preferencia de MercadoPago', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b4-deposit-create-preference', 'Crear preferencia MP', {
+      priority: 'P0',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('mp-preference-created')
+    }))
+
+    const result = await block.execute(async () => {
+      if (!ctx.walletPage) {
+        return { skipped: true, reason: 'wallet page not initialized' }
+      }
+
+      await ctx.walletPage.clickDeposit()
+
+      const depositAmount = WALLET_AMOUNTS?.small || 10000
+
+      await page.getByTestId('amount-input').fill(depositAmount.toString())
+      await page.getByTestId('deposit-submit').click()
+
+      await expect(page.getByTestId('creating-preference')).toBeVisible()
+
+      const initPointButton = page.getByTestId('mercadopago-init-point')
+      await expect(initPointButton).toBeVisible({ timeout: 10000 })
+
+      const href = await initPointButton.getAttribute('href')
+      expect(href).toMatch(/^https:\/\/(www\.)?mercadopago\.com/)
+      console.log('✅ Preferencia de MercadoPago creada')
+
+      return { preferenceCreated: true, initPointUrl: href }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test('B5: Completar flujo de depósito con mock', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b5-deposit-complete-flow', 'Flujo completo mock', {
+      priority: 'P0',
+      estimatedDuration: 20000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      if (!ctx.walletPage || ctx.initialBalance === undefined) {
+        return { skipped: true, reason: 'wallet page not initialized' }
+      }
+
+      await ctx.walletPage.clickDeposit()
+
+      const depositAmount = WALLET_AMOUNTS?.small || 10000
+
+      await page.getByTestId('amount-input').fill(depositAmount.toString())
+      await page.getByTestId('deposit-submit').click()
+
+      const initPointButton = page.getByTestId('mercadopago-init-point')
+      await expect(initPointButton).toBeVisible({ timeout: 10000 })
+
+      const transactionId = await page.getAttribute('[data-transaction-id]', 'data-transaction-id')
+      expect(transactionId).toBeTruthy()
+
+      // Simular webhook de MercadoPago
+      const response = await page.request.post('/api/webhooks/mercadopago', {
         data: {
-          id: `mock-payment-${Date.now()}`,
+          action: 'payment.created',
+          data: {
+            id: `mock-payment-${Date.now()}`,
+          },
         },
-        // Additional webhook payload...
-      },
-    });
+      })
 
-    expect(response.ok()).toBeTruthy();
+      expect(response.ok()).toBeTruthy()
+      console.log('✅ Webhook simulado enviado')
 
-    // Navigate back to wallet
-    await walletPage.goto();
+      await ctx.walletPage.goto()
+      await ctx.walletPage.assertBalance(ctx.initialBalance + depositAmount)
+      await ctx.walletPage.assertTransactionVisible('deposit', depositAmount)
+      console.log('✅ Depósito completado y verificado')
 
-    // Verify balance updated
-    await walletPage.assertBalance(initialBalance + depositAmount);
+      return { depositCompleted: true, amount: depositAmount }
+    })
 
-    // Verify transaction appears in history
-    await walletPage.assertTransactionVisible('deposit', depositAmount);
-  });
+    expect(result.state.status).toBe('passed')
+  })
 
-  test('should handle MercadoPago payment pending status', async ({ page }) => {
-    await walletPage.clickDeposit();
+  test('B6: Manejar pago pendiente', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b6-deposit-pending', 'Pago pendiente', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-    await page.getByTestId('amount-input').fill('15000');
-    await page.getByTestId('deposit-submit').click();
+    const result = await block.execute(async () => {
+      if (!ctx.walletPage || ctx.initialBalance === undefined) {
+        return { skipped: true, reason: 'wallet page not initialized' }
+      }
 
-    // Simulate pending payment webhook
-    const transactionId = await page.getAttribute('[data-transaction-id]', 'data-transaction-id');
+      await ctx.walletPage.clickDeposit()
+      await page.getByTestId('amount-input').fill('15000')
+      await page.getByTestId('deposit-submit').click()
 
-    await page.request.post('/api/webhooks/mercadopago', {
-      data: {
-        action: 'payment.updated',
+      await page.request.post('/api/webhooks/mercadopago', {
         data: {
-          id: `mock-payment-pending-${Date.now()}`,
-          status: 'pending',
+          action: 'payment.updated',
+          data: {
+            id: `mock-payment-pending-${Date.now()}`,
+            status: 'pending',
+          },
         },
-      },
-    });
+      })
 
-    // Navigate back to wallet
-    await walletPage.goto();
+      await ctx.walletPage.goto()
+      await ctx.walletPage.assertBalance(ctx.initialBalance)
 
-    // Balance should NOT be updated yet
-    await walletPage.assertBalance(initialBalance);
+      const pendingTransaction = page.locator('[data-testid="transaction-item"][data-status="pending"]').first()
+      await expect(pendingTransaction).toBeVisible()
+      console.log('✅ Pago pendiente manejado correctamente')
 
-    // Transaction should show as pending
-    const pendingTransaction = page.locator('[data-testid="transaction-item"][data-status="pending"]').first();
-    await expect(pendingTransaction).toBeVisible();
-  });
+      return { pendingHandled: true }
+    })
 
-  test('should handle MercadoPago payment rejected', async ({ page }) => {
-    await walletPage.clickDeposit();
+    expect(result.state.status).toBe('passed')
+  })
 
-    await page.getByTestId('amount-input').fill('20000');
-    await page.getByTestId('deposit-submit').click();
+  test('B7: Manejar pago rechazado', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b7-deposit-rejected', 'Pago rechazado', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-    // Simulate rejected payment webhook
-    await page.request.post('/api/webhooks/mercadopago', {
-      data: {
-        action: 'payment.updated',
+    const result = await block.execute(async () => {
+      if (!ctx.walletPage || ctx.initialBalance === undefined) {
+        return { skipped: true, reason: 'wallet page not initialized' }
+      }
+
+      await ctx.walletPage.clickDeposit()
+      await page.getByTestId('amount-input').fill('20000')
+      await page.getByTestId('deposit-submit').click()
+
+      await page.request.post('/api/webhooks/mercadopago', {
         data: {
-          id: `mock-payment-rejected-${Date.now()}`,
-          status: 'rejected',
+          action: 'payment.updated',
+          data: {
+            id: `mock-payment-rejected-${Date.now()}`,
+            status: 'rejected',
+          },
         },
-      },
-    });
+      })
 
-    // Navigate back to wallet
-    await walletPage.goto();
+      await ctx.walletPage.goto()
+      await ctx.walletPage.assertBalance(ctx.initialBalance)
+      await expect(page.getByTestId('deposit-error-notification')).toBeVisible()
+      console.log('✅ Pago rechazado manejado correctamente')
 
-    // Balance should NOT change
-    await walletPage.assertBalance(initialBalance);
+      return { rejectedHandled: true }
+    })
 
-    // Should show error notification
-    await expect(page.getByTestId('deposit-error-notification')).toBeVisible();
-  });
+    expect(result.state.status).toBe('passed')
+  })
 
-  test('should display transaction history after deposit', async ({ page }) => {
-    await walletPage.goto();
+  test('B8: Mostrar historial de transacciones', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b8-deposit-history', 'Historial transacciones', {
+      priority: 'P1',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-    // Should see transaction list
-    await expect(walletPage.transactionList).toBeVisible();
+    const result = await block.execute(async () => {
+      if (!ctx.walletPage) {
+        return { skipped: true, reason: 'wallet page not initialized' }
+      }
 
-    // Filter by deposit transactions
-    await walletPage.filterByType('deposit');
+      await ctx.walletPage.goto()
+      await expect(ctx.walletPage.transactionList).toBeVisible()
 
-    // Should see at least seed data deposits (if any)
-    const depositItems = page.locator('[data-testid="transaction-item"][data-type="deposit"]');
-    const count = await depositItems.count();
+      await ctx.walletPage.filterByType('deposit')
 
-    // Verify transaction structure
-    if (count > 0) {
-      const firstDeposit = depositItems.first();
-      await expect(firstDeposit.getByTestId('transaction-amount')).toBeVisible();
-      await expect(firstDeposit.getByTestId('transaction-date')).toBeVisible();
-      await expect(firstDeposit.getByTestId('transaction-status')).toBeVisible();
-    }
-  });
+      const depositItems = page.locator('[data-testid="transaction-item"][data-type="deposit"]')
+      const count = await depositItems.count()
 
-  test('should prevent multiple concurrent deposits', async ({ page }) => {
-    await walletPage.clickDeposit();
+      if (count > 0) {
+        const firstDeposit = depositItems.first()
+        await expect(firstDeposit.getByTestId('transaction-amount')).toBeVisible()
+        await expect(firstDeposit.getByTestId('transaction-date')).toBeVisible()
+        await expect(firstDeposit.getByTestId('transaction-status')).toBeVisible()
+      }
 
-    await page.getByTestId('amount-input').fill('10000');
-    await page.getByTestId('deposit-submit').click();
+      console.log(`✅ Historial mostrado con ${count} depósitos`)
+      return { historyDisplayed: true, depositCount: count }
+    })
 
-    // Wait for preference creation to start
-    await expect(page.getByTestId('creating-preference')).toBeVisible();
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Try to submit again (should be disabled or show error)
-    const submitButton = page.getByTestId('deposit-submit');
-    await expect(submitButton).toBeDisabled();
-  });
+  test('B9: Prevenir depósitos concurrentes', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b9-deposit-concurrent', 'Prevenir concurrentes', {
+      priority: 'P1',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-  test('should handle network errors gracefully', async ({ page }) => {
-    await walletPage.clickDeposit();
+    const result = await block.execute(async () => {
+      if (!ctx.walletPage) {
+        return { skipped: true, reason: 'wallet page not initialized' }
+      }
 
-    // Simulate network failure by mocking the API
-    await page.route('**/api/wallet/deposit', (route) => {
-      route.abort('failed');
-    });
+      await ctx.walletPage.clickDeposit()
+      await page.getByTestId('amount-input').fill('10000')
+      await page.getByTestId('deposit-submit').click()
 
-    await page.getByTestId('amount-input').fill('10000');
-    await page.getByTestId('deposit-submit').click();
+      await expect(page.getByTestId('creating-preference')).toBeVisible()
 
-    // Should show error message
-    await expect(page.getByTestId('deposit-error')).toBeVisible();
-    await expect(page.getByTestId('deposit-error')).toContainText(
-      'Error de conexión'
-    );
-  });
+      const submitButton = page.getByTestId('deposit-submit')
+      await expect(submitButton).toBeDisabled()
+      console.log('✅ Depósitos concurrentes prevenidos')
 
-  test('should preserve deposit amount on back navigation', async ({ page }) => {
-    await walletPage.clickDeposit();
+      return { concurrentPrevented: true }
+    })
 
-    const testAmount = '25000';
-    await page.getByTestId('amount-input').fill(testAmount);
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Go back
-    await page.goBack();
+  test('B10: Manejar errores de red', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b10-deposit-network-error', 'Error de red', {
+      priority: 'P1',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-    // Go forward again
-    await walletPage.clickDeposit();
+    const result = await block.execute(async () => {
+      if (!ctx.walletPage) {
+        return { skipped: true, reason: 'wallet page not initialized' }
+      }
 
-    // Amount should be preserved (if implemented)
-    const inputValue = await page.getByTestId('amount-input').inputValue();
-    // Note: This may not be implemented - just a nice-to-have test
-  });
-});
+      await ctx.walletPage.clickDeposit()
+
+      await page.route('**/api/wallet/deposit', (route) => {
+        route.abort('failed')
+      })
+
+      await page.getByTestId('amount-input').fill('10000')
+      await page.getByTestId('deposit-submit').click()
+
+      await expect(page.getByTestId('deposit-error')).toBeVisible()
+      await expect(page.getByTestId('deposit-error')).toContainText('Error de conexión')
+      console.log('✅ Error de red manejado correctamente')
+
+      return { networkErrorHandled: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+})

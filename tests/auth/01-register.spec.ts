@@ -1,164 +1,318 @@
-import { expect, test } from '@playwright/test';
-import { generateTestUser } from '../helpers/test-data';
+import { test, expect, defineBlock, withCheckpoint } from '../checkpoint/fixtures'
+import { generateTestUser } from '../helpers/test-data'
 
 /**
- * Test Suite: User Registration
+ * E2E Test: User Registration
+ * MIGRADO A ARQUITECTURA CHECKPOINT & HYDRATE
+ *
+ * Flujo en 12 bloques atómicos:
+ * B1: Mostrar formulario de registro
+ * B2: Validar campos vacíos
+ * B3: Validar formato de email
+ * B4: Validar longitud de contraseña
+ * B5: Llenar formulario correctamente
+ * B6: Mostrar hint de contraseña
+ * B7: Navegar a login desde registro
+ * B8: Mostrar mensaje después de registro
+ * B9: Validar longitud de nombre
+ * B10: Verificar layout del formulario
+ * B11: Mostrar indicadores de campo requerido
+ * B12: Verificar atributos de accesibilidad
  *
  * Priority: P0 (Critical)
- * Duration: ~3 minutes
- * Coverage:
- * - Registration form validation
- * - Email/password requirements
- * - Email verification flow
- * - Duplicate email handling
- *
- * Note: Tests adapted to use actual HTML structure with id attributes
- * instead of data-testid attributes.
  */
 
-test.describe('User Registration', () => {
+test.describe('User Registration - Checkpoint Architecture', () => {
+
   test.beforeEach(async ({ page }) => {
-    await page.goto('/auth/register');
-    // Wait for register form to be visible by checking for the "Crear cuenta" heading
-    await expect(page.getByRole('heading', { name: 'Crear cuenta' })).toBeVisible();
-  });
+    await page.goto('/auth/register')
+    await expect(page.getByRole('heading', { name: 'Crear cuenta' })).toBeVisible()
+  })
 
-  test('should display registration form with all fields', async ({ page }) => {
-    // Verify form elements using id attributes
-    await expect(page.locator('#register-fullname')).toBeVisible();
-    await expect(page.locator('#register-email')).toBeVisible();
-    await expect(page.locator('#register-password')).toBeVisible();
-    await expect(page.locator('#register-phone')).toBeVisible();
+  test('B1: Mostrar formulario de registro', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b1-register-form-display', 'Mostrar formulario', {
+      priority: 'P0',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('register-form-displayed')
+    }))
 
-    // Verify submit button
-    await expect(page.getByRole('button', { name: 'Crear cuenta' })).toBeVisible();
+    const result = await block.execute(async () => {
+      await expect(page.locator('#register-fullname')).toBeVisible()
+      await expect(page.locator('#register-email')).toBeVisible()
+      await expect(page.locator('#register-password')).toBeVisible()
+      await expect(page.locator('#register-phone')).toBeVisible()
 
-    // Verify login link - use first() to handle multiple matches
-    await expect(page.getByRole('link', { name: 'Ingresar' }).last()).toBeVisible();
-  });
+      await expect(page.getByRole('button', { name: 'Crear cuenta' })).toBeVisible()
 
-  test('should show validation errors for empty fields', async ({ page }) => {
-    // Try to submit with empty fullName
-    await page.locator('#register-fullname').click();
-    await page.locator('#register-email').click(); // Blur fullname
+      await expect(page.getByRole('link', { name: 'Ingresar' }).last()).toBeVisible()
+      console.log('✅ Formulario de registro visible')
 
-    // Should show validation error for fullname
-    await expect(page.locator('#register-fullname-error')).toContainText('nombre completo es obligatorio');
-  });
+      return { formDisplayed: true }
+    })
 
-  test('should validate email format', async ({ page }) => {
-    await page.locator('#register-email').fill('invalid-email');
-    await page.locator('#register-password').click(); // Blur email field
+    expect(result.state.status).toBe('passed')
+  })
 
-    await expect(page.locator('#register-email-error')).toContainText('Formato de email inválido');
-  });
+  test('B2: Validar campos vacíos', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b2-register-empty-validation', 'Validar vacíos', {
+      priority: 'P0',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-  test('should validate password minimum length', async ({ page }) => {
-    await page.locator('#register-password').fill('short');
-    await page.locator('#register-email').click(); // Blur password field
+    const result = await block.execute(async () => {
+      await page.locator('#register-fullname').click()
+      await page.locator('#register-email').click()
 
-    await expect(page.locator('#register-password-error')).toContainText('al menos 8 caracteres');
-  });
+      await expect(page.locator('#register-fullname-error')).toContainText('nombre completo es obligatorio')
+      console.log('✅ Validación de campos vacíos funcionando')
 
-  test('should successfully fill registration form (basic validation)', async ({ page }) => {
-    const testUser = generateTestUser('locatario');
+      return { emptyValidationWorks: true }
+    })
 
-    // Fill registration form
-    await page.locator('#register-fullname').fill(testUser.fullName);
-    await page.locator('#register-email').fill(testUser.email);
-    await page.locator('#register-password').fill(testUser.password);
-    await page.locator('#register-phone').fill('+59899123456');
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Verify no validation errors
-    await expect(page.locator('#register-fullname-error')).not.toBeVisible();
-    await expect(page.locator('#register-email-error')).not.toBeVisible();
-    await expect(page.locator('#register-password-error')).not.toBeVisible();
-    await expect(page.locator('#register-phone-error')).not.toBeVisible();
+  test('B3: Validar formato de email', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b3-register-email-format', 'Validar email', {
+      priority: 'P0',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-    // Verify submit button becomes enabled
-    const submitButton = page.getByRole('button', { name: 'Crear cuenta' });
-    await expect(submitButton).toBeEnabled();
-  });
+    const result = await block.execute(async () => {
+      await page.locator('#register-email').fill('invalid-email')
+      await page.locator('#register-password').click()
 
-  test('should show password requirements hint', async ({ page }) => {
-    // Click on password field to show hint
-    await page.locator('#register-password').click();
+      await expect(page.locator('#register-email-error')).toContainText('Formato de email inválido')
+      console.log('✅ Validación de formato de email funcionando')
 
-    // Verify hint is visible
-    await expect(page.locator('#register-password-hint')).toBeVisible();
-    await expect(page.locator('#register-password-hint')).toContainText('al menos 8 caracteres');
-  });
+      return { emailValidationWorks: true }
+    })
 
-  test('should navigate to login page from register', async ({ page }) => {
-    // Click the login link in the form (last one on page)
-    await page.getByRole('link', { name: 'Ingresar' }).last().click();
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Verify URL changed to login page
-    await page.waitForURL('/auth/login', { timeout: 10000 });
-    expect(page.url()).toContain('/auth/login');
+  test('B4: Validar longitud de contraseña', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b4-register-password-length', 'Validar contraseña', {
+      priority: 'P0',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-    // Verify we're not on register page anymore
-    await expect(page.getByRole('heading', { name: 'Crear cuenta' })).not.toBeVisible();
-  });
+    const result = await block.execute(async () => {
+      await page.locator('#register-password').fill('short')
+      await page.locator('#register-email').click()
 
-  test('should display success message after registration', async ({ page }) => {
-    const testUser = generateTestUser('locatario');
+      await expect(page.locator('#register-password-error')).toContainText('al menos 8 caracteres')
+      console.log('✅ Validación de longitud de contraseña funcionando')
 
-    // Fill all required fields
-    await page.locator('#register-fullname').fill(testUser.fullName);
-    await page.locator('#register-email').fill(testUser.email);
-    await page.locator('#register-password').fill(testUser.password);
-    await page.locator('#register-phone').fill('+59899123456');
+      return { passwordValidationWorks: true }
+    })
 
-    // Submit form
-    await page.getByRole('button', { name: 'Crear cuenta' }).click();
+    expect(result.state.status).toBe('passed')
+  })
 
-    // Wait for either success message or error (depending on actual implementation)
-    // This is a soft check that something happens after submission
-    const loadingState = page.getByRole('button', { name: /creando cuenta/i });
-    await expect(loadingState.or(page.locator('role=alert'))).toBeVisible({ timeout: 10000 });
-  });
+  test('B5: Llenar formulario correctamente', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b5-register-fill-form', 'Llenar formulario', {
+      priority: 'P0',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('register-form-filled')
+    }))
 
-  test('should validate fullname minimum length', async ({ page }) => {
-    await page.locator('#register-fullname').fill('ab'); // Less than 3 chars
-    await page.locator('#register-email').click(); // Blur
+    const result = await block.execute(async () => {
+      const testUser = generateTestUser('locatario')
 
-    await expect(page.locator('#register-fullname-error')).toContainText('al menos 3 caracteres');
-  });
+      await page.locator('#register-fullname').fill(testUser.fullName)
+      await page.locator('#register-email').fill(testUser.email)
+      await page.locator('#register-password').fill(testUser.password)
+      await page.locator('#register-phone').fill('+59899123456')
 
-  test('should display form in correct layout', async ({ page }) => {
-    // Verify logo is visible in the form (not in header/footer)
-    await expect(page.locator('#main-content img[alt="Autorentar"]')).toBeVisible();
+      await expect(page.locator('#register-fullname-error')).not.toBeVisible()
+      await expect(page.locator('#register-email-error')).not.toBeVisible()
+      await expect(page.locator('#register-password-error')).not.toBeVisible()
+      await expect(page.locator('#register-phone-error')).not.toBeVisible()
 
-    // Verify heading and description
-    await expect(page.getByRole('heading', { name: 'Crear cuenta' })).toBeVisible();
-    await expect(page.getByText('Unite a la comunidad de Autorentar')).toBeVisible();
+      const submitButton = page.getByRole('button', { name: 'Crear cuenta' })
+      await expect(submitButton).toBeEnabled()
+      console.log('✅ Formulario llenado correctamente')
 
-    // Verify footer text about terms (use first() to handle multiple matches)
-    await expect(page.getByText(/términos y condiciones/i).first()).toBeVisible();
-  });
+      return { formFilled: true, email: testUser.email }
+    })
 
-  test('should show required field indicators', async ({ page }) => {
-    // All form labels should have asterisks (aria-hidden) indicating required fields
-    const fullNameLabel = page.locator('label[for="register-fullname"]');
-    const emailLabel = page.locator('label[for="register-email"]');
-    const passwordLabel = page.locator('label[for="register-password"]');
+    expect(result.state.status).toBe('passed')
+  })
 
-    await expect(fullNameLabel).toContainText('*');
-    await expect(emailLabel).toContainText('*');
-    await expect(passwordLabel).toContainText('*');
-    await expect(page.locator('label[for="register-phone"]')).toContainText('*');
-  });
+  test('B6: Mostrar hint de contraseña', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b6-register-password-hint', 'Hint contraseña', {
+      priority: 'P1',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: []
+    }))
 
-  test('should have proper accessibility attributes', async ({ page }) => {
-    // Check ARIA attributes on inputs
-    const emailInput = page.locator('#register-email');
-    const passwordInput = page.locator('#register-password');
+    const result = await block.execute(async () => {
+      await page.locator('#register-password').click()
 
-    await expect(emailInput).toHaveAttribute('aria-required', 'true');
-    await expect(passwordInput).toHaveAttribute('aria-required', 'true');
-    await expect(emailInput).toHaveAttribute('autocomplete', 'email');
-    await expect(passwordInput).toHaveAttribute('autocomplete', 'new-password');
-    await expect(page.locator('#register-phone')).toHaveAttribute('aria-required', 'true');
-  });
-});
+      await expect(page.locator('#register-password-hint')).toBeVisible()
+      await expect(page.locator('#register-password-hint')).toContainText('al menos 8 caracteres')
+      console.log('✅ Hint de contraseña visible')
+
+      return { hintVisible: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test('B7: Navegar a login desde registro', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b7-register-navigate-login', 'Navegar a login', {
+      priority: 'P1',
+      estimatedDuration: 10000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      await page.getByRole('link', { name: 'Ingresar' }).last().click()
+
+      await page.waitForURL('/auth/login', { timeout: 10000 })
+      expect(page.url()).toContain('/auth/login')
+
+      await expect(page.getByRole('heading', { name: 'Crear cuenta' })).not.toBeVisible()
+      console.log('✅ Navegación a login exitosa')
+
+      return { navigatedToLogin: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test('B8: Mostrar mensaje después de registro', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b8-register-success-message', 'Mensaje post-registro', {
+      priority: 'P0',
+      estimatedDuration: 15000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      const testUser = generateTestUser('locatario')
+
+      await page.locator('#register-fullname').fill(testUser.fullName)
+      await page.locator('#register-email').fill(testUser.email)
+      await page.locator('#register-password').fill(testUser.password)
+      await page.locator('#register-phone').fill('+59899123456')
+
+      await page.getByRole('button', { name: 'Crear cuenta' }).click()
+
+      const loadingState = page.getByRole('button', { name: /creando cuenta/i })
+      await expect(loadingState.or(page.locator('role=alert'))).toBeVisible({ timeout: 10000 })
+      console.log('✅ Mensaje post-registro visible')
+
+      return { messageShown: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test('B9: Validar longitud de nombre', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b9-register-fullname-length', 'Validar nombre', {
+      priority: 'P1',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      await page.locator('#register-fullname').fill('ab')
+      await page.locator('#register-email').click()
+
+      await expect(page.locator('#register-fullname-error')).toContainText('al menos 3 caracteres')
+      console.log('✅ Validación de longitud de nombre funcionando')
+
+      return { fullnameValidationWorks: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test('B10: Verificar layout del formulario', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b10-register-layout', 'Layout formulario', {
+      priority: 'P1',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      await expect(page.locator('#main-content img[alt="Autorentar"]')).toBeVisible()
+
+      await expect(page.getByRole('heading', { name: 'Crear cuenta' })).toBeVisible()
+      await expect(page.getByText('Unite a la comunidad de Autorentar')).toBeVisible()
+
+      await expect(page.getByText(/términos y condiciones/i).first()).toBeVisible()
+      console.log('✅ Layout de formulario correcto')
+
+      return { layoutCorrect: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test('B11: Mostrar indicadores de campo requerido', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b11-register-required-indicators', 'Indicadores requerido', {
+      priority: 'P1',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      const fullNameLabel = page.locator('label[for="register-fullname"]')
+      const emailLabel = page.locator('label[for="register-email"]')
+      const passwordLabel = page.locator('label[for="register-password"]')
+
+      await expect(fullNameLabel).toContainText('*')
+      await expect(emailLabel).toContainText('*')
+      await expect(passwordLabel).toContainText('*')
+      await expect(page.locator('label[for="register-phone"]')).toContainText('*')
+      console.log('✅ Indicadores de campo requerido visibles')
+
+      return { requiredIndicatorsVisible: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+
+  test('B12: Verificar atributos de accesibilidad', async ({ page, createBlock }) => {
+    const block = createBlock(defineBlock('b12-register-accessibility', 'Accesibilidad', {
+      priority: 'P1',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: []
+    }))
+
+    const result = await block.execute(async () => {
+      const emailInput = page.locator('#register-email')
+      const passwordInput = page.locator('#register-password')
+
+      await expect(emailInput).toHaveAttribute('aria-required', 'true')
+      await expect(passwordInput).toHaveAttribute('aria-required', 'true')
+      await expect(emailInput).toHaveAttribute('autocomplete', 'email')
+      await expect(passwordInput).toHaveAttribute('autocomplete', 'new-password')
+      await expect(page.locator('#register-phone')).toHaveAttribute('aria-required', 'true')
+      console.log('✅ Atributos de accesibilidad correctos')
+
+      return { accessibilityCorrect: true }
+    })
+
+    expect(result.state.status).toBe('passed')
+  })
+})
