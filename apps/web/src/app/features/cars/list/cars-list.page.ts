@@ -12,7 +12,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Car } from '../../../core/models';
@@ -72,6 +72,7 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
   selector: 'app-cars-list-page',
   imports: [
     CommonModule,
+    RouterLink,
     CarsMapComponent,
     MapFiltersComponent,
     StickyCtaMobileComponent,
