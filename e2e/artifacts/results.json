@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 2
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -52,7 +54,9 @@
         "outputDir": "/home/edu/autorenta/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium-desktop",
         "name": "chromium-desktop",
         "testDir": "/home/edu/autorenta/e2e/specs",
@@ -69,7 +73,9 @@
         "outputDir": "/home/edu/autorenta/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "mobile-chrome",
         "name": "mobile-chrome",
         "testDir": "/home/edu/autorenta/e2e/specs",
@@ -98,19 +104,190 @@
       "stderr": "pipe"
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
-      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
+      "title": "01-browse-and-filter.spec.ts",
+      "file": "01-browse-and-filter.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Browse and filter catalog",
+          "file": "01-browse-and-filter.spec.ts",
+          "line": 10,
+          "column": 6,
+          "specs": [
+            {
+              "title": "01-browse-and-filter: displays car catalog and allows navigation to detail",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 50335,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m2\u001b[39m\nReceived:    \u001b[31m1\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m2\u001b[39m\nReceived:    \u001b[31m1\u001b[39m\n    at /home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts:30:26",
+                        "location": {
+                          "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                          "column": 26,
+                          "line": 30
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 28 |\u001b[39m     \u001b[36mconst\u001b[39m initialCount \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m carCards\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 29 |\u001b[39m     logStep(\u001b[32m'initial-catalog-loaded'\u001b[39m\u001b[33m,\u001b[39m { count\u001b[33m:\u001b[39m initialCount })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 30 |\u001b[39m     expect(initialCount)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(cars\u001b[33m.\u001b[39mlength)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 31 |\u001b[39m\n \u001b[90m 32 |\u001b[39m     \u001b[90m// Click on first car to view details\u001b[39m\n \u001b[90m 33 |\u001b[39m     logStep(\u001b[32m'open-first-car'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                            "column": 26,
+                            "line": 30
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m2\u001b[39m\nReceived:    \u001b[31m1\u001b[39m\n\n\u001b[0m \u001b[90m 28 |\u001b[39m     \u001b[36mconst\u001b[39m initialCount \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m carCards\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 29 |\u001b[39m     logStep(\u001b[32m'initial-catalog-loaded'\u001b[39m\u001b[33m,\u001b[39m { count\u001b[33m:\u001b[39m initialCount })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 30 |\u001b[39m     expect(initialCount)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(cars\u001b[33m.\u001b[39mlength)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 31 |\u001b[39m\n \u001b[90m 32 |\u001b[39m     \u001b[90m// Click on first car to view details\u001b[39m\n \u001b[90m 33 |\u001b[39m     logStep(\u001b[32m'open-first-car'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts:30:26\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-28T05:10:52.709Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-da078-allows-navigation-to-detail-chromium-desktop/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-da078-allows-navigation-to-detail-chromium-desktop/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-da078-allows-navigation-to-detail-chromium-desktop/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-da078-allows-navigation-to-detail-chromium-desktop/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                        "column": 26,
+                        "line": 30
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f48b4054009129a59d70-97d79bcf9dd9d64f7623",
+              "file": "01-browse-and-filter.spec.ts",
+              "line": 11,
+              "column": 7
+            },
+            {
+              "title": "01-browse-and-filter: displays car catalog and allows navigation to detail",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 48809,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m2\u001b[39m\nReceived:    \u001b[31m1\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m2\u001b[39m\nReceived:    \u001b[31m1\u001b[39m\n    at /home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts:30:26",
+                        "location": {
+                          "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                          "column": 26,
+                          "line": 30
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 28 |\u001b[39m     \u001b[36mconst\u001b[39m initialCount \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m carCards\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 29 |\u001b[39m     logStep(\u001b[32m'initial-catalog-loaded'\u001b[39m\u001b[33m,\u001b[39m { count\u001b[33m:\u001b[39m initialCount })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 30 |\u001b[39m     expect(initialCount)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(cars\u001b[33m.\u001b[39mlength)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 31 |\u001b[39m\n \u001b[90m 32 |\u001b[39m     \u001b[90m// Click on first car to view details\u001b[39m\n \u001b[90m 33 |\u001b[39m     logStep(\u001b[32m'open-first-car'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                            "column": 26,
+                            "line": 30
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m2\u001b[39m\nReceived:    \u001b[31m1\u001b[39m\n\n\u001b[0m \u001b[90m 28 |\u001b[39m     \u001b[36mconst\u001b[39m initialCount \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m carCards\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 29 |\u001b[39m     logStep(\u001b[32m'initial-catalog-loaded'\u001b[39m\u001b[33m,\u001b[39m { count\u001b[33m:\u001b[39m initialCount })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 30 |\u001b[39m     expect(initialCount)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(cars\u001b[33m.\u001b[39mlength)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 31 |\u001b[39m\n \u001b[90m 32 |\u001b[39m     \u001b[90m// Click on first car to view details\u001b[39m\n \u001b[90m 33 |\u001b[39m     logStep(\u001b[32m'open-first-car'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts:30:26\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-28T05:10:52.662Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-da078-allows-navigation-to-detail-mobile-chrome/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-da078-allows-navigation-to-detail-mobile-chrome/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-da078-allows-navigation-to-detail-mobile-chrome/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/01-browse-and-filter-Brows-da078-allows-navigation-to-detail-mobile-chrome/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/e2e/specs/01-browse-and-filter.spec.ts",
+                        "column": 26,
+                        "line": 30
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f48b4054009129a59d70-6cbf8f5068edc997ac3c",
+              "file": "01-browse-and-filter.spec.ts",
+              "line": 11,
+              "column": 7
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2025-11-28T05:02:38.082Z",
-    "duration": 22547.993000000002,
+    "startTime": "2025-11-28T05:06:57.937Z",
+    "duration": 286600.54500000004,
     "expected": 0,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 2,
     "flaky": 0
   }
 }
