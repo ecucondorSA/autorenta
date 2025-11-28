@@ -1,9 +1,9 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import {
   CreateFeatureFlagDto,
   CreateFeatureFlagOverrideDto,
-  EvaluationReason,
   FeatureFlag,
   FeatureFlagAuditLog,
   FeatureFlagContext,
@@ -21,6 +21,7 @@ import { SupabaseClientService } from './supabase-client.service';
 export class FeatureFlagService {
   private readonly supabase = inject(SupabaseClientService).getClient();
   private readonly logger = inject(LoggerService).createChildLogger('FeatureFlagService');
+  private readonly platformId = inject(PLATFORM_ID);
 
   // Local cache of feature flags
   private readonly flagsSignal = signal<Map<string, FeatureFlag>>(new Map());
@@ -51,8 +52,10 @@ export class FeatureFlagService {
    * Initialize the service and subscribe to realtime updates
    */
   private async initialize(): Promise<void> {
-    await this.loadFlags();
-    this.subscribeToRealtime();
+    if (isPlatformBrowser(this.platformId)) {
+      await this.loadFlags();
+      this.subscribeToRealtime();
+    }
   }
 
   /**
@@ -126,7 +129,11 @@ export class FeatureFlagService {
           table: 'feature_flags',
         },
         (payload) => {
-          this.handleRealtimeUpdate(payload);
+          this.handleRealtimeUpdate({
+            eventType: payload.eventType,
+            new: payload.new as FeatureFlag | null,
+            old: payload.old as { id: string; name?: string } | null,
+          });
         }
       )
       .subscribe();

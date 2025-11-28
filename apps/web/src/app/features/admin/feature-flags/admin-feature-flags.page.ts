@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MessageService, PrimeTemplate } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
@@ -10,7 +11,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import {
   CreateFeatureFlagDto,
   FeatureFlag,
@@ -33,6 +33,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
     TableModule,
     TagModule,
     ToastModule,
+    PrimeTemplate,
   ],
   providers: [MessageService],
   template: `
@@ -70,7 +71,9 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
         </p-card>
         <p-card>
           <div class="text-center">
-            <div class="text-3xl font-bold text-orange-500">{{ partialRolloutFlags() }}</div>
+            <div class="text-3xl font-bold text-orange-500">
+              {{ partialRolloutFlags() }}
+            </div>
             <div class="text-gray-500">Rollout Parcial</div>
           </div>
         </p-card>
@@ -175,10 +178,14 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
                 @if (log.action === 'updated' && log.old_value && log.new_value) {
                   @if (log.old_value.enabled !== log.new_value.enabled) {
                     <span class="text-sm">
-                      enabled: {{ log.old_value.enabled }} → {{ log.new_value.enabled }}
+                      enabled: {{ log.old_value.enabled }} →
+                      {{ log.new_value.enabled }}
                     </span>
                   }
-                  @if (log.old_value.rollout_percentage !== log.new_value.rollout_percentage) {
+                  @if (
+                    log.old_value.rollout_percentage !==
+                    log.new_value.rollout_percentage
+                  ) {
                     <span class="text-sm">
                       rollout: {{ log.old_value.rollout_percentage }}% →
                       {{ log.new_value.rollout_percentage }}%
@@ -192,7 +199,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
       </p-card>
     </div>
 
-    <!-- Create/Edit Dialog -->
+    <!-- Create / Edit Dialog -->
     <p-dialog
       [(visible)]="dialogVisible"
       [header]="editingFlag() ? 'Editar Feature Flag' : 'Nueva Feature Flag'"
@@ -209,7 +216,9 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
             class="w-full"
             placeholder="feature_name"
           />
-          <small class="text-gray-500">Usar snake_case, ej: new_booking_flow</small>
+          <small class="text-gray-500"
+            >Usar snake_case, ej: new_booking_flow</small
+          >
         </div>
 
         <div>
@@ -228,7 +237,9 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Rollout Percentage</label>
+          <label class="block text-sm font-medium mb-1"
+            >Rollout Percentage</label
+          >
           <p-inputNumber
             [(ngModel)]="formData.rollout_percentage"
             [min]="0"
@@ -302,10 +313,15 @@ export class AdminFeatureFlagsPage implements OnInit {
 
   // Computed stats
   readonly totalFlags = computed(() => this.flags().length);
-  readonly enabledFlags = computed(() => this.flags().filter((f) => f.enabled).length);
-  readonly disabledFlags = computed(() => this.flags().filter((f) => !f.enabled).length);
+  readonly enabledFlags = computed(
+    () => this.flags().filter((f) => f.enabled).length
+  );
+  readonly disabledFlags = computed(
+    () => this.flags().filter((f) => !f.enabled).length
+  );
   readonly partialRolloutFlags = computed(
-    () => this.flags().filter((f) => f.enabled && f.rollout_percentage < 100).length
+    () =>
+      this.flags().filter((f) => f.enabled && f.rollout_percentage < 100).length
   );
 
   // Dialog state

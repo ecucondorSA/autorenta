@@ -21,7 +21,10 @@ function normalizeError(error: unknown): { message?: string; code?: string } {
   return { message: String(error) };
 }
 
-// TODO: Fix - requires Supabase configuration in test environment
+// TODO: Fix - requires complete service mocking (services use inject() internally)
+// These tests attempt to inject real services with a mock Supabase client,
+// but the services use SupabaseClientService (not SUPABASE_CLIENT token).
+// Needs rewrite with proper service mocks or integration test setup.
 xdescribe('Sprint 5.3 - Error Handling', () => {
   let bookingsService: BookingsService;
   let carsService: CarsService;

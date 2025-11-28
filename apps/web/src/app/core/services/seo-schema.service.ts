@@ -16,7 +16,7 @@ import type { FAQItem } from '../models/marketplace.model';
   providedIn: 'root',
 })
 export class SeoSchemaService {
-  private readonly document = inject(DOCUMENT);
+  private readonly document = inject(DOCUMENT) as Document;
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 

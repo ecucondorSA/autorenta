@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { FaceVerificationService, type FaceVerificationResult } from './face-verification.service';
 import { SupabaseClientService } from './supabase-client.service';
 
-// TODO: Fix - Missing HttpClientTestingModule for TikTokEventsService dependency
+// TODO: Fix - Service API changed, tests need update
 xdescribe('FaceVerificationService', () => {
   let service: FaceVerificationService;
   let supabaseMock: any;

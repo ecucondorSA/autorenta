@@ -70,6 +70,7 @@ export class SupabaseClientService {
   private readonly platformId = inject(PLATFORM_ID);
 
   constructor() {
+    console.log('[SupabaseClientService] Initializing...');
     const supabaseUrl = environment.supabaseUrl;
     const supabaseAnonKey = environment.supabaseAnonKey;
 

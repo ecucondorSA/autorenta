@@ -1,12 +1,30 @@
 import { TestBed } from '@angular/core/testing';
+import { PLATFORM_ID } from '@angular/core';
 import { BreakpointService, BREAKPOINTS } from './breakpoint.service';
 
-// TODO: Fix NG0203 injection errors - service uses inject() in constructor outside injection context in some tests
-xdescribe('BreakpointService', () => {
+describe('BreakpointService', () => {
   let service: BreakpointService;
 
+  // Helper to create service with specific window width
+  function createServiceWithWidth(width: number): BreakpointService {
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: width,
+    });
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
+    });
+
+    return TestBed.inject(BreakpointService);
+  }
+
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
+    });
     service = TestBed.inject(BreakpointService);
   });
 
@@ -23,74 +41,69 @@ xdescribe('BreakpointService', () => {
   });
 
   it('should detect mobile viewport', () => {
-    // Simulamos viewport móvil
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: 375,
-    });
-
-    const newService = new BreakpointService();
-    expect(newService.isMobile()).toBe(true);
-    expect(newService.isDesktop()).toBe(false);
+    const mobileService = createServiceWithWidth(375);
+    expect(mobileService.isMobile()).toBe(true);
+    expect(mobileService.isDesktop()).toBe(false);
   });
 
   it('should detect desktop viewport', () => {
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: 1440,
-    });
-
-    const newService = new BreakpointService();
-    expect(newService.isMobile()).toBe(false);
-    expect(newService.isDesktop()).toBe(true);
+    const desktopService = createServiceWithWidth(1440);
+    expect(desktopService.isMobile()).toBe(false);
+    expect(desktopService.isDesktop()).toBe(true);
   });
 
   it('should correctly identify current breakpoint', () => {
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: 800,
-    });
-
-    const newService = new BreakpointService();
-    expect(newService.current()).toBe('lg');
+    // 800px is >= 768 (md) but < 1024 (lg), so current should be 'lg'
+    // According to service logic:
+    // if (w < sm=640) return 'sm'
+    // if (w < md=768) return 'md'
+    // if (w < lg=1024) return 'lg'  <-- 800 falls here
+    // if (w < xl=1280) return 'xl'
+    // else return '2xl'
+    const testService = createServiceWithWidth(800);
+    expect(testService.current()).toBe('lg');
   });
 
   it('should use isAtLeast helper correctly', () => {
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: 1024,
-    });
-
-    const newService = new BreakpointService();
-    expect(newService.isAtLeast('lg')).toBe(true);
-    expect(newService.isAtLeast('xl')).toBe(false);
+    const testService = createServiceWithWidth(1024);
+    expect(testService.isAtLeast('lg')).toBe(true);
+    expect(testService.isAtLeast('xl')).toBe(false);
   });
 
   it('should use isBelow helper correctly', () => {
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: 768,
-    });
-
-    const newService = new BreakpointService();
-    expect(newService.isBelow('lg')).toBe(true);
-    expect(newService.isBelow('md')).toBe(false);
+    const testService = createServiceWithWidth(768);
+    expect(testService.isBelow('lg')).toBe(true);
+    expect(testService.isBelow('md')).toBe(false);
   });
 
   it('should use isBetween helper correctly', () => {
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: 900,
-    });
+    // 900px is >= 768 (md) and < 1024 (lg)
+    const testService = createServiceWithWidth(900);
+    // isBetween(md, lg) means >= 768 and < 1024 → true
+    expect(testService.isBetween('md', 'lg')).toBe(true);
+    // isBetween(lg, xl) means >= 1024 and < 1280 → false (900 < 1024)
+    expect(testService.isBetween('lg', 'xl')).toBe(false);
+  });
 
-    const newService = new BreakpointService();
-    expect(newService.isBetween('md', 'lg')).toBe(false);
-    expect(newService.isBetween('lg', 'xl')).toBe(true);
+  it('should detect tablet viewport', () => {
+    // Tablet is >= 768 and < 1024
+    const tabletService = createServiceWithWidth(800);
+    expect(tabletService.isTablet()).toBe(true);
+    expect(tabletService.isMobile()).toBe(false);
+    expect(tabletService.isDesktop()).toBe(false);
+  });
+
+  it('should detect small mobile viewport', () => {
+    // Small mobile is < 640
+    const smallMobileService = createServiceWithWidth(320);
+    expect(smallMobileService.isSmallMobile()).toBe(true);
+    expect(smallMobileService.isMobile()).toBe(true);
+  });
+
+  it('should detect large desktop viewport', () => {
+    // Large desktop is >= 1280
+    const largeDesktopService = createServiceWithWidth(1440);
+    expect(largeDesktopService.isLargeDesktop()).toBe(true);
+    expect(largeDesktopService.isDesktop()).toBe(true);
   });
 });

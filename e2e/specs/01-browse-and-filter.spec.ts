@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { resolve } from 'node:path';
 import { loadCarsFixture } from '../support/fixtures';
 import { installSupabaseMocks } from '../support/network-mocks';

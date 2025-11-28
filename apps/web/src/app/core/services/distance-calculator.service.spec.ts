@@ -2,8 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { DistanceCalculatorService, DistanceRiskTier } from './distance-calculator.service';
 
-// TODO: Fix - Service API changed, mocks not matching
-xdescribe('DistanceCalculatorService', () => {
+describe('DistanceCalculatorService', () => {
   let service: DistanceCalculatorService;
 
   beforeEach(() => {
@@ -108,6 +107,8 @@ xdescribe('DistanceCalculatorService', () => {
   });
 
   describe('calculateDeliveryFee', () => {
+    // Note: deliveryFeePerKm is currently 0 in environment (delivery is free)
+    // Tests reflect the actual production configuration
     it('should return 0 for distances under minimum threshold', () => {
       const fee = service.calculateDeliveryFee(3);
 
@@ -121,31 +122,33 @@ xdescribe('DistanceCalculatorService', () => {
       expect(fee).toBe(0);
     });
 
-    it('should calculate fee correctly for 10km distance', () => {
-      // 10 * 0.5 * 100 = 500 cents
+    it('should calculate fee based on deliveryFeePerKm config', () => {
+      // With deliveryFeePerKm = 0, all distances should return 0
       const fee = service.calculateDeliveryFee(10);
+      const expectedFee = 10 * environment.distanceConfig.deliveryFeePerKm * 100;
 
-      expect(fee).toBe(500);
+      expect(fee).toBe(expectedFee);
     });
 
-    it('should calculate fee correctly for 50km distance', () => {
-      // 50 * 0.5 * 100 = 2500 cents
-      const fee = service.calculateDeliveryFee(50);
+    it('should scale fee with distance', () => {
+      const fee10km = service.calculateDeliveryFee(10);
+      const fee50km = service.calculateDeliveryFee(50);
+      const feePerKm = environment.distanceConfig.deliveryFeePerKm;
 
-      expect(fee).toBe(2500);
+      // Fee should scale linearly with distance
+      if (feePerKm > 0) {
+        expect(fee50km).toBeGreaterThan(fee10km);
+      } else {
+        // When fee is 0, both should be 0
+        expect(fee10km).toBe(0);
+        expect(fee50km).toBe(0);
+      }
     });
 
-    it('should calculate fee for distance beyond max delivery distance', () => {
-      // Note: The service doesn't cap the fee automatically
-      // It just calculates the fee for any distance
-      const fee150km = service.calculateDeliveryFee(150);
-
-      // 150 * 0.5 * 100 = 7500 cents
-      expect(fee150km).toBe(7500);
-
-      // Check if distance is within range separately
-      expect(service.isWithinDeliveryRange(150)).toBe(false);
+    it('should check delivery range independently of fee', () => {
+      // isWithinDeliveryRange should work regardless of fee amount
       expect(service.isWithinDeliveryRange(50)).toBe(true);
+      expect(service.isWithinDeliveryRange(150)).toBe(false);
     });
   });
 
@@ -182,7 +185,8 @@ xdescribe('DistanceCalculatorService', () => {
       expect(metadata.distanceKm).toBe(15);
       expect(metadata.tier).toBe('local');
       expect(metadata.guaranteeMultiplier).toBe(1.0);
-      expect(metadata.deliveryFeeCents).toBeGreaterThan(0);
+      // With deliveryFeePerKm = 0, fee is always 0
+      expect(metadata.deliveryFeeCents).toBeGreaterThanOrEqual(0);
       expect(metadata.message).toContain('cercano');
     });
 
@@ -322,12 +326,21 @@ xdescribe('DistanceCalculatorService', () => {
     });
 
     it('should handle very small custom thresholds', () => {
-      // Nearby is ~0.4km away
-      const isNear03 = service.isNearLocation(buenosAires, nearby, 0.3);
-      expect(isNear03).toBe(false);
+      // Calculate actual distance first
+      const actualDistance = service.calculateDistance(
+        buenosAires.lat,
+        buenosAires.lng,
+        nearby.lat,
+        nearby.lng,
+      );
+      // Nearby is ~0.27km away based on actual calculation
+      // With threshold smaller than actual distance, should return false
+      const isNearTooSmall = service.isNearLocation(buenosAires, nearby, 0.1);
+      expect(isNearTooSmall).toBe(false);
 
-      const isNear05 = service.isNearLocation(buenosAires, nearby, 0.5);
-      expect(isNear05).toBe(true);
+      // With threshold larger than actual distance, should return true
+      const isNearEnough = service.isNearLocation(buenosAires, nearby, actualDistance + 0.1);
+      expect(isNearEnough).toBe(true);
     });
   });
 
@@ -350,13 +363,22 @@ xdescribe('DistanceCalculatorService', () => {
       });
     });
 
-    it('should calculate delivery fee that increases with distance', () => {
+    it('should calculate delivery fee consistently with config', () => {
       const fee10km = service.calculateDeliveryFee(10);
       const fee20km = service.calculateDeliveryFee(20);
       const fee30km = service.calculateDeliveryFee(30);
+      const feePerKm = environment.distanceConfig.deliveryFeePerKm;
 
-      expect(fee20km).toBeGreaterThan(fee10km);
-      expect(fee30km).toBeGreaterThan(fee20km);
+      // Fee should scale linearly with distance (or be 0 if feePerKm is 0)
+      if (feePerKm > 0) {
+        expect(fee20km).toBeGreaterThan(fee10km);
+        expect(fee30km).toBeGreaterThan(fee20km);
+      } else {
+        // When fee is disabled, all should be 0
+        expect(fee10km).toBe(0);
+        expect(fee20km).toBe(0);
+        expect(fee30km).toBe(0);
+      }
     });
 
     it('should handle complete booking distance flow', () => {

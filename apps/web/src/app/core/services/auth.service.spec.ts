@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 import { SupabaseClientService } from './supabase-client.service';
+import { LoggerService } from './logger.service';
+import { RateLimiterService } from './rate-limiter.service';
 
-// TODO: Fix - Missing HttpClientTestingModule for TikTokEventsService dependency
 type AuthCallback = (event: AuthChangeEvent, session: Session | null) => void;
 
 const createSession = (id: string): Session => ({
@@ -21,7 +23,7 @@ const createSession = (id: string): Session => ({
     email_confirmed_at: '2024-01-01T00:00:00.000Z',
     identities: [],
     last_sign_in_at: '2024-01-01T00:00:00.000Z',
-    phone: '',
+    phone: null as unknown as string, // Supabase puede retornar null
     role: 'authenticated',
     updated_at: '2024-01-01T00:00:00.000Z',
     factors: [],
@@ -32,7 +34,7 @@ const createSession = (id: string): Session => ({
   provider_refresh_token: null,
 });
 
-xdescribe('AuthService', () => {
+describe('AuthService', () => {
   let authCallbacks: AuthCallback | undefined;
   let supabaseAuthMock: {
     getSession: jasmine.Spy<() => Promise<{ data: { session: Session | null }; error: null }>>;
@@ -43,8 +45,12 @@ xdescribe('AuthService', () => {
     signInWithPassword: jasmine.Spy;
     signOut: jasmine.Spy;
     resetPasswordForEmail: jasmine.Spy;
+    signInWithOAuth: jasmine.Spy;
   };
   let supabaseMock: { auth: typeof supabaseAuthMock };
+  let routerSpy: jasmine.SpyObj<Router>;
+  let loggerSpy: jasmine.SpyObj<LoggerService>;
+  let rateLimiterSpy: jasmine.SpyObj<RateLimiterService>;
 
   const initService = async (): Promise<AuthService> => {
     const instance = TestBed.inject(AuthService);
@@ -74,9 +80,17 @@ xdescribe('AuthService', () => {
       resetPasswordForEmail: jasmine
         .createSpy('resetPasswordForEmail')
         .and.resolveTo({ data: {}, error: null }),
+      signInWithOAuth: jasmine
+        .createSpy('signInWithOAuth')
+        .and.resolveTo({ data: {}, error: null }),
     };
 
     supabaseMock = { auth: supabaseAuthMock };
+
+    routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
+    loggerSpy = jasmine.createSpyObj('LoggerService', ['debug', 'info', 'warn', 'error']);
+    rateLimiterSpy = jasmine.createSpyObj('RateLimiterService', ['isAllowed', 'recordAttempt', 'reset']);
+    rateLimiterSpy.isAllowed.and.returnValue(true);
 
     TestBed.configureTestingModule({
       providers: [
@@ -87,6 +101,9 @@ xdescribe('AuthService', () => {
             getClient: () => supabaseMock,
           },
         },
+        { provide: Router, useValue: routerSpy },
+        { provide: LoggerService, useValue: loggerSpy },
+        { provide: RateLimiterService, useValue: rateLimiterSpy },
       ],
     });
   });
@@ -136,6 +153,7 @@ xdescribe('AuthService', () => {
       options: {
         data: {
           full_name: 'Juan Pérez',
+          phone: null,
           default_currency: environment.defaultCurrency,
         },
       },

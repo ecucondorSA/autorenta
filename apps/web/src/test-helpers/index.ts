@@ -37,5 +37,12 @@ export {
 // Legacy support
 export { makeSupabaseMock } from './supabase.mock';
 
+// TikTok Events Mock
+export {
+  type MockTikTokEventsService,
+  createMockTikTokEventsService,
+  MOCK_TIKTOK_EVENTS_SERVICE,
+} from './tiktok-events.mock';
+
 // Factories (si existen)
 export * from './factories';

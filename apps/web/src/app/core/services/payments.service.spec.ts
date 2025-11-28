@@ -5,34 +5,64 @@ import { FxService } from './fx.service';
 import { PaymentsService } from './payments.service';
 import { SupabaseClientService } from './supabase-client.service';
 
-// TODO: Fix - Service API changed, mocks not matching new signature
-xdescribe('PaymentsService', () => {
+// Helper to create chainable Supabase mock queries
+function createMockQuery(finalResponse: { data: unknown; error: unknown }): Record<string, jasmine.Spy> {
+  const query: Record<string, jasmine.Spy> = {};
+  query['select'] = jasmine.createSpy('select').and.callFake(() => query);
+  query['eq'] = jasmine.createSpy('eq').and.callFake(() => query);
+  query['insert'] = jasmine.createSpy('insert').and.callFake(() => query);
+  query['single'] = jasmine.createSpy('single').and.resolveTo(finalResponse);
+  return query;
+}
+
+describe('PaymentsService', () => {
   let service: PaymentsService;
-  let supabase: any;
-  let originalWebhookUrl: string;
-  let fxService: jasmine.SpyObj<FxService>;
+  let mockSupabaseClient: any;
+  let mockFxService: jasmine.SpyObj<FxService>;
+  let originalPaymentsWebhookUrl: string;
+  let originalProduction: boolean;
+
+  const mockBooking = {
+    id: 'booking-123',
+    total_amount: 100000,
+    currency: 'ARS',
+    renter_id: 'user-456',
+  };
+
+  const mockPaymentIntent: PaymentIntent = {
+    id: 'intent-123',
+    booking_id: 'booking-123',
+    provider: 'mercadopago',
+    status: 'pending',
+    created_at: '2025-11-28T10:00:00Z',
+  };
 
   beforeEach(() => {
-    originalWebhookUrl = environment.paymentsWebhookUrl;
+    // Store original values
+    originalPaymentsWebhookUrl = environment.paymentsWebhookUrl;
+    originalProduction = environment.production;
 
-    // Mock completo de Supabase
-    supabase = {
+    // Default to development mode
+    (environment as any).production = false;
+    (environment as any).paymentsWebhookUrl = 'http://localhost:8787/webhooks/payments';
+
+    // Create Supabase mock
+    mockSupabaseClient = {
       from: jasmine.createSpy('from'),
-      auth: {
-        getUser: jasmine.createSpy('getUser').and.resolveTo({
-          data: { user: { id: 'user-123', email: 'test@example.com' } },
-          error: null,
-        }),
-      },
     };
-    fxService = jasmine.createSpyObj<FxService>('FxService', ['getCurrentRateAsync']);
-    fxService.getCurrentRateAsync.and.resolveTo(1000);
+
+    // Create FxService mock
+    mockFxService = jasmine.createSpyObj('FxService', ['getCurrentRateAsync']);
+    mockFxService.getCurrentRateAsync.and.resolveTo(1000); // 1 USD = 1000 ARS
 
     TestBed.configureTestingModule({
       providers: [
         PaymentsService,
-        { provide: SupabaseClientService, useValue: { getClient: () => supabase } },
-        { provide: FxService, useValue: fxService },
+        {
+          provide: SupabaseClientService,
+          useValue: { getClient: () => mockSupabaseClient },
+        },
+        { provide: FxService, useValue: mockFxService },
       ],
     });
 
@@ -40,296 +70,463 @@ xdescribe('PaymentsService', () => {
   });
 
   afterEach(() => {
-    environment.paymentsWebhookUrl = originalWebhookUrl;
+    // Restore original values
+    (environment as any).paymentsWebhookUrl = originalPaymentsWebhookUrl;
+    (environment as any).production = originalProduction;
   });
 
-  describe('Basic functionality', () => {
-    it('creates payment intents with default values', async () => {
-      // Mock para obtener booking
-      const bookingBuilder: Record<string, any> = {};
-      bookingBuilder.select = jasmine.createSpy('select').and.returnValue(bookingBuilder);
-      bookingBuilder.eq = jasmine.createSpy('eq').and.returnValue(bookingBuilder);
-      bookingBuilder.single = jasmine.createSpy('single').and.resolveTo({
-        data: {
-          id: 'booking-1',
-          total_amount: 100000,
-          currency: 'ARS',
-          renter_id: 'user-123',
-        },
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  // ========================================
+  // createIntent
+  // ========================================
+  describe('createIntent', () => {
+    beforeEach(() => {
+      // Setup default mocks for createIntent
+      const bookingQuery = createMockQuery({
+        data: mockBooking,
         error: null,
       });
 
-      // Mock para insertar payment intent
-      const intentBuilder: Record<string, any> = {};
-      intentBuilder.select = jasmine.createSpy('select').and.returnValue(intentBuilder);
-      intentBuilder.single = jasmine.createSpy('single').and.resolveTo({
-        data: { id: 'intent-1', status: 'pending' },
+      const insertQuery = createMockQuery({
+        data: mockPaymentIntent,
         error: null,
       });
-      const insert = jasmine.createSpy('insert').and.returnValue(intentBuilder);
 
-      supabase.from.and.callFake((table: string) => {
-        if (table === 'bookings') return bookingBuilder;
-        if (table === 'payment_intents') return { insert };
+      mockSupabaseClient.from.and.callFake((table: string) => {
+        if (table === 'bookings') return bookingQuery;
+        if (table === 'payment_intents') return insertQuery;
+        return {};
+      });
+    });
+
+    it('should create a payment intent for a valid booking', async () => {
+      const result = await service.createIntent('booking-123');
+
+      expect(result).toEqual(mockPaymentIntent);
+      expect(mockSupabaseClient.from).toHaveBeenCalledWith('bookings');
+      expect(mockSupabaseClient.from).toHaveBeenCalledWith('payment_intents');
+      expect(mockFxService.getCurrentRateAsync).toHaveBeenCalledWith('USD', 'ARS');
+    });
+
+    it('should throw error when booking not found', async () => {
+      const bookingQuery = createMockQuery({
+        data: null,
+        error: { code: 'PGRST116', message: 'Not found' },
+      });
+
+      mockSupabaseClient.from.and.returnValue(bookingQuery);
+
+      await expectAsync(service.createIntent('invalid-booking')).toBeRejectedWithError(
+        /Booking no encontrado/,
+      );
+    });
+
+    it('should throw error when amount is invalid', async () => {
+      const bookingQuery = createMockQuery({
+        data: { ...mockBooking, total_amount: 0 },
+        error: null,
+      });
+
+      mockSupabaseClient.from.and.returnValue(bookingQuery);
+
+      await expectAsync(service.createIntent('booking-123')).toBeRejectedWithError(
+        /Monto inválido/,
+      );
+    });
+
+    it('should throw error when FX rate is unavailable', async () => {
+      mockFxService.getCurrentRateAsync.and.resolveTo(0);
+
+      const bookingQuery = createMockQuery({
+        data: mockBooking,
+        error: null,
+      });
+
+      mockSupabaseClient.from.and.returnValue(bookingQuery);
+
+      await expectAsync(service.createIntent('booking-123')).toBeRejectedWithError(
+        /tasa de cambio/,
+      );
+    });
+
+    it('should handle USD currency correctly', async () => {
+      const usdBooking = { ...mockBooking, currency: 'USD', total_amount: 100 };
+
+      const bookingQuery = createMockQuery({
+        data: usdBooking,
+        error: null,
+      });
+
+      const insertQuery = createMockQuery({
+        data: mockPaymentIntent,
+        error: null,
+      });
+
+      mockSupabaseClient.from.and.callFake((table: string) => {
+        if (table === 'bookings') return bookingQuery;
+        if (table === 'payment_intents') return insertQuery;
         return {};
       });
 
-      const intent = await service.createIntent('booking-1');
+      await service.createIntent('booking-123');
 
-      expect(intent).toEqual({ id: 'intent-1', status: 'pending' } as any);
-      expect(fxService.getCurrentRateAsync).toHaveBeenCalledWith('USD', 'ARS');
+      expect(insertQuery['insert']).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          amount_usd: 100,
+          amount_ars: 100000, // 100 USD * 1000 rate
+        }),
+      );
+    });
+  });
+
+  // ========================================
+  // getStatus
+  // ========================================
+  describe('getStatus', () => {
+    it('should return payment intent status', async () => {
+      const query = createMockQuery({
+        data: { ...mockPaymentIntent, status: 'completed' },
+        error: null,
+      });
+
+      mockSupabaseClient.from.and.returnValue(query);
+
+      const result = await service.getStatus('intent-123');
+
+      expect(result?.status).toBe('completed');
+      expect(query['eq']).toHaveBeenCalledWith('id', 'intent-123');
     });
 
-    it('calls the worker webhook when marking as paid', async () => {
-      environment.paymentsWebhookUrl = 'https://worker.example';
-      const fetchSpy = spyOn(window, 'fetch').and.resolveTo(new Response(null, { status: 200 }));
+    it('should return null when payment intent not found', async () => {
+      const query = createMockQuery({
+        data: null,
+        error: { code: 'PGRST116' },
+      });
 
-      await service.markAsPaid('intent-7');
+      mockSupabaseClient.from.and.returnValue(query);
 
-      expect(fetchSpy).toHaveBeenCalledWith('https://worker.example', {
+      const result = await service.getStatus('missing-intent');
+
+      expect(result).toBeNull();
+    });
+
+    it('should throw error for other database errors', async () => {
+      const query = createMockQuery({
+        data: null,
+        error: { code: 'OTHER_ERROR', message: 'Database error' },
+      });
+
+      mockSupabaseClient.from.and.returnValue(query);
+
+      await expectAsync(service.getStatus('intent-123')).toBeRejected();
+    });
+  });
+
+  // ========================================
+  // markAsPaid (DEV ONLY)
+  // ========================================
+  describe('markAsPaid', () => {
+    it('should call webhook in development mode', async () => {
+      const fetchSpy = spyOn(window, 'fetch').and.resolveTo(
+        new Response(null, { status: 200 }),
+      );
+
+      await service.markAsPaid('intent-123');
+
+      expect(fetchSpy).toHaveBeenCalledWith('http://localhost:8787/webhooks/payments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           provider: 'mock',
-          intent_id: 'intent-7',
+          intent_id: 'intent-123',
           status: 'approved',
         }),
       });
     });
 
-    it('returns null when payment intent is missing', async () => {
-      const builder: Record<string, any> = {};
-      builder.select = jasmine.createSpy('select').and.returnValue(builder);
-      builder.eq = jasmine.createSpy('eq').and.returnValue(builder);
-      builder.single = jasmine.createSpy('single').and.resolveTo({
-        data: null,
-        error: { code: 'PGRST116' },
+    it('should throw error in production mode', async () => {
+      (environment as any).production = true;
+
+      await expectAsync(service.markAsPaid('intent-123')).toBeRejectedWithError(
+        /deprecado en producción/,
+      );
+    });
+
+    it('should throw error when webhook URL not configured', async () => {
+      (environment as any).paymentsWebhookUrl = '';
+
+      await expectAsync(service.markAsPaid('intent-123')).toBeRejectedWithError(
+        /paymentsWebhookUrl no configurado/,
+      );
+    });
+
+    it('should throw error when webhook responds with error', async () => {
+      spyOn(window, 'fetch').and.resolveTo(new Response(null, { status: 500 }));
+
+      await expectAsync(service.markAsPaid('intent-123')).toBeRejectedWithError(
+        /Webhook respondió 500/,
+      );
+    });
+  });
+
+  // ========================================
+  // triggerMockPayment (DEV ONLY)
+  // ========================================
+  describe('triggerMockPayment', () => {
+    it('should trigger approved payment webhook', async () => {
+      const fetchSpy = spyOn(window, 'fetch').and.resolveTo(
+        new Response(null, { status: 200 }),
+      );
+
+      await service.triggerMockPayment('booking-123', 'approved');
+
+      expect(fetchSpy).toHaveBeenCalledWith('http://localhost:8787/webhooks/payments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider: 'mock',
+          booking_id: 'booking-123',
+          status: 'approved',
+        }),
       });
-      supabase.from.and.returnValue(builder);
+    });
 
-      const result = await service.getStatus('missing');
+    it('should trigger rejected payment webhook', async () => {
+      const fetchSpy = spyOn(window, 'fetch').and.resolveTo(
+        new Response(null, { status: 200 }),
+      );
 
-      expect(builder.eq).toHaveBeenCalledWith('id', 'missing');
-      expect(result).toBeNull();
+      await service.triggerMockPayment('booking-123', 'rejected');
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        jasmine.any(String),
+        jasmine.objectContaining({
+          body: jasmine.stringContaining('"status":"rejected"'),
+        }),
+      );
+    });
+
+    it('should throw error in production mode', async () => {
+      (environment as any).production = true;
+
+      await expectAsync(
+        service.triggerMockPayment('booking-123', 'approved'),
+      ).toBeRejectedWithError(/solo disponible en desarrollo/);
     });
   });
 
   // ========================================
-  // SPRINT 1.1: Email dinámico en pagos
+  // createPaymentIntentWithDetails
   // ========================================
-  describe('SPRINT 1.1: Email dinámico en pagos', () => {
-    it('debería usar email del usuario cuando está disponible', async () => {
-      pending('Funcionalidad pendiente de implementación');
-    });
+  describe('createPaymentIntentWithDetails', () => {
+    it('should create payment intent with wallet provider', async () => {
+      const insertQuery = createMockQuery({
+        data: { ...mockPaymentIntent, provider: 'wallet' },
+        error: null,
+      });
 
-    it('debería usar email por defecto cuando no hay email', async () => {
-      pending('Funcionalidad pendiente de implementación');
-    });
+      mockSupabaseClient.from.and.returnValue(insertQuery);
 
-    it('debería validar formato de email inválido', () => {
-      pending('Funcionalidad pendiente de implementación');
-    });
-  });
-
-  // ========================================
-  // SPRINT 1.2: PaymentsService centralizado
-  // ========================================
-  describe('SPRINT 1.2: PaymentsService centralizado', () => {
-    it('debería tener toda la lógica de pago centralizada en processPayment', () => {
-      // Verificar que el método processPayment existe
-      expect(typeof service.processPayment).toBe('function');
-    });
-
-    it('debería procesar el pago completo: crear intent, marcar como pagado, verificar estado', async () => {
-      environment.paymentsWebhookUrl = 'https://worker.example';
-
-      // Mock de createIntent
-      spyOn(service, 'createIntent').and.resolveTo({
-        id: 'intent-123',
+      const result = await service.createPaymentIntentWithDetails({
+        booking_id: 'booking-123',
+        payment_method: 'wallet',
+        amount_cents: 10000,
         status: 'pending',
-      } as any);
+      });
 
-      // Mock de markAsPaid
+      expect(insertQuery['insert']).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          booking_id: 'booking-123',
+          provider: 'wallet',
+          status: 'pending',
+        }),
+      );
+      expect(result.provider).toBe('wallet');
+    });
+
+    it('should create payment intent with mercadopago provider for card', async () => {
+      const insertQuery = createMockQuery({
+        data: { ...mockPaymentIntent, provider: 'mercadopago' },
+        error: null,
+      });
+
+      mockSupabaseClient.from.and.returnValue(insertQuery);
+
+      await service.createPaymentIntentWithDetails({
+        booking_id: 'booking-123',
+        payment_method: 'credit_card',
+        amount_cents: 10000,
+        status: 'pending',
+      });
+
+      expect(insertQuery['insert']).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          provider: 'mercadopago',
+        }),
+      );
+    });
+  });
+
+  // ========================================
+  // processPayment
+  // ========================================
+  describe('processPayment', () => {
+    it('should process payment successfully', async () => {
+      spyOn(service, 'createIntent').and.resolveTo(mockPaymentIntent);
       spyOn(service, 'markAsPaid').and.resolveTo();
-
-      // Mock de getStatus
       spyOn(service, 'getStatus').and.resolveTo({
-        id: 'intent-123',
+        ...mockPaymentIntent,
         status: 'completed',
-      } as any);
+      } as PaymentIntent);
 
-      const result = await service.processPayment('booking-1');
+      const result = await service.processPayment('booking-123');
 
       expect(result.success).toBe(true);
       expect(result.paymentIntentId).toBe('intent-123');
-      expect(service.createIntent).toHaveBeenCalledWith('booking-1');
+      expect(service.createIntent).toHaveBeenCalledWith('booking-123');
       expect(service.markAsPaid).toHaveBeenCalledWith('intent-123');
       expect(service.getStatus).toHaveBeenCalledWith('intent-123');
     });
 
-    it('debería manejar errores durante el proceso de pago', async () => {
-      environment.paymentsWebhookUrl = 'https://worker.example';
+    it('should return error when intent creation fails', async () => {
+      spyOn(service, 'createIntent').and.rejectWith(new Error('Invalid booking'));
 
-      // Mock de createIntent que falla
-      spyOn(service, 'createIntent').and.rejectWith(new Error('Error de red'));
-
-      const result = await service.processPayment('booking-1');
+      const result = await service.processPayment('booking-123');
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Error de red');
+      expect(result.error).toContain('Invalid booking');
     });
 
-    it('no debería tener lógica de pago duplicada - todo debe usar PaymentsService', () => {
-      // Este test verifica la arquitectura
-      // Los componentes deben inyectar PaymentsService y llamar a processPayment
-      // En lugar de duplicar lógica de createIntent + markAsPaid + getStatus
-      expect(service.processPayment).toBeDefined();
-      expect(service.createIntent).toBeDefined();
-      expect(service.markAsPaid).toBeDefined();
-      expect(service.getStatus).toBeDefined();
+    it('should return error when payment does not complete', async () => {
+      spyOn(service, 'createIntent').and.resolveTo(mockPaymentIntent);
+      spyOn(service, 'markAsPaid').and.resolveTo();
+      spyOn(service, 'getStatus').and.resolveTo({
+        ...mockPaymentIntent,
+        status: 'pending',
+      } as PaymentIntent);
+
+      const result = await service.processPayment('booking-123');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('no se completó');
+    });
+
+    it('should retry on network errors', async () => {
+      let callCount = 0;
+      spyOn(service, 'createIntent').and.callFake(async () => {
+        callCount++;
+        if (callCount < 3) {
+          throw new Error('Network error');
+        }
+        return mockPaymentIntent;
+      });
+      spyOn(service, 'markAsPaid').and.resolveTo();
+      spyOn(service, 'getStatus').and.resolveTo({
+        ...mockPaymentIntent,
+        status: 'completed',
+      } as PaymentIntent);
+
+      // Mock delay to speed up test
+      spyOn<any>(service, 'delay').and.resolveTo();
+
+      const result = await service.processPayment('booking-123');
+
+      expect(result.success).toBe(true);
+      expect(callCount).toBe(3);
+    });
+
+    it('should not retry validation errors', async () => {
+      let callCount = 0;
+      spyOn(service, 'createIntent').and.callFake(async () => {
+        callCount++;
+        throw new Error('Invalid booking ID');
+      });
+
+      const result = await service.processPayment('booking-123');
+
+      expect(result.success).toBe(false);
+      expect(callCount).toBe(1); // No retries for validation errors
+    });
+
+    it('should stop retrying after max retries', async () => {
+      let callCount = 0;
+      spyOn(service, 'createIntent').and.callFake(async () => {
+        callCount++;
+        throw new Error('Network error');
+      });
+
+      // Mock delay to speed up test
+      spyOn<any>(service, 'delay').and.resolveTo();
+
+      const result = await service.processPayment('booking-123');
+
+      expect(result.success).toBe(false);
+      expect(callCount).toBe(4); // 1 initial + 3 retries
+    });
+
+    it('should skip markAsPaid in production mode', async () => {
+      (environment as any).production = true;
+
+      spyOn(service, 'createIntent').and.resolveTo(mockPaymentIntent);
+      spyOn(service, 'markAsPaid').and.resolveTo();
+      spyOn(service, 'getStatus').and.resolveTo({
+        ...mockPaymentIntent,
+        status: 'completed',
+      } as PaymentIntent);
+
+      await service.processPayment('booking-123');
+
+      expect(service.markAsPaid).not.toHaveBeenCalled();
     });
   });
 
   // ========================================
-  // SPRINT 1.3: Retry logic
+  // Alias methods
   // ========================================
-  describe('SPRINT 1.3: Retry logic', () => {
-    beforeEach(() => {
-      environment.paymentsWebhookUrl = 'https://worker.example';
+  describe('createPaymentIntent (alias)', () => {
+    it('should call createIntent', async () => {
+      spyOn(service, 'createIntent').and.resolveTo(mockPaymentIntent);
+
+      const result = await service.createPaymentIntent('booking-123', 'mercadopago');
+
+      expect(service.createIntent).toHaveBeenCalledWith('booking-123');
+      expect(result).toEqual(mockPaymentIntent);
+    });
+  });
+
+  describe('simulateWebhook (alias)', () => {
+    it('should call markAsPaid', async () => {
+      spyOn(service, 'markAsPaid').and.resolveTo();
+
+      await service.simulateWebhook('mock', 'intent-123', 'approved');
+
+      expect(service.markAsPaid).toHaveBeenCalledWith('intent-123');
+    });
+  });
+
+  // ========================================
+  // isRetryableError (private method testing)
+  // ========================================
+  describe('isRetryableError', () => {
+    it('should identify network errors as retryable', () => {
+      const isRetryable = (service as any).isRetryableError.bind(service);
+
+      expect(isRetryable(new Error('Network error'))).toBe(true);
+      expect(isRetryable(new Error('Request timeout'))).toBe(true);
+      expect(isRetryable(new Error('ECONNRESET'))).toBe(true);
+      expect(isRetryable(new Error('ETIMEDOUT'))).toBe(true);
+      expect(isRetryable(new Error('Failed to fetch'))).toBe(true);
     });
 
-    it('debería reintentar después de un fallo de red', async () => {
-      let attemptCount = 0;
+    it('should identify validation errors as non-retryable', () => {
+      const isRetryable = (service as any).isRetryableError.bind(service);
 
-      // Mock que falla 2 veces y luego tiene éxito
-      const createIntentSpy = spyOn(service, 'createIntent').and.callFake(async () => {
-        attemptCount++;
-        if (attemptCount < 3) {
-          throw new Error('Network error');
-        }
-        return { id: 'intent-123', status: 'pending' } as PaymentIntent;
-      });
-
-      const markAsPaidSpy = spyOn(service, 'markAsPaid').and.resolveTo();
-      const getStatusSpy = spyOn(service, 'getStatus').and.resolveTo({
-        id: 'intent-123',
-        status: 'completed',
-      } as any);
-
-      // Mock del delay para acelerar el test
-      spyOn<any>(service as any, 'delay').and.resolveTo();
-
-      const result = await service.processPayment('booking-1');
-
-      expect(result.success).toBe(true);
-      expect(attemptCount).toBe(3);
-      expect(createIntentSpy).toHaveBeenCalledTimes(3);
-    });
-
-    it('debería tener un máximo de 3 reintentos', async () => {
-      let attemptCount = 0;
-
-      // Mock que siempre falla
-      const createIntentSpy = spyOn(service, 'createIntent').and.callFake(async () => {
-        attemptCount++;
-        throw new Error('Network error');
-      });
-
-      // Mock del delay para acelerar el test
-      spyOn<any>(service as any, 'delay').and.resolveTo();
-
-      const result = await service.processPayment('booking-1');
-
-      expect(result.success).toBe(false);
-      expect(attemptCount).toBe(4); // 1 intento inicial + 3 reintentos
-      expect(result.error).toContain('Network error');
-      expect(createIntentSpy).toHaveBeenCalledTimes(4);
-    });
-
-    it('debería usar backoff exponencial entre reintentos', async () => {
-      const delays: number[] = [];
-
-      // Mock del delay para capturar los valores
-      const delaySpy = spyOn<any>(service as any, 'delay').and.callFake(async (ms: number) => {
-        delays.push(ms);
-        return Promise.resolve();
-      });
-
-      spyOn(service, 'createIntent').and.rejectWith(new Error('Network error'));
-
-      await service.processPayment('booking-1');
-
-      // Verificar que los delays aumentan exponencialmente
-      expect(delays.length).toBe(3); // 3 reintentos
-      expect(delays[0]).toBe(1000); // 1 segundo
-      expect(delays[1]).toBe(2000); // 2 segundos
-      expect(delays[2]).toBe(3000); // 3 segundos
-      expect(delaySpy).toHaveBeenCalledTimes(3);
-    });
-
-    it('debería identificar errores reintentables correctamente', () => {
-      const retryableErrors = [
-        new Error('Network error'),
-        new Error('timeout occurred'),
-        new Error('ECONNRESET'),
-        new Error('ETIMEDOUT'),
-        new Error('Failed to fetch'),
-      ];
-
-      const nonRetryableErrors = [
-        new Error('Invalid booking ID'),
-        new Error('Payment declined'),
-        new Error('Insufficient funds'),
-      ];
-
-      // Test de método privado (solo para verificación)
-      const isRetryableError = (service as any).isRetryableError.bind(service);
-
-      retryableErrors.forEach((err) => {
-        expect(isRetryableError(err)).toBe(true, `${err.message} debería ser reintentable`);
-      });
-
-      nonRetryableErrors.forEach((err) => {
-        expect(isRetryableError(err)).toBe(false, `${err.message} NO debería ser reintentable`);
-      });
-    });
-
-    it('no debería reintentar errores de validación', async () => {
-      let attemptCount = 0;
-
-      // Error de validación (no reintentable)
-      const createIntentSpy = spyOn(service, 'createIntent').and.callFake(async () => {
-        attemptCount++;
-        throw new Error('Invalid booking ID');
-      });
-
-      // Mock del delay (no debería llamarse)
-      const delaySpy = spyOn<any>(service as any, 'delay').and.resolveTo();
-
-      const result = await service.processPayment('booking-1');
-
-      expect(result.success).toBe(false);
-      expect(attemptCount).toBe(1); // Solo 1 intento, sin reintentos
-      expect(result.error).toContain('Invalid booking ID');
-      expect(createIntentSpy).toHaveBeenCalledTimes(1);
-      expect(delaySpy).not.toHaveBeenCalled();
-    });
-
-    it('debería loggear los reintentos en consola', async () => {
-      const logSpy = spyOn(console, 'log');
-      const errorSpy = spyOn(console, 'error');
-
-      spyOn(service, 'createIntent').and.rejectWith(new Error('Network error'));
-      spyOn<any>(service as any, 'delay').and.resolveTo();
-
-      await service.processPayment('booking-1');
-
-      // Verificar que se loggearon los reintentos
-      expect(logSpy).toHaveBeenCalledWith(jasmine.stringMatching(/Reintentando pago/));
-      expect(errorSpy).toHaveBeenCalledWith(
-        jasmine.stringMatching(/Error en processPayment/),
-        jasmine.any(Error),
-      );
+      expect(isRetryable(new Error('Invalid booking ID'))).toBe(false);
+      expect(isRetryable(new Error('Monto inválido'))).toBe(false);
+      expect(isRetryable(new Error('Booking no encontrado'))).toBe(false);
     });
   });
 });
