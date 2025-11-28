@@ -21,7 +21,13 @@ test.describe('Browse and filter catalog', () => {
       throw error;
     });
 
-    // Wait for car cards to be visible
+    // Switch to grid view (default view may be map which doesn't have data-car-id)
+    logStep('switch-to-grid-view');
+    const gridViewButton = page.locator('button[title="Vista Cuadrícula"]');
+    await expect(gridViewButton).toBeVisible({ timeout: 10000 });
+    await gridViewButton.click();
+
+    // Wait for car cards to be visible in grid view
     const carCards = page.locator('[data-car-id]');
     await expect(carCards.first()).toBeVisible({ timeout: 15000 });
 
