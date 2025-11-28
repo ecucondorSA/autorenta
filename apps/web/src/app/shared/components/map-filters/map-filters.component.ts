@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,6 +7,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  PLATFORM_ID,
   computed,
   inject,
   signal,
@@ -45,6 +46,7 @@ export type { FilterState } from '../../../core/models/marketplace.model';
 })
 export class MapFiltersComponent implements OnInit, OnDestroy {
   private readonly availabilityService = inject(CarAvailabilityService);
+  private readonly platformId = inject(PLATFORM_ID);
 
   private readonly availableCarsSignal = signal<CarMapLocation[]>([]);
   private occupancyLoadTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -197,8 +199,10 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
   );
 
   ngOnInit(): void {
-    this.detectMobile();
-    window.addEventListener('resize', () => this.detectMobile());
+    if (isPlatformBrowser(this.platformId)) {
+      this.detectMobile();
+      window.addEventListener('resize', this.resizeHandler);
+    }
 
     // Initialize price range with available cars' min/max
     if (this.availableCarsSignal().length > 0) {
@@ -212,8 +216,14 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
     this.loadFiltersFromStorage();
   }
 
+  private readonly resizeHandler = (): void => {
+    this.detectMobile();
+  };
+
   ngOnDestroy(): void {
-    window.removeEventListener('resize', () => this.detectMobile());
+    if (isPlatformBrowser(this.platformId)) {
+      window.removeEventListener('resize', this.resizeHandler);
+    }
     if (this.occupancyLoadTimeout) {
       clearTimeout(this.occupancyLoadTimeout);
     }
@@ -223,7 +233,9 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
    * Detect mobile screen size
    */
   private detectMobile(): void {
-    this.isMobile.set(window.innerWidth < 640);
+    if (isPlatformBrowser(this.platformId)) {
+      this.isMobile.set(window.innerWidth < 640);
+    }
   }
 
   /**
@@ -320,7 +332,9 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
       });
     }
     this.emitFilterChange();
-    sessionStorage.removeItem('mapFilters');
+    if (isPlatformBrowser(this.platformId)) {
+      sessionStorage.removeItem('mapFilters');
+    }
   }
 
   /**
@@ -402,6 +416,9 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
    * Save filter state to sessionStorage
    */
   private saveFiltersToStorage(filter: FilterState): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
     try {
       const serialized = {
         ...filter,
@@ -422,6 +439,9 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
    * Load filter state from sessionStorage
    */
   private loadFiltersFromStorage(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
     try {
       const stored = sessionStorage.getItem('mapFilters');
       if (stored) {

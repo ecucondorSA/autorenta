@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
@@ -28,6 +29,7 @@ export class MetaService {
   private readonly meta = inject(Meta);
   private readonly title = inject(Title);
   private readonly router = inject(Router);
+  private readonly platformId = inject(PLATFORM_ID);
 
   private readonly defaultConfig: MetaConfig = {
     title: 'AutoRenta - Alquiler de Autos entre Personas',
@@ -234,6 +236,10 @@ export class MetaService {
    * Update canonical URL
    */
   private updateCanonicalUrl(url: string): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     let link: HTMLLinkElement | null = document.querySelector("link[rel='canonical']");
 
     if (!link) {
@@ -253,6 +259,10 @@ export class MetaService {
     type: 'Product' | 'Organization' | 'WebSite',
     data: Record<string, unknown>,
   ): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     let script: HTMLScriptElement | null = document.querySelector(
       `script[type='application/ld+json'][data-type='${type}']`,
     );

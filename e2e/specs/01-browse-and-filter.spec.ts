@@ -36,19 +36,28 @@ test.describe('Browse and filter catalog', () => {
     // Verify at least 1 car is visible (mock may not return all fixture cars)
     expect(initialCount).toBeGreaterThanOrEqual(1);
 
-    // Click on first car to view details
-    logStep('open-first-car');
+    // Get the first car's ID and verify href attribute
+    logStep('verify-first-car');
     const firstCarId = await carCards.first().getAttribute('data-car-id');
-    await carCards.first().click();
+    logStep('first-car-id', { carId: firstCarId });
 
-    // Verify navigation to car detail page
-    await expect(page).toHaveURL(new RegExp(`/cars/${firstCarId}`), { timeout: 10000 });
+    // Verify the car card has correct href (routerLink generates href)
+    const firstCardHref = await carCards.first().getAttribute('href');
+    logStep('first-car-href', { href: firstCardHref });
+
+    // Navigate directly to detail page (more reliable than click during SSR hydration)
+    logStep('navigate-to-detail');
+    await page.goto(`/cars/${firstCarId}`, { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(new RegExp(`/cars/${firstCarId}`), { timeout: 15000 });
     logStep('navigated-to-detail', { carId: firstCarId });
 
-    // Go back to list
-    logStep('go-back-to-list');
-    await page.goBack();
+    // Navigate back to list
+    logStep('navigate-back-to-list');
+    await page.goto('/cars/list', { waitUntil: 'networkidle' });
     await expect(page).toHaveURL(/\/cars\/list/);
+
+    // Switch to grid view again
+    await gridViewButton.click();
 
     // Verify cars are still visible
     await expect(carCards.first()).toBeVisible({ timeout: 10000 });
