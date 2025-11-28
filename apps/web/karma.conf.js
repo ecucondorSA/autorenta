@@ -30,26 +30,32 @@ module.exports = function (config) {
     },
     reporters: ['progress', 'kjhtml'],
     browsers: ['Chrome'],
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage'],
+      },
+    },
     restartOnFileChange: true,
 
     // CUSTOM TIMEOUT CONFIGURATIONS FOR STABILITY
     // These increased timeouts prevent disconnects during slow tests or CI environments
 
     // Time (ms) to wait for browser to send messages before considering it disconnected
-    // Increased from 30000 (30s) to 60000 (60s) to handle slow tests
-    browserNoActivityTimeout: 60000,
+    // Increased from 60000 (60s) to 120000 (120s) to handle slow tests in CI
+    browserNoActivityTimeout: 120000,
 
     // Time (ms) to wait for browser to reconnect after disconnect
-    // Increased from 2000 (2s) to 5000 (5s) for better reconnection handling
-    browserDisconnectTimeout: 5000,
+    // Increased from 5000 (5s) to 10000 (10s) for better reconnection handling
+    browserDisconnectTimeout: 10000,
 
     // Number of times to retry reconnecting a browser before giving up
-    // Increased from 0 to 3 to handle transient network issues
-    browserDisconnectTolerance: 3,
+    // Increased from 3 to 5 to handle transient network issues
+    browserDisconnectTolerance: 5,
 
     // Time (ms) to wait for browser to start and connect to Karma
-    // Increased from 60000 (60s) to 120000 (120s) for slow CI environments
-    captureTimeout: 120000,
+    // Increased from 120000 (120s) to 240000 (240s) for slow CI environments
+    captureTimeout: 240000,
 
     // Optional: Set to false to run tests only once (useful for CI)
     // Set to true for development (watches files and re-runs tests)
