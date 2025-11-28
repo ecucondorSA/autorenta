@@ -27,6 +27,7 @@ if (process.env.QASE_API_TOKEN) {
     {
       apiToken: process.env.QASE_API_TOKEN,
       projectCode: process.env.QASE_PROJECT_CODE,
+      runTitle: 'Investigación',
       runComplete: true,
       basePath: 'https://api.qase.io/v1',
       logging: true,
