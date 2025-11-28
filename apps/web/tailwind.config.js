@@ -105,6 +105,7 @@ module.exports = {
           primary: 'var(--text-primary)',
           secondary: 'var(--text-secondary)',
           muted: 'var(--text-muted)',
+          tertiary: 'var(--text-tertiary)',
           inverse: 'var(--text-inverse)',
           link: 'var(--text-link)',
           'link-hover': 'var(--text-link-hover)',
@@ -115,6 +116,7 @@ module.exports = {
         border: {
           default: 'var(--border-default)',
           muted: 'var(--border-muted)',
+          subtle: 'var(--border-subtle)',
           focus: 'var(--border-focus)',
           hover: 'var(--border-hover)',
           error: 'var(--border-error)',

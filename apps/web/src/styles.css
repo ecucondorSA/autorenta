@@ -152,6 +152,7 @@ body.no-scroll {
     --text-primary: #0a3d52; /* Azul celeste muy oscuro - Máxima legibilidad */
     --text-secondary: #2b5f72; /* Azul celeste oscuro - Texto secundario legible */
     --text-muted: #5a7f8a; /* Azul celeste medio - Texto deshabilitado pero visible */
+    --text-tertiary: #7a96a1; /* Azul celeste suave - Texto terciario/decorativo */
     --text-inverse: #ffffff; /* Blanco puro - Texto sobre fondos oscuros */
     --text-link: #0d7fa8; /* Azul celeste más profundo - Links */
     --text-link-hover: #05536b; /* Azul celeste hover */
@@ -160,6 +161,7 @@ body.no-scroll {
     /* ─── Bordes ─── */
     --border-default: #b3dce6; /* Borde azul celeste sutil pero visible */
     --border-muted: #c7e9f0; /* Borde azul celeste muy sutil */
+    --border-subtle: #e5eff3; /* Borde muy sutil para separadores */
     --border-focus: #0d7fa8; /* Borde de focus azul celeste */
     --border-hover: #a4d3dd; /* Hover sobre elementos con borde */
 
@@ -368,6 +370,7 @@ body.no-scroll {
     --text-primary: #ffffff; /* Blanco puro - Máximo contraste */
     --text-secondary: #a3a3a3; /* Gris claro - Secundario */
     --text-muted: #737373; /* Gris medio - Deshabilitado */
+    --text-tertiary: #8b8b8b; /* Gris medio claro - Texto terciario */
     --text-inverse: #0f0f0f; /* Negro - Texto sobre fondos claros */
     --text-link: #38bdf8; /* Azul brillante accesible en dark */
     --text-link-hover: #7dd3fc; /* Azul más claro hover */
@@ -376,6 +379,7 @@ body.no-scroll {
     /* ─── Bordes ─── */
     --border-default: #333333; /* Borde sutil oscuro */
     --border-muted: #262626; /* Borde muy sutil */
+    --border-subtle: #2a2a2a; /* Borde muy sutil para separadores */
     --border-focus: #38bdf8; /* Focus */
     --border-hover: #404040; /* Hover */
 
@@ -1672,6 +1676,7 @@ body.no-scroll {
   --text-primary: #f8f4ec; /* Ivory */
   --text-secondary: #bcbcbc; /* Gray G20 */
   --text-muted: #7b7b7b; /* Gray G40 */
+  --text-tertiary: #9a9a9a; /* Gray - Texto terciario */
   --text-inverse: #050505; /* Black */
   --text-link: #a7d8f4; /* Blue primary */
   --text-link-hover: #c1e3f7; /* Blue hover */
@@ -1680,6 +1685,7 @@ body.no-scroll {
   /* ─── Bordes ─── */
   --border-default: #4e4e4e; /* Gray G60 */
   --border-muted: #7b7b7b; /* Gray G40 */
+  --border-subtle: #3a3a3a; /* Borde muy sutil para separadores */
   --border-focus: #a7d8f4; /* Blue focus */
   --border-hover: #6e5845; /* Hover sobre elementos con borde */
   --border-error: #ea9d9d; /* Error en dark mode */
