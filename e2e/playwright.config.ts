@@ -77,7 +77,7 @@ export default defineConfig({
     cwd: resolve(__dirname, '..'),
     url: `http://127.0.0.1:${defaultPort}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 240 * 1000,
+    timeout: 300 * 1000,
     stdout: 'pipe',
     stderr: 'pipe',
   },

@@ -1,5 +1,6 @@
 <article
   [routerLink]="['/cars', car.id]"
+  [attr.data-car-id]="car.id"
   class="cq-card car-card card-premium flex flex-col overflow-hidden group cursor-pointer hover-lift transition-smooth"
   [class.selected]="selected"
   [class.urgent-mode]="urgentMode"

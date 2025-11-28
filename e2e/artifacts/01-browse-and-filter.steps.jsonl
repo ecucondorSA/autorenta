@@ -1,0 +1,12 @@
+{"timestamp":"2025-11-28T00:01:27.536Z","step":"install-supabase-mocks"}
+{"timestamp":"2025-11-28T00:01:27.548Z","step":"navigate-to-cars-list"}
+{"timestamp":"2025-11-28T00:01:27.554Z","step":"navigation-error","details":{"message":"page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n\u001b[2m  - navigating to \"/cars\", waiting until \"networkidle\"\u001b[22m\n"}}
+{"timestamp":"2025-11-28T00:02:08.542Z","step":"install-supabase-mocks"}
+{"timestamp":"2025-11-28T00:02:08.561Z","step":"navigate-to-cars-list"}
+{"timestamp":"2025-11-28T00:02:08.569Z","step":"navigation-error","details":{"message":"page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n\u001b[2m  - navigating to \"/cars\", waiting until \"networkidle\"\u001b[22m\n"}}
+{"timestamp":"2025-11-28T00:02:45.478Z","step":"install-supabase-mocks"}
+{"timestamp":"2025-11-28T00:02:45.505Z","step":"navigate-to-cars-list"}
+{"timestamp":"2025-11-28T04:48:58.078Z","step":"install-supabase-mocks"}
+{"timestamp":"2025-11-28T04:48:58.079Z","step":"install-supabase-mocks"}
+{"timestamp":"2025-11-28T04:48:58.109Z","step":"navigate-to-cars-list"}
+{"timestamp":"2025-11-28T04:48:58.117Z","step":"navigate-to-cars-list"}

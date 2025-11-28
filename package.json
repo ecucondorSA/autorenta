@@ -162,16 +162,8 @@
     }
   },
   "dependencies": {
-    "@fullcalendar/angular": "^6.1.19",
-    "@fullcalendar/core": "^6.1.19",
-    "@fullcalendar/daygrid": "^6.1.19",
-    "@fullcalendar/interaction": "^6.1.19",
-    "@fullcalendar/timegrid": "^6.1.19",
-    "@gltf-transform/core": "^4.2.1",
-    "@gltf-transform/extensions": "^4.2.1",
     "@supabase/storage-js": "^2.84.0",
     "chart.js": "^4.5.1",
-    "draco3d": "^1.5.7",
     "flatpickr": "^4.6.13",
     "html2canvas": "^1.4.1",
     "ionicons": "^8.0.13",

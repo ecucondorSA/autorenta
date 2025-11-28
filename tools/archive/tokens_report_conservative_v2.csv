@@ -1,6 +1,0 @@
-file,json_bytes,json_tokens,toon_bytes,toon_tokens,saved_percent
-scripts/samples/mp_payment_example.json,801,258,631,200,22.48
-tests/fixtures/availability/available-cars-response.json,964,338,595,201,40.53
-tests/fixtures/availability/is-car-available-response.json,54,16,54,16,0
-tests/fixtures/mp_payment_approved.json,307,117,231,86,26.5
-tests/fixtures/mp_preference_approved.json,249,82,226,72,12.2

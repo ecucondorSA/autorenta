@@ -1,0 +1,116 @@
+{
+  "config": {
+    "configFile": "/home/edu/autorenta/e2e/playwright.config.ts",
+    "rootDir": "/home/edu/autorenta/e2e/specs",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/edu/autorenta/e2e/artifacts/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/home/edu/autorenta/e2e/artifacts/html"
+        }
+      ],
+      [
+        "/home/edu/autorenta/node_modules/.pnpm/playwright-qase-reporter@2.1.6_@playwright+test@1.56.1/node_modules/playwright-qase-reporter/dist/index.js",
+        {
+          "apiToken": "988ce0476ec829da1be1cab30510f59e45213593f543ae7897b06471bd20bef9",
+          "projectCode": "AUTORENTAR",
+          "runTitle": "Investigación",
+          "runComplete": true,
+          "basePath": "https://api.qase.io/v1",
+          "logging": true,
+          "uploadAttachments": true
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/edu/autorenta/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium-desktop",
+        "name": "chromium-desktop",
+        "testDir": "/home/edu/autorenta/e2e/specs",
+        "testIgnore": [
+          "**/apps/**",
+          "**/node_modules/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/home/edu/autorenta/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "mobile-chrome",
+        "name": "mobile-chrome",
+        "testDir": "/home/edu/autorenta/e2e/specs",
+        "testIgnore": [
+          "**/apps/**",
+          "**/node_modules/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 2,
+    "webServer": {
+      "command": "bash -lc \"cd apps/web && node scripts/generate-env.js && pnpm exec ng serve --configuration development --port 4300 --host 127.0.0.1\"",
+      "cwd": "/home/edu/autorenta",
+      "url": "http://127.0.0.1:4300",
+      "reuseExistingServer": true,
+      "timeout": 300000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
+      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
+    }
+  ],
+  "stats": {
+    "startTime": "2025-11-28T05:02:38.082Z",
+    "duration": 22547.993000000002,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
