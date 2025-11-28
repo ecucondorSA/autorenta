@@ -104,37 +104,14 @@ const headersContent = `# Headers globales de seguridad
   Cache-Control: public, max-age=0, must-revalidate
 `;
 
-// Step 1: Copy browser/* files to dist/web/ root (required by Cloudflare Pages)
-// Angular 17+ builds to dist/web/browser/, but Cloudflare expects files at dist/web/
-if (fs.existsSync(browserPath)) {
-  try {
-    const files = fs.readdirSync(browserPath);
-    for (const file of files) {
-      const src = path.join(browserPath, file);
-      const dest = path.join(distWebPath, file);
+// Step 1: Skip copying files (we will deploy the browser directory directly)
+// Angular builds to dist/web/browser/
 
-      if (fs.lstatSync(src).isDirectory()) {
-        // Copy directory recursively
-        if (!fs.existsSync(dest)) {
-          fs.mkdirSync(dest, { recursive: true });
-        }
-        execSync(`cp -r "${src}"/* "${dest}"/`);
-      } else {
-        // Copy file
-        fs.copyFileSync(src, dest);
-      }
-    }
-    console.log('✅ Copied browser/ files to dist/web/ root');
-  } catch (error) {
-    console.error('❌ Error copying browser files:', error.message);
-    process.exit(1);
-  }
-}
+// Step 2: Escribir archivos de configuración en el directorio browser
+// Así podemos desplegar dist/web/browser directamente y tener todo junto
+fs.writeFileSync(path.join(browserPath, '_redirects'), redirectsContent);
+fs.writeFileSync(path.join(browserPath, '_headers'), headersContent);
 
-// Step 2: Escribir archivos de configuración en la raíz
-fs.writeFileSync(path.join(distWebPath, '_redirects'), redirectsContent);
-fs.writeFileSync(path.join(distWebPath, '_headers'), headersContent);
-
-console.log('✅ Archivos de configuración de Cloudflare Pages creados:');
+console.log('✅ Archivos de configuración de Cloudflare Pages creados en dist/web/browser:');
 console.log('   - _redirects (SPA routing)');
 console.log('   - _headers (Security & Cache)');
