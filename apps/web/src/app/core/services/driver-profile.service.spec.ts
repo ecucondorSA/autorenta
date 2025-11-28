@@ -12,7 +12,7 @@ import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
 // TODO: Fix ClassUpdateResult, Signal API, and type mismatches
-xdescribe('DriverProfileService', () => {
+describe('DriverProfileService', () => {
   let service: DriverProfileService;
   let supabaseClientServiceMock: jasmine.SpyObj<SupabaseClientService>;
   let loggerServiceMock: jasmine.SpyObj<LoggerService>;

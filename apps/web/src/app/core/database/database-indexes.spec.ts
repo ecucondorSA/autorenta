@@ -8,7 +8,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
  * los índices necesarios configurados.
  */
 // TODO: Fix - These are schema verification tests, consider moving to SQL tests
-xdescribe('Database Indexes', () => {
+describe('Database Indexes', () => {
   let mockSupabase: jasmine.SpyObj<SupabaseClient>;
 
   beforeEach(() => {

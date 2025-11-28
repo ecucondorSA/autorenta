@@ -42,11 +42,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
     <div class="p-4">
       <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold">Feature Flags</h1>
-        <p-button
-          label="Nueva Flag"
-          icon="pi pi-plus"
-          (onClick)="showCreateDialog()"
-        ></p-button>
+        <p-button label="Nueva Flag" icon="pi pi-plus" (onClick)="showCreateDialog()"></p-button>
       </div>
 
       <!-- Stats Cards -->
@@ -117,7 +113,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
                   [severity]="getRolloutSeverity(flag.rollout_percentage)"
                 ></p-tag>
               </td>
-              <td>{{ flag.updated_at | date : 'short' }}</td>
+              <td>{{ flag.updated_at | date: 'short' }}</td>
               <td>
                 <p-button
                   icon="pi pi-pencil"
@@ -137,9 +133,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="6" class="text-center py-4">
-                No hay feature flags configuradas
-              </td>
+              <td colspan="6" class="text-center py-4">No hay feature flags configuradas</td>
             </tr>
           </ng-template>
         </p-table>
@@ -164,15 +158,12 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
           </ng-template>
           <ng-template pTemplate="body" let-log>
             <tr>
-              <td>{{ log.changed_at | date : 'medium' }}</td>
+              <td>{{ log.changed_at | date: 'medium' }}</td>
               <td>
                 <span class="font-mono text-sm">{{ log.feature_flag_name }}</span>
               </td>
               <td>
-                <p-tag
-                  [value]="log.action"
-                  [severity]="getActionSeverity(log.action)"
-                ></p-tag>
+                <p-tag [value]="log.action" [severity]="getActionSeverity(log.action)"></p-tag>
               </td>
               <td>
                 @if (log.action === 'updated' && log.old_value && log.new_value) {
@@ -182,10 +173,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
                       {{ log.new_value.enabled }}
                     </span>
                   }
-                  @if (
-                    log.old_value.rollout_percentage !==
-                    log.new_value.rollout_percentage
-                  ) {
+                  @if (log.old_value.rollout_percentage !== log.new_value.rollout_percentage) {
                     <span class="text-sm">
                       rollout: {{ log.old_value.rollout_percentage }}% →
                       {{ log.new_value.rollout_percentage }}%
@@ -216,9 +204,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
             class="w-full"
             placeholder="feature_name"
           />
-          <small class="text-gray-500"
-            >Usar snake_case, ej: new_booking_flow</small
-          >
+          <small class="text-gray-500">Usar snake_case, ej: new_booking_flow</small>
         </div>
 
         <div>
@@ -237,9 +223,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1"
-            >Rollout Percentage</label
-          >
+          <label class="block text-sm font-medium mb-1">Rollout Percentage</label>
           <p-inputNumber
             [(ngModel)]="formData.rollout_percentage"
             [min]="0"
@@ -254,11 +238,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
       </div>
 
       <ng-template pTemplate="footer">
-        <p-button
-          label="Cancelar"
-          [text]="true"
-          (onClick)="dialogVisible = false"
-        ></p-button>
+        <p-button label="Cancelar" [text]="true" (onClick)="dialogVisible = false"></p-button>
         <p-button
           [label]="editingFlag() ? 'Guardar' : 'Crear'"
           (onClick)="saveFlag()"
@@ -282,11 +262,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
       <p class="text-sm text-red-500 mt-2">Esta acción no se puede deshacer.</p>
 
       <ng-template pTemplate="footer">
-        <p-button
-          label="Cancelar"
-          [text]="true"
-          (onClick)="deleteDialogVisible = false"
-        ></p-button>
+        <p-button label="Cancelar" [text]="true" (onClick)="deleteDialogVisible = false"></p-button>
         <p-button
           label="Eliminar"
           severity="danger"
@@ -313,15 +289,10 @@ export class AdminFeatureFlagsPage implements OnInit {
 
   // Computed stats
   readonly totalFlags = computed(() => this.flags().length);
-  readonly enabledFlags = computed(
-    () => this.flags().filter((f) => f.enabled).length
-  );
-  readonly disabledFlags = computed(
-    () => this.flags().filter((f) => !f.enabled).length
-  );
+  readonly enabledFlags = computed(() => this.flags().filter((f) => f.enabled).length);
+  readonly disabledFlags = computed(() => this.flags().filter((f) => !f.enabled).length);
   readonly partialRolloutFlags = computed(
-    () =>
-      this.flags().filter((f) => f.enabled && f.rollout_percentage < 100).length
+    () => this.flags().filter((f) => f.enabled && f.rollout_percentage < 100).length,
   );
 
   // Dialog state
@@ -432,7 +403,7 @@ export class AdminFeatureFlagsPage implements OnInit {
         detail: `${flag.name} ${flag.enabled ? 'habilitada' : 'deshabilitada'}`,
       });
       await this.loadAuditLog();
-    } catch (err) {
+    } catch {
       // Revert the toggle
       flag.enabled = !flag.enabled;
       this.messageService.add({
@@ -462,7 +433,7 @@ export class AdminFeatureFlagsPage implements OnInit {
       });
       this.deleteDialogVisible = false;
       await this.loadAuditLog();
-    } catch (err) {
+    } catch {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',

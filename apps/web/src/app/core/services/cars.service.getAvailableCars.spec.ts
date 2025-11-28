@@ -7,7 +7,7 @@ import { CarsService } from './cars.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix Jasmine API (.returnThis(), score property, lat/lng parameters)
-xdescribe('CarsService - getAvailableCars with scoring', () => {
+describe('CarsService - getAvailableCars with scoring', () => {
   let service: CarsService;
   let supabase: any;
 

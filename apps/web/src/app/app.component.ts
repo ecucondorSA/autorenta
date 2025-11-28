@@ -163,7 +163,11 @@ import { VerificationPromptBannerComponent } from './shared/components/verificat
       }
 
       .header-transparent .nav-link-highlight {
-        background: linear-gradient(135deg, rgba(6, 182, 212, 0.8), rgba(59, 130, 246, 0.8)) !important;
+        background: linear-gradient(
+          135deg,
+          rgba(6, 182, 212, 0.8),
+          rgba(59, 130, 246, 0.8)
+        ) !important;
       }
     `,
   ],

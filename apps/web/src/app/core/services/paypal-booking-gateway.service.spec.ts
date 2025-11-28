@@ -8,7 +8,7 @@ import { PayPalBookingGatewayService } from './paypal-booking-gateway.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix Response mock type (missing headers, redirected, type, url properties)
-xdescribe('PayPalBookingGatewayService', () => {
+describe('PayPalBookingGatewayService', () => {
   let service: PayPalBookingGatewayService;
   let supabaseMock: any;
   const originalFetch = globalThis.fetch;

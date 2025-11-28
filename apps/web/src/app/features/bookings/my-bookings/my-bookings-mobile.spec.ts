@@ -43,7 +43,7 @@ import { MyBookingsPage } from './my-bookings.page';
  * Now using manual dimension updates + ResizeObserver callbacks without global window events
  */
 // TODO: Fix getMyBookings return type from Booking[] to { bookings: Booking[], total: number }
-xdescribe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
+describe('MyBookingsPage - Sprint 6: Mobile Responsive', () => {
   let component: MyBookingsPage;
   let fixture: ComponentFixture<MyBookingsPage>;
   let bookingsService: jasmine.SpyObj<BookingsService>;

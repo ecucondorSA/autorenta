@@ -177,7 +177,9 @@ export class SeoSchemaService {
         '@type': 'Offer',
         priceCurrency: car.currency,
         price: car.pricePerDay,
-        priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split('T')[0],
         availability: 'https://schema.org/InStock',
         url: `https://autorentar.com.ar/cars/${car.id}`,
         seller: {
@@ -201,9 +203,7 @@ export class SeoSchemaService {
   }
 
   // ─── Breadcrumb Schema ──────────────────────────────────────────────────
-  setBreadcrumbSchema(
-    items: Array<{ name: string; url: string }>,
-  ): void {
+  setBreadcrumbSchema(items: Array<{ name: string; url: string }>): void {
     const schema = {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',

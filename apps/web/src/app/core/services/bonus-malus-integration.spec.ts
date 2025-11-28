@@ -29,15 +29,14 @@ import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
 // TODO: Fix ClassUpdateResult type reference
-xdescribe('Bonus-Malus Integration Tests', () => {
+describe('Bonus-Malus Integration Tests', () => {
   let supabaseClient: SupabaseClient;
   let testUserId: string;
   let testBookingId: string;
 
   // Skip these tests if not running in integration test mode
   // Guard against 'process is not defined' in browser tests
-  const isIntegrationTest =
-    typeof process !== 'undefined' && !!process.env?.['TEST_SUPABASE_URL'];
+  const isIntegrationTest = typeof process !== 'undefined' && !!process.env?.['TEST_SUPABASE_URL'];
 
   beforeAll(() => {
     if (!isIntegrationTest) {

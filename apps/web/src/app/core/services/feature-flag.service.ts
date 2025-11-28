@@ -71,10 +71,7 @@ export class FeatureFlagService {
     this.errorSignal.set(null);
 
     try {
-      const { data, error } = await this.supabase
-        .from('feature_flags')
-        .select('*')
-        .order('name');
+      const { data, error } = await this.supabase.from('feature_flags').select('*').order('name');
 
       if (error) throw error;
 
@@ -134,7 +131,7 @@ export class FeatureFlagService {
             new: payload.new as FeatureFlag | null,
             old: payload.old as { id: string; name?: string } | null,
           });
-        }
+        },
       )
       .subscribe();
   }
@@ -280,12 +277,13 @@ export class FeatureFlagService {
           ? segment.value.includes(context.userId || '')
           : segment.value === context.userId;
 
-      case 'email_domain':
+      case 'email_domain': {
         if (!context.email) return false;
         const domain = context.email.split('@')[1];
         return Array.isArray(segment.value)
           ? segment.value.includes(domain)
           : segment.value === domain;
+      }
 
       case 'role':
         return Array.isArray(segment.value)
@@ -345,10 +343,7 @@ export class FeatureFlagService {
    * Get all feature flags (admin)
    */
   async getAllFlags(): Promise<FeatureFlag[]> {
-    const { data, error } = await this.supabase
-      .from('feature_flags')
-      .select('*')
-      .order('name');
+    const { data, error } = await this.supabase.from('feature_flags').select('*').order('name');
 
     if (error) throw error;
     return data || [];
@@ -358,11 +353,7 @@ export class FeatureFlagService {
    * Create a new feature flag (admin)
    */
   async createFlag(dto: CreateFeatureFlagDto): Promise<FeatureFlag> {
-    const { data, error } = await this.supabase
-      .from('feature_flags')
-      .insert(dto)
-      .select()
-      .single();
+    const { data, error } = await this.supabase.from('feature_flags').insert(dto).select().single();
 
     if (error) throw error;
 

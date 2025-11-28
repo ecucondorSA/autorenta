@@ -1,10 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
-import {
-  SplitPaymentService,
-  SplitPaymentRequest,
-  PaymentSplit,
-} from './split-payment.service';
+import { SplitPaymentService, SplitPaymentRequest, PaymentSplit } from './split-payment.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // Helper to create chainable Supabase mock queries
@@ -31,7 +27,8 @@ function createRejectingQuery(errorMessage: string): Record<string, any> {
   query['insert'] = jasmine.createSpy('insert').and.callFake(() => query);
   query['update'] = jasmine.createSpy('update').and.callFake(() => query);
   query['single'] = jasmine.createSpy('single').and.returnValue(rejection);
-  query['then'] = (_resolve: unknown, reject: (err: Error) => void) => reject(new Error(errorMessage));
+  query['then'] = (_resolve: unknown, reject: (err: Error) => void) =>
+    reject(new Error(errorMessage));
   query['catch'] = (fn: (err: Error) => void) => fn(new Error(errorMessage));
   return query;
 }
@@ -216,9 +213,7 @@ describe('SplitPaymentService', () => {
         platformFeePercentage: 10, // 10% instead of default 5%
       };
 
-      mockSupabaseClient.from.and.callFake(() =>
-        createMockQuery({ data: null, error: null }),
-      );
+      mockSupabaseClient.from.and.callFake(() => createMockQuery({ data: null, error: null }));
 
       const result = await firstValueFrom(service.processSplitPayment(customFeeRequest));
 
@@ -249,9 +244,7 @@ describe('SplitPaymentService', () => {
     it('should return splits for a booking', async () => {
       const mockSplits = [mockPaymentSplit, { ...mockPaymentSplit, id: 'split_456' }];
 
-      mockSupabaseClient.from.and.returnValue(
-        createMockQuery({ data: mockSplits, error: null }),
-      );
+      mockSupabaseClient.from.and.returnValue(createMockQuery({ data: mockSplits, error: null }));
 
       const result = await firstValueFrom(service.getBookingSplits('booking_789'));
 
@@ -287,9 +280,9 @@ describe('SplitPaymentService', () => {
     it('should throw error when fetch fails', async () => {
       mockSupabaseClient.from.and.returnValue(createRejectingQuery('Fetch failed'));
 
-      await expectAsync(
-        firstValueFrom(service.getUserSplits('user_001')),
-      ).toBeRejectedWithError('Failed to fetch user payment splits');
+      await expectAsync(firstValueFrom(service.getUserSplits('user_001'))).toBeRejectedWithError(
+        'Failed to fetch user payment splits',
+      );
     });
   });
 
@@ -304,9 +297,7 @@ describe('SplitPaymentService', () => {
         { ...mockPaymentSplit, id: 'split_3', status: 'pending', netAmount: 500 },
       ];
 
-      mockSupabaseClient.from.and.returnValue(
-        createMockQuery({ data: mockSplits, error: null }),
-      );
+      mockSupabaseClient.from.and.returnValue(createMockQuery({ data: mockSplits, error: null }));
 
       const result = await firstValueFrom(service.getUserSplitStats('user_001'));
 
@@ -322,9 +313,7 @@ describe('SplitPaymentService', () => {
         { ...mockPaymentSplit, status: 'pending', netAmount: 500 },
       ];
 
-      mockSupabaseClient.from.and.returnValue(
-        createMockQuery({ data: mockSplits, error: null }),
-      );
+      mockSupabaseClient.from.and.returnValue(createMockQuery({ data: mockSplits, error: null }));
 
       const result = await firstValueFrom(service.getUserSplitStats('user_001'));
 
@@ -386,9 +375,7 @@ describe('SplitPaymentService', () => {
         failureReason: 'Payment declined',
       };
 
-      mockSupabaseClient.from.and.returnValue(
-        createMockQuery({ data: failedSplit, error: null }),
-      );
+      mockSupabaseClient.from.and.returnValue(createMockQuery({ data: failedSplit, error: null }));
 
       const result = await firstValueFrom(service.failSplit('split_123', 'Payment declined'));
 

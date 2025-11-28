@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  Input,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, Input, signal } from '@angular/core';
 import type { UrgencyIndicator } from '../../../../core/models/marketplace.model';
 
 /**
@@ -33,12 +27,7 @@ import type { UrgencyIndicator } from '../../../../core/models/marketplace.model
           }
         </div>
         @if (dismissible) {
-          <button
-            type="button"
-            class="dismiss-btn"
-            aria-label="Cerrar"
-            (click)="dismiss()"
-          >
+          <button type="button" class="dismiss-btn" aria-label="Cerrar" (click)="dismiss()">
             ×
           </button>
         }

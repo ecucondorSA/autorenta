@@ -3,7 +3,7 @@ import { RiskSnapshot, FxSnapshot } from '../../../../core/models/booking-detail
 import { PaymentModeAlertComponent } from './payment-mode-alert.component';
 
 // TODO: Fix invalid CSS selectors like '.bg-cta-default/10' - Tailwind classes with / are not valid DOM selectors
-xdescribe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
+describe('PaymentModeAlertComponent - Escenario 3: Cambio de método', () => {
   let component: PaymentModeAlertComponent;
   let fixture: ComponentFixture<PaymentModeAlertComponent>;
 

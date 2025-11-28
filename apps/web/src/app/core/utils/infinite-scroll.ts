@@ -45,9 +45,7 @@ export interface InfiniteScrollState<T> {
   resetOnFilterChange: (filters: unknown) => void;
 }
 
-export function createInfiniteScroll<T>(
-  options: InfiniteScrollOptions<T>,
-): InfiniteScrollState<T> {
+export function createInfiniteScroll<T>(options: InfiniteScrollOptions<T>): InfiniteScrollState<T> {
   const itemsSignal = signal<T[]>([]);
   const isLoadingSignal = signal(false);
   const hasMoreSignal = signal(true);

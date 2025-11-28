@@ -8,7 +8,7 @@ import { Booking } from '../../../core/models';
 import { MyBookingsPage } from './my-bookings.page';
 
 // TODO: Update mocks to return { bookings: [...], total: N }
-xdescribe('MyBookingsPage - Sprint 3', () => {
+describe('MyBookingsPage - Sprint 3', () => {
   let component: MyBookingsPage;
   let fixture: ComponentFixture<MyBookingsPage>;
   let bookingsService: jasmine.SpyObj<BookingsService>;
@@ -476,7 +476,7 @@ xdescribe('MyBookingsPage - Sprint 3', () => {
       expect(bookingsService.cancelBooking).not.toHaveBeenCalled();
     });
 
-    xit('debería manejar error inesperado en cancelación', async () => {
+    it('debería manejar error inesperado en cancelación', async () => {
       // Arrange
       bookingsService.cancelBooking.and.returnValue(Promise.reject(new Error('Network error')));
       bookingsService.getMyBookings.and.returnValue(Promise.resolve([]));

@@ -37,6 +37,18 @@
     "supabase": {
       "type": "http",
       "url": "https://mcp.supabase.com/mcp?project_ref=pisqjmoklivzpwufhscx"
+    },
+    "state-aware-testing": {
+      "command": "node",
+      "args": [
+        "/home/edu/autorenta/tools/state-aware-mcp/server.js"
+      ],
+      "env": {
+        "NG_APP_SUPABASE_URL": "${NG_APP_SUPABASE_URL}",
+        "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_SERVICE_ROLE_KEY}",
+        "PROJECT_ROOT": "/home/edu/autorenta",
+        "NODE_ENV": "development"
+      }
     }
   }
 }

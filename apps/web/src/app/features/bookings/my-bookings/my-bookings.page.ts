@@ -65,7 +65,7 @@ export class MyBookingsPage implements OnInit {
     };
   });
 
-  constructor(private readonly bookingsService: BookingsService) { }
+  constructor(private readonly bookingsService: BookingsService) {}
 
   ngOnInit(): void {
     void this.loadBookings();
@@ -254,9 +254,9 @@ export class MyBookingsPage implements OnInit {
         // Fallback: mostrar email
         alert(
           `📧 Contacto del propietario:\n\n` +
-          `${contact.name || 'Propietario'}\n` +
-          `Email: ${contact.email || 'No disponible'}\n\n` +
-          `Puedes contactarlo por email para coordinar el retiro.`,
+            `${contact.name || 'Propietario'}\n` +
+            `Email: ${contact.email || 'No disponible'}\n\n` +
+            `Puedes contactarlo por email para coordinar el retiro.`,
         );
         return;
       }

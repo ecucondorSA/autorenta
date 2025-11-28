@@ -15,7 +15,7 @@ import { SupabaseClientService } from '../../core/services/supabase-client.servi
  * Level 1: Email + Phone → Level 2: Documents → Level 3: Facial Biometrics
  */
 // TODO: Fix - Integration test requires mocks for all verification services
-xdescribe('Verification Flow Integration', () => {
+describe('Verification Flow Integration', () => {
   let identityLevelService: IdentityLevelService;
   let emailVerificationService: EmailVerificationService;
   let phoneVerificationService: PhoneVerificationService;

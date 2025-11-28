@@ -10,7 +10,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
  * que el schema sea el esperado.
  */
 // TODO: Fix SupabaseClient mock type incompatibility
-xdescribe('Database RPC Functions', () => {
+describe('Database RPC Functions', () => {
   let mockSupabase: jasmine.SpyObj<SupabaseClient>;
 
   beforeEach(() => {

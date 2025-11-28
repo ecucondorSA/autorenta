@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
 import type { Testimonial } from '../../../../core/models/marketplace.model';
 
 /**
@@ -23,12 +18,8 @@ import type { Testimonial } from '../../../../core/models/marketplace.model';
   template: `
     <section class="testimonials-section" aria-labelledby="testimonials-title">
       <header class="section-header">
-        <h2 id="testimonials-title" class="section-title">
-          Lo que dicen nuestros usuarios
-        </h2>
-        <p class="section-subtitle">
-          Miles de conductores y dueños confían en Autorentar
-        </p>
+        <h2 id="testimonials-title" class="section-title">Lo que dicen nuestros usuarios</h2>
+        <p class="section-subtitle">Miles de conductores y dueños confían en Autorentar</p>
       </header>
 
       <!-- Role Tabs -->
@@ -199,7 +190,9 @@ import type { Testimonial } from '../../../../core/models/marketplace.model';
         border-radius: var(--radius-xl);
         padding: var(--space-6);
         box-shadow: var(--shadow-sm);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
 
         &:hover {
           transform: translateY(-2px);
@@ -368,9 +361,7 @@ export class TestimonialsSectionComponent {
     if (role === 'all') {
       this.filteredTestimonials.set(this.testimonials);
     } else {
-      this.filteredTestimonials.set(
-        this.testimonials.filter((t) => t.role === role),
-      );
+      this.filteredTestimonials.set(this.testimonials.filter((t) => t.role === role));
     }
   }
 }

@@ -7,7 +7,7 @@ import { PayPalWalletGatewayService } from './paypal-wallet-gateway.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix Response mock type (missing headers, redirected, type, url properties)
-xdescribe('PayPalWalletGatewayService', () => {
+describe('PayPalWalletGatewayService', () => {
   let service: PayPalWalletGatewayService;
   let supabaseMock: any;
   const originalFetch = globalThis.fetch;

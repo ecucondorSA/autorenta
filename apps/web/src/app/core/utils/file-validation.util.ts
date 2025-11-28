@@ -23,12 +23,7 @@ export interface FileValidationResult {
 /**
  * Default allowed MIME types for images
  */
-export const DEFAULT_IMAGE_MIME_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-];
+export const DEFAULT_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
 /**
  * Default allowed MIME types for documents

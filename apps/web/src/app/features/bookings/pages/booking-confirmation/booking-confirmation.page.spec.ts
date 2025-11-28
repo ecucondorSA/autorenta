@@ -4,7 +4,7 @@ import { BookingsService } from '../../../../core/services/bookings.service';
 import { BookingConfirmationPage } from './booking-confirmation.page';
 
 // TODO: Fix - Missing HttpClientTestingModule for TikTokEventsService dependency
-xdescribe('BookingConfirmationPage', () => {
+describe('BookingConfirmationPage', () => {
   let component: BookingConfirmationPage;
   let fixture: ComponentFixture<BookingConfirmationPage>;
   let mockRouter: jasmine.SpyObj<Router>;

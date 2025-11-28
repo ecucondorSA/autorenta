@@ -7,10 +7,7 @@ import { LoggerService } from './logger.service';
 import { CarOwnerNotificationsService } from './car-owner-notifications.service';
 import { CarsService } from './cars.service';
 import { Booking } from '../models';
-import {
-  WalletLockFundsResponse,
-  WalletUnlockFundsResponse,
-} from '../models/wallet.model';
+import { WalletLockFundsResponse, WalletUnlockFundsResponse } from '../models/wallet.model';
 
 // Helper to create chainable Supabase mock queries
 function createMockQuery(finalResponse: { data: unknown; error: unknown }): Record<string, any> {
@@ -135,9 +132,7 @@ describe('BookingWalletService', () => {
   // ========================================
   describe('processRentalPayment', () => {
     it('should process rental payment successfully', async () => {
-      mockSupabaseClient.from.and.returnValue(
-        createMockQuery({ data: null, error: null }),
-      );
+      mockSupabaseClient.from.and.returnValue(createMockQuery({ data: null, error: null }));
 
       const result = await service.processRentalPayment(mockBooking, 10000);
 
@@ -155,9 +150,7 @@ describe('BookingWalletService', () => {
     });
 
     it('should notify owner after successful payment', async () => {
-      mockSupabaseClient.from.and.returnValue(
-        createMockQuery({ data: null, error: null }),
-      );
+      mockSupabaseClient.from.and.returnValue(createMockQuery({ data: null, error: null }));
 
       await service.processRentalPayment(mockBooking, 10000);
 

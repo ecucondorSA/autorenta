@@ -22,7 +22,9 @@ import {
  */
 type THREE = typeof import('three');
 type GLTFLoaderType = typeof import('three/examples/jsm/loaders/GLTFLoader.js').GLTFLoader;
-type OrbitControlsType = typeof import('three/examples/jsm/controls/OrbitControls.js').OrbitControls;
+type DRACOLoaderType = typeof import('three/examples/jsm/loaders/DRACOLoader.js').DRACOLoader;
+type OrbitControlsType =
+  typeof import('three/examples/jsm/controls/OrbitControls.js').OrbitControls;
 
 /** Información de una parte del vehículo */
 export interface CarPartInfo {
@@ -37,17 +39,23 @@ export interface CarPartInfo {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="viewer-container"
-         (mouseenter)="onMouseEnter()"
-         (mouseleave)="onMouseLeave()"
-         (mousemove)="onMouseMove($event)"
-         (click)="onClick($event)"
-         (dblclick)="onDoubleClick()">
+    <div
+      class="viewer-container"
+      (mouseenter)="onMouseEnter()"
+      (mouseleave)="onMouseLeave()"
+      (mousemove)="onMouseMove($event)"
+      (click)="onClick($event)"
+      (dblclick)="onDoubleClick()"
+    >
       <canvas #rendererCanvas id="webgl-canvas"></canvas>
 
       <!-- Part Tooltip (hover) -->
       @if (hoveredPartInfo && !isLoading) {
-        <div class="part-tooltip" [style.left.px]="tooltipPosition.x" [style.top.px]="tooltipPosition.y">
+        <div
+          class="part-tooltip"
+          [style.left.px]="tooltipPosition.x"
+          [style.top.px]="tooltipPosition.y"
+        >
           <span class="tooltip-icon">{{ hoveredPartInfo.icon }}</span>
           <span class="tooltip-text">{{ hoveredPartInfo.name }}</span>
         </div>
@@ -68,7 +76,9 @@ export interface CarPartInfo {
           <div class="loading-content">
             <div class="car-silhouette">
               <svg viewBox="0 0 100 40" fill="currentColor">
-                <path d="M15 30c0-2.8 2.2-5 5-5s5 2.2 5 5H15zm60 0c0-2.8 2.2-5 5-5s5 2.2 5 5H75zM10 25l5-10h25l10-7h20l15 7h10v10l-5 5H15l-5-5z"/>
+                <path
+                  d="M15 30c0-2.8 2.2-5 5-5s5 2.2 5 5H15zm60 0c0-2.8 2.2-5 5-5s5 2.2 5 5H75zM10 25l5-10h25l10-7h20l15 7h10v10l-5 5H15l-5-5z"
+                />
               </svg>
             </div>
             <div class="loading-bar">
@@ -104,7 +114,12 @@ export interface CarPartInfo {
       </div>
 
       <!-- Headlights Toggle Button -->
-      <button class="headlights-btn" [class.active]="headlightsOn" (click)="toggleHeadlights()" aria-label="Encender/Apagar luces">
+      <button
+        class="headlights-btn"
+        [class.active]="headlightsOn"
+        (click)="toggleHeadlights()"
+        aria-label="Encender/Apagar luces"
+      >
         <span class="btn-icon">{{ headlightsOn ? '💡' : '🔦' }}</span>
         <span class="btn-text">Luces</span>
       </button>
@@ -145,7 +160,7 @@ export interface CarPartInfo {
       .loading-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(248, 244, 236, 0.98) 0%, rgba(232, 228, 220, 0.95) 100%);
+        background: var(--surface-base); /* Use CSS variable */
         backdrop-filter: blur(20px);
         display: flex;
         align-items: center;
@@ -163,7 +178,7 @@ export interface CarPartInfo {
       .car-silhouette {
         width: 120px;
         height: 60px;
-        color: rgba(167, 216, 244, 0.6);
+        color: var(--cta-default); /* Use CSS variable */
         animation: carPulse 2s ease-in-out infinite;
       }
 
@@ -173,14 +188,21 @@ export interface CarPartInfo {
       }
 
       @keyframes carPulse {
-        0%, 100% { opacity: 0.4; transform: scale(1); }
-        50% { opacity: 1; transform: scale(1.05); }
+        0%,
+        100% {
+          opacity: 0.4;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
       }
 
       .loading-bar {
         width: 200px;
         height: 3px;
-        background: rgba(0, 0, 0, 0.08);
+        background: var(--border-subtle); /* Use CSS variable */
         border-radius: 10px;
         overflow: hidden;
       }
@@ -188,19 +210,30 @@ export interface CarPartInfo {
       .loading-progress {
         height: 100%;
         width: 30%;
-        background: linear-gradient(90deg, #a7d8f4, #8ec9ec, #a7d8f4);
+        background: linear-gradient(
+          90deg,
+          var(--cta-default),
+          var(--cta-hover),
+          var(--cta-default)
+        ); /* Use CSS variables */
         background-size: 200% 100%;
         border-radius: 10px;
         animation: loadingSlide 1.5s ease-in-out infinite;
       }
 
       @keyframes loadingSlide {
-        0% { transform: translateX(-100%); background-position: 0% 50%; }
-        100% { transform: translateX(400%); background-position: 100% 50%; }
+        0% {
+          transform: translateX(-100%);
+          background-position: 0% 50%;
+        }
+        100% {
+          transform: translateX(400%);
+          background-position: 100% 50%;
+        }
       }
 
       .loading-text {
-        color: rgba(5, 5, 5, 0.6);
+        color: var(--text-secondary); /* Use CSS variable */
         font-size: 0.875rem;
         font-weight: 500;
         letter-spacing: 0.05em;
@@ -215,14 +248,16 @@ export interface CarPartInfo {
         display: flex;
         gap: 1.5rem;
         padding: 0.75rem 1.5rem;
-        background: rgba(255, 255, 255, 0.9);
+        background: var(--surface-raised); /* Use CSS variable */
         backdrop-filter: blur(12px);
         border-radius: 9999px;
-        border: 1px solid rgba(167, 216, 244, 0.4);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--border-default); /* Use CSS variable */
+        box-shadow: var(--elevation-2); /* Use CSS variable */
         z-index: 5;
         animation: hintsSlideUp 0.5s ease-out;
-        transition: opacity 0.5s ease, transform 0.5s ease;
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s ease;
       }
 
       .interaction-hints.fade-out {
@@ -231,15 +266,21 @@ export interface CarPartInfo {
       }
 
       @keyframes hintsSlideUp {
-        from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateX(-50%) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
       }
 
       .hint-item {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        color: rgba(5, 5, 5, 0.7);
+        color: var(--text-primary); /* Use CSS variable */
         font-size: 0.75rem;
         font-weight: 500;
         white-space: nowrap;
@@ -258,11 +299,11 @@ export interface CarPartInfo {
         align-items: center;
         gap: 0.5rem;
         padding: 0.5rem 1rem;
-        background: rgba(167, 216, 244, 0.25);
+        background: var(--surface-raised); /* Use CSS variable */
         backdrop-filter: blur(12px);
         border-radius: 9999px;
-        border: 1px solid rgba(167, 216, 244, 0.5);
-        color: #3b6e8f;
+        border: 1px solid var(--border-default); /* Use CSS variable */
+        color: var(--text-primary); /* Use CSS variable */
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -272,8 +313,14 @@ export interface CarPartInfo {
       }
 
       @keyframes modeSlideIn {
-        from { opacity: 0; transform: translateX(20px); }
-        to { opacity: 1; transform: translateX(0); }
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
 
       .mode-icon {
@@ -287,7 +334,11 @@ export interface CarPartInfo {
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.5s ease;
-        background: radial-gradient(ellipse 60% 40% at 50% 60%, rgba(167, 216, 244, 0.2), transparent 70%);
+        background: radial-gradient(
+          ellipse 60% 40% at 50% 60%,
+          var(--cta-secondary),
+          transparent 70%
+        ); /* Use CSS variable */
         z-index: 1;
       }
 
@@ -302,11 +353,11 @@ export interface CarPartInfo {
         align-items: center;
         gap: 0.5rem;
         padding: 0.5rem 0.875rem;
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--surface-raised); /* Use CSS variable */
         backdrop-filter: blur(12px);
         border-radius: 8px;
-        border: 1px solid rgba(167, 216, 244, 0.5);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border: 1px solid var(--border-default); /* Use CSS variable */
+        box-shadow: var(--elevation-3); /* Use CSS variable */
         pointer-events: none;
         z-index: 20;
         transform: translate(-50%, -120%);
@@ -315,8 +366,14 @@ export interface CarPartInfo {
       }
 
       @keyframes tooltipFadeIn {
-        from { opacity: 0; transform: translate(-50%, -100%); }
-        to { opacity: 1; transform: translate(-50%, -120%); }
+        from {
+          opacity: 0;
+          transform: translate(-50%, -100%);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, -120%);
+        }
       }
 
       .tooltip-icon {
@@ -326,7 +383,7 @@ export interface CarPartInfo {
       .tooltip-text {
         font-size: 0.8125rem;
         font-weight: 600;
-        color: #050505;
+        color: var(--text-primary); /* Use CSS variable */
         letter-spacing: 0.01em;
       }
 
@@ -340,18 +397,24 @@ export interface CarPartInfo {
         align-items: center;
         gap: 0.625rem;
         padding: 0.625rem 1rem;
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--surface-raised); /* Use CSS variable */
         backdrop-filter: blur(12px);
         border-radius: 9999px;
-        border: 2px solid rgba(167, 216, 244, 0.6);
-        box-shadow: 0 4px 20px rgba(167, 216, 244, 0.3);
+        border: 2px solid var(--cta-default); /* Use CSS variable */
+        box-shadow: var(--elevation-4); /* Use CSS variable */
         z-index: 15;
         animation: badgeSlideUp 0.3s ease-out;
       }
 
       @keyframes badgeSlideUp {
-        from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateX(-50%) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
       }
 
       .badge-icon {
@@ -361,7 +424,7 @@ export interface CarPartInfo {
       .badge-name {
         font-size: 0.875rem;
         font-weight: 600;
-        color: #050505;
+        color: var(--text-primary); /* Use CSS variable */
       }
 
       .badge-close {
@@ -372,18 +435,18 @@ export interface CarPartInfo {
         height: 20px;
         margin-left: 0.25rem;
         padding: 0;
-        background: rgba(0, 0, 0, 0.1);
+        background: var(--surface-secondary); /* Use CSS variable */
         border: none;
         border-radius: 50%;
-        color: #4e4e4e;
+        color: var(--text-secondary); /* Use CSS variable */
         font-size: 0.75rem;
         cursor: pointer;
         transition: all 0.2s ease;
       }
 
       .badge-close:hover {
-        background: rgba(167, 216, 244, 0.3);
-        color: #050505;
+        background: var(--cta-secondary); /* Use CSS variable */
+        color: var(--text-primary); /* Use CSS variable */
       }
 
       /* Mobile Responsive */
@@ -423,30 +486,30 @@ export interface CarPartInfo {
         align-items: center;
         gap: 0.5rem;
         padding: 0.5rem 1rem;
-        background: rgba(255, 255, 255, 0.85);
+        background: var(--surface-raised); /* Use CSS variable */
         backdrop-filter: blur(12px);
         border-radius: 9999px;
-        border: 1px solid rgba(167, 216, 244, 0.5);
-        color: #4e4e4e;
+        border: 1px solid var(--border-default); /* Use CSS variable */
+        color: var(--text-primary); /* Use CSS variable */
         font-size: 0.75rem;
         font-weight: 600;
         cursor: pointer;
         z-index: 5;
         transition: all 0.2s ease;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        box-shadow: var(--elevation-2); /* Use CSS variable */
       }
 
       .headlights-btn:hover {
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--surface-elevated); /* Use CSS variable */
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--elevation-3); /* Use CSS variable */
       }
 
       .headlights-btn.active {
-        background: rgba(255, 255, 220, 0.95);
-        border-color: #fbbf24;
-        color: #d97706;
-        box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+        background: var(--warning-50); /* Use CSS variable */
+        border-color: var(--warning-400); /* Use CSS variable */
+        color: var(--warning-600); /* Use CSS variable */
+        box-shadow: 0 0 15px var(--warning-200); /* Use CSS variable */
       }
 
       .btn-icon {
@@ -465,7 +528,11 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   @Output() viewModeChange = new EventEmitter<string>();
   @Output() modelClicked = new EventEmitter<void>();
   @Output() modelLoaded = new EventEmitter<void>();
-  @Output() partHovered = new EventEmitter<{ part: string; info: CarPartInfo | undefined; position: { x: number; y: number } }>();
+  @Output() partHovered = new EventEmitter<{
+    part: string;
+    info: CarPartInfo | undefined;
+    position: { x: number; y: number };
+  }>();
   @Output() partSelected = new EventEmitter<{ part: string; info: CarPartInfo | undefined }>();
   @Output() partDeselected = new EventEmitter<void>();
 
@@ -481,7 +548,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   hintsHiding = false;
   currentViewMode: 'default' | 'front' | 'side' | 'interior' | 'top' = 'default';
   headlightsOn = false;
-  private headlightSpots: any[] = []; // THREE.SpotLight[]
+  private headlightSpots: import('three').Object3D[] = [];
 
   // Part interaction state (public for template)
   hoveredPartInfo: CarPartInfo | null = null;
@@ -497,13 +564,17 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     default: { position: { x: 4, y: 1.5, z: 6 }, target: { x: 0, y: 0.8, z: 0 } },
     front: { position: { x: 0, y: 1.2, z: 8 }, target: { x: 0, y: 0.8, z: 0 } },
     side: { position: { x: 8, y: 1.5, z: 0 }, target: { x: 0, y: 0.8, z: 0 } },
-    interior: { position: { x: 0.3, y: 1.2, z: 0 }, target: { x: 0, y: 1, z: 2 } },
+    // Vista interior desde asiento del conductor - mirando hacia adelante
+    interior: { position: { x: -0.4, y: 1.1, z: -0.3 }, target: { x: -0.4, y: 1.0, z: 5 } },
+    // Vista alternativa desde asiento del copiloto
+    passenger: { position: { x: 0.4, y: 1.1, z: -0.3 }, target: { x: 0.4, y: 1.0, z: 5 } },
     top: { position: { x: 0, y: 10, z: 2 }, target: { x: 0, y: 0, z: 0 } },
   };
 
   // Three.js module reference (lazy loaded)
   private THREE: THREE | null = null;
   private GLTFLoader: GLTFLoaderType | null = null;
+  private DRACOLoader: DRACOLoaderType | null = null;
   private OrbitControls: OrbitControlsType | null = null;
 
   // Three.js objects (typed as any since we load dynamically)
@@ -513,8 +584,8 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   private carModel: import('three').Group | null = null;
   private animationId: number | null = null;
   private resizeObserver: ResizeObserver | null = null;
-  private mixer: any = null; // THREE.AnimationMixer
-  private clock: any = null; // THREE.Clock
+  private mixer: import('three').AnimationMixer | null = null;
+  private clock: import('three').Clock | null = null;
   private controls: InstanceType<OrbitControlsType> | null = null;
 
   // Animation state
@@ -535,25 +606,79 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
   // Part info mapping - detecta partes por nombre de mesh o características
   private readonly partInfoMap: Map<string, CarPartInfo> = new Map([
-    ['body', { name: 'Carroceria', description: 'Estructura principal del vehiculo', icon: '🚗', category: 'body' }],
-    ['chassis', { name: 'Chasis', description: 'Base estructural del vehiculo', icon: '🔧', category: 'body' }],
+    [
+      'body',
+      {
+        name: 'Carroceria',
+        description: 'Estructura principal del vehiculo',
+        icon: '🚗',
+        category: 'body',
+      },
+    ],
+    [
+      'chassis',
+      {
+        name: 'Chasis',
+        description: 'Base estructural del vehiculo',
+        icon: '🔧',
+        category: 'body',
+      },
+    ],
     ['hood', { name: 'Capo', description: 'Cubierta del motor', icon: '🔲', category: 'body' }],
-    ['trunk', { name: 'Maletero', description: 'Compartimiento de carga', icon: '📦', category: 'body' }],
+    [
+      'trunk',
+      { name: 'Maletero', description: 'Compartimiento de carga', icon: '📦', category: 'body' },
+    ],
     ['door', { name: 'Puerta', description: 'Acceso al habitaculo', icon: '🚪', category: 'body' }],
-    ['wheel', { name: 'Rueda', description: 'Sistema de rodamiento', icon: '🛞', category: 'wheel' }],
-    ['tire', { name: 'Neumatico', description: 'Cubierta de caucho', icon: '⚫', category: 'wheel' }],
+    [
+      'wheel',
+      { name: 'Rueda', description: 'Sistema de rodamiento', icon: '🛞', category: 'wheel' },
+    ],
+    [
+      'tire',
+      { name: 'Neumatico', description: 'Cubierta de caucho', icon: '⚫', category: 'wheel' },
+    ],
     ['rim', { name: 'Rin', description: 'Llanta de aleacion', icon: '💿', category: 'wheel' }],
     ['window', { name: 'Ventana', description: 'Cristal lateral', icon: '🪟', category: 'glass' }],
-    ['windshield', { name: 'Parabrisas', description: 'Cristal frontal', icon: '🔳', category: 'glass' }],
-    ['glass', { name: 'Cristal', description: 'Superficie transparente', icon: '✨', category: 'glass' }],
-    ['headlight', { name: 'Faro delantero', description: 'Iluminacion frontal', icon: '💡', category: 'light' }],
-    ['taillight', { name: 'Faro trasero', description: 'Iluminacion posterior', icon: '🔴', category: 'light' }],
+    [
+      'windshield',
+      { name: 'Parabrisas', description: 'Cristal frontal', icon: '🔳', category: 'glass' },
+    ],
+    [
+      'glass',
+      { name: 'Cristal', description: 'Superficie transparente', icon: '✨', category: 'glass' },
+    ],
+    [
+      'headlight',
+      { name: 'Faro delantero', description: 'Iluminacion frontal', icon: '💡', category: 'light' },
+    ],
+    [
+      'taillight',
+      { name: 'Faro trasero', description: 'Iluminacion posterior', icon: '🔴', category: 'light' },
+    ],
     ['mirror', { name: 'Espejo', description: 'Retrovisor lateral', icon: '🪞', category: 'body' }],
-    ['bumper', { name: 'Paragolpes', description: 'Proteccion frontal/trasera', icon: '🛡️', category: 'body' }],
+    [
+      'bumper',
+      {
+        name: 'Paragolpes',
+        description: 'Proteccion frontal/trasera',
+        icon: '🛡️',
+        category: 'body',
+      },
+    ],
     ['grille', { name: 'Parrilla', description: 'Rejilla frontal', icon: '▦', category: 'body' }],
-    ['seat', { name: 'Asiento', description: 'Asiento del vehiculo', icon: '🪑', category: 'interior' }],
-    ['dashboard', { name: 'Tablero', description: 'Panel de instrumentos', icon: '📊', category: 'interior' }],
-    ['steering', { name: 'Volante', description: 'Control de direccion', icon: '🎡', category: 'interior' }],
+    [
+      'seat',
+      { name: 'Asiento', description: 'Asiento del vehiculo', icon: '🪑', category: 'interior' },
+    ],
+    [
+      'dashboard',
+      { name: 'Tablero', description: 'Panel de instrumentos', icon: '📊', category: 'interior' },
+    ],
+    [
+      'steering',
+      { name: 'Volante', description: 'Control de direccion', icon: '🎡', category: 'interior' },
+    ],
   ]);
 
   // Colors for mapping
@@ -568,6 +693,8 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     { name: 'Verde', hex: '#008000' },
   ];
 
+  private themeChangeListener: ((event: Event) => void) | null = null;
+
   async ngAfterViewInit(): Promise<void> {
     if (!this.isBrowser) {
       this.isLoading = false;
@@ -576,14 +703,16 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
     try {
       // ✅ OPTIMIZED: Dynamic import of Three.js
-      const [threeModule, gltfModule, orbitModule] = await Promise.all([
+      const [threeModule, gltfModule, dracoModule, orbitModule] = await Promise.all([
         import('three'),
         import('three/examples/jsm/loaders/GLTFLoader.js'),
+        import('three/examples/jsm/loaders/DRACOLoader.js'),
         import('three/examples/jsm/controls/OrbitControls.js'),
       ]);
 
       this.THREE = threeModule;
       this.GLTFLoader = gltfModule.GLTFLoader;
+      this.DRACOLoader = dracoModule.DRACOLoader;
       this.OrbitControls = orbitModule.OrbitControls;
 
       // Initialize Raycaster for part detection
@@ -597,6 +726,13 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
       this.loadCar();
       this.startAnimationLoop();
       this.setupResizeObserver();
+
+      // Listen for theme changes
+      this.themeChangeListener = (_event: Event) => {
+        // const customEvent = event as CustomEvent;
+        this.updateThemeColors();
+      };
+      window.addEventListener('autorenta:theme-change', this.themeChangeListener);
     } catch (error) {
       console.error('[Car3dViewer] Failed to load Three.js:', error);
       this.isLoading = false;
@@ -633,34 +769,18 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     if (this.hintsTimeout) {
       clearTimeout(this.hintsTimeout);
     }
+    if (this.themeChangeListener) {
+      window.removeEventListener('autorenta:theme-change', this.themeChangeListener);
+    }
   }
 
   private initScene(): void {
     if (!this.THREE) return;
 
-    // 1. Scene con fondo degradado Autorentar (marfil neutro)
     this.scene = new this.THREE.Scene();
 
-    // Crear fondo degradado Autorentar - colores neutros elegantes
-    const canvas = document.createElement('canvas');
-    canvas.width = 2;
-    canvas.height = 512;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      const gradient = ctx.createLinearGradient(0, 0, 0, 512);
-      gradient.addColorStop(0, '#f8f4ec');    // Marfil claro arriba
-      gradient.addColorStop(0.3, '#f0ebe2');  // Marfil medio
-      gradient.addColorStop(0.6, '#e8e4dc');  // Marfil oscuro
-      gradient.addColorStop(1, '#d8d4cc');    // Gris cálido abajo
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 2, 512);
-    }
-    const texture = new this.THREE.CanvasTexture(canvas);
-    texture.needsUpdate = true;
-    this.scene.background = texture;
-
-    // Create studio environment for reflections (PMREMGenerator)
-    this.createStudioEnvironment();
+    // Initial theme colors update
+    this.updateThemeColors();
 
     // 2. Camera - Más cerca y FOV más estrecho para efecto inmersivo
     const width = this.rendererCanvas.nativeElement.clientWidth;
@@ -670,10 +790,11 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     this.camera.position.set(4, 1.5, 6);
     this.camera.lookAt(0, 0.8, 0);
 
-    // 3. Renderer
+    // 3. Renderer - alpha: true para fondo transparente (usa el fondo del HTML)
     this.renderer = new this.THREE.WebGLRenderer({
       canvas: this.rendererCanvas.nativeElement,
       antialias: true,
+      alpha: true,
     });
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -682,6 +803,21 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     this.renderer.outputColorSpace = this.THREE.SRGBColorSpace;
     this.renderer.toneMapping = this.THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.8; // AUMENTADO de 1.2 a 1.8 para más brillo
+  }
+
+  private updateThemeColors(): void {
+    if (!this.THREE || !this.scene || !this.renderer) return;
+
+    const styles = getComputedStyle(document.documentElement);
+    const surfaceBase = styles.getPropertyValue('--surface-base').trim();
+    const surfaceSecondary = styles.getPropertyValue('--surface-secondary').trim();
+
+    // Fondo transparente - usa el fondo del HTML (marfil)
+    this.scene.background = null;
+    this.renderer.setClearColor(0x000000, 0); // Transparente
+
+    // Update environment for reflections
+    this.createStudioEnvironment(surfaceBase, surfaceSecondary);
   }
 
   private setupOrbitControls(): void {
@@ -771,7 +907,10 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   }
 
   /** Create procedural studio environment for realistic reflections */
-  private createStudioEnvironment(): void {
+  private createStudioEnvironment(
+    baseColor: string = '#ffffff',
+    secondaryColor: string = '#f8f4ec',
+  ): void {
     if (!this.THREE || !this.scene || !this.renderer) return;
 
     // Create a simple environment scene for reflections
@@ -785,23 +924,23 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     const envCtx = envCanvas.getContext('2d');
 
     if (envCtx) {
-      // Vertical gradient for sky-like reflections (marfil tones)
+      // Vertical gradient for sky-like reflections
       const gradient = envCtx.createLinearGradient(0, 0, 0, 128);
-      gradient.addColorStop(0, '#ffffff');    // White top (bright sky)
-      gradient.addColorStop(0.3, '#f8f4ec');  // Marfil
-      gradient.addColorStop(0.6, '#e8e4dc');  // Marfil oscuro
-      gradient.addColorStop(1, '#d8d4cc');    // Gris cálido (ground)
+      gradient.addColorStop(0, '#ffffff'); // White top (bright sky)
+      gradient.addColorStop(0.3, baseColor);
+      gradient.addColorStop(0.6, secondaryColor);
+      gradient.addColorStop(1, '#808080'); // Grey ground
       envCtx.fillStyle = gradient;
       envCtx.fillRect(0, 0, 256, 128);
 
       // Add some subtle highlights for window-like reflections
       envCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-      envCtx.fillRect(50, 10, 40, 30);   // Left window
-      envCtx.fillRect(166, 10, 40, 30);  // Right window
+      envCtx.fillRect(50, 10, 40, 30); // Left window
+      envCtx.fillRect(166, 10, 40, 30); // Right window
 
       // Add subtle warm accent (celeste Autorentar)
       envCtx.fillStyle = 'rgba(167, 216, 244, 0.15)';
-      envCtx.fillRect(100, 5, 56, 40);   // Center accent
+      envCtx.fillRect(100, 5, 56, 40); // Center accent
     }
 
     const envTexture = new this.THREE.CanvasTexture(envCanvas);
@@ -818,9 +957,16 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   }
 
   private loadCar(): void {
-    if (!this.THREE || !this.GLTFLoader || !this.scene) return;
+    if (!this.THREE || !this.GLTFLoader || !this.DRACOLoader || !this.scene) return;
+
+    // Configure DRACO loader for compressed models
+    const dracoLoader = new this.DRACOLoader();
+    // Use CDN path for DRACO decoder (Google's WASM decoder)
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    dracoLoader.setDecoderConfig({ type: 'wasm' });
 
     const loader = new this.GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
 
     loader.load(
       this.src,
@@ -835,9 +981,9 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
         const size = box.getSize(new this.THREE.Vector3());
 
         // Adjust position so it sits on the ground
-        this.carModel.position.x += (this.carModel.position.x - center.x);
+        this.carModel.position.x += this.carModel.position.x - center.x;
         this.carModel.position.y = 0;
-        this.carModel.position.z += (this.carModel.position.z - center.z);
+        this.carModel.position.z += this.carModel.position.z - center.z;
 
         // Escalar el modelo para que ocupe bien el espacio
         // Tamaño objetivo: ~6 unidades para que sea prominente
@@ -852,10 +998,10 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
         this.carModel.position.x = -scaledCenter.x;
         this.carModel.position.z = -scaledCenter.z;
         // Ajustar Y para que el modelo esté sobre el suelo
-        const scaledSize = scaledBox.getSize(new this.THREE.Vector3());
+        // const scaledSize = scaledBox.getSize(new this.THREE.Vector3());
         this.carModel.position.y = -scaledBox.min.y;
 
-        // Enable shadows and enhance materials
+        // Enable shadows, enhance materials, and add edge outlines
         this.carModel.traverse((child) => {
           if (!this.THREE) return;
           const mesh = child as import('three').Mesh;
@@ -868,6 +1014,20 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
               mesh.material.metalness = Math.max(mesh.material.metalness, 0.6); // Asegurar metallic
               mesh.material.roughness = Math.min(mesh.material.roughness, 0.4); // Menos rugoso para brillo
               mesh.material.needsUpdate = true;
+            }
+
+            // Add edge outlines to highlight parts - more visible
+            if (mesh.geometry) {
+              const edges = new this.THREE.EdgesGeometry(mesh.geometry, 25); // 25 degree threshold (more edges)
+              const lineMaterial = new this.THREE.LineBasicMaterial({
+                color: 0x2b5f72, // --text-secondary (azul celeste oscuro)
+                transparent: true,
+                opacity: 0.35, // Más visible
+                linewidth: 1,
+              });
+              const edgeLines = new this.THREE.LineSegments(edges, lineMaterial);
+              edgeLines.userData['isEdgeLine'] = true; // Mark for later identification
+              mesh.add(edgeLines);
             }
           }
         });
@@ -900,7 +1060,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
       (error) => {
         console.error('[Car3dViewer] Error loading car model:', error);
         this.isLoading = false;
-      }
+      },
     );
   }
 
@@ -1029,7 +1189,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     }
   }
 
-  onClick(event: MouseEvent): void {
+  onClick(_event: MouseEvent): void {
     if (!this.enableInteraction) return;
     this.modelClicked.emit();
 
@@ -1110,7 +1270,12 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
         // If interior mode, hide exterior parts
         if (isInterior) {
           // Hide body, glass, wheels, etc.
-          if (partInfo.category === 'body' || partInfo.category === 'glass' || partInfo.category === 'wheel' || partInfo.category === 'light') {
+          if (
+            partInfo.category === 'body' ||
+            partInfo.category === 'glass' ||
+            partInfo.category === 'wheel' ||
+            partInfo.category === 'light'
+          ) {
             // Check if it's a door (might want to keep door frames but usually better to hide for clear view)
             mesh.visible = false;
           } else {
@@ -1217,7 +1382,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   private removeHeadlightBeams(): void {
     if (!this.scene) return;
 
-    this.headlightSpots.forEach(obj => {
+    this.headlightSpots.forEach((obj) => {
       this.scene!.remove(obj);
     });
     this.headlightSpots = [];
@@ -1225,7 +1390,13 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
   /** Cycle through view modes on click */
   cycleViewMode(): void {
-    const modes: Array<'default' | 'front' | 'side' | 'interior' | 'top'> = ['default', 'front', 'side', 'interior', 'top'];
+    const modes: Array<'default' | 'front' | 'side' | 'interior' | 'top'> = [
+      'default',
+      'front',
+      'side',
+      'interior',
+      'top',
+    ];
     const currentIndex = modes.indexOf(this.currentViewMode);
     const nextIndex = (currentIndex + 1) % modes.length;
     this.setViewMode(modes[nextIndex]);
@@ -1266,14 +1437,38 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     const lerpFactor = 0.05;
 
     // Animate camera position
-    this.camera.position.x = this.lerp(this.camera.position.x, this.targetCameraPosition.x, lerpFactor);
-    this.camera.position.y = this.lerp(this.camera.position.y, this.targetCameraPosition.y, lerpFactor);
-    this.camera.position.z = this.lerp(this.camera.position.z, this.targetCameraPosition.z, lerpFactor);
+    this.camera.position.x = this.lerp(
+      this.camera.position.x,
+      this.targetCameraPosition.x,
+      lerpFactor,
+    );
+    this.camera.position.y = this.lerp(
+      this.camera.position.y,
+      this.targetCameraPosition.y,
+      lerpFactor,
+    );
+    this.camera.position.z = this.lerp(
+      this.camera.position.z,
+      this.targetCameraPosition.z,
+      lerpFactor,
+    );
 
     // Animate controls target
-    this.controls.target.x = this.lerp(this.controls.target.x, this.targetControlsTarget.x, lerpFactor);
-    this.controls.target.y = this.lerp(this.controls.target.y, this.targetControlsTarget.y, lerpFactor);
-    this.controls.target.z = this.lerp(this.controls.target.z, this.targetControlsTarget.z, lerpFactor);
+    this.controls.target.x = this.lerp(
+      this.controls.target.x,
+      this.targetControlsTarget.x,
+      lerpFactor,
+    );
+    this.controls.target.y = this.lerp(
+      this.controls.target.y,
+      this.targetControlsTarget.y,
+      lerpFactor,
+    );
+    this.controls.target.z = this.lerp(
+      this.controls.target.z,
+      this.targetControlsTarget.z,
+      lerpFactor,
+    );
   }
 
   // ===== RAYCASTER & PART INTERACTION METHODS =====
@@ -1313,19 +1508,31 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
         // Update tooltip position
         this.tooltipPosition = {
-          x: event.clientX - (this.rendererCanvas.nativeElement.parentElement?.getBoundingClientRect().left || 0),
-          y: event.clientY - (this.rendererCanvas.nativeElement.parentElement?.getBoundingClientRect().top || 0),
+          x:
+            event.clientX -
+            (this.rendererCanvas.nativeElement.parentElement?.getBoundingClientRect().left || 0),
+          y:
+            event.clientY -
+            (this.rendererCanvas.nativeElement.parentElement?.getBoundingClientRect().top || 0),
         };
 
         // Emit hover event
         const partInfo = this.getPartInfoFromMesh(mesh);
         this.hoveredPartInfo = partInfo;
-        this.partHovered.emit({ part: mesh.name || 'unknown', info: partInfo, position: this.tooltipPosition });
+        this.partHovered.emit({
+          part: mesh.name || 'unknown',
+          info: partInfo,
+          position: this.tooltipPosition,
+        });
       } else if (mesh === this.hoveredMesh) {
         // Update tooltip position even when same mesh
         this.tooltipPosition = {
-          x: event.clientX - (this.rendererCanvas.nativeElement.parentElement?.getBoundingClientRect().left || 0),
-          y: event.clientY - (this.rendererCanvas.nativeElement.parentElement?.getBoundingClientRect().top || 0),
+          x:
+            event.clientX -
+            (this.rendererCanvas.nativeElement.parentElement?.getBoundingClientRect().left || 0),
+          y:
+            event.clientY -
+            (this.rendererCanvas.nativeElement.parentElement?.getBoundingClientRect().top || 0),
         };
       }
     } else {
@@ -1350,17 +1557,35 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
       // Dark color = likely wheel/tire
       if (mat.color.r < 0.15 && mat.color.g < 0.15 && mat.color.b < 0.15) {
-        return this.partInfoMap.get('wheel') || { name: 'Rueda', description: 'Parte del sistema de rodamiento', icon: '🛞' };
+        return (
+          this.partInfoMap.get('wheel') || {
+            name: 'Rueda',
+            description: 'Parte del sistema de rodamiento',
+            icon: '🛞',
+          }
+        );
       }
 
       // Transparent = glass
       if (mat.opacity < 0.9 || mat.transparent) {
-        return this.partInfoMap.get('glass') || { name: 'Cristal', description: 'Superficie de vidrio', icon: '✨' };
+        return (
+          this.partInfoMap.get('glass') || {
+            name: 'Cristal',
+            description: 'Superficie de vidrio',
+            icon: '✨',
+          }
+        );
       }
 
       // High metalness = body panels
       if (mat.metalness > 0.5) {
-        return this.partInfoMap.get('body') || { name: 'Carroceria', description: 'Estructura del vehiculo', icon: '🚗' };
+        return (
+          this.partInfoMap.get('body') || {
+            name: 'Carroceria',
+            description: 'Estructura del vehiculo',
+            icon: '🚗',
+          }
+        );
       }
     }
 

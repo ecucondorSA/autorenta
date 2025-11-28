@@ -5,7 +5,7 @@ import { CarsService } from './cars.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix - Service API changed, mocks not matching
-xdescribe('CarsService', () => {
+describe('CarsService', () => {
   let service: CarsService;
   let supabase: any;
 

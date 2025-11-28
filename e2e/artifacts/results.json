@@ -1,0 +1,160 @@
+{
+  "config": {
+    "configFile": "/home/edu/autorenta/e2e/playwright.config.ts",
+    "rootDir": "/home/edu/autorenta/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "/home/edu/autorenta/tests/global-setup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/edu/autorenta/e2e/artifacts/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/home/edu/autorenta/e2e/artifacts/html"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/edu/autorenta/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium-desktop",
+        "name": "chromium-desktop",
+        "testDir": "/home/edu/autorenta/tests",
+        "testIgnore": [
+          "**/apps/**",
+          "**/node_modules/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/home/edu/autorenta/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "mobile-chrome",
+        "name": "mobile-chrome",
+        "testDir": "/home/edu/autorenta/tests",
+        "testIgnore": [
+          "**/apps/**",
+          "**/node_modules/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 2,
+    "webServer": {
+      "command": "bash -lc \"cd apps/web && node scripts/generate-env.js && node scripts/serve-with-env.js --configuration development --port 4300 --host 127.0.0.1\"",
+      "cwd": "/home/edu/autorenta",
+      "url": "http://127.0.0.1:4300",
+      "reuseExistingServer": true,
+      "timeout": 420000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: supabaseKey is required.",
+      "stack": "Error: supabaseKey is required.\n    at SupabaseClient (/home/edu/autorenta/node_modules/.pnpm/@supabase+supabase-js@2.84.0/node_modules/@supabase/supabase-js/src/SupabaseClient.ts:118:29)\n    at createClient (/home/edu/autorenta/node_modules/.pnpm/@supabase+supabase-js@2.84.0/node_modules/@supabase/supabase-js/src/index.ts:54:10)\n    at Object.<anonymous> (/home/edu/autorenta/tests/critical/05-complete-payment-with-mercadopago.spec.ts:20:30)",
+      "location": {
+        "file": "/home/edu/autorenta/tests/critical/05-complete-payment-with-mercadopago.spec.ts",
+        "column": 30,
+        "line": 20
+      },
+      "snippet": "\u001b[90m   at \u001b[39mcritical/05-complete-payment-with-mercadopago.spec.ts:20\n\n\u001b[0m \u001b[90m 18 |\u001b[39m\n \u001b[90m 19 |\u001b[39m \u001b[90m// Configurar Supabase para verificar DB\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m \u001b[36mconst\u001b[39m supabase \u001b[33m=\u001b[39m createClient(\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m   process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mPLAYWRIGHT_SUPABASE_URL\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'http://localhost:54321'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 22 |\u001b[39m   process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mPLAYWRIGHT_SUPABASE_ANON_KEY\u001b[39m \u001b[33m||\u001b[39m \u001b[32m''\u001b[39m\n \u001b[90m 23 |\u001b[39m )\u001b[33m;\u001b[39m\u001b[0m"
+    },
+    {
+      "message": "Error: supabaseKey is required.",
+      "stack": "Error: supabaseKey is required.\n    at SupabaseClient (/home/edu/autorenta/node_modules/.pnpm/@supabase+supabase-js@2.84.0/node_modules/@supabase/supabase-js/src/SupabaseClient.ts:118:29)\n    at createClient (/home/edu/autorenta/node_modules/.pnpm/@supabase+supabase-js@2.84.0/node_modules/@supabase/supabase-js/src/index.ts:54:10)\n    at Object.<anonymous> (/home/edu/autorenta/tests/critical/06-marketplace-onboarding-oauth.spec.ts:20:30)",
+      "location": {
+        "file": "/home/edu/autorenta/tests/critical/06-marketplace-onboarding-oauth.spec.ts",
+        "column": 30,
+        "line": 20
+      },
+      "snippet": "\u001b[90m   at \u001b[39mcritical/06-marketplace-onboarding-oauth.spec.ts:20\n\n\u001b[0m \u001b[90m 18 |\u001b[39m \u001b[90m */\u001b[39m\n \u001b[90m 19 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 20 |\u001b[39m \u001b[36mconst\u001b[39m supabase \u001b[33m=\u001b[39m createClient(\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 21 |\u001b[39m   process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mPLAYWRIGHT_SUPABASE_URL\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'http://localhost:54321'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 22 |\u001b[39m   process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mPLAYWRIGHT_SUPABASE_ANON_KEY\u001b[39m \u001b[33m||\u001b[39m \u001b[32m''\u001b[39m\n \u001b[90m 23 |\u001b[39m )\u001b[33m;\u001b[39m\u001b[0m"
+    },
+    {
+      "message": "Error: supabaseKey is required.",
+      "stack": "Error: supabaseKey is required.\n    at SupabaseClient (/home/edu/autorenta/node_modules/.pnpm/@supabase+supabase-js@2.84.0/node_modules/@supabase/supabase-js/src/SupabaseClient.ts:118:29)\n    at createClient (/home/edu/autorenta/node_modules/.pnpm/@supabase+supabase-js@2.84.0/node_modules/@supabase/supabase-js/src/index.ts:54:10)\n    at Object.<anonymous> (/home/edu/autorenta/tests/critical/07-refunds-and-cancellations.spec.ts:24:30)",
+      "location": {
+        "file": "/home/edu/autorenta/tests/critical/07-refunds-and-cancellations.spec.ts",
+        "column": 30,
+        "line": 24
+      },
+      "snippet": "\u001b[90m   at \u001b[39mcritical/07-refunds-and-cancellations.spec.ts:24\n\n\u001b[0m \u001b[90m 22 |\u001b[39m \u001b[90m */\u001b[39m\n \u001b[90m 23 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 24 |\u001b[39m \u001b[36mconst\u001b[39m supabase \u001b[33m=\u001b[39m createClient(\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 25 |\u001b[39m   process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mPLAYWRIGHT_SUPABASE_URL\u001b[39m \u001b[33m||\u001b[39m \u001b[32m'http://localhost:54321'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 26 |\u001b[39m   process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mPLAYWRIGHT_SUPABASE_ANON_KEY\u001b[39m \u001b[33m||\u001b[39m \u001b[32m''\u001b[39m\n \u001b[90m 27 |\u001b[39m )\u001b[33m;\u001b[39m\u001b[0m"
+    },
+    {
+      "message": "Error: Supabase envs missing for admin-approve-car: set NG_APP_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY",
+      "stack": "Error: Supabase envs missing for admin-approve-car: set NG_APP_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY\n    at Object.<anonymous> (/home/edu/autorenta/tests/e2e/admin-approve-car.spec.ts:14:9)",
+      "location": {
+        "file": "/home/edu/autorenta/tests/e2e/admin-approve-car.spec.ts",
+        "column": 9,
+        "line": 14
+      },
+      "snippet": "\u001b[90m   at \u001b[39me2e/admin-approve-car.spec.ts:14\n\n\u001b[0m \u001b[90m 12 |\u001b[39m\n \u001b[90m 13 |\u001b[39m \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39msupabaseUrl \u001b[33m||\u001b[39m \u001b[33m!\u001b[39msupabaseServiceRole) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m   \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\n \u001b[90m    |\u001b[39m         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[32m'Supabase envs missing for admin-approve-car: set NG_APP_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY'\u001b[39m\n \u001b[90m 16 |\u001b[39m   )\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m }\u001b[0m"
+    },
+    {
+      "message": "Error: Supabase envs missing for car-publish-flow: set NG_APP_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY",
+      "stack": "Error: Supabase envs missing for car-publish-flow: set NG_APP_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY\n    at Object.<anonymous> (/home/edu/autorenta/tests/e2e/car-publish-flow.spec.ts:14:9)",
+      "location": {
+        "file": "/home/edu/autorenta/tests/e2e/car-publish-flow.spec.ts",
+        "column": 9,
+        "line": 14
+      },
+      "snippet": "\u001b[90m   at \u001b[39me2e/car-publish-flow.spec.ts:14\n\n\u001b[0m \u001b[90m 12 |\u001b[39m\n \u001b[90m 13 |\u001b[39m \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39msupabaseUrl \u001b[33m||\u001b[39m \u001b[33m!\u001b[39msupabaseServiceRole) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m   \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\n \u001b[90m    |\u001b[39m         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[32m'Supabase envs missing for car-publish-flow: set NG_APP_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY'\u001b[39m\n \u001b[90m 16 |\u001b[39m   )\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m }\u001b[0m"
+    },
+    {
+      "message": "Error: Cannot find module '@jest/globals'\nRequire stack:\n- /home/edu/autorenta/tests/unit/toon-conversion.spec.ts\n- /home/edu/autorenta/node_modules/.pnpm/playwright@1.56.1/node_modules/playwright/lib/transform/transform.js\n- /home/edu/autorenta/node_modules/.pnpm/playwright@1.56.1/node_modules/playwright/lib/common/configLoader.js\n- /home/edu/autorenta/node_modules/.pnpm/playwright@1.56.1/node_modules/playwright/lib/program.js\n- /home/edu/autorenta/node_modules/.pnpm/playwright@1.56.1/node_modules/playwright/cli.js",
+      "stack": "Error: Cannot find module '@jest/globals'\nRequire stack:\n- /home/edu/autorenta/tests/unit/toon-conversion.spec.ts\n- /home/edu/autorenta/node_modules/.pnpm/playwright@1.56.1/node_modules/playwright/lib/transform/transform.js\n- /home/edu/autorenta/node_modules/.pnpm/playwright@1.56.1/node_modules/playwright/lib/common/configLoader.js\n- /home/edu/autorenta/node_modules/.pnpm/playwright@1.56.1/node_modules/playwright/lib/program.js\n- /home/edu/autorenta/node_modules/.pnpm/playwright@1.56.1/node_modules/playwright/cli.js\n    at Object.<anonymous> (/home/edu/autorenta/tests/unit/toon-conversion.spec.ts:10:1)",
+      "location": {
+        "file": "/home/edu/autorenta/tests/unit/toon-conversion.spec.ts",
+        "column": 1,
+        "line": 10
+      },
+      "snippet": "\u001b[90m   at \u001b[39munit/toon-conversion.spec.ts:10\n\n\u001b[0m \u001b[90m  8 |\u001b[39m \u001b[90m */\u001b[39m\n \u001b[90m  9 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m \u001b[36mimport\u001b[39m { describe\u001b[33m,\u001b[39m it\u001b[33m,\u001b[39m expect\u001b[33m,\u001b[39m beforeAll } \u001b[36mfrom\u001b[39m \u001b[32m'@jest/globals'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m \u001b[36mimport\u001b[39m \u001b[33m*\u001b[39m \u001b[36mas\u001b[39m fs \u001b[36mfrom\u001b[39m \u001b[32m'fs'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m \u001b[36mimport\u001b[39m \u001b[33m*\u001b[39m \u001b[36mas\u001b[39m path \u001b[36mfrom\u001b[39m \u001b[32m'path'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 13 |\u001b[39m\u001b[0m"
+    }
+  ],
+  "stats": {
+    "startTime": "2025-11-28T09:27:40.254Z",
+    "duration": 180282.23500000002,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

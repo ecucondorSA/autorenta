@@ -7,7 +7,7 @@ import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.int
 import { BookingCheckoutPage } from './booking-checkout.page';
 
 // TODO: Fix - Missing HttpClientTestingModule for TikTokEventsService dependency
-xdescribe('BookingCheckoutPage', () => {
+describe('BookingCheckoutPage', () => {
   let component: BookingCheckoutPage;
   let fixture: ComponentFixture<BookingCheckoutPage>;
   let mockRouter: jasmine.SpyObj<Router>;

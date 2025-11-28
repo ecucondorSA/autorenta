@@ -20,12 +20,7 @@ export const AuthGuard: CanMatchFn = async (route: ActivatedRouteSnapshot) => {
   // Users must verify their email before accessing protected routes
   if (!session.user.email_confirmed_at) {
     // Allow access to specific routes even without email verification
-    const allowedRoutes = [
-      'profile',
-      'profile/verification',
-      'verification',
-      'auth/logout',
-    ];
+    const allowedRoutes = ['profile', 'profile/verification', 'verification', 'auth/logout'];
 
     const routePath = route.routeConfig?.path || '';
     const isAllowedRoute = allowedRoutes.some((allowed) => routePath.includes(allowed));

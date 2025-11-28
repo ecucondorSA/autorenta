@@ -1109,12 +1109,16 @@ export class BookingsService {
         cancelled_at: new Date().toISOString(),
       });
 
-      this.logger.info('Booking auto-cancelled due to insurance system failure', 'BookingsService', {
-        bookingId,
-        status: 'cancelled',
-        reason: 'system_failure:insurance_activation_failed',
-        isSystemFailure: true,
-      });
+      this.logger.info(
+        'Booking auto-cancelled due to insurance system failure',
+        'BookingsService',
+        {
+          bookingId,
+          status: 'cancelled',
+          reason: 'system_failure:insurance_activation_failed',
+          isSystemFailure: true,
+        },
+      );
     } catch (cancelError) {
       this.logger.error(
         'Failed to auto-cancel booking after insurance failure',

@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Input,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit, signal } from '@angular/core';
 import type { FAQItem } from '../../../../core/models/marketplace.model';
 import { SeoSchemaService } from '../../../../core/services/seo-schema.service';
 
@@ -27,9 +20,7 @@ import { SeoSchemaService } from '../../../../core/services/seo-schema.service';
     <section class="faq-section" aria-labelledby="faq-title">
       <header class="faq-header">
         <h2 id="faq-title" class="faq-title">Preguntas Frecuentes</h2>
-        <p class="faq-subtitle">
-          Todo lo que necesitas saber sobre alquilar o publicar tu auto
-        </p>
+        <p class="faq-subtitle">Todo lo que necesitas saber sobre alquilar o publicar tu auto</p>
       </header>
 
       <!-- Category Tabs -->
@@ -99,9 +90,7 @@ import { SeoSchemaService } from '../../../../core/services/seo-schema.service';
       <!-- CTA -->
       <footer class="faq-footer">
         <p>¿No encontraste lo que buscabas?</p>
-        <a href="mailto:soporte@autorentar.com.ar" class="faq-cta">
-          Contáctanos
-        </a>
+        <a href="mailto:soporte@autorentar.com.ar" class="faq-cta"> Contáctanos </a>
       </footer>
     </section>
   `,

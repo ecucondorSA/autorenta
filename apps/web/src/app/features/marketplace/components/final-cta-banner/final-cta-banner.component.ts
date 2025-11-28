@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 /**
@@ -46,11 +40,7 @@ import { RouterLink } from '@angular/router';
 
         <!-- Right: CTAs -->
         <div class="cta-buttons">
-          <a
-            [routerLink]="primaryCta.link"
-            class="cta-btn primary"
-            (click)="onPrimaryClick()"
-          >
+          <a [routerLink]="primaryCta.link" class="cta-btn primary" (click)="onPrimaryClick()">
             {{ primaryCta.label }}
           </a>
           <a

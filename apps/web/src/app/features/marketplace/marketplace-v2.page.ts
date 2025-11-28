@@ -13,7 +13,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { Car } from '../../core/models';
@@ -21,9 +21,7 @@ import { CarMapLocation } from '../../core/services/car-locations.service';
 import { CarsService } from '../../core/services/cars.service';
 import { DistanceCalculatorService } from '../../core/services/distance-calculator.service';
 import { GeocodingResult, GeocodingService } from '../../core/services/geocoding.service';
-import {
-  LocationService
-} from '../../core/services/location.service';
+import { LocationService } from '../../core/services/location.service';
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { UrgentRentalService } from '../../core/services/urgent-rental.service';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
@@ -41,17 +39,17 @@ import { BookingsService } from '../../core/services/bookings.service';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { TikTokEventsService } from '../../core/services/tiktok-events.service';
-import { Car3dViewerComponent, CarPartInfo } from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
+import {
+  Car3dViewerComponent,
+  CarPartInfo,
+} from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
 import {
   DateRange,
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
 // DynamicPricingBadgeComponent - available for car cards when needed
-import {
-  MapControlsComponent,
-  MapControlsEvent,
-} from '../../shared/components/map-controls/map-controls.component';
-import { MapFiltersComponent } from '../../shared/components/map-filters/map-filters.component';
+import { MapControlsEvent } from '../../shared/components/map-controls/map-controls.component';
+
 import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
 
 // TooltipComponent - available for interactive hints when needed
@@ -94,6 +92,7 @@ export interface Stat {
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     CarsMapComponent,
 
     WhatsappFabComponent,
@@ -102,8 +101,7 @@ export interface Stat {
     // NotificationToastComponent, // REMOVED: Using PrimeNG Toast now
 
     DateRangePickerComponent,
-    MapFiltersComponent,
-    MapControlsComponent,
+
     PriceTransparencyModalComponent,
     Car3dViewerComponent,
 
@@ -150,6 +148,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly error = signal<string | null>(null);
   readonly cars = signal<Car[]>([]);
   readonly selectedCarId = signal<string | null>(null);
+
+  // Pagination - Solo 2 autos iniciales para carga rápida
+  readonly currentPage = signal(1);
+  readonly pageSize = signal(2);
+  readonly totalCarsCount = signal(0);
   // User Location Signals
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
   readonly locationAccuracy = signal<number | null>(null);
@@ -157,7 +160,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private locationWatchId: number | null = null;
 
   // UI State Signals
-
 
   readonly drawerOpen = signal(false);
   readonly filtersVisible = signal(true);
@@ -425,6 +427,21 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     return 'photo'; // Browsing/exploration mode (default - more visual)
   });
 
+  /**
+   * Static Mapbox image URL for performance optimization
+   * Replaces interactive Mapbox GL JS with static image
+   */
+  readonly staticMapUrl = computed(() => {
+    const center = this.userLocation() || { lng: -58.3816, lat: -34.6037 }; // Buenos Aires default
+    const token = environment.mapboxAccessToken;
+    return `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${center.lng},${center.lat},11,0/1200x800@2x?access_token=${token}`;
+  });
+
+  /**
+   * Total pages for pagination
+   */
+  readonly totalPages = computed(() => Math.ceil(this.totalCarsCount() / this.pageSize()));
+
   // Realtime
   private realtimeChannel?: RealtimeChannel;
 
@@ -447,11 +464,24 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // SEO Meta Tags
-    this.titleService.setTitle('Alquiler de Autos P2P | Autorentar - Renta Segura sin Intermediarios');
-    this.meta.updateTag({ name: 'description', content: 'Alquila autos verificados directamente de dueños. 100% asegurado, pagos seguros con MercadoPago, entrega express. Sin intermediarios, sin tarjeta de crédito requerida.' });
-    this.meta.updateTag({ name: 'keywords', content: 'alquiler autos, renta de autos, alquiler sin tarjeta, autos particulares, P2P, Argentina' });
+    this.titleService.setTitle(
+      'Alquiler de Autos P2P | Autorentar - Renta Segura sin Intermediarios',
+    );
+    this.meta.updateTag({
+      name: 'description',
+      content:
+        'Alquila autos verificados directamente de dueños. 100% asegurado, pagos seguros con MercadoPago, entrega express. Sin intermediarios, sin tarjeta de crédito requerida.',
+    });
+    this.meta.updateTag({
+      name: 'keywords',
+      content:
+        'alquiler autos, renta de autos, alquiler sin tarjeta, autos particulares, P2P, Argentina',
+    });
     this.meta.updateTag({ property: 'og:title', content: 'Autorentar - Alquiler de Autos P2P' });
-    this.meta.updateTag({ property: 'og:description', content: 'Conectamos personas con vehículos verificados. Sin intermediarios, 100% asegurado.' });
+    this.meta.updateTag({
+      property: 'og:description',
+      content: 'Conectamos personas con vehículos verificados. Sin intermediarios, 100% asegurado.',
+    });
     this.meta.updateTag({ property: 'og:type', content: 'website' });
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
 
@@ -514,19 +544,50 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.error.set(null);
     try {
       const dateRange = this.dateRange();
-      // const filters = this.mapFilters();
+      const page = this.currentPage();
+      const size = this.pageSize();
+      const rangeStart = (page - 1) * size;
+      const rangeEnd = rangeStart + size - 1;
 
       if (dateRange.from && dateRange.to) {
+        // Use availability service for date-filtered queries
         const items = await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
-          limit: 100,
+          limit: size,
+          offset: rangeStart,
         });
         this.cars.set(items);
+        // For date-filtered queries, we need a separate count query
+        const { count } = await this.supabase
+          .from('cars')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'active');
+        this.totalCarsCount.set(count || 0);
       } else {
-        const items = await this.carsService.listActiveCars({
-          from: dateRange.from ?? undefined,
-          to: dateRange.to ?? undefined,
-        });
-        this.cars.set(items);
+        // Paginated query with count for non-date-filtered
+        const { data, count, error } = await this.supabase
+          .from('cars')
+          .select(
+            `
+            *,
+            car_photos(*),
+            owner:profiles!cars_owner_id_fkey(
+              id,
+              full_name,
+              avatar_url,
+              rating_avg,
+              rating_count,
+              created_at
+            )
+          `,
+            { count: 'exact' },
+          )
+          .eq('status', 'active')
+          .order('created_at', { ascending: false })
+          .range(rangeStart, rangeEnd);
+
+        if (error) throw error;
+        this.cars.set((data as Car[]) || []);
+        this.totalCarsCount.set(count || 0);
       }
 
       // Hide search button after loading
@@ -607,8 +668,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       source: 'car_card',
     });
   }
-
-
 
   /**
    * Handle map filters change
@@ -1091,7 +1150,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   /**
    * Handle part hover from 3D viewer
    */
-  onPartHovered(event: { part: string; info: CarPartInfo | undefined; position: { x: number; y: number } }): void {
+  onPartHovered(event: {
+    part: string;
+    info: CarPartInfo | undefined;
+    position: { x: number; y: number };
+  }): void {
     if (event.info) {
       this.hoveredPart.set(event.info);
       this.hoveredPartPosition.set(event.position);
@@ -1174,6 +1237,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       transmission: null,
     });
     this.activeQuickFilters.set(new Set());
+    // Reset pagination
+    this.currentPage.set(1);
     void this.loadCars();
     this.showToast('Filtros limpiados', 'success');
   }
@@ -1183,5 +1248,31 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
    */
   mapFilterSourceLocations(): CarMapLocation[] {
     return this.carMapLocations();
+  }
+
+  /**
+   * Go to next page of cars
+   */
+  nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update((p) => p + 1);
+      void this.loadCars();
+      if (this.isBrowser) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  }
+
+  /**
+   * Go to previous page of cars
+   */
+  previousPage(): void {
+    if (this.currentPage() > 1) {
+      this.currentPage.update((p) => p - 1);
+      void this.loadCars();
+      if (this.isBrowser) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
   }
 }

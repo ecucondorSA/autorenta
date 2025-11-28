@@ -5,7 +5,7 @@ import { IdentityLevelService, type VerificationProgress } from './identity-leve
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix UserIdentityLevel type mismatch (missing extracted_gender, manual_review_* properties)
-xdescribe('IdentityLevelService', () => {
+describe('IdentityLevelService', () => {
   let service: IdentityLevelService;
   let supabaseMock: any;
 

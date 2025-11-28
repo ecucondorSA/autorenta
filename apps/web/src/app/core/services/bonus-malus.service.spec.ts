@@ -4,7 +4,7 @@ import type { UserBonusMalus, BonusMalusCalculation } from '../models';
 import { BonusMalusService } from './bonus-malus.service';
 
 // TODO: Fix - Service API changed, mocks not matching
-xdescribe('BonusMalusService', () => {
+describe('BonusMalusService', () => {
   let service: BonusMalusService;
   let mockSupabase: jasmine.SpyObj<SupabaseClient>;
 

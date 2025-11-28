@@ -236,11 +236,9 @@ export class RefundService {
     if (claimsError) {
       this.logger.error('Error checking claims', 'RefundService', claimsError as Error);
       // P0-SECURITY: BLOCK refund on claims check error - fail safe
-      throw new Error(
-        'Unable to verify claim status. Please try again or contact support.',
-      );
+      throw new Error('Unable to verify claim status. Please try again or contact support.');
     } else if (claims && claims.length > 0) {
-      const claimStatuses = claims.map(c => c.status).join(', ');
+      const claimStatuses = claims.map((c) => c.status).join(', ');
       throw new Error(
         `Cannot refund booking with active insurance claims (status: ${claimStatuses}). Please wait for claim resolution or rejection.`,
       );

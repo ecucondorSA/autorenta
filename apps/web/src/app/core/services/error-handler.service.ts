@@ -160,7 +160,11 @@ export class ErrorHandlerService {
       // ✅ P0-020: In production, NEVER expose Error objects directly
       if (environment.production && this.isTechnicalJargon(error.message)) {
         // Return generic message, log details to Sentry only
-        this.logger.error('Technical error hidden from user (production)', 'ErrorHandlerService', error);
+        this.logger.error(
+          'Technical error hidden from user (production)',
+          'ErrorHandlerService',
+          error,
+        );
         errorMessage = ''; // Clear to force mapping to user-friendly message
       }
     } else if (error && typeof error === 'object' && 'message' in error) {
@@ -168,8 +172,11 @@ export class ErrorHandlerService {
 
       // ✅ P0-020: Same protection for error-like objects
       if (environment.production && this.isTechnicalJargon(String(error.message))) {
-        this.logger.error('Technical error hidden from user (production)', 'ErrorHandlerService',
-          error instanceof Error ? error : new Error(String(error.message)));
+        this.logger.error(
+          'Technical error hidden from user (production)',
+          'ErrorHandlerService',
+          error instanceof Error ? error : new Error(String(error.message)),
+        );
         errorMessage = '';
       }
     }
@@ -321,28 +328,28 @@ export class ErrorHandlerService {
     const technicalPatterns = [
       /Error:/i,
       /Exception/i,
-      /at\s+\w+\./i,           // Stack trace pattern: "at Function.method"
-      /\w+\.\w+\(/i,            // Method call pattern: "service.method("
-      /line\s+\d+/i,            // Line number references
-      /column\s+\d+/i,          // Column number references
-      /\w+Error/i,              // Error types: TypeError, ReferenceError, etc.
-      /null\s+is\s+not/i,       // "null is not an object"
-      /undefined\s+is\s+not/i,  // "undefined is not a function"
+      /at\s+\w+\./i, // Stack trace pattern: "at Function.method"
+      /\w+\.\w+\(/i, // Method call pattern: "service.method("
+      /line\s+\d+/i, // Line number references
+      /column\s+\d+/i, // Column number references
+      /\w+Error/i, // Error types: TypeError, ReferenceError, etc.
+      /null\s+is\s+not/i, // "null is not an object"
+      /undefined\s+is\s+not/i, // "undefined is not a function"
       /cannot\s+read\s+property/i,
       /cannot\s+access/i,
       /'[a-z_]+'\s+of\s+(null|undefined)/i, // "'property' of undefined"
-      /\[\w+\]/i,               // Property access: [propertyName]
-      /stack\s*:/i,             // Stack property
-      /PGRST\d+/i,              // Postgres/Supabase error codes
-      /23\d{3}/i,               // PostgreSQL error codes (23xxx)
-      /42\d{3}/i,               // PostgreSQL error codes (42xxx)
-      /function\s+\w+/i,        // Function references
-      /class\s+\w+/i,           // Class references
-      /RPC\s+/i,                // RPC errors
-      /SQL\s+/i,                // SQL errors
-      /database\s+/i,           // Database errors (be cautious - might be user-friendly in some contexts)
+      /\[\w+\]/i, // Property access: [propertyName]
+      /stack\s*:/i, // Stack property
+      /PGRST\d+/i, // Postgres/Supabase error codes
+      /23\d{3}/i, // PostgreSQL error codes (23xxx)
+      /42\d{3}/i, // PostgreSQL error codes (42xxx)
+      /function\s+\w+/i, // Function references
+      /class\s+\w+/i, // Class references
+      /RPC\s+/i, // RPC errors
+      /SQL\s+/i, // SQL errors
+      /database\s+/i, // Database errors (be cautious - might be user-friendly in some contexts)
     ];
 
-    return technicalPatterns.some(pattern => pattern.test(message));
+    return technicalPatterns.some((pattern) => pattern.test(message));
   }
 }

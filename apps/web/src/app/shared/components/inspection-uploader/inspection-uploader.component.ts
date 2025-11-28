@@ -18,7 +18,12 @@ import {
 } from '../../../core/models/fgo-v1-1.model';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
-import { validateFiles, allFilesValid, getFirstError, logFileUpload } from '../../../core/utils/file-validation.util';
+import {
+  validateFiles,
+  allFilesValid,
+  getFirstError,
+  logFileUpload,
+} from '../../../core/utils/file-validation.util';
 
 // Window extension for inspection callback
 interface WindowWithInspectionCallback extends Window {

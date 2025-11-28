@@ -200,8 +200,7 @@ export class DamageDetectionService {
       // Ordenar por confianza y severidad
       const sorted = items.sort((a, b) => {
         const severityScore = { minor: 1, moderate: 2, severe: 3 };
-        const severityDiff =
-          severityScore[b.severity] - severityScore[a.severity];
+        const severityDiff = severityScore[b.severity] - severityScore[a.severity];
         if (severityDiff !== 0) return severityDiff;
         return b.confidence - a.confidence;
       });
@@ -257,9 +256,7 @@ export class DamageDetectionService {
    * Mapea nivel de severidad
    * @private
    */
-  private mapSeverity(
-    detectedSeverity: string,
-  ): 'minor' | 'moderate' | 'severe' {
+  private mapSeverity(detectedSeverity: string): 'minor' | 'moderate' | 'severe' {
     const lower = detectedSeverity.toLowerCase();
     if (lower.includes('severe') || lower.includes('grave')) return 'severe';
     if (lower.includes('moderate') || lower.includes('moderate')) return 'moderate';

@@ -1565,7 +1565,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Calculate nearby cars
     const nearbyCars = this.getNearbyCarsCount();
-    const carsText = nearbyCars > 0 ? `🚗 Hay <b>${nearbyCars}</b> autos cerca` : 'No hay autos cerca';
+    const carsText =
+      nearbyCars > 0 ? `🚗 Hay <b>${nearbyCars}</b> autos cerca` : 'No hay autos cerca';
 
     const popupHTML = `
       <div class="user-location-popup" style="font-family: 'Inter', sans-serif; padding: 4px;">
@@ -1606,9 +1607,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.deg2rad(lat1)) *
-      Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
     return d;
@@ -1630,15 +1631,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     const radius = this.searchRadiusKm || 5; // Default 5km if not set
 
-    return this.cars.filter(car => {
+    return this.cars.filter((car) => {
       if (!car.lat || !car.lng) return false;
 
-      const dist = this.calculateDistanceKm(
-        userLoc.lat,
-        userLoc.lng,
-        car.lat,
-        car.lng
-      );
+      const dist = this.calculateDistanceKm(userLoc.lat, userLoc.lng, car.lat, car.lng);
 
       return dist <= radius;
     }).length;
@@ -1863,7 +1859,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     const lat2 = Math.asin(
       Math.sin(lat1) * Math.cos(distanceMeters / R) +
-      Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
+        Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
     );
 
     const lng2 =

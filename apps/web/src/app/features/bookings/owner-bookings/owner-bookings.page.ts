@@ -61,7 +61,7 @@ export class OwnerBookingsPage implements OnInit {
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly marketplaceService: MarketplaceOnboardingService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     void this.initialize();

@@ -417,7 +417,8 @@ export class NotificationPreferencesPage implements OnInit {
         ),
       };
 
-      if (this.isBrowser) localStorage.setItem(`notification_prefs_${user.id}`, JSON.stringify(prefsToSave));
+      if (this.isBrowser)
+        localStorage.setItem(`notification_prefs_${user.id}`, JSON.stringify(prefsToSave));
 
       // Show success message
       alert('✅ Preferencias guardadas correctamente');

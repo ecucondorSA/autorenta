@@ -206,21 +206,20 @@ describe('BookingsService', () => {
         '2025-12-05T18:00:00Z',
       );
 
-      expect(mockSupabaseClient.rpc).toHaveBeenCalledWith('request_booking', jasmine.objectContaining({
-        p_car_id: 'car-456',
-        p_start: '2025-12-01T10:00:00Z',
-        p_end: '2025-12-05T18:00:00Z',
-      }));
+      expect(mockSupabaseClient.rpc).toHaveBeenCalledWith(
+        'request_booking',
+        jasmine.objectContaining({
+          p_car_id: 'car-456',
+          p_start: '2025-12-01T10:00:00Z',
+          p_end: '2025-12-05T18:00:00Z',
+        }),
+      );
       expect(booking).toBeTruthy();
       expect(booking.id).toBe('booking-123');
     });
 
     it('should activate insurance coverage after creating booking', async () => {
-      await service.requestBooking(
-        'car-456',
-        '2025-12-01T10:00:00Z',
-        '2025-12-05T18:00:00Z',
-      );
+      await service.requestBooking('car-456', '2025-12-01T10:00:00Z', '2025-12-05T18:00:00Z');
 
       expect(mockInsuranceService.activateCoverage).toHaveBeenCalledWith({
         booking_id: 'booking-123',
@@ -229,11 +228,7 @@ describe('BookingsService', () => {
     });
 
     it('should track TikTok PlaceAnOrder event', async () => {
-      await service.requestBooking(
-        'car-456',
-        '2025-12-01T10:00:00Z',
-        '2025-12-05T18:00:00Z',
-      );
+      await service.requestBooking('car-456', '2025-12-01T10:00:00Z', '2025-12-05T18:00:00Z');
 
       expect(mockTikTokEventsService.trackPlaceAnOrder).toHaveBeenCalled();
     });
@@ -264,11 +259,14 @@ describe('BookingsService', () => {
         dynamicPriceSnapshot: { discount: 10 },
       });
 
-      expect(mockSupabaseClient.rpc).toHaveBeenCalledWith('request_booking', jasmine.objectContaining({
-        p_use_dynamic_pricing: true,
-        p_price_lock_token: 'lock-token-123',
-        p_dynamic_price_snapshot: { discount: 10 },
-      }));
+      expect(mockSupabaseClient.rpc).toHaveBeenCalledWith(
+        'request_booking',
+        jasmine.objectContaining({
+          p_use_dynamic_pricing: true,
+          p_price_lock_token: 'lock-token-123',
+          p_dynamic_price_snapshot: { discount: 10 },
+        }),
+      );
     });
   });
 
@@ -617,7 +615,9 @@ describe('BookingsService', () => {
     });
 
     it('should handle insurance activation failure', async () => {
-      mockInsuranceService.activateCoverage.and.rejectWith(new Error('Insurance service unavailable'));
+      mockInsuranceService.activateCoverage.and.rejectWith(
+        new Error('Insurance service unavailable'),
+      );
 
       const result = await service.activateInsuranceCoverage('booking-123');
 

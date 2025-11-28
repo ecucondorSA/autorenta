@@ -6,7 +6,10 @@ import { PaymentsService } from './payments.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // Helper to create chainable Supabase mock queries
-function createMockQuery(finalResponse: { data: unknown; error: unknown }): Record<string, jasmine.Spy> {
+function createMockQuery(finalResponse: {
+  data: unknown;
+  error: unknown;
+}): Record<string, jasmine.Spy> {
   const query: Record<string, jasmine.Spy> = {};
   query['select'] = jasmine.createSpy('select').and.callFake(() => query);
   query['eq'] = jasmine.createSpy('eq').and.callFake(() => query);
@@ -230,9 +233,7 @@ describe('PaymentsService', () => {
   // ========================================
   describe('markAsPaid', () => {
     it('should call webhook in development mode', async () => {
-      const fetchSpy = spyOn(window, 'fetch').and.resolveTo(
-        new Response(null, { status: 200 }),
-      );
+      const fetchSpy = spyOn(window, 'fetch').and.resolveTo(new Response(null, { status: 200 }));
 
       await service.markAsPaid('intent-123');
 
@@ -277,9 +278,7 @@ describe('PaymentsService', () => {
   // ========================================
   describe('triggerMockPayment', () => {
     it('should trigger approved payment webhook', async () => {
-      const fetchSpy = spyOn(window, 'fetch').and.resolveTo(
-        new Response(null, { status: 200 }),
-      );
+      const fetchSpy = spyOn(window, 'fetch').and.resolveTo(new Response(null, { status: 200 }));
 
       await service.triggerMockPayment('booking-123', 'approved');
 
@@ -295,9 +294,7 @@ describe('PaymentsService', () => {
     });
 
     it('should trigger rejected payment webhook', async () => {
-      const fetchSpy = spyOn(window, 'fetch').and.resolveTo(
-        new Response(null, { status: 200 }),
-      );
+      const fetchSpy = spyOn(window, 'fetch').and.resolveTo(new Response(null, { status: 200 }));
 
       await service.triggerMockPayment('booking-123', 'rejected');
 

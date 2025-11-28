@@ -3,7 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { MarketplaceService } from '../marketplace.service';
 
 // TODO: Fix - Service API changed, environment mocks not working
-xdescribe('MarketplaceService', () => {
+describe('MarketplaceService', () => {
   let service: MarketplaceService;
   let mockSupabase: jasmine.SpyObj<SupabaseClient>;
 

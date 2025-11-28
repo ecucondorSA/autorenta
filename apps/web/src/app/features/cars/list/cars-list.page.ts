@@ -294,9 +294,9 @@ export class CarsListPage implements OnInit, OnDestroy {
     const list = !segmentation
       ? cars
       : cars.filter((car) => {
-        const score = segmentation.scores.get(car.id) ?? 0;
-        return score >= segmentation.threshold;
-      });
+          const score = segmentation.scores.get(car.id) ?? 0;
+          return score >= segmentation.threshold;
+        });
 
     const sorted = list.slice();
 

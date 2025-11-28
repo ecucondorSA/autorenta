@@ -12,7 +12,7 @@ import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
 // TODO: Fix - service API changed, RPC call counts and error messages differ from mocks
-xdescribe('AutorentarCreditService', () => {
+describe('AutorentarCreditService', () => {
   let service: AutorentarCreditService;
   let supabaseClientServiceMock: jasmine.SpyObj<SupabaseClientService>;
   let loggerServiceMock: jasmine.SpyObj<LoggerService>;

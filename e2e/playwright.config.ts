@@ -37,7 +37,8 @@ if (process.env.QASE_API_TOKEN) {
 }
 
 export default defineConfig({
-  testDir: resolve(__dirname, 'specs'),
+  globalSetup: resolve(__dirname, '../tests/global-setup'),
+  testDir: resolve(__dirname, '../tests'),
   testIgnore: ['**/apps/**', '**/node_modules/**'],
   timeout: 120 * 1000,
   expect: {
@@ -53,6 +54,7 @@ export default defineConfig({
     screenshot: 'on',
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
+    storageState: 'tests/.auth/renter.json',
   },
   projects: [
     {
@@ -73,7 +75,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `bash -lc "cd apps/web && node scripts/generate-env.js && pnpm exec ng serve --configuration development --port ${defaultPort} --host 127.0.0.1"`,
+    command: `bash -lc "cd apps/web && node scripts/generate-env.js && node scripts/serve-with-env.js --configuration development --port ${defaultPort} --host 127.0.0.1"`,
     cwd: resolve(__dirname, '..'),
     url: `http://127.0.0.1:${defaultPort}`,
     reuseExistingServer: !process.env.CI,

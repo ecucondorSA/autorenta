@@ -2,7 +2,6 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   ElementRef,
   inject,
   Input,
@@ -41,7 +40,7 @@ import type { SocialProofStat } from '../../../../core/models/marketplace.model'
               @if (stat.prefix) {
                 <span class="stat-prefix">{{ stat.prefix }}</span>
               }
-              <span class="stat-number">{{ animatedValues()[stat.id] | number : '1.0-0' }}</span>
+              <span class="stat-number">{{ animatedValues()[stat.id] | number: '1.0-0' }}</span>
               @if (stat.suffix) {
                 <span class="stat-suffix">{{ stat.suffix }}</span>
               }

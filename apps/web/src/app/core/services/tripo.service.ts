@@ -3,7 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable, interval, of, throwError } from 'rxjs';
 import { map, switchMap, takeWhile, timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { TripoTaskRequest, TripoTaskResponse, TripoTaskStatusResponse } from '../models/tripo.models';
+import {
+  TripoTaskRequest,
+  TripoTaskResponse,
+  TripoTaskStatusResponse,
+} from '../models/tripo.models';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +16,7 @@ export class TripoService {
   private apiUrl = 'https://api.tripo3d.ai/v2/openapi/task';
   private apiKey = environment.tripoApiKey; // We will add this to environment
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   /**
    * Starts a new image-to-3D generation task
@@ -42,7 +46,7 @@ export class TripoService {
           throw new Error(response.message || 'Failed to start task');
         }
         return response.data.task_id;
-      })
+      }),
     );
   }
 
@@ -55,33 +59,42 @@ export class TripoService {
       Authorization: `Bearer ${this.apiKey}`,
     });
 
-    return interval(2000).pipe( // Poll every 2 seconds
-      switchMap(() => this.http.get<TripoTaskStatusResponse>(`${this.apiUrl}/${taskId}`, { headers })),
-      map((response) => response.data),
-      takeWhile((data) => data.status !== 'SUCCESS' && data.status !== 'FAILED' && data.status !== 'CANCELLED', true),
-      switchMap((data) => {
-        if (data.status === 'FAILED' || data.status === 'CANCELLED') {
-          return throwError(() => new Error(`Task failed with status: ${data.status}`));
-        }
-        if (data.status === 'SUCCESS') {
-          // Handle different response structures if necessary
-          const modelUrl = data.output?.model || data.result?.model?.url;
-          if (!modelUrl) {
-            return throwError(() => new Error('Task succeeded but no model URL found'));
+    return interval(2000)
+      .pipe(
+        // Poll every 2 seconds
+        switchMap(() =>
+          this.http.get<TripoTaskStatusResponse>(`${this.apiUrl}/${taskId}`, { headers }),
+        ),
+        map((response) => response.data),
+        takeWhile(
+          (data) =>
+            data.status !== 'SUCCESS' && data.status !== 'FAILED' && data.status !== 'CANCELLED',
+          true,
+        ),
+        switchMap((data) => {
+          if (data.status === 'FAILED' || data.status === 'CANCELLED') {
+            return throwError(() => new Error(`Task failed with status: ${data.status}`));
           }
-          return of(modelUrl);
-        }
-        return of(null); // Continue polling
-      }),
-      timeout(300000), // 5 minute timeout
-      // Filter out nulls (intermediate states)
-      map(result => result as string),
-      // We need to filter the stream to only emit the final result, but takeWhile(inclusive=true) emits the last value.
-      // The logic above returns Observable<string | null>. We want to ignore nulls.
-    ).pipe(
-      // Simple filter to ignore the 'null' emissions from running state
-      switchMap(val => val ? of(val) : new Observable<never>())
-    );
+          if (data.status === 'SUCCESS') {
+            // Handle different response structures if necessary
+            const modelUrl = data.output?.model || data.result?.model?.url;
+            if (!modelUrl) {
+              return throwError(() => new Error('Task succeeded but no model URL found'));
+            }
+            return of(modelUrl);
+          }
+          return of(null); // Continue polling
+        }),
+        timeout(300000), // 5 minute timeout
+        // Filter out nulls (intermediate states)
+        map((result) => result as string),
+        // We need to filter the stream to only emit the final result, but takeWhile(inclusive=true) emits the last value.
+        // The logic above returns Observable<string | null>. We want to ignore nulls.
+      )
+      .pipe(
+        // Simple filter to ignore the 'null' emissions from running state
+        switchMap((val) => (val ? of(val) : new Observable<never>())),
+      );
   }
 
   /**
@@ -112,7 +125,7 @@ export class TripoService {
           throw new Error(response.message || 'Failed to start texturization task');
         }
         return response.data.task_id;
-      })
+      }),
     );
   }
 
@@ -124,7 +137,7 @@ export class TripoService {
    */
   texturizeModel(modelUrl: string, texturePrompt: string): Observable<string> {
     return this.applyTextureFromPrompt(modelUrl, texturePrompt).pipe(
-      switchMap(taskId => this.pollTaskStatus(taskId))
+      switchMap((taskId) => this.pollTaskStatus(taskId)),
     );
   }
 }

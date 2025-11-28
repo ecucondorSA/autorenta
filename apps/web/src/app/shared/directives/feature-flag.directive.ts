@@ -1,11 +1,4 @@
-import {
-  Directive,
-  effect,
-  inject,
-  Input,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { Directive, effect, inject, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FeatureFlagService } from '../../core/services/feature-flag.service';
 
 /**
@@ -108,7 +101,7 @@ export class FeatureFlagDirective {
    */
   static ngTemplateContextGuard(
     _dir: FeatureFlagDirective,
-    _ctx: unknown
+    _ctx: unknown,
   ): _ctx is FeatureFlagContext {
     return true;
   }

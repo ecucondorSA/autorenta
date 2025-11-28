@@ -98,7 +98,8 @@ export class OwnerDashboardPage implements OnInit, OnDestroy {
     this.error.set(null);
 
     // P0-006 FIX: Prevent memory leak with takeUntil
-    this.dashboardService.getDashboardStats(forceRefresh)
+    this.dashboardService
+      .getDashboardStats(forceRefresh)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (stats) => {

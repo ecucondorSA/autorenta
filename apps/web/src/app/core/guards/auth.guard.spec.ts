@@ -7,20 +7,18 @@ import { AuthGuard } from './auth.guard';
 class AuthServiceStub {
   private authenticated = false;
 
-  ensureSession = jasmine
-    .createSpy('ensureSession')
-    .and.callFake(async () =>
-      this.authenticated
-        ? ({
-            access_token: 'token',
-            user: {
-              id: 'user-1',
-              email: 'test@example.com',
-              email_confirmed_at: '2024-01-01T00:00:00.000Z', // P0-013: Must have verified email
-            },
-          } as any)
-        : null,
-    );
+  ensureSession = jasmine.createSpy('ensureSession').and.callFake(async () =>
+    this.authenticated
+      ? ({
+          access_token: 'token',
+          user: {
+            id: 'user-1',
+            email: 'test@example.com',
+            email_confirmed_at: '2024-01-01T00:00:00.000Z', // P0-013: Must have verified email
+          },
+        } as any)
+      : null,
+  );
 
   isAuthenticated = () => this.authenticated;
 

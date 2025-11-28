@@ -116,7 +116,9 @@ export class MakeCalendarPublicButtonComponent {
       console.error('Error making calendar public:', err);
 
       const errorMessage =
-        (err as { error?: { error?: string } })?.error?.error || (err as Error)?.message || 'Error desconocido';
+        (err as { error?: { error?: string } })?.error?.error ||
+        (err as Error)?.message ||
+        'Error desconocido';
       this.error.set(errorMessage);
 
       this.notifications.error('Error', `No se pudo hacer público el calendario: ${errorMessage}`);

@@ -2,17 +2,18 @@
 // @ts-nocheck - Tests need rewrite: ClaimProcessResult→ClaimProcessingResult, type changes
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+
+import type { BookingRiskSnapshot, EligibilityResult } from '../models/fgo-v1-1.model';
+import { DamageDetectionService } from './damage-detection.service';
+import { FgoV1_1Service } from './fgo-v1-1.service';
+import { FgoService } from './fgo.service';
+import { RiskMatrixService } from './risk-matrix.service';
+import type { Claim, ClaimProcessResult } from './settlement.service';
 import { SettlementService } from './settlement.service';
 import { SupabaseClientService } from './supabase-client.service';
-import { FgoV1_1Service } from './fgo-v1-1.service';
-import { RiskMatrixService } from './risk-matrix.service';
-import { FgoService } from './fgo.service';
-import { DamageDetectionService } from './damage-detection.service';
-import type { Claim, ClaimProcessResult } from './settlement.service';
-import type { BookingRiskSnapshot, EligibilityResult } from '../models/fgo-v1-1.model';
 
 // TODO: Fix ClaimProcessResult→ClaimProcessingResult, waterfallResult, status/bucket types
-xdescribe('SettlementService', () => {
+describe('SettlementService', () => {
   let service: SettlementService;
   let mockSupabase: any;
   let mockSupabaseService: any;
@@ -61,23 +62,21 @@ xdescribe('SettlementService', () => {
       from: jasmine.createSpy('from').and.returnValue({
         select: jasmine.createSpy('select').and.returnValue({
           eq: jasmine.createSpy('eq').and.returnValue({
-            single: jasmine.createSpy('single').and.returnValue(
-              Promise.resolve({ data: null, error: null }),
-            ),
+            single: jasmine
+              .createSpy('single')
+              .and.returnValue(Promise.resolve({ data: null, error: null })),
           }),
         }),
         update: jasmine.createSpy('update').and.returnValue({
-          eq: jasmine.createSpy('eq').and.returnValue(
-            Promise.resolve({ data: null, error: null }),
-          ),
+          eq: jasmine.createSpy('eq').and.returnValue(Promise.resolve({ data: null, error: null })),
         }),
-        insert: jasmine.createSpy('insert').and.returnValue(
-          Promise.resolve({ data: null, error: null }),
-        ),
+        insert: jasmine
+          .createSpy('insert')
+          .and.returnValue(Promise.resolve({ data: null, error: null })),
       }),
-      rpc: jasmine.createSpy('rpc').and.returnValue(
-        Promise.resolve({ data: { acquired: true }, error: null }),
-      ),
+      rpc: jasmine
+        .createSpy('rpc')
+        .and.returnValue(Promise.resolve({ data: { acquired: true }, error: null })),
     };
 
     // Mock services
@@ -109,9 +108,9 @@ xdescribe('SettlementService', () => {
     mockFgoService = {
       addPayout: jasmine.createSpy('addPayout').and.returnValue(Promise.resolve()),
       addContribution: jasmine.createSpy('addContribution').and.returnValue(Promise.resolve()),
-      getReserveCoefficient: jasmine.createSpy('getReserveCoefficient').and.returnValue(
-        Promise.resolve(1.5),
-      ),
+      getReserveCoefficient: jasmine
+        .createSpy('getReserveCoefficient')
+        .and.returnValue(Promise.resolve(1.5)),
     };
 
     mockDamageDetectionService = {
@@ -175,9 +174,9 @@ xdescribe('SettlementService', () => {
         if (table === 'claims') {
           return {
             update: jasmine.createSpy('update').and.returnValue({
-              eq: jasmine.createSpy('eq').and.returnValue(
-                Promise.resolve({ data: null, error: null }),
-              ),
+              eq: jasmine
+                .createSpy('eq')
+                .and.returnValue(Promise.resolve({ data: null, error: null })),
             }),
           };
         }
@@ -236,9 +235,9 @@ xdescribe('SettlementService', () => {
         if (table === 'claims') {
           return {
             update: jasmine.createSpy('update').and.returnValue({
-              eq: jasmine.createSpy('eq').and.returnValue(
-                Promise.resolve({ data: null, error: null }),
-              ),
+              eq: jasmine
+                .createSpy('eq')
+                .and.returnValue(Promise.resolve({ data: null, error: null })),
             }),
           };
         }
@@ -293,9 +292,9 @@ xdescribe('SettlementService', () => {
         if (table === 'claims') {
           return {
             update: jasmine.createSpy('update').and.returnValue({
-              eq: jasmine.createSpy('eq').and.returnValue(
-                Promise.resolve({ data: null, error: null }),
-              ),
+              eq: jasmine
+                .createSpy('eq')
+                .and.returnValue(Promise.resolve({ data: null, error: null })),
             }),
           };
         }
@@ -362,9 +361,9 @@ xdescribe('SettlementService', () => {
         if (table === 'claims') {
           return {
             update: jasmine.createSpy('update').and.returnValue({
-              eq: jasmine.createSpy('eq').and.returnValue(
-                Promise.resolve({ data: null, error: null }),
-              ),
+              eq: jasmine
+                .createSpy('eq')
+                .and.returnValue(Promise.resolve({ data: null, error: null })),
             }),
           };
         }
@@ -431,9 +430,9 @@ xdescribe('SettlementService', () => {
         if (table === 'claims') {
           return {
             update: jasmine.createSpy('update').and.returnValue({
-              eq: jasmine.createSpy('eq').and.returnValue(
-                Promise.resolve({ data: null, error: null }),
-              ),
+              eq: jasmine
+                .createSpy('eq')
+                .and.returnValue(Promise.resolve({ data: null, error: null })),
             }),
           };
         }
@@ -497,9 +496,9 @@ xdescribe('SettlementService', () => {
         if (table === 'claims') {
           return {
             update: jasmine.createSpy('update').and.returnValue({
-              eq: jasmine.createSpy('eq').and.returnValue(
-                Promise.resolve({ data: null, error: null }),
-              ),
+              eq: jasmine
+                .createSpy('eq')
+                .and.returnValue(Promise.resolve({ data: null, error: null })),
             }),
           };
         }
@@ -562,9 +561,9 @@ xdescribe('SettlementService', () => {
         if (table === 'claims') {
           return {
             update: jasmine.createSpy('update').and.returnValue({
-              eq: jasmine.createSpy('eq').and.returnValue(
-                Promise.resolve({ data: null, error: null }),
-              ),
+              eq: jasmine
+                .createSpy('eq')
+                .and.returnValue(Promise.resolve({ data: null, error: null })),
             }),
           };
         }
@@ -617,9 +616,9 @@ xdescribe('SettlementService', () => {
         if (table === 'claims') {
           return {
             update: jasmine.createSpy('update').and.returnValue({
-              eq: jasmine.createSpy('eq').and.returnValue(
-                Promise.resolve({ data: null, error: null }),
-              ),
+              eq: jasmine
+                .createSpy('eq')
+                .and.returnValue(Promise.resolve({ data: null, error: null })),
             }),
           };
         }

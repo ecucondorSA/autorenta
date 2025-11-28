@@ -228,31 +228,29 @@ export class MessagesPage implements OnInit, OnDestroy {
     }
 
     // Leer query params
-    this.route.queryParams
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(async (params) => {
-        this.bookingId.set(params['bookingId'] ?? null);
-        this.carId.set(params['carId'] ?? null);
-        this.recipientId.set(params['userId'] ?? null);
-        this.recipientName.set(params['userName'] ?? params['carName'] ?? 'Usuario');
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(async (params) => {
+      this.bookingId.set(params['bookingId'] ?? null);
+      this.carId.set(params['carId'] ?? null);
+      this.recipientId.set(params['userId'] ?? null);
+      this.recipientName.set(params['userName'] ?? params['carName'] ?? 'Usuario');
 
-        // Validar que tenemos al menos booking o car ID
-        if (!this.bookingId() && !this.carId()) {
-          this.error.set('Falta información para iniciar el chat (booking o car ID)');
-        }
+      // Validar que tenemos al menos booking o car ID
+      if (!this.bookingId() && !this.carId()) {
+        this.error.set('Falta información para iniciar el chat (booking o car ID)');
+      }
 
-        // Validar que tenemos recipient
-        if (!this.recipientId()) {
-          this.error.set('Falta información del destinatario');
-        }
+      // Validar que tenemos recipient
+      if (!this.recipientId()) {
+        this.error.set('Falta información del destinatario');
+      }
 
-        // Cargar información del booking si está disponible
-        if (this.bookingId()) {
-          await this.loadBookingContext(this.bookingId()!);
-        }
+      // Cargar información del booking si está disponible
+      if (this.bookingId()) {
+        await this.loadBookingContext(this.bookingId()!);
+      }
 
-        this.loading.set(false);
-      });
+      this.loading.set(false);
+    });
   }
 
   ngOnDestroy(): void {

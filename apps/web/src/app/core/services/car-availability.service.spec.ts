@@ -4,7 +4,7 @@ import { CarBlockingService } from './car-blocking.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix - Service API changed, mocks not matching
-xdescribe('CarAvailabilityService', () => {
+describe('CarAvailabilityService', () => {
   let service: CarAvailabilityService;
   let mockSupabaseClient: any;
   let mockCarBlocking: any;
@@ -21,9 +21,9 @@ xdescribe('CarAvailabilityService', () => {
             in: jasmine.createSpy('in').and.returnValue({
               gte: jasmine.createSpy('gte').and.returnValue({
                 lte: jasmine.createSpy('lte').and.returnValue({
-                  order: jasmine.createSpy('order').and.returnValue(
-                    Promise.resolve({ data: [], error: null }),
-                  ),
+                  order: jasmine
+                    .createSpy('order')
+                    .and.returnValue(Promise.resolve({ data: [], error: null })),
                 }),
               }),
             }),
@@ -42,9 +42,9 @@ xdescribe('CarAvailabilityService', () => {
 
     // Mock CarBlockingService
     mockCarBlocking = {
-      getBlockedDates: jasmine.createSpy('getBlockedDates').and.callFake((id: string) =>
-        Promise.resolve([]),
-      ),
+      getBlockedDates: jasmine
+        .createSpy('getBlockedDates')
+        .and.callFake((id: string) => Promise.resolve([])),
     };
 
     TestBed.configureTestingModule({
@@ -64,9 +64,9 @@ xdescribe('CarAvailabilityService', () => {
           in: jasmine.createSpy('in').and.returnValue({
             gte: jasmine.createSpy('gte').and.returnValue({
               lte: jasmine.createSpy('lte').and.returnValue({
-                order: jasmine.createSpy('order').and.returnValue(
-                  Promise.resolve({ data: bookings, error: null }),
-                ),
+                order: jasmine
+                  .createSpy('order')
+                  .and.returnValue(Promise.resolve({ data: bookings, error: null })),
               }),
             }),
           }),
@@ -78,14 +78,16 @@ xdescribe('CarAvailabilityService', () => {
   /**
    * Helper function to set up mock manual blocks
    */
-  function mockManualBlocks(blocks: Array<{
-    id: string;
-    car_id?: string;
-    blocked_from: string;
-    blocked_to: string;
-    reason?: string;
-    notes?: string;
-  }>) {
+  function mockManualBlocks(
+    blocks: Array<{
+      id: string;
+      car_id?: string;
+      blocked_from: string;
+      blocked_to: string;
+      reason?: string;
+      notes?: string;
+    }>,
+  ) {
     mockCarBlocking.getBlockedDates.and.returnValue(Promise.resolve(blocks));
   }
 
@@ -134,11 +136,7 @@ xdescribe('CarAvailabilityService', () => {
     mockBookingsQuery([]);
     mockManualBlocks([]);
 
-    const result = await service.getNextAvailableRange(
-      carId,
-      '2025-12-01',
-      '2025-12-10',
-    );
+    const result = await service.getNextAvailableRange(carId, '2025-12-01', '2025-12-10');
 
     // Should return one range: the entire search period
     expect(result.length).toBe(1);
@@ -157,11 +155,7 @@ xdescribe('CarAvailabilityService', () => {
     ]);
     mockManualBlocks([]);
 
-    const result = await service.getNextAvailableRange(
-      carId,
-      '2025-12-01',
-      '2025-12-10',
-    );
+    const result = await service.getNextAvailableRange(carId, '2025-12-01', '2025-12-10');
 
     // Should return gaps: before (Dec 1-4) and after (Dec 8-10)
     expect(result.length).toBe(2);
@@ -217,12 +211,7 @@ xdescribe('CarAvailabilityService', () => {
       },
     ]);
 
-    const result = await service.getNextAvailableRange(
-      carId,
-      '2025-12-01',
-      '2025-12-10',
-      5,
-    );
+    const result = await service.getNextAvailableRange(carId, '2025-12-01', '2025-12-10', 5);
 
     // Should recognize both blocked periods
     expect(result.length).toBeGreaterThan(0);
@@ -277,11 +266,7 @@ xdescribe('CarAvailabilityService', () => {
     ]);
     mockManualBlocks([]);
 
-    const result = await service.getNextAvailableRange(
-      carId,
-      '2025-12-01',
-      '2025-12-20',
-    );
+    const result = await service.getNextAvailableRange(carId, '2025-12-01', '2025-12-20');
 
     // First gap (Dec 1-9) should have ~9 days
     expect(result[0].daysCount).toBeGreaterThan(0);
@@ -299,9 +284,11 @@ xdescribe('CarAvailabilityService', () => {
           in: jasmine.createSpy('in').and.returnValue({
             gte: jasmine.createSpy('gte').and.returnValue({
               lte: jasmine.createSpy('lte').and.returnValue({
-                order: jasmine.createSpy('order').and.returnValue(
-                  Promise.resolve({ data: null, error: new Error('Database error') }),
-                ),
+                order: jasmine
+                  .createSpy('order')
+                  .and.returnValue(
+                    Promise.resolve({ data: null, error: new Error('Database error') }),
+                  ),
               }),
             }),
           }),
@@ -309,11 +296,7 @@ xdescribe('CarAvailabilityService', () => {
       }),
     });
 
-    const result = await service.getNextAvailableRange(
-      carId,
-      '2025-12-01',
-      '2025-12-10',
-    );
+    const result = await service.getNextAvailableRange(carId, '2025-12-01', '2025-12-10');
 
     expect(result).toEqual([]);
   });
@@ -332,11 +315,7 @@ xdescribe('CarAvailabilityService', () => {
     ]);
     mockManualBlocks([]);
 
-    const result = await service.getNextAvailableRange(
-      carId,
-      '2025-12-01',
-      '2025-12-15',
-    );
+    const result = await service.getNextAvailableRange(carId, '2025-12-01', '2025-12-15');
 
     // Should still find gaps, treating overlapping blocks as continuous
     expect(result.length).toBeGreaterThan(0);
@@ -352,20 +331,12 @@ xdescribe('CarAvailabilityService', () => {
     mockManualBlocks([]);
 
     // Search before the booking exists
-    const resultBefore = await service.getNextAvailableRange(
-      carId,
-      '2025-12-01',
-      '2025-12-09',
-    );
+    const resultBefore = await service.getNextAvailableRange(carId, '2025-12-01', '2025-12-09');
     expect(resultBefore.length).toBe(1);
     expect(resultBefore[0].daysCount).toBeGreaterThan(0);
 
     // Search after the booking exists
-    const resultAfter = await service.getNextAvailableRange(
-      carId,
-      '2025-12-16',
-      '2025-12-25',
-    );
+    const resultAfter = await service.getNextAvailableRange(carId, '2025-12-16', '2025-12-25');
     expect(resultAfter.length).toBe(1);
     expect(resultAfter[0].daysCount).toBeGreaterThan(0);
   });
@@ -389,21 +360,11 @@ xdescribe('CarAvailabilityService', () => {
     mockManualBlocks([]);
 
     // Request only 1
-    const resultOne = await service.getNextAvailableRange(
-      carId,
-      '2025-12-01',
-      '2025-12-31',
-      1,
-    );
+    const resultOne = await service.getNextAvailableRange(carId, '2025-12-01', '2025-12-31', 1);
     expect(resultOne.length).toBeLessThanOrEqual(1);
 
     // Request 10
-    const resultTen = await service.getNextAvailableRange(
-      carId,
-      '2025-12-01',
-      '2025-12-31',
-      10,
-    );
+    const resultTen = await service.getNextAvailableRange(carId, '2025-12-01', '2025-12-31', 10);
     expect(resultTen.length).toBeLessThanOrEqual(10);
     expect(resultTen.length).toBeGreaterThanOrEqual(resultOne.length);
   });
@@ -412,11 +373,7 @@ xdescribe('CarAvailabilityService', () => {
     mockBookingsQuery([]);
     mockManualBlocks([]);
 
-    const result = await service.getNextAvailableRange(
-      carId,
-      '2025-12-01',
-      '2025-12-10',
-    );
+    const result = await service.getNextAvailableRange(carId, '2025-12-01', '2025-12-10');
 
     expect(result.length).toBeGreaterThan(0);
     // Check that dates are in YYYY-MM-DD format

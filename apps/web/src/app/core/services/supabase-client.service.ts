@@ -1,5 +1,11 @@
 import { isPlatformServer } from '@angular/common';
-import { EnvironmentProviders, inject, Injectable, makeEnvironmentProviders, PLATFORM_ID } from '@angular/core';
+import {
+  EnvironmentProviders,
+  inject,
+  Injectable,
+  makeEnvironmentProviders,
+  PLATFORM_ID,
+} from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 

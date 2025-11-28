@@ -419,10 +419,12 @@ export class TelemetryService {
       const result = (data?.[0] || null) as RecordTelemetryResult | null;
 
       // Refrescar resumen activo en background (no esperamos el resultado)
-      this.activeSummary(userId ?? undefined).pipe(take(1)).subscribe({
-        error: (err: unknown) =>
-          this.logger.error('[TelemetryService] Error al refrescar summary', String(err)),
-      });
+      this.activeSummary(userId ?? undefined)
+        .pipe(take(1))
+        .subscribe({
+          error: (err: unknown) =>
+            this.logger.error('[TelemetryService] Error al refrescar summary', String(err)),
+        });
 
       return result!;
     })();

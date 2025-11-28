@@ -296,8 +296,18 @@ export interface TrustBadge {
 }
 
 export const TRUST_BADGES: TrustBadge[] = [
-  { id: 'insurance', label: '100% Asegurado', icon: '🛡️', description: 'Seguro incluido en todas las rentas' },
-  { id: 'payment', label: 'Pagos Seguros', icon: '💳', description: 'MercadoPago protege tu dinero' },
+  {
+    id: 'insurance',
+    label: '100% Asegurado',
+    icon: '🛡️',
+    description: 'Seguro incluido en todas las rentas',
+  },
+  {
+    id: 'payment',
+    label: 'Pagos Seguros',
+    icon: '💳',
+    description: 'MercadoPago protege tu dinero',
+  },
   { id: 'verified', label: 'Dueños Verificados', icon: '✓', description: 'Identidad verificada' },
   { id: 'support', label: 'Soporte 24/7', icon: '📞', description: 'Asistencia en todo momento' },
 ];

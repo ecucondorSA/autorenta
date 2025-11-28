@@ -1,0 +1,26 @@
+{
+  "name": "state-aware-mcp",
+  "version": "1.0.0",
+  "description": "MCP Server for State-Aware E2E Testing - Forensic interrogation of app state",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "mcp",
+    "e2e-testing",
+    "state-aware",
+    "playwright",
+    "supabase",
+    "forensic-testing"
+  ],
+  "author": "AutoRenta",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.22.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "glob": "^10.3.0"
+  }
+}

@@ -15,7 +15,7 @@ import { makeSupabaseMock } from '../../test-helpers/supabase.mock';
 import { randomUuid, VALID_UUID } from '../../test-helpers/factories';
 
 // TODO: Fix getMyBookings return type from Booking[] to { bookings: Booking[], total: number }
-xdescribe('Sprint 5.1 - E2E Booking Flow', () => {
+describe('Sprint 5.1 - E2E Booking Flow', () => {
   let carsService: CarsService;
   let bookingsService: BookingsService;
   let walletService: WalletService;

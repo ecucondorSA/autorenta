@@ -8,7 +8,7 @@ import { WalletService } from '../../../core/services/wallet.service';
 import { DepositModalComponent } from './deposit-modal.component';
 
 // TODO: Fix - Service API changed, mocks not matching
-xdescribe('DepositModalComponent', () => {
+describe('DepositModalComponent', () => {
   let component: DepositModalComponent;
   let fixture: ComponentFixture<DepositModalComponent>;
   let mockWalletService: any;

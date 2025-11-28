@@ -141,9 +141,9 @@ body.no-scroll {
     --safe-area-right: env(safe-area-inset-right, 0px);
 
     /* ─── Superficies (Surfaces) - Marfil / Ivory ─── */
-    --surface-base: #F8F4EC; /* Marfil - Fondo principal */
-    --surface-raised: #FFFFFF; /* Blanco - Tarjetas */
-    --surface-secondary: #F2EFE9; /* Marfil oscuro - Paneles secundarios */
+    --surface-base: #f8f4ec; /* Marfil - Fondo principal */
+    --surface-raised: #ffffff; /* Blanco - Tarjetas */
+    --surface-secondary: #f2efe9; /* Marfil oscuro - Paneles secundarios */
     --surface-elevated: #f5fbfc; /* Superficies elevadas */
     --surface-hover: #d0e9f0; /* Azul celeste hover */
     --surface-pressed: #c1dfea; /* Azul celeste pressed */
@@ -350,10 +350,10 @@ body.no-scroll {
     --footer-height: 280px;
 
     /* ─── Section Spacing (Landing Page) ─── */
-    --section-py: 4rem;         /* 64px - Padding vertical de secciones */
-    --section-py-lg: 6rem;      /* 96px - Secciones grandes */
-    --section-gap: 3rem;        /* 48px - Gap entre elementos de sección */
-    --card-gap: 1.5rem;         /* 24px - Gap entre cards */
+    --section-py: 4rem; /* 64px - Padding vertical de secciones */
+    --section-py-lg: 6rem; /* 96px - Secciones grandes */
+    --section-gap: 3rem; /* 48px - Gap entre elementos de sección */
+    --card-gap: 1.5rem; /* 24px - Gap entre cards */
   }
 
   /* ─── Dark Mode Variables - Refined ─── */

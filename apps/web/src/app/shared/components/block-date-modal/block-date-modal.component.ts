@@ -47,7 +47,10 @@ export interface BlockDateRequest {
       >
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
-          <h2 id="block-date-modal-title" class="text-xl font-bold text-text-primary dark:text-text-secondary">
+          <h2
+            id="block-date-modal-title"
+            class="text-xl font-bold text-text-primary dark:text-text-secondary"
+          >
             {{ title() || 'Bloquear Fechas' }}
           </h2>
           <button

@@ -484,7 +484,9 @@ export class CarAvailabilityService {
         // Si hay espacio entre el gap actual y este bloque
         if (currentGapStart < block.start) {
           const gapEnd = new Date(Math.min(block.start.getTime(), searchEnd.getTime()));
-          const daysCount = Math.ceil((gapEnd.getTime() - currentGapStart.getTime()) / (1000 * 60 * 60 * 24));
+          const daysCount = Math.ceil(
+            (gapEnd.getTime() - currentGapStart.getTime()) / (1000 * 60 * 60 * 24),
+          );
 
           if (daysCount > 0) {
             availableRanges.push({
@@ -501,7 +503,9 @@ export class CarAvailabilityService {
 
       // Agregar gap final si existe
       if (currentGapStart < searchEnd) {
-        const daysCount = Math.ceil((searchEnd.getTime() - currentGapStart.getTime()) / (1000 * 60 * 60 * 24));
+        const daysCount = Math.ceil(
+          (searchEnd.getTime() - currentGapStart.getTime()) / (1000 * 60 * 60 * 24),
+        );
         if (daysCount > 0) {
           availableRanges.push({
             startDate: currentGapStart.toISOString().split('T')[0],

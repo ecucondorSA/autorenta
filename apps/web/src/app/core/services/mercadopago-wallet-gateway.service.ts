@@ -42,10 +42,7 @@ export class MercadoPagoWalletGatewayService implements WalletPaymentGateway {
    * @param transactionId - ID de la transacción de wallet
    * @returns Observable con la respuesta de MercadoPago
    */
-  createDepositOrder(
-    amountUSD: number,
-    transactionId: string,
-  ): Observable<WalletDepositResponse> {
+  createDepositOrder(amountUSD: number, transactionId: string): Observable<WalletDepositResponse> {
     return from(this._createDepositOrder(amountUSD, transactionId)).pipe(
       catchError((err) => {
         return throwError(() => new Error(this.formatError(err)));
@@ -101,9 +98,7 @@ export class MercadoPagoWalletGatewayService implements WalletPaymentGateway {
       const errorData = await response.json().catch(() => ({
         error: `HTTP ${response.status}: ${response.statusText}`,
       }));
-      throw new Error(
-        errorData.error || 'Error al crear orden de depósito en MercadoPago',
-      );
+      throw new Error(errorData.error || 'Error al crear orden de depósito en MercadoPago');
     }
 
     const data = await response.json();

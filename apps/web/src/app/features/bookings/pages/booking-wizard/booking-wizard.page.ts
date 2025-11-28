@@ -191,7 +191,7 @@ export class BookingWizardPage implements OnInit {
     private bookingsService: BookingsService,
     private errorHandler: ErrorHandlerService,
     private emailVerificationService: EmailVerificationService,
-  ) { }
+  ) {}
 
   async ngOnInit() {
     // Get car ID from route params

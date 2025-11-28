@@ -74,7 +74,9 @@ export class WalletService {
     this.error.set(null);
 
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
       if (!session?.user) {
         throw new Error('Usuario no autenticado');
       }
@@ -103,7 +105,9 @@ export class WalletService {
     this.error.set(null);
 
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
       if (!session?.user) {
         throw new Error('Usuario no autenticado');
       }

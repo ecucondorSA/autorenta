@@ -536,30 +536,26 @@ export class CarDetailPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Verificar si viene con query param urgent - P0-006 FIX: Added takeUntil
-    this.route.queryParams
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params) => {
-        if (params['urgent'] === 'true') {
-          this.expressMode.set(true);
-          void this.setupExpressMode();
-        }
-      });
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      if (params['urgent'] === 'true') {
+        this.expressMode.set(true);
+        void this.setupExpressMode();
+      }
+    });
 
     // Cargar fechas bloqueadas cuando el auto esté disponible - P0-006 FIX: Added takeUntil
-    this.carData$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((state) => {
-        if (state.car) {
-          void this.loadBlockedDates(state.car.id);
-          // ✅ FIX: Cargar precio dinámico si el auto tiene region_id
-          if (state.car.region_id) {
-            void this.loadDynamicPrice();
-          }
-          // ✅ NEW: Inicializar ubicación y calcular distancia
-          void this.initializeUserLocationAndDistance(state.car);
+    this.carData$.pipe(takeUntil(this.destroy$)).subscribe((state) => {
+      if (state.car) {
+        void this.loadBlockedDates(state.car.id);
+        // ✅ FIX: Cargar precio dinámico si el auto tiene region_id
+        if (state.car.region_id) {
+          void this.loadDynamicPrice();
+        }
+        // ✅ NEW: Inicializar ubicación y calcular distancia
+        void this.initializeUserLocationAndDistance(state.car);
 
-          // ✅ NEW: Check if current user is the owner
-          void this.checkOwnership(state.car.owner_id);
+        // ✅ NEW: Check if current user is the owner
+        void this.checkOwnership(state.car.owner_id);
 
         // 🎯 TikTok Events: Track ViewContent
         void this.tiktokEvents.trackViewContent({

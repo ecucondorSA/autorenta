@@ -11,7 +11,7 @@ import { LoggerService } from '../logger.service';
 import type { AdminRole } from '../../types/admin.types';
 
 // TODO: Fix - Service API changed, mocks not matching
-xdescribe('AdminService', () => {
+describe('AdminService', () => {
   let service: AdminService;
   let mockSupabase: jasmine.SpyObj<SupabaseClient>;
   let mockLogger: jasmine.SpyObj<LoggerService>;

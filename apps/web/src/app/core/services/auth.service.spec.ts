@@ -89,7 +89,11 @@ describe('AuthService', () => {
 
     routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
     loggerSpy = jasmine.createSpyObj('LoggerService', ['debug', 'info', 'warn', 'error']);
-    rateLimiterSpy = jasmine.createSpyObj('RateLimiterService', ['isAllowed', 'recordAttempt', 'reset']);
+    rateLimiterSpy = jasmine.createSpyObj('RateLimiterService', [
+      'isAllowed',
+      'recordAttempt',
+      'reset',
+    ]);
     rateLimiterSpy.isAllowed.and.returnValue(true);
 
     TestBed.configureTestingModule({

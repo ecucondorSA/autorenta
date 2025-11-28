@@ -3,7 +3,7 @@ import { FaceVerificationService, type FaceVerificationResult } from './face-ver
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix - Service API changed, tests need update
-xdescribe('FaceVerificationService', () => {
+describe('FaceVerificationService', () => {
   let service: FaceVerificationService;
   let supabaseMock: any;
   let fetchSpy: jasmine.Spy;

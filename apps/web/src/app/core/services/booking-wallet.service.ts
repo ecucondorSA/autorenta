@@ -236,11 +236,7 @@ export class BookingWalletService {
       });
 
       if (error) {
-        this.logger.error(
-          'Atomic damage deduction failed',
-          'BookingWalletService',
-          error as Error,
-        );
+        this.logger.error('Atomic damage deduction failed', 'BookingWalletService', error as Error);
         return { ok: false, error: error.message };
       }
 
@@ -263,7 +259,7 @@ export class BookingWalletService {
 
       this.logger.info(
         `Atomic damage deduction successful: ${damageAmountCents / 100} charged, ` +
-        `${(result.remaining_deposit ?? 0) / 100} remaining`,
+          `${(result.remaining_deposit ?? 0) / 100} remaining`,
       );
 
       return {

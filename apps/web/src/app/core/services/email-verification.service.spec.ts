@@ -5,7 +5,7 @@ import { EmailVerificationService } from './email-verification.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix VerificationStatus type mismatch (missing email property in Expected<>)
-xdescribe('EmailVerificationService', () => {
+describe('EmailVerificationService', () => {
   let service: EmailVerificationService;
   let supabaseMock: any;
 

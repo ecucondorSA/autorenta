@@ -30,7 +30,7 @@ type PurchaseProtectorResult = {
 };
 
 // TODO: Rewrite tests to match new Signal-based API
-xdescribe('BonusProtectorService', () => {
+describe('BonusProtectorService', () => {
   let service: BonusProtectorService;
   let supabaseClientServiceMock: jasmine.SpyObj<SupabaseClientService>;
   let loggerServiceMock: jasmine.SpyObj<LoggerService>;

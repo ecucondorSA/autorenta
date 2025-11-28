@@ -5,7 +5,7 @@ import { PhoneVerificationService } from './phone-verification.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix PhoneVerificationStatus type (missing phone property in Expected<>)
-xdescribe('PhoneVerificationService', () => {
+describe('PhoneVerificationService', () => {
   let service: PhoneVerificationService;
   let supabaseMock: any;
 

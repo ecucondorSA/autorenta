@@ -7,7 +7,7 @@ import { ReviewsService } from './reviews.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix CarStats type (missing rating_* properties), fix module path
-xdescribe('ReviewsService', () => {
+describe('ReviewsService', () => {
   let service: ReviewsService;
   let supabaseMock: ReturnType<typeof createSupabaseMock>;
 

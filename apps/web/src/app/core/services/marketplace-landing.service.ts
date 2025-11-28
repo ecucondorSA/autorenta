@@ -1,8 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
-import {
-  DEFAULT_FILTER_STATE,
-} from '../models/marketplace.model';
+import { DEFAULT_FILTER_STATE } from '../models/marketplace.model';
 import type {
   CarWithDistance,
   DateRange,
@@ -126,8 +124,7 @@ export class MarketplaceLandingService {
     if (filters.priceRange) {
       cars = cars.filter(
         (c) =>
-          c.price_per_day >= filters.priceRange!.min &&
-          c.price_per_day <= filters.priceRange!.max,
+          c.price_per_day >= filters.priceRange!.min && c.price_per_day <= filters.priceRange!.max,
       );
     }
 

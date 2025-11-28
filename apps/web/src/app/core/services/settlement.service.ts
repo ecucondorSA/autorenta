@@ -174,7 +174,10 @@ export class SettlementService {
       );
 
       if (!analysisResult.success) {
-        console.error(`compareDamages: Analysis failed for booking ${bookingId}:`, analysisResult.error);
+        console.error(
+          `compareDamages: Analysis failed for booking ${bookingId}:`,
+          analysisResult.error,
+        );
         return [];
       }
 
@@ -252,7 +255,11 @@ export class SettlementService {
       }
 
       // P0-SECURITY: Anti-fraud validation
-      const fraudCheck = await this.validateClaimAntiFraud(bookingId, user.id, totalEstimatedCostUsd);
+      const fraudCheck = await this.validateClaimAntiFraud(
+        bookingId,
+        user.id,
+        totalEstimatedCostUsd,
+      );
       if (fraudCheck.blocked) {
         this.error.set(fraudCheck.blockReason || 'Claim bloqueado por validación anti-fraude');
         return null;
@@ -287,7 +294,10 @@ export class SettlementService {
       // Fallback to in-memory claim if DB insert fails (for backwards compatibility)
       const claimId = claimData?.id || crypto.randomUUID();
       if (insertError) {
-        console.warn('[SettlementService] Could not persist claim to DB, using in-memory:', insertError);
+        console.warn(
+          '[SettlementService] Could not persist claim to DB, using in-memory:',
+          insertError,
+        );
       }
 
       const claim: Claim = {
@@ -499,21 +509,21 @@ export class SettlementService {
           try {
             // Convert cents to ARS for payment provider (MercadoPago uses ARS)
             // Note: captureAmount is in USD cents, need to convert to ARS
-            const captureAmountArs = Math.round(captureAmount * snapshot.fxSnapshot / 100);
+            const captureAmountArs = Math.round((captureAmount * snapshot.fxSnapshot) / 100);
 
             // Capture the partial amount from the credit card hold
             const captureResult = await firstValueFrom(
               this.paymentAuthorizationService.captureAuthorization(
                 snapshot.authorizedPaymentId,
-                captureAmountArs
-              )
+                captureAmountArs,
+              ),
             );
 
             if (captureResult.ok) {
               breakdown.holdCaptured = captureAmount;
               this.logger.info(
                 `Partial capture: ${centsToUsd(captureAmount)} USD ` +
-                `(${captureAmountArs} ARS) from auth ${snapshot.authorizedPaymentId}`,
+                  `(${captureAmountArs} ARS) from auth ${snapshot.authorizedPaymentId}`,
               );
             } else {
               // If capture fails, log the error but continue with waterfall
@@ -548,7 +558,7 @@ export class SettlementService {
           const debitResult = await this.debitWalletForDamage(
             claim.bookingId,
             claim.id,
-            centsToUsd(maxDebitCents) // Convert cents to USD for RPC
+            centsToUsd(maxDebitCents), // Convert cents to USD for RPC
           );
 
           if (debitResult.success) {
@@ -581,7 +591,7 @@ export class SettlementService {
         if (fgoCoverage > eligibility.maxCoverCents) {
           this.logger.warn(
             `FGO covering ${centsToUsd(fgoCoverage)} USD exceeds limit ` +
-            `${centsToUsd(eligibility.maxCoverCents)} USD for claim ${claim.id}`,
+              `${centsToUsd(eligibility.maxCoverCents)} USD for claim ${claim.id}`,
           );
         }
 
@@ -882,7 +892,10 @@ export class SettlementService {
   /**
    * Release lock on a claim (called on error/failure)
    */
-  private async releaseClaimLock(claimId: string, revertToStatus: 'approved' | 'rejected' = 'approved'): Promise<void> {
+  private async releaseClaimLock(
+    claimId: string,
+    revertToStatus: 'approved' | 'rejected' = 'approved',
+  ): Promise<void> {
     try {
       await this.supabaseClient
         .from('claims')

@@ -46,7 +46,10 @@ export class BookingFlowService {
   /**
    * Obtiene las acciones disponibles para un booking según su estado y el rol del usuario
    */
-  async getAvailableActions(booking: Booking, _userRole: 'owner' | 'renter' | 'both'): Promise<BookingAction[]> {
+  async getAvailableActions(
+    booking: Booking,
+    _userRole: 'owner' | 'renter' | 'both',
+  ): Promise<BookingAction[]> {
     const actions: BookingAction[] = [];
     const status = booking.status;
     const currentUserId = this.authService.session$()?.user?.id;

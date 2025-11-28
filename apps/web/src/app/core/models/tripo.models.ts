@@ -30,11 +30,12 @@ export interface TripoTaskStatusResponse {
       base_model?: string;
       render?: string;
     };
-    result?: { // Sometimes the API returns result instead of output depending on version
+    result?: {
+      // Sometimes the API returns result instead of output depending on version
       model?: {
         url: string;
         type: string;
-      }
-    }
+      };
+    };
   };
 }

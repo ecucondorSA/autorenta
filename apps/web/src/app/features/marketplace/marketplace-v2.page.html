@@ -2,21 +2,26 @@
 
 <!-- Hero Header - Full 3D Immersion -->
 <div class="hero-immersive relative overflow-hidden min-h-[100svh] flex flex-col">
-
   <!-- Pure Background - Autorentar neutral gradient -->
-  <div class="absolute inset-0 bg-gradient-to-b from-[#f8f4ec] via-[#f0ebe2] to-[#e8e4dc] -z-10">
-  </div>
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-[#f8f4ec] via-[#f0ebe2] to-[#e8e4dc] -z-10"
+  ></div>
 
   <!-- Subtle Grid Pattern (very subtle, doesn't block 3D) -->
-  <div class="absolute inset-0 -z-5 opacity-[0.03]"
-    style="background-image: linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px); background-size: 80px 80px;">
-  </div>
+  <div
+    class="absolute inset-0 -z-5 opacity-[0.03]"
+    style="
+      background-image:
+        linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+    "
+  ></div>
 
   <!-- TOP NAV AREA - REMOVED DUPLICATE HEADER -->
   <!-- The main app-header handles navigation. Keeping only necessary controls if needed, but removing full header to avoid duplication -->
   <div class="relative z-50 w-full pointer-events-none">
-    <div
-      class="max-w-[1800px] mx-auto px-6 lg:px-12 pt-6 lg:pt-8 flex justify-end">
+    <div class="max-w-[1800px] mx-auto px-6 lg:px-12 pt-6 lg:pt-8 flex justify-end">
       <!-- Live Stats Pills & Dark Mode Only -->
       <div class="hidden lg:flex items-center gap-3 pointer-events-auto">
         <div class="stat-pill-light">
@@ -43,117 +48,208 @@
     <div class="absolute inset-0 z-0">
       <div class="w-full h-full model-3d-container">
         @defer (on idle) {
-        <app-car-3d-viewer #carViewer src="/camaro.glb" [selectedColor]="selectedCar()?.color"
-          alt="Chevrolet Camaro ZL1 3D Model" class="w-full h-full" (modelLoaded)="onModelLoaded()"
-          (viewModeChange)="onViewModeChange($event)" (partHovered)="onPartHovered($event)"
-          (partSelected)="onPartSelected($event)"
-          (partDeselected)="onPartDeselected()"></app-car-3d-viewer>
+          <app-car-3d-viewer
+            #carViewer
+            src="/camaro.glb"
+            [selectedColor]="selectedCar()?.color"
+            alt="Chevrolet Camaro ZL1 3D Model"
+            class="w-full h-full"
+            (modelLoaded)="onModelLoaded()"
+            (viewModeChange)="onViewModeChange($event)"
+            (partHovered)="onPartHovered($event)"
+            (partSelected)="onPartSelected($event)"
+            (partDeselected)="onPartDeselected()"
+          ></app-car-3d-viewer>
         } @placeholder {
-        <div
-          class="w-full h-full flex items-center justify-center bg-gradient-to-b from-slate-900 to-slate-950">
-          <div class="text-center">
-            <div
-              class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center animate-pulse">
-              <svg class="w-10 h-10 text-cyan-400/50" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-              </svg>
-            </div>
-            <p class="text-sm text-white/30">Cargando modelo 3D...</p>
-          </div>
-        </div>
-        } @loading (minimum 300ms) {
-        <div
-          class="w-full h-full flex items-center justify-center bg-gradient-to-b from-slate-900 to-slate-950">
           <div
-            class="animate-spin rounded-full h-12 w-12 border-2 border-cyan-400 border-t-transparent">
+            class="w-full h-full flex items-center justify-center bg-gradient-to-b from-slate-900 to-slate-950"
+          >
+            <div class="text-center">
+              <div
+                class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center animate-pulse"
+              >
+                <svg
+                  class="w-10 h-10 text-cyan-400/50"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                  />
+                </svg>
+              </div>
+              <p class="text-sm text-white/30">Cargando modelo 3D...</p>
+            </div>
           </div>
-        </div>
+        } @loading (minimum 300ms) {
+          <div
+            class="w-full h-full flex items-center justify-center bg-gradient-to-b from-slate-900 to-slate-950"
+          >
+            <div
+              class="animate-spin rounded-full h-12 w-12 border-2 border-cyan-400 border-t-transparent"
+            ></div>
+          </div>
         }
       </div>
     </div>
 
     <!-- 3D Part Hover Tooltip -->
     @if (hoveredPart() && hoveredPartPosition()) {
-    <div class="part-hover-tooltip" [style.left.px]="hoveredPartPosition()!.x + 15"
-      [style.top.px]="hoveredPartPosition()!.y - 10" role="tooltip">
-      <div class="flex items-center gap-2">
-        <span class="text-lg">{{ hoveredPart()!.icon }}</span>
-        <span class="font-medium text-[#050505]">{{ hoveredPart()!.name }}</span>
+      <div
+        class="part-hover-tooltip"
+        [style.left.px]="hoveredPartPosition()!.x + 15"
+        [style.top.px]="hoveredPartPosition()!.y - 10"
+        role="tooltip"
+      >
+        <div class="flex items-center gap-2">
+          <span class="text-lg">{{ hoveredPart()!.icon }}</span>
+          <span class="font-medium text-[#050505]">{{ hoveredPart()!.name }}</span>
+        </div>
       </div>
-    </div>
     }
 
     <!-- 3D Part Info Panel (on selection) -->
     @if (selectedPart()) {
-    <div class="part-info-panel">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">{{ selectedPart()!.icon }}</span>
-          <h4 class="font-bold text-lg text-[#050505]">{{ selectedPart()!.name }}</h4>
+      <div class="part-info-panel">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">{{ selectedPart()!.icon }}</span>
+            <h4 class="font-bold text-lg text-[#050505]">{{ selectedPart()!.name }}</h4>
+          </div>
+          <button
+            (click)="closePartPanel()"
+            class="p-1.5 rounded-lg hover:bg-[#a7d8f4]/20 transition-colors"
+            aria-label="Cerrar panel de información"
+          >
+            <svg
+              class="w-5 h-5 text-[#4e4e4e]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
-        <button (click)="closePartPanel()"
-          class="p-1.5 rounded-lg hover:bg-[#a7d8f4]/20 transition-colors"
-          aria-label="Cerrar panel de información">
-          <svg class="w-5 h-5 text-[#4e4e4e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+        <p class="text-sm text-[#4e4e4e] leading-relaxed">{{ selectedPart()!.description }}</p>
+        @if (selectedPart()!.category) {
+          <div class="mt-3 pt-3 border-t border-[#a7d8f4]/20">
+            <span class="text-xs font-medium text-[#3b6e8f] uppercase tracking-wide">
+              {{ selectedPart()!.category }}
+            </span>
+          </div>
+        }
       </div>
-      <p class="text-sm text-[#4e4e4e] leading-relaxed">{{ selectedPart()!.description }}</p>
-      @if (selectedPart()!.category) {
-      <div class="mt-3 pt-3 border-t border-[#a7d8f4]/20">
-        <span class="text-xs font-medium text-[#3b6e8f] uppercase tracking-wide">
-          {{ selectedPart()!.category }}
-        </span>
-      </div>
-      }
-    </div>
     }
 
     <!-- 3D View Controls - Right Side -->
     <div
       class="absolute right-6 lg:right-12 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-3 hero-fade-in hero-delay-2"
-      role="group" aria-label="Controles de vista 3D del vehículo">
-      <button (click)="set3DView('front')" class="view-control-btn"
-        [class.active]="current3DView === 'front'" [attr.aria-pressed]="current3DView === 'front'"
-        aria-label="Vista frontal del vehículo">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+      role="group"
+      aria-label="Controles de vista 3D del vehículo"
+    >
+      <button
+        (click)="set3DView('front')"
+        class="view-control-btn"
+        [class.active]="current3DView === 'front'"
+        [attr.aria-pressed]="current3DView === 'front'"
+        aria-label="Vista frontal del vehículo"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+          />
         </svg>
       </button>
-      <button (click)="set3DView('side')" class="view-control-btn"
-        [class.active]="current3DView === 'side'" [attr.aria-pressed]="current3DView === 'side'"
-        aria-label="Vista lateral del vehículo">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+      <button
+        (click)="set3DView('side')"
+        class="view-control-btn"
+        [class.active]="current3DView === 'side'"
+        [attr.aria-pressed]="current3DView === 'side'"
+        aria-label="Vista lateral del vehículo"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+          />
         </svg>
       </button>
-      <button (click)="set3DView('top')" class="view-control-btn"
-        [class.active]="current3DView === 'top'" [attr.aria-pressed]="current3DView === 'top'"
-        aria-label="Vista superior del vehículo">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M5 15l7-7 7 7" />
+      <button
+        (click)="set3DView('top')"
+        class="view-control-btn"
+        [class.active]="current3DView === 'top'"
+        [attr.aria-pressed]="current3DView === 'top'"
+        aria-label="Vista superior del vehículo"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M5 15l7-7 7 7"
+          />
         </svg>
       </button>
       <div class="h-px w-full bg-white/10 my-1" aria-hidden="true"></div>
-      <button (click)="set3DView('default')" class="view-control-btn"
+      <button
+        (click)="set3DView('default')"
+        class="view-control-btn"
         [class.active]="current3DView === 'default'"
-        [attr.aria-pressed]="current3DView === 'default'" aria-label="Vista general del vehículo">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        [attr.aria-pressed]="current3DView === 'default'"
+        aria-label="Vista general del vehículo"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
         </svg>
       </button>
     </div>
@@ -163,15 +259,18 @@
       <div class="max-w-2xl pointer-events-auto">
         <!-- Eyebrow -->
         <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 border border-[#a7d8f4]/40 mb-6 hero-fade-in shadow-sm">
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 border border-[#a7d8f4]/40 mb-6 hero-fade-in shadow-sm"
+        >
           <span class="w-2 h-2 rounded-full bg-[#3b6e8f] animate-pulse"></span>
-          <span class="text-sm font-medium text-[#050505]/70 tracking-wide">Plataforma P2P de
-            Alquiler</span>
+          <span class="text-sm font-medium text-[#050505]/70 tracking-wide"
+            >Plataforma P2P de Alquiler</span
+          >
         </div>
 
         <!-- Main Headline -->
         <h2
-          class="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-[#050505] leading-[0.9] tracking-tight mb-6 hero-fade-in hero-delay-1">
+          class="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-[#050505] leading-[0.9] tracking-tight mb-6 hero-fade-in hero-delay-1"
+        >
           Maneja tu
           <span class="text-gradient-celeste block sm:inline">proxima</span>
           aventura
@@ -179,7 +278,8 @@
 
         <!-- Subheadline -->
         <p
-          class="text-lg lg:text-xl text-[#4e4e4e] font-light leading-relaxed max-w-lg mb-8 hero-fade-in hero-delay-2">
+          class="text-lg lg:text-xl text-[#4e4e4e] font-light leading-relaxed max-w-lg mb-8 hero-fade-in hero-delay-2"
+        >
           Conectamos personas con vehiculos verificados. Sin intermediarios,
           <span class="text-[#050505] font-medium">100% asegurado</span>.
         </p>
@@ -187,26 +287,50 @@
         <!-- Feature Pills -->
         <div class="flex flex-wrap gap-3 mb-10 hero-fade-in hero-delay-2">
           <div class="feature-pill">
-            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              class="w-4 h-4 text-emerald-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span>Verificación instantánea</span>
           </div>
           <div class="feature-pill">
-            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <svg
+              class="w-4 h-4 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
             </svg>
             <span>Pago seguro</span>
           </div>
           <div class="feature-pill">
-            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <svg
+              class="w-4 h-4 text-amber-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
             </svg>
             <span>Entrega express</span>
           </div>
@@ -217,8 +341,12 @@
           <button (click)="handleHeroQuickBook()" class="btn-primary-glow w-full sm:w-auto">
             <span class="relative z-10 flex items-center justify-center gap-2">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
               </svg>
               Reserva Instantánea
             </span>
@@ -232,7 +360,8 @@
 
     <!-- Floating Stats - Bottom Left -->
     <div
-      class="absolute bottom-32 lg:bottom-40 left-6 lg:left-12 z-10 hidden lg:block hero-fade-in hero-delay-3">
+      class="absolute bottom-32 lg:bottom-40 left-6 lg:left-12 z-10 hidden lg:block hero-fade-in hero-delay-3"
+    >
       <div class="floating-stats-card">
         <div class="flex items-center gap-4">
           <div class="stat-item">
@@ -267,65 +396,98 @@
             <p class="text-sm text-[#4e4e4e] mt-1">Busca por ubicación o fecha</p>
           </div>
           <div
-            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20"
+          >
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-sm font-medium text-emerald-400">{{ visibleCars().length }}
-              disponibles</span>
+            <span class="text-sm font-medium text-emerald-400"
+              >{{ visibleCars().length }} disponibles</span
+            >
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-end">
           <!-- Location Search -->
           <div class="lg:col-span-5 relative group z-30">
-            <label class="input-label-premium">
-              Ubicación
-            </label>
+            <label class="input-label-premium"> Ubicación </label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg
                   class="w-5 h-5 text-[#7b7b7b] group-focus-within:text-cyan-500 transition-colors"
-                  fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
                 </svg>
               </div>
-              <input type="text" placeholder="¿Dónde recoges el auto?"
+              <input
+                type="text"
+                placeholder="¿Dónde recoges el auto?"
                 [value]="selectedLocation() || searchValue()"
-                (input)="onLocationInputChange($event)" (focus)="showLocationSuggestions.set(true)"
-                (blur)="onLocationInputBlur()" (keydown.escape)="closeLocationSuggestions()"
-                class="input-premium pl-12" />
+                (input)="onLocationInputChange($event)"
+                (focus)="showLocationSuggestions.set(true)"
+                (blur)="onLocationInputBlur()"
+                (keydown.escape)="closeLocationSuggestions()"
+                class="input-premium pl-12"
+              />
 
               <!-- Loading indicator -->
-              <div *ngIf="locationSearchLoading()"
-                class="absolute right-4 top-1/2 -translate-y-1/2">
+              <div
+                *ngIf="locationSearchLoading()"
+                class="absolute right-4 top-1/2 -translate-y-1/2"
+              >
                 <div
-                  class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-400 border-t-transparent">
-                </div>
+                  class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-400 border-t-transparent"
+                ></div>
               </div>
 
               <!-- Dropdown de sugerencias -->
-              <div *ngIf="showLocationSuggestions() && locationSuggestions().length > 0"
-                class="absolute z-50 w-full mt-2 bg-slate-900/95 backdrop-blur-xl rounded-xl border border-white/10 max-h-80 overflow-y-auto shadow-2xl">
+              <div
+                *ngIf="showLocationSuggestions() && locationSuggestions().length > 0"
+                class="absolute z-50 w-full mt-2 bg-slate-900/95 backdrop-blur-xl rounded-xl border border-white/10 max-h-80 overflow-y-auto shadow-2xl"
+              >
                 <div class="py-1">
                   <button
                     *ngFor="let suggestion of locationSuggestions(); trackBy: trackBySuggestion"
                     (click)="onLocationSuggestionSelect(suggestion)"
-                    class="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-start gap-3 group">
+                    class="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-start gap-3 group"
+                  >
                     <div
-                      class="p-2 bg-cyan-500/10 rounded-lg group-hover:bg-cyan-500/20 transition-colors">
-                      <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      class="p-2 bg-cyan-500/10 rounded-lg group-hover:bg-cyan-500/20 transition-colors"
+                    >
+                      <svg
+                        class="w-4 h-4 text-cyan-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        />
                       </svg>
                     </div>
                     <div class="flex-1 min-w-0">
                       <p
-                        class="text-sm font-medium text-white group-hover:text-cyan-400 transition-colors">
-                        {{ suggestion.placeName }}</p>
-                      <p class="text-xs text-white/40 truncate mt-0.5">{{ suggestion.fullAddress }}
+                        class="text-sm font-medium text-white group-hover:text-cyan-400 transition-colors"
+                      >
+                        {{ suggestion.placeName }}
+                      </p>
+                      <p class="text-xs text-white/40 truncate mt-0.5">
+                        {{ suggestion.fullAddress }}
                       </p>
                     </div>
                   </button>
@@ -334,14 +496,29 @@
 
               <!-- No results message -->
               <div
-                *ngIf="showLocationSuggestions() && !locationSearchLoading() && locationSuggestions().length === 0 && (selectedLocation() || searchValue()).length >= 2"
-                class="absolute z-50 w-full mt-2 bg-slate-900/95 backdrop-blur-xl rounded-xl border border-white/10 p-6 text-center">
+                *ngIf="
+                  showLocationSuggestions() &&
+                  !locationSearchLoading() &&
+                  locationSuggestions().length === 0 &&
+                  (selectedLocation() || searchValue()).length >= 2
+                "
+                class="absolute z-50 w-full mt-2 bg-slate-900/95 backdrop-blur-xl rounded-xl border border-white/10 p-6 text-center"
+              >
                 <div
-                  class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg class="w-6 h-6 text-white/40" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-3"
+                >
+                  <svg
+                    class="w-6 h-6 text-white/40"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
                 <p class="text-sm font-medium text-white">No encontramos esa ubicación</p>
@@ -354,8 +531,12 @@
           <div class="lg:col-span-4 relative group z-20">
             <label class="input-label-premium">Fechas</label>
             <div class="relative">
-              <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
-                (rangeChange)="onDateRangeChange($event)" (calendarClick)="openDatePicker()" />
+              <app-date-range-picker
+                [initialFrom]="dateRange().from"
+                [initialTo]="dateRange().to"
+                (rangeChange)="onDateRangeChange($event)"
+                (calendarClick)="openDatePicker()"
+              />
             </div>
           </div>
 
@@ -364,14 +545,16 @@
             <button (click)="onSearchSubmit(searchValue())" class="btn-search-premium w-full">
               <span>Buscar</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             </button>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>
@@ -379,72 +562,119 @@
 
 <!-- Mobile 3D View Controls Bar -->
 <div class="mobile-3d-controls md:hidden">
-  <button (click)="set3DView('front')" class="mobile-view-btn"
-    [class.active]="current3DView === 'front'" aria-label="Vista frontal">
+  <button
+    (click)="set3DView('front')"
+    class="mobile-view-btn"
+    [class.active]="current3DView === 'front'"
+    aria-label="Vista frontal"
+  >
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
     </svg>
     <span>Frontal</span>
   </button>
-  <button (click)="set3DView('side')" class="mobile-view-btn"
-    [class.active]="current3DView === 'side'" aria-label="Vista lateral">
+  <button
+    (click)="set3DView('side')"
+    class="mobile-view-btn"
+    [class.active]="current3DView === 'side'"
+    aria-label="Vista lateral"
+  >
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+      />
     </svg>
     <span>Lateral</span>
   </button>
-  <button (click)="set3DView('top')" class="mobile-view-btn"
-    [class.active]="current3DView === 'top'" aria-label="Vista superior">
+  <button
+    (click)="set3DView('top')"
+    class="mobile-view-btn"
+    [class.active]="current3DView === 'top'"
+    aria-label="Vista superior"
+  >
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 15l7-7 7 7" />
     </svg>
     <span>Superior</span>
   </button>
-  <button (click)="set3DView('interior')" class="mobile-view-btn"
-    [class.active]="current3DView === 'interior'" aria-label="Vista interior">
+  <button
+    (click)="set3DView('interior')"
+    class="mobile-view-btn"
+    [class.active]="current3DView === 'interior'"
+    aria-label="Vista interior"
+  >
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+      />
     </svg>
     <span>Interior</span>
   </button>
-  <button (click)="set3DView('default')" class="mobile-view-btn reset-btn"
-    aria-label="Restablecer vista">
+  <button
+    (click)="set3DView('default')"
+    class="mobile-view-btn reset-btn"
+    aria-label="Restablecer vista"
+  >
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+      />
     </svg>
   </button>
 </div>
 
 <!-- Main Content Area -->
-<div class="marketplace-content bg-[#0f0f0f] min-h-screen">
-
+<div class="marketplace-content bg-surface-primary dark:bg-[#0f0f0f] min-h-screen">
   <!-- COLABORADORES / PARTNERS SECTION - PREMIUM -->
   <section class="partners-section py-12 lg:py-16 relative overflow-hidden">
     <!-- Background Effects -->
-    <div class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950">
-    </div>
-    <div class="absolute inset-0 opacity-[0.015]"
-      style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0); background-size: 40px 40px;">
-    </div>
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950"
+    ></div>
+    <div
+      class="absolute inset-0 opacity-[0.015]"
+      style="
+        background-image: radial-gradient(
+          circle at 1px 1px,
+          rgba(255, 255, 255, 0.3) 1px,
+          transparent 0
+        );
+        background-size: 40px 40px;
+      "
+    ></div>
 
     <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
       <!-- Section Header -->
       <div class="text-center mb-16">
         <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/10 to-cyan-500/10 border border-cyan-500/20 mb-6">
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/10 to-cyan-500/10 border border-cyan-500/20 mb-6"
+        >
           <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-          <span class="text-xs font-semibold text-cyan-400 uppercase tracking-widest">Tecnología de
-            Clase Mundial</span>
+          <span class="text-xs font-semibold text-cyan-400 uppercase tracking-widest"
+            >Tecnología de Clase Mundial</span
+          >
         </div>
-        <h2 class="font-display text-3xl lg:text-4xl xl:text-5xl font-black text-white mb-4">
+        <h2
+          class="font-display text-3xl lg:text-4xl xl:text-5xl font-black text-text-primary dark:text-white mb-4"
+        >
           Respaldados por
           <span class="text-gradient-cyan">los mejores</span>
         </h2>
-        <p class="text-lg text-white/50 max-w-2xl mx-auto">
+        <p class="text-lg text-text-secondary dark:text-white/50 max-w-2xl mx-auto">
           Integramos las mejores soluciones tecnológicas para brindarte una experiencia segura y
           confiable.
         </p>
@@ -457,8 +687,9 @@
           <div class="partner-card-inner">
             <div class="partner-icon-wrapper bg-[#00B1EA]/10 group-hover:bg-[#00B1EA]/20">
               <svg class="h-8 w-auto text-[#00B1EA]" viewBox="0 0 100 30" fill="currentColor">
-                <text x="0" y="22" font-family="system-ui" font-weight="800"
-                  font-size="18">MercadoPago</text>
+                <text x="0" y="22" font-family="system-ui" font-weight="800" font-size="18">
+                  MercadoPago
+                </text>
               </svg>
             </div>
             <span class="partner-name">Pagos Seguros</span>
@@ -471,12 +702,15 @@
             <div class="partner-icon-wrapper bg-[#3ECF8E]/10 group-hover:bg-[#3ECF8E]/20">
               <svg class="h-8 w-8 text-[#3ECF8E]" viewBox="0 0 109 113" fill="currentColor">
                 <path
-                  d="M63.7 110.3c-2.5 3.3-7.9 1.5-7.9-2.7V71.4h45.1c5.8 0 9 6.8 5.4 11.3l-42.6 27.6z" />
+                  d="M63.7 110.3c-2.5 3.3-7.9 1.5-7.9-2.7V71.4h45.1c5.8 0 9 6.8 5.4 11.3l-42.6 27.6z"
+                />
                 <path
                   d="M63.7 110.3c-2.5 3.3-7.9 1.5-7.9-2.7V71.4h45.1c5.8 0 9 6.8 5.4 11.3l-42.6 27.6z"
-                  fill-opacity=".2" />
+                  fill-opacity=".2"
+                />
                 <path
-                  d="M45.3 2.7c2.5-3.3 7.9-1.5 7.9 2.7v36.2H8.1c-5.8 0-9-6.8-5.4-11.3L45.3 2.7z" />
+                  d="M45.3 2.7c2.5-3.3 7.9-1.5 7.9 2.7v36.2H8.1c-5.8 0-9-6.8-5.4-11.3L45.3 2.7z"
+                />
               </svg>
             </div>
             <span class="partner-name">Base de Datos</span>
@@ -488,8 +722,9 @@
           <div class="partner-card-inner">
             <div class="partner-icon-wrapper bg-[#F6821F]/10 group-hover:bg-[#F6821F]/20">
               <svg class="h-7 w-auto text-[#F6821F]" viewBox="0 0 100 30" fill="currentColor">
-                <text x="0" y="22" font-family="system-ui" font-weight="800"
-                  font-size="16">Cloudflare</text>
+                <text x="0" y="22" font-family="system-ui" font-weight="800" font-size="16">
+                  Cloudflare
+                </text>
               </svg>
             </div>
             <span class="partner-name">CDN & Seguridad</span>
@@ -502,7 +737,8 @@
             <div class="partner-icon-wrapper bg-[#DD0031]/10 group-hover:bg-[#DD0031]/20">
               <svg class="h-9 w-9 text-[#DD0031]" viewBox="0 0 250 250" fill="currentColor">
                 <path
-                  d="M125 30L31.9 63.2l14.2 123.1L125 230l78.9-43.7 14.2-123.1L125 30zm0 22.2l63.1 145.6h-23.5l-12.7-31.8h-54l-12.7 31.8H61.9L125 52.2z" />
+                  d="M125 30L31.9 63.2l14.2 123.1L125 230l78.9-43.7 14.2-123.1L125 30zm0 22.2l63.1 145.6h-23.5l-12.7-31.8h-54l-12.7 31.8H61.9L125 52.2z"
+                />
                 <path d="M145.6 156.2L125 106.6l-20.6 49.6h41.2z" />
               </svg>
             </div>
@@ -516,7 +752,8 @@
             <div class="partner-icon-wrapper bg-[#4285F4]/10 group-hover:bg-[#4285F4]/20">
               <svg class="h-8 w-8 text-[#4285F4]" viewBox="0 0 24 24" fill="currentColor">
                 <path
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                />
               </svg>
             </div>
             <span class="partner-name">Mapas</span>
@@ -527,30 +764,55 @@
       <!-- Security Badge -->
       <div class="mt-16 flex justify-center">
         <div
-          class="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-white/[0.02] border border-white/5">
+          class="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-white/[0.02] border border-white/5"
+        >
           <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            <svg
+              class="w-5 h-5 text-emerald-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
             </svg>
             <span class="text-sm text-white/60">Datos encriptados</span>
           </div>
           <div class="w-px h-4 bg-white/10"></div>
           <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <svg
+              class="w-5 h-5 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
             </svg>
             <span class="text-sm text-white/60">SSL Certificado</span>
           </div>
           <div class="w-px h-4 bg-white/10"></div>
           <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              class="w-5 h-5 text-cyan-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span class="text-sm text-white/60">99.9% Uptime</span>
           </div>
@@ -569,27 +831,47 @@
       <!-- Section Header -->
       <div class="text-center mb-20 lg:mb-24">
         <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 mb-6">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M13 10V3L4 14h7v7l9-11h-7z" />
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 mb-6"
+        >
+          <svg
+            class="w-4 h-4 text-emerald-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
           </svg>
-          <span class="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Proceso
-            Simple</span>
+          <span class="text-xs font-semibold text-emerald-400 uppercase tracking-widest"
+            >Proceso Simple</span
+          >
         </div>
-        <h2 class="font-display text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-6">
+        <h2
+          class="font-display text-4xl lg:text-5xl xl:text-6xl font-black text-text-primary dark:text-white mb-6"
+        >
           Alquila en
           <span class="relative">
             <span class="text-gradient-cyan">4 pasos</span>
-            <svg class="absolute -bottom-2 left-0 w-full h-3 text-cyan-500/30" viewBox="0 0 200 12"
-              preserveAspectRatio="none">
-              <path d="M0 6c50-6 100-6 200 0" stroke="currentColor" stroke-width="3" fill="none"
-                stroke-linecap="round" />
+            <svg
+              class="absolute -bottom-2 left-0 w-full h-3 text-cyan-500/30"
+              viewBox="0 0 200 12"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M0 6c50-6 100-6 200 0"
+                stroke="currentColor"
+                stroke-width="3"
+                fill="none"
+                stroke-linecap="round"
+              />
             </svg>
           </span>
         </h2>
-        <p class="text-lg lg:text-xl text-white/50 max-w-2xl mx-auto">
+        <p class="text-lg lg:text-xl text-text-secondary dark:text-white/50 max-w-2xl mx-auto">
           Sin complicaciones. Sin intermediarios. Todo desde tu celular en minutos.
         </p>
       </div>
@@ -598,8 +880,8 @@
       <div class="relative">
         <!-- Connection Line (Desktop) -->
         <div
-          class="hidden lg:block absolute top-[80px] left-[calc(12.5%+32px)] right-[calc(12.5%+32px)] h-0.5 bg-gradient-to-r from-cyan-500/20 via-cyan-500/20 to-amber-500/20">
-        </div>
+          class="hidden lg:block absolute top-[80px] left-[calc(12.5%+32px)] right-[calc(12.5%+32px)] h-0.5 bg-gradient-to-r from-cyan-500/20 via-cyan-500/20 to-amber-500/20"
+        ></div>
 
         <!-- Steps Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
@@ -609,11 +891,20 @@
               <span class="step-number-text">01</span>
             </div>
             <div
-              class="step-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
-              <svg class="w-8 h-8 text-cyan-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              class="step-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600"
+            >
+              <svg
+                class="w-8 h-8 text-cyan-400 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             </div>
             <h3 class="step-title-premium">Explora</h3>
@@ -621,12 +912,21 @@
               Navega el mapa interactivo o la lista de autos verificados cerca de ti.
             </p>
             <div class="step-cta">
-              <span class="text-xs text-cyan-400 font-medium group-hover:text-cyan-300">Ver autos
-                disponibles</span>
-              <svg class="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
+              <span class="text-xs text-cyan-400 font-medium group-hover:text-cyan-300"
+                >Ver autos disponibles</span
+              >
+              <svg
+                class="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </div>
           </div>
@@ -637,11 +937,20 @@
               <span class="step-number-text">02</span>
             </div>
             <div
-              class="step-icon-premium bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600">
-              <svg class="w-8 h-8 text-emerald-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              class="step-icon-premium bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600"
+            >
+              <svg
+                class="w-8 h-8 text-emerald-400 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
               </svg>
             </div>
             <h3 class="step-title-premium">Reserva</h3>
@@ -649,12 +958,21 @@
               Elige tus fechas y chatea directo con el dueño para coordinar.
             </p>
             <div class="step-cta">
-              <span class="text-xs text-emerald-400 font-medium group-hover:text-emerald-300">Sin
-                compromiso</span>
-              <svg class="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
+              <span class="text-xs text-emerald-400 font-medium group-hover:text-emerald-300"
+                >Sin compromiso</span
+              >
+              <svg
+                class="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </div>
           </div>
@@ -665,11 +983,20 @@
               <span class="step-number-text">03</span>
             </div>
             <div
-              class="step-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
-              <svg class="w-8 h-8 text-cyan-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              class="step-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600"
+            >
+              <svg
+                class="w-8 h-8 text-cyan-400 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
               </svg>
             </div>
             <h3 class="step-title-premium">Verifica</h3>
@@ -677,12 +1004,21 @@
               Sube tu licencia y DNI. Verificación automática con IA en minutos.
             </p>
             <div class="step-cta">
-              <span class="text-xs text-cyan-400 font-medium group-hover:text-cyan-300">100%
-                seguro</span>
-              <svg class="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
+              <span class="text-xs text-cyan-400 font-medium group-hover:text-cyan-300"
+                >100% seguro</span
+              >
+              <svg
+                class="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </div>
           </div>
@@ -693,11 +1029,20 @@
               <span class="step-number-text">04</span>
             </div>
             <div
-              class="step-icon-premium bg-gradient-to-br from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600">
-              <svg class="w-8 h-8 text-amber-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              class="step-icon-premium bg-gradient-to-br from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600"
+            >
+              <svg
+                class="w-8 h-8 text-amber-400 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <h3 class="step-title-premium">Maneja</h3>
@@ -705,12 +1050,21 @@
               Paga seguro por MercadoPago o Wallet. ¡Disfruta tu viaje!
             </p>
             <div class="step-cta">
-              <span class="text-xs text-amber-400 font-medium group-hover:text-amber-300">Múltiples
-                pagos</span>
-              <svg class="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
+              <span class="text-xs text-amber-400 font-medium group-hover:text-amber-300"
+                >Múltiples pagos</span
+              >
+              <svg
+                class="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </div>
           </div>
@@ -720,13 +1074,22 @@
       <!-- CTA Banner -->
       <div class="mt-20 text-center">
         <div
-          class="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-cyan-500/10 to-amber-500/10 border border-white/10">
+          class="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-cyan-500/10 to-amber-500/10 border border-white/10"
+        >
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
-              <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                class="w-6 h-6 text-cyan-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <div class="text-left">
@@ -739,8 +1102,12 @@
               <span class="relative z-10 flex items-center gap-2">
                 Comenzar ahora
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
                 </svg>
               </span>
             </button>
@@ -752,30 +1119,51 @@
 
   <!-- TRUST FEATURES - PREMIUM REDESIGNED -->
   <section
-    class="trust-section py-12 lg:py-16 relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900/80 to-slate-950">
+    class="trust-section py-12 lg:py-16 relative overflow-hidden bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:from-slate-950 dark:via-slate-900/80 dark:to-slate-950"
+  >
     <!-- Background Pattern -->
-    <div class="absolute inset-0 opacity-[0.02]"
-      style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0); background-size: 40px 40px;">
-    </div>
+    <div
+      class="absolute inset-0 opacity-[0.02]"
+      style="
+        background-image: radial-gradient(
+          circle at 1px 1px,
+          rgba(255, 255, 255, 0.3) 1px,
+          transparent 0
+        );
+        background-size: 40px 40px;
+      "
+    ></div>
 
     <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
       <!-- Section Header -->
       <div class="text-center mb-16">
         <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 mb-6">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 mb-6"
+        >
+          <svg
+            class="w-4 h-4 text-emerald-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+            />
           </svg>
-          <span class="text-xs font-semibold text-emerald-400 uppercase tracking-widest">¿Por qué
-            elegirnos?</span>
+          <span class="text-xs font-semibold text-emerald-400 uppercase tracking-widest"
+            >¿Por qué elegirnos?</span
+          >
         </div>
-        <h2 class="font-display text-3xl lg:text-4xl xl:text-5xl font-black text-white mb-4">
+        <h2
+          class="font-display text-3xl lg:text-4xl xl:text-5xl font-black text-text-primary dark:text-white mb-4"
+        >
           Confianza en cada
           <span class="text-gradient-cyan">kilómetro</span>
         </h2>
-        <p class="text-lg text-white/50 max-w-2xl mx-auto">
+        <p class="text-lg text-text-secondary dark:text-white/50 max-w-2xl mx-auto">
           Tu seguridad es nuestra prioridad. Cada detalle está pensado para brindarte tranquilidad.
         </p>
       </div>
@@ -787,11 +1175,20 @@
           <div class="trust-card-glow bg-emerald-500/20"></div>
           <div class="trust-card-content">
             <div
-              class="trust-icon-premium bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600">
-              <svg class="w-7 h-7 text-emerald-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              class="trust-icon-premium bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600"
+            >
+              <svg
+                class="w-7 h-7 text-emerald-400 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <h4 class="trust-title-premium">100% Verificado</h4>
@@ -811,11 +1208,20 @@
           <div class="trust-card-glow bg-blue-500/20"></div>
           <div class="trust-card-content">
             <div
-              class="trust-icon-premium bg-gradient-to-br from-blue-500/20 to-blue-500/5 group-hover:from-blue-500 group-hover:to-blue-600">
-              <svg class="w-7 h-7 text-blue-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              class="trust-icon-premium bg-gradient-to-br from-blue-500/20 to-blue-500/5 group-hover:from-blue-500 group-hover:to-blue-600"
+            >
+              <svg
+                class="w-7 h-7 text-blue-400 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
               </svg>
             </div>
             <h4 class="trust-title-premium">Seguro Incluido</h4>
@@ -834,11 +1240,20 @@
           <div class="trust-card-glow bg-cyan-500/20"></div>
           <div class="trust-card-content">
             <div
-              class="trust-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
-              <svg class="w-7 h-7 text-cyan-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              class="trust-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600"
+            >
+              <svg
+                class="w-7 h-7 text-cyan-400 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                />
               </svg>
             </div>
             <h4 class="trust-title-premium">Sin Tarjeta</h4>
@@ -857,11 +1272,20 @@
           <div class="trust-card-glow bg-amber-500/20"></div>
           <div class="trust-card-content">
             <div
-              class="trust-icon-premium bg-gradient-to-br from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600">
-              <svg class="w-7 h-7 text-amber-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z" />
+              class="trust-icon-premium bg-gradient-to-br from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600"
+            >
+              <svg
+                class="w-7 h-7 text-amber-400 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
               </svg>
             </div>
             <h4 class="trust-title-premium">Entrega Rápida</h4>
@@ -886,22 +1310,34 @@
         </div>
         <div class="trust-badge">
           <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+            />
           </svg>
           <span>Verificación KYC</span>
         </div>
         <div class="trust-badge">
           <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
+            />
           </svg>
           <span>Soporte 24/7</span>
         </div>
         <div class="trust-badge">
           <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+            />
           </svg>
           <span>4.8/5 Rating</span>
         </div>
@@ -916,72 +1352,121 @@
       <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6">
         <div>
           <span
-            class="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-white/50 uppercase tracking-widest mb-3">
+            class="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-white/50 uppercase tracking-widest mb-3"
+          >
             Marketplace
           </span>
-          <h2 class="font-display text-3xl lg:text-4xl font-bold text-white">
-            Autos cerca de ti
-          </h2>
+          <h2 class="font-display text-3xl lg:text-4xl font-bold text-white">Autos cerca de ti</h2>
         </div>
 
         <div class="flex items-center gap-4">
           <!-- Sort Dropdown -->
           <div class="relative">
             <label for="sort-order" class="sr-only">Ordenar autos por</label>
-            <select id="sort-order" [value]="sortOrder()" (change)="onSortOrderChange($event)"
-              class="select-premium" aria-label="Ordenar lista de autos">
+            <select
+              id="sort-order"
+              [value]="sortOrder()"
+              (change)="onSortOrderChange($event)"
+              class="select-premium"
+              aria-label="Ordenar lista de autos"
+            >
               <option value="distance">Más cercanos</option>
               <option value="score">Relevancia</option>
               <option value="price_asc">Menor precio</option>
               <option value="price_desc">Mayor precio</option>
               <option value="rating">Mejor valorados</option>
             </select>
-            <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/40"
-              aria-hidden="true">
+            <div
+              class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/40"
+              aria-hidden="true"
+            >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M19 9l-7 7-7-7" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </div>
           </div>
 
           <!-- View Toggle -->
           <div class="view-toggle-premium" role="group" aria-label="Cambiar modo de visualización">
-            <button [class.active]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+            <button
+              [class.active]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
               (click)="viewMode.set('grid')"
               [attr.aria-pressed]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-              aria-label="Vista de cuadrícula">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+              aria-label="Vista de cuadrícula"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                />
               </svg>
             </button>
-            <button [class.active]="viewMode() === 'list'" (click)="viewMode.set('list')"
-              [attr.aria-pressed]="viewMode() === 'list'" aria-label="Vista de lista">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16" />
+            <button
+              [class.active]="viewMode() === 'list'"
+              (click)="viewMode.set('list')"
+              [attr.aria-pressed]="viewMode() === 'list'"
+              aria-label="Vista de lista"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </button>
-            <button [class.active]="viewMode() === 'map' && !isDesktop()"
-              (click)="viewMode.set('map')" class="lg:hidden"
-              [attr.aria-pressed]="viewMode() === 'map' && !isDesktop()" aria-label="Vista de mapa">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            <button
+              [class.active]="viewMode() === 'map' && !isDesktop()"
+              (click)="viewMode.set('map')"
+              class="lg:hidden"
+              [attr.aria-pressed]="viewMode() === 'map' && !isDesktop()"
+              aria-label="Vista de mapa"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                />
               </svg>
             </button>
           </div>
 
           <!-- Results Count -->
           <div
-            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10"
+          >
             <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-            <span class="text-sm font-medium text-white/70">{{ visibleCars().length }}
-              resultados</span>
+            <span class="text-sm font-medium text-white/70"
+              >{{ visibleCars().length }} resultados</span
+            >
           </div>
         </div>
       </div>
@@ -989,39 +1474,53 @@
       <!-- Main Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         <!-- LEFT PANEL: Car Cards -->
-        <div class="lg:col-span-5 xl:col-span-4 space-y-6"
-          [class.hidden]="viewMode() === 'map' && !isDesktop()">
-
+        <div
+          class="lg:col-span-5 xl:col-span-4 space-y-6"
+          [class.hidden]="viewMode() === 'map' && !isDesktop()"
+        >
           <!-- Grid View - Premium Cards -->
-          <div *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-            class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
-              class="car-card-premium group" [class.car-card-selected]="selectedCarId() === car.id"
-              (click)="onCarSelected(car.id)" role="button"
-              [attr.aria-label]="'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup"
-              tabindex="0" (keydown.enter)="onCarSelected(car.id)"
-              (keydown.space)="onCarSelected(car.id)">
-
+          <div
+            *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
+            class="grid grid-cols-1 sm:grid-cols-2 gap-3"
+          >
+            <div
+              *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
+              class="car-card-premium group"
+              [class.car-card-selected]="selectedCarId() === car.id"
+              (click)="onCarSelected(car.id)"
+              role="button"
+              [attr.aria-label]="
+                'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup
+              "
+              tabindex="0"
+              (keydown.enter)="onCarSelected(car.id)"
+              (keydown.space)="onCarSelected(car.id)"
+            >
               <!-- Image -->
               <div class="car-card-image">
-                <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
+                <img
+                  [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
                   [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
-                  class="w-full h-full object-cover" [loading]="i < 3 ? 'eager' : 'lazy'"
-                  [attr.fetchpriority]="i < 3 ? 'high' : 'auto'" />
+                  class="w-full h-full object-cover"
+                  [loading]="i < 3 ? 'eager' : 'lazy'"
+                  [attr.fetchpriority]="i < 3 ? 'high' : 'auto'"
+                />
 
                 <!-- Overlay -->
                 <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                </div>
-
-
+                  class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+                ></div>
 
                 <!-- Badges -->
                 <div class="absolute top-3 left-3 flex items-center gap-2">
                   <span *ngIf="getCarInstantBooking(car)" class="badge-instant">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
                     </svg>
                     Inmediato
                   </span>
@@ -1037,10 +1536,18 @@
                     </h3>
                     <div class="flex items-center gap-2 text-sm text-white/50 mt-1">
                       <span class="flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                          viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <svg
+                          class="w-3.5 h-3.5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
                         </svg>
                         {{ car.distanceText || car.location_city || 'N/A' }}
                       </span>
@@ -1052,8 +1559,9 @@
                     </div>
                   </div>
                   <div class="text-right flex-shrink-0">
-                    <span class="text-xl font-bold text-white">${{ car.price_per_day | number:
-                      '1.0-0' }}</span>
+                    <span class="text-xl font-bold text-white"
+                      >${{ car.price_per_day | number: '1.0-0' }}</span
+                    >
                     <span class="text-sm text-white/40 block">/ día</span>
                   </div>
                 </div>
@@ -1062,31 +1570,46 @@
                 <div class="flex items-center gap-3 pt-3 border-t border-white/5">
                   <span class="car-spec">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
                     {{ car.transmission || 'Manual' }}
                   </span>
                   <span class="car-spec">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
                     </svg>
                     {{ car.seats || 5 }}
                   </span>
                   <span class="car-spec">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
                     </svg>
                     {{ car.fuel_type || 'Nafta' }}
                   </span>
                 </div>
               </div>
             </div>
-
 
             <!-- Loading skeleton -->
             <ng-container *ngIf="loading()">
@@ -1100,14 +1623,25 @@
             </ng-container>
 
             <!-- Empty state -->
-            <div *ngIf="!loading() && !error() && visibleCars().length === 0"
-              class="empty-state-card">
+            <div
+              *ngIf="!loading() && !error() && visibleCars().length === 0"
+              class="empty-state-card"
+            >
               <div
-                class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-white/30" fill="none" stroke="currentColor"
-                  viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6"
+              >
+                <svg
+                  class="w-10 h-10 text-white/30"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
               <h3 class="font-display text-xl font-bold text-white mb-2">No encontramos autos</h3>
@@ -1122,11 +1656,20 @@
             <!-- Error state -->
             <div *ngIf="!loading() && error()" class="empty-state-card border-red-500/20">
               <div
-                class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor"
-                  viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6"
+              >
+                <svg
+                  class="w-10 h-10 text-red-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
                 </svg>
               </div>
               <h3 class="font-display text-xl font-bold text-white mb-2">Algo salió mal</h3>
@@ -1137,13 +1680,19 @@
 
           <!-- List View -->
           <div *ngIf="viewMode() === 'list'" class="space-y-4">
-            <div *ngFor="let car of visibleCars(); trackBy: trackByCarId"
-              (click)="onCarSelected(car.id)" class="car-card-list group">
+            <div
+              *ngFor="let car of visibleCars(); trackBy: trackByCarId"
+              (click)="onCarSelected(car.id)"
+              class="car-card-list group"
+            >
               <!-- Image -->
               <div class="car-card-list-image">
-                <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
+                <img
+                  [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
                   [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
-                  class="w-full h-full object-cover" loading="lazy" />
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </div>
 
               <!-- Content -->
@@ -1151,7 +1700,8 @@
                 <div class="flex items-start justify-between gap-4 mb-3">
                   <div>
                     <h3
-                      class="font-display text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">
+                      class="font-display text-lg font-bold text-white group-hover:text-cyan-400 transition-colors"
+                    >
                       {{ car.brand_text_backup }} {{ car.model_text_backup }}
                     </h3>
                     <div class="flex items-center gap-2 text-sm text-white/50 mt-1">
@@ -1161,176 +1711,273 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <span class="text-2xl font-bold text-white">${{ car.price_per_day | number:
-                      '1.0-0' }}</span>
+                    <span class="text-2xl font-bold text-white"
+                      >${{ car.price_per_day | number: '1.0-0' }}</span
+                    >
                     <span class="text-sm text-white/40 block">/ día</span>
                   </div>
                 </div>
 
-                <p *ngIf="car.description" class="text-sm text-white/40 line-clamp-2 mb-4">{{
-                  car.description }}</p>
+                <p *ngIf="car.description" class="text-sm text-white/40 line-clamp-2 mb-4">
+                  {{ car.description }}
+                </p>
 
                 <div class="flex items-center gap-3">
-                    <span class="car-spec">{{ car.transmission || 'Manual' }}</span>
-                    <span class="car-spec">{{ car.seats || 5 }} plazas</span>
-                  </div>
+                  <span class="car-spec">{{ car.transmission || 'Manual' }}</span>
+                  <span class="car-spec">{{ car.seats || 5 }} plazas</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- RIGHT PANEL: Map - Lazy loaded -->
-        <div
-          class="lg:col-span-7 xl:col-span-8 hidden lg:block sticky top-24 h-[calc(100vh-180px)]">
-          <div class="map-container-premium h-full">
-            @defer (on viewport) {
-            <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
-              [userLocation]="userLocation()" [markerVariant]="contextualMarkerVariant()"
-              [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
-              (carSelected)="onCarSelected($event)"
-              (userLocationChange)="onUserLocationChange($event)"
-              (searchRadiusChange)="onSearchRadiusChange($event)"
-              (boundsChange)="onBoundsChange($event)" class="w-full h-full" />
-
-            <app-map-controls (controlEvent)="onMapControlEvent($event)" />
-
-            <!-- Search in area button -->
-            @if (showSearchAreaButton()) {
-            <div class="absolute top-4 left-1/2 -translate-x-1/2 z-10">
-              <button (click)="searchInArea()" class="btn-search-area"
-                aria-label="Buscar autos en esta zona del mapa">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                  aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <!-- Pagination Controls -->
+          @if (totalPages() > 1) {
+            <div
+              class="pagination-controls flex items-center justify-center gap-4 py-6 mt-4 border-t border-white/10"
+            >
+              <button
+                (click)="previousPage()"
+                [disabled]="currentPage() === 1"
+                class="pagination-btn group disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <svg
+                  class="w-5 h-5 mr-1 group-hover:-translate-x-0.5 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
-                Buscar en esta zona
+                Anterior
+              </button>
+
+              <span class="text-sm text-white/60 font-medium">
+                Página <span class="text-cyan-400">{{ currentPage() }}</span> de
+                <span class="text-white">{{ totalPages() }}</span>
+              </span>
+
+              <button
+                (click)="nextPage()"
+                [disabled]="currentPage() >= totalPages()"
+                class="pagination-btn group disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Siguiente
+                <svg
+                  class="w-5 h-5 ml-1 group-hover:translate-x-0.5 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
               </button>
             </div>
-            }
-            } @placeholder {
+          }
+
+          <!-- Total cars info -->
+          <div class="text-center py-2 text-sm text-white/40">
+            {{ totalCarsCount() }} autos disponibles
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: Static Map Preview (Performance Optimized) -->
+        <div
+          class="lg:col-span-7 xl:col-span-8 hidden lg:block sticky top-24 h-[calc(100vh-180px)]"
+        >
+          <div
+            class="static-map-container relative h-full rounded-xl overflow-hidden border border-white/10"
+          >
+            <!-- Static Map Image -->
+            <img
+              [src]="staticMapUrl()"
+              alt="Mapa de autos disponibles en tu zona"
+              class="w-full h-full object-cover"
+              loading="eager"
+            />
+
+            <!-- Overlay with CTA -->
             <div
-              class="w-full h-full flex items-center justify-center bg-slate-900/50 rounded-xl border border-white/5">
-              <div class="text-center p-8">
-                <div
-                  class="w-16 h-16 mx-auto mb-4 rounded-xl bg-white/5 flex items-center justify-center">
-                  <svg class="w-8 h-8 text-cyan-400/40" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                  </svg>
-                </div>
-                <p class="text-sm text-white/40">Cargando mapa...</p>
-              </div>
+              class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex flex-col items-center justify-center"
+            >
+              <a
+                routerLink="/cars/map"
+                class="btn-primary-glow text-lg px-8 py-4 shadow-2xl hover:scale-105 transition-transform"
+              >
+                <svg
+                  class="w-6 h-6 mr-2 inline-block"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                  />
+                </svg>
+                Ver mapa interactivo
+              </a>
+              <p class="text-white/60 text-sm mt-4">Explora autos con filtros avanzados</p>
             </div>
-            } @loading (minimum 200ms) {
-            <div class="w-full h-full flex items-center justify-center bg-slate-900/50 rounded-xl">
-              <div
-                class="animate-spin rounded-full h-10 w-10 border-2 border-cyan-400 border-t-transparent">
-              </div>
+
+            <!-- Car count badge -->
+            <div
+              class="absolute bottom-4 left-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg"
+            >
+              <span class="font-bold text-cyan-600 dark:text-cyan-400">{{ totalCarsCount() }}</span>
+              <span class="text-gray-600 dark:text-gray-300 ml-1">autos disponibles</span>
             </div>
-            }
           </div>
         </div>
       </div>
 
-      <!-- Map View (Mobile Only) -->
+      <!-- Map View (Mobile Only) - Static Map Preview -->
       @if (viewMode() === 'map' && !isDesktop()) {
-      <div class="map-container-premium h-[70vh] mt-6">
-        @defer (on viewport) {
-        <app-cars-map [cars]="carMapLocations()" [selectedCarId]="selectedCarId()"
-          [userLocation]="userLocation()" [markerVariant]="contextualMarkerVariant()"
-          [searchRadiusKm]="radiusKm()" [showSearchRadius]="true"
-          (carSelected)="onCarSelected($event)"
-          (userLocationChange)="onUserLocationChange($event)"
-          (searchRadiusChange)="onSearchRadiusChange($event)"
-          (boundsChange)="onBoundsChange($event)" class="w-full h-full" />
+        <div
+          class="static-map-container relative h-[70vh] mt-6 rounded-xl overflow-hidden border border-white/10"
+        >
+          <!-- Static Map Image -->
+          <img
+            [src]="staticMapUrl()"
+            alt="Mapa de autos disponibles"
+            class="w-full h-full object-cover"
+            loading="eager"
+          />
 
-        <app-map-controls (controlEvent)="onMapControlEvent($event)" />
+          <!-- Overlay with CTA -->
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex flex-col items-center justify-center p-4"
+          >
+            <a routerLink="/cars/map" class="btn-primary-glow text-base px-6 py-3 shadow-2xl">
+              <svg
+                class="w-5 h-5 mr-2 inline-block"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                />
+              </svg>
+              Ver mapa interactivo
+            </a>
+            <p class="text-white/60 text-sm mt-3 text-center">
+              Explora autos con filtros avanzados
+            </p>
+          </div>
 
-        @if (showSearchAreaButton()) {
-        <div class="absolute top-4 left-1/2 -translate-x-1/2 z-10">
-          <button (click)="searchInArea()" class="btn-search-area"
-            aria-label="Buscar autos en esta zona">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            Buscar en esta zona
-          </button>
-        </div>
-        }
-        } @placeholder {
-        <div class="w-full h-full flex items-center justify-center bg-slate-900/50 rounded-xl">
-          <div class="animate-pulse text-center">
-            <svg class="w-12 h-12 mx-auto text-cyan-400/30 mb-3" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-            </svg>
-            <p class="text-sm text-white/30">Cargando mapa...</p>
+          <!-- Car count badge -->
+          <div
+            class="absolute bottom-4 left-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-lg px-3 py-1.5 shadow-lg"
+          >
+            <span class="font-bold text-cyan-600 dark:text-cyan-400 text-sm">{{
+              totalCarsCount()
+            }}</span>
+            <span class="text-gray-600 dark:text-gray-300 text-sm ml-1">autos</span>
           </div>
         </div>
-        }
-      </div>
       }
     </div>
   </section>
 </div>
 
-
 <!-- Floating Action Button -->
-<app-floating-action-fab [actions]="fabActions" position="bottom-right"
-  (actionClick)="onFabActionClick($event)" />
+<app-floating-action-fab
+  [actions]="fabActions"
+  position="bottom-right"
+  (actionClick)="onFabActionClick($event)"
+/>
 
 <!-- Date Picker Modal -->
-<div *ngIf="showDatePicker()" class="fixed inset-0 z-50 flex items-start justify-center pt-6 px-4"
-  (click)="closeDatePicker()">
+<div
+  *ngIf="showDatePicker()"
+  class="fixed inset-0 z-50 flex items-start justify-center pt-6 px-4"
+  (click)="closeDatePicker()"
+>
   <div
     class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-700/50 overflow-hidden transform transition-all duration-300"
-    (click)="$event.stopPropagation()">
+    (click)="$event.stopPropagation()"
+  >
     <!-- Header con gradiente de marca -->
     <div
-      class="bg-gradient-to-r from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between">
+      class="bg-gradient-to-r from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between"
+    >
       <div class="flex items-center gap-3">
         <div
-          class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+          class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+        >
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
           </svg>
         </div>
         <h3 class="text-lg font-bold text-white">Selecciona las fechas</h3>
       </div>
-      <button (click)="closeDatePicker()"
+      <button
+        (click)="closeDatePicker()"
         class="w-8 h-8 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
-        aria-label="Cerrar">
+        aria-label="Cerrar"
+      >
         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M6 18L18 6M6 6l12 12" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </div>
 
     <!-- Contenido -->
     <div
-      class="p-5 bg-gradient-to-b from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50">
-      <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
-        (rangeChange)="onDateRangeChange($event)" />
+      class="p-5 bg-gradient-to-b from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50"
+    >
+      <app-date-range-picker
+        [initialFrom]="dateRange().from"
+        [initialTo]="dateRange().to"
+        (rangeChange)="onDateRangeChange($event)"
+      />
 
       <!-- Footer con botón de acción -->
       <div
-        class="mt-5 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex items-center justify-end gap-3">
-        <button (click)="closeDatePicker()"
-          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+        class="mt-5 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex items-center justify-end gap-3"
+      >
+        <button
+          (click)="closeDatePicker()"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+        >
           Cancelar
         </button>
-        <button (click)="closeDatePicker()"
-          class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl text-sm shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
+        <button
+          (click)="closeDatePicker()"
+          class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl text-sm shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
+        >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M5 13l4 4L19 7" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
           Aplicar fechas
         </button>
@@ -1340,29 +1987,48 @@
 </div>
 
 <!-- Location Picker Modal -->
-<div *ngIf="showLocationPicker()"
+<div
+  *ngIf="showLocationPicker()"
   class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-  (click)="closeLocationPicker()">
-  <div class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden"
-    (click)="$event.stopPropagation()">
+  (click)="closeLocationPicker()"
+>
+  <div
+    class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden"
+    (click)="$event.stopPropagation()"
+  >
     <div
-      class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
+      class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between"
+    >
       <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Selecciona la ubicación</h3>
-      <button (click)="closeLocationPicker()"
-        class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-        <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor"
-          viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M6 18L18 6M6 6l12 12" />
+      <button
+        (click)="closeLocationPicker()"
+        class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+      >
+        <svg
+          class="w-6 h-6 text-gray-600 dark:text-gray-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </div>
     <div class="p-6">
       <!-- Search input -->
       <div class="mb-4">
-        <input type="text" placeholder="Buscar ubicación..." [value]="selectedLocation()"
+        <input
+          type="text"
+          placeholder="Buscar ubicación..."
+          [value]="selectedLocation()"
           (input)="selectedLocation.set($any($event.target).value)"
-          class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 text-gray-900 dark:text-white placeholder:text-gray-400" />
+          class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 text-gray-900 dark:text-white placeholder:text-gray-400"
+        />
       </div>
 
       <!-- Popular locations -->
@@ -1373,14 +2039,27 @@
         <button
           *ngFor="let location of ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza', 'La Plata']"
           (click)="onLocationSelect(location)"
-          class="w-full px-4 py-3 text-left bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 rounded-xl transition-colors text-gray-900 dark:text-white">
+          class="w-full px-4 py-3 text-left bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 rounded-xl transition-colors text-gray-900 dark:text-white"
+        >
           <div class="flex items-center gap-3">
-            <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            <svg
+              class="w-5 h-5 text-cyan-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
             </svg>
             <span>{{ location }}</span>
           </div>
@@ -1388,8 +2067,10 @@
       </div>
 
       <!-- Use my location button -->
-      <button (click)="onLogoClick()"
-        class="w-full mt-4 px-4 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
+      <button
+        (click)="onLogoClick()"
+        class="w-full mt-4 px-4 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
+      >
         <span class="text-xl">📍</span>
         Usar mi ubicación
       </button>
@@ -1402,12 +2083,20 @@
 <!-- ═══════════════════════════════════════════════════════════════════════════ -->
 
 <!-- Social Proof Bar - Animated stats -->
-<app-social-proof-bar [stats]="[
-    { id: 'cars', value: visibleCars().length || 500, label: 'Autos disponibles', icon: '🚗', suffix: '+' },
+<app-social-proof-bar
+  [stats]="[
+    {
+      id: 'cars',
+      value: visibleCars().length || 500,
+      label: 'Autos disponibles',
+      icon: '🚗',
+      suffix: '+',
+    },
     { id: 'users', value: 10000, label: 'Usuarios activos', icon: '👥', suffix: '+' },
     { id: 'rentals', value: 25000, label: 'Alquileres completados', icon: '✅', suffix: '+' },
-    { id: 'rating', value: 4.8, label: 'Calificación promedio', icon: '⭐' }
-  ]" />
+    { id: 'rating', value: 4.8, label: 'Calificación promedio', icon: '⭐' },
+  ]"
+/>
 
 <!-- Testimonials Section -->
 <app-testimonials-section />
@@ -1416,15 +2105,17 @@
 <app-faq-section />
 
 <!-- Final CTA Banner -->
-<app-final-cta-banner title="¿Listo para tu próxima aventura?"
+<app-final-cta-banner
+  title="¿Listo para tu próxima aventura?"
   subtitle="Únete a miles de usuarios que ya disfrutan de la libertad de alquilar sin intermediarios."
   [primaryCta]="{ label: 'Buscar autos', link: '/cars/list' }"
-  [secondaryCta]="{ label: 'Publicar mi auto', link: '/cars/publish' }" />
+  [secondaryCta]="{ label: 'Publicar mi auto', link: '/cars/publish' }"
+/>
 
 <!-- WhatsApp FAB -->
 <app-whatsapp-fab />
 
 <!-- Price Transparency Modal -->
 @if (showPriceTransparencyModal()) {
-<app-price-transparency-modal (closed)="onPriceTransparencyModalClose()" />
+  <app-price-transparency-modal (closed)="onPriceTransparencyModalClose()" />
 }

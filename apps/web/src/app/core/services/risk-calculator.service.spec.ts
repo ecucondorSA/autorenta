@@ -8,7 +8,7 @@ import { RiskCalculatorService } from './risk-calculator.service';
 import { SupabaseClientService } from './supabase-client.service';
 
 // TODO: Fix RiskCalculation type (missing distanceKm, guarantee* properties)
-xdescribe('RiskCalculatorService', () => {
+describe('RiskCalculatorService', () => {
   let service: RiskCalculatorService;
   let mockFranchiseService: jasmine.SpyObj<FranchiseTableService>;
   let mockDistanceService: jasmine.SpyObj<DistanceCalculatorService>;
@@ -475,7 +475,7 @@ xdescribe('RiskCalculatorService', () => {
     });
   });
 
-  xdescribe('MAYOR criterion edge cases', () => {
+  describe('MAYOR criterion edge cases', () => {
     // Tests skipped - service signature changed
     it('placeholder', () => expect(true).toBe(true));
   });

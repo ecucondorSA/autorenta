@@ -4,7 +4,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -14,7 +13,6 @@ import {
 } from '@angular/core';
 import type { FilterState, QuickFilter } from '../../../../core/models/marketplace.model';
 import { QUICK_FILTERS } from '../../../../core/models/marketplace.model';
-import { GestureService } from '../../../../core/services/gesture.service';
 
 /**
  * BottomSheetFiltersComponent - Mobile-optimized filter sheet
@@ -158,9 +156,7 @@ import { GestureService } from '../../../../core/services/gesture.service';
 
       <!-- Footer -->
       <footer class="sheet-footer">
-        <button type="button" class="btn-secondary" (click)="close()">
-          Cancelar
-        </button>
+        <button type="button" class="btn-secondary" (click)="close()">Cancelar</button>
         <button type="button" class="btn-primary" (click)="apply()">
           Ver {{ resultCount }} autos
         </button>

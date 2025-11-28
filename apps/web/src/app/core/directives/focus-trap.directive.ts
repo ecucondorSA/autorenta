@@ -1,11 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  OnInit,
-  OnDestroy,
-  Input,
-  AfterViewInit,
-} from '@angular/core';
+import { Directive, ElementRef, OnInit, OnDestroy, Input, AfterViewInit } from '@angular/core';
 
 /**
  * P1-016 FIX: Focus Trap Directive
