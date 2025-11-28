@@ -74,13 +74,15 @@ export default defineConfig({
       },
     },
   ],
-  webServer: {
-    command: `bash -lc "cd apps/web && node scripts/generate-env.js && node scripts/serve-with-env.js --configuration development --port ${defaultPort} --host 127.0.0.1"`,
-    cwd: resolve(__dirname, '..'),
-    url: `http://127.0.0.1:${defaultPort}`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 420 * 1000,
-    stdout: 'pipe',
-    stderr: 'pipe',
-  },
+  webServer: process.env.CI
+    ? undefined
+    : {
+      command: `bash -lc "cd apps/web && node scripts/generate-env.js && node scripts/serve-with-env.js --configuration development --port ${defaultPort} --host 127.0.0.1"`,
+      cwd: resolve(__dirname, '..'),
+      url: `http://127.0.0.1:${defaultPort}`,
+      reuseExistingServer: true,
+      timeout: 420 * 1000,
+      stdout: 'pipe',
+      stderr: 'pipe',
+    },
 });
