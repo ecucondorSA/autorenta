@@ -82,10 +82,11 @@
   border-radius: 12px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   z-index: 40;
-  min-width: 280px;
+  width: min(280px, calc(100vw - 2rem));
   max-height: 400px;
   overflow-y: auto;
   animation: slideDown 0.25s ease-out;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 @keyframes slideDown {
@@ -202,15 +203,34 @@ input[type='checkbox'] {
   .filter-chip {
     padding: 0.4rem 0.7rem;
     font-size: 0.75rem;
+    /* Touch target minimum 44px */
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .filter-panel {
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: auto;
+    bottom: 0;
     left: 0;
     right: 0;
+    width: 100%;
     max-width: 100%;
-    border-radius: 8px 8px 0 0;
-    min-width: unset;
+    max-height: 70vh;
+    border-radius: 1rem 1rem 0 0;
+    animation: slideUp 0.3s ease-out;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

@@ -188,7 +188,7 @@
         </div>
 
         <ng-container *ngIf="!specsCollapsed()">
-          <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
+          <div class="mt-4 grid grid-cols-1 xs:grid-cols-2 gap-4 md:grid-cols-3">
             <div class="flex items-center gap-3">
               <div
                 class="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-secondary"
@@ -442,7 +442,7 @@
         <!-- Estadísticas del auto (mantener si hay carStats) -->
         <div
           *ngIf="carStats() as stats"
-          class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-surface-secondary rounded-xl"
+          class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-surface-secondary rounded-xl"
         >
           <div class="text-center">
             <div class="text-3xl font-bold text-cta-default">
@@ -468,7 +468,7 @@
 
         <div
           *ngIf="carStats() && carStats()!.reviews_count > 0"
-          class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6"
+          class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-3 mb-6"
         >
           <div
             class="flex items-center justify-between p-3 bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-default"

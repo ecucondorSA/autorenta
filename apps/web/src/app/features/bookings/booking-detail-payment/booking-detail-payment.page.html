@@ -72,12 +72,13 @@
         <div class="p-8 space-y-8">
           <!-- Car Details -->
           <div class="space-y-6">
-            <div class="flex gap-6 items-start">
+            <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
               @if (car()?.photos?.[0]?.url) {
                 <img
                   [src]="car()?.photos?.[0]?.url"
                   alt="Car"
-                  class="w-32 h-24 object-cover rounded-lg shadow-sm"
+                  class="w-full sm:w-32 h-48 sm:h-24 object-cover rounded-lg shadow-sm"
+                  loading="lazy"
                 />
               }
               <div class="flex-1">
@@ -115,7 +116,7 @@
             </div>
 
             <!-- Vehicle Specifications -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-surface-base rounded-xl">
+            <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-surface-base rounded-xl">
               <div class="text-center">
                 <p class="text-xs uppercase tracking-wide text-text-secondary mb-1">Transmisión</p>
                 <p class="font-medium text-text-primary">{{ car()?.transmission || 'N/A' }}</p>
@@ -166,7 +167,7 @@
                 <h4 class="text-sm font-semibold text-text-primary mb-3">
                   Características y Equipamiento
                 </h4>
-                <div class="grid grid-cols-2 gap-2 text-sm text-text-secondary">
+                <div class="grid grid-cols-1 xs:grid-cols-2 gap-2 text-sm text-text-secondary">
                   @for (feature of getCarFeatures(); track feature) {
                     <div class="flex items-center gap-2">
                       <svg
@@ -288,7 +289,7 @@
           <div class="space-y-4 border-t border-border-default pt-6">
             <h3 class="text-lg font-semibold text-text-primary">Condiciones de Alquiler</h3>
 
-            <div class="grid grid-cols-2 gap-4 text-sm">
+            <div class="grid grid-cols-1 xs:grid-cols-2 gap-4 text-sm">
               @if (car()?.min_rental_days) {
                 <div>
                   <p class="text-text-secondary">Días mínimos de alquiler</p>

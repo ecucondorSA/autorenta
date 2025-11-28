@@ -65,7 +65,7 @@ interface CardToken {
           <div id="form-checkout__cardNumber" class="mp-input"></div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="grid grid-cols-1 xs:grid-cols-2 gap-4 mb-4">
           <div>
             <label class="block text-sm font-medium mb-2">Vencimiento</label>
             <div id="form-checkout__expirationDate" class="mp-input"></div>
@@ -82,18 +82,18 @@ interface CardToken {
             id="form-checkout__cardholderName"
             name="cardholderName"
             type="text"
-            class="w-full px-3 py-2 border border-border-muted rounded-md"
+            class="w-full px-3 py-2 border border-border-muted rounded-md text-base"
             placeholder="NOMBRE APELLIDO"
           />
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="grid grid-cols-1 xs:grid-cols-2 gap-4 mb-4">
           <div>
             <label class="block text-sm font-medium mb-2">Tipo de Documento</label>
             <select
               id="form-checkout__identificationType"
               name="identificationType"
-              class="w-full px-3 py-2 border border-border-muted rounded-md"
+              class="w-full px-3 py-2 border border-border-muted rounded-md text-base"
             >
               <option value="">Seleccionar...</option>
             </select>
@@ -104,7 +104,7 @@ interface CardToken {
               id="form-checkout__identificationNumber"
               name="identificationNumber"
               type="text"
-              class="w-full px-3 py-2 border border-border-muted rounded-md"
+              class="w-full px-3 py-2 border border-border-muted rounded-md text-base"
               placeholder="12345678"
             />
           </div>
@@ -162,22 +162,35 @@ interface CardToken {
   styles: [
     `
       .mp-card-form-container {
-        max-width: 500px;
+        max-width: min(500px, 100%);
         margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      @media (min-width: 640px) {
+        .mp-card-form-container {
+          padding: 0;
+        }
       }
 
       .mp-input {
-        height: 42px;
+        height: 48px;
         border: 1px solid #d1d5db;
         border-radius: 0.375rem;
         padding: 0.5rem 0.75rem;
+        font-size: 16px; /* Prevent iOS zoom */
       }
 
       .mp-input:focus {
         outline: none;
         border-color: #3b82f6;
-        ring: 2px;
-        ring-color: #3b82f64d;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+      }
+
+      /* Ensure MercadoPago iframes are responsive */
+      .mp-input iframe {
+        width: 100% !important;
+        min-height: 100% !important;
       }
     `,
   ],
