@@ -10,8 +10,27 @@ import { createClient } from '@supabase/supabase-js';
  * - Admin: Platform admin with approval powers
  */
 
-const supabaseUrl = process.env.NG_APP_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NG_APP_SUPABASE_ANON_KEY || '';
+const supabaseUrl =
+  process.env.NG_APP_SUPABASE_URL ||
+  process.env.SUPABASE_URL ||
+  process.env.PLAYWRIGHT_SUPABASE_URL ||
+  '';
+const supabaseAnonKey =
+  process.env.NG_APP_SUPABASE_ANON_KEY ||
+  process.env.SUPABASE_ANON_KEY ||
+  process.env.PLAYWRIGHT_SUPABASE_ANON_KEY ||
+  '';
+const baseUrl =
+  process.env.PLAYWRIGHT_BASE_URL ||
+  process.env.E2E_WEB_URL ||
+  process.env.WEB_URL ||
+  'http://127.0.0.1:4200';
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Supabase envs missing: set NG_APP_SUPABASE_URL & NG_APP_SUPABASE_ANON_KEY (or SUPABASE_URL/SUPABASE_ANON_KEY)'
+  );
+}
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -19,19 +38,19 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // Usar test-renter@autorenta.com que ya existe en la base de datos
 const testUsers = {
   renter: {
-    email: 'test-renter@autorenta.com',
-    password: 'TestPassword123!',
+    email: process.env.TEST_RENTER_EMAIL || 'renter.test@autorenta.com',
+    password: process.env.TEST_RENTER_PASSWORD || 'TestRenter123!',
     role: 'locatario',
   },
   owner: {
-    email: 'test-owner@autorenta.com',
-    password: 'TestPassword123!',
+    email: process.env.TEST_OWNER_EMAIL || 'owner.test@autorenta.com',
+    password: process.env.TEST_OWNER_PASSWORD || 'TestOwner123!',
     role: 'locador',
   },
   admin: {
-    email: 'admin.test@autorenta.com',
-    password: 'TestAdmin123!',
-    role: 'locatario',
+    email: process.env.TEST_ADMIN_EMAIL || 'admin.test@autorenta.com',
+    password: process.env.TEST_ADMIN_PASSWORD || 'TestAdmin123!',
+    role: 'admin',
   },
 };
 
@@ -42,13 +61,66 @@ const authFiles = {
   admin: 'tests/.auth/admin.json',
 };
 
+const setSupabaseSessionInBrowser = async (page: any, session: any) => {
+  await page.evaluate(
+    ({ session: s, supabaseUrl: url }) => {
+      const serialized = JSON.stringify(s);
+      localStorage.setItem('supabase.auth.token', serialized);
+      sessionStorage.setItem('supabase.auth.token', serialized);
+
+      try {
+        const projectRef = new URL(url).hostname.split('.')[0];
+        const key = `sb-${projectRef}-auth-token`;
+        localStorage.setItem(key, serialized);
+      } catch (e) {
+        console.error('Failed to derive projectRef for auth token key', e);
+      }
+    },
+    { session, supabaseUrl }
+  );
+};
+
+const gotoHome = async (page: any) => {
+  await page.goto(baseUrl);
+  await page.waitForLoadState('domcontentloaded');
+};
+
+const verifyAuthenticated = async (page: any, role: string) => {
+  await page.waitForTimeout(3000);
+  await page.goto(`${baseUrl}/cars`);
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(1500);
+
+  const loginButton = page
+    .locator('a[routerLink="/auth/login"]')
+    .or(page.getByRole('link', { name: /entrar|login|iniciar sesión/i }));
+  const profileLink = page.locator('a[routerLink="/profile"]').or(page.locator('a[href="/profile"]'));
+  const verificationBadge = page.locator('app-verification-badge');
+
+  const [loginButtonVisible, profileLinkVisible, badgeVisible] = await Promise.all([
+    loginButton.isVisible({ timeout: 5000 }).catch(() => false),
+    profileLink.isVisible({ timeout: 5000 }).catch(() => false),
+    verificationBadge.isVisible({ timeout: 5000 }).catch(() => false),
+  ]);
+
+  const currentUrl = page.url();
+  const isOnLoginPage = currentUrl.includes('/auth/login');
+  const isAuthenticated =
+    (profileLinkVisible && !loginButtonVisible) || badgeVisible || (!isOnLoginPage && !loginButtonVisible);
+
+  if (!isAuthenticated) {
+    throw new Error(
+      `Autenticación fallida para ${role}. URL actual: ${currentUrl}. profile:${profileLinkVisible} login:${loginButtonVisible}`
+    );
+  }
+};
+
 /**
  * Setup authenticated renter session
  */
 setup('authenticate as renter', async ({ page }) => {
   console.log('Setting up renter authentication...');
 
-  // Login via Supabase
   const { data, error } = await supabase.auth.signInWithPassword({
     email: testUsers.renter.email,
     password: testUsers.renter.password,
@@ -61,71 +133,11 @@ setup('authenticate as renter', async ({ page }) => {
   expect(data.user).toBeTruthy();
   expect(data.session).toBeTruthy();
 
-  // Navigate to app and set session in browser
-  await page.goto('/');
-  await page.waitForLoadState('domcontentloaded');
-
-  // Set session in localStorage
-  // Set session in localStorage
-  await page.evaluate(({ session, supabaseUrl }) => {
-    localStorage.setItem('supabase.auth.token', JSON.stringify(session));
-    sessionStorage.setItem('supabase.auth.token', JSON.stringify(session));
-
-    // Also set the project-specific key which newer Supabase clients use
-    try {
-      const url = new URL(supabaseUrl);
-      const projectRef = url.hostname.split('.')[0];
-      const key = `sb-${projectRef}-auth-token`;
-      localStorage.setItem(key, JSON.stringify(session));
-    } catch (e) {
-      console.error('Failed to set project-specific auth key', e);
-    }
-  }, { session: data.session, supabaseUrl });
-
-  // Reload page to apply session
+  await gotoHome(page);
+  await setSupabaseSessionInBrowser(page, data.session);
   await page.reload();
-  await page.waitForLoadState('domcontentloaded');
-  await page.waitForTimeout(2000); // Dar tiempo para que se establezca la sesión
+  await verifyAuthenticated(page, 'renter');
 
-  // Verify auth state - usar selectores basados en el HTML real
-  await page.goto('/cars');
-  await page.waitForLoadState('domcontentloaded');
-  await page.waitForTimeout(3000); // Dar más tiempo para que Angular procese la sesión
-
-  // Verificar autenticación de múltiples formas basadas en el HTML real
-  // 1. Verificar que el botón de login NO está visible (significa que está autenticado)
-  const loginButton = page.locator('a[routerLink="/auth/login"]').or(
-    page.getByRole('link', { name: /entrar|login|iniciar sesión/i })
-  );
-  const loginButtonVisible = await loginButton.isVisible({ timeout: 5000 }).catch(() => false);
-
-  // 2. Verificar que el link a profile SÍ está visible (significa que está autenticado)
-  const profileLink = page.locator('a[routerLink="/profile"]').or(
-    page.locator('a[href="/profile"]')
-  );
-  const profileLinkVisible = await profileLink.isVisible({ timeout: 5000 }).catch(() => false);
-
-  // 3. Verificar badge de verificación (solo visible si está autenticado)
-  const verificationBadge = page.locator('app-verification-badge');
-  const badgeVisible = await verificationBadge.isVisible({ timeout: 5000 }).catch(() => false);
-
-  // 4. Verificar que NO estamos en login
-  const currentUrl = page.url();
-  const isOnLoginPage = currentUrl.includes('/auth/login');
-
-  // Consideramos autenticado si:
-  // - El link a profile está visible Y el botón de login NO está visible
-  // - O si el badge de verificación está visible
-  // - Y no estamos en la página de login
-  const isAuthenticated = (profileLinkVisible && !loginButtonVisible) || badgeVisible || !isOnLoginPage;
-
-  if (!isAuthenticated || isOnLoginPage) {
-    throw new Error(`El usuario no se autenticó correctamente. URL: ${currentUrl}, Profile link visible: ${profileLinkVisible}, Login button visible: ${loginButtonVisible}`);
-  }
-
-  console.log('✅ Autenticación verificada correctamente');
-
-  // Save storage state
   await page.context().storageState({ path: authFiles.renter });
   console.log('✅ Renter authenticated and state saved');
 });
@@ -148,70 +160,11 @@ setup('authenticate as owner', async ({ page }) => {
   expect(data.user).toBeTruthy();
   expect(data.session).toBeTruthy();
 
-  // Navigate to app and set session in browser
-  await page.goto('/');
-  await page.waitForLoadState('domcontentloaded');
-
-  // Set session in localStorage
-  // Set session in localStorage
-  await page.evaluate(({ session, supabaseUrl }) => {
-    localStorage.setItem('supabase.auth.token', JSON.stringify(session));
-    sessionStorage.setItem('supabase.auth.token', JSON.stringify(session));
-
-    try {
-      const url = new URL(supabaseUrl);
-      const projectRef = url.hostname.split('.')[0];
-      const key = `sb-${projectRef}-auth-token`;
-      localStorage.setItem(key, JSON.stringify(session));
-    } catch (e) {
-      console.error('Failed to set project-specific auth key', e);
-    }
-  }, { session: data.session, supabaseUrl });
-
-  // Reload page to apply session
+  await gotoHome(page);
+  await setSupabaseSessionInBrowser(page, data.session);
   await page.reload();
-  await page.waitForLoadState('domcontentloaded');
-  await page.waitForTimeout(2000); // Dar tiempo para que se establezca la sesión
+  await verifyAuthenticated(page, 'owner');
 
-  // Verify auth state - usar selectores basados en el HTML real
-  await page.goto('/cars');
-  await page.waitForLoadState('domcontentloaded');
-  await page.waitForTimeout(3000); // Dar más tiempo para que Angular procese la sesión
-
-  // Verificar autenticación de múltiples formas basadas en el HTML real
-  // 1. Verificar que el botón de login NO está visible (significa que está autenticado)
-  const loginButton = page.locator('a[routerLink="/auth/login"]').or(
-    page.getByRole('link', { name: /entrar|login|iniciar sesión/i })
-  );
-  const loginButtonVisible = await loginButton.isVisible({ timeout: 5000 }).catch(() => false);
-
-  // 2. Verificar que el link a profile SÍ está visible (significa que está autenticado)
-  const profileLink = page.locator('a[routerLink="/profile"]').or(
-    page.locator('a[href="/profile"]')
-  );
-  const profileLinkVisible = await profileLink.isVisible({ timeout: 5000 }).catch(() => false);
-
-  // 3. Verificar badge de verificación (solo visible si está autenticado)
-  const verificationBadge = page.locator('app-verification-badge');
-  const badgeVisible = await verificationBadge.isVisible({ timeout: 5000 }).catch(() => false);
-
-  // 4. Verificar que NO estamos en login
-  const currentUrl = page.url();
-  const isOnLoginPage = currentUrl.includes('/auth/login');
-
-  // Consideramos autenticado si:
-  // - El link a profile está visible Y el botón de login NO está visible
-  // - O si el badge de verificación está visible
-  // - Y no estamos en la página de login
-  const isAuthenticated = (profileLinkVisible && !loginButtonVisible) || badgeVisible || !isOnLoginPage;
-
-  if (!isAuthenticated || isOnLoginPage) {
-    throw new Error(`El usuario owner no se autenticó correctamente. URL: ${currentUrl}, Profile link visible: ${profileLinkVisible}, Login button visible: ${loginButtonVisible}`);
-  }
-
-  console.log('✅ Autenticación verificada correctamente');
-
-  // Save storage state
   await page.context().storageState({ path: authFiles.owner });
   console.log('✅ Owner authenticated and state saved');
 });
@@ -219,7 +172,7 @@ setup('authenticate as owner', async ({ page }) => {
 /**
  * Setup authenticated admin session
  */
-setup.skip('authenticate as admin', async ({ page }) => {
+setup('authenticate as admin', async ({ page }) => {
   console.log('Setting up admin authentication...');
 
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -234,59 +187,10 @@ setup.skip('authenticate as admin', async ({ page }) => {
   expect(data.user).toBeTruthy();
   expect(data.session).toBeTruthy();
 
-  // Navigate to app and set session in browser
-  await page.goto('/');
-  await page.waitForLoadState('domcontentloaded');
-
-  // Set session in localStorage
-  await page.evaluate((session) => {
-    localStorage.setItem('supabase.auth.token', JSON.stringify(session));
-    // También guardar en sessionStorage por si acaso
-    sessionStorage.setItem('supabase.auth.token', JSON.stringify(session));
-  }, data.session);
-
-  // Reload page to apply session
+  await gotoHome(page);
+  await setSupabaseSessionInBrowser(page, data.session);
   await page.reload();
-  await page.waitForLoadState('domcontentloaded');
-  await page.waitForTimeout(2000); // Dar tiempo para que se establezca la sesión
-
-  // Verify auth state - usar selectores basados en el HTML real
-  await page.goto('/admin');
-  await page.waitForLoadState('domcontentloaded');
-  await page.waitForTimeout(3000); // Dar más tiempo para que Angular procese la sesión
-
-  // Verificar autenticación de múltiples formas basadas en el HTML real
-  // 1. Verificar que el botón de login NO está visible (significa que está autenticado)
-  const loginButton = page.locator('a[routerLink="/auth/login"]').or(
-    page.getByRole('link', { name: /entrar|login|iniciar sesión/i })
-  );
-  const loginButtonVisible = await loginButton.isVisible({ timeout: 5000 }).catch(() => false);
-
-  // 2. Verificar que el link a profile SÍ está visible (significa que está autenticado)
-  const profileLink = page.locator('a[routerLink="/profile"]').or(
-    page.locator('a[href="/profile"]')
-  );
-  const profileLinkVisible = await profileLink.isVisible({ timeout: 5000 }).catch(() => false);
-
-  // 3. Verificar badge de verificación (solo visible si está autenticado)
-  const verificationBadge = page.locator('app-verification-badge');
-  const badgeVisible = await verificationBadge.isVisible({ timeout: 5000 }).catch(() => false);
-
-  // 4. Verificar que NO estamos en login
-  const currentUrl = page.url();
-  const isOnLoginPage = currentUrl.includes('/auth/login');
-
-  // Consideramos autenticado si:
-  // - El link a profile está visible Y el botón de login NO está visible
-  // - O si el badge de verificación está visible
-  // - Y no estamos en la página de login
-  const isAuthenticated = (profileLinkVisible && !loginButtonVisible) || badgeVisible || !isOnLoginPage;
-
-  if (!isAuthenticated || isOnLoginPage) {
-    throw new Error(`El usuario admin no se autenticó correctamente. URL: ${currentUrl}, Profile link visible: ${profileLinkVisible}, Login button visible: ${loginButtonVisible}`);
-  }
-
-  console.log('✅ Autenticación verificada correctamente');
+  await verifyAuthenticated(page, 'admin');
 
   await page.context().storageState({ path: authFiles.admin });
   console.log('✅ Admin authenticated and state saved');

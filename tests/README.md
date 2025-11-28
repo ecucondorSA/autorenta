@@ -27,6 +27,14 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 # Test environment
 PLAYWRIGHT_BASE_URL=http://localhost:4200
 DATABASE_URL=your_postgres_connection_string
+
+# Test users (optional override)
+TEST_RENTER_EMAIL=renter.test@autorenta.com
+TEST_RENTER_PASSWORD=TestRenter123!
+TEST_OWNER_EMAIL=owner.test@autorenta.com
+TEST_OWNER_PASSWORD=TestOwner123!
+TEST_ADMIN_EMAIL=admin.test@autorenta.com
+TEST_ADMIN_PASSWORD=TestAdmin123!
 ```
 
 ### Seed Test Data
@@ -64,6 +72,19 @@ npx playwright test --project=mobile-safari:renter
 # Run only P0 (critical) tests
 npx playwright test --grep @p0
 ```
+
+### Auth states (renter/owner/admin)
+
+1) Sembrar datos: `psql -U postgres -d autorenta -f tests/data/seeds.sql`
+2) Generar storageState sin abrir navegador:
+
+```bash
+node scripts/gen-auth-state.mjs renter
+node scripts/gen-auth-state.mjs owner
+node scripts/gen-auth-state.mjs admin
+```
+
+Los archivos se guardan en `tests/.auth/*.json` y Playwright los usa automáticamente en `global-setup`.
 
 ## 🧪 Test Coverage
 

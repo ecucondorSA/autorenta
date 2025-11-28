@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 /**
  * E2E Test CRÍTICO: Marketplace Onboarding - OAuth Flow de MercadoPago
@@ -15,14 +15,24 @@ import { createClient } from '@supabase/supabase-js';
  *
  * Prioridad: P0 (BLOCKER para owners)
  * Duración estimada: ~2-4 minutos
+ *
+ * Requiere: PLAYWRIGHT_SUPABASE_URL y PLAYWRIGHT_SUPABASE_ANON_KEY
  */
 
-const supabase = createClient(
-  process.env.PLAYWRIGHT_SUPABASE_URL || 'http://localhost:54321',
-  process.env.PLAYWRIGHT_SUPABASE_ANON_KEY || ''
-);
+// Verificar env vars antes de crear cliente
+const supabaseUrl = process.env.PLAYWRIGHT_SUPABASE_URL || process.env.NG_APP_SUPABASE_URL;
+const supabaseKey = process.env.PLAYWRIGHT_SUPABASE_ANON_KEY || process.env.NG_APP_SUPABASE_ANON_KEY;
+const hasEnvVars = !!(supabaseUrl && supabaseKey);
+
+// Solo crear cliente si tenemos las variables
+let supabase: SupabaseClient | null = null;
+if (hasEnvVars) {
+  supabase = createClient(supabaseUrl!, supabaseKey!);
+}
 
 test.describe('🔴 CRITICAL: Marketplace Onboarding - MercadoPago OAuth', () => {
+  test.skip(!hasEnvVars, 'Requires PLAYWRIGHT_SUPABASE_URL and PLAYWRIGHT_SUPABASE_ANON_KEY');
+
   test.use({
     baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:4200',
   });
@@ -30,6 +40,7 @@ test.describe('🔴 CRITICAL: Marketplace Onboarding - MercadoPago OAuth', () =>
   let testOwnerId: string | null = null;
 
   test.beforeEach(async () => {
+    if (!supabase) return;
     // Limpiar cualquier autorización previa de test
     await supabase
       .from('marketplace_authorizations')
