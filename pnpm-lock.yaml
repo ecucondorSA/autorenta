@@ -341,6 +341,18 @@ importers:
         specifier: ^1.40.0
         version: 1.56.1
 
+  tools/state-aware-mcp:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.22.0
+        version: 1.23.0(zod@4.1.13)
+      '@supabase/supabase-js':
+        specifier: ^2.39.0
+        version: 2.84.0
+      glob:
+        specifier: ^10.3.0
+        version: 10.4.5
+
 packages:
 
   '@algolia/abtesting@1.1.0':
