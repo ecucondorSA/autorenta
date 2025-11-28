@@ -35,11 +35,12 @@ jobs:
         run: npx wait-on http://localhost:4200 -t 120000
 
       - name: Run Playwright tests
-        run: |
-          npx playwright test --reporter=html --output=test-results/artifacts
+        run: pnpm test:e2e
         env:
           CI: true
           PLAYWRIGHT_BASE_URL: http://localhost:4200
+          QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+          QASE_PROJECT_CODE: ${{ secrets.QASE_PROJECT_CODE }}
 
       - name: Upload Playwright artifacts
         uses: actions/upload-artifact@v4
