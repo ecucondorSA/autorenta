@@ -14,30 +14,43 @@ jobs:
   build:
     name: 🔨 Build Application
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.22.0
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'
-      
+
       - name: Install dependencies
         run: pnpm install
-      
+
       - name: Build web application
         run: pnpm run build:web
         env:
           NODE_ENV: production
           NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
           NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
+          NG_APP_DEFAULT_CURRENCY: "ARS"
+          NG_APP_PAYMENTS_WEBHOOK_URL: ${{ secrets.NG_APP_PAYMENTS_WEBHOOK_URL }}
+          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN }}
+          NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: ${{ secrets.NG_APP_CAR_LOCATIONS_EDGE_FUNCTION }}
+          NG_APP_MERCADOPAGO_PUBLIC_KEY: ${{ secrets.NG_APP_MERCADOPAGO_PUBLIC_KEY }}
+          NG_APP_CLOUDFLARE_WORKER_URL: ${{ secrets.NG_APP_CLOUDFLARE_WORKER_URL }}
+          NG_APP_TIKTOK_CLIENT_ID: ${{ secrets.NG_APP_TIKTOK_CLIENT_ID }}
+          NG_APP_GOOGLE_CALENDAR_ID: ${{ secrets.NG_APP_GOOGLE_CALENDAR_ID }}
+          NG_APP_GOOGLE_CALENDAR_API_KEY: ${{ secrets.NG_APP_GOOGLE_CALENDAR_API_KEY }}
+          NG_APP_GOOGLE_CALENDAR_CLIENT_ID: ${{ secrets.NG_APP_GOOGLE_CALENDAR_CLIENT_ID }}
+          NG_APP_PAYPAL_CLIENT_ID: ${{ secrets.NG_APP_PAYPAL_CLIENT_ID }}
+          NG_APP_SENTRY_DSN: ${{ secrets.NG_APP_SENTRY_DSN }}
+          NG_APP_SENTRY_ENVIRONMENT: "production"
 
       - name: Upload source maps to Sentry
         working-directory: apps/web
@@ -59,16 +72,16 @@ jobs:
     name: 📄 Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
     needs: build
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: apps/web/dist/web
-      
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
@@ -111,7 +124,7 @@ jobs:
     name: 🧪 Smoke Tests
     runs-on: ubuntu-latest
     needs: [deploy-pages]
-    
+
     steps:
       - name: Test homepage
         run: |
@@ -122,7 +135,7 @@ jobs:
             exit 1
           fi
           echo "✅ Homepage OK"
-      
+
       - name: Test login page (SPA routing)
         run: |
           # Cloudflare Pages con _redirects debería retornar index.html para rutas SPA
@@ -143,7 +156,7 @@ jobs:
           else
             echo "✅ Login page returned $status (acceptable for SPA)"
           fi
-      
+
       - name: Test cars page (SPA routing)
         run: |
           # Similar a login page - SPA routing funciona en navegador, no necesariamente en curl
@@ -156,7 +169,7 @@ jobs:
           else
             echo "✅ Cars page returned $status (acceptable for SPA)"
           fi
-      
+
       - name: Test PWA manifest
         run: |
           # El manifest se llama manifest.webmanifest, no manifest.json
@@ -172,7 +185,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [deploy-pages, deploy-worker, smoke-tests]
     if: always()
-    
+
     steps:
       - name: Generate Summary
         run: |
