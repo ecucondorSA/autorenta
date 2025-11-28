@@ -115,3 +115,13 @@ fs.writeFileSync(path.join(browserPath, '_headers'), headersContent);
 console.log('✅ Archivos de configuración de Cloudflare Pages creados en dist/web/browser:');
 console.log('   - _redirects (SPA routing)');
 console.log('   - _headers (Security & Cache)');
+
+// Step 3: Rename index.csr.html to index.html if needed
+// Angular with outputMode: server generates index.csr.html
+const indexCsrPath = path.join(browserPath, 'index.csr.html');
+const indexPath = path.join(browserPath, 'index.html');
+
+if (fs.existsSync(indexCsrPath) && !fs.existsSync(indexPath)) {
+  fs.renameSync(indexCsrPath, indexPath);
+  console.log('✅ Renamed index.csr.html to index.html for static deployment');
+}
