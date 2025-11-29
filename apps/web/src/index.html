@@ -1,186 +1,154 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <title>Autorentar - Alquiler de Autos entre Personas</title>
-    <base href="/" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
-    />
 
-    <!-- SEO Meta Tags -->
-    <meta
-      name="description"
-      content="Alquiler de autos entre personas. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura."
-    />
-    <meta
-      name="keywords"
-      content="alquiler autos, rent a car, uruguay, autorentar, alquiler vehiculos"
-    />
-    <meta name="author" content="Autorentar" />
-    <meta name="tiktok-developers-site-verification" content="GRIz5qjvcGDIOvq4kx7mriQCMVbR4g1r" />
+<head>
+  <meta charset="utf-8" />
+  <title>Autorentar - Alquiler de Autos entre Personas</title>
+  <base href="/" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <link rel="apple-touch-icon" href="/assets/images/autorentar-logo.png" />
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="Alquiler de autos entre personas. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura." />
+  <meta name="keywords"
+    content="alquiler autos, rent a car, uruguay, autorentar, alquiler vehiculos" />
+  <meta name="author" content="Autorentar" />
+  <meta name="tiktok-developers-site-verification" content="GRIz5qjvcGDIOvq4kx7mriQCMVbR4g1r" />
 
-    <!-- Preconnect for external APIs (performance optimization) -->
-    <link rel="preconnect" href="https://api.mapbox.com" crossorigin />
-    <link rel="preconnect" href="https://sdk.mercadopago.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://api.mapbox.com" />
-    <link rel="dns-prefetch" href="https://sdk.mercadopago.com" />
-    <link rel="dns-prefetch" href="https://events.mapbox.com" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="/assets/images/autorentar-logo.png" />
 
-    <!-- Mapbox GL CSS -->
-    <link href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.css" rel="stylesheet" />
+  <!-- Preconnect for external APIs (performance optimization) -->
+  <link rel="preconnect" href="https://api.mapbox.com" crossorigin />
+  <link rel="preconnect" href="https://sdk.mercadopago.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://api.mapbox.com" />
+  <link rel="dns-prefetch" href="https://sdk.mercadopago.com" />
+  <link rel="dns-prefetch" href="https://events.mapbox.com" />
 
-    <!-- Ionicons -->
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <!-- Mapbox GL CSS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.css" rel="stylesheet" />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://autorentar.com/" />
-    <meta property="og:title" content="Autorentar - Alquiler de Autos entre Personas" />
-    <meta
-      property="og:description"
-      content="Alquiler de autos entre personas. Encuentra el auto perfecto para tu viaje."
-    />
-    <meta property="og:image" content="/assets/images/autorentar-logo.png" />
+  <!-- Ionicons -->
+  <script type="module"
+    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://autorentar.com/" />
-    <meta property="twitter:title" content="Autorentar - Alquiler de Autos entre Personas" />
-    <meta
-      property="twitter:description"
-      content="Alquiler de autos entre personas. Encuentra el auto perfecto para tu viaje."
-    />
-    <meta property="twitter:image" content="/assets/images/autorentar-logo.png" />
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://autorentar.com/" />
+  <meta property="og:title" content="Autorentar - Alquiler de Autos entre Personas" />
+  <meta property="og:description"
+    content="Alquiler de autos entre personas. Encuentra el auto perfecto para tu viaje." />
+  <meta property="og:image" content="/assets/images/autorentar-logo.png" />
 
-    <!-- Theme Color -->
-    <meta name="theme-color" content="#805ad5" />
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://autorentar.com/" />
+  <meta property="twitter:title" content="Autorentar - Alquiler de Autos entre Personas" />
+  <meta property="twitter:description"
+    content="Alquiler de autos entre personas. Encuentra el auto perfecto para tu viaje." />
+  <meta property="twitter:image" content="/assets/images/autorentar-logo.png" />
 
-    <!-- Content Security Policy -->
-    <!-- NOTE: This meta tag is overridden by _headers file in production -->
-    <!-- Keep in sync with apps/web/public/_headers and apps/web/scripts/create-cloudflare-config.js -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://static.cloudflareinsights.com https://unpkg.com https://ajax.googleapis.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com https://unpkg.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com; connect-src 'self' blob: https://*.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://events.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.workers.dev wss://*.supabase.co https://cloudflareinsights.com https://parallelum.com.br https://www.googleapis.com https://api.binance.com https://data-api.binance.vision https://unpkg.com https://www.gstatic.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.ar https://*.mercadolibre.com https://calendar.google.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://*.mercadopago.com;"
-    />
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#805ad5" />
 
-    <!-- PWA Configuration -->
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
-    <link
-      rel="apple-touch-startup-image"
-      href="/icons/apple-splash-2048x2732.png"
-      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      href="/icons/apple-splash-1284x2778.png"
-      media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
-    />
+  <!-- Content Security Policy -->
+  <!-- NOTE: This meta tag is overridden by _headers file in production -->
+  <!-- Keep in sync with apps/web/public/_headers and apps/web/scripts/create-cloudflare-config.js -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://static.cloudflareinsights.com https://unpkg.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com https://unpkg.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com; connect-src 'self' blob: https://*.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://events.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.workers.dev wss://*.supabase.co https://cloudflareinsights.com https://static.cloudflareinsights.com https://parallelum.com.br https://www.googleapis.com https://api.binance.com https://data-api.binance.vision https://unpkg.com https://www.gstatic.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.ar https://*.mercadolibre.com https://calendar.google.com; worker-src 'self' blob: https://www.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.mercadopago.com;" />
 
-    <!-- Preload critical fonts for instant text rendering -->
-    <link
-      rel="preload"
-      href="/assets/fonts/inter-var.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-      fetchpriority="high"
-    />
+  <!-- PWA Configuration -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
+  <link rel="apple-touch-startup-image" href="/icons/apple-splash-2048x2732.png"
+    media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+  <link rel="apple-touch-startup-image" href="/icons/apple-splash-1284x2778.png"
+    media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
 
-    <!-- Preload splash video for instant playback -->
-    <link
-      rel="preload"
-      href="/assets/videos/volvo-c-recharge-splash.mp4"
-      as="video"
-      type="video/mp4"
-    />
-    <link rel="prefetch" href="/assets/images/volvo-c-recharge-splash-poster.jpg" as="image" />
+  <!-- Preload critical fonts for instant text rendering -->
+  <link rel="preload" href="/assets/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin
+    fetchpriority="high" />
 
-    <!-- PWA Manifests -->
-    <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="manifest" href="manifest-v2.webmanifest" />
-    <!-- Model Viewer -->
-    <script
-      type="module"
-      src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"
-    ></script>
-  </head>
+  <!-- Preload splash video for instant playback -->
+  <link rel="preload" href="/assets/videos/volvo-c-recharge-splash.mp4" as="video"
+    type="video/mp4" />
+  <link rel="prefetch" href="/assets/images/volvo-c-recharge-splash-poster.jpg" as="image" />
 
-  <body>
-    <!-- Runtime environment configuration (loaded before Angular) -->
-    <script src="env.js?v=20251024"></script>
-    <app-root></app-root>
-    <noscript>Please enable JavaScript to continue using this application.</noscript>
+  <!-- PWA Manifests -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="manifest" href="manifest-v2.webmanifest" />
 
-    <!-- Service Worker Registration -->
-    <!-- DISABLED: Angular ngsw-worker.js not being generated in build -->
-    <!-- TODO: Enable Angular Service Worker in angular.json if offline support needed -->
-    <script>
-      // Service Worker temporarily disabled due to build configuration
-      // Service Worker temporarily disabled due to build configuration
-      // console.log('⚠️ Service Worker disabled - enable in angular.json if needed');
+</head>
 
-      // Install prompt for PWA
-      let deferredPrompt;
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        // console.log('💡 PWA install prompt ready');
+<body>
+  <!-- Runtime environment configuration (loaded before Angular) -->
+  <script src="env.js?v=20251024"></script>
+  <app-root></app-root>
+  <noscript>Please enable JavaScript to continue using this application.</noscript>
 
-        // Dispatch custom event for app to show install button
-        window.dispatchEvent(new CustomEvent('pwa-install-available', { detail: e }));
-      });
+  <!-- Service Worker Registration -->
+  <!-- DISABLED: Angular ngsw-worker.js not being generated in build -->
+  <!-- TODO: Enable Angular Service Worker in angular.json if offline support needed -->
+  <script>
+    // Service Worker temporarily disabled due to build configuration
+    // Service Worker temporarily disabled due to build configuration
+    // console.log('⚠️ Service Worker disabled - enable in angular.json if needed');
 
-      // Track PWA installation
-      window.addEventListener('appinstalled', () => {
-        // console.log('✅ PWA installed successfully');
-        deferredPrompt = null;
-      });
+    // Install prompt for PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // console.log('💡 PWA install prompt ready');
 
-      // Show PWA install banner on iOS Safari
-      if (
-        /iPhone|iPad|iPod/.test(navigator.userAgent) &&
-        !window.navigator.standalone &&
-        !window.matchMedia('(display-mode: standalone)').matches
-      ) {
-        // console.log('💡 iOS: Show "Add to Home Screen" hint');
-        window.dispatchEvent(new CustomEvent('ios-install-hint'));
-      }
-    </script>
+      // Dispatch custom event for app to show install button
+      window.dispatchEvent(new CustomEvent('pwa-install-available', { detail: e }));
+    });
 
-    <!-- Network status monitoring -->
-    <script>
-      window.addEventListener('online', () => {
-        console.log('🌐 Online');
-        window.dispatchEvent(
-          new CustomEvent('network-status-change', {
-            detail: { online: true },
-          }),
-        );
-      });
+    // Track PWA installation
+    window.addEventListener('appinstalled', () => {
+      // console.log('✅ PWA installed successfully');
+      deferredPrompt = null;
+    });
 
-      window.addEventListener('offline', () => {
-        console.log('📴 Offline');
-        window.dispatchEvent(
-          new CustomEvent('network-status-change', {
-            detail: { online: false },
-          }),
-        );
-      });
-    </script>
-  </body>
+    // Show PWA install banner on iOS Safari
+    if (
+      /iPhone|iPad|iPod/.test(navigator.userAgent) &&
+      !window.navigator.standalone &&
+      !window.matchMedia('(display-mode: standalone)').matches
+    ) {
+      // console.log('💡 iOS: Show "Add to Home Screen" hint');
+      window.dispatchEvent(new CustomEvent('ios-install-hint'));
+    }
+  </script>
+
+  <!-- Network status monitoring -->
+  <script>
+    window.addEventListener('online', () => {
+      console.log('🌐 Online');
+      window.dispatchEvent(
+        new CustomEvent('network-status-change', {
+          detail: { online: true },
+        }),
+      );
+    });
+
+    window.addEventListener('offline', () => {
+      console.log('📴 Offline');
+      window.dispatchEvent(
+        new CustomEvent('network-status-change', {
+          detail: { online: false },
+        }),
+      );
+    });
+  </script>
+</body>
+
 </html>
