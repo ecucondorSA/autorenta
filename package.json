@@ -17,6 +17,7 @@
     "test:e2e:ui": "./tools/run.sh test:e2e:ui",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:headed": "playwright test --headed",
+    "test:smart": "npx ts-node tests/runner/cli.ts",
     "test:e2e:booking": "playwright test tests/renter/booking",
     "test:e2e:wallet": "playwright test tests/renter/booking/payment-wallet.spec.ts",
     "test:e2e:card": "playwright test tests/renter/booking/payment-card.spec.ts",
@@ -95,6 +96,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.4.0",
+    "@gltf-transform/cli": "^4.2.1",
     "@playwright/test": "^1.56.1",
     "@supabase/supabase-js": "^2.84.0",
     "@toon-format/toon": "^1.0.0",

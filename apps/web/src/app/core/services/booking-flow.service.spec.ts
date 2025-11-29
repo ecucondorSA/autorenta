@@ -1,4 +1,6 @@
 import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import type { Booking } from '../models';
 import { BookingFlowService } from './booking-flow.service';
 import { AuthService } from './auth.service';
 import { BookingConfirmationService } from './booking-confirmation.service';
@@ -7,8 +9,6 @@ import { BookingsService } from './bookings.service';
 import { FgoV1_1Service } from './fgo-v1-1.service';
 import { ReviewsService } from './reviews.service';
 import { NotificationsService } from './user-notifications.service';
-import { Router } from '@angular/router';
-import type { Booking } from '../models';
 
 describe('BookingFlowService', () => {
   let service: BookingFlowService;

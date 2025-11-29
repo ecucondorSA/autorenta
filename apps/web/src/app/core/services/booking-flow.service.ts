@@ -168,7 +168,7 @@ export class BookingFlowService {
    */
   private async canLeaveReview(
     booking: Booking,
-    userId: string,
+    _userId: string,
   ): Promise<{
     canReview: boolean;
     description?: string;

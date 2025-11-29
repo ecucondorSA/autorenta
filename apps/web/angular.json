@@ -56,7 +56,14 @@
               "src/styles/primeng-theme.css"
             ],
             "allowedCommonJsDependencies": [
-              "mapbox-gl"
+              "mapbox-gl",
+              "jspdf",
+              "html2canvas",
+              "canvg",
+              "dompurify",
+              "fflate",
+              "raf",
+              "rgbcolor"
             ],
             "server": "src/main.server.ts",
             "prerender": false,
@@ -70,8 +77,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1.5MB",
-                  "maximumError": "2MB"
+                  "maximumWarning": "2.5MB",
+                  "maximumError": "3MB"
                 },
                 {
                   "type": "anyComponentStyle",

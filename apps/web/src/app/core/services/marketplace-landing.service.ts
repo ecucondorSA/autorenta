@@ -1,6 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
 import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
-import { DEFAULT_FILTER_STATE } from '../models/marketplace.model';
 import type {
   CarWithDistance,
   DateRange,

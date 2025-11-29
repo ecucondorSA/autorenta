@@ -43,6 +43,14 @@ export interface ImageAnalysisResult {
  * - TensorFlow/ML.js para detección local
  * - AWS Rekognition o similar
  */
+interface RawDamage {
+  type: string;
+  description?: string;
+  severity: string;
+  confidence: string;
+  location?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -159,13 +167,16 @@ export class DamageDetectionService {
       }
 
       // Mapear resultados a DetectedDamage[]
-      return (data.damages || []).map((damage: any) => ({
+      return (data.damages || []).map((damage: RawDamage) => ({
         type: this.mapDamageType(damage.type),
         description: damage.description || this.getDefaultDescription(damage.type),
         severity: this.mapSeverity(damage.severity),
         confidence: parseFloat(damage.confidence) || 0.5,
         location: damage.location || `Imagen ${pairIndex}`,
-        estimatedCostUsd: this.estimateCost(damage.type, damage.severity),
+        estimatedCostUsd: this.estimateCost(
+          this.mapDamageType(damage.type),
+          damage.severity || 'minor',
+        ),
       }));
     } catch (error) {
       console.error(`Error comparing image pair ${pairIndex}:`, error);
@@ -194,7 +205,7 @@ export class DamageDetectionService {
     // Para cada grupo, mantener el de mayor confianza y severidad
     const consolidated: DetectedDamage[] = [];
 
-    for (const [_type, items] of Object.entries(grouped)) {
+    for (const [, items] of Object.entries(grouped)) {
       if (items.length === 0) continue;
 
       // Ordenar por confianza y severidad

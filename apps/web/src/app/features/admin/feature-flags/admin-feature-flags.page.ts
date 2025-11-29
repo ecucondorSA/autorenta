@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -28,7 +28,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
     CardModule,
     DialogModule,
     InputNumberModule,
-    InputSwitchModule,
+    ToggleSwitchModule,
     InputTextModule,
     TableModule,
     TagModule,
@@ -102,10 +102,10 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
               </td>
               <td>{{ flag.description || '-' }}</td>
               <td>
-                <p-inputSwitch
+                <p-toggleswitch
                   [(ngModel)]="flag.enabled"
                   (onChange)="toggleFlag(flag)"
-                ></p-inputSwitch>
+                ></p-toggleswitch>
               </td>
               <td>
                 <p-tag
@@ -219,7 +219,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
 
         <div>
           <label class="block text-sm font-medium mb-1">Habilitada</label>
-          <p-inputSwitch [(ngModel)]="formData.enabled"></p-inputSwitch>
+          <p-toggleswitch [(ngModel)]="formData.enabled"></p-toggleswitch>
         </div>
 
         <div>

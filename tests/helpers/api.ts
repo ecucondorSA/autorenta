@@ -1,5 +1,5 @@
-import fetch from 'node-fetch';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import fetch from 'node-fetch';
 import { generateTestCar, generateTestUser, TestUser } from './test-data';
 
 /**
@@ -141,6 +141,88 @@ async function ensureWallet(userId: string, cents: number) {
     locked_balance_cents: 0,
     currency: 'ARS',
   });
+}
+
+async function ensureBooking(
+  renterId: string,
+  ownerId: string,
+  carId: string,
+  options: { startDate?: string; endDate?: string; amount?: number } = {},
+): Promise<string | null> {
+  if (!supabase) return null;
+
+  const startDate = options.startDate || '2025-12-01';
+  const endDate = options.endDate || '2025-12-05';
+  const totalAmount = options.amount || 50000;
+
+  // Intentar buscar uno existente
+  const { data: existing } = await supabase
+    .from('bookings')
+    .select('id')
+    .eq('renter_id', renterId)
+    .eq('car_id', carId)
+    .eq('status', 'pending')
+    .maybeSingle();
+
+  if (existing) return existing.id;
+
+  // Crear nuevo
+  const { data, error } = await supabase
+    .from('bookings')
+    .insert({
+      renter_id: renterId,
+      owner_id: ownerId,
+      car_id: carId,
+      start_date: startDate,
+      end_date: endDate,
+      status: 'pending',
+      total_amount: totalAmount,
+      currency: 'ARS',
+      payment_mode: 'instant',
+      // Campos mínimos para que no falle la UI
+      price_per_day: 10000,
+      days: 5,
+    })
+    .select('id')
+    .single();
+
+  if (error) {
+    warn(`Error creando booking: ${error.message}`);
+    return null;
+  }
+
+  return data.id;
+}
+
+export async function createPendingBooking(
+  renter: TestUser,
+  owner: TestUser,
+  options: { startDate?: string; endDate?: string; amount?: number } = {},
+): Promise<string> {
+  if (!supabase) throw new Error('Supabase no configurado para createPendingBooking');
+
+  const renterId = await ensureUser(renter);
+  const ownerId = await ensureUser(owner);
+
+  if (!renterId || !ownerId) throw new Error('Error creando usuarios para booking');
+
+  // Asegurar auto del dueño
+  await ensureCar(ownerId);
+
+  // Obtener ID del auto (asumimos que ensureCar creó uno o ya existía)
+  const { data: car } = await supabase
+    .from('cars')
+    .select('id')
+    .eq('owner_id', ownerId)
+    .limit(1)
+    .single();
+
+  if (!car) throw new Error('No se pudo obtener el auto para el booking');
+
+  const bookingId = await ensureBooking(renterId, ownerId, car.id, options);
+  if (!bookingId) throw new Error('No se pudo crear el booking');
+
+  return bookingId;
 }
 
 async function ensureSeedViaApi(payload: Record<string, unknown>) {

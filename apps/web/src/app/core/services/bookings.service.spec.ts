@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Booking, Car, UserProfile } from '../models';
 import { BookingsService } from './bookings.service';
 import { SupabaseClientService } from './supabase-client.service';
 import { PwaService } from './pwa.service';
@@ -14,7 +15,6 @@ import { TikTokEventsService } from './tiktok-events.service';
 import { CarOwnerNotificationsService } from './car-owner-notifications.service';
 import { CarsService } from './cars.service';
 import { ProfileService } from './profile.service';
-import { Booking, Car, UserProfile } from '../models';
 
 describe('BookingsService', () => {
   let service: BookingsService;

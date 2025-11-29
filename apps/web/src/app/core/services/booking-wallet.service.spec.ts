@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { Booking } from '../models';
+import { WalletLockFundsResponse, WalletUnlockFundsResponse } from '../models/wallet.model';
 import { BookingWalletService } from './booking-wallet.service';
 import { SupabaseClientService } from './supabase-client.service';
 import { WalletService } from './wallet.service';
 import { LoggerService } from './logger.service';
 import { CarOwnerNotificationsService } from './car-owner-notifications.service';
 import { CarsService } from './cars.service';
-import { Booking } from '../models';
-import { WalletLockFundsResponse, WalletUnlockFundsResponse } from '../models/wallet.model';
 
 // Helper to create chainable Supabase mock queries
 function createMockQuery(finalResponse: { data: unknown; error: unknown }): Record<string, any> {

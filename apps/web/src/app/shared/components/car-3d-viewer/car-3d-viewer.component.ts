@@ -124,8 +124,7 @@ export interface CarPartInfo {
         <span class="btn-text">Luces</span>
       </button>
 
-      <!-- Hover Glow Effect -->
-      <div class="hover-glow" [class.active]="isHovered"></div>
+
     </div>
   `,
   styles: [
@@ -565,7 +564,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     front: { position: { x: 0, y: 1.2, z: 8 }, target: { x: 0, y: 0.8, z: 0 } },
     side: { position: { x: 8, y: 1.5, z: 0 }, target: { x: 0, y: 0.8, z: 0 } },
     // Vista interior desde asiento del conductor - mirando hacia adelante
-    interior: { position: { x: -0.4, y: 1.1, z: -0.3 }, target: { x: -0.4, y: 1.0, z: 5 } },
+    interior: { position: { x: -0.35, y: 1.0, z: 0.2 }, target: { x: -0.35, y: 1.0, z: 5 } },
     // Vista alternativa desde asiento del copiloto
     passenger: { position: { x: 0.4, y: 1.1, z: -0.3 }, target: { x: 0.4, y: 1.0, z: 5 } },
     top: { position: { x: 0, y: 10, z: 2 }, target: { x: 0, y: 0, z: 0 } },
@@ -830,7 +829,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     this.controls.dampingFactor = 0.08; // Movimiento más suave
     this.controls.enableZoom = true;
     this.controls.enablePan = false; // Desactivar pan para mantener centrado
-    this.controls.minDistance = 0.5; // Permite entrar dentro del auto
+    this.controls.minDistance = 0.1; // Permite entrar completamente dentro del auto
     this.controls.maxDistance = 20; // Puede alejarse para vista completa
     this.controls.minPolarAngle = 0; // Puede ver desde arriba
     this.controls.maxPolarAngle = Math.PI / 1.8; // Casi hasta abajo

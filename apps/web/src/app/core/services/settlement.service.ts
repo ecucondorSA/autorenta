@@ -197,18 +197,23 @@ export class SettlementService {
     if (!inspection) return [];
 
     const images: string[] = [];
+    const insp = inspection as unknown as {
+      photos?: string[];
+      images?: string[];
+      photo_urls?: string[];
+    };
 
     // Suportar diferentes estructuras de almacenamiento de fotos
-    if (Array.isArray((inspection as any).photos)) {
-      images.push(...(inspection as any).photos);
+    if (Array.isArray(insp.photos)) {
+      images.push(...insp.photos);
     }
 
-    if (Array.isArray((inspection as any).images)) {
-      images.push(...(inspection as any).images);
+    if (Array.isArray(insp.images)) {
+      images.push(...insp.images);
     }
 
-    if ((inspection as any).photo_urls) {
-      const urls = (inspection as any).photo_urls;
+    if (insp.photo_urls) {
+      const urls = insp.photo_urls;
       if (Array.isArray(urls)) {
         images.push(...urls);
       }

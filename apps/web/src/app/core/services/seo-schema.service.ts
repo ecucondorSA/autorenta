@@ -249,7 +249,7 @@ export class SeoSchemaService {
 
   // ─── Remove All Schemas ─────────────────────────────────────────────────
   removeAllSchemas(): void {
-    this.scriptElements.forEach((script, id) => {
+    this.scriptElements.forEach((script) => {
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }

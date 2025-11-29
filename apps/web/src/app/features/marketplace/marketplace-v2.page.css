@@ -91,6 +91,10 @@
   background: linear-gradient(180deg, #f8f4ec 0%, #f0ebe2 50%, #e8e4dc 100%);
 }
 
+.hero-immersive h2 {
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
 /* 3D Model Container - No filters, full clarity */
 .model-3d-container {
   position: relative;
@@ -321,6 +325,7 @@
   border: none;
   cursor: pointer;
   transition: all 0.3s;
+  animation: pulse-soft 3s infinite;
 }
 
 .btn-search-premium:hover {
@@ -833,12 +838,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.875rem;
+  padding: 0.625rem 1rem;
   background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
   border: 1px solid rgba(167, 216, 244, 0.3);
   border-radius: 9999px;
   color: #4e4e4e;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 500;
   transition: all 0.2s;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -988,8 +994,8 @@
 .step-card-premium:hover {
   background: var(--surface-hover);
   border-color: var(--border-hover);
-  transform: translateY(-8px);
-  box-shadow: var(--elevation-4);
+  transform: translateY(-10px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
 .step-card-premium:hover::before {
@@ -1113,7 +1119,8 @@
 .trust-card-premium:hover .trust-card-content {
   background: var(--surface-hover);
   border-color: var(--border-hover);
-  transform: translateY(-4px);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
 }
 
 .trust-icon-premium {
@@ -1329,6 +1336,16 @@
   }
   50% {
     border-color: rgba(6, 182, 212, 0.6);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
   }
 }
 

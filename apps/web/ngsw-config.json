@@ -62,6 +62,18 @@
           "/icons/**/*.png"
         ]
       }
+    },
+    {
+      "name": "3d-loaders",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/libs/draco/**/*.js",
+          "/libs/draco/**/*.wasm",
+          "/**/*.glb"
+        ]
+      }
     }
   ],
   "dataGroups": [

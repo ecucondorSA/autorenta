@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { computed, inject, Injectable, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import {
   CreateFeatureFlagDto,
@@ -18,7 +18,7 @@ import { SupabaseClientService } from './supabase-client.service';
 @Injectable({
   providedIn: 'root',
 })
-export class FeatureFlagService {
+export class FeatureFlagService implements OnDestroy {
   private readonly supabase = inject(SupabaseClientService).getClient();
   private readonly logger = inject(LoggerService).createChildLogger('FeatureFlagService');
   private readonly platformId = inject(PLATFORM_ID);

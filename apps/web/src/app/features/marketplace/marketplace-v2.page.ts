@@ -24,7 +24,6 @@ import { GeocodingResult, GeocodingService } from '../../core/services/geocoding
 import { LocationService } from '../../core/services/location.service';
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { UrgentRentalService } from '../../core/services/urgent-rental.service';
-import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
 import {
   FabAction,
   FloatingActionFabComponent,
@@ -48,12 +47,9 @@ import {
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
 // DynamicPricingBadgeComponent - available for car cards when needed
-import { MapControlsEvent } from '../../shared/components/map-controls/map-controls.component';
 
 import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
 
-// TooltipComponent - available for interactive hints when needed
-import { DarkModeToggleComponent } from '../../shared/components/dark-mode-toggle/dark-mode-toggle.component';
 // SkeletonComponent - available for loading states when needed
 import { SeoSchemaService } from '../../core/services/seo-schema.service';
 import { ThemeService } from '../../core/services/theme.service';
@@ -93,7 +89,6 @@ export interface Stat {
   imports: [
     CommonModule,
     RouterModule,
-    CarsMapComponent,
 
     WhatsappFabComponent,
 
@@ -110,7 +105,6 @@ export interface Stat {
     FAQSectionComponent,
     TestimonialsSectionComponent,
     FinalCTABannerComponent,
-    DarkModeToggleComponent,
     // UrgencyBannerComponent - ready for real-time stock alerts
     // BottomSheetFiltersComponent - ready for mobile filter UX
   ],
@@ -119,7 +113,6 @@ export interface Stat {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceV2Page implements OnInit, OnDestroy {
-  @ViewChild(CarsMapComponent) carsMapComponent!: CarsMapComponent;
   @ViewChild('drawerContent', { read: ElementRef }) drawerContent?: ElementRef<HTMLDivElement>;
   @ViewChild('carViewer') carViewer?: Car3dViewerComponent;
 
@@ -727,41 +720,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
    */
   searchInArea(): void {
     void this.loadCars();
-  }
-
-  /**
-   * Handle map controls events
-   */
-  onMapControlEvent(event: MapControlsEvent): void {
-    if (!this.carsMapComponent) {
-      console.warn('Map component not initialized');
-      return;
-    }
-
-    switch (event.type) {
-      case 'center':
-        if (this.userLocation()) {
-          this.carsMapComponent.flyTo(this.userLocation()!);
-          this.showToast('Centrando en tu ubicación...', 'info');
-        } else {
-          this.showToast('Ubicación no disponible', 'warning');
-          void this.onLogoClick(); // Try to get location
-        }
-        break;
-      case 'fullscreen':
-        this.toggleFullscreen();
-        break;
-      case '3d-toggle':
-        // TODO: Implement 3D view toggle
-        break;
-      case 'search-area':
-        void this.loadCars();
-        this.showToast('Buscando en esta área...', 'info');
-        break;
-      default:
-        console.warn(`[Marketplace] Unhandled action type: ${event.type}`);
-        break;
-    }
   }
 
   /**
