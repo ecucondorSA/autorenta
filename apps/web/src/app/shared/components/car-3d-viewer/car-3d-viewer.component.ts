@@ -961,8 +961,8 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
     // Configure DRACO loader for compressed models
     const dracoLoader = new this.DRACOLoader();
-    // Use CDN path for DRACO decoder (Google's WASM decoder)
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    // Use local path for DRACO decoder instead of CDN to avoid 504 Gateway Timeout
+    dracoLoader.setDecoderPath('/libs/draco/');
     dracoLoader.setDecoderConfig({ type: 'wasm' });
 
     const loader = new this.GLTFLoader();
