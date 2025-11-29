@@ -48,6 +48,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Security Audit
+        run: pnpm audit --prod
+
       - name: Lint
         run: pnpm lint
 
@@ -66,8 +69,18 @@ jobs:
           path: apps/web/coverage/
           retention-days: 30
 
-      - name: Build
-        run: pnpm build
+      - name: Build & Bundle Analysis
+        run: |
+          cd apps/web
+          npm run analyze
+
+      - name: Upload Bundle Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bundle-analysis
+          path: apps/web/dist/web/report.html
+          retention-days: 14
 
   e2e-tests:
     name: E2E Tests
