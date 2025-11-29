@@ -31,6 +31,7 @@ functions/workers/*/.wrangler
 # ONNX models (too large for GitHub)
 apps/web/src/assets/models/*.onnx
 test-results/
+e2e/artifacts/
 
 # Temporary files and archives
 *.log
