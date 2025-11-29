@@ -1,4 +1,4 @@
-import { Page, expect, Locator } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 
 /**
  * Wallet Page Object
@@ -20,7 +20,7 @@ export class WalletPage {
     this.page = page;
 
     // Main heading
-    this.pageHeading = page.getByRole('heading', { name: 'Mi Wallet' });
+    this.pageHeading = page.getByRole('heading', { name: 'Mi Wallet', level: 1 });
 
     // Action buttons - use text content since no IDs
     this.depositButton = page.getByRole('button', { name: /depositar|configurar crédito/i });
@@ -39,15 +39,34 @@ export class WalletPage {
 
   /**
    * Get balance from wallet balance card component
-   * Note: Balance is shown in multiple places, we'll look for "USD" text
+   * Robustly handles "USD 1,234.56", "$1,234.56", "1234.56 USD" etc.
    */
   async getBalance(): Promise<number> {
-    // Look for balance display - try to find USD amount
-    const balanceText = await this.page.locator('text=/USD\\s+[\\d,\\.]+/').first().textContent();
+    // Try specific locator first, then fallback to generic text search
+    const balanceElement = this.page.locator('.balance-amount, [data-testid="wallet-balance"]').first();
+    let balanceText = '';
+
+    if (await balanceElement.isVisible()) {
+      balanceText = await balanceElement.textContent() || '';
+    } else {
+      // Fallback: Look for currency patterns
+      const potentialElements = await this.page.getByText(/USD|\$|ARS/).all();
+      for (const el of potentialElements) {
+        const text = await el.textContent();
+        if (text && /\d/.test(text) && (text.includes('USD') || text.includes('$'))) {
+          balanceText = text;
+          break;
+        }
+      }
+    }
+
     if (!balanceText) return 0;
 
-    const match = balanceText.match(/[\d,\.]+/);
-    return match ? parseFloat(match[0].replace(',', '')) : 0;
+    // Remove non-numeric chars except dot and comma
+    // Handle "1.000,00" vs "1,000.00" logic if needed, defaulting to US format for now
+    // Assuming 1,234.56 format
+    const cleanText = balanceText.replace(/[^0-9.]/g, '');
+    return parseFloat(cleanText) || 0;
   }
 
   /**

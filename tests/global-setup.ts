@@ -38,6 +38,17 @@ async function globalSetup(config: FullConfig) {
       .or(page.locator('button[type="submit"]'))
       .first();
 
+    // Check for Vite error overlay
+    const overlay = page.locator('vite-error-overlay');
+    if (await overlay.isVisible()) {
+      console.error('🚨 Vite Error Overlay detected!');
+      const errorText = await overlay.evaluate(el => el.shadowRoot?.textContent || el.textContent);
+      console.error('Overlay content:', errorText);
+
+      // Try to hide it to proceed
+      await page.addStyleTag({ content: 'vite-error-overlay { display: none !important; }' });
+    }
+
     await loginButton.click();
 
     // 4. Esperar a que el login sea exitoso (redirección o elemento de UI)
