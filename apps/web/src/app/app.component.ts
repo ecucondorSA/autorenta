@@ -219,6 +219,18 @@ export class AppComponent implements OnInit {
     this.syncSidebarSideEffects(false);
   }
 
+  async signOut(): Promise<void> {
+    await this.authService.signOut();
+    this.closeProfileMenu();
+    this.router.navigate(['/']);
+  }
+
+  onSidebarKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      this.closeSidebar();
+    }
+  }
+
   toggleDarkMode(): void {
     const newMode = !this.darkMode();
     this.darkMode.set(newMode);
