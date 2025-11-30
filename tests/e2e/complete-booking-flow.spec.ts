@@ -16,21 +16,12 @@ import { test, expect, defineBlock, requiresCheckpoint, expectsUrl, expectsEleme
  */
 
 test.use({
-  storageState: 'tests/.auth/renter.json',
-  baseURL: 'http://127.0.0.1:4200'
+  storageState: 'tests/.auth/renter.json'
 })
 
 // Mock para la API car_stats para evitar 404
 test.beforeEach(async ({ page }) => {
-  // Debug: Log all requests to find the failing one
-  page.on('request', request => {
-    if (request.url().includes('car_stats')) {
-      console.log('>> Request to:', request.url());
-    }
-  });
-
-  await page.route('**/car_stats*', async route => {
-    console.log('Intercepted car_stats request:', route.request().url());
+  await page.route('**/rest/v1/car_stats**', async route => {
     // Puedes personalizar la respuesta con datos válidos si necesitas
     const mockResponse = [
       {
@@ -48,7 +39,35 @@ test.beforeEach(async ({ page }) => {
       body: JSON.stringify(mockResponse)
     });
   });
+
+  // Mock para la API principal de coches
+  await page.route('**/rest/v1/cars**', async route => {
+    const mockCars = [
+      {
+        id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+        brand: 'Toyota',
+        model: 'Corolla',
+        year: 2022,
+        price_per_day: 5000,
+        currency: 'ARS',
+        photos: [{ url: 'https://via.placeholder.com/150' }], // Necesario para que el card se renderice
+        title: 'Toyota Corolla 2022',
+        location_city: 'Buenos Aires',
+        transmission: 'automatic',
+        seats: 5,
+        // Añadir más propiedades si son necesarias para el renderizado del app-car-card
+        // Asegúrate de que este mock incluya todas las propiedades que `app-car-card` espera
+      }
+    ];
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers: { 'Content-Range': '0-0/1' }, // Importante para Supabase
+      body: JSON.stringify(mockCars)
+    });
+  });
 });
+
 
 // Contexto compartido entre bloques
 interface BookingFlowContext {
