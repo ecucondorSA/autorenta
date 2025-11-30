@@ -260,6 +260,17 @@ export class AppComponent implements OnInit, AfterViewInit {
       });
   }
 
+  private initializeProfileMenuCloseOnNavigation(): void {
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => {
+        this.profileMenuOpen.set(false);
+      });
+  }
+
   private syncLayoutFromRoute(route: ActivatedRoute): void {
     let current: ActivatedRoute | null = route;
 
