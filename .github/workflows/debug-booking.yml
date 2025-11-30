@@ -1,0 +1,70 @@
+name: Debug Booking Flow
+
+on:
+  workflow_dispatch: # Permite ejecución manual desde la UI de GitHub
+
+jobs:
+  debug-booking:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    env:
+      # Mock env vars para build
+      NG_APP_SUPABASE_URL: https://pisqjmoklivzpwufhscx.supabase.co
+      NG_APP_SUPABASE_ANON_KEY: mock-key-for-ci
+      NG_APP_MAPBOX_ACCESS_TOKEN: pk.mock-token
+      
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.22.0
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Build Web App (Development)
+        run: pnpm run build:web
+
+      - name: Serve Web App
+        run: |
+          # Iniciar servidor en background
+          pnpm exec ng serve --configuration development --port 4200 --host 127.0.0.1 &
+          
+          # Esperar a que responda
+          echo "Waiting for server..."
+          npx wait-on http://127.0.0.1:4200 -t 120000
+          echo "Server is up!"
+
+      - name: Run Booking E2E Test
+        run: |
+          # Ejecutar solo el test de booking con tracing activado
+          npx playwright test tests/e2e/complete-booking-flow.spec.ts \
+            --reporter=list,html \
+            --trace=on \
+            --video=on \
+            --screenshot=on
+        env:
+          CI: true
+          # Usamos la URL local donde acabamos de levantar el server
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:4200
+
+      - name: Upload Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-artifacts
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 5

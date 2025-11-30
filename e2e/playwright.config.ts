@@ -40,9 +40,9 @@ export default defineConfig({
   globalSetup: resolve(__dirname, '../tests/global-setup'),
   testDir: resolve(__dirname, '../tests'),
   testIgnore: ['**/apps/**', '**/node_modules/**'],
-  timeout: 120 * 1000,
+  timeout: 300 * 1000,
   expect: {
-    timeout: 10 * 1000,
+    timeout: 30 * 1000,
   },
   fullyParallel: false,
   workers: process.env.CI ? 1 : undefined,

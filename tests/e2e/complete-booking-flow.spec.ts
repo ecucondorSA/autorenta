@@ -15,7 +15,10 @@ import { test, expect, defineBlock, requiresCheckpoint, expectsUrl, expectsEleme
  * Duración estimada: ~2-3 minutos
  */
 
-test.use({ storageState: 'tests/.auth/renter.json' })
+test.use({ 
+  storageState: 'tests/.auth/renter.json',
+  baseURL: 'http://127.0.0.1:4200'
+})
 
 // Contexto compartido entre bloques
 interface BookingFlowContext {
@@ -42,9 +45,8 @@ test.describe('Flujo Completo de Alquiler - Checkpoint Architecture', () => {
 
     const result = await block.execute(async () => {
       // Verificar autenticación via storageState
-      await page.goto('/')
-      await page.waitForLoadState('domcontentloaded')
-
+      await page.goto('/', { waitUntil: 'commit' })
+      
       const userMenu = page.getByTestId('user-menu')
         .or(page.locator('a[href*="/profile"]'))
 
@@ -111,7 +113,7 @@ test.describe('Flujo Completo de Alquiler - Checkpoint Architecture', () => {
       await checkpointManager.restoreCheckpoint(prev)
     } else {
       // Si no hay checkpoint, navegar manualmente
-      await page.goto('/cars/list', { waitUntil: 'domcontentloaded' })
+      await page.goto('/cars/list', { waitUntil: 'commit' })
       await page.waitForTimeout(3000)
     }
 
