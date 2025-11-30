@@ -53,9 +53,7 @@ jobs:
           # Ejecutar solo el test de booking con tracing activado
           npx playwright test tests/e2e/complete-booking-flow.spec.ts \
             --reporter=list,html \
-            --trace=on \
-            --video=on \
-            --screenshot=on
+            --trace=on
         env:
           CI: true
           # Usamos la URL local donde acabamos de levantar el server
