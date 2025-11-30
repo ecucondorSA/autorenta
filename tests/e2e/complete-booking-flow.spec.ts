@@ -20,6 +20,28 @@ test.use({
   baseURL: 'http://127.0.0.1:4200'
 })
 
+// Mock para la API car_stats para evitar 404
+test.beforeEach(async ({ page }) => {
+  await page.route('**/rest/v1/car_stats**', async route => {
+    // Puedes personalizar la respuesta con datos válidos si necesitas
+    const mockResponse = [
+      {
+        car_id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', // Un ID de ejemplo
+        reviews_count: 5,
+        rating_avg: 4.5,
+        total_bookings: 10
+        // Asegúrate de incluir todas las columnas que tu frontend pueda esperar.
+        // Aquí solo están las mínimas que inferí del esquema.
+      }
+    ];
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(mockResponse)
+    });
+  });
+});
+
 // Contexto compartido entre bloques
 interface BookingFlowContext {
   carId?: string
@@ -114,7 +136,6 @@ test.describe('Flujo Completo de Alquiler - Checkpoint Architecture', () => {
     } else {
       // Si no hay checkpoint, navegar manualmente
       await page.goto('/cars/list', { waitUntil: 'commit' })
-      await page.waitForTimeout(3000)
     }
 
     const block = createBlock(defineBlock('b2-booking-select-car', 'Seleccionar auto y ver detalle', {
