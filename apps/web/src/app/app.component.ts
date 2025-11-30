@@ -228,6 +228,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.showSplash.set(false);
     }, 4000); // Muestra el splash por 4 segundos
+  }
 
   private initializeTheme(): void {
     if (!this.isBrowser) {
