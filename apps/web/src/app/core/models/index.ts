@@ -44,6 +44,9 @@ export * from './insurance.model';
 // Export Dashboard models
 export * from './dashboard.model';
 
+// Export Organization models
+export * from './organization.model';
+
 // Export Dynamic Pricing models
 export * from './dynamic-pricing.model';
 
@@ -257,6 +260,7 @@ export interface Car {
   brand_id: string;
   model_id: string;
   region_id?: string | null; // For dynamic pricing
+  organization_id?: string | null; // ✅ Fleet Management
 
   // Backward compatibility fields (required in database)
   brand_text_backup: string;
@@ -473,6 +477,9 @@ export interface Booking {
   delivery_distance_km?: number | null;
   delivery_fee_cents?: number | null;
   distance_risk_tier?: 'local' | 'regional' | 'long_distance' | null;
+
+  // Metadata
+  metadata?: Record<string, unknown> | null;
 
   // ✅ DYNAMIC PRICING: Campos de pricing dinámico
   has_dynamic_pricing?: boolean | null;

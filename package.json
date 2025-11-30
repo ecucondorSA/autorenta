@@ -96,20 +96,20 @@
     "monitoring:deploy": "supabase functions deploy monitoring-health-check && supabase functions deploy monitoring-alerts && supabase functions deploy monitoring-metrics"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.4.0",
-    "@commitlint/config-conventional": "^19.4.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@gltf-transform/cli": "^4.2.1",
     "@modelcontextprotocol/sdk": "^1.23.0",
-    "@playwright/test": "^1.56.1",
-    "@supabase/supabase-js": "^2.84.0",
-    "@toon-format/toon": "^1.0.0",
+    "@playwright/test": "^1.57.0",
+    "@supabase/supabase-js": "^2.86.0",
+    "@toon-format/toon": "^1.4.0",
     "@types/node-fetch": "^2.6.13",
     "@types/uuid": "^11.0.0",
     "dotenv": "^17.2.3",
     "fast-check": "^4.3.0",
     "gltf-pipeline": "^4.3.0",
     "node-fetch": "^3.3.2",
-    "playwright": "^1.56.1",
+    "playwright": "^1.57.0",
     "playwright-qase-reporter": "^2.1.6",
     "puppeteer": "^24.31.0",
     "uuid": "^13.0.0",
@@ -168,7 +168,7 @@
     }
   },
   "dependencies": {
-    "@supabase/storage-js": "^2.84.0",
+    "@supabase/storage-js": "^2.86.0",
     "chart.js": "^4.5.1",
     "flatpickr": "^4.6.13",
     "html2canvas": "^1.4.1",
@@ -180,7 +180,7 @@
     "primeicons": "^7.0.0",
     "primeng": "^19.1.4",
     "shepherd.js": "^14.5.1",
-    "three": "^0.181.1",
+    "three": "^0.181.2",
     "tslib": "^2.8.1"
   }
 }

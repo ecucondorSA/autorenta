@@ -110,14 +110,16 @@ export interface WalletUnlockFundsResponse {
  * Respuesta de wallet_initiate_deposit
  */
 export interface WalletInitiateDepositResponse {
-  transaction_id: string;
   success: boolean;
-  message: string;
-  payment_provider: WalletPaymentProvider;
-  payment_url: string;
-  payment_mobile_deep_link?: string | null;
-  status: WalletTransactionStatus;
-  is_withdrawable?: boolean;
+  message?: string;
+  transaction_id: string;
+  amount: number;
+  currency: string;
+  provider: string;
+  payment_url?: string;
+  payment_mobile_deep_link?: string;
+  init_point?: string;
+  preference_id?: string;
 }
 
 /**

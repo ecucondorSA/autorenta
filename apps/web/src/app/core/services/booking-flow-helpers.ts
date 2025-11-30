@@ -16,15 +16,17 @@ export function isValidStatusTransition(
 ): { valid: boolean; reason?: string } {
   const validTransitions: Record<BookingStatus, BookingStatus[]> = {
     pending: ['confirmed', 'cancelled', 'expired'],
-    // Estado intermedio cuando falta el pago (similar a pending)
     pending_payment: ['confirmed', 'cancelled', 'expired'],
     confirmed: ['in_progress', 'cancelled'],
     in_progress: ['completed', 'cancelled'],
-    completed: [], // Estado final, no se puede cambiar
-    cancelled: [], // Estado final
-    expired: [], // Estado final
-    // No show es un estado final (el locatario no se presentó)
+    completed: [],
+    cancelled: [],
+    expired: [],
     no_show: [],
+    rejected: [],
+    pending_owner_review: [],
+    pending_renter_review: [],
+    pending_dispute_resolution: []
   };
 
   const allowed = validTransitions[from]?.includes(to) ?? false;
@@ -199,6 +201,30 @@ export function getBookingStatusDisplay(status: BookingStatus): {
       color: 'danger',
       icon: '🚫',
       description: 'El locatario no se presentó para el inicio del alquiler',
+    },
+    rejected: {
+      label: 'Rechazada',
+      color: 'danger',
+      icon: '❌',
+      description: 'La solicitud fue rechazada por el dueño',
+    },
+    pending_owner_review: {
+      label: 'Calificación Pendiente',
+      color: 'warning',
+      icon: '⭐',
+      description: 'El dueño debe calificar al conductor',
+    },
+    pending_renter_review: {
+      label: 'Tu Calificación Pendiente',
+      color: 'warning',
+      icon: '⭐',
+      description: 'Debés calificar tu experiencia',
+    },
+    pending_dispute_resolution: {
+      label: 'En Disputa',
+      color: 'danger',
+      icon: '⚖️',
+      description: 'El caso está siendo revisado por soporte',
     },
   };
 

@@ -9703,14 +9703,16 @@ export type Transmission = string; // transmission is stored as text in DB
 export type CancelPolicy = string; // Not defined as enum in DB
 export type BookingStatus =
   | 'pending'
-  | 'approved'
   | 'confirmed'
   | 'in_progress'
   | 'completed'
   | 'cancelled'
   | 'rejected'
+  | 'pending_payment'
+  | 'expired'
+  | 'no_show'
   | 'pending_owner_review'
   | 'pending_renter_review'
-  | 'pending_dispute_resolution'; -- NUEVO: Estado para cargos pendientes de disputa
+  | 'pending_dispute_resolution';
 export type PaymentStatus = Database['public']['Enums']['payment_status'];
 export type PaymentProvider = Database['public']['Enums']['payment_provider'];

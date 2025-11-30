@@ -245,7 +245,7 @@ export class BookingCompletionService {
       // La deducción/captura real se hará después de la resolución de la disputa
     });
 
-    this.logger.info(`Booking ${booking.id} marked as pending_dispute_resolution with charges.`, {
+    this.logger.info(`Booking ${booking.id} marked as pending_dispute_resolution with charges.`, 'BookingCompletionService', {
       totalCharges,
       description,
     });

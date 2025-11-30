@@ -695,7 +695,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   private themeChangeListener: ((event: Event) => void) | null = null;
 
   async ngAfterViewInit(): Promise<void> {
-    if (!this.isBrowser || true) { // ✅ DISABLED FOR TESTING
+    if (!this.isBrowser) {
       this.isLoading = false;
       return;
     }

@@ -7,54 +7,17 @@ import { AuthService } from './auth.service';
  * Tipos de eventos de conversión que trackeamos
  */
 export type ConversionEventType =
-  // Date Picker Events
-  | 'date_preset_clicked'
-  | 'date_range_selected'
-  | 'date_availability_checked'
-  | 'date_unavailable_error'
-  | 'date_autosuggest_applied'
-  | 'alternative_dates_suggested'
-  | 'alternative_date_applied'
-  // Social Proof Events
-  | 'social_proof_viewed'
-  | 'urgency_indicator_viewed'
-  // CTA Events
-  | 'cta_clicked'
-  | 'cta_hovered'
-  // Booking Events
-  | 'booking_initiated'
-  | 'booking_completed'
-  | 'booking_failed'
-  // Owner Events
-  | 'owner_profile_viewed'
-  | 'owner_contact_clicked'
-  // Review Events
-  | 'review_viewed'
-  | 'review_section_clicked'
-  // Marketplace Events
-  | 'filters_opened'
-  | 'car_details_clicked'
-  // Wallet Events
-  | 'wallet_page_viewed'
-  | 'wallet_onboarding_banner_viewed'
-  | 'wallet_onboarding_cta_clicked'
-  | 'wallet_deposit_modal_opened'
-  | 'wallet_deposit_initiated'
-  | 'wallet_deposit_completed'
-  | 'wallet_deposit_failed'
-  | 'wallet_protected_credit_milestone'
-  | 'wallet_cta_clicked'
-  | 'wallet_benefits_section_expanded'
-  | 'wallet_transaction_filter_applied'
-  | 'wallet_retry_deposit_clicked'
-  // Onboarding Events
-  | 'onboarding_modal_shown'
-  | 'onboarding_goal_selected'
-  | 'onboarding_step_clicked'
-  | 'onboarding_step_completed'
-  | 'onboarding_modal_dismissed'
-  // Price Transparency Events
-  | 'price_transparency_modal_viewed';
+  | 'search_performed'
+  | 'car_viewed'
+  | 'checkout_started'
+  | 'checkout_completed'
+  | 'sign_up'
+  | 'login'
+  | 'deposit_page_viewed'
+  | 'deposit_mercadopago_preference_created'
+  | 'deposit_error'
+  | 'deposit_cancelled'
+  | string; // Allow any string for flexibility
 
 export interface ConversionEventData {
   // Common fields

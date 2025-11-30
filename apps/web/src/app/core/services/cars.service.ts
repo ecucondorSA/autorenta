@@ -264,11 +264,32 @@ export class CarsService {
   async listMyCars(): Promise<Car[]> {
     const userId = (await this.supabase.auth.getUser()).data.user?.id;
     if (!userId) throw new Error('Usuario no autenticado');
-    const { data, error } = await this.supabase
+
+    // 1. Get my orgs IDs (to include fleet cars)
+    const { data: orgs } = await this.supabase
+      .from('organization_members')
+      .select('organization_id')
+      .eq('user_id', userId);
+
+    const orgIds = orgs?.map((o) => o.organization_id) || [];
+
+    // 2. Build query
+    let query = this.supabase
       .from('cars')
       .select('*, car_photos(*)')
-      .eq('owner_id', userId)
       .order('created_at', { ascending: false });
+
+    if (orgIds.length > 0) {
+      // Fetch cars where:
+      // A) I am the owner (owner_id = me)
+      // B) OR the car belongs to an organization I am a member of
+      query = query.or(`owner_id.eq.${userId},organization_id.in.(${orgIds.join(',')})`);
+    } else {
+      // Fallback for individuals with no orgs
+      query = query.eq('owner_id', userId);
+    }
+
+    const { data, error } = await query;
     if (error) throw error;
 
     return (data ?? []).map((car: CarWithPhotosRaw) => ({

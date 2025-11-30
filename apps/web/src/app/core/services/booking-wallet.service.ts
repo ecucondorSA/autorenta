@@ -194,7 +194,7 @@ export class BookingWalletService {
 
         // Actualizar el booking con el ID de la orden de MP
         await this.supabase
-          .getClient()
+          
           .from('bookings')
           .update({
             mp_security_deposit_order_id: updatedIntent.mp_order_id,

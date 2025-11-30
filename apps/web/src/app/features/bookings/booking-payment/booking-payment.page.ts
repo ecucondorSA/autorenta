@@ -28,9 +28,10 @@ import { WalletBalanceCardComponent } from '../../../shared/components/wallet-ba
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 
 // Types
-import type { Database } from '../../../../types/supabase.types';
-type Booking = Database['public']['Views']['my_bookings']['Row'];
-type Car = Database['public']['Tables']['cars']['Row'];
+import { Booking, Car } from '../../../core/models';
+// import type { Database } from '../../../../types/supabase.types';
+// type Booking = Database['public']['Views']['my_bookings']['Row'];
+// type Car = Database['public']['Tables']['cars']['Row'];
 
 interface PaymentOption {
   id: 'wallet' | 'deposit' | 'card';
@@ -87,7 +88,7 @@ export class BookingPaymentPage implements OnInit {
 
   // Desglose de costos para transparencia
   readonly deliveryFee = computed(() => {
-    const bookingData = this.booking();
+    const bookingData = this.booking() as any; // Cast to any to access new fields
     return (bookingData?.delivery_fee_cents || 0) / 100;
   });
 

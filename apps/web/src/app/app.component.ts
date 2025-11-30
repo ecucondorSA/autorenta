@@ -208,8 +208,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   year = new Date().getFullYear();
 
   // Splash loader state
-  // Splash loader state
-  showSplash = signal(false);
+  showSplash = signal(true);
 
   ngOnInit(): void {
     this.handleOAuthCallbackRedirect();
@@ -222,147 +221,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.checkVerificationPage(this.router.url);
   }
 
-  ngAfterViewInit(): void {
-    if (!this.isBrowser) {
-      return;
-    }
-
-    // V2: Mobile bottom nav deshabilitado
-    // requestAnimationFrame(() => {
-    //   this.mobileBottomNavPortal.create();
-    // });
-
-    // Wait for splash screen (4s) + initial render (1s) + buffer (1s)
-    setTimeout(() => {
-      this.initializeWelcomeTour();
-    }, 6000);
-  }
-
-  toggleSidebar(): void {
-    const next = !this.sidebarOpen();
-    this.sidebarOpen.set(next);
-    this.syncSidebarSideEffects(next);
-  }
-
-  closeSidebar(): void {
-    if (!this.sidebarOpen()) {
-      return;
-    }
-    this.sidebarOpen.set(false);
-    this.syncSidebarSideEffects(false);
-  }
-
-  onSidebarKeydown(event: KeyboardEvent): void {
-    if (!this.sidebarOpen()) {
-      return;
-    }
-
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      this.closeSidebar();
-      return;
-    }
-
-    if (event.key !== 'Tab') {
-      return;
-    }
-
-    const focusable = this.getSidebarFocusableElements();
-
-    if (focusable.length === 0) {
-      event.preventDefault();
-      this.sidebarPanel?.nativeElement.focus();
-      return;
-    }
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    const activeElement = document.activeElement;
-
-    if (event.shiftKey && activeElement === first) {
-      event.preventDefault();
-      last.focus();
-      return;
-    }
-
-    if (!event.shiftKey && activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  }
-
-  toggleDarkMode(): void {
-    const next = !this.darkMode();
-    this.darkMode.set(next);
-    if (!this.isBrowser) {
-      return;
-    }
-    document.documentElement.classList.toggle('dark', next);
-    localStorage.setItem('theme', next ? 'dark' : 'light');
-    window.dispatchEvent(new CustomEvent('autorenta:theme-change', { detail: { dark: next } }));
-  }
-
-  toggleProfileMenu(): void {
-    const next = !this.profileMenuOpen();
-    this.profileMenuOpen.set(next);
-    if (next && this.isBrowser) {
-      // Close menu when clicking outside
-      setTimeout(() => {
-        const handler = (event: MouseEvent) => {
-          const target = event.target as HTMLElement;
-          const profileMenu = document.querySelector('[data-profile-menu]');
-          const profileButton = document.querySelector('[data-profile-button]');
-
-          if (
-            profileMenu &&
-            profileButton &&
-            !profileMenu.contains(target) &&
-            !profileButton.contains(target)
-          ) {
-            this.closeProfileMenu();
-            document.removeEventListener('click', handler);
-          }
-        };
-        document.addEventListener('click', handler);
-      }, 0);
-    }
-  }
-
-  closeProfileMenu(): void {
-    this.profileMenuOpen.set(false);
-  }
-
-  private initializeProfileMenuCloseOnNavigation(): void {
-    if (!this.isBrowser) {
-      return;
-    }
-
-    this.router.events
-      .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => {
-        this.closeProfileMenu();
-      });
-  }
-
-  async signOut(): Promise<void> {
-    this.closeProfileMenu();
-    await this.authService.signOut();
-    await this.router.navigate(['/']);
-  }
-
-  /**
-   * Get route animation data for route transitions
-   */
-  getRouteAnimationData(): string {
-    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'] || '';
-  }
+  // ...
 
   private initializeSplash(): void {
-    this.showSplash.set(false);
-  }
+    // Ocultar el splash después de 4 segundos
+    setTimeout(() => {
+      this.showSplash.set(false);
+    }, 4000); // Muestra el splash por 4 segundos
 
   private initializeTheme(): void {
     if (!this.isBrowser) {

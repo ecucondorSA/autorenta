@@ -9,6 +9,9 @@ import { CarsService } from '../../../core/services/cars.service';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 
+import { Organization, BonusProgress } from '../../../core/models/organization.model';
+import { OrganizationService } from '../../../core/services/organization.service';
+
 @Component({
   standalone: true,
   selector: 'app-my-cars-page',
@@ -18,17 +21,31 @@ import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboar
 })
 export class MyCarsPage {
   private readonly carsService = inject(CarsService);
+  private readonly orgService = inject(OrganizationService);
   private readonly authService = inject(AuthService);
   private readonly modalCtrl = inject(ModalController);
   private readonly router = inject(Router);
 
   readonly cars = signal<Car[]>([]);
+  readonly organizations = signal<Organization[]>([]);
+  readonly bonuses = signal<BonusProgress[]>([]);
   readonly loading = signal(false);
 
   constructor() {
     this.loading.set(true);
-    this.carsService.listMyCars().then((cars) => {
+    Promise.all([
+      this.carsService.listMyCars(),
+      this.orgService.getMyOrganizations()
+    ]).then(async ([cars, orgs]) => {
       this.cars.set(cars);
+      this.organizations.set(orgs);
+      
+      // Fetch bonuses if org exists
+      if (orgs.length > 0) {
+        const bonuses = await this.orgService.getBonusesProgress(orgs[0].id);
+        this.bonuses.set(bonuses);
+      }
+      
       this.loading.set(false);
     });
   }

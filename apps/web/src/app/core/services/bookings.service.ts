@@ -6,6 +6,7 @@ import { PwaService } from './pwa.service';
 import { InsuranceService } from './insurance.service';
 import { LoggerService } from './logger.service';
 import { BookingWalletService } from './booking-wallet.service';
+import { WalletService } from './wallet.service';
 import { BookingApprovalService } from './booking-approval.service';
 import { BookingCompletionService } from './booking-completion.service';
 import { BookingValidationService } from './booking-validation.service';
@@ -37,7 +38,8 @@ export class BookingsService {
   private readonly tiktokEvents = inject(TikTokEventsService);
 
   // Specialized booking services
-  private readonly walletService = inject(BookingWalletService);
+  private readonly bookingWalletService = inject(BookingWalletService);
+  private readonly walletService = inject(WalletService);
   private readonly approvalService = inject(BookingApprovalService);
   private readonly completionService = inject(BookingCompletionService);
   private readonly validationService = inject(BookingValidationService);
@@ -548,10 +550,10 @@ export class BookingsService {
     const booking = await this.getBookingById(bookingId);
     if (!booking) return { ok: false, error: 'Booking not found' };
 
-    const result = await this.walletService.chargeRentalFromWallet(
+    const result = await this.bookingWalletService.chargeRentalFromWallet(
       booking,
       amountCents,
-      description,
+      // description omitted to fix signature mismatch
     );
     if (result.ok) {
       await this.updateBooking(bookingId, {
@@ -571,7 +573,7 @@ export class BookingsService {
     const booking = await this.getBookingById(bookingId);
     if (!booking) return { ok: false, error: 'Booking not found' };
 
-    return this.walletService.processRentalPayment(booking, amountCents, description);
+    return this.bookingWalletService.processRentalPayment(booking, amountCents, description);
   }
 
   async lockSecurityDeposit(
@@ -582,9 +584,10 @@ export class BookingsService {
     const booking = await this.getBookingById(bookingId);
     if (!booking) return { ok: false, error: 'Booking not found' };
 
-    const result = await this.walletService.lockSecurityDeposit(
+    const result = await this.bookingWalletService.lockSecurityDeposit(
       booking,
       depositAmountCents,
+      'wallet',
       description,
     );
     if (result.ok) {
@@ -603,7 +606,7 @@ export class BookingsService {
     const booking = await this.getBookingById(bookingId);
     if (!booking) return { ok: false, error: 'Booking not found' };
 
-    const result = await this.walletService.releaseSecurityDeposit(booking, description);
+    const result = await this.bookingWalletService.releaseSecurityDeposit(booking, description);
     if (result.ok) {
       await this.updateBooking(bookingId, { wallet_status: 'refunded' });
     }
@@ -618,7 +621,7 @@ export class BookingsService {
     const booking = await this.getBookingById(bookingId);
     if (!booking) return { ok: false, error: 'Booking not found' };
 
-    const result = await this.walletService.deductFromSecurityDeposit(
+    const result = await this.bookingWalletService.deductFromSecurityDeposit(
       booking,
       damageAmountCents,
       damageDescription,
@@ -774,7 +777,7 @@ export class BookingsService {
       const additionalCostCents = Math.round(pricePerDay * additionalDays * 100); // Simple calculation
 
       // 3. Cobrar diferencia (Intento de cobro directo a wallet)
-      const chargeResult = await this.walletService.processRentalPayment(
+      const chargeResult = await this.bookingWalletService.processRentalPayment(
         booking,
         additionalCostCents,
         `Extensión de reserva #${booking.id} (${additionalDays} días)`,
@@ -836,10 +839,10 @@ export class BookingsService {
         booking.id,
       );
 
-      this.logger.info(`Car rejected at pickup for booking ${booking.id}`, {
+      this.logger.info(`Car rejected at pickup for booking ${booking.id}`, JSON.stringify({
         reason,
         photos: evidencePhotos.length,
-      });
+      }));
 
       return { success: true };
     } catch (error) {
@@ -940,7 +943,7 @@ export class BookingsService {
 
       // Marcar booking en estado de disputa (esto debería bloquear payouts automáticos en el backend)
       await this.updateBooking(bookingId, {
-        status: 'disputed', // Asumiendo que existe este estado o usando metadata
+        status: 'pending_dispute_resolution', // Correct status for disputes
         // metadata: { is_disputed: true } // Alternativa si no hay enum
       });
 
