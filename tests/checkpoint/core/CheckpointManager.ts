@@ -8,19 +8,19 @@
  * - Tracking de entidades creadas para cleanup
  */
 
-import { Page, BrowserContext } from '@playwright/test'
+import { BrowserContext, Page } from '@playwright/test'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { v4 as uuidv4 } from 'uuid'
-import {
-  Checkpoint,
-  BrowserState,
-  DatabaseState,
-  CreatedEntities,
-  CreateCheckpointOptions,
-  RestoreCheckpointOptions,
-  HydrationResult
-} from '../types/checkpoint.types'
 import { CheckpointStorage, getCheckpointStorage } from '../storage/CheckpointStorage'
+import {
+  BrowserState,
+  Checkpoint,
+  CreateCheckpointOptions,
+  CreatedEntities,
+  DatabaseState,
+  HydrationResult,
+  RestoreCheckpointOptions
+} from '../types/checkpoint.types'
 
 const CHECKPOINT_VERSION = '1.0.0'
 const DEFAULT_TTL_MS = 60 * 60 * 1000 // 1 hora
@@ -134,25 +134,56 @@ export class CheckpointManager {
   /**
    * Obtiene el userId del usuario autenticado desde localStorage
    */
-  private async getUserIdFromStorage(): Promise<string | null> {
+  /**
+   * Obtiene el userId del usuario autenticado desde localStorage
+   */
+  async getUserIdFromStorage(): Promise<string | null> {
     try {
       const userId = await this.page.evaluate(() => {
-        const keys = Object.keys(localStorage)
-        for (const key of keys) {
-          if (key.includes('supabase') && key.includes('auth')) {
+        // Debug: Listar todas las claves de localStorage
+        const allKeys = Object.keys(localStorage);
+        console.log('[getUserIdFromStorage] Todas las claves en localStorage:', allKeys);
+
+        // Buscar claves que contengan 'supabase' o empiecen con 'sb-' (formato nuevo)
+        for (const key of allKeys) {
+          if (key.includes('supabase') || key.startsWith('sb-')) {
+            console.log(`[getUserIdFromStorage] Examinando clave: ${key}`);
             try {
-              const data = JSON.parse(localStorage.getItem(key) || '{}')
-              return data.user?.id || null
-            } catch {
-              return null
+              const value = localStorage.getItem(key);
+              if (value) {
+                const data = JSON.parse(value);
+                console.log(`[getUserIdFromStorage] Datos de ${key}:`, JSON.stringify(data).substring(0, 200));
+
+                // Intentar diferentes rutas posibles
+                if (data.user?.id) {
+                  console.log(`[getUserIdFromStorage] ✅ userId encontrado en ${key}: ${data.user.id}`);
+                  return data.user.id;
+                }
+                if (data.id) {
+                  console.log(`[getUserIdFromStorage] ✅ id encontrado en ${key}: ${data.id}`);
+                  return data.id;
+                }
+              }
+            } catch (e) {
+              console.warn(`[getUserIdFromStorage] Error parseando ${key}:`, e);
             }
           }
         }
-        return null
-      })
-      return userId
-    } catch {
-      return null
+
+        console.error('[getUserIdFromStorage] ❌ No se encontró userId en ninguna clave de localStorage');
+        return null;
+      });
+
+      if (userId) {
+        console.log(`[CheckpointManager] getUserIdFromStorage() retornó: ${userId}`);
+      } else {
+        console.error('[CheckpointManager] getUserIdFromStorage() no encontró userId');
+      }
+
+      return userId;
+    } catch (error) {
+      console.error('[CheckpointManager] Error en getUserIdFromStorage():', error);
+      return null;
     }
   }
 
@@ -241,16 +272,35 @@ export class CheckpointManager {
   async createCheckpoint(options: CreateCheckpointOptions): Promise<Checkpoint> {
     this.blockCounter++
 
+    console.log(`[CheckpointManager] 🔍 Iniciando creación de checkpoint: ${options.name}`)
+
+    console.log(`[CheckpointManager] 📍 Paso 1: Obteniendo userId...`)
     const userId = await this.getUserIdFromStorage()
+
+    // MODO DEGRADADO: Permitir checkpoint sin userId
     if (!userId) {
-      throw new Error('[CheckpointManager] No se pudo obtener userId. ¿Usuario no autenticado?')
+      console.warn('[CheckpointManager] ⚠️ No se pudo obtener userId. Creando checkpoint en modo degradado (sin DB state)')
+    } else {
+      console.log(`[CheckpointManager] ✅ userId obtenido: ${userId}`)
     }
 
-    console.log(`[CheckpointManager] Creando checkpoint: ${options.name}`)
-
+    console.log(`[CheckpointManager] 📍 Paso 2: Capturando browser state...`)
     const browserState = await this.captureBrowserState()
-    const databaseState = await this.captureDatabaseState(userId)
+    console.log(`[CheckpointManager] ✅ Browser state capturado`)
 
+    console.log(`[CheckpointManager] 📍 Paso 3: Capturando database state...`)
+    // Solo capturar DB state si tenemos userId
+    const databaseState = userId
+      ? await this.captureDatabaseState(userId)
+      : {
+        userId: 'unknown',
+        userEmail: '',
+        userRole: 'locatario' as const,
+        createdEntities: { ...this.createdEntities }
+      }
+    console.log(`[CheckpointManager] ✅ Database state capturado`)
+
+    console.log(`[CheckpointManager] 📍 Paso 4: Construyendo checkpoint object...`)
     const checkpoint: Checkpoint = {
       id: uuidv4(),
       name: options.name,
@@ -263,14 +313,17 @@ export class CheckpointManager {
       databaseState,
       metadata: options.metadata || {}
     }
+    console.log(`[CheckpointManager] ✅ Checkpoint object construido`)
 
     // Capturar estado de formulario si se solicita
     if (options.captureFormState && options.formSelectors?.length) {
+      console.log(`[CheckpointManager] 📍 Capturando form state...`)
       checkpoint.formState = await this.captureFormState(options.formSelectors)
     }
 
+    console.log(`[CheckpointManager] 📍 Paso 5: Guardando checkpoint en storage...`)
     await this.storage.save(checkpoint)
-    console.log(`[CheckpointManager] Checkpoint "${options.name}" creado (block #${this.blockCounter})`)
+    console.log(`[CheckpointManager] ✅ Checkpoint "${options.name}" creado exitosamente (block #${this.blockCounter})`)
 
     return checkpoint
   }

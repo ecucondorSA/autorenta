@@ -17,11 +17,20 @@ cd tools/state-aware-mcp
 npm install
 ```
 
+## Verificación de Instalación
+
+Para verificar que el servidor MCP se conecta correctamente a Supabase y recibe las credenciales:
+
+```bash
+npx ts-node tests/verification/verify_mcp_supabase.ts
+```
+
+Si la salida muestra `✅ MCP Supabase integration is FUNCTIONAL`, todo está listo.
+
 ## Configuración
 
 Ya configurado en `.mcp.json`:
 
-```json
 {
   "state-aware-testing": {
     "command": "node",
@@ -34,6 +43,8 @@ Ya configurado en `.mcp.json`:
   }
 }
 ```
+
+> **Nota:** El cliente de pruebas (`McpTestClient`) está configurado para cargar automáticamente las variables desde `.env.local` y pasarlas al servidor. Asegúrate de tener tu archivo `.env.local` configurado correctamente en la raíz del proyecto.
 
 ## Herramientas Disponibles
 
@@ -107,7 +118,7 @@ Usar get_user_state con:
 | Fixture | Descripción |
 |---------|-------------|
 | `empty_cart` | Carrito vacío para usuario de test |
-| `cart_with_3_items` | Carrito con 3 autos disponibles |
+| `cart_with_3_items` | Carrito con 3 autos disponibles (Standard, Premium, Economy) |
 | `user_with_wallet` | Usuario con balance en wallet (1000 ARS) |
 | `booking_pending_payment` | Booking pendiente de pago |
 | `booking_confirmed` | Booking confirmado listo para check-in |

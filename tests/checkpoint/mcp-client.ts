@@ -1,6 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import path from "path";
+import * as path from "path";
 
 export class McpTestClient {
     private client: Client;
@@ -12,6 +12,7 @@ export class McpTestClient {
         this.transport = new StdioClientTransport({
             command: "node",
             args: [serverPath],
+            env: process.env as any, // Explicitly pass environment variables
         });
 
         this.client = new Client(
@@ -21,8 +22,7 @@ export class McpTestClient {
             },
             {
                 capabilities: {
-                    tools: {},
-                    resources: {},
+                    roots: { listChanged: true },
                 },
             }
         );

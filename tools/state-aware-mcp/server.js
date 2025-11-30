@@ -31,8 +31,8 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
-import * as path from 'path';
 import { glob } from 'glob';
+import * as path from 'path';
 
 // ============================================================================
 // CONFIGURACIÓN
@@ -41,7 +41,7 @@ import { glob } from 'glob';
 const PROJECT_ROOT = process.env.PROJECT_ROOT || '/home/edu/autorenta';
 const SUPABASE_URL = process.env.NG_APP_SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ||
-                     process.env.NG_APP_SUPABASE_ANON_KEY || '';
+  process.env.NG_APP_SUPABASE_ANON_KEY || '';
 
 // Inicializar Supabase si hay credenciales
 let supabase = null;
@@ -82,6 +82,69 @@ const TEST_FIXTURES = {
     seed: [
       { table: 'bookings', data: { status: 'confirmed' } }
     ]
+  },
+  'search_results': {
+    description: 'Autos para búsqueda y filtros',
+    cleanup: ['cars'],
+    seed: [
+      {
+        table: 'cars',
+        data: {
+          title: 'Toyota Corolla 2022',
+          description: 'Excelente estado, poco uso',
+          brand: 'Toyota',
+          model: 'Corolla',
+          year: 2022,
+          price_per_day: 50000,
+          currency: 'ARS',
+          city: 'Buenos Aires',
+          province: 'Buenos Aires',
+          country: 'AR',
+          status: 'active',
+          latitude: -34.6037,
+          longitude: -58.3816,
+          category_code: 'standard'
+        }
+      },
+      {
+        table: 'cars',
+        data: {
+          title: 'Ford Ranger 4x4',
+          description: 'Ideal para viajes largos',
+          brand: 'Ford',
+          model: 'Ranger',
+          year: 2023,
+          price_per_day: 80000,
+          currency: 'ARS',
+          city: 'Buenos Aires',
+          province: 'Buenos Aires',
+          country: 'AR',
+          status: 'active',
+          latitude: -34.6037,
+          longitude: -58.3816,
+          category_code: 'premium'
+        }
+      },
+      {
+        table: 'cars',
+        data: {
+          title: 'Fiat Cronos',
+          description: 'Económico y confiable',
+          brand: 'Fiat',
+          model: 'Cronos',
+          year: 2021,
+          price_per_day: 40000,
+          currency: 'ARS',
+          city: 'Córdoba',
+          province: 'Córdoba',
+          country: 'AR',
+          status: 'active',
+          latitude: -31.4201,
+          longitude: -64.1888,
+          category_code: 'economy'
+        }
+      }
+    ]
   }
 };
 
@@ -91,6 +154,24 @@ const TEST_FIXTURES = {
 
 const TOOLS = [
   // --- CAPA DE DATOS ---
+  {
+    name: 'wait_for_db_record',
+    description: `Espera hasta que un registro exista en la base de datos (polling).
+Útil para evitar race conditions en tests asíncronos.
+Retorna: { success: boolean, record: object | null, error?: string }`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        table: { type: 'string' },
+        column: { type: 'string' },
+        value: { type: 'string' },
+        select: { type: 'string', default: '*' },
+        timeout_ms: { type: 'number', default: 10000 },
+        interval_ms: { type: 'number', default: 500 }
+      },
+      required: ['table', 'column', 'value']
+    }
+  },
   {
     name: 'verify_db_record',
     description: `Verifica si existe un registro en la base de datos Supabase.
@@ -400,6 +481,32 @@ Extrae: describes, tests, hooks (beforeEach/afterEach), locators usados.
 // IMPLEMENTACIÓN DE HERRAMIENTAS
 // ============================================================================
 
+
+
+async function waitForDbRecord(args) {
+  if (!supabase) {
+    return { success: false, error: 'Supabase not configured' };
+  }
+
+  const { table, column, value, select = '*', timeout_ms = 10000, interval_ms = 500 } = args;
+  const startTime = Date.now();
+
+  while (Date.now() - startTime < timeout_ms) {
+    const result = await verifyDbRecord({ table, column, value, select });
+    if (result.exists) {
+      return { success: true, record: result.record };
+    }
+    if (result.error && result.error !== 'Supabase not configured') {
+      // Si hay un error real (no "not found"), retornarlo
+      return { success: false, error: result.error };
+    }
+    // Esperar antes del siguiente intento
+    await new Promise(resolve => setTimeout(resolve, interval_ms));
+  }
+
+  return { success: false, error: `Timeout waiting for record in ${table} where ${column}=${value}` };
+}
+
 async function verifyDbRecord(args) {
   if (!supabase) {
     return { exists: false, error: 'Supabase not configured' };
@@ -465,6 +572,28 @@ async function resetTestState(args) {
       const data = { ...seedItem.data, ...(custom_data || {}) };
       if (user_id) {
         data.user_id = user_id;
+        // También asignar owner_id si la tabla lo requiere (ej: cars)
+        if (seedItem.table === 'cars') {
+          data.owner_id = user_id;
+        }
+        // También asignar renter_id si la tabla lo requiere (ej: bookings)
+        if (seedItem.table === 'bookings') {
+          data.renter_id = user_id;
+        }
+      }
+
+      // Resolver category_code a category_id para autos
+      if (data.category_code) {
+        const { data: category } = await supabase
+          .from('vehicle_categories')
+          .select('id')
+          .eq('code', data.category_code)
+          .single();
+
+        if (category) {
+          data.category_id = category.id;
+        }
+        delete data.category_code;
       }
 
       let query;
@@ -1072,6 +1201,8 @@ async function analyzeTestStructure(args) {
 async function handleToolCall(name, args) {
   switch (name) {
     // Capa de Datos
+    case 'wait_for_db_record':
+      return await waitForDbRecord(args);
     case 'verify_db_record':
       return await verifyDbRecord(args);
     case 'reset_test_state':

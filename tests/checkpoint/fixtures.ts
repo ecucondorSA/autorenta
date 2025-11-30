@@ -17,9 +17,9 @@
 import { test as base, expect } from '@playwright/test'
 import { CheckpointManager, createCheckpointManager } from './core/CheckpointManager'
 import { TestBlock, createTestBlock } from './core/TestBlock'
-import { TestBlockDefinition, BlockRunnerConfig } from './types/test-block.types'
-import { getCheckpointStorage, CheckpointStorage } from './storage/CheckpointStorage'
 import { McpTestClient } from './mcp-client'
+import { CheckpointStorage, getCheckpointStorage } from './storage/CheckpointStorage'
+import { BlockRunnerConfig, TestBlockDefinition } from './types/test-block.types'
 
 /**
  * Opciones de configuración para los fixtures
@@ -43,7 +43,10 @@ type CreateBlockFn = (definition: TestBlockDefinition) => TestBlock
 /**
  * Fixtures extendidos para checkpoint
  */
-type CheckpointFixtures = {
+/**
+ * Fixtures de test para checkpoint
+ */
+type CheckpointTestFixtures = {
   /** Instancia de CheckpointManager para el test actual */
   checkpointManager: CheckpointManager
 
@@ -55,15 +58,20 @@ type CheckpointFixtures = {
 
   /** Opciones de configuración */
   checkpointOptions: CheckpointFixtureOptions
+}
 
-  /** Cliente MCP para state-aware testing */
+/**
+ * Fixtures de worker para checkpoint
+ */
+type CheckpointWorkerFixtures = {
+  /** Cliente MCP para state-aware testing (Worker Scoped) */
   mcp: McpTestClient
 }
 
 /**
  * Test base extendido con fixtures de checkpoint
  */
-export const test = base.extend<CheckpointFixtures>({
+export const test = base.extend<CheckpointTestFixtures, CheckpointWorkerFixtures>({
   // Opciones por defecto (pueden ser overriden con test.use())
   checkpointOptions: [{
     blockRunnerConfig: {
@@ -82,7 +90,11 @@ export const test = base.extend<CheckpointFixtures>({
   },
 
   // CheckpointManager por test
-  checkpointManager: async ({ page, context, checkpointOptions }, use, testInfo) => {
+  checkpointManager: async ({ page, context, checkpointOptions, baseURL }, use, testInfo) => {
+    console.log(`[Fixture] Setup CheckpointManager. baseURL: '${baseURL}'`);
+    if (!baseURL) {
+      console.warn('⚠️ WARNING: baseURL is not defined! Navigation with relative URLs will fail.');
+    }
     // Crear nombre único para el test
     const testName = testInfo.title
       .replace(/\s+/g, '-')
@@ -93,7 +105,10 @@ export const test = base.extend<CheckpointFixtures>({
       page,
       context,
       testName,
-      defaultTtlMs: checkpointOptions.defaultCheckpointTtl
+      defaultTtlMs: checkpointOptions.defaultCheckpointTtl,
+      // CRÍTICO: Pasar explícitamente las credenciales de Supabase
+      supabaseUrl: process.env.NG_APP_SUPABASE_URL,
+      supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NG_APP_SUPABASE_ANON_KEY
     })
 
     // Usar el manager durante el test
@@ -121,13 +136,13 @@ export const test = base.extend<CheckpointFixtures>({
     await use(createBlockFn)
   },
 
-  // MCP Client fixture
-  mcp: async ({ }, use) => {
+  // MCP Client fixture (Worker Scoped)
+  mcp: [async ({ }, use) => {
     const mcp = new McpTestClient();
     await mcp.connect();
     await use(mcp);
     await mcp.close();
-  }
+  }, { scope: 'worker' }]
 })
 
 // Re-export expect para conveniencia

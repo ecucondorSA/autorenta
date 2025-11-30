@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 2
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -40,7 +42,9 @@
         "outputDir": "/home/edu/autorenta/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium-desktop",
         "name": "chromium-desktop",
         "testDir": "/home/edu/autorenta/tests",
@@ -57,7 +61,9 @@
         "outputDir": "/home/edu/autorenta/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "mobile-chrome",
         "name": "mobile-chrome",
         "testDir": "/home/edu/autorenta/tests",
@@ -86,19 +92,365 @@
       "stderr": "pipe"
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
-      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
+      "title": "e2e/complete-booking-flow.spec.ts",
+      "file": "e2e/complete-booking-flow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Flujo Completo de Alquiler - Checkpoint Architecture",
+          "file": "e2e/complete-booking-flow.spec.ts",
+          "line": 82,
+          "column": 6,
+          "specs": [
+            {
+              "title": "B1: Verificar autenticación y navegar a lista",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 300000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 99435,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"\u001b[7mpass\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfail\u001b[27med\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"\u001b[7mpass\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfail\u001b[27med\"\u001b[39m\n    at /home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts:166:33",
+                        "location": {
+                          "file": "/home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts",
+                          "column": 33,
+                          "line": 166
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 164 |\u001b[39m       console\u001b[33m.\u001b[39merror(\u001b[32m'❌ Block B1 Failed:'\u001b[39m\u001b[33m,\u001b[39m result\u001b[33m.\u001b[39mstate\u001b[33m.\u001b[39merror)\u001b[33m;\u001b[39m\n \u001b[90m 165 |\u001b[39m     }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 166 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstate\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'passed'\u001b[39m)\n \u001b[90m     |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 167 |\u001b[39m   })\n \u001b[90m 168 |\u001b[39m\n \u001b[90m 169 |\u001b[39m   test(\u001b[32m'B2: Seleccionar auto y navegar a detalle'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page\u001b[33m,\u001b[39m checkpointManager\u001b[33m,\u001b[39m createBlock }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts",
+                            "column": 33,
+                            "line": 166
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"\u001b[7mpass\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfail\u001b[27med\"\u001b[39m\n\n\u001b[0m \u001b[90m 164 |\u001b[39m       console\u001b[33m.\u001b[39merror(\u001b[32m'❌ Block B1 Failed:'\u001b[39m\u001b[33m,\u001b[39m result\u001b[33m.\u001b[39mstate\u001b[33m.\u001b[39merror)\u001b[33m;\u001b[39m\n \u001b[90m 165 |\u001b[39m     }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 166 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstate\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'passed'\u001b[39m)\n \u001b[90m     |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 167 |\u001b[39m   })\n \u001b[90m 168 |\u001b[39m\n \u001b[90m 169 |\u001b[39m   test(\u001b[32m'B2: Seleccionar auto y navegar a detalle'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page\u001b[33m,\u001b[39m checkpointManager\u001b[33m,\u001b[39m createBlock }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts:166:33\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "[Fixture] Setup CheckpointManager. baseURL: 'http://127.0.0.1:4300'\n"
+                        },
+                        {
+                          "text": "[b1-booking-auth-nav] Verificando precondiciones...\n"
+                        },
+                        {
+                          "text": "[b1-booking-auth-nav] Precondiciones OK (1ms)\n"
+                        },
+                        {
+                          "text": "[b1-booking-auth-nav] Ejecutando acción principal...\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: <link rel=preload> uses an unsupported `as` value\n"
+                        },
+                        {
+                          "text": "DEBUG: LocalStorage content: {\"autorenta:tour:debug\":\"true\",\"theme\":\"light\",\"sb-pisqjmoklivzpwufhscx-auth-token\":\"{\\\"access_token\\\":\\\"eyJhbGciOiJIUzI1NiIsImtpZCI6IlRNdFFyYUNoNVZFUkE0d2QiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3Bpc3FqbW9rbGl2enB3dWZoc2N4LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI3NzEzOWRkNy1jMmI3LTQzZjMtYjdiOC00ZjNiNTQ3NmM2YzQiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY0NDc5NzI5LCJpYXQiOjE3NjQ0NzYxMjksImVtYWlsIjoidGVzdC1yZW50ZXJAYXV0b3JlbnRhLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZGVmYXVsdF9jdXJyZW5jeSI6IkFSUyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJUZXN0IFJlbnRlciJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzY0NDc2MTI5fV0sInNlc3Npb25faWQiOiJhMTZhMjRhNi02YTUzLTQwOGYtOGQ5Ny1hOTQ4ZGMwZjI5NWYiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.oCXIoRit5Np-l1sejyg7ZHZiOkwS9-0nqLRzvhlHe8c\\\",\\\"token_type\\\":\\\"bearer\\\",\\\"expires_in\\\":3600,\\\"expires_at\\\":1764479729,\\\"refresh_token\\\":\\\"2gzp2qtdlltt\\\",\\\"user\\\":{\\\"id\\\":\\\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\\\",\\\"aud\\\":\\\"authenticated\\\",\\\"role\\\":\\\"authenticated\\\",\\\"email\\\":\\\"test-renter@autorenta.com\\\",\\\"email_confirmed_at\\\":\\\"2025-11-15T09:37:16.467012Z\\\",\\\"phone\\\":\\\"\\\",\\\"confirmed_at\\\":\\\"2025-11-15T09:37:16.467012Z\\\",\\\"last_sign_in_at\\\":\\\"2025-11-30T04:15:29.520618601Z\\\",\\\"app_metadata\\\":{\\\"provider\\\":\\\"email\\\",\\\"providers\\\":[\\\"email\\\"]},\\\"user_metadata\\\":{\\\"default_currency\\\":\\\"ARS\\\",\\\"email_verified\\\":true,\\\"full_name\\\":\\\"Test Renter\\\"},\\\"identities\\\":[{\\\"identity_id\\\":\\\"1e2f32aa-f837-4e61-9429-bab5b3592086\\\",\\\"id\\\":\\\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\\\",\\\"user_id\\\":\\\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\\\",\\\"identity_data\\\":{\\\"email\\\":\\\"test-renter@autorenta.com\\\",\\\"email_verified\\\":false,\\\"phone_verified\\\":false,\\\"sub\\\":\\\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\\\"},\\\"provider\\\":\\\"email\\\",\\\"last_sign_in_at\\\":\\\"2025-11-15T09:37:16.442418Z\\\",\\\"created_at\\\":\\\"2025-11-15T09:37:16.44302Z\\\",\\\"updated_at\\\":\\\"2025-11-15T09:37:16.44302Z\\\",\\\"email\\\":\\\"test-renter@autorenta.com\\\"}],\\\"created_at\\\":\\\"2025-11-15T09:37:16.388384Z\\\",\\\"updated_at\\\":\\\"2025-11-30T04:15:29.552298Z\\\",\\\"is_anonymous\\\":false},\\\"weak_password\\\":null}\",\"autorenta-theme\":\"system\",\"app_lang\":\"es\",\"preferred_language\":\"es\",\"ratelimit_login_test-renter@autorenta.com\":\"{\\\"count\\\":1,\\\"resetAt\\\":1764477029105}\"}\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [vite] connecting...\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [vite] connected.\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: NG05001: Configuration error: found both hydration and enabledBlocking initial navigation in the same application, which is a contradiction.\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: NG0505: Angular hydration was requested on the client, but there was no serialized information present in the server response, thus hydration was not enabled. Make sure the `provideClientHydration()` is included into the list of providers in the server part of the application configuration. Find more at https://v20.angular.dev/errors/NG0505\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: 📱 Device Info: {userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb…L, like Gecko) Chrome/141.0.7390.37 Safari/537.36, platform: Linux x86_64, memory: Object, connection: Object, screen: Object}\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: 📊 Performance Monitoring initialized\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [SupabaseClientService] Initializing...\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [DEBUG] syncLayoutFromRoute - url: / isHome: true\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: NG0751: Angular has detected that this application contains `@defer` blocks and the hot module replacement (HMR) mode is enabled. All `@defer` block dependencies will be loaded eagerly. Find more at https://v20.angular.dev/errors/NG0751\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [DEBUG] syncLayoutFromRoute - url: / isHome: true\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: Angular is running in development mode.\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: 📊 CLS: 0.0531\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: 📊 LCP: 64792.00ms\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: ⚠️ LCP is above target (2.5s): 64.79s\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: Error getting current position: User denied Geolocation\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [NotificationsService] Subscribing to Realtime notifications for user: 77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [NotificationsService] Realtime subscription status: SUBSCRIBED\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [NotificationsService] ✅ Successfully subscribed to Realtime notifications\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: 📊 CLS: 0.0531\n"
+                        },
+                        {
+                          "text": "[b1-booking-auth-nav] Screenshot guardado: test-results/checkpoints/b1-booking-auth-nav-failure-1764476205980.png\n"
+                        },
+                        {
+                          "text": "[CheckpointManager] Iniciando cleanup de entidades\n"
+                        },
+                        {
+                          "text": "[CheckpointManager] Cleanup completado\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "buffer": "U3RhdGUtQXdhcmUgTUNQIFNlcnZlciBydW5uaW5nIG9uIHN0ZGlvCg=="
+                        },
+                        {
+                          "text": "❌ Block B1 Failed: {\n  message: \u001b[32m'\\x1B[2mexpect(\\x1B[22m\\x1B[31mlocator\\x1B[39m\\x1B[2m).\\x1B[22mtoBeAttached\\x1B[2m(\\x1B[22m\\x1B[2m)\\x1B[22m failed\\n'\u001b[39m +\n    \u001b[32m'\\n'\u001b[39m +\n    \u001b[32m`Locator: getByTestId('user-menu').or(locator('a[href*=\"/profile\"]')).first()\\n`\u001b[39m +\n    \u001b[32m'Expected: attached\\n'\u001b[39m +\n    \u001b[32m'Timeout: 10000ms\\n'\u001b[39m +\n    \u001b[32m'Error: element(s) not found\\n'\u001b[39m +\n    \u001b[32m'\\n'\u001b[39m +\n    \u001b[32m'Call log:\\n'\u001b[39m +\n    \u001b[32m'\\x1B[2m  - Expect \"toBeAttached\" with timeout 10000ms\\x1B[22m\\n'\u001b[39m +\n    \u001b[32m`\\x1B[2m  - waiting for getByTestId('user-menu').or(locator('a[href*=\"/profile\"]')).first()\\x1B[22m\\n`\u001b[39m,\n  stack: \u001b[32m'Error: \\x1B[2mexpect(\\x1B[22m\\x1B[31mlocator\\x1B[39m\\x1B[2m).\\x1B[22mtoBeAttached\\x1B[2m(\\x1B[22m\\x1B[2m)\\x1B[22m failed\\n'\u001b[39m +\n    \u001b[32m'\\n'\u001b[39m +\n    \u001b[32m`Locator: getByTestId('user-menu').or(locator('a[href*=\"/profile\"]')).first()\\n`\u001b[39m +\n    \u001b[32m'Expected: attached\\n'\u001b[39m +\n    \u001b[32m'Timeout: 10000ms\\n'\u001b[39m +\n    \u001b[32m'Error: element(s) not found\\n'\u001b[39m +\n    \u001b[32m'\\n'\u001b[39m +\n    \u001b[32m'Call log:\\n'\u001b[39m +\n    \u001b[32m'\\x1B[2m  - Expect \"toBeAttached\" with timeout 10000ms\\x1B[22m\\n'\u001b[39m +\n    \u001b[32m`\\x1B[2m  - waiting for getByTestId('user-menu').or(locator('a[href*=\"/profile\"]')).first()\\x1B[22m\\n`\u001b[39m +\n    \u001b[32m'\\n'\u001b[39m +\n    \u001b[32m'    at /home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts:110:38\\n'\u001b[39m +\n    \u001b[32m'    at TestBlock.execute (/home/edu/autorenta/tests/checkpoint/core/TestBlock.ts:138:7)\\n'\u001b[39m +\n    \u001b[32m'    at /home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts:96:20'\u001b[39m,\n  screenshot: \u001b[32m'test-results/checkpoints/b1-booking-auth-nav-failure-1764476205980.png'\u001b[39m\n}\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-11-30T04:15:54.984Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/edu/autorenta/test-results/e2e-complete-booking-flow--328a3-nticación-y-navegar-a-lista-chromium-desktop/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/e2e-complete-booking-flow--328a3-nticación-y-navegar-a-lista-chromium-desktop/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/edu/autorenta/test-results/e2e-complete-booking-flow--328a3-nticación-y-navegar-a-lista-chromium-desktop/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/e2e-complete-booking-flow--328a3-nticación-y-navegar-a-lista-chromium-desktop/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts",
+                        "column": 33,
+                        "line": 166
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1eca7619e50f5a93c111-ba370409d8e12a603090",
+              "file": "e2e/complete-booking-flow.spec.ts",
+              "line": 84,
+              "column": 7
+            },
+            {
+              "title": "B1: Verificar autenticación y navegar a lista",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 300000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-chrome",
+                  "projectName": "mobile-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 121723,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"\u001b[7mpass\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfail\u001b[27med\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"\u001b[7mpass\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfail\u001b[27med\"\u001b[39m\n    at /home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts:166:33",
+                        "location": {
+                          "file": "/home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts",
+                          "column": 33,
+                          "line": 166
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 164 |\u001b[39m       console\u001b[33m.\u001b[39merror(\u001b[32m'❌ Block B1 Failed:'\u001b[39m\u001b[33m,\u001b[39m result\u001b[33m.\u001b[39mstate\u001b[33m.\u001b[39merror)\u001b[33m;\u001b[39m\n \u001b[90m 165 |\u001b[39m     }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 166 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstate\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'passed'\u001b[39m)\n \u001b[90m     |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 167 |\u001b[39m   })\n \u001b[90m 168 |\u001b[39m\n \u001b[90m 169 |\u001b[39m   test(\u001b[32m'B2: Seleccionar auto y navegar a detalle'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page\u001b[33m,\u001b[39m checkpointManager\u001b[33m,\u001b[39m createBlock }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts",
+                            "column": 33,
+                            "line": 166
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"\u001b[7mpass\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfail\u001b[27med\"\u001b[39m\n\n\u001b[0m \u001b[90m 164 |\u001b[39m       console\u001b[33m.\u001b[39merror(\u001b[32m'❌ Block B1 Failed:'\u001b[39m\u001b[33m,\u001b[39m result\u001b[33m.\u001b[39mstate\u001b[33m.\u001b[39merror)\u001b[33m;\u001b[39m\n \u001b[90m 165 |\u001b[39m     }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 166 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstate\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'passed'\u001b[39m)\n \u001b[90m     |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 167 |\u001b[39m   })\n \u001b[90m 168 |\u001b[39m\n \u001b[90m 169 |\u001b[39m   test(\u001b[32m'B2: Seleccionar auto y navegar a detalle'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page\u001b[33m,\u001b[39m checkpointManager\u001b[33m,\u001b[39m createBlock }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts:166:33\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "[Fixture] Setup CheckpointManager. baseURL: 'http://127.0.0.1:4300'\n"
+                        },
+                        {
+                          "text": "[b1-booking-auth-nav] Verificando precondiciones...\n"
+                        },
+                        {
+                          "text": "[b1-booking-auth-nav] Precondiciones OK (2ms)\n"
+                        },
+                        {
+                          "text": "[b1-booking-auth-nav] Ejecutando acción principal...\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: <link rel=preload> uses an unsupported `as` value\n"
+                        },
+                        {
+                          "text": "DEBUG: LocalStorage content: {\"autorenta:tour:debug\":\"true\",\"theme\":\"light\",\"sb-pisqjmoklivzpwufhscx-auth-token\":\"{\\\"access_token\\\":\\\"eyJhbGciOiJIUzI1NiIsImtpZCI6IlRNdFFyYUNoNVZFUkE0d2QiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3Bpc3FqbW9rbGl2enB3dWZoc2N4LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI3NzEzOWRkNy1jMmI3LTQzZjMtYjdiOC00ZjNiNTQ3NmM2YzQiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY0NDc5NzI5LCJpYXQiOjE3NjQ0NzYxMjksImVtYWlsIjoidGVzdC1yZW50ZXJAYXV0b3JlbnRhLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZGVmYXVsdF9jdXJyZW5jeSI6IkFSUyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJUZXN0IFJlbnRlciJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzY0NDc2MTI5fV0sInNlc3Npb25faWQiOiJhMTZhMjRhNi02YTUzLTQwOGYtOGQ5Ny1hOTQ4ZGMwZjI5NWYiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.oCXIoRit5Np-l1sejyg7ZHZiOkwS9-0nqLRzvhlHe8c\\\",\\\"token_type\\\":\\\"bearer\\\",\\\"expires_in\\\":3600,\\\"expires_at\\\":1764479729,\\\"refresh_token\\\":\\\"2gzp2qtdlltt\\\",\\\"user\\\":{\\\"id\\\":\\\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\\\",\\\"aud\\\":\\\"authenticated\\\",\\\"role\\\":\\\"authenticated\\\",\\\"email\\\":\\\"test-renter@autorenta.com\\\",\\\"email_confirmed_at\\\":\\\"2025-11-15T09:37:16.467012Z\\\",\\\"phone\\\":\\\"\\\",\\\"confirmed_at\\\":\\\"2025-11-15T09:37:16.467012Z\\\",\\\"last_sign_in_at\\\":\\\"2025-11-30T04:15:29.520618601Z\\\",\\\"app_metadata\\\":{\\\"provider\\\":\\\"email\\\",\\\"providers\\\":[\\\"email\\\"]},\\\"user_metadata\\\":{\\\"default_currency\\\":\\\"ARS\\\",\\\"email_verified\\\":true,\\\"full_name\\\":\\\"Test Renter\\\"},\\\"identities\\\":[{\\\"identity_id\\\":\\\"1e2f32aa-f837-4e61-9429-bab5b3592086\\\",\\\"id\\\":\\\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\\\",\\\"user_id\\\":\\\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\\\",\\\"identity_data\\\":{\\\"email\\\":\\\"test-renter@autorenta.com\\\",\\\"email_verified\\\":false,\\\"phone_verified\\\":false,\\\"sub\\\":\\\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\\\"},\\\"provider\\\":\\\"email\\\",\\\"last_sign_in_at\\\":\\\"2025-11-15T09:37:16.442418Z\\\",\\\"created_at\\\":\\\"2025-11-15T09:37:16.44302Z\\\",\\\"updated_at\\\":\\\"2025-11-15T09:37:16.44302Z\\\",\\\"email\\\":\\\"test-renter@autorenta.com\\\"}],\\\"created_at\\\":\\\"2025-11-15T09:37:16.388384Z\\\",\\\"updated_at\\\":\\\"2025-11-30T04:15:29.552298Z\\\",\\\"is_anonymous\\\":false},\\\"weak_password\\\":null}\",\"autorenta-theme\":\"system\",\"app_lang\":\"es\",\"preferred_language\":\"es\",\"ratelimit_login_test-renter@autorenta.com\":\"{\\\"count\\\":1,\\\"resetAt\\\":1764477029105}\"}\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [vite] connecting...\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [vite] connected.\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: NG05001: Configuration error: found both hydration and enabledBlocking initial navigation in the same application, which is a contradiction.\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: NG0505: Angular hydration was requested on the client, but there was no serialized information present in the server response, thus hydration was not enabled. Make sure the `provideClientHydration()` is included into the list of providers in the server part of the application configuration. Find more at https://v20.angular.dev/errors/NG0505\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: 📱 Device Info: {userAgent: Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebK… Gecko) Chrome/141.0.7390.37 Mobile Safari/537.36, platform: Linux x86_64, memory: Object, connection: Object, screen: Object}\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: 📊 Performance Monitoring initialized\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [SupabaseClientService] Initializing...\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [DEBUG] syncLayoutFromRoute - url: / isHome: true\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: NG0751: Angular has detected that this application contains `@defer` blocks and the hot module replacement (HMR) mode is enabled. All `@defer` block dependencies will be loaded eagerly. Find more at https://v20.angular.dev/errors/NG0751\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [DEBUG] syncLayoutFromRoute - url: / isHome: true\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: Angular is running in development mode.\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: 📊 CLS: 0.0660\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: Error getting current position: User denied Geolocation\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [NotificationsService] Subscribing to Realtime notifications for user: 77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [NotificationsService] Realtime subscription status: SUBSCRIBED\n"
+                        },
+                        {
+                          "text": "BROWSER LOG: [NotificationsService] ✅ Successfully subscribed to Realtime notifications\n"
+                        },
+                        {
+                          "text": "[b1-booking-auth-nav] Screenshot guardado: test-results/checkpoints/b1-booking-auth-nav-failure-1764476204015.png\n"
+                        },
+                        {
+                          "text": "[CheckpointManager] Iniciando cleanup de entidades\n"
+                        },
+                        {
+                          "text": "[CheckpointManager] Cleanup completado\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "buffer": "U3RhdGUtQXdhcmUgTUNQIFNlcnZlciBydW5uaW5nIG9uIHN0ZGlvCg=="
+                        },
+                        {
+                          "text": "❌ Block B1 Failed: {\n  message: \u001b[32m'\\x1B[2mexpect(\\x1B[22m\\x1B[31mlocator\\x1B[39m\\x1B[2m).\\x1B[22mtoBeAttached\\x1B[2m(\\x1B[22m\\x1B[2m)\\x1B[22m failed\\n'\u001b[39m +\n    \u001b[32m'\\n'\u001b[39m +\n    \u001b[32m`Locator: getByTestId('user-menu').or(locator('a[href*=\"/profile\"]')).first()\\n`\u001b[39m +\n    \u001b[32m'Expected: attached\\n'\u001b[39m +\n    \u001b[32m'Timeout: 10000ms\\n'\u001b[39m +\n    \u001b[32m'Error: element(s) not found\\n'\u001b[39m +\n    \u001b[32m'\\n'\u001b[39m +\n    \u001b[32m'Call log:\\n'\u001b[39m +\n    \u001b[32m'\\x1B[2m  - Expect \"toBeAttached\" with timeout 10000ms\\x1B[22m\\n'\u001b[39m +\n    \u001b[32m`\\x1B[2m  - waiting for getByTestId('user-menu').or(locator('a[href*=\"/profile\"]')).first()\\x1B[22m\\n`\u001b[39m,\n  stack: \u001b[32m'Error: \\x1B[2mexpect(\\x1B[22m\\x1B[31mlocator\\x1B[39m\\x1B[2m).\\x1B[22mtoBeAttached\\x1B[2m(\\x1B[22m\\x1B[2m)\\x1B[22m failed\\n'\u001b[39m +\n    \u001b[32m'\\n'\u001b[39m +\n    \u001b[32m`Locator: getByTestId('user-menu').or(locator('a[href*=\"/profile\"]')).first()\\n`\u001b[39m +\n    \u001b[32m'Expected: attached\\n'\u001b[39m +\n    \u001b[32m'Timeout: 10000ms\\n'\u001b[39m +\n    \u001b[32m'Error: element(s) not found\\n'\u001b[39m +\n    \u001b[32m'\\n'\u001b[39m +\n    \u001b[32m'Call log:\\n'\u001b[39m +\n    \u001b[32m'\\x1B[2m  - Expect \"toBeAttached\" with timeout 10000ms\\x1B[22m\\n'\u001b[39m +\n    \u001b[32m`\\x1B[2m  - waiting for getByTestId('user-menu').or(locator('a[href*=\"/profile\"]')).first()\\x1B[22m\\n`\u001b[39m +\n    \u001b[32m'\\n'\u001b[39m +\n    \u001b[32m'    at /home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts:110:38\\n'\u001b[39m +\n    \u001b[32m'    at TestBlock.execute (/home/edu/autorenta/tests/checkpoint/core/TestBlock.ts:138:7)\\n'\u001b[39m +\n    \u001b[32m'    at /home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts:96:20'\u001b[39m,\n  screenshot: \u001b[32m'test-results/checkpoints/b1-booking-auth-nav-failure-1764476204015.png'\u001b[39m\n}\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-11-30T04:15:54.845Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/edu/autorenta/test-results/e2e-complete-booking-flow--328a3-nticación-y-navegar-a-lista-mobile-chrome/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/edu/autorenta/test-results/e2e-complete-booking-flow--328a3-nticación-y-navegar-a-lista-mobile-chrome/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/edu/autorenta/test-results/e2e-complete-booking-flow--328a3-nticación-y-navegar-a-lista-mobile-chrome/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/edu/autorenta/test-results/e2e-complete-booking-flow--328a3-nticación-y-navegar-a-lista-mobile-chrome/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/edu/autorenta/tests/e2e/complete-booking-flow.spec.ts",
+                        "column": 33,
+                        "line": 166
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1eca7619e50f5a93c111-deacebad27b21c3c1fe9",
+              "file": "e2e/complete-booking-flow.spec.ts",
+              "line": 84,
+              "column": 7
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2025-11-30T03:31:16.953Z",
-    "duration": 100541.995,
+    "startTime": "2025-11-30T04:14:20.857Z",
+    "duration": 219632.364,
     "expected": 0,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 2,
     "flaky": 0
   }
 }

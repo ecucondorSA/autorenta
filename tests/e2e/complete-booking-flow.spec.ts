@@ -1,4 +1,4 @@
-import { test, expect, defineBlock, requiresCheckpoint, expectsUrl, expectsElement, withCheckpoint } from '../checkpoint/fixtures'
+import { defineBlock, expect, expectsElement, expectsUrl, requiresCheckpoint, test, withCheckpoint } from '../checkpoint/fixtures';
 
 /**
  * E2E Test Completo: Flujo de Alquiler desde Inicio hasta Postcheckout
@@ -16,7 +16,8 @@ import { test, expect, defineBlock, requiresCheckpoint, expectsUrl, expectsEleme
  */
 
 test.use({
-  storageState: 'tests/.auth/renter.json'
+  storageState: 'tests/.auth/renter.json',
+  baseURL: 'http://127.0.0.1:4300'
 })
 
 // Mock para la API car_stats para evitar 404
@@ -93,8 +94,15 @@ test.describe('Flujo Completo de Alquiler - Checkpoint Architecture', () => {
     }))
 
     const result = await block.execute(async () => {
+      // Debug: Escuchar logs del navegador
+      page.on('console', msg => console.log(`BROWSER LOG: ${msg.text()}`));
+      page.on('pageerror', err => console.error(`BROWSER ERROR: ${err.message}`));
+
       // Verificar autenticación via storageState
       await page.goto('/', { waitUntil: 'commit' })
+
+      const localStorage = await page.evaluate(() => JSON.stringify(window.localStorage));
+      console.log('DEBUG: LocalStorage content:', localStorage);
 
       const userMenu = page.getByTestId('user-menu')
         .or(page.locator('a[href*="/profile"]'))
@@ -149,9 +157,12 @@ test.describe('Flujo Completo de Alquiler - Checkpoint Architecture', () => {
         }
       }
 
-      return { carsListReady: true }
+      // return { carsListReady: true }
     })
 
+    if (result.state.status !== 'passed') {
+      console.error('❌ Block B1 Failed:', result.state.error);
+    }
     expect(result.state.status).toBe('passed')
   })
 

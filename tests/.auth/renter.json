@@ -9,8 +9,16 @@
           "value": "light"
         },
         {
+          "name": "autorenta:tour:debug",
+          "value": "true"
+        },
+        {
           "name": "sb-pisqjmoklivzpwufhscx-auth-token",
-          "value": "{\"access_token\":\"eyJhbGciOiJIUzI1NiIsImtpZCI6IlRNdFFyYUNoNVZFUkE0d2QiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3Bpc3FqbW9rbGl2enB3dWZoc2N4LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI3NzEzOWRkNy1jMmI3LTQzZjMtYjdiOC00ZjNiNTQ3NmM2YzQiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY0NDc2MjkwLCJpYXQiOjE3NjQ0NzI2OTAsImVtYWlsIjoidGVzdC1yZW50ZXJAYXV0b3JlbnRhLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZGVmYXVsdF9jdXJyZW5jeSI6IkFSUyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJUZXN0IFJlbnRlciJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzY0NDcyNjkwfV0sInNlc3Npb25faWQiOiJlYWFhM2RjMy05MWNjLTQ3YmMtODk3MC0xNjcyZTlmZDdlZTAiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.HE7XjCgw4NxCkeHDJo01cD3mZxsc2QW92TKUj5VBJ5Y\",\"token_type\":\"bearer\",\"expires_in\":3600,\"expires_at\":1764476290,\"refresh_token\":\"oh66idy3br23\",\"user\":{\"id\":\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"test-renter@autorenta.com\",\"email_confirmed_at\":\"2025-11-15T09:37:16.467012Z\",\"phone\":\"\",\"confirmed_at\":\"2025-11-15T09:37:16.467012Z\",\"last_sign_in_at\":\"2025-11-30T03:18:10.010202667Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{\"default_currency\":\"ARS\",\"email_verified\":true,\"full_name\":\"Test Renter\"},\"identities\":[{\"identity_id\":\"1e2f32aa-f837-4e61-9429-bab5b3592086\",\"id\":\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\",\"user_id\":\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\",\"identity_data\":{\"email\":\"test-renter@autorenta.com\",\"email_verified\":false,\"phone_verified\":false,\"sub\":\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\"},\"provider\":\"email\",\"last_sign_in_at\":\"2025-11-15T09:37:16.442418Z\",\"created_at\":\"2025-11-15T09:37:16.44302Z\",\"updated_at\":\"2025-11-15T09:37:16.44302Z\",\"email\":\"test-renter@autorenta.com\"}],\"created_at\":\"2025-11-15T09:37:16.388384Z\",\"updated_at\":\"2025-11-30T03:18:10.061663Z\",\"is_anonymous\":false},\"weak_password\":null}"
+          "value": "{\"access_token\":\"eyJhbGciOiJIUzI1NiIsImtpZCI6IlRNdFFyYUNoNVZFUkE0d2QiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3Bpc3FqbW9rbGl2enB3dWZoc2N4LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI3NzEzOWRkNy1jMmI3LTQzZjMtYjdiOC00ZjNiNTQ3NmM2YzQiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY0NDc5NzI5LCJpYXQiOjE3NjQ0NzYxMjksImVtYWlsIjoidGVzdC1yZW50ZXJAYXV0b3JlbnRhLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZGVmYXVsdF9jdXJyZW5jeSI6IkFSUyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJUZXN0IFJlbnRlciJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzY0NDc2MTI5fV0sInNlc3Npb25faWQiOiJhMTZhMjRhNi02YTUzLTQwOGYtOGQ5Ny1hOTQ4ZGMwZjI5NWYiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.oCXIoRit5Np-l1sejyg7ZHZiOkwS9-0nqLRzvhlHe8c\",\"token_type\":\"bearer\",\"expires_in\":3600,\"expires_at\":1764479729,\"refresh_token\":\"2gzp2qtdlltt\",\"user\":{\"id\":\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"test-renter@autorenta.com\",\"email_confirmed_at\":\"2025-11-15T09:37:16.467012Z\",\"phone\":\"\",\"confirmed_at\":\"2025-11-15T09:37:16.467012Z\",\"last_sign_in_at\":\"2025-11-30T04:15:29.520618601Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{\"default_currency\":\"ARS\",\"email_verified\":true,\"full_name\":\"Test Renter\"},\"identities\":[{\"identity_id\":\"1e2f32aa-f837-4e61-9429-bab5b3592086\",\"id\":\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\",\"user_id\":\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\",\"identity_data\":{\"email\":\"test-renter@autorenta.com\",\"email_verified\":false,\"phone_verified\":false,\"sub\":\"77139dd7-c2b7-43f3-b7b8-4f3b5476c6c4\"},\"provider\":\"email\",\"last_sign_in_at\":\"2025-11-15T09:37:16.442418Z\",\"created_at\":\"2025-11-15T09:37:16.44302Z\",\"updated_at\":\"2025-11-15T09:37:16.44302Z\",\"email\":\"test-renter@autorenta.com\"}],\"created_at\":\"2025-11-15T09:37:16.388384Z\",\"updated_at\":\"2025-11-30T04:15:29.552298Z\",\"is_anonymous\":false},\"weak_password\":null}"
+        },
+        {
+          "name": "autorenta-theme",
+          "value": "system"
         },
         {
           "name": "app_lang",
@@ -22,7 +30,7 @@
         },
         {
           "name": "ratelimit_login_test-renter@autorenta.com",
-          "value": "{\"count\":1,\"resetAt\":1764473589458}"
+          "value": "{\"count\":1,\"resetAt\":1764477029105}"
         }
       ]
     }

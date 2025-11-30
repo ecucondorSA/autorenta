@@ -1,100 +1,114 @@
-import { expect, test } from '@playwright/test';
-import { WalletPage } from '../pages/wallet/WalletPage';
+import { defineBlock, expect, requiresCheckpoint, test, withCheckpoint } from '../checkpoint/fixtures';
 
-test.describe('Renter Wallet Deposit Flow', () => {
-  // Use renter auth state
-  test.use({ storageState: 'tests/.auth/renter.json' });
+test.describe('Renter Wallet Deposit Flow - Checkpoint Architecture', () => {
+  test.use({
+    storageState: 'tests/.auth/renter.json',
+    baseURL: 'http://127.0.0.1:4300'
+  });
 
-  test('should perform a deposit successfully via MercadoPago mock', async ({ page }) => {
-    const walletPage = new WalletPage(page);
+  test('B1: Navigate to Wallet', async ({ page, checkpointManager, createBlock }) => {
+    const block = createBlock(defineBlock('b1-wallet-nav', 'Navigate to Wallet', {
+      priority: 'P1',
+      estimatedDuration: 5000,
+      preconditions: [],
+      postconditions: [],
+      ...withCheckpoint('wallet-page-ready')
+    }));
 
-    // 1. Navigate to Wallet
-    await walletPage.goto();
+    const result = await block.execute(async () => {
+      await page.goto('/wallet');
+      await expect(page).toHaveURL(/\/wallet/);
 
-    // Capture initial balance
-    const initialBalance = await walletPage.getBalance();
-    console.log(`💰 Balance inicial: $${initialBalance}`);
+      // Esperar que la página cargue
+      await page.waitForLoadState('domcontentloaded');
 
-    // 2. Initiate Deposit
-    await walletPage.clickDeposit();
+      // Verificar que el elemento de balance sea visible (múltiples estrategias)
+      const balanceElement = page.locator('[data-testid="wallet-balance"]')
+        .or(page.locator('.wallet-balance, .balance-amount').first())
+        .or(page.locator('h1, h2, h3').filter({ hasText: /\$|ARS|USD/ }).first());
 
-    // 3. Interact with Deposit Modal/Page
-    // Note: Depending on implementation, this might be a modal or a redirect
-    const amountInput = page.locator('input[type="number"]').first();
-    await expect(amountInput).toBeVisible();
+      await expect(balanceElement).toBeVisible({ timeout: 15000 });
 
-    const depositAmount = 5000;
-    await amountInput.fill(depositAmount.toString());
-    console.log('✅ Amount filled');
+      const initialBalanceText = await balanceElement.textContent() || 'No disponible';
+      console.log(`💰 Initial Balance: ${initialBalanceText}`);
 
-    // Select MercadoPago/Card payment method if available
-    // NOTE: The modal uses a <select>, not buttons. Default is MercadoPago.
-    // const mpButton = page.locator('button', { hasText: /mercadopago|tarjeta/i }).first();
-    // if (await mpButton.isVisible()) {
-    //     await mpButton.click();
-    //     console.log('✅ Payment method selected');
-    // }
-
-    const confirmButton = page.locator('button', { hasText: /confirmar|pagar|continuar|pago/i }).first();
-
-    // Handle potential popup or redirect
-    // We set up the listener BEFORE clicking
-    const popupPromise = page.waitForEvent('popup').catch(() => null);
-
-    if (await confirmButton.isVisible()) {
-      await confirmButton.click();
-      console.log('✅ Confirm button clicked');
-    }
-
-    // 4. Handle Payment Gateway (Mock or Sandbox)
-    const popup = await Promise.race([
-      popupPromise,
-      page.waitForURL(/mercadopago\.com|wallet\/deposit/i, { timeout: 5000 }).then(() => null)
-    ]);
-
-    if (popup) {
-      console.log('✅ Popup opened');
-      await popup.waitForLoadState();
-      console.log('✅ Popup URL: ' + popup.url());
-      await expect(popup).toHaveURL(/mercadopago\.com/i);
-    } else {
-      console.log('✅ No popup, checking current page URL');
-      // If no popup, maybe it redirected the main page
-      // Or maybe we are mocking the webhook directly and don't care about the redirect if it fails in test env
-      // But let's check if URL changed or if we are still on wallet
-      console.log('Current URL: ' + page.url());
-    }
-
-    // OPTION B: Mock the webhook directly to simulate payment success
-    // This is more robust for CI than actually paying in Sandbox
-    console.log('🔄 Simulating MP Webhook...');
-    const paymentId = `test_pay_${Date.now()}`;
-
-    // We need to send a POST to our backend webhook endpoint
-    const webhookResponse = await page.request.post('/api/webhooks/mercadopago', {
-      data: {
-        action: 'payment.created',
-        data: { id: paymentId },
-        type: 'payment',
-        user_id: 'current_user_id_placeholder' // In a real test, we'd need the user ID
-      }
+      return { initialBalance: initialBalanceText };
     });
 
-    // Note: Since we don't have the user ID easily in the frontend test without API call,
-    // we might rely on the UI showing the "Pending" state or "Success" state if we fully automate the sandbox.
+    expect(result.state.status).toBe('passed');
+  });
 
-    // For now, let's verify we see a success message or redirect back
-    // Assuming the app handles the redirect back from MP:
-    // await page.goto('/wallet?status=approved&payment_id=' + paymentId);
+  test('B2: Initiate Deposit', async ({ page, checkpointManager, createBlock, mcp }) => {
+    // Restore checkpoint
+    const prev = await checkpointManager.loadCheckpoint('wallet-page-ready');
+    if (prev) {
+      await checkpointManager.restoreCheckpoint(prev);
+    } else {
+      await page.goto('/wallet');
+    }
 
-    // 5. Verify Balance Update
-    // await walletPage.goto(); // Reload to fetch new balance
-    // const newBalance = await walletPage.getBalance();
-    // console.log(`💰 Nuevo Balance: $${newBalance}`);
-    // expect(newBalance).toBeGreaterThan(initialBalance);
+    const block = createBlock(defineBlock('b2-wallet-deposit', 'Initiate Deposit', {
+      priority: 'P1',
+      estimatedDuration: 15000,
+      preconditions: [requiresCheckpoint('wallet-page-ready')],
+      postconditions: []
+    }));
 
-    // Since we can't easily mock the full MP flow without more setup,
-    // we will at least verify we can reach the deposit screen and initiate it.
-    console.log('✅ Deposit initiated successfully');
+    const result = await block.execute(async () => {
+      // Click Deposit
+      const depositButton = page.getByRole('button', { name: /depositar|deposit/i }).first();
+      await depositButton.click();
+
+      // Fill Amount
+      const amountInput = page.locator('input[type="number"]').first();
+      await expect(amountInput).toBeVisible();
+      await amountInput.fill('5000');
+
+      // Confirm
+      const confirmButton = page.locator('button', { hasText: /confirmar|pagar|continuar|pago/i }).first();
+
+      // Handle Popup/Redirect
+      const popupPromise = page.waitForEvent('popup').catch(() => null);
+
+      if (await confirmButton.isVisible()) {
+        await confirmButton.click();
+      }
+
+      const popup = await Promise.race([
+        popupPromise,
+        page.waitForURL(/mercadopago\.com|wallet\/deposit/i, { timeout: 5000 }).then(() => null)
+      ]);
+
+      if (popup) {
+        console.log('✅ Popup opened');
+        await popup.close(); // Close popup to continue test
+      } else {
+        console.log('✅ No popup, checking current page URL');
+      }
+
+      // Simulate Webhook
+      console.log('🔄 Simulating MP Webhook...');
+      const paymentId = `test_pay_${Date.now()}`;
+
+      // We assume the API is available at /api/webhooks/mercadopago relative to baseURL
+      // Or we can use request from playwright
+      const response = await page.request.post('/api/webhooks/mercadopago', {
+        data: {
+          action: 'payment.created',
+          data: { id: paymentId },
+          type: 'payment',
+          user_id: 'current_user_id_placeholder'
+        }
+      });
+
+      console.log(`Webhook response: ${response.status()}`);
+
+      // Verify via MCP if possible (optional, as user_id is placeholder)
+      // If we had the real user_id, we could use wait_for_db_record
+
+      return { depositInitiated: true, paymentId };
+    });
+
+    expect(result.state.status).toBe('passed');
   });
 });

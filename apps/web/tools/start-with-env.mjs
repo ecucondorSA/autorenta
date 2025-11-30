@@ -21,7 +21,8 @@ if (existsSync(envFile)) {
   }
 }
 
-const child = spawn('npx', ['ng', 'serve', '--configuration', 'development'], {
+const args = ['ng', 'serve', '--configuration', 'development', ...process.argv.slice(2)];
+const child = spawn('npx', args, {
   stdio: 'inherit',
   env: process.env,
   cwd: root,
