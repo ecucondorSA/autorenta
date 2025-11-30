@@ -297,13 +297,13 @@ export class SupabaseClient {
 
   async createCarAvailabilityBlock(carId: string, startDate: string, endDate: string, reason: string) {
     const { data, error } = await this.client
-      .from('car_availability')
+      .from('car_blocked_dates')
       .insert({
         car_id: carId,
-        start_date: startDate,
-        end_date: endDate,
-        is_available: false,
-        reason
+        blocked_from: startDate,
+        blocked_to: endDate,
+        reason,
+        created_by: (await this.client.auth.getUser()).data.user?.id
       })
       .select()
       .single();

@@ -9,7 +9,7 @@ import { Checkpoint, CreateCheckpointOptions } from './checkpoint.types'
 /**
  * Tipo de precondición
  */
-export type PreconditionType = 'checkpoint' | 'api' | 'navigation' | 'element' | 'db' | 'custom'
+export type PreconditionType = 'checkpoint' | 'api' | 'navigation' | 'element' | 'db' | 'custom' | 'mcp'
 
 /**
  * Precondición para un TestBlock
@@ -43,6 +43,12 @@ export interface BlockPrecondition {
     expectExists: boolean
   }
 
+  /** Acción MCP (si type === 'mcp') */
+  mcpAction?: {
+    toolName: string
+    args: Record<string, unknown>
+  }
+
   /** Función custom de setup */
   customSetup?: (page: Page, context: BrowserContext) => Promise<void>
 
@@ -56,7 +62,7 @@ export interface BlockPrecondition {
 /**
  * Tipo de postcondición
  */
-export type PostconditionType = 'url' | 'element' | 'db' | 'api' | 'custom'
+export type PostconditionType = 'url' | 'element' | 'db' | 'api' | 'custom' | 'mcp'
 
 /**
  * Postcondición para un TestBlock
@@ -87,6 +93,13 @@ export interface BlockPostcondition {
     method: 'GET' | 'POST'
     expectedStatus: number
     expectedBody?: Record<string, unknown>
+  }
+
+  /** Verificación MCP (si type === 'mcp') */
+  mcpCheck?: {
+    toolName: string
+    args: Record<string, unknown>
+    validate: (result: any) => boolean | Promise<boolean>
   }
 
   /** Función custom de verificación */

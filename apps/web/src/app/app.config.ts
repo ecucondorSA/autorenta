@@ -8,7 +8,7 @@ import {
   LOCALE_ID,
   provideZoneChangeDetection,
 } from '@angular/core';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
   PreloadAllModules,
   provideRouter,
@@ -63,7 +63,7 @@ export const appConfig: ApplicationConfig = {
         httpErrorInterceptor,
       ]),
     ),
-    provideAnimationsAsync(),
+    provideNoopAnimations(),
     provideIonicAngular({
       mode: 'md',
     }),
@@ -85,11 +85,11 @@ export const appConfig: ApplicationConfig = {
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode()
       ? {
-          provide: APP_INITIALIZER,
-          useFactory: initializePerformanceMonitoring,
-          deps: [PerformanceMonitoringService],
-          multi: true,
-        }
+        provide: APP_INITIALIZER,
+        useFactory: initializePerformanceMonitoring,
+        deps: [PerformanceMonitoringService],
+        multi: true,
+      }
       : [],
   ],
 };

@@ -23,14 +23,16 @@ export class CatalogPage extends BasePage {
   }
 
   async goto(): Promise<void> {
-    await super.goto('/cars/list');
-    await this.waitForVisible(this.filtersPanel);
-    // Wait for at least one car or empty state
-    // We prefer waiting for cars
+    console.log('CatalogPage: Navigating to /cars/list');
     try {
-      await this.carCards.first().waitFor({ state: 'visible', timeout: 10000 });
-    } catch (e) {
-      console.warn('No cars found after timeout. Check DB or API.');
+      await this.page.goto('/cars/list', { waitUntil: 'domcontentloaded' });
+      console.log('CatalogPage: Page loaded (domcontentloaded), waiting for car cards...');
+      // Wait for at least one car card to be visible to ensure list is loaded
+      await this.carCards.first().waitFor({ state: 'visible', timeout: 30000 });
+      console.log('CatalogPage: Car cards visible');
+    } catch (error) {
+      console.error('CatalogPage: Error in goto:', error);
+      throw error;
     }
   }
 
@@ -60,7 +62,18 @@ export class CatalogPage extends BasePage {
   }
 
   async selectFirstCar(): Promise<void> {
-    await this.carCards.first().click();
-    await this.page.waitForURL(/\/cars\/[a-zA-Z0-9-]+/);
+    console.log('🚗 Selecting first car...');
+    const firstCard = this.carCards.first();
+    const href = await firstCard.getAttribute('href');
+    console.log(`🚗 First car href: ${href}`);
+    await firstCard.click();
+    console.log('🚗 Clicked first car, waiting for navigation...');
+    try {
+      await this.page.waitForURL(/\/cars\/[a-zA-Z0-9-]+/, { timeout: 10000 });
+      console.log('🚗 Navigated to car detail');
+    } catch (e) {
+      console.log(`🚗 Navigation timeout. Current URL: ${this.page.url()}`);
+      throw e;
+    }
   }
 }

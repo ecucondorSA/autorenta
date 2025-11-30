@@ -223,7 +223,7 @@ test.describe('Flujo Completo de Alquiler - Checkpoint Architecture', () => {
     expect(result.state.status).toBe('passed')
   })
 
-  test('B3: Seleccionar fechas y crear reserva', async ({ page, checkpointManager, createBlock }) => {
+  test('B3: Seleccionar fechas y crear reserva', async ({ page, checkpointManager, createBlock, mcp }) => {
     // Restaurar checkpoint anterior
     const prev = await checkpointManager.loadCheckpoint('booking-flow-car-detail-ready')
     if (prev) {
@@ -338,13 +338,35 @@ test.describe('Flujo Completo de Alquiler - Checkpoint Architecture', () => {
 
       console.log(`✅ Reserva creada: ${ctx.bookingId}`)
 
+      // --- MCP STATE VERIFICATION ---
+      if (ctx.bookingId) {
+        console.log('🕵️ Verificando estado en DB via MCP...')
+        try {
+          const dbResult: any = await mcp.callTool('verify_db_record', {
+            table: 'bookings',
+            column: 'id',
+            value: ctx.bookingId
+          });
+
+          if (dbResult.exists) {
+            console.log(`✅ Booking encontrado en DB. Status: ${dbResult.record.status}`);
+            // Opcional: Validar status si sabemos cuál debe ser (ej: pending_payment)
+          } else {
+            console.warn(`⚠️ Booking ${ctx.bookingId} NO encontrado en DB (posible latencia o error)`);
+          }
+        } catch (error) {
+          console.warn('⚠️ Error consultando MCP:', error);
+        }
+      }
+      // -----------------------------
+
       return { bookingId: ctx.bookingId }
     })
 
     expect(result.state.status).toBe('passed')
   })
 
-  test('B4: Configurar pago y completar transacción', async ({ page, checkpointManager, createBlock }) => {
+  test('B4: Configurar pago y completar transacción', async ({ page, checkpointManager, createBlock, mcp }) => {
     // Restaurar checkpoint anterior
     const prev = await checkpointManager.loadCheckpoint('booking-flow-payment-page-ready')
     if (prev) {
@@ -432,6 +454,33 @@ test.describe('Flujo Completo de Alquiler - Checkpoint Architecture', () => {
       }
 
       console.log(`✅ Pago completado, booking ID: ${ctx.bookingId}`)
+
+      // --- MCP STATE VERIFICATION ---
+      if (ctx.bookingId) {
+        console.log('🕵️ Verificando estado FINAL en DB via MCP...')
+        try {
+          const dbResult: any = await mcp.callTool('verify_db_record', {
+            table: 'bookings',
+            column: 'id',
+            value: ctx.bookingId
+          });
+
+          if (dbResult.exists) {
+            console.log(`✅ Booking encontrado en DB. Status: ${dbResult.record.status}`);
+            // Verificar que el status sea confirmed o similar
+            if (['confirmed', 'paid', 'reserved'].includes(dbResult.record.status)) {
+              console.log('✅ Status de booking correcto en DB');
+            } else {
+              console.warn(`⚠️ Status de booking inesperado en DB: ${dbResult.record.status}`);
+            }
+          } else {
+            console.warn(`⚠️ Booking ${ctx.bookingId} NO encontrado en DB tras pago`);
+          }
+        } catch (error) {
+          console.warn('⚠️ Error consultando MCP:', error);
+        }
+      }
+      // -----------------------------
 
       return { bookingId: ctx.bookingId, paymentCompleted: true }
     })

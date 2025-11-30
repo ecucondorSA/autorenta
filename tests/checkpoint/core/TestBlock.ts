@@ -1,3 +1,5 @@
+import { McpTestClient } from '../mcp-client'
+
 /**
  * TestBlock - Clase para ejecutar bloques atómicos de test con pre/post condiciones
  *
@@ -35,13 +37,15 @@ export class TestBlock {
   private executionState: BlockExecutionState
   private logs: string[] = []
   private eventHandlers: BlockEventHandler[] = []
+  private mcp: McpTestClient | undefined
 
   constructor(
     definition: TestBlockDefinition,
     checkpointManager: CheckpointManager,
     page: Page,
     context: BrowserContext,
-    config?: BlockRunnerConfig
+    config?: BlockRunnerConfig,
+    mcp?: McpTestClient
   ) {
     this.definition = definition
     this.checkpointManager = checkpointManager
@@ -56,6 +60,7 @@ export class TestBlock {
 
     // Obtener cliente Supabase del CheckpointManager
     this.supabase = checkpointManager.getSupabaseClient()
+    this.mcp = mcp
   }
 
   /**
@@ -292,6 +297,18 @@ export class TestBlock {
               await precond.customSetup(this.page, this.context)
             }
             break
+
+          case 'mcp':
+            if (precond.mcpAction && this.mcp) {
+              try {
+                await this.mcp.callTool(precond.mcpAction.toolName, precond.mcpAction.args)
+              } catch (error) {
+                return { success: false, failedCondition: `MCP Action ${precond.mcpAction.toolName} falló: ${error}` }
+              }
+            } else if (!this.mcp) {
+              return { success: false, failedCondition: 'MCP client not available' }
+            }
+            break
         }
       } catch (error) {
         return {
@@ -403,6 +420,22 @@ export class TestBlock {
               }
             }
             break
+
+          case 'mcp':
+            if (postcond.mcpCheck && this.mcp) {
+              try {
+                const result = await this.mcp.callTool(postcond.mcpCheck.toolName, postcond.mcpCheck.args)
+                const isValid = await postcond.mcpCheck.validate(result)
+                if (!isValid) {
+                  return { success: false, failedCondition: `MCP Check ${postcond.mcpCheck.toolName} validación falló` }
+                }
+              } catch (error) {
+                return { success: false, failedCondition: `MCP Check ${postcond.mcpCheck.toolName} error: ${error}` }
+              }
+            } else if (!this.mcp) {
+              return { success: false, failedCondition: 'MCP client not available' }
+            }
+            break
         }
       } catch (error) {
         return {
@@ -438,7 +471,8 @@ export function createTestBlock(
   checkpointManager: CheckpointManager,
   page: Page,
   context: BrowserContext,
-  config?: BlockRunnerConfig
+  config?: BlockRunnerConfig,
+  mcp?: McpTestClient
 ): TestBlock {
-  return new TestBlock(definition, checkpointManager, page, context, config)
+  return new TestBlock(definition, checkpointManager, page, context, config, mcp)
 }

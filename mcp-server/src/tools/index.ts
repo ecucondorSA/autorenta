@@ -51,7 +51,7 @@ export function registerTools(server: MCPServer, supabase: SupabaseClient, audit
       });
 
       const { bookingId } = schema.parse(args);
-      const result = await supabase.updateBookingStatus(bookingId, 'approved');
+      const result = await supabase.updateBookingStatus(bookingId, 'confirmed');
 
       return {
         success: true,
@@ -145,8 +145,8 @@ export function registerTools(server: MCPServer, supabase: SupabaseClient, audit
         block: {
           id: result.id,
           car_id: result.car_id,
-          start_date: result.start_date,
-          end_date: result.end_date,
+          start_date: result.blocked_from,
+          end_date: result.blocked_to,
           reason: result.reason
         }
       };
@@ -278,7 +278,7 @@ export function registerTools(server: MCPServer, supabase: SupabaseClient, audit
 
       const { data: users, error } = await client
         .from('profiles')
-        .select('id, full_name, email, role, verification_status')
+        .select('id, full_name, email, role')
         .or(`email.ilike.%${query}%,full_name.ilike.%${query}%`)
         .limit(10);
 
@@ -291,8 +291,7 @@ export function registerTools(server: MCPServer, supabase: SupabaseClient, audit
           id: u.id,
           name: u.full_name,
           email: u.email,
-          role: u.role,
-          verified: u.verification_status === 'verified'
+          role: u.role
         }))
       };
     },
@@ -327,27 +326,27 @@ export function registerTools(server: MCPServer, supabase: SupabaseClient, audit
       // Verificar bookings existentes
       const { data: bookings, error } = await client
         .from('bookings')
-        .select('id, start_date, end_date, status')
+        .select('id, start_at, end_at, status')
         .eq('car_id', carId)
-        .in('status', ['approved', 'active'])
-        .gte('end_date', startDate)
-        .lte('start_date', endDate);
+        .in('status', ['confirmed', 'in_progress', 'pending'])
+        .gte('end_at', startDate)
+        .lte('start_at', endDate);
 
       if (error) throw error;
 
       // Verificar bloqueos manuales
+      // Verificar bloqueos manuales
       const { data: blocks, error: blocksError } = await client
-        .from('car_availability')
+        .from('car_blocked_dates')
         .select('*')
         .eq('car_id', carId)
-        .eq('is_available', false)
-        .gte('end_date', startDate)
-        .lte('start_date', endDate);
+        .gte('blocked_to', startDate)
+        .lte('blocked_from', endDate);
 
       if (blocksError) throw blocksError;
 
       const isAvailable = (!bookings || bookings.length === 0) &&
-                          (!blocks || blocks.length === 0);
+        (!blocks || blocks.length === 0);
 
       return {
         car_id: carId,
@@ -359,13 +358,13 @@ export function registerTools(server: MCPServer, supabase: SupabaseClient, audit
         conflicts: {
           bookings: bookings?.map(b => ({
             id: b.id,
-            start: b.start_date,
-            end: b.end_date,
+            start: b.start_at,
+            end: b.end_at,
             status: b.status
           })) || [],
           blocks: blocks?.map(b => ({
-            start: b.start_date,
-            end: b.end_date,
+            start: b.blocked_from,
+            end: b.blocked_to,
             reason: b.reason
           })) || []
         }

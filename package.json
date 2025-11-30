@@ -97,6 +97,7 @@
     "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.4.0",
     "@gltf-transform/cli": "^4.2.1",
+    "@modelcontextprotocol/sdk": "^1.23.0",
     "@playwright/test": "^1.56.1",
     "@supabase/supabase-js": "^2.84.0",
     "@toon-format/toon": "^1.0.0",

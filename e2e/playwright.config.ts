@@ -10,9 +10,9 @@ if (!existsSync(artifactsRoot)) {
 }
 
 const baseURL =
-  process.env.E2E_WEB_URL ??
-  process.env.PLAYWRIGHT_BASE_URL ??
-  process.env.WEB_URL ??
+  process.env.E2E_WEB_URL ||
+  process.env.PLAYWRIGHT_BASE_URL ||
+  process.env.WEB_URL ||
   `http://127.0.0.1:${defaultPort}`;
 
 const reporters = [

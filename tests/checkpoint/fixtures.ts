@@ -19,6 +19,7 @@ import { CheckpointManager, createCheckpointManager } from './core/CheckpointMan
 import { TestBlock, createTestBlock } from './core/TestBlock'
 import { TestBlockDefinition, BlockRunnerConfig } from './types/test-block.types'
 import { getCheckpointStorage, CheckpointStorage } from './storage/CheckpointStorage'
+import { McpTestClient } from './mcp-client'
 
 /**
  * Opciones de configuración para los fixtures
@@ -54,6 +55,9 @@ type CheckpointFixtures = {
 
   /** Opciones de configuración */
   checkpointOptions: CheckpointFixtureOptions
+
+  /** Cliente MCP para state-aware testing */
+  mcp: McpTestClient
 }
 
 /**
@@ -72,7 +76,7 @@ export const test = base.extend<CheckpointFixtures>({
   }, { option: true }],
 
   // Storage singleton
-  checkpointStorage: async ({}, use) => {
+  checkpointStorage: async ({ }, use) => {
     const storage = getCheckpointStorage()
     await use(storage)
   },
@@ -102,18 +106,27 @@ export const test = base.extend<CheckpointFixtures>({
   },
 
   // Helper para crear bloques
-  createBlock: async ({ page, context, checkpointManager, checkpointOptions }, use) => {
+  createBlock: async ({ page, context, checkpointManager, checkpointOptions, mcp }, use) => {
     const createBlockFn: CreateBlockFn = (definition: TestBlockDefinition) => {
       return createTestBlock(
         definition,
         checkpointManager,
         page,
         context,
-        checkpointOptions.blockRunnerConfig
+        checkpointOptions.blockRunnerConfig,
+        mcp
       )
     }
 
     await use(createBlockFn)
+  },
+
+  // MCP Client fixture
+  mcp: async ({ }, use) => {
+    const mcp = new McpTestClient();
+    await mcp.connect();
+    await use(mcp);
+    await mcp.close();
   }
 })
 
@@ -234,5 +247,25 @@ export function withCheckpoint(name: string, options: { ttlMs?: number; metadata
       name,
       ...options
     }
+  }
+}
+
+/**
+ * Helper para definir postcondición de MCP
+ */
+export function expectsInMcp(
+  toolName: string,
+  args: Record<string, unknown>,
+  validate: (result: any) => boolean | Promise<boolean>,
+  description?: string
+) {
+  return {
+    type: 'mcp' as const,
+    mcpCheck: {
+      toolName,
+      args,
+      validate
+    },
+    description: description || `MCP ${toolName} debe pasar validación`
   }
 }

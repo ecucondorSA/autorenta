@@ -208,7 +208,9 @@ export class CarDetailPage implements OnInit, OnDestroy {
       }
       // ✅ FIX: Validar que el ID sea un UUID válido
       // Previene errores cuando se navega a rutas como /cars/publish
+      console.log(`CarDetailPage: Validating ID: ${id}`);
       if (!this.isValidUUID(id)) {
+        console.log(`CarDetailPage: Invalid UUID: ${id}, redirecting to /cars`);
         // Redirigir a la lista de autos si el ID no es válido
         setTimeout(() => this.router.navigate(['/cars']), 100);
         return of({
@@ -219,6 +221,7 @@ export class CarDetailPage implements OnInit, OnDestroy {
           error: 'ID de auto inválido',
         });
       }
+      console.log(`CarDetailPage: Valid UUID: ${id}, fetching data...`);
       return combineLatest([
         from(this.carsService.getCarById(id)),
         from(this.reviewsService.getReviewsForCar(id)).pipe(
@@ -230,6 +233,7 @@ export class CarDetailPage implements OnInit, OnDestroy {
       ]).pipe(
         map(([car, reviews, stats]) => {
           if (car) {
+            console.log('CarDetailPage: Car loaded:', JSON.stringify(car));
             this.updateMetaTags(car, stats);
           }
           return { car, reviews, stats, loading: false, error: car ? null : 'Auto no disponible' };

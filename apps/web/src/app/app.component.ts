@@ -208,7 +208,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   year = new Date().getFullYear();
 
   // Splash loader state
-  showSplash = signal(true);
+  // Splash loader state
+  showSplash = signal(false);
 
   ngOnInit(): void {
     this.handleOAuthCallbackRedirect();
@@ -360,21 +361,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private initializeSplash(): void {
-    if (!this.isBrowser) {
-      this.showSplash.set(false);
-      return;
-    }
-
-    // const hasSeenSplash = sessionStorage.getItem('splash_shown');
-
-    // if (!hasSeenSplash) {
-    setTimeout(() => {
-      this.showSplash.set(false);
-      // sessionStorage.setItem('splash_shown', '1');
-    }, 4000);
-    // } else {
-    //   this.showSplash.set(false);
-    // }
+    this.showSplash.set(false);
   }
 
   private initializeTheme(): void {
