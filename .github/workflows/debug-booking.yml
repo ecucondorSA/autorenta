@@ -41,7 +41,7 @@ jobs:
           # Navegar al directorio de la app
           cd apps/web
           # Iniciar servidor en background
-          pnpm exec ng serve --configuration development --port 4200 --host 127.0.0.1 --disable-host-check &
+          pnpm exec ng serve --configuration development --port 4200 --host 127.0.0.1 &
           
           # Esperar a que responda
           echo "Waiting for server..."
