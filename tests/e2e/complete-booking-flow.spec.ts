@@ -15,14 +15,22 @@ import { test, expect, defineBlock, requiresCheckpoint, expectsUrl, expectsEleme
  * Duración estimada: ~2-3 minutos
  */
 
-test.use({ 
+test.use({
   storageState: 'tests/.auth/renter.json',
   baseURL: 'http://127.0.0.1:4200'
 })
 
 // Mock para la API car_stats para evitar 404
 test.beforeEach(async ({ page }) => {
-  await page.route('**/rest/v1/car_stats**', async route => {
+  // Debug: Log all requests to find the failing one
+  page.on('request', request => {
+    if (request.url().includes('car_stats')) {
+      console.log('>> Request to:', request.url());
+    }
+  });
+
+  await page.route('**/car_stats*', async route => {
+    console.log('Intercepted car_stats request:', route.request().url());
     // Puedes personalizar la respuesta con datos válidos si necesitas
     const mockResponse = [
       {
@@ -68,7 +76,7 @@ test.describe('Flujo Completo de Alquiler - Checkpoint Architecture', () => {
     const result = await block.execute(async () => {
       // Verificar autenticación via storageState
       await page.goto('/', { waitUntil: 'commit' })
-      
+
       const userMenu = page.getByTestId('user-menu')
         .or(page.locator('a[href*="/profile"]'))
 
@@ -136,6 +144,8 @@ test.describe('Flujo Completo de Alquiler - Checkpoint Architecture', () => {
     } else {
       // Si no hay checkpoint, navegar manualmente
       await page.goto('/cars/list', { waitUntil: 'commit' })
+      // Esperar a que la página de lista de autos cargue elementos visibles
+      await expect(page.locator('app-car-card').first()).toBeVisible({ timeout: 15000 });
     }
 
     const block = createBlock(defineBlock('b2-booking-select-car', 'Seleccionar auto y ver detalle', {
