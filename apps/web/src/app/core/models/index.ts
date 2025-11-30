@@ -430,6 +430,8 @@ export interface Booking {
   wallet_status?: 'none' | 'locked' | 'charged' | 'refunded' | 'partially_charged' | null;
   wallet_charged_at?: string | null;
   wallet_refunded_at?: string | null;
+  mp_security_deposit_order_id?: string | null; // NUEVO: ID de la pre-autorización de MP para el depósito
+
 
   // Dual payment system (rental + deposit)
   rental_amount_cents?: number | null;
@@ -506,10 +508,20 @@ export interface Booking {
 
 export interface PaymentIntent {
   id: string;
-  booking_id: string;
-  provider: string;
-  status: string;
+  booking_id?: string | null; // booking_id puede ser nulo para depósitos de seguridad
+  user_id?: string; // ID del usuario para el intent (por ejemplo, para depósitos de seguridad)
+  provider: string; // 'mercadopago' o 'wallet'
+  status: string; // 'pending', 'authorized', 'captured', 'cancelled', 'failed', 'completed'
   created_at: string;
+  updated_at?: string;
+  amount_usd?: number;
+  amount_ars?: number;
+  fx_rate?: number;
+  description?: string;
+  intent_type?: 'booking' | 'security_deposit' | 'fine'; // Nuevo: tipo de intent
+  is_preauth?: boolean; // Nuevo: si es una pre-autorización
+  mp_order_id?: string | null; // Nuevo: ID de la orden de MercadoPago para pre-autorizaciones
+  mp_order_status?: string | null; // Nuevo: Estado de la orden de MercadoPago
 }
 
 export interface Payment {

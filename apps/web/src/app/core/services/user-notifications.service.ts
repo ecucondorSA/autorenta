@@ -426,6 +426,25 @@ export class NotificationsService implements OnDestroy {
     );
   }
 
+  async notifyBookingCreated(bookingId: string, carTitle: string) {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+    if (!user) return;
+
+    return this.createNotification(
+      user.id,
+      {
+        title: 'Reserva creada',
+        message: `Tu solicitud de reserva para ${carTitle} ha sido enviada`,
+        type: 'success',
+        actionUrl: `/bookings/${bookingId}`,
+        metadata: { bookingId, carTitle },
+      },
+      'booking_created',
+    );
+  }
+
   async notifyBookingCancelledForOwner(bookingId: string, carTitle: string, renterName: string) {
     const {
       data: { user },

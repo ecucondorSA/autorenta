@@ -339,8 +339,7 @@ export class SimpleCheckoutComponent {
       }
 
       // 4. Notificar al usuario
-      // TODO: Implementar notifyBookingCreated en NotificationsService
-      // await this.notificationsService.notifyBookingCreated(booking.id, this.car.title);
+      await this.notificationsService.notifyBookingCreated(booking.id, this.car.title);
 
       // 5. Emitir evento y redirigir
       this.bookingCreated.emit(booking as unknown as { id: string; [key: string]: unknown });

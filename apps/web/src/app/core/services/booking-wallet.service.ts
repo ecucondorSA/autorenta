@@ -6,6 +6,7 @@ import { WalletService } from './wallet.service';
 import { LoggerService } from './logger.service';
 import { CarOwnerNotificationsService } from './car-owner-notifications.service';
 import { CarsService } from './cars.service';
+import { PaymentsService } from './payments.service'; // NEW: Import PaymentsService
 
 /**
  * Service for managing booking-related wallet operations
@@ -20,6 +21,7 @@ export class BookingWalletService {
   private readonly logger = inject(LoggerService);
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
   private readonly carsService = inject(CarsService);
+  private readonly paymentsService = inject(PaymentsService); // NEW: Inject PaymentsService
 
   /**
    * Charge rental from user's wallet using the new ledger system
@@ -123,50 +125,98 @@ export class BookingWalletService {
   async lockSecurityDeposit(
     booking: Booking,
     depositAmountCents: number,
+    paymentMethod: 'card' | 'wallet', // NUEVO: Método de pago
     description?: string,
-  ): Promise<{ ok: boolean; transaction_id?: string; error?: string }> {
+  ): Promise<{ ok: boolean; transaction_id?: string; mp_order_id?: string; error?: string }> {
     try {
       if (!booking.user_id) {
         return { ok: false, error: 'Booking has no user_id' };
       }
 
-      // Check if user has sufficient available balance
-      const { data: wallet, error: walletError } = await this.supabase
-        .from('user_wallets')
-        .select('available_balance')
-        .eq('user_id', booking.user_id)
-        .single();
+      // 1. Si es con Wallet: Usar lógica existente de bloqueo de fondos
+      if (paymentMethod === 'wallet') {
+        // Check if user has sufficient available balance
+        const { data: wallet, error: walletError } = await this.supabase
+          .from('user_wallets')
+          .select('available_balance')
+          .eq('user_id', booking.user_id)
+          .single();
 
-      if (walletError) {
-        return { ok: false, error: 'Error checking wallet balance' };
-      }
+        if (walletError) {
+          return { ok: false, error: 'Error checking wallet balance' };
+        }
 
-      if (wallet.available_balance < depositAmountCents) {
+        if (wallet.available_balance < depositAmountCents) {
+          return {
+            ok: false,
+            error: `Saldo insuficiente. Disponible: ${wallet.available_balance / 100}, Requerido: ${depositAmountCents / 100}`,
+          };
+        }
+
+        const lockResult = await firstValueFrom(
+          this.walletService.lockFunds(
+            booking.id,
+            depositAmountCents,
+            description || `Garantía bloqueada - Reserva ${booking.id.substring(0, 8)}`,
+          ),
+        );
+
+        if (!lockResult.success) {
+          return { ok: false, error: lockResult.message };
+        }
+
         return {
-          ok: false,
-          error: `Saldo insuficiente. Disponible: ${wallet.available_balance / 100}, Requerido: ${depositAmountCents / 100}`,
+          ok: true,
+          transaction_id: lockResult.transaction_id ?? undefined,
         };
       }
 
-      // Lock funds using wallet service
-      const lockResult = await firstValueFrom(
-        this.walletService.lockFunds(
-          booking.id,
-          depositAmountCents,
-          description || `Garantía bloqueada - Reserva ${booking.id.substring(0, 8)}`,
-        ),
-      );
+      // 2. Si es con Tarjeta: Crear pre-autorización de MercadoPago
+      if (paymentMethod === 'card') {
+        // Crear un PaymentIntent de tipo security_deposit
+        const intent = await this.paymentsService.createPaymentIntent({
+          bookingId: booking.id,
+          userId: booking.user_id,
+          amount: depositAmountCents / 100, // MP espera monto en la moneda base
+          currency: booking.currency || 'ARS',
+          intentType: 'security_deposit',
+          isPreAuth: true,
+          description: description || `Pre-autorización Garantía Reserva ${booking.id.substring(0, 8)}`,
+        });
 
-      if (!lockResult.success) {
-        return { ok: false, error: lockResult.message };
+        // Llamar a la RPC de Supabase para crear la pre-autorización en MP
+        const updatedIntent = await this.paymentsService.createMpPreAuthOrder(
+          intent.id,
+          depositAmountCents,
+          description || `Pre-autorización Garantía Reserva ${booking.id.substring(0, 8)}`,
+          booking.id,
+        );
+
+        // Actualizar el booking con el ID de la orden de MP
+        await this.supabase
+          .getClient()
+          .from('bookings')
+          .update({
+            mp_security_deposit_order_id: updatedIntent.mp_order_id,
+            deposit_status: 'locked', // Usar el nuevo estado de depósito
+            payment_method: 'credit_card',
+          })
+          .eq('id', booking.id);
+
+        return {
+          ok: true,
+          mp_order_id: updatedIntent.mp_order_id ?? undefined,
+        };
       }
 
-      return {
-        ok: true,
-        transaction_id: lockResult.transaction_id ?? undefined,
-      };
+      return { ok: false, error: 'Método de pago no soportado para garantía' };
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Error inesperado';
+      this.logger.error(
+        'lockSecurityDeposit exception',
+        'BookingWalletService',
+        err instanceof Error ? err : new Error(errorMsg),
+      );
       return { ok: false, error: errorMsg };
     }
   }

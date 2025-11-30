@@ -17,6 +17,7 @@ import { BookingStepIndicatorComponent } from '../../components/booking-step-ind
 import { Car } from '../../../../core/models';
 import { BookingsService } from '../../../../core/services/bookings.service';
 import { CarsService } from '../../../../core/services/cars.service';
+import { DistanceCalculatorService } from '../../../../core/services/distance-calculator.service';
 import { EmailVerificationService } from '../../../../core/services/email-verification.service';
 import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 
@@ -191,6 +192,7 @@ export class BookingWizardPage implements OnInit {
     private bookingsService: BookingsService,
     private errorHandler: ErrorHandlerService,
     private emailVerificationService: EmailVerificationService,
+    private distanceCalculator: DistanceCalculatorService
   ) {}
 
   async ngOnInit() {
@@ -300,6 +302,19 @@ export class BookingWizardPage implements OnInit {
     this.isLoading.set(true);
     try {
       const bookingData = this.prepareBookingData();
+      const car = this.car();
+
+      if (!car) {
+        throw new Error('Car details not loaded');
+      }
+
+      // Calculate distance and delivery fee
+      const distanceKm = this.distanceCalculator.calculateDistanceBetweenLocations(
+        { lat: bookingData.pickup_location.lat, lng: bookingData.pickup_location.lng },
+        { lat: car.latitude, lng: car.longitude }
+      ) || 0;
+
+      const distanceMetadata = this.distanceCalculator.calculateDistanceMetadata(distanceKm);
 
       const result = await this.bookingsService.createBookingWithValidation(
         bookingData.car_id,
@@ -310,10 +325,10 @@ export class BookingWizardPage implements OnInit {
           pickupLng: bookingData.pickup_location.lng,
           dropoffLat: bookingData.dropoff_location.lat,
           dropoffLng: bookingData.dropoff_location.lng,
-          deliveryRequired: false, // FIXME: Calculate from distance based on car location
-          distanceKm: 0, // FIXME: Calculate actual distance
-          deliveryFeeCents: 0, // FIXME: Calculate fee based on distance
-          distanceTier: 'local',
+          deliveryRequired: distanceKm > 0.5, // Consider delivery if > 500m
+          distanceKm: distanceKm,
+          deliveryFeeCents: distanceMetadata.deliveryFeeCents,
+          distanceTier: distanceMetadata.tier,
         },
       );
 

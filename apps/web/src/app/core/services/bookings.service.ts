@@ -735,6 +735,72 @@ export class BookingsService {
     return this.cancellationService.cancelBookingLegacy(booking, reason);
   }
 
+  // Extension Operations
+  /**
+   * Extiende una reserva existente
+   * 1. Verifica disponibilidad
+   * 2. Calcula diferencia de precio
+   * 3. Cobra diferencia de wallet (o tarjeta guardada)
+   * 4. Actualiza fechas de reserva y seguro
+   */
+  async extendBooking(
+    bookingId: string,
+    newEndDate: Date,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const booking = await this.getBookingById(bookingId);
+      if (!booking) throw new Error('Reserva no encontrada');
+
+      // 1. Verificar disponibilidad
+      const isAvailable = await this.carsService.isCarAvailable(
+        booking.car_id,
+        booking.end_at, // Desde el fin actual
+        newEndDate.toISOString(), // Hasta la nueva fecha
+      );
+
+      if (!isAvailable) {
+        return { success: false, error: 'El auto no está disponible para esas fechas' };
+      }
+
+      // 2. Calcular costo adicional
+      const currentEnd = new Date(booking.end_at);
+      const additionalDays = Math.ceil(
+        (newEndDate.getTime() - currentEnd.getTime()) / (1000 * 60 * 60 * 24),
+      );
+      if (additionalDays <= 0)
+        return { success: false, error: 'La nueva fecha debe ser posterior a la actual' };
+
+      const pricePerDay = this.getBookingPricePerDay(booking);
+      const additionalCostCents = Math.round(pricePerDay * additionalDays * 100); // Simple calculation
+
+      // 3. Cobrar diferencia (Intento de cobro directo a wallet)
+      const chargeResult = await this.walletService.processRentalPayment(
+        booking,
+        additionalCostCents,
+        `Extensión de reserva #${booking.id} (${additionalDays} días)`,
+      );
+
+      if (!chargeResult.ok) {
+        return { success: false, error: `Fallo al cobrar extensión: ${chargeResult.error}` };
+      }
+
+      // 4. Actualizar reserva
+      await this.updateBooking(booking.id, {
+        end_at: newEndDate.toISOString(),
+        total_amount: (booking.total_amount || 0) + additionalCostCents / 100,
+      });
+
+      // TODO: Extender seguro (llamada a insuranceService)
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al extender reserva',
+      };
+    }
+  }
+
   // Utility Operations
   getTimeUntilExpiration(booking: Booking): number | null {
     return this.utilsService.getTimeUntilExpiration(booking);

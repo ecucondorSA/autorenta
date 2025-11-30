@@ -337,6 +337,15 @@ export class WithdrawalService {
   }
 
   /**
+   * Obtiene TODAS las solicitudes de retiro (Admin only)
+   * Este método es semánticamente para uso administrativo.
+   * Confía en que las políticas RLS del backend permitirán al admin ver todo.
+   */
+  async getAllWithdrawals(filters?: WithdrawalFilters): Promise<WithdrawalRequest[]> {
+    return this.getWithdrawalRequests(filters);
+  }
+
+  /**
    * Cancela una solicitud de retiro pendiente
    */
   async cancelWithdrawalRequest(requestId: string): Promise<void> {

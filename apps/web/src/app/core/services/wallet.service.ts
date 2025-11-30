@@ -169,6 +169,9 @@ export class WalletService {
   // DEPOSIT METHODS
   // ============================================================================
 
+  /**
+   * Inicia un proceso de depósito a la wallet del usuario, generalmente desde MP
+   */
   initiateDeposit(params: InitiateDepositParams): Observable<WalletInitiateDepositResponse> {
     this.loading.set(true);
     this.error.set(null);
@@ -211,6 +214,7 @@ export class WalletService {
               ),
             ),
           );
+        );
         }
 
         return from(Promise.resolve(result));
@@ -224,6 +228,46 @@ export class WalletService {
         return result;
       }),
     );
+  }
+
+  /**
+   * Deposita fondos directamente en la wallet de un usuario.
+   * Usado para reembolsos o créditos del sistema.
+   * Requiere una función RPC en Supabase: wallet_deposit_funds_admin
+   */
+  async depositFunds(
+    userId: string,
+    amountCents: number,
+    description: string,
+    referenceId?: string,
+  ): Promise<{ success: boolean; transactionId?: string; error?: string }> {
+    try {
+      const { data, error } = await this.supabase.rpc('wallet_deposit_funds_admin', {
+        p_user_id: userId,
+        p_amount_cents: amountCents,
+        p_description: description,
+        p_reference_id: referenceId || null,
+      });
+
+      if (error) throw error;
+      const result = (data && Array.isArray(data) ? data[0] : data) as {
+        success: boolean;
+        transaction_id?: string;
+        error_message?: string;
+      };
+
+      if (!result.success) {
+        throw new Error(result.error_message || 'Fallo al depositar fondos');
+      }
+
+      this.fetchBalance().catch(() => {}); // Refrescar balance
+      this.fetchTransactions().catch(() => {}); // Refrescar transacciones
+
+      return { success: true, transactionId: result.transaction_id };
+    } catch (err) {
+      this.handleError(err, 'Error al depositar fondos');
+      return { success: false, error: err instanceof Error ? err.message : 'Error desconocido' };
+    }
   }
 
   private async createMercadoPagoPreference(

@@ -44,23 +44,23 @@ export class PaymentsService {
   private readonly supabase = injectSupabase();
   private readonly fxService = inject(FxService);
 
-  async createIntent(bookingId: string): Promise<PaymentIntent> {
-    // Obtener datos del booking para el payment intent
-    const { data: booking, error: bookingError } = await this.supabase
-      .from('bookings')
-      .select('id, total_amount, currency, renter_id')
-      .eq('id', bookingId)
-      .single();
-
-    if (bookingError || !booking) {
-      throw new Error(`Booking no encontrado: ${bookingId}`);
-    }
-
-    const currency = (booking.currency ?? 'USD').toUpperCase();
-    const totalAmount = Number(booking.total_amount ?? 0);
+  /**
+   * Crea un Payment Intent genérico (booking, security_deposit, fine)
+   */
+  async createPaymentIntent(params: {
+    bookingId?: string;
+    userId?: string;
+    amount: number;
+    currency: string;
+    intentType: 'booking' | 'security_deposit' | 'fine';
+    isPreAuth?: boolean;
+    description?: string;
+  }): Promise<PaymentIntent> {
+    const totalAmount = Number(params.amount ?? 0);
+    const currency = (params.currency ?? 'USD').toUpperCase();
 
     if (!Number.isFinite(totalAmount) || totalAmount <= 0) {
-      throw new Error(`Monto inválido para el booking ${bookingId}`);
+      throw new Error(`Monto inválido para el intent`);
     }
 
     const fxRate = await this.fxService.getCurrentRateAsync('USD', 'ARS');
@@ -77,15 +77,15 @@ export class PaymentsService {
     const { data, error } = await this.supabase
       .from('payment_intents')
       .insert({
-        booking_id: bookingId,
-        user_id: booking.renter_id,
-        intent_type: 'booking',
+        booking_id: params.bookingId,
+        user_id: params.userId,
+        intent_type: params.intentType,
         amount_usd: amountUsd,
         amount_ars: amountArs,
         fx_rate: fxRate,
         status: 'pending',
-        description: `Pago de reserva ${bookingId.substring(0, 8)}`,
-        is_preauth: false,
+        description: params.description || `Intent ${params.intentType}`,
+        is_preauth: params.isPreAuth || false,
       })
       .select()
       .single();
@@ -96,6 +96,93 @@ export class PaymentsService {
       );
     }
     return data as PaymentIntent;
+  }
+
+  /**
+   * Crea una pre-autorización (hold) en MercadoPago
+   * Requiere una función RPC en el backend de Supabase: create_mp_preauth_order
+   *
+   * @param intentId - El ID del PaymentIntent creado previamente
+   * @param bookingId - ID de la reserva (si aplica)
+   * @param amountCents - Monto de la pre-autorización en centavos
+   * @param description - Descripción del hold
+   * @returns El PaymentIntent actualizado con los datos de la orden de MP
+   */
+  async createMpPreAuthOrder(
+    intentId: string,
+    amountCents: number,
+    description: string,
+    bookingId?: string,
+  ): Promise<PaymentIntent> {
+    const { data, error } = await this.supabase.rpc('create_mp_preauth_order', {
+      p_intent_id: intentId,
+      p_amount_cents: amountCents,
+      p_description: description,
+      p_booking_id: bookingId,
+    });
+
+    if (error) {
+      throw new Error(
+        `Error al crear pre-autorización de MP: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+      );
+    }
+
+    const result = (data && Array.isArray(data) ? data[0] : data) as {
+      success: boolean;
+      error?: string;
+      mp_order_id?: string;
+      mp_order_status?: string;
+    };
+
+    if (!result.success) {
+      throw new Error(result.error || 'Fallo al crear pre-autorización de MP');
+    }
+
+    // Actualizar el PaymentIntent con los datos de la orden de MP
+    const { data: updatedIntent, error: updateError } = await this.supabase
+      .from('payment_intents')
+      .update({
+        mp_order_id: result.mp_order_id,
+        mp_order_status: result.mp_order_status,
+        status: 'authorized', // Marcar como autorizado
+      })
+      .eq('id', intentId)
+      .select()
+      .single();
+
+    if (updateError) {
+      throw new Error(
+        `Error al actualizar payment intent con datos de MP: ${updateError.message}`,
+      );
+    }
+
+    return updatedIntent as PaymentIntent;
+  }
+
+  /**
+   * @deprecated Usar createPaymentIntent genérico.
+   * Crea un payment intent para una reserva.
+   */
+  async createBookingPaymentIntent(bookingId: string): Promise<PaymentIntent> {
+    // Obtener datos del booking para el payment intent
+    const { data: booking, error: bookingError } = await this.supabase
+      .from('bookings')
+      .select('id, total_amount, currency, renter_id')
+      .eq('id', bookingId)
+      .single();
+
+    if (bookingError || !booking) {
+      throw new Error(`Booking no encontrado: ${bookingId}`);
+    }
+
+    return this.createPaymentIntent({
+      bookingId: bookingId,
+      userId: booking.renter_id,
+      amount: Number(booking.total_amount ?? 0),
+      currency: booking.currency ?? 'ARS',
+      intentType: 'booking',
+      description: `Pago de reserva ${bookingId.substring(0, 8)}`,
+    });
   }
 
   /**
@@ -256,10 +343,137 @@ export class PaymentsService {
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Error al procesar el pago',
+        error: error instanceof Error ? error.message : 'Error inesperado al crear la reserva',
       };
     }
   }
+
+  /**
+   * Captura un monto de una pre-autorización (hold) existente en MercadoPago.
+   * Requiere una función RPC en el backend de Supabase: capture_mp_preauth_order
+   *
+   * @param mpOrderId - ID de la orden de MercadoPago de la pre-autorización
+   * @param amountCents - Monto a capturar en centavos (debe ser menor o igual al pre-autorizado)
+   * @param description - Descripción de la captura
+   * @returns El PaymentIntent actualizado
+   */
+  async captureMpPreAuth(
+    mpOrderId: string,
+    amountCents: number,
+    description: string,
+  ): Promise<PaymentIntent> {
+    const { data, error } = await this.supabase.rpc('capture_mp_preauth_order', {
+      p_mp_order_id: mpOrderId,
+      p_amount_cents: amountCents,
+      p_description: description,
+    });
+
+    if (error) {
+      throw new Error(
+        `Error al capturar pre-autorización de MP: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+      );
+    }
+
+    const result = (data && Array.isArray(data) ? data[0] : data) as {
+      success: boolean;
+      error?: string;
+      mp_order_id?: string;
+      mp_order_status?: string;
+    };
+
+    if (!result.success) {
+      throw new Error(result.error || 'Fallo al capturar pre-autorización de MP');
+    }
+
+    // Actualizar el PaymentIntent con el nuevo estado de la orden de MP
+    const { data: updatedIntent, error: updateError } = await this.supabase
+      .from('payment_intents')
+      .update({
+        mp_order_status: result.mp_order_status,
+        status: 'captured', // Marcar como capturado
+      })
+      .eq('mp_order_id', mpOrderId)
+      .select()
+      .single();
+
+    if (updateError) {
+      throw new Error(
+        `Error al actualizar payment intent después de captura: ${updateError.message}`,
+      );
+    }
+
+    return updatedIntent as PaymentIntent;
+  }
+
+  /**
+   * Libera (cancela) una pre-autorización (hold) de MercadoPago sin cobrar nada.
+   * Requiere una función RPC en el backend de Supabase: release_mp_preauth_order
+   *
+   * @param mpOrderId - ID de la orden de MercadoPago de la pre-autorización
+   * @param description - Descripción de la liberación
+   * @returns El PaymentIntent actualizado
+   */
+  async releaseMpPreAuth(mpOrderId: string, description: string): Promise<PaymentIntent> {
+    const { data, error } = await this.supabase.rpc('release_mp_preauth_order', {
+      p_mp_order_id: mpOrderId,
+      p_description: description,
+    });
+
+    if (error) {
+      throw new Error(
+        `Error al liberar pre-autorización de MP: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+      );
+    }
+
+    const result = (data && Array.isArray(data) ? data[0] : data) as {
+      success: boolean;
+      error?: string;
+      mp_order_id?: string;
+      mp_order_status?: string;
+    };
+
+    if (!result.success) {
+      throw new Error(result.error || 'Fallo al liberar pre-autorización de MP');
+    }
+
+    // Actualizar el PaymentIntent con el nuevo estado de la orden de MP
+    const { data: updatedIntent, error: updateError } = await this.supabase
+      .from('payment_intents')
+      .update({
+        mp_order_status: result.mp_order_status,
+        status: 'released', // Marcar como liberado
+      })
+      .eq('mp_order_id', mpOrderId)
+      .select()
+      .single();
+
+    if (updateError) {
+      throw new Error(
+        `Error al actualizar payment intent después de liberación: ${updateError.message}`,
+      );
+    }
+
+    return updatedIntent as PaymentIntent;
+  }
+
+  /**
+   * Cancela una pre-autorización (hold) de MercadoPago (equivalente a release).
+   * Requiere una función RPC en el backend de Supabase: cancel_mp_preauth_order
+   *
+   * @param mpOrderId - ID de la orden de MercadoPago de la pre-autorización
+   * @param description - Descripción de la cancelación
+   * @returns El PaymentIntent actualizado
+   */
+  async cancelMpPreAuth(mpOrderId: string, description: string): Promise<PaymentIntent> {
+    // Por ahora, usamos la misma lógica que release, ya que MP maneja la cancelación
+    // de pre-autorizaciones como una liberación sin captura.
+    return this.releaseMpPreAuth(mpOrderId, description);
+  }
+
+  // ============================================================================
+  // DEPRECATED METHODS
+  // ============================================================================
+
 
   /**
    * Determina si un error es reintentable

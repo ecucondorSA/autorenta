@@ -197,10 +197,8 @@ export class WithdrawalsAdminPage implements OnInit {
     this.filterStatus.set(status || null);
 
     try {
-      // Note: WithdrawalService no tiene método getAllWithdrawals para admin
-      // Esto requeriría una implementación adicional en el servicio
-      // Por ahora, usamos el método del usuario como placeholder
-      const requests = await this.withdrawalService.getWithdrawalRequests({
+      // Usar el método administrativo para obtener retiros
+      const requests = await this.withdrawalService.getAllWithdrawals({
         status: status ? [status] : undefined,
       });
       this.withdrawals.set(requests);

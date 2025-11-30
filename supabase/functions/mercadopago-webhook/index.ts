@@ -547,29 +547,12 @@ serve(async (req: Request) => {
       const paymentClient = getPaymentClient(mpConfig);
 
       // Enforce a 3s timeout when fetching payment data from MercadoPago.
-      // Use AbortController when the client supports it. If passing `signal` causes
-      // an error, fall back to calling without signal but still enforce timeout.
-      const controller = new AbortController();
+      // The SDK is configured with a global timeout, but we add an extra layer of safety.
       try {
-        // Try to call SDK with signal (may be supported by newer SDKs)
-        try {
-          paymentData = await withTimeout(
-            // @ts-ignore - some SDKs accept an options object with signal
-            paymentClient.get({ id: paymentId, signal: controller.signal }),
-            3000,
-            controller
-          );
-        } catch (signalErr) {
-          // Fallback: call without signal if the SDK doesn't accept the option
-          paymentData = await withTimeout(paymentClient.get({ id: paymentId }), 3000);
-        }
-      } finally {
-        // Ensure controller is aborted to free any underlying resources
-        try {
-          controller.abort();
-        } catch (e) {
-          // ignore
-        }
+        paymentData = await withTimeout(paymentClient.get({ id: paymentId }), 3000);
+      } catch (timeoutErr) {
+        console.warn('Timeout fetching payment data, retrying might be needed', timeoutErr);
+        throw timeoutErr;
       }
 
       // Validar que la respuesta contiene datos válidos
