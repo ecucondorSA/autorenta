@@ -9701,6 +9701,16 @@ export type CarStatus = Database['public']['Enums']['car_status'];
 export type FuelType = string; // fuel_type is stored as text in DB
 export type Transmission = string; // transmission is stored as text in DB
 export type CancelPolicy = string; // Not defined as enum in DB
-export type BookingStatus = Database['public']['Enums']['booking_status'];
+export type BookingStatus =
+  | 'pending'
+  | 'approved'
+  | 'confirmed'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled'
+  | 'rejected'
+  | 'pending_owner_review'
+  | 'pending_renter_review'
+  | 'pending_dispute_resolution'; -- NUEVO: Estado para cargos pendientes de disputa
 export type PaymentStatus = Database['public']['Enums']['payment_status'];
 export type PaymentProvider = Database['public']['Enums']['payment_provider'];

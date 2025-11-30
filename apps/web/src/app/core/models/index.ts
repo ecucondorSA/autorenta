@@ -454,6 +454,10 @@ export interface Booking {
   funds_released_at?: string | null;
   completion_status?: BookingCompletionStatus | null;
 
+  // NEW: Dispute management fields
+  dispute_open_at?: string | null;
+  dispute_status?: 'open' | 'resolved' | 'rejected' | null; // open, resolved (owner wins), rejected (renter wins)
+
   // Cancellation management
   cancellation_policy_id?: number;
   cancellation_fee_cents?: number;

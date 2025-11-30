@@ -215,7 +215,7 @@ export class BookingCompletionService {
       return this.completeBookingClean(booking, onUpdateBooking);
     }
 
-    // Caso 2: Con cargos - Debitar de la garantía
+    // Caso 2: Con cargos - Marcar como pendiente de resolución de disputa
     const descriptionParts = [];
     if (inspectionData.fuelDifferenceCents > 0) {
       descriptionParts.push(`Combustible: $${(inspectionData.fuelDifferenceCents / 100).toFixed(2)}`);
@@ -229,12 +229,31 @@ export class BookingCompletionService {
 
     const description = `Cargos al cierre: ${descriptionParts.join(', ')}`;
 
-    return this.completeBookingWithDamages(
-      booking,
+    // Actualizar la reserva para reflejar los cargos pendientes de disputa
+    await onUpdateBooking(booking.id, {
+      status: 'pending_dispute_resolution', // Nuevo estado
+      dispute_open_at: new Date().toISOString(),
+      owner_damage_amount: inspectionData.damageAmountCents,
+      owner_damage_description: inspectionData.damageDescription,
+      // Almacenar otros cargos en metadata si no hay columnas dedicadas
+      metadata: {
+        ...(booking.metadata || {}),
+        pending_fuel_charge: inspectionData.fuelDifferenceCents,
+        pending_late_fee_charge: inspectionData.lateFeesCents,
+        total_pending_charges_cents: totalCharges,
+      },
+      // La deducción/captura real se hará después de la resolución de la disputa
+    });
+
+    this.logger.info(`Booking ${booking.id} marked as pending_dispute_resolution with charges.`, {
       totalCharges,
       description,
-      inspectionData.damageAmountCents > 0 ? 1 : 0, // Solo afecta perfil si hay daños
-      onUpdateBooking,
-    );
+    });
+
+    return {
+      success: true,
+      error: 'Cargos reportados. Pendiente de resolución de disputa.',
+      remaining_deposit: booking.deposit_amount_cents || 0 // El depósito sigue retenido
+    };
   }
 }

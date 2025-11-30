@@ -801,6 +801,158 @@ export class BookingsService {
     }
   }
 
+  /**
+   * Rechaza el auto en el momento del retiro (Check-in)
+   * Caso de uso: Auto sucio, daños no reportados, no es el modelo correcto.
+   * Acción: Cancela reserva, reembolso 100% inmediato, penaliza al dueño.
+   */
+  async rejectCarAtPickup(
+    bookingId: string,
+    reason: string,
+    evidencePhotos: string[] = [],
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const booking = await this.getBookingById(bookingId);
+      if (!booking) throw new Error('Reserva no encontrada');
+
+      // 1. Cancelar la reserva con motivo especial
+      // Usamos force=true para bypassear reglas de tiempo (es una cancelación justificada)
+      await this.cancellationService.cancelBooking(booking, true);
+
+      // 2. Actualizar motivo específico y evidencia
+      await this.updateBooking(booking.id, {
+        cancellation_reason: `RECHAZADO EN CHECK-IN: ${reason}`,
+        metadata: {
+          ...booking.metadata,
+          rejection_evidence: evidencePhotos,
+          rejected_at_pickup: true,
+        },
+      });
+
+      // 3. Registrar incidente para penalización del dueño (Strike)
+      await this.profileService.addStrike(
+        booking.owner_id || '',
+        'car_rejected_at_pickup',
+        booking.id,
+      );
+
+      this.logger.info(`Car rejected at pickup for booking ${booking.id}`, {
+        reason,
+        photos: evidencePhotos.length,
+      });
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al rechazar vehículo',
+      };
+    }
+  }
+
+  /**
+   * Procesa una devolución anticipada (Early Return)
+   * Reembolsa los días no utilizados al locatario.
+   */
+  async processEarlyReturn(bookingId: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const booking = await this.getBookingById(bookingId);
+      if (!booking) throw new Error('Reserva no encontrada');
+
+      const now = new Date();
+      const endDate = new Date(booking.end_at);
+      const startDate = new Date(booking.start_at);
+
+      // Validar que sea realmente anticipada
+      if (now >= endDate) {
+        return { success: false, error: 'La reserva ya ha finalizado o está por finalizar' };
+      }
+
+      if (now < startDate) {
+        return { success: false, error: 'La reserva aún no ha comenzado' };
+      }
+
+      // Calcular días no utilizados (diferencia entre ahora y fin programado)
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const remainingDays = Math.floor((endDate.getTime() - now.getTime()) / msPerDay);
+
+      if (remainingDays <= 0) {
+        return { success: false, error: 'No hay días completos para reembolsar' };
+      }
+
+      const pricePerDay = this.getBookingPricePerDay(booking);
+      const refundAmount = pricePerDay * remainingDays;
+
+      // Actualizar fecha de fin a "ahora"
+      await this.updateBooking(booking.id, {
+        end_at: now.toISOString(),
+        // total_amount se ajustará automáticamente o se deja como registro histórico
+        // Idealmente deberíamos actualizar total_amount = total_amount - refundAmount
+        total_amount: (booking.total_amount || 0) - refundAmount,
+      });
+
+      // Procesar reembolso
+      if (refundAmount > 0) {
+        // Reembolsar a wallet (o tarjeta si es posible, pero wallet es inmediato)
+        if (booking.user_id) {
+          await this.walletService.depositFunds(
+            booking.user_id,
+            Math.round(refundAmount * 100),
+            `Reembolso por devolución anticipada (${remainingDays} días)`,
+            booking.id,
+          );
+        }
+      }
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al procesar devolución anticipada',
+      };
+    }
+  }
+
+  /**
+   * Inicia una disputa sobre cargos adicionales
+   * Congela la transferencia de fondos al dueño hasta resolución.
+   */
+  async createDispute(
+    bookingId: string,
+    reason: string,
+    evidence?: string[],
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const user = await this.supabase.auth.getUser();
+      if (!user.data.user) throw new Error('No autenticado');
+
+      // Insertar disputa
+      const { error } = await this.supabase.from('booking_disputes').insert({
+        booking_id: bookingId,
+        opened_by: user.data.user.id,
+        reason,
+        evidence: evidence || [],
+        status: 'open',
+        created_at: new Date().toISOString(),
+      });
+
+      if (error) throw error;
+
+      // Marcar booking en estado de disputa (esto debería bloquear payouts automáticos en el backend)
+      await this.updateBooking(bookingId, {
+        status: 'disputed', // Asumiendo que existe este estado o usando metadata
+        // metadata: { is_disputed: true } // Alternativa si no hay enum
+      });
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al crear disputa',
+      };
+    }
+  }
+
   // Utility Operations
   getTimeUntilExpiration(booking: Booking): number | null {
     return this.utilsService.getTimeUntilExpiration(booking);

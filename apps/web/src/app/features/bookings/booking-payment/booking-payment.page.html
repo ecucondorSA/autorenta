@@ -224,14 +224,41 @@
 
           <!-- Amounts -->
           <div class="space-y-2 mb-4">
+            <!-- Base Rental Cost -->
             <div class="flex justify-between text-sm">
-              <span class="text-text-secondary">Subtotal:</span>
+              <span class="text-text-secondary">Alquiler del vehículo:</span>
               <span class="font-medium text-text-primary dark:text-text-secondary">
-                {{ booking()?.total_amount | money }}
+                {{ rentalBaseAmount() | money }}
               </span>
             </div>
-            <div class="flex justify-between text-sm">
-              <span class="text-text-secondary">Depósito:</span>
+
+            <!-- Delivery Fee (if applicable) -->
+            <div *ngIf="deliveryFee() > 0" class="flex justify-between text-sm">
+              <span class="text-text-secondary">Envío a domicilio:</span>
+              <span class="font-medium text-text-primary dark:text-text-secondary">
+                {{ deliveryFee() | money }}
+              </span>
+            </div>
+
+            <!-- Insurance Fee (if applicable) -->
+            <div *ngIf="insuranceFee() > 0" class="flex justify-between text-sm">
+              <span class="text-text-secondary">Cobertura de seguro:</span>
+              <span class="font-medium text-text-primary dark:text-text-secondary">
+                {{ insuranceFee() | money }}
+              </span>
+            </div>
+
+            <!-- Platform Fee -->
+            <div *ngIf="platformFee() > 0" class="flex justify-between text-sm">
+              <span class="text-text-secondary">Tarifa de servicio:</span>
+              <span class="font-medium text-text-primary dark:text-text-secondary">
+                {{ platformFee() | money }}
+              </span>
+            </div>
+
+            <!-- Security Deposit -->
+            <div class="flex justify-between text-sm pt-2 border-t border-border-default/50">
+              <span class="text-text-secondary">Depósito de garantía (Reembolsable):</span>
               <span class="font-medium text-text-primary dark:text-text-secondary">
                 {{ depositAmount() | money }}
               </span>

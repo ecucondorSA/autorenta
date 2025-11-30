@@ -85,6 +85,31 @@ export class BookingPaymentPage implements OnInit {
     return (bookingData.deposit_amount_cents || 0) / 100;
   });
 
+  // Desglose de costos para transparencia
+  readonly deliveryFee = computed(() => {
+    const bookingData = this.booking();
+    return (bookingData?.delivery_fee_cents || 0) / 100;
+  });
+
+  readonly insuranceFee = computed(() => {
+    const bookingData = this.booking();
+    return (bookingData?.insurance_cents || 0) / 100;
+  });
+
+  readonly platformFee = computed(() => {
+    const bookingData = this.booking();
+    return (bookingData?.fees_cents || 0) / 100;
+  });
+
+  readonly rentalBaseAmount = computed(() => {
+    const bookingData = this.booking();
+    if (!bookingData) return 0;
+    // El total incluye todo, así que restamos los extras para obtener el base
+    const total = bookingData.total_amount || 0;
+    const extras = this.deliveryFee() + this.insuranceFee() + this.platformFee();
+    return total - extras;
+  });
+
   readonly totalAmount = computed(() => {
     const bookingData = this.booking();
     if (!bookingData) return 0;

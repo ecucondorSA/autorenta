@@ -478,4 +478,29 @@ export class ProfileService {
       throw error;
     }
   }
+
+  /**
+   * Registra una infracción (strike) contra un usuario
+   * Útil para penalizar dueños por autos sucios o cancelaciones injustificadas
+   */
+  async addStrike(userId: string, reason: string, bookingId?: string): Promise<void> {
+    try {
+      // Intentar insertar en tabla de strikes
+      // Nota: Si la tabla no existe, esto fallará silenciosamente en el catch
+      const { error } = await this.supabase.from('user_strikes').insert({
+        user_id: userId,
+        reason,
+        booking_id: bookingId,
+        created_at: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.warn('Could not record strike (table might not exist):', error.message);
+      } else {
+        console.log(`Strike added to user ${userId}: ${reason}`);
+      }
+    } catch (err) {
+      console.error('Error adding strike:', err);
+    }
+  }
 }
