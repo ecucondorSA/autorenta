@@ -214,6 +214,11 @@ export class AppComponent implements OnInit {
     this.syncSidebarSideEffects(this.sidebarOpen());
   }
 
+  closeSidebar(): void {
+    this.sidebarOpen.set(false);
+    this.syncSidebarSideEffects(false);
+  }
+
   toggleDarkMode(): void {
     const newMode = !this.darkMode();
     this.darkMode.set(newMode);
