@@ -209,6 +209,27 @@ export class AppComponent implements OnInit {
   // Splash loader state
   showSplash = signal(true);
 
+  toggleSidebar(): void {
+    this.sidebarOpen.update((v) => !v);
+    this.syncSidebarSideEffects(this.sidebarOpen());
+  }
+
+  toggleDarkMode(): void {
+    const newMode = !this.darkMode();
+    this.darkMode.set(newMode);
+    localStorage.setItem('theme', newMode ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', newMode);
+    window.dispatchEvent(new CustomEvent('autorenta:theme-change', { detail: { dark: newMode } }));
+  }
+
+  toggleProfileMenu(): void {
+    this.profileMenuOpen.update((v) => !v);
+  }
+
+  closeProfileMenu(): void {
+    this.profileMenuOpen.set(false);
+  }
+
   ngOnInit(): void {
     this.handleOAuthCallbackRedirect();
     this.initializeSplash();
