@@ -571,3 +571,10 @@
   background: linear-gradient(135deg, #75bae4 0%, #5aa8d4 100%);
   box-shadow: 0 4px 16px rgba(117, 186, 228, 0.4);
 }
+
+/* Ocultar componente map-filters si se está renderizando */
+app-map-filters,
+.map-filters-desktop,
+.map-filters-mobile {
+  display: none !important;
+}

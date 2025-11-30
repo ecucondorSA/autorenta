@@ -1,0 +1,101 @@
+name: Verify Test Selectors
+
+on:
+  pull_request:
+    paths:
+      - 'tests/**/*.spec.ts'
+      - 'tests/**/pages/**/*.ts'
+      - 'apps/web/src/app/**/*.html'
+      - 'apps/web/src/app/**/*.ts'
+      - 'tools/analyze-test-selectors.mjs'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'tests/**/*.spec.ts'
+      - 'apps/web/src/app/**/*.html'
+      - 'tools/analyze-test-selectors.mjs'
+  workflow_dispatch:
+
+jobs:
+  verify-selectors:
+    name: Verify E2E Test Selectors
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify test selectors
+        id: verify-selectors
+        run: |
+          echo "🔍 Verificando selectores de tests E2E..."
+          npm run test:selectors:check || true
+
+      - name: Generate full report
+        if: steps.verify-selectors.outcome == 'failure'
+        run: |
+          echo "📊 Generando reporte completo..."
+          npm run test:selectors > selector-report.txt 2>&1 || true
+
+      - name: Upload selector report
+        if: steps.verify-selectors.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: selector-verification-report
+          path: |
+            test-selectors-report.json
+            selector-report.txt
+          retention-days: 7
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request' && steps.verify-selectors.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let report = '## ⚠️ Selectores de Tests Rotos\n\n';
+
+            try {
+              const data = JSON.parse(fs.readFileSync('test-selectors-report.json', 'utf8'));
+              report += `**Resumen:**\n`;
+              report += `- ✅ Selectores verificados: ${data.summary.verified}\n`;
+              report += `- ❌ Selectores rotos: ${data.summary.broken}\n`;
+              report += `- ⚠️ Tests sin HTML: ${data.summary.notFound}\n\n`;
+
+              if (data.broken && data.broken.length > 0) {
+                report += `**Selectores rotos más comunes:**\n\n`;
+                const grouped = {};
+                data.broken.forEach(b => {
+                  grouped[b.selector] = (grouped[b.selector] || 0) + 1;
+                });
+                const top = Object.entries(grouped)
+                  .sort((a, b) => b[1] - a[1])
+                  .slice(0, 10)
+                  .map(([sel, count]) => `- \`${sel}\`: ${count} ocurrencias`)
+                  .join('\n');
+                report += top + '\n\n';
+                report += `> 💡 Ejecuta \`npm run test:selectors\` localmente para ver el reporte completo.\n`;
+              }
+            } catch (e) {
+              report += `Error generando reporte: ${e.message}\n`;
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+
+

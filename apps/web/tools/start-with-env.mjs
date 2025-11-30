@@ -21,10 +21,10 @@ if (existsSync(envFile)) {
   }
 }
 
-const args = ['ng', 'serve', '--configuration', 'development', ...process.argv.slice(2)];
+const args = ['ng', 'serve', '--configuration', 'development', '--proxy-config', 'proxy.conf.json', ...process.argv.slice(2)];
 const child = spawn('npx', args, {
   stdio: 'inherit',
-  env: process.env,
+  env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=4096' },
   cwd: root,
 });
 

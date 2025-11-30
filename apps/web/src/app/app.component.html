@@ -177,6 +177,7 @@
           (click)="toggleDarkMode()"
           class="icon-button h-10 w-10 lg:h-11 lg:w-11"
           [attr.aria-label]="'common.changeTheme' | translate"
+          data-testid="theme-toggle"
         >
           <svg
             *ngIf="!darkMode()"
@@ -236,6 +237,7 @@
             [attr.aria-label]="'nav.profile' | translate"
             [attr.aria-expanded]="profileMenuOpen()"
             type="button"
+            data-testid="user-menu"
           >
             <img
               *ngIf="userProfile()?.avatar_url; else profilePlaceholder"

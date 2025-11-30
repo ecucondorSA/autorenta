@@ -2,6 +2,7 @@
   class="cars-map-container"
   [class.map-variant-photo]="markerVariant === 'photo'"
   [class.map-variant-price]="markerVariant === 'price'"
+  data-testid="cars-map"
 >
   <div *ngIf="loading()" class="map-overlay loading-overlay">
     <div class="spinner"></div>
@@ -22,7 +23,7 @@
     </div>
   </div>
 
-  <div #mapContainer class="map-canvas"></div>
+  <div #mapContainer class="map-canvas" id="map-container" data-testid="map-container"></div>
 
   <!-- Map Layers Control -->
   <app-map-layers-control

@@ -186,7 +186,7 @@ interface BookingDataSummary {
 
               <div class="price-divider"></div>
 
-              <div class="price-row total">
+              <div class="price-row total" data-testid="price-total">
                 <span class="price-label">Total</span>
                 <span class="price-value">{{ formatCurrency(totalPrice()) }}</span>
               </div>

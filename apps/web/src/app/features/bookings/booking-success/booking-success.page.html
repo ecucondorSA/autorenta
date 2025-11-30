@@ -32,7 +32,7 @@
 
   <!-- Success State -->
   @else if (booking(); as bkg) {
-    <div class="success-container max-w-3xl mx-auto">
+    <div class="success-container max-w-3xl mx-auto" data-testid="booking-success-page">
       <!-- ✅ Payment Status Indicator (solo si viene de MercadoPago) -->
       @if (paymentStatus() !== 'pending' || pollAttempts > 0) {
         <div class="mb-6">
@@ -298,6 +298,7 @@
           [routerLink]="['/bookings', bookingId()]"
           color="primary"
           size="large"
+          data-testid="view-details-button"
         >
           <ion-icon name="document-text-outline" slot="start"></ion-icon>
           Ver Detalles de la Reserva
@@ -309,12 +310,13 @@
           fill="outline"
           color="primary"
           size="large"
+          data-testid="search-more-button"
         >
           <ion-icon name="search-outline" slot="start"></ion-icon>
           Buscar Más Vehículos
         </ion-button>
 
-        <ion-button expand="block" [routerLink]="['/']" fill="clear" color="medium">
+        <ion-button expand="block" [routerLink]="['/']" fill="clear" color="medium" data-testid="home-button">
           <ion-icon name="home-outline" slot="start"></ion-icon>
           Ir al Inicio
         </ion-button>

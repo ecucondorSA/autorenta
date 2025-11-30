@@ -123,6 +123,7 @@ import { TranslateModule } from '@ngx-translate/core';
       <!-- Content Over Video -->
       <div
         class="relative z-10 h-full flex flex-col items-center justify-center gap-8 text-text-inverse"
+        data-testid="splash-loader"
       >
         <!-- Logo/Wordmark -->
         <div

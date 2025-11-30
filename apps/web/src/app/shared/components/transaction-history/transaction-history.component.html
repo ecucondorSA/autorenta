@@ -1,4 +1,6 @@
 <div class="transaction-history-container p-4" data-testid="transaction-history">
+  <!-- Table wrapper for transaction list -->
+  <div *ngIf="!isLoading() && filteredTransactions().length > 0" data-testid="transaction-table">
   <!-- Header -->
   <div class="flex justify-between items-center mb-6">
     <h2 class="text-2xl font-bold text-text-primary dark:text-pearl-white">
@@ -101,7 +103,7 @@
   </div>
 
   <!-- Transactions List -->
-  <div *ngIf="!isLoading() && filteredTransactions().length > 0" class="space-y-4">
+  <div *ngIf="!isLoading() && filteredTransactions().length > 0" class="space-y-4" data-testid="transaction-table">
     <div
       *ngFor="let transaction of filteredTransactions(); trackBy: trackByTransactionId"
       class="bg-surface-raised dark:bg-charcoal-dark rounded-lg border border-ash-gray dark:border-charcoal-medium hover:shadow-lg transition-shadow"
@@ -123,7 +125,7 @@
                 {{ translateType(getTransactionType(transaction)) }}
               </span>
             </div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70" data-testid="transaction-date">
               {{ formatDate(transaction.transaction_date) }}
             </p>
           </div>
@@ -138,6 +140,7 @@
                 ),
                 'text-error-text': isOutgoingTransaction(getTransactionType(transaction)),
               }"
+              data-testid="transaction-amount"
             >
               {{ isOutgoingTransaction(getTransactionType(transaction)) ? '-' : '+' }}
               {{ formatCurrency(transaction.amount_cents, transaction.currency) }}
@@ -145,6 +148,7 @@
             <span
               class="inline-block px-2 py-1 rounded-full text-xs font-medium mt-1"
               [ngClass]="getStatusColor(getTransactionStatus(transaction))"
+              data-testid="transaction-status"
             >
               {{ translateStatus(getTransactionStatus(transaction)) }}
             </span>

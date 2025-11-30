@@ -107,6 +107,7 @@
             placeholder="tu@email.com"
             required
             aria-required="true"
+            data-testid="login-email-input"
             [attr.aria-invalid]="
               form.controls.email.touched && form.controls.email.invalid ? 'true' : null
             "
@@ -168,6 +169,7 @@
             placeholder="••••••••"
             required
             aria-required="true"
+            data-testid="login-password-input"
             [attr.aria-invalid]="
               form.controls.password.touched && form.controls.password.invalid ? 'true' : null
             "
@@ -229,6 +231,7 @@
           type="submit"
           class="w-full rounded-lg bg-cta-default text-cta-text hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
           [disabled]="form.invalid || loading()"
+          data-testid="login-button"
         >
           <span *ngIf="!loading()">Ingresar</span>
           <span *ngIf="loading()" class="flex items-center justify-center gap-2">

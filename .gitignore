@@ -135,3 +135,10 @@ logs/**
 **/*.toon
 !.claude/config.toon
 !docs/REFERENCE_DATA.toon
+
+# Limpieza automática - temporal/debug files
+debug-artifacts/
+playwright-report/
+.wrangler/
+*.log
+*_output*.txt

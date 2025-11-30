@@ -186,7 +186,7 @@ export class WalletFaqComponent {
     {
       question: '¿Cuál es la diferencia entre pagar con Wallet vs. Tarjeta?',
       answer: `
-        <table class="w-full text-xs mt-2 border-collapse">
+        <table class="w-full text-xs mt-2 border-collapse" data-testid="wallet-table">
           <thead>
             <tr class="bg-border-default/30 dark:bg-surface-base">
               <th class="border border-border-default dark:border-border-muted px-2 py-1 text-left">Característica</th>
@@ -305,7 +305,7 @@ export class WalletFaqComponent {
       question: '¿Qué pasa con mis $300 USD si tengo 1 siniestro y soy culpable?',
       answer: `El Crédito de Protección <strong>NO se pierde todo</strong> - solo se consume <strong>lo que cuesta el daño</strong>:
         <p class="mt-2"><strong>💰 Consumo del Crédito:</strong></p>
-        <table class="w-full text-xs mt-2 border-collapse">
+        <table class="w-full text-xs mt-2 border-collapse" data-testid="wallet-table">
           <thead>
             <tr class="bg-border-default/30 dark:bg-surface-base">
               <th class="border border-border-default dark:border-border-muted px-2 py-1">Daño</th>

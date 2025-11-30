@@ -2,34 +2,57 @@ import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-// Cargar variables de entorno desde .env.local
+/**
+ * Configuración optimizada para velocidad y reutilización de estado.
+ */
+
+// Cargar variables de entorno
 dotenv.config({ path: path.resolve(__dirname, '.env.local') });
+
+const AUTH_FILE = path.join(__dirname, '.auth/user.json');
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  fullyParallel: true, // Ejecutar tests en paralelo para velocidad
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : undefined, // Usar todos los cores en local
   reporter: 'html',
+  
+  // Timeout global (30s es estándar, pero para local rápido podemos bajarlo si la app es rápida)
+  timeout: 30000,
 
   use: {
-    baseURL: 'http://127.0.0.1:4300',
-    trace: 'on-first-retry',
+    baseURL: 'http://localhost:4300', // URL de desarrollo por defecto
+    trace: 'on-first-retry', // Solo guardar traza si falla (ahorra disco/tiempo)
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
 
-  // Configuración de proyectos
   projects: [
+    // 1. SETUP: Se ejecuta primero y guarda la sesión
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.ts/,
+    },
+
+    // 2. E2E: Depende del setup y reutiliza la sesión
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        // Aquí está la magia: inyecta las cookies/storage guardados
+        storageState: AUTH_FILE, 
+      },
+      dependencies: ['setup'], // Espera a que 'setup' termine
     },
-  ],
 
-  // Servidor web opcional (descomentado si quieres que Playwright lo inicie)
-  // webServer: {
-  //   command: 'npm run dev:web',
-  //   url: 'http://127.0.0.1:4300',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+    /* Descomentar para probar en otros navegadores
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'], storageState: AUTH_FILE },
+      dependencies: ['setup'],
+    },
+    */
+  ],
 });

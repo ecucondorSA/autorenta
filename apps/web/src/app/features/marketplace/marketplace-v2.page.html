@@ -246,7 +246,7 @@
         <!-- Search Header -->
         <div class="flex items-center justify-between mb-6 lg:mb-8">
           <div>
-            <h3 class="font-display text-xl lg:text-2xl font-bold text-[#050505] tracking-tight">
+            <h3 class="font-display text-xl lg:text-2xl font-bold text-[#050505] tracking-tight" data-testid="marketplace-heading">
               Encuentra tu vehículo
             </h3>
             <p class="text-sm text-[#4e4e4e] mt-1">Busca por ubicación o fecha</p>
@@ -581,7 +581,7 @@
             Simple</span>
         </div>
         <h2
-          class="font-display text-4xl lg:text-5xl xl:text-6xl font-black text-text-primary dark:text-white mb-6">
+          class="font-display text-4xl lg:text-5xl xl:text-6xl font-black text-text-primary dark:text-white mb-6" data-testid="marketplace-h1">
           Alquila en
           <span class="relative">
             <span class="text-gradient-cyan">4 pasos</span>
@@ -1003,11 +1003,11 @@
           <div *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
             class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
-              class="car-card-premium group" [class.car-card-selected]="selectedCarId() === car.id"
+              class="car-card-premium group car-card-enhanced" [class.car-card-selected]="selectedCarId() === car.id"
               (click)="onCarSelected(car.id)" role="button" [attr.aria-label]="
                 'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup
               " tabindex="0" (keydown.enter)="onCarSelected(car.id)"
-              (keydown.space)="onCarSelected(car.id)">
+              (keydown.space)="onCarSelected(car.id)" data-testid="car-card-enhanced">
               <!-- Image -->
               <div class="car-card-image">
                 <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"

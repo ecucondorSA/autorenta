@@ -63,6 +63,7 @@
       *ngFor="let booking of filteredBookings()"
       class="card-premium overflow-hidden hover-lift shadow-soft booking-card"
       [ngClass]="statusCardClass(booking)"
+      data-testid="booking-card"
     >
       <a [routerLink]="['/bookings', booking.id]" class="block">
         <!-- Hero Section with Car Photo Background -->

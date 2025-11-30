@@ -1,6 +1,7 @@
 <article
   [routerLink]="['/cars', car.id]"
   [attr.data-car-id]="car.id"
+  data-testid="car-card"
   class="cq-card car-card card-premium flex flex-col overflow-hidden group cursor-pointer hover-lift transition-smooth"
   [class.selected]="selected"
   [class.urgent-mode]="urgentMode"
@@ -267,15 +268,15 @@
             <div class="h-8 sm:h-10 bg-border-default dark:bg-surface-secondary rounded w-28 mb-1"></div>
             <div class="h-4 bg-border-default dark:bg-surface-secondary rounded w-16"></div>
           </div>
-          
+
           <!-- Precio (dinámico o estático) -->
           <div *ngIf="!showPriceLoader()" class="flex items-baseline gap-2">
             <p class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-none">
               {{ displayPrice() | money }}
             </p>
             <!-- Icono de surge pricing -->
-            <span *ngIf="priceSurgeIcon()" 
-                  class="text-lg" 
+            <span *ngIf="priceSurgeIcon()"
+                  class="text-lg"
                   [title]="priceSurgeIcon() === '⚡' ? 'Precio ajustado por demanda' : 'Descuento disponible'">
               {{ priceSurgeIcon() }}
             </span>
@@ -291,7 +292,7 @@
           <button
             (click)="onToggleAvailability($event)"
             [attr.aria-label]="car.status === 'active' ? 'Desactivar auto' : 'Activar auto'"
-            [class]="car.status === 'active' 
+            [class]="car.status === 'active'
               ? 'flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-warning-border text-warning-text hover:bg-warning-bg transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]'
               : 'flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-success-light text-success-light hover:bg-success-light/10 transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]'"
             [title]="car.status === 'active' ? 'Desactivar auto' : 'Activar auto'"
@@ -364,11 +365,11 @@
                                                               [class.text-text-inverse]="isComparing"
                                                               [class.border-cta-default]="isComparing"
                                                               [title]="isComparing ? 'Quitar de comparación' : (compareDisabled ? 'Máximo 3 autos' : 'Agregar a comparación')">
-                                                  
-                                        
-                              
-                    
-          
+
+
+
+
+
 
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path *ngIf="!isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />

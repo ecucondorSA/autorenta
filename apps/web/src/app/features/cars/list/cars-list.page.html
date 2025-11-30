@@ -101,12 +101,6 @@
       class="w-full h-full"
     ></app-cars-map>
 
-    <!-- Floating Map Filters -->
-    <app-map-filters
-      (filterChange)="onFiltersChange($event)"
-      class="absolute top-4 left-4 z-[400]"
-    />
-
     <!-- Urgent Banner over map -->
     <div
       *ngIf="selectedCarId() && urgentAvailability()?.available"
@@ -124,9 +118,86 @@
 
   <!-- 📦 GRID & LIST VIEW CONTAINER -->
   <div *ngIf="viewMode() !== 'map'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Filters Section -->
-    <div class="mb-6">
-      <app-map-filters (filterChange)="onFiltersChange($event)" />
+    <!-- 🔍 FILTROS -->
+    <div class="mb-6 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+      <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-4">Filtros de búsqueda</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Filtro por distancia -->
+        <div>
+          <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+            Distancia máxima (km)
+          </label>
+          <input
+            type="number"
+            [value]="maxDistance() ?? ''"
+            (input)="maxDistance.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
+            placeholder="Sin límite"
+            min="0"
+            step="1"
+            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+          />
+        </div>
+
+        <!-- Filtro por precio mínimo -->
+        <div>
+          <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+            Precio mínimo ($/día)
+          </label>
+          <input
+            type="number"
+            [value]="minPrice() ?? ''"
+            (input)="minPrice.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
+            placeholder="Sin mínimo"
+            min="0"
+            step="100"
+            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+          />
+        </div>
+
+        <!-- Filtro por precio máximo -->
+        <div>
+          <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+            Precio máximo ($/día)
+          </label>
+          <input
+            type="number"
+            [value]="maxPrice() ?? ''"
+            (input)="maxPrice.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
+            placeholder="Sin máximo"
+            min="0"
+            step="100"
+            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+          />
+        </div>
+
+        <!-- Filtro por rating mínimo -->
+        <div>
+          <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+            Calificación mínima (⭐)
+          </label>
+          <input
+            type="number"
+            [value]="minRating() ?? ''"
+            (input)="minRating.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
+            placeholder="Sin mínimo"
+            min="0"
+            max="5"
+            step="0.1"
+            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+          />
+        </div>
+      </div>
+
+      <!-- Botón limpiar filtros -->
+      <div class="mt-4 flex justify-end">
+        <button
+          *ngIf="maxDistance() !== null || minPrice() !== null || maxPrice() !== null || minRating() !== null"
+          (click)="clearFilters()"
+          class="text-sm text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 font-medium"
+        >
+          Limpiar filtros
+        </button>
+      </div>
     </div>
 
     <!-- GRID VIEW -->

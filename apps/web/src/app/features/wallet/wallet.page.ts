@@ -1,30 +1,30 @@
+import { CommonModule } from '@angular/common';
 import {
-  Component,
-  signal,
-  ViewChild,
   AfterViewInit,
+  Component,
   computed,
+  effect,
   inject,
   OnInit,
-  effect,
+  signal,
+  ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { WalletBalanceCardComponent } from '../../shared/components/wallet-balance-card/wallet-balance-card.component';
-import { DepositModalComponent } from '../../shared/components/deposit-modal/deposit-modal.component';
-import { TransactionHistoryComponent } from '../../shared/components/transaction-history/transaction-history.component';
+import type { AddBankAccountParams, RequestWithdrawalParams } from '../../core/models/wallet.model';
+import { AnalyticsService } from '../../core/services/analytics.service';
+import { MetaService } from '../../core/services/meta.service';
+import { NotificationManagerService } from '../../core/services/notification-manager.service';
+import { ProfileService } from '../../core/services/profile.service';
+import { WalletService } from '../../core/services/wallet.service';
+import { WithdrawalService } from '../../core/services/withdrawal.service';
 import { BankAccountFormComponent } from '../../shared/components/bank-account-form/bank-account-form.component';
 import { BankAccountsListComponent } from '../../shared/components/bank-accounts-list/bank-accounts-list.component';
-import { WithdrawalRequestFormComponent } from '../../shared/components/withdrawal-request-form/withdrawal-request-form.component';
+
+import { TransactionHistoryComponent } from '../../shared/components/transaction-history/transaction-history.component';
+import { WalletBalanceCardComponent } from '../../shared/components/wallet-balance-card/wallet-balance-card.component';
 import { WithdrawalHistoryComponent } from '../../shared/components/withdrawal-history/withdrawal-history.component';
-import { WithdrawalService } from '../../core/services/withdrawal.service';
-import type { AddBankAccountParams, RequestWithdrawalParams } from '../../core/models/wallet.model';
-import { WalletService } from '../../core/services/wallet.service';
-import { MetaService } from '../../core/services/meta.service';
-import { ProfileService } from '../../core/services/profile.service';
-import { NotificationManagerService } from '../../core/services/notification-manager.service';
-import { AnalyticsService } from '../../core/services/analytics.service';
+import { WithdrawalRequestFormComponent } from '../../shared/components/withdrawal-request-form/withdrawal-request-form.component';
 
 /**
  * WalletPage
@@ -55,7 +55,6 @@ import { WalletFaqComponent } from './components/wallet-faq.component';
   imports: [
     CommonModule,
     WalletBalanceCardComponent,
-    DepositModalComponent,
     TransactionHistoryComponent,
     BankAccountFormComponent,
     BankAccountsListComponent,
@@ -75,15 +74,23 @@ export class WalletPage implements AfterViewInit, OnInit {
    */
   @ViewChild('balanceCard') balanceCard?: WalletBalanceCardComponent;
 
-  /**
-   * Controla la visibilidad del modal de depósito
-   */
-  showDepositModal = signal(false);
+
 
   /**
    * Tab activa (transactions | withdrawals)
    */
+  /**
+   * Tab activa (transactions | withdrawals)
+   */
   activeTab = signal<'transactions' | 'withdrawals'>('transactions');
+
+  /**
+   * Tabs definition for the view
+   */
+  readonly tabs = [
+    { id: 'transactions', label: 'Transacciones' },
+    { id: 'withdrawals', label: 'Retiros' },
+  ];
 
   /**
    * Modo de retiro (form | accounts)
@@ -274,26 +281,26 @@ export class WalletPage implements AfterViewInit, OnInit {
    */
   ngAfterViewInit(): void {
     if (this.balanceCard) {
-      this.balanceCard.setDepositClickHandler(() => this.openDepositModal());
+      this.balanceCard.setDepositClickHandler(() => this.navigateToDeposit());
     }
   }
 
   /**
-   * Abre el modal de depósito
+   * Navega a la página de depósito
+   */
+  navigateToDeposit(): void {
+    void this.router.navigate(['/wallet/deposit']);
+  }
+
+  /**
+   * Navega a la página de depósito (alias para compatibilidad)
    */
   openDepositModal(): void {
-    this.showDepositModal.set(true);
+    this.navigateToDeposit();
   }
 
   /**
-   * Cierra el modal de depósito
-   */
-  closeDepositModal(): void {
-    this.showDepositModal.set(false);
-  }
-
-  /**
-   * Abre el modal de depósito específicamente para crédito protegido
+   * Navega a la página de depósito con analytics para crédito protegido
    */
   openDepositModalForProtectedCredit(): void {
     // Track analytics event
@@ -302,9 +309,8 @@ export class WalletPage implements AfterViewInit, OnInit {
       protected_credit_progress: this.protectedCreditProgress(),
     });
 
-    // Open deposit modal
-    // FIXME: Pre-select "protected credit" type when deposit modal is enhanced
-    this.openDepositModal();
+    // Navigate to deposit page
+    this.navigateToDeposit();
   }
 
   /**
@@ -336,13 +342,6 @@ export class WalletPage implements AfterViewInit, OnInit {
     }
   }
 
-  /**
-   * Maneja el evento de depósito exitoso
-   */
-  handleDepositSuccess(_paymentUrl: string): void {
-    // El modal ya maneja la redirección automática
-    // Aquí podríamos agregar tracking o analytics
-  }
 
   /**
    * Cambia el tab activo

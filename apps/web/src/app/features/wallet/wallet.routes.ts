@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 
 export const WALLET_ROUTES: Routes = [
   {
+    path: 'deposit',
+    loadComponent: () => import('../deposit/deposit.page').then((m) => m.DepositPage),
+    title: 'Depositar Fondos - AutoRenta',
+  },
+  {
     path: 'history',
     loadComponent: () =>
       import('./components/ledger-history.component').then((m) => m.LedgerHistoryComponent),

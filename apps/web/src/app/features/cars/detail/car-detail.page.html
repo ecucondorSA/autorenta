@@ -1155,6 +1155,7 @@
             *ngIf="authService.isAuthenticated()"
             (click)="onBookClick()"
             [disabled]="!canBook() || bookingInProgress()"
+            data-testid="book-car-button"
             [ngClass]="{
               'cursor-not-allowed': !canBook() || bookingInProgress(),
               'bg-gradient-to-r': expressMode(),

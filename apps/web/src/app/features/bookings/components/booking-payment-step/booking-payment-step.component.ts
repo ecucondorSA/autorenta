@@ -24,7 +24,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
         <ion-card-content>
           <ion-radio-group [(ngModel)]="paymentMethod" (ngModelChange)="onDataChange()">
             <ion-item>
-              <ion-radio value="card">
+              <ion-radio value="card" data-testid="payment-method-card">
                 <ion-label>
                   <h3>Tarjeta de crédito/débito</h3>
                   <p>Pago seguro con MercadoPago</p>
@@ -32,7 +32,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
               </ion-radio>
             </ion-item>
             <ion-item>
-              <ion-radio value="wallet">
+              <ion-radio value="wallet" data-testid="payment-method-wallet">
                 <ion-label>
                   <h3>Saldo en wallet</h3>
                   <p>Usa tu saldo disponible</p>
@@ -40,7 +40,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
               </ion-radio>
             </ion-item>
             <ion-item>
-              <ion-radio value="bank_transfer">
+              <ion-radio value="bank_transfer" data-testid="payment-method-bank-transfer">
                 <ion-label>
                   <h3>Transferencia bancaria</h3>
                   <p>Pago mediante transferencia</p>
@@ -48,7 +48,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
               </ion-radio>
             </ion-item>
             <ion-item>
-              <ion-radio value="split">
+              <ion-radio value="split" data-testid="payment-method-split">
                 <ion-label>
                   <h3>Pago mixto</h3>
                   <p>Combina wallet + tarjeta</p>
@@ -67,7 +67,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
         <ion-card-content>
           <ion-radio-group [(ngModel)]="paymentPlan" (ngModelChange)="onDataChange()">
             <ion-item>
-              <ion-radio value="full">
+              <ion-radio value="full" data-testid="payment-plan-full">
                 <ion-label>
                   <h3>Pago completo ahora</h3>
                   <p>Mejor precio</p>
@@ -75,7 +75,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
               </ion-radio>
             </ion-item>
             <ion-item>
-              <ion-radio value="split_50_50">
+              <ion-radio value="split_50_50" data-testid="payment-plan-split-50-50">
                 <ion-label>
                   <h3>50% ahora, 50% al check-in</h3>
                   <p>Divide el pago</p>
@@ -83,7 +83,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
               </ion-radio>
             </ion-item>
             <ion-item>
-              <ion-radio value="deposit_20">
+              <ion-radio value="deposit_20" data-testid="payment-plan-deposit-20">
                 <ion-label>
                   <h3>20% ahora, resto 7 días antes</h3>
                   <p>Mayor flexibilidad</p>
@@ -106,6 +106,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
               [(ngModel)]="promoCode"
               (ngModelChange)="onDataChange()"
               placeholder="Ej: SUMMER2025"
+              data-testid="promo-code-input"
             ></ion-input>
           </ion-item>
         </ion-card-content>

@@ -1,4 +1,0 @@
-
-> payments_webhook@1.0.0 build
-> tsc --project tsconfig.json
-

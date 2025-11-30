@@ -43,7 +43,7 @@ export interface BookingDatesLocation {
               </label>
               <input
                 type="date"
-                id="startDate"
+                id="search-start"
                 class="field-input"
                 [(ngModel)]="localData.startDate"
                 [min]="minStartDate"
@@ -78,7 +78,7 @@ export interface BookingDatesLocation {
               </label>
               <input
                 type="date"
-                id="endDate"
+                id="search-end"
                 class="field-input"
                 [(ngModel)]="localData.endDate"
                 [min]="minEndDate()"

@@ -14,6 +14,8 @@
     "test:quick": "./tools/run.sh test:quick",
     "test:coverage": "./tools/run.sh test:coverage",
     "test:e2e": "./tools/run.sh test:e2e",
+    "test:selectors": "node tools/analyze-test-selectors.mjs",
+    "test:selectors:check": "node tools/analyze-test-selectors.mjs --check",
     "test:e2e:ui": "./tools/run.sh test:e2e:ui",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:headed": "playwright test --headed",
@@ -111,6 +113,7 @@
     "playwright-qase-reporter": "^2.1.6",
     "puppeteer": "^24.31.0",
     "uuid": "^13.0.0",
+    "wait-on": "^9.0.3",
     "zod": "^4.1.13"
   },
   "autorenta": {

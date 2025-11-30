@@ -1,5 +1,6 @@
 <div
   class="wallet-balance-card bg-surface-raised dark:bg-surface-raised border border-border-default/70 dark:border-slate-deep rounded-xl shadow-soft dark:shadow-card p-6 transition-colors duration-300"
+  data-testid="wallet-balance-card"
 >
   <!-- Header -->
   <div class="flex items-center justify-between mb-6">
@@ -140,7 +141,7 @@
         Balance Total
       </p>
       <p
-        class="text-4xl font-bold text-text-primary dark:text-text-primary"
+        class="text-4xl font-bold text-text-primary dark:text-text-primary wallet-balance balance-amount"
         data-testid="wallet-balance"
       >
         {{ formatCurrency(totalBalance()) }}

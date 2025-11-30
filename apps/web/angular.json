@@ -69,12 +69,8 @@
               "whatwg-url",
               "@supabase/node-fetch"
             ],
-            "server": "src/main.server.ts",
             "prerender": false,
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "ssr": false
           },
           "configurations": {
             "production": {

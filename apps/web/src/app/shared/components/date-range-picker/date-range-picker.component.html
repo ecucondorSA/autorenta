@@ -56,7 +56,7 @@
 
       <div class="date-selected" *ngIf="from() || to()">
         <div class="date-range">
-          <span class="date-from">{{
+          <span class="date-from" data-testid="date-from">{{
             from() ? (from() | date: 'dd MMM yyyy') : 'Fecha inicio'
           }}</span>
           <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +67,7 @@
               d="M14 5l7 7m0 0l-7 7m7-7H3"
             />
           </svg>
-          <span class="date-to">{{ to() ? (to() | date: 'dd MMM yyyy') : 'Fecha fin' }}</span>
+          <span class="date-to" data-testid="date-to">{{ to() ? (to() | date: 'dd MMM yyyy') : 'Fecha fin' }}</span>
         </div>
         <span class="duration-badge" *ngIf="selectedDays()">
           {{ selectedDays() }} día{{ (selectedDays() ?? 0) > 1 ? 's' : '' }}

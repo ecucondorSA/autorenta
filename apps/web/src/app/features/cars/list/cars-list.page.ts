@@ -27,10 +27,6 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
-import {
-  FilterState,
-  MapFiltersComponent,
-} from '../../../shared/components/map-filters/map-filters.component';
 import { PullToRefreshComponent } from '../../../shared/components/pull-to-refresh/pull-to-refresh.component';
 import { PwaTitlebarComponent } from '../../../shared/components/pwa-titlebar/pwa-titlebar.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
@@ -74,7 +70,6 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     CommonModule,
     RouterLink,
     CarsMapComponent,
-    MapFiltersComponent,
     StickyCtaMobileComponent,
     UrgentRentalBannerComponent,
     WhatsappFabComponent,
@@ -92,6 +87,9 @@ export class CarsListPage implements OnInit, OnDestroy {
   @ViewChild(CarsMapComponent) carsMapComponent!: CarsMapComponent;
   @ViewChild('unifiedCarousel', { read: ElementRef }) unifiedCarousel?: ElementRef<HTMLDivElement>;
   @ViewChild(PullToRefreshComponent) pullToRefresh!: PullToRefreshComponent;
+
+  // Exponer parseFloat para el template
+  readonly parseFloat = parseFloat;
 
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -145,13 +143,6 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly searchExpanded = signal(false);
   readonly inventoryReady = signal(false);
   readonly drawerOpen = signal(false);
-  readonly mapFilters = signal<FilterState>({
-    dateRange: null,
-    priceRange: null,
-    vehicleTypes: null,
-    immediateOnly: false,
-    transmission: null,
-  });
   readonly urgentAvailability = signal<{
     available: boolean;
     distance?: number;
@@ -167,6 +158,12 @@ export class CarsListPage implements OnInit, OnDestroy {
   // Filtros y ordenamiento
   readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('rating');
   readonly sortLabel = computed(() => this.getSortLabel(this.sortBy()));
+
+  // Filtros de búsqueda
+  readonly maxDistance = signal<number | null>(null); // km
+  readonly minPrice = signal<number | null>(null);
+  readonly maxPrice = signal<number | null>(null);
+  readonly minRating = signal<number | null>(null); // 0-5
 
   // Contadores para badge de resultados
   readonly totalCount = computed(() => this.cars().length);
@@ -209,40 +206,74 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly filteredCarsWithDistance = computed<CarWithDistance[]>(() => {
     let carsList = this.cars();
     const userLoc = this.userLocation();
+    const maxDist = this.maxDistance();
+    const minP = this.minPrice();
+    const maxP = this.maxPrice();
+    const minR = this.minRating();
 
     if (!carsList.length) {
       return [] as CarWithDistance[];
     }
 
-    return carsList.map((car) => {
-      if (!userLoc || !car.location_lat || !car.location_lng) {
-        return { ...car, distance: undefined, distanceText: undefined };
-      }
+    // Calcular distancias y aplicar filtros
+    const carsWithDistance = carsList
+      .map((car) => {
+        if (!userLoc || !car.location_lat || !car.location_lng) {
+          return { ...car, distance: undefined, distanceText: undefined };
+        }
 
-      const distanceKm = this.calculateDistance(
-        userLoc.lat,
-        userLoc.lng,
-        car.location_lat,
-        car.location_lng,
-      );
+        const distanceKm = this.calculateDistance(
+          userLoc.lat,
+          userLoc.lng,
+          car.location_lat,
+          car.location_lng,
+        );
 
-      // Formatear texto de distancia
-      let distanceText: string;
-      if (distanceKm < 1) {
-        distanceText = `${Math.round(distanceKm * 10) * 100}m`;
-      } else if (distanceKm < 10) {
-        distanceText = `${distanceKm.toFixed(1)}km`;
-      } else {
-        distanceText = `${Math.round(distanceKm)}km`;
-      }
+        // Formatear texto de distancia
+        let distanceText: string;
+        if (distanceKm < 1) {
+          distanceText = `${Math.round(distanceKm * 10) * 100}m`;
+        } else if (distanceKm < 10) {
+          distanceText = `${distanceKm.toFixed(1)}km`;
+        } else {
+          distanceText = `${Math.round(distanceKm)}km`;
+        }
 
-      return {
-        ...car,
-        distance: distanceKm,
-        distanceText,
-        image_url: this.extractPhotoGallery(car)[0] || null,
-      };
-    });
+        return {
+          ...car,
+          distance: distanceKm,
+          distanceText,
+          image_url: this.extractPhotoGallery(car)[0] || null,
+        };
+      })
+      .filter((car) => {
+        // Filtro por distancia máxima
+        if (maxDist !== null && car.distance !== undefined && car.distance > maxDist) {
+          return false;
+        }
+
+        // Filtro por precio mínimo
+        if (minP !== null && car.price_per_day < minP) {
+          return false;
+        }
+
+        // Filtro por precio máximo
+        if (maxP !== null && car.price_per_day > maxP) {
+          return false;
+        }
+
+        // Filtro por rating mínimo
+        if (minR !== null) {
+          const rating = car.owner?.rating_avg ?? 0;
+          if (rating < minR) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+    return carsWithDistance;
   });
 
   private readonly premiumSegmentation = computed<PremiumSegmentation | null>(() => {
@@ -793,6 +824,16 @@ export class CarsListPage implements OnInit, OnDestroy {
     void this.loadCars();
   }
 
+  /**
+   * Limpiar todos los filtros
+   */
+  clearFilters(): void {
+    this.maxDistance.set(null);
+    this.minPrice.set(null);
+    this.maxPrice.set(null);
+    this.minRating.set(null);
+  }
+
   onCarSelected(carId: string): void {
     const previousCarId = this.selectedCarId();
     this.selectedCarId.set(carId);
@@ -828,20 +869,6 @@ export class CarsListPage implements OnInit, OnDestroy {
     void this.checkUrgentAvailability(carId);
   }
 
-  /**
-   * Handle map filters change
-   */
-  onFiltersChange(filters: FilterState): void {
-    this.mapFilters.set(filters);
-    // Update date range if changed
-    if (filters.dateRange) {
-      const from = filters.dateRange.start.toISOString().split('T')[0];
-      const to = filters.dateRange.end.toISOString().split('T')[0];
-      this.dateRange.set({ from, to });
-    }
-    // Reload cars with new filters
-    void this.loadCars();
-  }
 
   /**
    * Handle drawer close
