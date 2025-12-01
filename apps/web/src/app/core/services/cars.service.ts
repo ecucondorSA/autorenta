@@ -152,6 +152,18 @@ export class CarsService {
     return photoData as CarPhoto;
   }
 
+  async getCarPhotos(carId: string): Promise<CarPhoto[]> {
+    const { data, error } = await this.supabase
+      .from('car_photos')
+      .select('*')
+      .eq('car_id', carId)
+      .order('sort_order', { ascending: true })
+      .order('position', { ascending: true });
+
+    if (error) throw error;
+    return (data ?? []) as CarPhoto[];
+  }
+
   suggestVehicleValueUsd(
     pricePerDay: number | null | undefined,
     options?: { averageRentalDays?: number },

@@ -156,15 +156,15 @@ export interface LocationSelection {
         padding: 1rem;
         text-align: left;
         background: white;
-        border: 2px solid #e5e7eb;
+        border: 2px solid var(--border-default, #e5e7eb);
         border-radius: 0.5rem;
         cursor: pointer;
         transition: all 0.2s;
       }
 
       .location-option-btn:hover:not(:disabled) {
-        border-color: #3b82f6;
-        background: #eff6ff;
+        border-color: var(--system-blue-default, #3b82f6);
+        background: var(--surface-info-light, #eff6ff);
       }
 
       .location-option-btn:disabled {
@@ -173,8 +173,8 @@ export interface LocationSelection {
       }
 
       .location-option-btn.selected {
-        border-color: #3b82f6;
-        background: #dbeafe;
+        border-color: var(--system-blue-default, #3b82f6);
+        background: var(--surface-info-medium, #dbeafe);
       }
 
       .location-option-btn .icon {
@@ -190,12 +190,12 @@ export interface LocationSelection {
 
       .location-option-btn .label {
         font-weight: 600;
-        color: #111827;
+        color: var(--text-primary, #111827);
       }
 
       .location-option-btn .address {
         font-size: 0.75rem;
-        color: #6b7280;
+        color: var(--text-secondary, #6b7280);
         margin-top: 0.25rem;
       }
 
@@ -208,13 +208,13 @@ export interface LocationSelection {
         align-items: center;
         padding: 1rem;
         background: white;
-        border: 2px solid #e5e7eb;
+        border: 2px solid var(--border-default, #e5e7eb);
         border-radius: 0.5rem;
         transition: border-color 0.2s;
       }
 
       .address-search-input:focus-within {
-        border-color: #3b82f6;
+        border-color: var(--system-blue-default, #3b82f6);
       }
 
       .address-search-input .icon {
@@ -230,7 +230,7 @@ export interface LocationSelection {
       }
 
       .address-input::placeholder {
-        color: #9ca3af;
+        color: var(--text-placeholder, #9ca3af);
       }
 
       .selected-location {

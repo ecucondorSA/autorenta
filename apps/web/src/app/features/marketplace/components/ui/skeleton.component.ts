@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
   styles: [
     `
       .skeleton {
-        background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
+        background: var(--surface-elevated); /* Reemplazado gradiente con color sólido */
         background-size: 200% 100%;
         animation: shimmer 1.5s ease-in-out infinite;
         border-radius: 8px;
@@ -115,7 +115,7 @@ import { CommonModule } from '@angular/common';
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+        background: none; /* Reemplazado gradiente con color sólido */
         animation: wave 1.5s ease-in-out infinite;
       }
 

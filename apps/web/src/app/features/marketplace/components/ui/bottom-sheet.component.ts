@@ -148,7 +148,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
       .sheet-handle {
         width: 40px;
         height: 4px;
-        background: #d1d5db;
+        background: var(--border-default, #d1d5db);
         border-radius: 2px;
         margin-bottom: 0.75rem;
       }
@@ -156,7 +156,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
       .sheet-title {
         font-size: 1.125rem;
         font-weight: 700;
-        color: #1f2937;
+        color: var(--text-primary, #1f2937);
         margin: 0;
         align-self: flex-start;
       }
@@ -175,7 +175,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
       .sheet-footer {
         padding: 1rem 1.5rem;
         padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-        border-top: 1px solid #f3f4f6;
+        border-top: 1px solid var(--border-default, #f3f4f6);
         display: flex;
         gap: 0.75rem;
         flex-shrink: 0;

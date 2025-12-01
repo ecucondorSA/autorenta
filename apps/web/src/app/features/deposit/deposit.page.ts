@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { WalletService } from '../../core/services/wallet.service';
+import { injectSupabase } from '../../core/services/supabase-client.service';
 
 /**
  * DepositPage
@@ -34,6 +35,7 @@ export class DepositPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly toastService = inject(NotificationManagerService);
   private readonly analyticsService = inject(AnalyticsService);
+  private readonly supabase = injectSupabase();
 
   // Form state
   readonly arsAmount = signal<number>(0);
@@ -73,12 +75,26 @@ export class DepositPage implements OnInit {
   async loadExchangeRate(): Promise<void> {
     this.loadingRate.set(true);
     try {
-      // TODO: Implement actual exchange rate fetch from backend
-      // For now, use a hardcoded rate
-      this.platformRate.set(1350.0); // 1 USD = 1350 ARS
+      const { data, error } = await this.supabase
+        .from('exchange_rates')
+        .select('rate, last_updated')
+        .eq('is_active', true)
+        .order('last_updated', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data?.rate) {
+        this.platformRate.set(Number(data.rate));
+      } else {
+        this.platformRate.set(null);
+        this.toastService.warning('Sin cotización', 'No encontramos la cotización actual. Intenta más tarde.');
+      }
     } catch (error) {
       console.error('Error loading exchange rate:', error);
       this.platformRate.set(null);
+      this.toastService.error('Error de cotización', 'No pudimos obtener la cotización en tiempo real.');
     } finally {
       this.loadingRate.set(false);
     }

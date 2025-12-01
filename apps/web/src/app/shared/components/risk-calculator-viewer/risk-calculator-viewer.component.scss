@@ -79,27 +79,27 @@
 }
 
 .text-gray-500 {
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
 }
 
 .text-blue-800 {
-  color: #1e40af;
+  color: var(--system-blue-dark, #1e40af);
 }
 
 .bg-gray-50 {
-  background-color: #f9fafb;
+  background-color: var(--surface-light-subtle, #f9fafb);
 }
 
 .bg-blue-50 {
-  background-color: #eff6ff;
+  background-color: var(--surface-info-light, #eff6ff);
 }
 
 .bg-yellow-50 {
-  background-color: #fefce8;
+  background-color: var(--surface-warning-light, #fefce8);
 }
 
 .text-yellow-800 {
-  color: #854d0e;
+  color: var(--text-warning-dark, #854d0e);
 }
 
 .rounded {
@@ -134,13 +134,13 @@ table {
 
 .border-b {
   border-bottom-width: 1px;
-  border-bottom-color: #e5e7eb;
+  border-bottom-color: var(--border-default, #e5e7eb);
 }
 
 thead {
-  background-color: #f9fafb;
+  background-color: var(--surface-light-subtle, #f9fafb);
 }
 
 tbody tr:hover {
-  background-color: #f3f4f6;
+  background-color: var(--surface-hover-light, #f3f4f6);
 }

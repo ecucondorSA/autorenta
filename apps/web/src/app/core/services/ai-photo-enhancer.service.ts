@@ -196,11 +196,7 @@ export class AiPhotoEnhancerService {
         break;
 
       case 'showroom': {
-        // Gradiente gris profesional
-        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        gradient.addColorStop(0, '#F5F5F5');
-        gradient.addColorStop(1, '#E0E0E0');
-        ctx.fillStyle = gradient;
+        ctx.fillStyle = '#f5f5f5';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         break;
       }

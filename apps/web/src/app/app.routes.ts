@@ -200,6 +200,13 @@ export const routes: Routes = [
           import('./features/admin/disputes/admin-disputes.page').then((m) => m.AdminDisputesPage),
       },
       {
+        path: 'disputes/:id', // Nueva ruta para el detalle de disputas
+        loadComponent: () =>
+          import('./features/disputes/pages/dispute-detail/dispute-detail.page').then(
+            (m) => m.DisputeDetailPage,
+          ),
+      },
+      {
         path: 'deposits',
         loadComponent: () =>
           import('./features/admin/deposits-monitoring/deposits-monitoring.page').then(
@@ -238,6 +245,13 @@ export const routes: Routes = [
         path: 'pricing',
         loadComponent: () =>
           import('./features/admin/pricing/admin-pricing.page').then((m) => m.AdminPricingPage),
+      },
+      {
+        path: 'organizations', // Nueva ruta para organizaciones
+        loadComponent: () =>
+          import('./features/organizations/pages/organization-dashboard.component').then(
+            (m) => m.OrganizationDashboardComponent,
+          ),
       },
     ],
   },

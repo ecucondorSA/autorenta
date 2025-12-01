@@ -448,11 +448,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
 
       /* CTA Card */
       .cta-card {
-        background: linear-gradient(
-          135deg,
-          var(--ion-color-primary-tint),
-          var(--ion-color-secondary-tint)
-        );
+        background-color: var(--ion-color-primary); /* Replaced gradient with solid color token */
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
 

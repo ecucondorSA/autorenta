@@ -3,9 +3,9 @@
 }
 
 :host-context(.dark) .publish-card {
-  background-color: #1f2426;
-  border-color: rgba(255, 255, 255, 0.08);
-  color: #f7f5ee;
+  background-color: var(--surface-raised-dark);
+  border-color: var(--border-muted-dark);
+  color: var(--text-inverse);
   transition:
     background-color 0.3s ease,
     border-color 0.3s ease;
@@ -15,33 +15,33 @@
 :host-context(.dark) .text-gray-600,
 :host-context(.dark) .text-gray-700,
 :host-context(.dark) .text-gray-900 {
-  color: #f7f5ee;
+  color: var(--text-inverse);
 }
 
 :host-context(.dark) .text-gray-500 {
-  color: rgba(247, 245, 238, 0.7);
+  color: var(--text-secondary-dark);
 }
 
 :host-context(.dark) input,
 :host-context(.dark) select,
 :host-context(.dark) textarea {
-  background-color: #1a1f21;
-  border-color: rgba(255, 255, 255, 0.12);
-  color: #f7f5ee;
+  background-color: var(--surface-base-dark);
+  border-color: var(--border-default-dark);
+  color: var(--text-inverse);
 }
 
 :host-context(.dark) input:focus,
 :host-context(.dark) select:focus,
 :host-context(.dark) textarea:focus {
-  border-color: rgba(122, 162, 170, 0.65);
-  box-shadow: 0 0 0 2px rgba(44, 74, 82, 0.35);
+  border-color: var(--primary-default);
+  box-shadow: 0 0 0 2px var(--primary-dark);
 }
 
 :host-context(.dark) input::placeholder,
 :host-context(.dark) textarea::placeholder {
-  color: rgba(247, 245, 238, 0.4);
+  color: var(--text-muted-dark);
 }
 
 :host-context(.dark) .bg-gray-100 {
-  background-color: rgba(36, 42, 46, 0.9);
+  background-color: var(--surface-raised-dark);
 }

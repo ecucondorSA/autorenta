@@ -88,7 +88,7 @@ export class BookingPaymentPage implements OnInit {
 
   // Desglose de costos para transparencia
   readonly deliveryFee = computed(() => {
-    const bookingData = this.booking() as any; // Cast to any to access new fields
+    const bookingData = this.booking();
     return (bookingData?.delivery_fee_cents || 0) / 100;
   });
 

@@ -488,6 +488,19 @@
               </div>
             </div>
 
+            <!-- Pricing / Insurance cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <app-booking-pricing-breakdown
+                *ngIf="pricingView()"
+                [data]="pricingView()!"
+              ></app-booking-pricing-breakdown>
+
+              <app-booking-insurance-summary
+                *ngIf="insuranceView()"
+                [data]="insuranceView()!"
+              ></app-booking-insurance-summary>
+            </div>
+
             <!-- Check-in/Check-out Actions Card (for renters) -->
             <div
               *ngIf="isRenter() && (canPerformCheckIn() || canPerformCheckOut())"
@@ -1163,6 +1176,34 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- Operaciones & Tracking -->
+          <div class="mt-6 space-y-4">
+            <app-booking-ops-timeline
+              [data]="{
+                payment_note: paymentView() ? paymentView()!.method + ' · ' + paymentView()!.status : null,
+                payment_date: paymentView()?.date ?? null,
+                pickup_confirmed_at: confirmation()?.pickup_confirmed_at ?? null,
+                dropoff_confirmed_at: confirmation()?.dropoff_confirmed_at ?? null,
+                owner_confirmation_at: confirmation()?.owner_confirmation_at ?? booking()?.owner_confirmation_at,
+                renter_confirmation_at: confirmation()?.renter_confirmation_at ?? booking()?.renter_confirmation_at,
+                returned_at: confirmation()?.returned_at ?? booking()?.returned_at,
+                funds_released_at: confirmation()?.funds_released_at ?? booking()?.funds_released_at,
+                cancellation_reason: cancellation()?.cancellation_reason ?? booking()?.cancellation_reason,
+                cancellation_fee_cents: cancellation()?.cancellation_fee_cents ?? booking()?.cancellation_fee_cents ?? null,
+                cancelled_at: cancellation()?.cancelled_at ?? booking()?.cancelled_at
+              }"
+            ></app-booking-ops-timeline>
+
+            <app-booking-tracking
+              [session]="tracking() ? {
+                active: tracking()!.active,
+                started_at: tracking()!.started_at,
+                ended_at: tracking()!.ended_at,
+                points_count: tracking()!.points
+              } : null"
+            ></app-booking-tracking>
           </div>
         </div>
         <!-- End Right Column -->

@@ -12,10 +12,22 @@
   display: none;
 }
 
+/* Fallback para navegadores sin container queries */
+@supports not (container-type: inline-size) {
+  .car-specs {
+    display: none;
+  }
+
+  .car-specs-condensed,
+  .location-condensed {
+    display: flex;
+  }
+}
+
 /* Efectos de hover premium */
 .card-premium {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #d9d6d0;
+  border: 1px solid var(--border-muted);
 }
 
 .card-premium:hover {
@@ -48,11 +60,7 @@
 
 /* Animación sutil para el fallback sin foto */
 .card-premium:hover .absolute.inset-0:has(svg) {
-  background: linear-gradient(
-    135deg,
-    rgba(196, 168, 130, 0.15) 0%,
-    rgba(167, 216, 244, 0.15) 100%
-  ); /* warning-light y cta-default */
+  background: rgba(167, 216, 244, 0.14); /* cta-default tint sin gradiente */
 }
 
 /* Mejora la transición del badge de distancia */

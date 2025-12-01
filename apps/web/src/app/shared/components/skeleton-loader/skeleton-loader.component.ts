@@ -102,36 +102,24 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation
       }
 
       .skeleton-image {
-        width: 100%;
-        height: 200px;
-        background: linear-gradient(
-          90deg,
-          var(--surface-secondary) 0px,
-          var(--surface-elevated) 40px,
-          var(--surface-secondary) 80px
-        );
-        background-size: 468px;
-        animation: shimmer 1.2s ease-in-out infinite;
-      }
-
+            width: 100%;
+            height: 200px;
+            background: var(--surface-elevated); /* Reemplazado gradiente con color sólido */
+            background-size: 468px;
+            animation: shimmer 1.2s ease-in-out infinite;
+          }
       .skeleton-content {
         padding: 16px;
       }
 
       .skeleton-line {
-        height: 12px;
-        margin-bottom: 8px;
-        border-radius: 4px;
-        background: linear-gradient(
-          90deg,
-          var(--surface-secondary) 0px,
-          var(--surface-elevated) 40px,
-          var(--surface-secondary) 80px
-        );
-        background-size: 468px;
-        animation: shimmer 1.2s ease-in-out infinite;
-      }
-
+            height: 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            background: var(--surface-elevated); /* Reemplazado gradiente con color sólido */
+            background-size: 468px;
+            animation: shimmer 1.2s ease-in-out infinite;
+          }
       .skeleton-title {
         height: 16px;
         width: 60%;
@@ -147,31 +135,19 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation
       }
 
       .skeleton-circle {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: linear-gradient(
-          90deg,
-          var(--surface-secondary) 0px,
-          var(--surface-elevated) 40px,
-          var(--surface-secondary) 80px
-        );
-        background-size: 468px;
-        animation: shimmer 1.2s ease-in-out infinite;
-      }
-
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--surface-elevated); /* Reemplazado gradiente con color sólido */
+            background-size: 468px;
+            animation: shimmer 1.2s ease-in-out infinite;
+          }
       .skeleton-rect {
-        border-radius: 8px;
-        background: linear-gradient(
-          90deg,
-          var(--surface-secondary) 0px,
-          var(--surface-elevated) 40px,
-          var(--surface-secondary) 80px
-        );
-        background-size: 468px;
-        animation: shimmer 1.2s ease-in-out infinite;
-      }
-
+            border-radius: 8px;
+            background: var(--surface-elevated); /* Reemplazado gradiente con color sólido */
+            background-size: 468px;
+            animation: shimmer 1.2s ease-in-out infinite;
+          }
       .skeleton-text-wrapper {
         display: flex;
         flex-direction: column;

@@ -1,10 +1,12 @@
 <div class="bg-surface-raised rounded-2xl shadow-lg p-6 max-w-2xl mx-auto">
-  <h2 class="text-2xl font-bold text-text-primary mb-6">Agregar Cuenta Bancaria</h2>
+  <div class="stack-sm mb-6">
+    <h2 class="h2 text-text-primary">Agregar Cuenta Bancaria</h2>
+  </div>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="stack-lg">
     <!-- Tipo de cuenta -->
-    <div>
-      <label class="block text-sm font-semibold text-text-primary mb-2"> Tipo de cuenta * </label>
+    <div class="stack-xs">
+      <label class="block text-sm font-semibold text-text-primary"> Tipo de cuenta * </label>
       <div class="grid grid-cols-3 gap-3">
         @for (type of accountTypes; track type.value) {
           <label
@@ -34,8 +36,8 @@
     </div>
 
     <!-- Número de cuenta -->
-    <div>
-      <label for="account_number" class="block text-sm font-semibold text-text-primary mb-2">
+    <div class="stack-xs">
+      <label for="account_number" class="block text-sm font-semibold text-text-primary">
         {{ selectedType() === 'alias' ? 'Alias' : selectedType() === 'cbu' ? 'CBU' : 'CVU' }} *
       </label>
       <input
@@ -48,7 +50,7 @@
           form.get('account_number')?.invalid && form.get('account_number')?.touched
         "
       />
-      <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">
+      <p class="text-sm text-text-secondary dark:text-text-secondary">
         {{ selectedAccountTypeInfo()?.hint }}
       </p>
       @if (getErrorMessage('account_number')) {
@@ -57,8 +59,8 @@
     </div>
 
     <!-- Nombre del titular -->
-    <div>
-      <label for="account_holder_name" class="block text-sm font-semibold text-text-primary mb-2">
+    <div class="stack-xs">
+      <label for="account_holder_name" class="block text-sm font-semibold text-text-primary">
         Nombre del titular *
       </label>
       <input
@@ -77,10 +79,10 @@
     </div>
 
     <!-- DNI/CUIT -->
-    <div>
+    <div class="stack-xs">
       <label
         for="account_holder_document"
-        class="block text-sm font-semibold text-text-primary mb-2"
+        class="block text-sm font-semibold text-text-primary"
       >
         DNI o CUIT *
       </label>
@@ -95,15 +97,15 @@
           form.get('account_holder_document')?.touched
         "
       />
-      <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">Sin puntos ni guiones</p>
+      <p class="text-sm text-text-secondary dark:text-text-secondary">Sin puntos ni guiones</p>
       @if (getErrorMessage('account_holder_document')) {
         <p class="mt-1 text-sm text-error-text">{{ getErrorMessage('account_holder_document') }}</p>
       }
     </div>
 
     <!-- Nombre del banco (opcional) -->
-    <div>
-      <label for="bank_name" class="block text-sm font-semibold text-text-primary mb-2">
+    <div class="stack-xs">
+      <label for="bank_name" class="block text-sm font-semibold text-text-primary">
         Banco (opcional)
       </label>
       <input

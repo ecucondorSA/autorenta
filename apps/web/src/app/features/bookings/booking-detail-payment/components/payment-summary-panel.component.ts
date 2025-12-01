@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PromoCodeInputComponent } from '../../../../shared/components/promo-code-input/promo-code-input.component';
 import {
   PriceBreakdown,
   RiskSnapshot,
@@ -8,12 +9,13 @@ import {
   formatArs,
   formatUsd,
 } from '../../../../core/models/booking-detail-payment.model';
+import type { PromoCode } from '../../../../core/services/promotion.service';
 import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';
 
 @Component({
   selector: 'app-payment-summary-panel',
   standalone: true,
-  imports: [CommonModule, ReembolsabilityBadgeComponent],
+  imports: [CommonModule, ReembolsabilityBadgeComponent, PromoCodeInputComponent], // Añadir PromoCodeInputComponent aquí
   template: `
     <div
       class="rounded-xl border border-border-default/60 bg-surface-raised shadow-md p-6 dark:border-neutral-800/70 dark:bg-surface-raised transition-colors duration-300"
@@ -156,6 +158,11 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         </div>
       </div>
 
+      <!-- Promo Code Input -->
+      <div class="my-4">
+        <app-promo-code-input (promoApplied)="onPromoApplied($event)"></app-promo-code-input>
+      </div>
+
       <!-- Divider -->
       <div class="h-px bg-surface-hover dark:bg-neutral-700 my-4"></div>
 
@@ -291,6 +298,7 @@ export class PaymentSummaryPanelComponent {
   @Input({ required: true }) paymentMode!: PaymentMode;
 
   @Output() compareMethodsClick = new EventEmitter<void>();
+  @Output() promoApplied = new EventEmitter<PromoCode>();
 
   // Computed values
   protected creditSecurityArs = computed(() => {
@@ -356,5 +364,9 @@ export class PaymentSummaryPanelComponent {
 
   protected onCompareMethodsClick(): void {
     this.compareMethodsClick.emit();
+  }
+
+  protected onPromoApplied(promo: PromoCode): void {
+    this.promoApplied.emit(promo);
   }
 }

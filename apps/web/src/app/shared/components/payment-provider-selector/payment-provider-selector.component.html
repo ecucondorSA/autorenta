@@ -64,7 +64,7 @@
             class="mt-3 p-3 bg-surface-raised rounded border border-cta-default/40"
           >
             <p class="text-sm font-medium text-text-primary">Total a pagar:</p>
-            <p class="text-2xl font-bold text-cta-default">{{ formatCurrency(amountARS(), 'ARS') }}</p>
+            <p class="h4 text-cta-default">{{ formatCurrency(amountARS(), 'ARS') }}</p>
             <p *ngIf="currency === 'USD'" class="text-xs text-text-secondary dark:text-text-secondary mt-1">
               ≈ {{ formatCurrency(amount, 'USD') }} × {{ exchangeRate() | number: '1.2-2' }}
             </p>
@@ -125,7 +125,7 @@
             class="mt-3 p-3 bg-surface-raised rounded border border-cta-default/40"
           >
             <p class="text-sm font-medium text-text-primary">Total a pagar:</p>
-            <p class="text-2xl font-bold text-cta-default">
+            <p class="h4 text-cta-default">
               {{ formatCurrency(amountUSD(), 'USD') }}
             </p>
             <p *ngIf="currency === 'ARS'" class="text-xs text-text-secondary dark:text-text-secondary mt-1">

@@ -42,7 +42,7 @@ import { CommonModule } from '@angular/common';
         align-items: center;
         gap: 4px;
         padding: 4px 10px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-color: var(--cta-default, #667eea); /* Replaced gradient with solid color token */
         color: white;
         border-radius: 6px;
         font-size: 11px;
@@ -72,7 +72,7 @@ import { CommonModule } from '@angular/common';
       }
 
       .with-surge .badge-content {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background-color: var(--warning-default, #f093fb); /* Replaced gradient with solid color token */
       }
 
       .surge-indicator {

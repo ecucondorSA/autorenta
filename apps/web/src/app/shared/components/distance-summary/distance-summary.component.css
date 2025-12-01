@@ -7,20 +7,20 @@
 .summary-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary, #111827);
   margin-bottom: 0.5rem;
 }
 
 .summary-card {
   padding: 1.25rem;
   background: white;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-default, #e5e7eb);
   border-radius: 0.75rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .summary-card.highlight {
-  border-color: #fbbf24;
+  border-color: var(--warning-default, #fbbf24);
   background-color: #fffbeb;
 }
 
@@ -34,7 +34,7 @@
 .icon {
   width: 1.5rem;
   height: 1.5rem;
-  color: #3b82f6;
+  color: var(--system-blue-default, #3b82f6);
   flex-shrink: 0;
 }
 
@@ -48,29 +48,29 @@
 .card-title {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
 }
 
 .distance-value {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary, #111827);
 }
 
 .fee-value {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #f59e0b;
+  color: var(--warning-default, #f59e0b);
 }
 
 .fee-value.free {
-  color: #10b981;
+  color: var(--success-default, #10b981);
 }
 
 .multiplier-value {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #f59e0b;
+  color: var(--warning-default, #f59e0b);
 }
 
 .tier-badge {
@@ -85,18 +85,18 @@
 }
 
 .tier-badge.tier-local {
-  background-color: #dcfce7;
-  color: #166534;
+  background-color: var(--surface-success-light, #dcfce7);
+  color: var(--text-success-dark, #166534);
 }
 
 .tier-badge.tier-regional {
-  background-color: #fef3c7;
-  color: #b45309;
+  background-color: var(--surface-warning-light, #fef3c7);
+  color: var(--text-warning-dark, #b45309);
 }
 
 .tier-badge.tier-long-distance {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background-color: var(--surface-error-light, #fee2e2);
+  color: var(--text-error-dark, #b91c1c);
 }
 
 .tier-icon {
@@ -111,21 +111,21 @@
 
 .tier-description {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   line-height: 1.5;
   margin-top: 0.75rem;
 }
 
 .fee-note {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   line-height: 1.5;
   font-style: italic;
 }
 
 .guarantee-note {
   font-size: 0.875rem;
-  color: #92400e;
+  color: var(--text-warning-dark, #92400e);
   line-height: 1.5;
 }
 

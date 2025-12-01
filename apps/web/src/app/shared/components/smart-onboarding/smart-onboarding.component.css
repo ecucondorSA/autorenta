@@ -2,10 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.4), transparent 60%),
-    var(--surface-base, #f3e8d8);
-  color: var(--text-primary, #2b1d14);
+        background: var(--surface-base, #f3e8d8); /* Reemplazado gradiente con color sólido */  color: var(--text-primary, #2b1d14);
   font-family:
     'Inter',
     'Inter var',
@@ -43,12 +40,11 @@
 }
 
 .progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--cta-default, #a7d8f4), var(--cta-hover, #8ec9ec));
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
+      height: 100%;
+      background: var(--cta-default); /* Reemplazado gradiente con color sólido */
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
 .progress-text {
   font-size: 0.875rem;
   font-weight: 500;
@@ -265,11 +261,10 @@
 }
 
 .nav-button.primary {
-  background: linear-gradient(135deg, var(--cta-default, #a7d8f4), var(--cta-hover, #8ec9ec));
-  color: var(--cta-text, #050505);
-  box-shadow: 0 8px 22px rgba(5, 5, 5, 0.15);
-}
-
+      background: var(--cta-default); /* Reemplazado gradiente con color sólido */
+      color: var(--cta-text, #050505);
+      box-shadow: 0 8px 22px rgba(5, 5, 5, 0.15);
+    }
 .nav-button.primary:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(5, 5, 5, 0.18);

@@ -12,7 +12,7 @@
     <!-- Header with Progress -->
     <div class="stepper-header px-6 py-4 border-b border-border-default dark:border-border-default">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-inverse-pure">
+        <h2 class="h2 text-text-primary dark:text-text-inverse-pure">
           Reservar en 3 pasos
         </h2>
         <button
@@ -58,15 +58,13 @@
     <!-- Step Content -->
     <div class="stepper-content flex-1 overflow-y-auto px-6 py-6">
       <!-- Step 1: Verify Profile -->
-      <div *ngIf="currentStep() === 1" class="step-content">
-        <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure mb-4">
+      <div *ngIf="currentStep() === 1" class="step-content stack-md">
+        <h3 class="h3 text-text-primary dark:text-text-inverse-pure">
           Verifica tu perfil
         </h3>
-        <div class="space-y-4">
-          <div>
-            <label
-              class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
-            >
+        <div class="stack-md">
+          <div class="stack-xs">
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary">
               Nombre completo
             </label>
             <input
@@ -76,10 +74,8 @@
               class="w-full px-4 py-2 border border-border-default dark:border-border-default rounded-lg bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
             />
           </div>
-          <div>
-            <label
-              class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
-            >
+          <div class="stack-xs">
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary">
               Número de licencia
             </label>
             <input
@@ -89,10 +85,8 @@
               class="w-full px-4 py-2 border border-border-default dark:border-border-default rounded-lg bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
             />
           </div>
-          <div>
-            <label
-              class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
-            >
+          <div class="stack-xs">
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary">
               Selfie (opcional)
             </label>
             <button
@@ -106,16 +100,14 @@
       </div>
 
       <!-- Step 2: Choose Schedule & Delivery -->
-      <div *ngIf="currentStep() === 2" class="step-content">
-        <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure mb-4">
+      <div *ngIf="currentStep() === 2" class="step-content stack-md">
+        <h3 class="h3 text-text-primary dark:text-text-inverse-pure">
           Elige horario y entrega
         </h3>
-        <div class="space-y-4">
+        <div class="stack-md">
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label
-                class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
-              >
+              <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary">
                 Fecha inicio
               </label>
               <input
@@ -125,10 +117,8 @@
                 class="w-full px-4 py-2 border border-border-default dark:border-border-default rounded-lg bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
               />
             </div>
-            <div>
-              <label
-                class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
-              >
+            <div class="stack-xs">
+              <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary">
                 Fecha fin
               </label>
               <input
@@ -139,10 +129,8 @@
               />
             </div>
           </div>
-          <div>
-            <label
-              class="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2"
-            >
+          <div class="stack-xs">
+            <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary">
               Modo de entrega
             </label>
             <div class="space-y-2">
@@ -185,11 +173,11 @@
       </div>
 
       <!-- Step 3: Confirm & Payment -->
-      <div *ngIf="currentStep() === 3" class="step-content">
-        <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure mb-4">
+      <div *ngIf="currentStep() === 3" class="step-content stack-md">
+        <h3 class="h3 text-text-primary dark:text-text-inverse-pure">
           Confirma y pacta el pago
         </h3>
-        <div class="space-y-4">
+        <div class="stack-md">
           <!-- Info Banner -->
           <div
             class="bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default rounded-lg p-4"
@@ -254,7 +242,7 @@
               <span class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure"
                 >Total:</span
               >
-              <span class="text-2xl font-bold text-cta-default">
+              <span class="h4 text-cta-default">
                 ${{ totalPrice() | number: '1.0-0' }} {{ car?.currency || 'ARS' }}
               </span>
             </div>

@@ -46,17 +46,13 @@ input[type='radio'] {
 
 /* Info Banner */
 .bg-surface-base {
-  background-color: #f9fafb;
+  background-color: var(--surface-light-subtle, #f9fafb);
 }
 
 /* Responsive Design */
 @media (max-width: 640px) {
   .provider-option {
     padding: 0.875rem;
-  }
-
-  .text-2xl {
-    font-size: 1.5rem;
   }
 
   .flex-wrap {
@@ -67,36 +63,25 @@ input[type='radio'] {
 /* Dark Mode Support (Optional) */
 @media (prefers-color-scheme: dark) {
   .provider-option {
-    background-color: #1f2937;
-    border-color: #374151;
+    background-color: var(--surface-dark, #1f2937);
+    border-color: var(--border-dark, #374151);
   }
 
   .provider-option.bg-cta-default-10 {
-    background-color: #1e3a8a;
+    background-color: var(--cta-dark-alpha-10, #1e3a8a);
   }
 
-  .text-text-primary {
-    color: #f9fafb;
-  }
-
-  .text-text-secondary {
-    color: #9ca3af;
-  }
-
-  .bg-surface-base {
-    background-color: #1f2937;
-    border-color: #374151;
-  }
+  /* Colores en dark mode se heredan de tokens globales; no duplicamos aquí */
 }
 
 /* Focus States for Accessibility */
 .provider-option:focus-within {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--system-blue-default, #3b82f6);
   outline-offset: 2px;
 }
 
 input[type='radio']:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--system-blue-default, #3b82f6);
   outline-offset: 2px;
 }
 

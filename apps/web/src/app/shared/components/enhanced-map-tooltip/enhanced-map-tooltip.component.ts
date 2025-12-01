@@ -164,7 +164,7 @@ import { NavigationService } from '../../../core/services/navigation.service';
 
         <!-- Price -->
         <div class="flex items-baseline gap-1.5">
-          <span class="text-2xl font-bold text-text-primary">
+          <span class="h4 text-text-primary">
             {{ car.pricePerDay | money: car.currency || 'ARS' }}
           </span>
           <span class="text-sm text-text-secondary font-medium">/día</span>
@@ -202,7 +202,7 @@ import { NavigationService } from '../../../core/services/navigation.service';
           <button
             type="button"
             (click)="navigateWithWaze($event)"
-            class="w-full flex items-center justify-center gap-1.5 bg-[#33CCFF] hover:bg-[#2BB8EA] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200 text-sm"
+            class="w-full flex items-center justify-center gap-1.5 bg-[var(--brand-waze-default,#33CCFF)] hover:bg-[var(--brand-waze-hover,#2BB8EA)] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200 text-sm"
             title="Navegar con Waze"
           >
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">

@@ -249,7 +249,7 @@ export interface SidebarMenuItem {
         align-items: flex-start;
         justify-content: space-between;
         padding: 20px 16px;
-        background: linear-gradient(135deg, #a7d8f4 0%, #75bae4 100%);
+        background: var(--cta-default, #a7d8f4);
       }
 
       .user-profile {
@@ -281,7 +281,7 @@ export interface SidebarMenuItem {
       .user-name {
         font-size: 1.125rem;
         font-weight: 700;
-        color: #050505;
+  color: var(--text-primary); /* Reemplazado hex con token semántico */
         margin: 0 0 4px 0;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -290,7 +290,7 @@ export interface SidebarMenuItem {
 
       .user-email {
         font-size: 0.875rem;
-        color: #2c4a52;
+        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
         margin: 0;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -306,7 +306,7 @@ export interface SidebarMenuItem {
         background: rgba(255, 255, 255, 0.2);
         border: none;
         border-radius: 50%;
-        color: #050505;
+  color: var(--text-primary); /* Reemplazado hex con token semántico */
         cursor: pointer;
         transition: all 0.2s ease;
         flex-shrink: 0;
@@ -377,7 +377,7 @@ export interface SidebarMenuItem {
         flex: 1;
         font-size: 1rem;
         font-weight: 600;
-        color: #050505;
+  color: var(--text-primary); /* Reemplazado hex con token semántico */
       }
 
       .menu-badge {
@@ -439,7 +439,7 @@ export interface SidebarMenuItem {
         display: block;
         font-size: 1rem;
         font-weight: 600;
-        color: #050505;
+  color: var(--text-primary); /* Reemplazado hex con token semántico */
         margin-bottom: 2px;
       }
 
@@ -481,7 +481,7 @@ export interface SidebarMenuItem {
 
       .footer-btn:hover {
         background: #f5f5f5;
-        color: #050505;
+  color: var(--text-primary); /* Reemplazado hex con token semántico */
       }
 
       .footer-btn:active {
@@ -530,7 +530,7 @@ export interface SidebarMenuItem {
       .modal-title {
         font-size: 1.5rem;
         font-weight: 700;
-        color: #050505;
+  color: var(--text-primary); /* Reemplazado hex con token semántico */
         margin: 0;
       }
 
@@ -543,7 +543,7 @@ export interface SidebarMenuItem {
         background: #f5f5f5;
         border: none;
         border-radius: 50%;
-        color: #050505;
+  color: var(--text-primary); /* Reemplazado hex con token semántico */
         cursor: pointer;
         transition: all 0.2s ease;
       }
@@ -595,7 +595,7 @@ export interface SidebarMenuItem {
       .dashboard-item-label {
         font-size: 0.8125rem;
         font-weight: 600;
-        color: #050505;
+  color: var(--text-primary); /* Reemplazado hex con token semántico */
         text-align: center;
       }
 
@@ -662,7 +662,7 @@ export class FacebookSidebarComponent {
       label: 'Inicio',
       icon: '🏠',
       route: '/',
-      color: 'linear-gradient(135deg, #A7D8F4 0%, #75BAE4 100%)',
+      color: 'var(--cta-default)', // Reemplazado gradiente con token semántico
     },
     {
       id: 'cars',
@@ -670,39 +670,37 @@ export class FacebookSidebarComponent {
       icon: '🚗',
       route: '/cars',
       badge: 3,
-      color: 'linear-gradient(135deg, #DFD2BF 0%, #8B7355 100%)',
+      color: 'var(--surface-secondary)', // Reemplazado gradiente con token semántico
     },
-    {
-      id: 'bookings',
-      label: 'Reservas',
-      icon: '📅',
-      route: '/bookings',
-      badge: 2,
-      color: 'linear-gradient(135deg, #E0F3FB 0%, #A7D8F4 100%)',
-    },
-    {
-      id: 'wallet',
-      label: 'Billetera',
-      icon: '💰',
-      route: '/wallet',
-      color: 'linear-gradient(135deg, #9DB38B 0%, #7A9668 100%)',
-    },
-    {
-      id: 'messages',
-      label: 'Mensajes',
-      icon: '💬',
-      route: '/messages',
-      badge: 5,
-      color: 'linear-gradient(135deg, #F8F4EC 0%, #DFD2BF 100%)',
-    },
-    {
-      id: 'profile',
-      label: 'Mi Perfil',
-      icon: '👤',
-      route: '/profile',
-      color: 'linear-gradient(135deg, #BCBCBC 0%, #7B7B7B 100%)',
-    },
-  ];
+      {
+        id: 'bookings',
+        label: 'Reservas',
+        icon: '📅',
+        route: '/bookings',
+        badge: 2,
+        color: 'var(--surface-info-light, #E0F3FB)',
+      },
+          {
+            id: 'wallet',
+            label: 'Billetera',
+            icon: '💰',
+            route: '/wallet',
+            color: 'var(--success-default, #9DB38B)',
+          },      {
+        id: 'messages',
+        label: 'Mensajes',
+        icon: '💬',
+        route: '/messages',
+        badge: 5,
+        color: 'var(--surface-raised, #F8F4EC)',
+      },
+          {
+            id: 'profile',
+            label: 'Mi Perfil',
+            icon: '👤',
+            route: '/profile',
+            color: 'var(--border-default)', // Reemplazado gradiente con token semántico
+          },  ];
 
   // Dashboard Items (12 items en grid 3x4)
   dashboardItems: SidebarMenuItem[] = [

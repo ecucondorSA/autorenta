@@ -32,8 +32,8 @@
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #0070ba; /* PayPal blue */
+  border: 3px solid var(--border-default, #f3f3f3);
+  border-top: 3px solid var(--brand-paypal-default, #0070ba); /* PayPal blue */
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -50,7 +50,7 @@
 .loading-text {
   margin-top: 1rem;
   font-size: 0.875rem;
-  color: #666;
+  color: var(--text-secondary, #666);
   text-align: center;
 }
 
@@ -61,8 +61,8 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
+  background-color: var(--surface-error-light, #fef2f2);
+  border: 1px solid var(--border-error-light, #fecaca);
   border-radius: 8px;
   text-align: center;
 }
@@ -70,7 +70,7 @@
 .error-icon {
   width: 48px;
   height: 48px;
-  color: #ef4444;
+  color: var(--error-default, #ef4444);
   margin-bottom: 0.75rem;
 }
 
@@ -83,7 +83,7 @@
 
 .retry-button {
   padding: 0.5rem 1.5rem;
-  background-color: #ef4444;
+  background-color: var(--error-default, #ef4444);
   color: white;
   border: none;
   border-radius: 6px;
@@ -109,7 +109,7 @@
   margin-top: 0.75rem;
   padding: 0.5rem;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   text-align: center;
 }
 
@@ -153,10 +153,10 @@
 /* Dark Mode Support (Optional) */
 @media (prefers-color-scheme: dark) {
   .loading-text {
-    color: #9ca3af;
+    color: var(--text-muted-dark, #9ca3af);
   }
 
   .info-text {
-    color: #9ca3af;
+    color: var(--text-muted-dark, #9ca3af);
   }
 }

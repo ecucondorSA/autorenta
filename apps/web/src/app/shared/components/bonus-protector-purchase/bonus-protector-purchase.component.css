@@ -36,6 +36,6 @@ input[type='radio'] {
 }
 
 input[type='radio']:checked {
-  background-color: #9333ea;
-  border-color: #9333ea;
+  background-color: var(--cta-default);
+  border-color: var(--cta-default);
 }

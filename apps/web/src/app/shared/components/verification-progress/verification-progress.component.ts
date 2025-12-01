@@ -18,7 +18,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           </p>
         </div>
         <div class="text-right">
-          <div class="text-3xl font-bold text-cta-default">{{ progressPercentage() }}%</div>
+          <div class="h3 text-cta-default">{{ progressPercentage() }}%</div>
           <div class="text-xs text-text-secondary dark:text-text-secondary">Completado</div>
         </div>
       </div>

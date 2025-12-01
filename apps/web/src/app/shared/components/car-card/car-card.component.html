@@ -108,9 +108,9 @@
   </div>
 
   <!-- Contenido del card con padding uniforme -->
-  <div class="flex flex-1 flex-col gap-4 p-6">
+  <div class="flex flex-1 flex-col stack-md p-6">
     <!-- Título premium con sistema tipográfico -->
-    <h3 class="text-xl font-semibold text-text-primary group-hover:text-text-secondary dark:text-text-secondary transition-base">
+    <h3 class="h3 text-text-primary group-hover:text-text-secondary dark:text-text-secondary transition-base">
       {{ car.title }}
     </h3>
 
@@ -251,7 +251,7 @@
         <!-- Modo Urgente: Precio por hora -->
         <ng-container *ngIf="urgentMode && hourlyPrice()">
           <div class="flex items-center gap-3">
-            <div class="text-4xl font-black text-cta-default tracking-tight">
+            <div class="h3 font-black text-cta-default tracking-tight">
               $ {{ hourlyPrice() | number:'1.0-0' }}
             </div>
             <div class="flex flex-col">
@@ -271,7 +271,7 @@
 
           <!-- Precio (dinámico o estático) -->
           <div *ngIf="!showPriceLoader()" class="flex items-baseline gap-2">
-            <p class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-none">
+            <p class="h3 text-text-primary tracking-tight leading-none">
               {{ displayPrice() | money }}
             </p>
             <!-- Icono de surge pricing -->

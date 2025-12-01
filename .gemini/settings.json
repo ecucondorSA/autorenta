@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "prompt-refiner": {
+      "command": "/home/edu/autorenta/mcp/prompt-refiner/venv/bin/python",
+      "args": [
+        "/home/edu/autorenta/mcp/prompt-refiner/server.py"
+      ],
+      "description": "Gemini-powered Prompt Refiner for\n      Logic, UI, and Production optimization"
+    },
+    "autorenta-platform": {
+      "command": "node",
+      "args": [
+        "/home/edu/autorenta/mcp-server/dist/index.js"
+      ],
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "description": "AutoRenta Platform MCP - Real-time access to cars, bookings,\n     users, platform operations + Specialized DB Security Audit Module (SECURITY_DEFINER functions, RLS policies, performance analysis)"
+    }
+  }
+}

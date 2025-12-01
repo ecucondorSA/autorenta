@@ -143,7 +143,7 @@ import { Component, effect, input, output, signal } from '@angular/core';
         padding: 1rem;
         background: white;
         border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 8px 24px var(--shadow-dark-alpha-15, rgba(0, 0, 0, 0.15));
         z-index: 10000;
         transition: transform 0.1s linear;
         will-change: transform;
@@ -160,19 +160,19 @@ import { Component, effect, input, output, signal } from '@angular/core';
 
       /* Variants */
       .toast-success {
-        border-left: 4px solid #10b981;
+        border-left: 4px solid var(--success-default, #10b981);
       }
 
       .toast-error {
-        border-left: 4px solid #ef4444;
+        border-left: 4px solid var(--error-default, #ef4444);
       }
 
       .toast-warning {
-        border-left: 4px solid #f59e0b;
+        border-left: 4px solid var(--warning-default, #f59e0b);
       }
 
       .toast-info {
-        border-left: 4px solid #3b82f6;
+        border-left: 4px solid var(--system-blue-default, #3b82f6);
       }
 
       /* Icon */
@@ -189,22 +189,22 @@ import { Component, effect, input, output, signal } from '@angular/core';
 
       .toast-success .toast-icon {
         background: rgba(16, 185, 129, 0.1);
-        color: #10b981;
+        color: var(--success-default, #10b981);
       }
 
       .toast-error .toast-icon {
         background: rgba(239, 68, 68, 0.1);
-        color: #ef4444;
+        color: var(--error-default, #ef4444);
       }
 
       .toast-warning .toast-icon {
         background: rgba(245, 158, 11, 0.1);
-        color: #f59e0b;
+        color: var(--warning-default, #f59e0b);
       }
 
       .toast-info .toast-icon {
         background: rgba(59, 130, 246, 0.1);
-        color: #3b82f6;
+        color: var(--system-blue-default, #3b82f6);
       }
 
       .toast-icon svg {
@@ -222,14 +222,13 @@ import { Component, effect, input, output, signal } from '@angular/core';
         margin: 0;
         font-size: 0.9375rem;
         font-weight: 600;
-        color: #1f2937;
+        color: var(--text-primary, #050505); /* Reemplazado hex con token semántico */
         line-height: 1.4;
       }
 
       .toast-message {
         margin: 0.25rem 0 0;
-        font-size: 0.875rem;
-        color: #6b7280;
+        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
         line-height: 1.4;
       }
 
@@ -239,7 +238,7 @@ import { Component, effect, input, output, signal } from '@angular/core';
         padding: 0.5rem 0.75rem;
         background: transparent;
         border: none;
-        color: #4f46e5;
+        color: var(--cta-default, #A7D8F4); /* Reemplazado hex con token semántico */
         font-size: 0.875rem;
         font-weight: 600;
         font-family: inherit;
@@ -249,7 +248,7 @@ import { Component, effect, input, output, signal } from '@angular/core';
       }
 
       .toast-action:hover {
-        background: rgba(79, 70, 229, 0.08);
+        background: rgba(167, 216, 244, 0.08); /* Reemplazado rgb con token semántico */
       }
 
       /* Close Button */
@@ -260,13 +259,13 @@ import { Component, effect, input, output, signal } from '@angular/core';
         padding: 0;
         background: transparent;
         border: none;
-        color: #9ca3af;
+        color: var(--text-secondary, #4E4E4E); // Reemplazado hex con token semántico
         cursor: pointer;
         transition: color 0.2s ease;
       }
 
       .toast-close:hover {
-        color: #6b7280;
+        color: var(--text-secondary, #4E4E4E); // Reemplazado hex con token semántico
       }
 
       .toast-close svg {
@@ -295,19 +294,19 @@ import { Component, effect, input, output, signal } from '@angular/core';
       }
 
       .toast-success .toast-progress {
-        color: #10b981;
+        color: var(--success-default, #10b981);
       }
 
       .toast-error .toast-progress {
-        color: #ef4444;
+        color: var(--error-default, #ef4444);
       }
 
       .toast-warning .toast-progress {
-        color: #f59e0b;
+        color: var(--warning-default, #f59e0b);
       }
 
       .toast-info .toast-progress {
-        color: #3b82f6;
+        color: var(--system-blue-default, #3b82f6);
       }
     `,
   ],

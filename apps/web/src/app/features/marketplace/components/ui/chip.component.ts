@@ -70,36 +70,36 @@ import { CommonModule } from '@angular/common';
 
       /* Variants */
       .chip-filled {
-        background: #f3f4f6;
-        color: #374151;
+        background: var(--surface-light-subtle, #f3f4f6);
+        color: var(--text-secondary, #374151);
         border: 1px solid transparent;
       }
 
       .chip-filled.is-active {
-        background: #4f46e5;
+        background: var(--cta-default, #4f46e5);
         color: white;
       }
 
       .chip-outlined {
         background: transparent;
-        color: #374151;
-        border: 1px solid #e5e7eb;
+        color: var(--text-secondary, #374151);
+        border: 1px solid var(--surface-light-muted, #e5e7eb);
       }
 
       .chip-outlined.is-active {
         background: rgba(79, 70, 229, 0.08);
-        color: #4f46e5;
-        border-color: #4f46e5;
+        color: var(--cta-default, #4f46e5);
+        border-color: var(--cta-default, #4f46e5);
       }
 
       .chip-text {
         background: transparent;
-        color: #6b7280;
+        color: var(--text-secondary, #6b7280);
         border: 1px solid transparent;
       }
 
       .chip-text.is-active {
-        color: #4f46e5;
+        color: var(--cta-default, #4f46e5);
       }
 
       /* Clickable state */
@@ -112,11 +112,11 @@ import { CommonModule } from '@angular/common';
       }
 
       .chip-filled.is-clickable:hover:not(.is-active) {
-        background: #e5e7eb;
+        background: var(--surface-light-muted, #e5e7eb);
       }
 
       .chip-outlined.is-clickable:hover:not(.is-active) {
-        background: #f9fafb;
+        background: var(--surface-light-subtle, #f9fafb);
       }
 
       .is-clickable:active {
@@ -192,22 +192,22 @@ import { CommonModule } from '@angular/common';
       /* Color variants */
       .chip-primary {
         background: rgba(79, 70, 229, 0.1);
-        color: #4f46e5;
+        color: var(--cta-default, #4f46e5);
       }
 
       .chip-success {
         background: rgba(16, 185, 129, 0.1);
-        color: #059669;
+        color: var(--success-dark, #059669);
       }
 
       .chip-warning {
         background: rgba(245, 158, 11, 0.1);
-        color: #d97706;
+        color: var(--warning-dark, #d97706);
       }
 
       .chip-danger {
         background: rgba(239, 68, 68, 0.1);
-        color: #dc2626;
+        color: var(--error-dark, #dc2626);
       }
     `,
   ],

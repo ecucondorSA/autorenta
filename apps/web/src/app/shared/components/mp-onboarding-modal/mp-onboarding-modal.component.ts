@@ -56,9 +56,9 @@ import {
             <!-- Mercado Pago -->
             <div class="payment-logo-item">
               <svg width="60" height="60" viewBox="0 0 80 80" fill="none">
-                <rect width="80" height="80" rx="16" fill="#00B4E5" />
+                <rect width="80" height="80" rx="16" fill="var(--brand-mercadopago-default, #00B4E5)" />
                 <path d="M20 20h40v40H20z" fill="white" />
-                <path d="M32 32h16v4H32v-4zm0 8h16v4H32v-4zm0 8h12v4H32v-4z" fill="#00B4E5" />
+                <path d="M32 32h16v4H32v-4zm0 8h16v4H32v-4zm0 8h12v4H32v-4z" fill="var(--brand-mercadopago-default, #00B4E5)" />
               </svg>
               <span class="logo-label">Mercado Pago</span>
             </div>
@@ -66,7 +66,7 @@ import {
             <!-- PayPal -->
             <div class="payment-logo-item">
               <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                <rect width="60" height="60" rx="12" fill="#0070BA" />
+                <rect width="60" height="60" rx="12" fill="var(--brand-paypal-default, #0070BA)" />
                 <path
                   d="M8.5 15.5h12.5c6.5 0 11.5 5 11.5 11.5 0 6.5-5 11.5-11.5 11.5H14v7.5H8.5V15.5zm6.5 15h6c3.5 0 6-2.5 6-6s-2.5-6-6-6h-6v12z"
                   fill="white"
@@ -274,8 +274,8 @@ import {
         display: flex;
         align-items: center;
         gap: 1rem;
-        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-        border: 1px solid #0ea5e9;
+        background: var(--surface-info-light, #f0f9ff); /* Replaced gradient with solid color token */
+        border: 1px solid var(--border-info-default, #0ea5e9);
         border-radius: 12px;
         padding: 1.25rem;
         margin-bottom: 2rem;
@@ -374,8 +374,8 @@ import {
 
       .primary-cta {
         --border-radius: 12px;
-        --background: linear-gradient(135deg, #00b4e5 0%, #0099cc 100%);
-        --background-activated: linear-gradient(135deg, #0099cc 0%, #0088b8 100%);
+        --background: var(--cta-default, #00b4e5); /* Replaced gradient with solid color token */
+        --background-activated: var(--cta-hover, #0099cc); /* Replaced gradient with solid color token */
         --color: white;
         font-weight: 600;
         font-size: 1.1rem;

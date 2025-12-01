@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { CarsService } from '../../../../core/services/cars.service';
+import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
 
 export interface PhotoPreview {
   file: File;
@@ -19,6 +20,7 @@ export interface PhotoPreview {
 @Injectable()
 export class PublishCarPhotoService {
   private readonly carsService = inject(CarsService);
+  private readonly notifications = inject(NotificationManagerService);
 
   // State
   readonly uploadedPhotos = signal<PhotoPreview[]>([]);
@@ -119,99 +121,121 @@ export class PublishCarPhotoService {
     this.isGeneratingAIPhotos.set(true);
 
     try {
+      if (!environment.googleAiImageUrl) {
+        alert('Falta configurar NG_APP_GOOGLE_AI_IMAGE_URL (endpoint de Gemini).');
+      }
+
+      if (!environment.cloudflareWorkerUrl) {
+        alert('Falta configurar NG_APP_CLOUDFLARE_WORKER_URL (worker de generación).');
+      }
+
+      const googleEnabled = Boolean(environment.googleAiImageUrl);
+      const cloudflareEnabled = Boolean(environment.cloudflareWorkerUrl);
+
       const generatedPhotos: PhotoPreview[] = [];
+      const errors: string[] = [];
 
       // Generar dos imágenes con Gemini: exterior + interior (ambas <=1MB tras compresión) con escenarios aleatorios
       const googlePrompts = this.buildGeminiPrompts(brand, model, year);
 
-      for (const [index, prompt] of googlePrompts.entries()) {
-        if (remainingSlots <= 0) break;
+      if (googleEnabled) {
+        for (const [index, prompt] of googlePrompts.entries()) {
+          if (remainingSlots <= 0) break;
 
-        try {
-          const googleRequestBody = {
-            contents: [
-              {
-                role: 'user',
-                parts: [{ text: prompt }],
+          try {
+            const googleRequestBody = {
+              contents: [
+                {
+                  role: 'user',
+                  parts: [{ text: prompt }],
+                },
+              ],
+              generationConfig: {
+                responseModalities: ['IMAGE'],
+                imageConfig: {
+                  aspectRatio: '4:3', // Formato foto de móvil para look natural
+                },
               },
-            ],
-            generationConfig: {
-              responseModalities: ['IMAGE'],
-              imageConfig: {
-                aspectRatio: '4:3', // Formato foto de móvil para look natural
-              },
-            },
-          };
+            };
 
-          const googleResponse = await fetch(`${environment.googleAiImageUrl}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(googleRequestBody),
-          });
+            const googleResponse = await fetch(`${environment.googleAiImageUrl}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(googleRequestBody),
+            });
 
-          const googleResult = await googleResponse.json();
+            const googleResult = await googleResponse.json().catch(() => ({}));
 
-          if (!googleResponse.ok || !googleResult.candidates || !googleResult.candidates[0].content || !googleResult.candidates[0].content.parts[0].inlineData) {
-            console.error('Respuesta de Google AI inesperada:', googleResult);
-            throw new Error(googleResult.error || 'Error al generar foto con IA de Google. Respuesta inesperada.');
+            const inlineData = googleResult?.candidates?.[0]?.content?.parts?.[0]?.inlineData;
+            if (!googleResponse.ok || !inlineData?.data) {
+              const message = googleResult?.error?.message || googleResult?.error || googleResponse.statusText;
+              throw new Error(message || 'Respuesta inesperada de Gemini (imagen)');
+            }
+
+            const mimeType = inlineData.mimeType || 'image/png';
+            const fileExtension = mimeType.split('/')[1] || 'png';
+            const googleFile = await this.base64ToFile(
+              inlineData.data,
+              `google-ai-${brand}-${model}-${Date.now()}-${index}.${fileExtension}`,
+              mimeType,
+            );
+            const googlePreview = await this.createPreview(googleFile);
+            generatedPhotos.push({ file: googleFile, preview: googlePreview });
+            remainingSlots--;
+          } catch (error) {
+            console.error('Error generando foto con Google AI:', error);
+            errors.push(`Gemini #${index + 1}: ${error instanceof Error ? error.message : 'falló'}`);
           }
-
-          const inlineData = googleResult.candidates[0].content.parts[0].inlineData;
-          const mimeType = inlineData.mimeType || 'image/png';
-          const fileExtension = mimeType.split('/')[1] || 'png';
-          const googleFile = await this.base64ToFile(
-            inlineData.data,
-            `google-ai-${brand}-${model}-${Date.now()}-${index}.${fileExtension}`,
-            mimeType,
-          );
-          const googlePreview = await this.createPreview(googleFile);
-          generatedPhotos.push({ file: googleFile, preview: googlePreview });
-          remainingSlots--;
-
-        } catch (error) {
-          console.error('Error generando foto con Google AI:', error);
-          alert('No se pudo generar la foto con IA de Google. Se intentará continuar con el worker.');
         }
       }
 
       // Generar las imágenes restantes (hasta 2) con Cloudflare Worker
-      const numCloudflarePhotos = Math.min(2, remainingSlots); // Generar hasta 2 fotos más, respetando slots disponibles
-      for (let i = 0; i < numCloudflarePhotos; i++) {
-        try {
-          const workerResponse = await fetch(`${environment.cloudflareWorkerUrl}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              brand,
-              model,
-              year,
-              angle: '3/4-front', // Puedes variar el ángulo o estilo si el worker lo soporta
-              style: 'showroom',
-              num_steps: 8,
-            }),
-          });
+      if (cloudflareEnabled) {
+        const numCloudflarePhotos = Math.min(2, remainingSlots); // Generar hasta 2 fotos más, respetando slots disponibles
+        for (let i = 0; i < numCloudflarePhotos; i++) {
+          try {
+            const workerResponse = await fetch(`${environment.cloudflareWorkerUrl}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                brand,
+                model,
+                year,
+                angle: '3/4-front', // Puedes variar el ángulo o estilo si el worker lo soporta
+                style: 'showroom',
+                num_steps: 8,
+              }),
+            });
 
-          const workerResult = await workerResponse.json();
+            const workerResult = await workerResponse.json().catch(() => ({}));
 
-          if (!workerResponse.ok || !workerResult.success || !workerResult.image) {
-            throw new Error(workerResult.error || 'Error al generar foto con Cloudflare Worker');
+            if (!workerResponse.ok || !workerResult.success || !workerResult.image) {
+              const message = workerResult?.error || workerResponse.statusText;
+              throw new Error(message || 'Error al generar foto con Cloudflare Worker');
+            }
+
+            const workerFile = await this.base64ToFile(
+              workerResult.image,
+              `cf-worker-ai-${brand}-${model}-${Date.now()}-${i}.png`,
+            );
+            const workerPreview = await this.createPreview(workerFile);
+            generatedPhotos.push({ file: workerFile, preview: workerPreview });
+          } catch (error) {
+            console.error(`Error generando foto ${i + 1} con Cloudflare Worker:`, error);
+            errors.push(`Worker #${i + 1}: ${error instanceof Error ? error.message : 'falló'}`);
           }
-
-          const workerFile = await this.base64ToFile(workerResult.image, `cf-worker-ai-${brand}-${model}-${Date.now()}-${i}.png`);
-          const workerPreview = await this.createPreview(workerFile);
-          generatedPhotos.push({ file: workerFile, preview: workerPreview });
-
-        } catch (error) {
-          console.error(`Error generando foto ${i + 1} con Cloudflare Worker:`, error);
-          // No mostrar alert para cada fallo si hay multiples fotos, dejar que el alert final maneje el resumen.
         }
       }
 
       if (generatedPhotos.length > 0) {
         this.uploadedPhotos.set([...currentPhotos, ...generatedPhotos]);
-        alert(`✨ Se generaron ${generatedPhotos.length} foto(s) con IA.`);
+        const errorMsg = errors.length ? ` (algunas fallaron: ${errors.join('; ')})` : '';
+        alert(`✨ Se generaron ${generatedPhotos.length} foto(s) con IA${errorMsg}.`);
       } else {
-        alert('No se pudo generar ninguna foto con IA. Por favor, intenta nuevamente o sube fotos manualmente.');
+        const msg = errors.length
+          ? `No se generaron fotos. Errores: ${errors.join('; ')}`
+          : 'No se pudo generar ninguna foto con IA. Verifica configuración de NG_APP_GOOGLE_AI_IMAGE_URL o NG_APP_CLOUDFLARE_WORKER_URL.';
+        alert(msg);
       }
     } catch (error) {
       console.error('Error general durante la generación de fotos con IA:', error);
@@ -513,30 +537,25 @@ export class PublishCarPhotoService {
 
   /**
    * Load existing photos for editing
-   * TODO: Implement getCarPhotos method in CarsService
    */
-  async loadExistingPhotos(_carId: string): Promise<void> {
+  async loadExistingPhotos(carId: string): Promise<void> {
     try {
-      // const photos = await this.carsService.getCarPhotos(carId);
-      // // Convert URLs to PhotoPreview format
-      // const previews: PhotoPreview[] = await Promise.all(
-      //   photos.map(async (photo: any) => {
-      //     // Fetch image as blob
-      //     const response = await fetch(photo.url);
-      //     const blob = await response.blob();
-      //     const file = new File([blob], `photo-${photo.position}.jpg`, { type: 'image/jpeg' });
-      //     return {
-      //       file,
-      //       preview: photo.url,
-      //     };
-      //   })
-      // );
-      // this.uploadedPhotos.set(previews);
-      // console.warn(
-      //   'loadExistingPhotos not implemented - getCarPhotos method missing in CarsService',
-      // );
-    } catch {
-      // console.error('Failed to load existing photos:', error);
+      const photos = await this.carsService.getCarPhotos(carId);
+
+      const previews: PhotoPreview[] = await Promise.all(
+        photos.map(async (photo) => {
+          const response = await fetch(photo.url);
+          if (!response.ok) throw new Error('No se pudo descargar la foto existente');
+          const blob = await response.blob();
+          const file = new File([blob], `photo-${photo.position || 0}.jpg`, { type: blob.type || 'image/jpeg' });
+          return { file, preview: photo.url };
+        }),
+      );
+
+      this.uploadedPhotos.set(previews);
+    } catch (error) {
+      console.error('Failed to load existing photos:', error);
+      this.notifications.warning('Fotos', 'No pudimos cargar las fotos existentes.');
     }
   }
 }

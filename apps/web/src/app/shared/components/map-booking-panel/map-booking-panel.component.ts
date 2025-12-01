@@ -239,7 +239,7 @@ export interface BookingFormData {
             <button
               type="button"
               (click)="navigateWithWaze(); $event.stopPropagation()"
-              class="flex items-center justify-center gap-1.5 bg-[#33CCFF] hover:bg-[#2BB8EA] text-white font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
+              class="flex items-center justify-center gap-1.5 bg-[var(--brand-waze-default,#33CCFF)] hover:bg-[var(--brand-waze-hover,#2BB8EA)] text-white font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
               title="Navegar con Waze"
             >
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -256,7 +256,7 @@ export interface BookingFormData {
             <button
               type="button"
               (click)="navigateWithGoogleMaps(); $event.stopPropagation()"
-              class="flex items-center justify-center gap-1.5 bg-[#4285F4] hover:bg-[#3367D6] text-white font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
+              class="flex items-center justify-center gap-1.5 bg-[var(--brand-google-maps-default,#4285F4)] hover:bg-[var(--brand-google-maps-hover,#3367D6)] text-white font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
               title="Navegar con Google Maps"
             >
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">

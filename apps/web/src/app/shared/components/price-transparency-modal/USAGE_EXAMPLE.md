@@ -79,7 +79,7 @@ export class MarketplaceV2Page {
     <div class="car-card">
       <!-- Precio con icono info -->
       <div class="flex items-center gap-2">
-        <span class="text-2xl font-bold">\${{ car.price }}</span>
+        <span class="h4">\${{ car.price }}</span>
         <button
           (click)="showPriceInfoModal.set(true)"
           class="text-cta-default hover:text-cta-hover"
@@ -153,7 +153,7 @@ Si necesitas cambiar el contenido del modal:
   selector: 'app-price-transparency-modal',
   template: `
     <!-- ... mismo template ... -->
-    <h2 class="text-2xl font-bold text-text-primary mb-4">
+    <h2 class="h4 text-text-primary mb-4">
       {{ title() }}
     </h2>
     <p class="text-text-secondary text-base leading-relaxed">

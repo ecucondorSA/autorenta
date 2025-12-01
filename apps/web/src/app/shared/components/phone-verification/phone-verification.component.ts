@@ -185,7 +185,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
               maxlength="6"
               inputmode="numeric"
               pattern="[0-9]*"
-              class="block w-full rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-center text-2xl tracking-widest font-mono"
+              class="block w-full rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-center h4 tracking-widest font-mono"
               [disabled]="loading()"
               (input)="onOTPInput($event)"
             />

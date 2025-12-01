@@ -47,7 +47,7 @@ import { RouterLink } from '@angular/router';
             >
             <span class="text-lg">⏳</span>
           </div>
-          <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+          <p class="h4 text-text-primary dark:text-text-primary">
             {{ pendingCount() }}
           </p>
           <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
@@ -65,7 +65,7 @@ import { RouterLink } from '@angular/router';
             >
             <span class="text-lg">✅</span>
           </div>
-          <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+          <p class="h4 text-text-primary dark:text-text-primary">
             {{ confirmedCount() }}
           </p>
           <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
@@ -81,7 +81,7 @@ import { RouterLink } from '@angular/router';
             <span class="text-xs font-medium text-cta-default dark:text-cta-default">En Curso</span>
             <span class="text-lg">🚗</span>
           </div>
-          <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+          <p class="h4 text-text-primary dark:text-text-primary">
             {{ inProgressCount() }}
           </p>
           <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
@@ -99,7 +99,7 @@ import { RouterLink } from '@angular/router';
             >
             <span class="text-lg">🎉</span>
           </div>
-          <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+          <p class="h4 text-text-primary dark:text-text-primary">
             {{ completedCount() }}
           </p>
           <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
@@ -120,9 +120,9 @@ import { RouterLink } from '@angular/router';
             </p>
           </div>
           <div class="text-right">
-            <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
-              {{ conversionRate() }}%
-            </p>
+          <p class="h3 text-text-primary dark:text-text-primary">
+            {{ conversionRate() }}%
+          </p>
             <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
               {{ completedCount() }} / {{ totalCount() }}
             </p>

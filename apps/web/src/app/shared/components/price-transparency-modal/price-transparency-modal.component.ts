@@ -82,7 +82,7 @@ import { CommonModule } from '@angular/common';
 
         <!-- Content -->
         <div class="text-center mb-8">
-          <h2 class="text-2xl font-bold text-text-primary mb-4">El precio que ves incluye todo</h2>
+          <h2 class="h2 text-text-primary mb-4">El precio que ves incluye todo</h2>
           <p class="text-text-secondary text-base leading-relaxed">
             En AutoRenta, el precio que te mostramos para tu alquiler
             <strong class="text-text-primary">incluye todas las tarifas</strong>. Sin sorpresas al

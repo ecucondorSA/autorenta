@@ -18,6 +18,7 @@ import { InsuranceService } from '../../../core/services/insurance.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { PaymentsService } from '../../../core/services/payments.service';
 import { ReviewsService } from '../../../core/services/reviews.service';
+import { LoggerService } from '../../../core/services/logger.service';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
 import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
@@ -30,6 +31,18 @@ import { RefundRequestComponent } from '../../../shared/components/refund-reques
 import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
 import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
+import { BookingOpsTimelineComponent } from '../../../shared/components/booking-ops-timeline/booking-ops-timeline.component';
+import { BookingTrackingComponent } from '../../../shared/components/booking-tracking/booking-tracking.component';
+import { BookingPricingBreakdownComponent } from '../../../shared/components/booking-pricing-breakdown/booking-pricing-breakdown.component';
+import { BookingInsuranceSummaryComponent } from '../../../shared/components/booking-insurance-summary/booking-insurance-summary.component';
+import {
+  BookingCancellationRow,
+  BookingConfirmationRow,
+  BookingInsuranceRow,
+  BookingOpsService,
+  BookingPaymentRow,
+  BookingPricingRow,
+} from '../../../core/services/booking-ops.service';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
 
@@ -66,6 +79,10 @@ import { ReviewManagementComponent } from './review-management.component';
     ShareButtonComponent,
     DistanceRiskTierBadgeComponent,
     BookingConfirmationTimelineComponent,
+    BookingOpsTimelineComponent,
+    BookingTrackingComponent,
+    BookingPricingBreakdownComponent,
+    BookingInsuranceSummaryComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -82,6 +99,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly exchangeRateService = inject(ExchangeRateService);
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly insuranceService = inject(InsuranceService);
+  private readonly bookingOpsService = inject(BookingOpsService);
+  private readonly logger = inject(LoggerService).createChildLogger('BookingDetailPage');
 
   booking = signal<Booking | null>(null);
   loading = signal(true);
@@ -138,6 +157,63 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   // Claims signals
   bookingClaims = signal<InsuranceClaim[]>([]);
   loadingClaims = signal(false);
+
+  // Pricing / insurance / payment / tracking
+  pricing = signal<BookingPricingRow | null>(null);
+  insurance = signal<BookingInsuranceRow | null>(null);
+  payment = signal<BookingPaymentRow | null>(null);
+  tracking = signal<{
+    sessionId: string;
+    active: boolean;
+    started_at: string;
+    ended_at?: string | null;
+    points: number;
+  } | null>(null);
+  confirmation = signal<BookingConfirmationRow | null>(null);
+  cancellation = signal<BookingCancellationRow | null>(null);
+
+  readonly pricingView = computed(() => {
+    const pricing = this.pricing();
+    const booking = this.booking();
+    if (!pricing) return null;
+
+    return {
+      nightlyRate: (pricing.nightly_rate_cents ?? 0) / 100,
+      nights: pricing.days_count ?? booking?.days_count ?? 1,
+      fees: (pricing.fees_cents ?? 0) / 100,
+      discounts: (pricing.discounts_cents ?? 0) / 100,
+      insurance: (pricing.insurance_cents ?? 0) / 100,
+      total: (pricing.total_cents ?? pricing.subtotal_cents ?? 0) / 100,
+      currency: 'ARS' as const,
+    };
+  });
+
+  readonly insuranceView = computed(() => {
+    const insurance = this.insurance();
+    if (!insurance) return null;
+
+    return {
+      coverageName: insurance.coverage_upgrade || 'Estándar',
+      premium: insurance.insurance_premium_total ? insurance.insurance_premium_total / 100 : 0,
+      guaranteeType: insurance.guarantee_type || 'hold',
+      guaranteeAmount: insurance.guarantee_amount_cents
+        ? insurance.guarantee_amount_cents / 100
+        : undefined,
+      currency: 'ARS' as const,
+      notes: null,
+    };
+  });
+
+  readonly paymentView = computed(() => {
+    const payment = this.payment();
+    if (!payment) return null;
+
+    const status = payment.wallet_status || payment.deposit_status || 'pendiente';
+    const method = payment.payment_method || payment.payment_mode || 'sin método';
+    const date = payment.paid_at || payment.wallet_charged_at || null;
+
+    return { status, method, date };
+  });
 
   private countdownInterval: number | null = null;
 
@@ -318,6 +394,14 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
       // Load claims for this booking
       await this.loadClaims();
+
+      // Load pricing / insurance / tracking (best-effort)
+      void this.loadPricing(booking.id);
+      void this.loadInsurance(booking.id);
+      void this.loadPayment(booking.id);
+      void this.loadTracking(booking.id);
+      void this.loadConfirmation(booking.id);
+      void this.loadCancellation(booking.id);
     } catch {
       this.error.set('Error al cargar la reserva');
     } finally {
@@ -393,6 +477,72 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       // Non-blocking error, claims are optional
     } finally {
       this.loadingClaims.set(false);
+    }
+  }
+
+  private async loadPricing(bookingId: string): Promise<void> {
+    try {
+      const pricing = await this.bookingOpsService.getPricing(bookingId);
+      this.pricing.set(pricing);
+    } catch (error) {
+      this.logger.warn('booking-pricing-load', error);
+    }
+  }
+
+  private async loadInsurance(bookingId: string): Promise<void> {
+    try {
+      const insurance = await this.bookingOpsService.getInsurance(bookingId);
+      this.insurance.set(insurance);
+    } catch (error) {
+      this.logger.warn('booking-insurance-load', error);
+    }
+  }
+
+  private async loadPayment(bookingId: string): Promise<void> {
+    try {
+      const payment = await this.bookingOpsService.getPayment(bookingId);
+      this.payment.set(payment);
+    } catch (error) {
+      this.logger.warn('booking-payment-load', error);
+    }
+  }
+
+  private async loadTracking(bookingId: string): Promise<void> {
+    try {
+      const session = await this.bookingOpsService.getTrackingSession(bookingId);
+      if (!session) {
+        this.tracking.set(null);
+        return;
+      }
+
+      const points = await this.bookingOpsService.countTrackingPoints(session.id);
+      this.tracking.set({
+        sessionId: session.id,
+        active: session.active,
+        started_at: session.started_at,
+        ended_at: session.ended_at,
+        points,
+      });
+    } catch (error) {
+      this.logger.warn('booking-tracking-load', error);
+    }
+  }
+
+  private async loadConfirmation(bookingId: string): Promise<void> {
+    try {
+      const confirmation = await this.bookingOpsService.getConfirmation(bookingId);
+      this.confirmation.set(confirmation);
+    } catch (error) {
+      this.logger.warn('booking-confirmation-load', error);
+    }
+  }
+
+  private async loadCancellation(bookingId: string): Promise<void> {
+    try {
+      const cancellation = await this.bookingOpsService.getCancellation(bookingId);
+      this.cancellation.set(cancellation);
+    } catch (error) {
+      this.logger.warn('booking-cancellation-load', error);
     }
   }
 

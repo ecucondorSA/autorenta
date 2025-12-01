@@ -232,11 +232,7 @@ import { ProtectionCreditExplanationModalComponent } from '../protection-credit-
       .balance-section {
         margin-bottom: 24px;
         padding: 20px;
-        background: linear-gradient(
-          135deg,
-          var(--ion-color-primary-tint),
-          var(--ion-color-secondary-tint)
-        );
+        background-color: var(--ion-color-primary); /* Replaced gradient with solid color token */
         border-radius: 12px;
       }
 

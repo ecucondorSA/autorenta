@@ -29,7 +29,7 @@
   width: 100%;
   max-width: 400px;
   background: #ffffff;
-  border-left: 1px solid #e8e6e1;
+  border-left: 1px solid var(--border-default, #e8e6e1);
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
   z-index: 40;
   display: flex;
@@ -49,8 +49,8 @@
 
 /* Dark mode */
 :host-context(.dark) .map-drawer {
-  background: #1e1e1e;
-  border-left-color: #444444;
+  background: var(--surface-dark, #1e1e1e);
+  border-left-color: var(--border-dark, #444444);
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
@@ -62,17 +62,17 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  border-bottom: 1px solid #e8e6e1;
+  border-bottom: 1px solid var(--border-default, #e8e6e1);
   flex-shrink: 0;
 }
 
 :host-context(.dark) .drawer-header {
-  border-bottom-color: #444444;
+  border-bottom-color: var(--border-dark, #444444);
 }
 
 .btn-close {
   padding: 0.5rem;
-  color: #64646b;
+  color: var(--text-secondary, #64646b);
   background: none;
   border: none;
   cursor: pointer;
@@ -85,11 +85,11 @@
 
 .btn-close:hover {
   background: #f5f3f0;
-  color: #141718;
+  color: var(--text-primary, #141718);
 }
 
 :host-context(.dark) .btn-close:hover {
-  background: #2a2a2a;
+  background: var(--surface-hover-dark, #2a2a2a);
   color: #ffffff;
 }
 
@@ -126,7 +126,7 @@
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
-  color: #2c4a52;
+  color: var(--text-info-dark, #2c4a52);
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
@@ -155,15 +155,15 @@
   left: 0;
   right: 0;
   background: #ffffff;
-  border-top: 1px solid #e8e6e1;
+  border-top: 1px solid var(--border-default, #e8e6e1);
   padding: 1rem;
   z-index: 50;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
 }
 
 :host-context(.dark) .drawer-footer {
-  background: #1e1e1e;
-  border-top-color: #444444;
+  background: var(--surface-dark, #1e1e1e);
+  border-top-color: var(--border-dark, #444444);
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
@@ -203,7 +203,7 @@
     max-width: 100%;
     width: 100%;
     border-left: none;
-    border-top: 1px solid #e8e6e1;
+    border-top: 1px solid var(--border-default, #e8e6e1);
     bottom: auto;
     top: 0;
     height: auto;
@@ -217,7 +217,7 @@
   }
 
   .drawer-header {
-    border-bottom: 1px solid #e8e6e1;
+    border-bottom: 1px solid var(--border-default, #e8e6e1);
   }
 
   .drawer-content {
@@ -230,7 +230,7 @@
     left: 0;
     right: 0;
     width: 100%;
-    border-top: 1px solid #e8e6e1;
+    border-top: 1px solid var(--border-default, #e8e6e1);
     border-radius: 0;
   }
 }
@@ -248,18 +248,18 @@
 }
 
 .drawer-content::-webkit-scrollbar-thumb {
-  background: #d0ccc7;
+  background: var(--scrollbar-thumb-light, #d0ccc7);
   border-radius: 3px;
 }
 
 .drawer-content::-webkit-scrollbar-thumb:hover {
-  background: #b8b3ad;
+  background: var(--scrollbar-thumb-light-hover, #b8b3ad);
 }
 
 :host-context(.dark) .drawer-content::-webkit-scrollbar-thumb {
-  background: #444444;
+  background: var(--scrollbar-thumb-dark, #444444);
 }
 
 :host-context(.dark) .drawer-content::-webkit-scrollbar-thumb:hover {
-  background: #555555;
+  background: var(--scrollbar-thumb-dark-hover, #555555);
 }

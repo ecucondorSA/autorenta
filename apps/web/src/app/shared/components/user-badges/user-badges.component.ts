@@ -76,7 +76,7 @@ export class UserBadgesComponent {
     const sizes = {
       small: 'w-6 h-6 text-xs',
       medium: 'w-10 h-10 text-base',
-      large: 'w-16 h-16 text-2xl',
+      large: 'w-16 h-16 text-xl',
     };
 
     return sizes;

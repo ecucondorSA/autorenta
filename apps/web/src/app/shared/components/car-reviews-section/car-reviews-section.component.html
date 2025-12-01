@@ -1,7 +1,7 @@
 <section class="car-reviews-section">
   <!-- Header con estadísticas -->
-  <div class="reviews-header mb-6">
-    <h2 class="text-2xl font-bold text-text-primary mb-4">Calificaciones</h2>
+  <div class="reviews-header stack-sm">
+    <h2 class="h2 text-text-primary">Calificaciones</h2>
 
     @if (loading()) {
       <!-- Skeleton loader -->
@@ -10,9 +10,9 @@
         <div class="h-4 bg-surface-hover dark:bg-surface-base rounded w-48"></div>
       </div>
     } @else if (reviewsCount() > 0) {
-      <div class="stats flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-2">
+      <div class="stats flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <div class="rating flex items-center gap-2">
-          <span class="text-4xl font-bold text-text-primary">{{
+          <span class="h3 text-text-primary">{{
             averageRating() | number: '1.1-1'
           }}</span>
           <span class="text-text-secondary dark:text-text-secondary text-lg">/5.0</span>
@@ -62,7 +62,7 @@
 
   <!-- Reviews list -->
   @if (!loading() && reviewsCount() > 0) {
-    <div class="reviews-list space-y-4">
+    <div class="reviews-list stack-md">
       @for (review of reviews(); track review.id) {
         <app-review-card [review]="review" [showCarTitle]="false" />
       }

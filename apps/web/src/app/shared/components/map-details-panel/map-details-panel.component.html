@@ -41,8 +41,8 @@
   </div>
 
   <!-- Content -->
-  <div class="p-4 flex-grow overflow-y-auto">
-    <h2 class="text-xl font-bold text-text-primary dark:text-text-primary">
+  <div class="p-4 flex-grow overflow-y-auto stack-sm">
+    <h2 class="h3 text-text-primary dark:text-text-primary">
       {{ carLocation.title }}
     </h2>
     <p class="text-sm text-text-secondary dark:text-text-secondary">
@@ -50,30 +50,27 @@
     </p>
 
     <!-- Price -->
-    <div class="my-4">
-      <span class="text-2xl font-bold text-text-primary dark:text-text-primary"
-        >${{ carLocation.pricePerDay | number: '1.0-0' }}</span
-      >
+    <div class="stack-xs">
+      <span class="h4 text-text-primary dark:text-text-primary">
+        ${{ carLocation.pricePerDay | number: '1.0-0' }}
+      </span>
       <span class="text-text-secondary dark:text-text-secondary">/ día</span>
     </div>
 
     <!-- Description -->
-    <p
-      *ngIf="carLocation.description"
-      class="text-sm text-text-secondary dark:text-text-secondary mt-2"
-    >
+    <p *ngIf="carLocation.description" class="text-sm text-text-secondary dark:text-text-secondary">
       {{ carLocation.description }}
     </p>
   </div>
 
   <!-- Action Buttons -->
-  <div class="p-4 border-t border-border-muted dark:border-border-muted space-y-2">
+  <div class="p-4 border-t border-border-muted dark:border-border-muted stack-sm">
     <!-- Navigate Buttons -->
     <div class="grid grid-cols-2 gap-2">
       <button
         type="button"
         (click)="navigateWithWaze(); $event.stopPropagation()"
-        class="flex items-center justify-center gap-1.5 bg-[#33CCFF] hover:bg-[#2BB8EA] text-white font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
+        class="btn-secondary flex items-center justify-center gap-1.5 text-sm"
         title="Navegar con Waze"
       >
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -90,7 +87,7 @@
       <button
         type="button"
         (click)="navigateWithGoogleMaps(); $event.stopPropagation()"
-        class="flex items-center justify-center gap-1.5 bg-[#4285F4] hover:bg-[#3367D6] text-white font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
+        class="btn-secondary flex items-center justify-center gap-1.5 text-sm"
         title="Navegar con Google Maps"
       >
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -105,7 +102,7 @@
     <!-- Ver Detalles Button -->
     <a
       [routerLink]="['/cars', carLocation.carId]"
-      class="block w-full text-center bg-cta-default text-cta-text font-bold py-2.5 px-4 rounded-lg hover:bg-cta-hover transition-colors duration-200"
+      class="block w-full text-center btn-primary"
     >
       Ver Detalles
     </a>

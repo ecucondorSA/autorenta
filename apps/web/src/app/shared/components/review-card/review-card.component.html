@@ -69,7 +69,7 @@
       <div
         class="flex items-center space-x-2 bg-surface-base dark:bg-surface-base rounded-lg px-3 py-2"
       >
-        <span class="text-2xl font-bold text-text-primary">{{ getOverallRating() }}</span>
+        <span class="h4 text-text-primary">{{ getOverallRating() }}</span>
         <div class="flex items-center">
           @for (star of getRatingStars(getOverallRating()); track $index) {
             <svg

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
-  PreloadAllModules,
+  NoPreloading,
   provideRouter,
   withEnabledBlockingInitialNavigation,
   withInMemoryScrolling,
@@ -46,7 +46,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       routes,
-      withPreloading(PreloadAllModules),
+      // Cambiamos a NoPreloading para reducir descarga inicial en móvil; prefetch selectivo se puede habilitar con quicklink
+      withPreloading(NoPreloading),
       withEnabledBlockingInitialNavigation(),
       withInMemoryScrolling({
         scrollPositionRestoration: 'enabled',

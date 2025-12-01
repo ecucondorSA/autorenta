@@ -131,42 +131,42 @@ import { VerificationPromptBannerComponent } from './shared/components/verificat
         }
       }
 
-      /* Header transparente para homepage con hero 3D */
+      /* Header en home: usa colores de tokens, sin forzar blanco ni gradientes */
       .header-transparent {
-        color: white !important;
+        color: var(--text-primary) !important;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
       }
 
       .header-transparent * {
-        color: white !important;
+        color: inherit !important;
       }
 
       .header-transparent svg {
-        stroke: white !important;
+        stroke: currentColor !important;
       }
 
       .header-transparent img {
-        filter: brightness(0) invert(1) !important;
+        filter: none !important;
       }
 
       .header-transparent .nav-link,
       .header-transparent .nav-link-primary,
       .header-transparent .nav-link-highlight,
       .header-transparent .icon-button {
-        color: white !important;
+        color: var(--text-primary) !important;
       }
 
       .header-transparent .nav-link:hover,
       .header-transparent .nav-link-primary:hover,
       .header-transparent .icon-button:hover {
-        background-color: rgba(255, 255, 255, 0.1) !important;
+        background-color: var(--surface-secondary);
       }
 
       .header-transparent .nav-link-highlight {
-        background: linear-gradient(
-          135deg,
-          rgba(6, 182, 212, 0.8),
-          rgba(59, 130, 246, 0.8)
-        ) !important;
+        background: var(--warning-300);
+        color: var(--text-primary);
+        box-shadow: none;
       }
     `,
   ],
@@ -256,6 +256,10 @@ export class AppComponent implements OnInit {
     this.pushNotificationService.initializePushNotifications();
     this.initializeProfileMenuCloseOnNavigation();
     this.checkVerificationPage(this.router.url);
+
+    // Renderizar barra inferior móvil directamente en body para evitar issues de stacking
+    this.mobileBottomNavPortal.create();
+    this.destroyRef.onDestroy(() => this.mobileBottomNavPortal.destroy());
   }
 
   // ...

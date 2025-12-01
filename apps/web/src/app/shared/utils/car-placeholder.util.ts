@@ -15,57 +15,57 @@ export interface CarPlaceholderData {
  */
 const BRAND_COLORS: Record<string, { from: string; to: string }> = {
   // Marcas premium
-  'Mercedes-Benz': { from: '#1e293b', to: '#475569' }, // Gris oscuro elegante
-  BMW: { from: '#0ea5e9', to: '#0284c7' }, // Azul BMW
-  Audi: { from: '#dc2626', to: '#991b1b' }, // Rojo Audi
-  Porsche: { from: '#fbbf24', to: '#f59e0b' }, // Dorado
-  Tesla: { from: '#ef4444', to: '#dc2626' }, // Rojo Tesla
-  Lexus: { from: '#1e40af', to: '#1e3a8a' }, // Azul oscuro
+  'Mercedes-Benz': { from: 'var(--text-primary)', to: 'var(--text-secondary)' }, // Gris oscuro elegante
+  BMW: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul BMW
+  Audi: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo Audi
+  Porsche: { from: 'var(--warning-default)', to: 'var(--warning-dark)' }, // Dorado
+  Tesla: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo Tesla
+  Lexus: { from: 'var(--system-blue-dark)', to: 'var(--text-primary)' }, // Azul oscuro
 
   // Marcas japonesas
-  Toyota: { from: '#dc2626', to: '#991b1b' }, // Rojo Toyota
-  Honda: { from: '#dc2626', to: '#b91c1c' }, // Rojo Honda
-  Nissan: { from: '#1f2937', to: '#111827' }, // Negro/Gris oscuro
-  Mazda: { from: '#dc2626', to: '#991b1b' }, // Rojo Mazda
-  Subaru: { from: '#0ea5e9', to: '#0284c7' }, // Azul Subaru
-  Mitsubishi: { from: '#dc2626', to: '#991b1b' }, // Rojo
-  Suzuki: { from: '#0ea5e9', to: '#0369a1' }, // Azul
+  Toyota: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo Toyota
+  Honda: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo Honda
+  Nissan: { from: 'var(--surface-dark)', to: 'var(--text-primary)' }, // Negro/Gris oscuro
+  Mazda: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo Mazda
+  Subaru: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul Subaru
+  Mitsubishi: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo
+  Suzuki: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul
 
   // Marcas coreanas
-  Hyundai: { from: '#0ea5e9', to: '#0369a1' }, // Azul Hyundai
-  Kia: { from: '#dc2626', to: '#991b1b' }, // Rojo Kia
-  Genesis: { from: '#1e293b', to: '#0f172a' }, // Negro premium
+  Hyundai: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul Hyundai
+  Kia: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo Kia
+  Genesis: { from: 'var(--surface-dark)', to: 'var(--text-primary)' }, // Negro premium
 
   // Marcas americanas
-  Ford: { from: '#0ea5e9', to: '#0369a1' }, // Azul Ford
-  Chevrolet: { from: '#fbbf24', to: '#d97706' }, // Dorado Chevy
-  Dodge: { from: '#dc2626', to: '#991b1b' }, // Rojo
-  Jeep: { from: '#15803d', to: '#166534' }, // Verde militar
-  RAM: { from: '#1e293b', to: '#0f172a' }, // Negro/Gris
-  GMC: { from: '#dc2626', to: '#991b1b' }, // Rojo
+  Ford: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul Ford
+  Chevrolet: { from: 'var(--warning-default)', to: 'var(--warning-dark)' }, // Dorado Chevy
+  Dodge: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo
+  Jeep: { from: 'var(--success-default)', to: 'var(--success-dark)' }, // Verde militar
+  RAM: { from: 'var(--surface-dark)', to: 'var(--text-primary)' }, // Negro/Gris
+  GMC: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo
 
   // Marcas europeas
-  Volkswagen: { from: '#0ea5e9', to: '#0369a1' }, // Azul VW
-  Renault: { from: '#fbbf24', to: '#d97706' }, // Amarillo Renault
-  Peugeot: { from: '#0ea5e9', to: '#0369a1' }, // Azul
-  Citroën: { from: '#dc2626', to: '#991b1b' }, // Rojo
-  Fiat: { from: '#dc2626', to: '#991b1b' }, // Rojo Fiat
-  'Alfa Romeo': { from: '#dc2626', to: '#7f1d1d' }, // Rojo Alfa
-  Ferrari: { from: '#dc2626', to: '#7f1d1d' }, // Rojo Ferrari
-  Lamborghini: { from: '#fbbf24', to: '#d97706' }, // Amarillo/Naranja
-  Maserati: { from: '#0ea5e9', to: '#0c4a6e' }, // Azul
-  Volvo: { from: '#0ea5e9', to: '#075985' }, // Azul Volvo
-  SEAT: { from: '#dc2626', to: '#991b1b' }, // Rojo SEAT
-  Skoda: { from: '#15803d', to: '#14532d' }, // Verde Skoda
+  Volkswagen: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul VW
+  Renault: { from: 'var(--warning-default)', to: 'var(--warning-dark)' }, // Amarillo Renault
+  Peugeot: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul
+  Citroën: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo
+  Fiat: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo Fiat
+  'Alfa Romeo': { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo Alfa
+  Ferrari: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo Ferrari
+  Lamborghini: { from: 'var(--warning-default)', to: 'var(--warning-dark)' }, // Amarillo/Naranja
+  Maserati: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul
+  Volvo: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul Volvo
+  SEAT: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo SEAT
+  Skoda: { from: 'var(--success-default)', to: 'var(--success-dark)' }, // Verde Skoda
 
   // Marcas chinas
-  BYD: { from: '#0ea5e9', to: '#0369a1' }, // Azul
-  Chery: { from: '#dc2626', to: '#991b1b' }, // Rojo
-  Geely: { from: '#0ea5e9', to: '#0369a1' }, // Azul
+  BYD: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul
+  Chery: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo
+  Geely: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul
 
   // Marcas indias
-  Tata: { from: '#0ea5e9', to: '#075985' }, // Azul
-  Mahindra: { from: '#dc2626', to: '#991b1b' }, // Rojo
+  Tata: { from: 'var(--system-blue-default)', to: 'var(--system-blue-dark)' }, // Azul
+  Mahindra: { from: 'var(--error-default)', to: 'var(--error-dark)' }, // Rojo
 };
 
 /**
@@ -100,7 +100,8 @@ export function getCarPlaceholderGradient(data: CarPlaceholderData): string {
 
   const colors = brandKey ? BRAND_COLORS[brandKey] : stringToColor(data.id + brand);
 
-  return `linear-gradient(135deg, ${colors.from} 0%, ${colors.to} 100%)`;
+  // Usar color sólido (from) para fondo, evitando gradientes
+  return colors.from;
 }
 
 /**
@@ -111,23 +112,12 @@ export function getCarPlaceholderSvg(data: CarPlaceholderData): string {
   const model = data.model || '';
   const year = data.year || '';
 
-  const gradient = getCarPlaceholderGradient(data);
-
-  // Extraer colores del gradiente
-  const fromColor = gradient.match(/linear-gradient\(135deg, ([^,]+)/)?.[1] || '#475569';
-  const toColor = gradient.match(/, ([^)]+)\)/)?.[1] || '#1e293b';
+  const baseColor = getCarPlaceholderGradient(data);
 
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
-      <defs>
-        <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:${fromColor};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:${toColor};stop-opacity:1" />
-        </linearGradient>
-      </defs>
-
-      <!-- Fondo con gradiente -->
-      <rect width="800" height="600" fill="url(#bg-gradient)"/>
+      <!-- Fondo sólido (sin gradiente) -->
+      <rect width="800" height="600" fill="${baseColor}"/>
 
       <!-- Patrón de fondo sutil -->
       <circle cx="100" cy="100" r="80" fill="white" opacity="0.05"/>

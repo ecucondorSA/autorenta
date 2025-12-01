@@ -1,13 +1,14 @@
 import { Component, input, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DisputesService, DisputeKind } from '../../../core/services/disputes.service';
+import { DisputesService, DisputeKind, Dispute } from '../../../core/services/disputes.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { EvidenceUploaderComponent } from '../../../features/disputes/components/evidence-uploader/evidence-uploader.component';
 
 @Component({
   selector: 'app-dispute-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EvidenceUploaderComponent], // Añadir EvidenceUploaderComponent
   template: `
     <div
       *ngIf="isOpen()"
@@ -21,7 +22,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary">
-            Crear Disputa
+            {{ createdDisputeId() ? 'Añadir Evidencia' : 'Crear Disputa' }}
           </h2>
           <button
             type="button"
@@ -43,47 +44,52 @@ import { NotificationManagerService } from '../../../core/services/notification-
         <!-- Content -->
         <div class="space-y-4">
           <p class="text-sm text-text-secondary dark:text-text-secondary">
-            Si tienes un problema con esta reserva, puedes crear una disputa. Nuestro equipo la
-            revisará y te ayudará a resolverla.
+            {{ createdDisputeId() ? 'Ahora puedes subir archivos para respaldar tu disputa.' : 'Si tienes un problema con esta reserva, puedes crear una disputa. Nuestro equipo la revisará y te ayudará a resolverla.' }}
           </p>
 
-          <!-- Dispute Kind Selector -->
-          <div>
-            <label
-              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
-            >
-              Tipo de Disputa *
-            </label>
-            <select
-              [(ngModel)]="selectedKind"
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
-            >
-              <option value="">-- Seleccionar tipo --</option>
-              <option value="damage">Daños al vehículo</option>
-              <option value="no_show">No se presentó</option>
-              <option value="late_return">Devolución tardía</option>
-              <option value="other">Otro</option>
-            </select>
+          <div *ngIf="!createdDisputeId()">
+            <!-- Dispute Kind Selector -->
+            <div>
+              <label
+                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+              >
+                Tipo de Disputa *
+              </label>
+              <select
+                [(ngModel)]="selectedKind"
+                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
+              >
+                <option value="">-- Seleccionar tipo --</option>
+                <option value="damage">Daños al vehículo</option>
+                <option value="no_show">No se presentó</option>
+                <option value="late_return">Devolución tardía</option>
+                <option value="other">Otro</option>
+              </select>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label
+                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+              >
+                Descripción *
+              </label>
+              <textarea
+                [(ngModel)]="description"
+                rows="6"
+                placeholder="Describe el problema en detalle..."
+                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
+                required
+              ></textarea>
+              <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+                Proporciona todos los detalles relevantes para ayudar a nuestro equipo a entender el
+                problema.
+              </p>
+            </div>
           </div>
 
-          <!-- Description -->
-          <div>
-            <label
-              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
-            >
-              Descripción *
-            </label>
-            <textarea
-              [(ngModel)]="description"
-              rows="6"
-              placeholder="Describe el problema en detalle..."
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
-              required
-            ></textarea>
-            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
-              Proporciona todos los detalles relevantes para ayudar a nuestro equipo a entender el
-              problema.
-            </p>
+          <div *ngIf="createdDisputeId()" class_selector="mt-4">
+            <app-evidence-uploader [disputeId]="createdDisputeId()"></app-evidence-uploader>
           </div>
 
           <!-- Error Message -->
@@ -102,9 +108,10 @@ import { NotificationManagerService } from '../../../core/services/notification-
             (click)="close()"
             class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-secondary hover:bg-surface-raised dark:hover:bg-slate-deep transition-all font-medium"
           >
-            Cancelar
+            {{ createdDisputeId() ? 'Finalizar' : 'Cancelar' }}
           </button>
           <button
+            *ngIf="!createdDisputeId()"
             type="button"
             (click)="submit()"
             [disabled]="!canSubmit() || loading()"
@@ -152,6 +159,7 @@ export class DisputeFormComponent {
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly createdDisputeId = signal<string | null>(null); // Para almacenar el ID de la disputa creada
 
   selectedKind: DisputeKind | '' = '';
   description = '';
@@ -178,18 +186,18 @@ export class DisputeFormComponent {
     this.error.set(null);
 
     try {
-      await this.disputesService.createDispute({
+      const newDispute: Dispute = await this.disputesService.createDispute({
         bookingId: this.bookingId(),
         kind: this.selectedKind as DisputeKind,
         description: this.description.trim(),
       });
+      this.createdDisputeId.set(newDispute.id); // Almacenar el ID de la disputa creada
 
       this.toastService.success(
-        'Disputa creada exitosamente. Nuestro equipo la revisará pronto.',
+        'Disputa creada exitosamente. Ahora puedes añadir evidencias.',
         '',
       );
-      this.disputeCreated.emit();
-      this.close();
+      // No cerramos el modal, permitimos subir evidencia
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error al crear la disputa');
     } finally {
@@ -201,5 +209,6 @@ export class DisputeFormComponent {
     this.selectedKind = '';
     this.description = '';
     this.error.set(null);
+    this.createdDisputeId.set(null); // Resetear también el ID de disputa
   }
 }

@@ -31,7 +31,7 @@
 
 /* Mejora de accesibilidad para foco */
 .wallet-balance-card button:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--system-blue-default); /* Reemplazado hex con token semántico */
   outline-offset: 2px;
 }
 

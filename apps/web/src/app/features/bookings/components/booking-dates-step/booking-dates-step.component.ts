@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, signal, computed, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, computed, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -9,6 +9,8 @@ import { BookingLocationFormComponent } from '../../../../shared/components/book
 
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
 import { Car } from '../../../../core/models';
+import { CarAvailabilityService } from '../../../../core/services/car-availability.service';
+import type { BlockedDateRange } from '../../../../shared/components/date-range-picker/date-range-picker.component';
 
 interface LocationData {
   address: string;
@@ -34,11 +36,17 @@ export class BookingDatesStepComponent implements OnInit {
   @Input() data: BookingWizardData | null = null;
   @Output() dataChange = new EventEmitter<Partial<BookingWizardData>>();
 
+  private readonly availabilityService = inject(CarAvailabilityService);
+
   startDate = signal<Date | null>(null);
   endDate = signal<Date | null>(null);
   pickupLocation = signal<LocationData | null>(null);
   dropoffLocation = signal<LocationData | null>(null);
   sameLocation = signal(true);
+  blockedRanges = signal<BlockedDateRange[]>([]);
+  handoverPoints = signal<
+    { address: string; lat: number; lng: number; label?: string; radius_m?: number | null }[]
+  >([]);
 
   // Computed values
   totalDays = computed(() => {
@@ -81,6 +89,11 @@ export class BookingDatesStepComponent implements OnInit {
         );
       }
     }
+
+    // Cargar blackouts del auto para bloquear fechas no disponibles
+    void this.loadBlackouts();
+    // Cargar puntos de entrega del auto
+    void this.loadHandoverPoints();
   }
 
   onDateRangeChange(dateRange: { from: string | null; to: string | null }) {
@@ -155,5 +168,37 @@ export class BookingDatesStepComponent implements OnInit {
       pickupLocation: this.pickupLocation(),
       dropoffLocation: this.sameLocation() ? this.pickupLocation() : this.dropoffLocation(),
     });
+  }
+
+  private async loadBlackouts(): Promise<void> {
+    if (!this.car?.id) return;
+    try {
+      const blackouts = await this.availabilityService.getBlackouts(this.car.id);
+      const ranges: BlockedDateRange[] = blackouts.map((b) => ({
+        from: b.starts_at.split('T')[0],
+        to: b.ends_at.split('T')[0],
+      }));
+      this.blockedRanges.set(ranges);
+    } catch (error) {
+      // No bloquear el flujo si falla; solo log en consola
+      console.warn('blackouts-load', error);
+    }
+  }
+
+  private async loadHandoverPoints(): Promise<void> {
+    if (!this.car?.id) return;
+    try {
+      const points = await this.availabilityService.getHandoverPoints(this.car.id);
+      const mapped = points.map((p) => ({
+        address: p.kind,
+        lat: p.lat,
+        lng: p.lng,
+        label: p.kind,
+        radius_m: p.radius_m,
+      }));
+      this.handoverPoints.set(mapped);
+    } catch (error) {
+      console.warn('handover-points-load', error);
+    }
   }
 }

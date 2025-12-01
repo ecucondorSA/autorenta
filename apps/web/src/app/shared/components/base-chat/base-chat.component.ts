@@ -32,7 +32,7 @@ export interface ChatContext {
     >
       <!-- Header estilo WhatsApp -->
       <div
-        class="whatsapp-header flex items-center gap-3 bg-[#075E54] px-4 py-3 text-text-inverse dark:bg-[#1F2C33]"
+        class="whatsapp-header flex items-center gap-3 bg-cta-default px-4 py-3 text-text-primary dark:bg-surface-secondary"
       >
         <!-- Avatar -->
         <div
@@ -70,24 +70,20 @@ export interface ChatContext {
       <!-- Notificación flotante -->
       <div
         *ngIf="notification()"
-        class="absolute left-1/2 top-16 z-10 mx-auto w-[90%] max-w-md -translate-x-1/2 transform animate-slide-down rounded-lg bg-[#128C7E] px-4 py-2 text-center text-sm text-text-inverse shadow-lg"
+        class="absolute left-1/2 top-16 z-10 mx-auto w-[90%] max-w-md -translate-x-1/2 transform animate-slide-down rounded-lg bg-cta-hover px-4 py-2 text-center text-sm text-text-primary shadow-lg"
       >
         {{ notification() }}
       </div>
 
       <!-- Fondo estilo WhatsApp -->
       <div
-        class="whatsapp-bg relative flex-1 overflow-y-auto bg-[#ECE5DD] dark:bg-[#0B141A]"
-        style="
-          background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiPjxwYXRoIGQ9Ik0wIDBoMTAwdjEwMEgweiIgZmlsbD0iI2VjZTVkZCIvPjxwYXRoIGQ9Ik0wIDBoNTB2NTBIMHptNTAgNTBoNTB2NTBINTB6IiBmaWxsPSIjZjdmM2YwIiBmaWxsLW9wYWNpdHk9Ii4xIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+');
-          background-size: 400px 400px;
-        "
+        class="whatsapp-bg relative flex-1 overflow-y-auto bg-surface-base dark:bg-surface-secondary"
       >
         <!-- Loading -->
         <div *ngIf="loading()" class="flex h-full items-center justify-center">
           <div class="text-center">
             <div
-              class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-muted border-t-[#075E54]"
+              class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-muted border-t-cta-default"
             ></div>
             <p
               class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
@@ -114,7 +110,7 @@ export interface ChatContext {
             class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-surface-raised/70 dark:bg-surface-base/70"
           >
             <svg
-              class="h-10 w-10 text-[#075E54] dark:text-text-muted dark:text-text-secondary"
+              class="h-10 w-10 text-cta-default dark:text-text-secondary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -146,7 +142,7 @@ export interface ChatContext {
             <!-- Mensaje recibido (izquierda) -->
             <div
               *ngIf="!isOwnMessage(message)"
-              class="message-received relative max-w-[75%] rounded-lg rounded-tl-none bg-surface-raised px-3 py-2 shadow-sm dark:bg-[#202C33]"
+              class="message-received relative max-w-[75%] rounded-lg rounded-tl-none bg-surface-raised px-3 py-2 shadow-sm dark:bg-surface-secondary"
             >
               <p class="break-words text-sm text-text-primary dark:text-text-primary">
                 {{ message.body }}
@@ -159,14 +155,15 @@ export interface ChatContext {
               </div>
               <!-- Tail izquierdo -->
               <div
-                class="absolute -left-2 top-0 h-0 w-0 border-r-8 border-t-8 border-r-transparent border-t-white dark:border-t-[#202C33]"
+                class="absolute -left-2 top-0 h-0 w-0 border-r-8 border-t-8 border-r-transparent"
+                [style.borderTopColor]="'var(--surface-raised)'"
               ></div>
             </div>
 
             <!-- Mensaje enviado (derecha) -->
             <div
               *ngIf="isOwnMessage(message)"
-              class="message-sent relative max-w-[75%] rounded-lg rounded-tr-none bg-[#D9FDD3] px-3 py-2 shadow-sm dark:bg-[#005C4B]"
+              class="message-sent relative max-w-[75%] rounded-lg rounded-tr-none bg-cta-default px-3 py-2 shadow-sm dark:bg-cta-hover"
             >
               <p class="break-words text-sm text-text-primary dark:text-text-primary">
                 {{ message.body }}
@@ -214,7 +211,8 @@ export interface ChatContext {
               </div>
               <!-- Tail derecho -->
               <div
-                class="absolute -right-2 top-0 h-0 w-0 border-l-8 border-t-8 border-l-transparent border-t-[#D9FDD3] dark:border-t-[#005C4B]"
+                class="absolute -right-2 top-0 h-0 w-0 border-l-8 border-t-8 border-l-transparent"
+                [style.borderTopColor]="'var(--cta-default)'"
               ></div>
             </div>
           </div>
@@ -222,7 +220,7 @@ export interface ChatContext {
           <!-- Typing indicator -->
           <div *ngIf="recipientTyping()" class="flex justify-start px-4 py-2">
             <div
-              class="rounded-lg rounded-tl-none bg-surface-raised px-4 py-3 shadow-sm dark:bg-[#202C33]"
+              class="rounded-lg rounded-tl-none bg-surface-raised px-4 py-3 shadow-sm dark:bg-surface-secondary"
             >
               <div class="flex items-center gap-1">
                 <div
@@ -244,7 +242,7 @@ export interface ChatContext {
       </div>
 
       <!-- Input estilo WhatsApp -->
-      <div class="whatsapp-input flex items-center gap-2 bg-[#F0F2F5] px-3 py-2 dark:bg-[#1F2C33]">
+      <div class="whatsapp-input flex items-center gap-2 bg-surface-elevated px-3 py-2 dark:bg-surface-secondary">
         <!-- Emoji button -->
         <button
           type="button"
@@ -266,14 +264,14 @@ export interface ChatContext {
             name="message"
             [disabled]="sending()"
             placeholder="Escribe un mensaje"
-            class="flex-1 rounded-full bg-surface-raised px-4 py-2 text-sm text-text-primary placeholder-gray-500 focus:outline-none dark:bg-[#2A3942] dark:text-text-primary dark:placeholder-gray-400"
+            class="flex-1 rounded-full bg-surface-raised px-4 py-2 text-sm text-text-primary placeholder-text-muted focus:outline-none dark:bg-surface-raised dark:text-text-primary dark:placeholder-text-muted"
           />
 
           <!-- Send button -->
           <button
             type="submit"
             [disabled]="!draftMessage.trim() || sending()"
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#128C7E] text-text-inverse transition-all hover:bg-[#075E54] disabled:opacity-50 dark:bg-[#00A884] dark:hover:bg-[#008069]"
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-cta-default text-cta-text transition-all hover:bg-cta-hover disabled:opacity-50 dark:bg-cta-hover dark:hover:bg-cta-default"
           >
             <svg *ngIf="!sending()" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />

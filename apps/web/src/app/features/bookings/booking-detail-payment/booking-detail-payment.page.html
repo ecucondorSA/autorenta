@@ -187,9 +187,35 @@
                       </svg>
                       <span>{{ feature }}</span>
                     </div>
-                  }
-                </div>
-              </div>
+              }
+            </div>
+
+            <!-- Pricing & Insurance Panels -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <app-booking-pricing-breakdown
+                [data]="{
+                  nightlyRate: car()?.price_per_day || 0,
+                  nights: rentalDays(),
+                  fees: 0,
+                  discounts: 0,
+                  insurance: 0,
+                  total: rentalCostArs(),
+                  currency: 'ARS'
+                }"
+              ></app-booking-pricing-breakdown>
+
+              <app-booking-insurance-summary
+                [data]="{
+                  coverageName: 'Estándar',
+                  premium: 0,
+                  guaranteeType: 'hold',
+                  guaranteeAmount: PRE_AUTH_AMOUNT_USD * (fxSnapshot()?.platformRate || 0),
+                  currency: 'ARS',
+                  notes: 'La garantía se libera automáticamente tras el check-out sin daños.'
+                }"
+              ></app-booking-insurance-summary>
+            </div>
+          </div>
             }
           </div>
 

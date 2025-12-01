@@ -65,7 +65,7 @@ import { RouterLink } from '@angular/router';
       .cta-banner {
         position: relative;
         overflow: hidden;
-        background: linear-gradient(135deg, var(--cta-default) 0%, var(--cta-hover) 100%);
+        background: var(--cta-default); /* Reemplazado gradiente con color sólido */
         border-radius: var(--radius-2xl);
         padding: var(--space-10) var(--space-6);
         margin: var(--section-py) var(--space-4);
@@ -97,14 +97,14 @@ import { RouterLink } from '@angular/router';
       }
 
       .cta-title {
-        font-size: var(--text-3xl);
+        font-size: var(--text-xl);
         font-weight: 700;
         color: var(--text-primary);
         margin: 0 0 var(--space-3);
         line-height: 1.2;
 
         @media (min-width: 768px) {
-          font-size: var(--text-4xl);
+          font-size: var(--text-lg);
         }
       }
 

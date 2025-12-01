@@ -48,13 +48,12 @@
 }
 
 .text-gray-500 {
-  color: #6b7280;
+  color: var(--text-muted); /* Reemplazado hex con token semántico */
 }
 
 .text-gray-600 {
-  color: #4b5563;
-}
-
+      color: var(--text-secondary); /* Reemplazado hex con token semántico */
+    }
 .mb-2 {
   margin-bottom: 0.5rem;
 }

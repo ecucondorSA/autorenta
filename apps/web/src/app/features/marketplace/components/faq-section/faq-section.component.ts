@@ -108,13 +108,13 @@ import { SeoSchemaService } from '../../../../core/services/seo-schema.service';
       }
 
       .faq-title {
-        font-size: var(--text-3xl);
+        font-size: var(--text-xl);
         font-weight: 700;
         color: var(--text-primary);
         margin-bottom: var(--space-2);
 
         @media (min-width: 768px) {
-          font-size: var(--text-4xl);
+          font-size: var(--text-lg);
         }
       }
 

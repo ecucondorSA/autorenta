@@ -11,7 +11,7 @@ import {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="space-y-3">
+    <div class="stack-sm">
       <!-- Loading State -->
       <div *ngIf="loading()" class="animate-pulse">
         <div class="h-8 bg-border-default dark:bg-surface-secondary rounded w-32"></div>
@@ -19,10 +19,10 @@ import {
       </div>
 
       <!-- Price Display -->
-      <div *ngIf="!loading() && pricing()" class="space-y-2">
+      <div *ngIf="!loading() && pricing()" class="stack-sm">
         <!-- Main Price -->
         <div class="flex items-baseline gap-2">
-          <span class="text-3xl font-bold text-text-primary dark:text-text-inverse-pure">
+          <span class="h3 text-text-primary dark:text-text-inverse-pure">
             {{ formatPrice(pricing()!.price_per_hour, pricing()!.currency) }}
           </span>
           <span class="text-sm text-text-secondary dark:text-text-secondary">/hora</span>

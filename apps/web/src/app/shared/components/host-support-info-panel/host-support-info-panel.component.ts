@@ -28,8 +28,8 @@ import { TranslateModule } from '@ngx-translate/core';
       <div class="flex items-start justify-between gap-4 mb-4">
         <div class="flex items-start gap-3 flex-1">
           <div class="flex-shrink-0 w-10 h-10 bg-cta-default text-cta-text text-xl">💡</div>
-          <div class="flex-1">
-            <h3 class="text-lg font-bold text-text-primary dark:text-text-primary mb-1">
+          <div class="flex-1 stack-xs">
+            <h3 class="h4 text-text-primary dark:text-text-primary">
               Guía para Anfitriones
             </h3>
             <p class="text-sm text-text-secondary dark:text-text-secondary/75">
@@ -62,32 +62,32 @@ import { TranslateModule } from '@ngx-translate/core';
       </div>
 
       <!-- Expanded Content -->
-      <div *ngIf="isExpanded()" class="space-y-6">
+      <div *ngIf="isExpanded()" class="stack-lg">
         <!-- Quick Stats -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div
             class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
           >
-            <div class="text-2xl font-bold text-cta-default dark:text-cta-default/80">+40%</div>
-            <div class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+            <div class="h4 text-cta-default dark:text-cta-default/80">+40%</div>
+            <div class="text-xs text-text-secondary dark:text-text-secondary/75">
               Más reservas con fotos de calidad
             </div>
           </div>
           <div
             class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
           >
-            <div class="text-2xl font-bold text-warning-light dark:text-warning-light/90">
+            <div class="h4 text-warning-light dark:text-warning-light/90">
               15-25%
             </div>
-            <div class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+            <div class="text-xs text-text-secondary dark:text-text-secondary/75">
               Comisión de la plataforma
             </div>
           </div>
           <div
             class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
           >
-            <div class="text-2xl font-bold text-cta-default dark:text-cta-default/80">24-48h</div>
-            <div class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+            <div class="h4 text-cta-default dark:text-cta-default/80">24-48h</div>
+            <div class="text-xs text-text-secondary dark:text-text-secondary/75">
               Tiempo de revisión
             </div>
           </div>
@@ -124,9 +124,9 @@ import { TranslateModule } from '@ngx-translate/core';
         </div>
 
         <!-- Tab Content -->
-        <div class="mt-4">
+        <div class="stack-md">
           <!-- Tips Tab -->
-          <div *ngIf="activeTab() === 'tips'" class="space-y-3">
+          <div *ngIf="activeTab() === 'tips'" class="stack-sm">
             <!-- Accordion Items -->
             <div
               class="bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-muted overflow-hidden"
@@ -203,9 +203,9 @@ import { TranslateModule } from '@ngx-translate/core';
               </button>
               <div
                 *ngIf="openAccordion() === 'maintenance'"
-                class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2"
+                class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary stack-sm"
               >
-                <ul class="list-disc list-inside space-y-1">
+                <ul class="list-disc list-inside stack-xs">
                   <li>
                     <strong>Antes de cada alquiler:</strong> Limpieza completa interior y exterior
                   </li>
@@ -254,13 +254,13 @@ import { TranslateModule } from '@ngx-translate/core';
               </button>
               <div
                 *ngIf="openAccordion() === 'insurance'"
-                class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2"
+                class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary stack-sm"
               >
-                <div class="space-y-3">
+                <div class="stack-sm">
                   <div
                     class="bg-cta-default/5 dark:bg-cta-default/10 p-3 rounded-lg border border-cta-default/20"
                   >
-                    <p class="font-semibold text-cta-default dark:text-cta-default/80 mb-1">
+                    <p class="font-semibold text-cta-default dark:text-cta-default/80">
                       Seguro Obligatorio
                     </p>
                     <p class="text-sm">
@@ -271,7 +271,7 @@ import { TranslateModule } from '@ngx-translate/core';
                   <div
                     class="bg-warning-light/5 dark:bg-warning-light/10 p-3 rounded-lg border border-warning-light/20"
                   >
-                    <p class="font-semibold text-warning-light dark:text-warning-light/90 mb-1">
+                    <p class="font-semibold text-warning-light dark:text-warning-light/90">
                       Seguro Recomendado
                     </p>
                     <p class="text-sm">
@@ -318,9 +318,9 @@ import { TranslateModule } from '@ngx-translate/core';
               </button>
               <div
                 *ngIf="openAccordion() === 'legal'"
-                class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary space-y-2"
+                class="p-4 pt-0 text-sm text-text-secondary dark:text-text-secondary stack-sm"
               >
-                <ul class="list-disc list-inside space-y-1">
+                <ul class="list-disc list-inside stack-xs">
                   <li>
                     <strong>Cédula verde/azul:</strong> Debe estar a tu nombre o tener autorización
                     notarial
@@ -340,17 +340,15 @@ import { TranslateModule } from '@ngx-translate/core';
           <!-- Calculator Tab -->
           <div
             *ngIf="activeTab() === 'calculator'"
-            class="bg-surface-raised dark:bg-surface-raised rounded-lg p-6 border border-border-default dark:border-border-muted"
+            class="bg-surface-raised dark:bg-surface-raised rounded-lg p-6 border border-border-default dark:border-border-muted stack-md"
           >
-            <h4 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">
+            <h4 class="h4 text-text-primary dark:text-text-primary">
               Calculadora de Ganancias
             </h4>
 
-            <div class="space-y-4">
-              <div>
-                <label
-                  class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
-                >
+            <div class="stack-md">
+              <div class="stack-xs">
+                <label class="block text-sm font-medium text-text-primary dark:text-text-secondary">
                   Precio por día (USD)
                 </label>
                 <input
@@ -363,10 +361,8 @@ import { TranslateModule } from '@ngx-translate/core';
                 />
               </div>
 
-              <div>
-                <label
-                  class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
-                >
+              <div class="stack-xs">
+                <label class="block text-sm font-medium text-text-primary dark:text-text-secondary">
                   Días alquilados por mes (promedio)
                 </label>
                 <input
@@ -378,7 +374,7 @@ import { TranslateModule } from '@ngx-translate/core';
                   class="w-full rounded-lg border border-border-muted dark:border-border-default dark:bg-surface-base dark:text-text-inverse px-4 py-2"
                   placeholder="15"
                 />
-                <div class="mt-2 flex gap-2">
+                <div class="flex gap-2">
                   <button
                     type="button"
                     (click)="setDaysPerMonth(10)"
@@ -446,8 +442,8 @@ import { TranslateModule } from '@ngx-translate/core';
           </div>
 
           <!-- Pricing Tab -->
-          <div *ngIf="activeTab() === 'pricing'" class="space-y-4">
-            <p class="text-sm text-text-secondary dark:text-text-secondary mb-4">
+          <div *ngIf="activeTab() === 'pricing'" class="stack-md">
+            <p class="text-sm text-text-secondary dark:text-text-secondary">
               Precios sugeridos por categoría (USD por día). Basados en promedios de mercado en
               Argentina.
             </p>
@@ -456,19 +452,17 @@ import { TranslateModule } from '@ngx-translate/core';
               <div
                 class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
               >
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="text-2xl">🚗</span>
-                  <h5 class="font-semibold text-text-primary dark:text-text-primary">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">🚗</span>
+                  <h5 class="h5 text-text-primary dark:text-text-primary">
                     Compacto/Económico
                   </h5>
                 </div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">
+                <p class="text-xs text-text-muted dark:text-text-secondary/60">
                   Ej: Chevrolet Onix, Fiat Cronos
                 </p>
-                <div class="text-2xl font-bold text-cta-default dark:text-cta-default/80">
-                  $25-35
-                </div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+                <div class="h4 text-cta-default dark:text-cta-default/80">$25-35</div>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75">
                   USD por día
                 </p>
               </div>
@@ -476,19 +470,17 @@ import { TranslateModule } from '@ngx-translate/core';
               <div
                 class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
               >
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="text-2xl">🚙</span>
-                  <h5 class="font-semibold text-text-primary dark:text-text-primary">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">🚙</span>
+                  <h5 class="h5 text-text-primary dark:text-text-primary">
                     Sedán Mediano
                   </h5>
                 </div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">
+                <p class="text-xs text-text-muted dark:text-text-secondary/60">
                   Ej: Toyota Corolla, Volkswagen Vento
                 </p>
-                <div class="text-2xl font-bold text-warning-light dark:text-warning-light/90">
-                  $40-55
-                </div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+                <div class="h4 text-warning-light dark:text-warning-light/90">$40-55</div>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75">
                   USD por día
                 </p>
               </div>
@@ -496,19 +488,17 @@ import { TranslateModule } from '@ngx-translate/core';
               <div
                 class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
               >
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="text-2xl">🚐</span>
-                  <h5 class="font-semibold text-text-primary dark:text-text-primary">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">🚐</span>
+                  <h5 class="h5 text-text-primary dark:text-text-primary">
                     SUV/Camioneta
                   </h5>
                 </div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">
+                <p class="text-xs text-text-muted dark:text-text-secondary/60">
                   Ej: Ford Ranger, Chevrolet Tracker
                 </p>
-                <div class="text-2xl font-bold text-cta-default dark:text-cta-default/80">
-                  $60-85
-                </div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+                <div class="h4 text-cta-default dark:text-cta-default/80">$60-85</div>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75">
                   USD por día
                 </p>
               </div>
@@ -516,32 +506,30 @@ import { TranslateModule } from '@ngx-translate/core';
               <div
                 class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
               >
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="text-2xl">🏎️</span>
-                  <h5 class="font-semibold text-text-primary dark:text-text-primary">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">🏎️</span>
+                  <h5 class="h5 text-text-primary dark:text-text-primary">
                     Premium/Lujo
                   </h5>
                 </div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/60 mb-2">
+                <p class="text-xs text-text-muted dark:text-text-secondary/60">
                   Ej: Audi A4, BMW Serie 3
                 </p>
-                <div class="text-2xl font-bold text-warning-light dark:text-warning-light/90">
-                  $90-150+
-                </div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75 mt-1">
+                <div class="h4 text-warning-light dark:text-warning-light/90">$90-150+</div>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75">
                   USD por día
                 </p>
               </div>
             </div>
 
             <div
-              class="bg-cta-default/5 dark:bg-cta-default/10 border border-cta-default/20 rounded-lg p-4 text-sm"
+              class="bg-cta-default/5 dark:bg-cta-default/10 border border-cta-default/20 rounded-lg p-4 text-sm stack-xs"
             >
-              <p class="font-semibold text-cta-default dark:text-cta-default/80 mb-2">
+              <p class="font-semibold text-cta-default dark:text-cta-default/80">
                 💡 Tips de Pricing:
               </p>
               <ul
-                class="list-disc list-inside space-y-1 text-text-secondary dark:text-text-secondary text-xs"
+                class="list-disc list-inside stack-xs text-text-secondary dark:text-text-secondary text-xs"
               >
                 <li>Precio competitivo: Revisar autos similares en tu ciudad</li>
                 <li>Descuentos por semana (5-10%) y mes (15-20%) atraen más clientes</li>

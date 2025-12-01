@@ -28,8 +28,8 @@
 .loading-spinner {
   width: 48px;
   height: 48px;
-  border: 4px solid #e5e7eb;
-  border-top: 4px solid #3b82f6;
+  border: 4px solid var(--border-default, #BCBCBC);
+  border-top: 4px solid var(--system-blue-default, #4285F4);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -45,13 +45,13 @@
 }
 
 .dashboard-loading p {
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   font-size: 1rem;
 }
 
 /* Welcome Section */
 .welcome-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--cta-default, #667eea); /* Replaced gradient with solid color token */
   border-radius: 1rem;
   padding: 2rem;
   color: white;
@@ -108,7 +108,7 @@
 
 .action-button.secondary {
   background: rgba(255, 255, 255, 0.9);
-  color: #1f2937;
+  color: var(--text-primary, #1f2937);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -135,7 +135,7 @@
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-default, #BCBCBC); /* Reemplazado hex con el valor de borderDefault */
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -156,36 +156,36 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: var(--system-blue-default, #4285F4); /* Replaced gradient with solid color token */
 }
 
 .stat-card.wallet::before {
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: var(--success-default, #10b981); /* Replaced gradient with solid color token */
 }
 
 .stat-card.notifications::before {
-  background: linear-gradient(90deg, #f59e0b, #d97706);
+  background: var(--warning-default, #f59e0b); /* Replaced gradient with solid color token */
 }
 
 .stat-card.cars::before {
-  background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+  background: var(--cta-default, #8b5cf6); /* Replaced gradient with solid color token */
 }
 
 .stat-card.earnings::before {
-  background: linear-gradient(90deg, #06b6d4, #0891b2);
+  background: var(--system-cyan-default, #06b6d4); /* Replaced gradient with solid color token */
 }
 
 .stat-card.bookings::before {
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: var(--success-default, #10b981); /* Replaced gradient with solid color token */
 }
 
 .stat-card.pending::before {
-  background: linear-gradient(90deg, #f97316, #ea580c);
+  background: var(--warning-default, #f97316); /* Replaced gradient with solid color token */
 }
 
 .stat-card.has-unread {
-  border-color: #f59e0b;
-  background: #fefce8;
+  border-color: var(--warning-default, #f59e0b);
+  background: var(--surface-warning-light, #fefce8);
 }
 
 .stat-icon {
@@ -200,22 +200,21 @@
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary, #050505); /* Reemplazado hex con el valor de textPrimary */
   line-height: 1;
   margin-bottom: 0.25rem;
 }
 
 .stat-label {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   font-weight: 500;
 }
 
 .stat-action {
   background: none;
   border: none;
-  color: #3b82f6;
-  font-size: 0.875rem;
+  color: var(--system-blue-default); /* Reemplazado hex con token semántico */  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   text-decoration: underline;
@@ -223,7 +222,7 @@
 }
 
 .stat-action:hover {
-  color: #2563eb;
+  color: var(--system-blue-dark); /* Reemplazado hex con token semántico */
 }
 
 /* Quick Actions */
@@ -232,13 +231,13 @@
   border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-default, #BCBCBC);
 }
 
 .quick-actions h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary, #050505);
   margin-bottom: 1.5rem;
 }
 
@@ -259,7 +258,7 @@
   color: white;
   text-decoration: none;
   border: none;
-  background: #3b82f6;
+  background: var(--system-blue-default, #4285F4);
 }
 
 .action-card:hover {
@@ -268,7 +267,7 @@
 }
 
 .action-card.bg-purple-500 {
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  background: var(--cta-default, #8b5cf6); /* Replaced gradient with solid color token */
 }
 
 .action-card.bg-purple-500:hover {
@@ -276,7 +275,7 @@
 }
 
 .action-card.bg-cta-default {
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  background: var(--cta-default, #6366f1); /* Replaced gradient with solid color token */
 }
 
 .action-card.bg-cta-default:hover {
@@ -284,7 +283,7 @@
 }
 
 .action-card.bg-warning-light {
-  background: linear-gradient(135deg, #f97316, #ea580c);
+  background: var(--warning-light); /* Reemplazado gradiente con token semántico */
 }
 
 .action-card.bg-warning-light:hover {
@@ -292,7 +291,7 @@
 }
 
 .action-card.bg-cta-default {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: var(--cta-default); /* Reemplazado gradiente con token semántico */
 }
 
 .action-card.bg-cta-default:hover {
@@ -300,7 +299,7 @@
 }
 
 .action-card.bg-success-light {
-  background: linear-gradient(135deg, #14b8a6, #0f766e);
+  background: var(--success-light); /* Reemplazado gradiente con token semántico */
 }
 
 .action-card.bg-success-light:hover {
@@ -308,7 +307,7 @@
 }
 
 .action-card.bg-success-light {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: var(--success-default); /* Reemplazado gradiente con token semántico */
 }
 
 .action-card.bg-success-light:hover {
@@ -316,7 +315,7 @@
 }
 
 .action-card.bg-cta-default {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  background: var(--cta-default); /* Reemplazado gradiente con token semántico */
 }
 
 .action-card.bg-cta-default:hover {
@@ -358,7 +357,7 @@
   border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e5e7eb;
+  border: 1px solid #BCBCBC;
 }
 
 .section-header {
@@ -371,14 +370,14 @@
 .section-header h2 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #111827;
+  color: #050505;
   margin: 0;
 }
 
 .view-all {
   background: none;
   border: none;
-  color: #3b82f6;
+  color: #4285F4;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -387,7 +386,7 @@
 }
 
 .view-all:hover {
-  color: #2563eb;
+  color: #1967D2;
 }
 
 /* Cars Grid */
@@ -398,12 +397,12 @@
 }
 
 .car-card {
-  background: #f9fafb;
+  background: var(--surface-light-subtle, #f9fafb);
   border-radius: 0.75rem;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-default, #BCBCBC);
 }
 
 .car-card:hover {
@@ -424,13 +423,13 @@
 .car-info h3 {
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary, #050505);
   margin-bottom: 0.25rem;
 }
 
 .car-info p {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   margin-bottom: 0.5rem;
 }
 
@@ -444,13 +443,13 @@
 }
 
 .car-status.active {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--surface-success-light, #dcfce7);
+  color: var(--text-success-dark, #166534);
 }
 
 .car-status.rented {
-  background: #fed7aa;
-  color: #9a3412;
+  background: var(--surface-warning-light, #fed7aa);
+  color: var(--text-warning-dark, #9a3412);
 }
 
 /* Bookings Grid */
@@ -465,28 +464,28 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  background: #f9fafb;
+  background: var(--surface-light-subtle, #f9fafb);
   border-radius: 0.75rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-default, #BCBCBC);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .booking-card:hover {
-  background: #f3f4f6;
+  background: var(--surface-hover-light, #f3f4f6);
   transform: translateY(-1px);
 }
 
 .booking-info h3 {
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary, #050505);
   margin-bottom: 0.25rem;
 }
 
 .booking-info p {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   margin-bottom: 0.5rem;
 }
 
@@ -500,19 +499,19 @@
 }
 
 .booking-status.confirmed {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--surface-success-light, #dcfce7);
+  color: var(--text-success-dark, #166534);
 }
 
 .booking-status.pending {
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--surface-warning-light, #fef3c7);
+  color: var(--text-warning-dark, #92400e);
 }
 
 .booking-price {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #059669;
+  color: var(--text-success-dark, #059669);
 }
 
 /* Empty State */
@@ -521,7 +520,7 @@
   padding: 3rem 2rem;
   background: white;
   border-radius: 1rem;
-  border: 2px dashed #d1d5db;
+  border: 2px dashed var(--border-dashed-default, #d1d5db);
 }
 
 .empty-icon {
@@ -532,12 +531,12 @@
 .empty-state h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary, #050505);
   margin-bottom: 0.5rem;
 }
 
 .empty-state p {
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   margin-bottom: 2rem;
   max-width: 400px;
   margin-left: auto;
@@ -545,18 +544,17 @@
 }
 
 .cta-button {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
+      background: var(--cta-default); /* Reemplazado gradiente con token semántico */
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
 .cta-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);

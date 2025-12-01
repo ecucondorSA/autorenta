@@ -113,7 +113,7 @@ interface MarkerData {
       .spinner {
         width: 48px;
         height: 48px;
-        border: 4px solid #e2e8f0;
+        border: 4px solid var(--border-default, #e2e8f0);
         border-top-color: var(--cta-default, #805ad5);
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
@@ -166,7 +166,7 @@ interface MarkerData {
         display: flex;
         gap: 12px;
         padding: 12px 0;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid var(--border-default, #e2e8f0);
       }
 
       .tracking-user:last-child {
@@ -196,20 +196,20 @@ interface MarkerData {
       .user-name {
         font-weight: 600;
         font-size: 14px;
-        color: #0f172a;
+        color: var(--text-primary, #0f172a);
         margin: 0;
       }
 
       .user-role {
         font-size: 12px;
-        color: #64748b;
+        color: var(--text-secondary, #64748b);
         margin: 0;
       }
 
       .last-update,
       .distance {
         font-size: 11px;
-        color: #475569;
+        color: var(--text-muted, #475569);
         margin: 0;
       }
 
@@ -368,7 +368,7 @@ export class LiveTrackingMapComponent implements OnInit, OnChanges, OnDestroy {
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      border: 3px solid ${session.user_role === 'locador' ? '#805ad5' : '#10b981'};
+      border: 3px solid ${session.user_role === 'locador' ? this.getCssVariableValue('--cta-default', '#A7D8F4') : this.getCssVariableValue('--success-default', '#10b981')};
       object-fit: cover;
       position: absolute;
       top: 4px;
@@ -386,7 +386,7 @@ export class LiveTrackingMapComponent implements OnInit, OnChanges, OnDestroy {
       left: 0;
       width: 56px;
       height: 56px;
-      border: 2px solid ${session.user_role === 'locador' ? '#805ad5' : '#10b981'};
+      border: 2px solid ${session.user_role === 'locador' ? this.getCssVariableValue('--cta-default', '#A7D8F4') : this.getCssVariableValue('--success-default', '#10b981')};
       border-radius: 50%;
       animation: pulse 2s ease-out infinite;
       opacity: 0.6;
@@ -508,6 +508,14 @@ export class LiveTrackingMapComponent implements OnInit, OnChanges, OnDestroy {
   // ============================================================================
   // PUBLIC HELPER METHODS
   // ============================================================================
+
+  /**
+   * Helper to get CSS variable value
+   */
+  private getCssVariableValue(variableName: string, defaultValue: string): string {
+    if (!isPlatformBrowser(this.platformId)) return defaultValue;
+    return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim() || defaultValue;
+  }
 
   /**
    * Format time since last update

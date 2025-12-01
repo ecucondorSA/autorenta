@@ -69,8 +69,8 @@ import { FavoritesService } from '../../../core/services/favorites.service';
       .loading-spinner {
         width: 20px;
         height: 20px;
-        border: 2px solid #e5e7eb;
-        border-top-color: #3b82f6;
+        border: 2px solid var(--border-default, #e5e7eb);
+        border-top-color: var(--system-blue-default, #3b82f6);
         border-radius: 50%;
         animation: spin 0.6s linear infinite;
       }

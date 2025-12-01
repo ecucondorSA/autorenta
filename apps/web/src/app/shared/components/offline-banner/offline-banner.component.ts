@@ -50,7 +50,7 @@ import { OfflineManagerService } from '../../../core/services/offline-manager.se
         left: 0;
         right: 0;
         z-index: 9999;
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background: var(--error-default); /* Reemplazado gradiente con color sólido */
         color: white;
         padding: 0.75rem 1rem;
         box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);

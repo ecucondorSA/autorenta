@@ -33,27 +33,27 @@ import { Component, computed, input } from '@angular/core';
       }
 
       .distance-badge.nearby {
-        background: #dcfce7;
-        color: #166534;
-        border: 1px solid #86efac;
+        background: var(--surface-success-light, #dcfce7);
+        color: var(--text-success-dark, #166534);
+        border: 1px solid var(--border-success-medium, #86efac);
       }
 
       .distance-badge.medium {
-        background: #fef3c7;
-        color: #92400e;
-        border: 1px solid #fde68a;
+        background: var(--surface-warning-light, #fef3c7);
+        color: var(--text-warning-dark, #92400e);
+        border: 1px solid var(--border-warning-medium, #fde68a);
       }
 
       .distance-badge.far {
-        background: #fee2e2;
-        color: #991b1b;
-        border: 1px solid #fecaca;
+        background: var(--surface-error-light, #fee2e2);
+        color: var(--text-error-dark, #991b1b);
+        border: 1px solid var(--border-error-medium, #fecaca);
       }
 
       .distance-badge.default {
-        background: #f3f4f6;
-        color: #374151;
-        border: 1px solid #e5e7eb;
+        background: var(--surface-light-subtle, #f3f4f6);
+        color: var(--text-secondary, #374151);
+        border: 1px solid var(--border-default, #e5e7eb);
       }
 
       .distance-badge .icon {
@@ -67,7 +67,7 @@ import { Component, computed, input } from '@angular/core';
       .nearby-label {
         font-size: 0.625rem;
         padding: 0.125rem 0.375rem;
-        background: #16a34a;
+        background: var(--success-default, #16a34a);
         color: white;
         border-radius: 9999px;
         font-weight: 600;

@@ -2,14 +2,12 @@
   class="rounded-2xl border border-border-default dark:border-border-muted bg-gradient-to-br from-surface-raised to-surface-secondary dark:from-surface-secondary dark:to-surface-raised p-6 shadow-lg transition-all duration-300 hover:shadow-xl"
 >
   <!-- Header -->
-  <div class="flex items-center justify-between mb-4">
-    <div>
-      <h3
-        class="text-sm font-semibold uppercase tracking-wide text-text-muted dark:text-text-secondary/70"
-      >
+  <div class="flex items-center justify-between stack-xs">
+    <div class="stack-xs">
+      <h3 class="h5 uppercase tracking-wide text-text-muted dark:text-text-secondary/70">
         Ganancias
       </h3>
-      <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-1">
+      <p class="text-xs text-text-secondary dark:text-text-secondary/60">
         Split: 85% para ti, 15% plataforma
       </p>
     </div>
@@ -28,17 +26,17 @@
   </div>
 
   <!-- Main Earnings Display -->
-  <div class="space-y-4">
+  <div class="stack-md">
     <!-- This Month -->
     <div
       class="rounded-xl bg-cta-default/10 dark:bg-cta-default/20 p-4 border border-cta-default/30"
     >
       <div class="flex items-center justify-between">
-        <div>
+        <div class="stack-xs">
           <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/70">
             Este Mes
           </p>
-          <p class="text-2xl font-bold text-text-primary dark:text-text-primary mt-1">
+          <p class="h4 text-text-primary dark:text-text-primary">
             ${{ thisMonthEarnings() | number: '1.0-0' }}
           </p>
         </div>
@@ -91,7 +89,7 @@
         class="rounded-lg bg-surface-base dark:bg-surface-raised p-3 border border-border-default dark:border-border-muted"
       >
         <p class="text-xs text-text-secondary dark:text-text-secondary/70">Mes Anterior</p>
-        <p class="text-lg font-semibold text-text-primary dark:text-text-primary mt-1">
+        <p class="h5 text-text-primary dark:text-text-primary">
           ${{ lastMonthEarnings() | number: '1.0-0' }}
         </p>
       </div>
@@ -101,23 +99,21 @@
         class="rounded-lg bg-surface-base dark:bg-surface-raised p-3 border border-border-default dark:border-border-muted"
       >
         <p class="text-xs text-text-secondary dark:text-text-secondary/70">Total Histórico</p>
-        <p class="text-lg font-semibold text-text-primary dark:text-text-primary mt-1">
+        <p class="h5 text-text-primary dark:text-text-primary">
           ${{ totalEarnings() | number: '1.0-0' }}
         </p>
       </div>
     </div>
 
     <!-- Progress Bar (Visual) -->
-    <div class="pt-2">
-      <div
-        class="flex items-center justify-between text-xs text-text-secondary dark:text-text-secondary/70 mb-1"
-      >
+    <div class="stack-xs">
+      <div class="flex items-center justify-between text-xs text-text-secondary dark:text-text-secondary/70">
         <span>Progreso del mes</span>
         <span>{{ monthProgress() }}%</span>
       </div>
       <div class="h-2 w-full rounded-full bg-surface-base dark:bg-surface-raised overflow-hidden">
         <div
-          class="h-full bg-gradient-to-r from-cta-default to-primary-600 transition-all duration-500 ease-out"
+          class="h-full bg-cta-default transition-all duration-500 ease-out"
           [style.width.%]="monthProgress()"
         ></div>
       </div>

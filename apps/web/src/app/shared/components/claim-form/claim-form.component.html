@@ -1,9 +1,9 @@
-<div class="claim-form">
+<div class="claim-form stack-lg">
   <!-- Header -->
-  <div class="header">
-    <h2>Reportar Daños</h2>
+  <header class="header">
+    <h2 class="h2">Reportar Daños</h2>
     <button class="close-btn" (click)="cancel()" [disabled]="creating()">✕</button>
-  </div>
+  </header>
 
   <!-- Error message -->
   @if (error()) {
@@ -19,11 +19,11 @@
   </div>
 
   <!-- Damages list -->
-  <div class="damages-section">
-    <h3>Daños Reportados ({{ damageCount() }})</h3>
+  <section class="damages-section stack-md">
+    <h3 class="h3">Daños Reportados ({{ damageCount() }})</h3>
 
     @for (damage of damages(); track $index; let i = $index) {
-      <div class="damage-card">
+      <article class="damage-card stack-md">
         <!-- Card header -->
         <div class="damage-header">
           <span class="damage-number">Daño #{{ i + 1 }}</span>
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Type selection -->
-        <div class="form-group">
+        <div class="form-group stack-xs">
           <label [for]="'type-' + i">Tipo de Daño</label>
           <select
             [id]="'type-' + i"
@@ -55,7 +55,7 @@
         </div>
 
         <!-- Description -->
-        <div class="form-group">
+        <div class="form-group stack-xs">
           <label [for]="'description-' + i">Descripción</label>
           <textarea
             [id]="'description-' + i"
@@ -70,7 +70,7 @@
         </div>
 
         <!-- Severity -->
-        <div class="form-group">
+        <div class="form-group stack-xs">
           <label [for]="'severity-' + i">Severidad</label>
           <div class="severity-options">
             @for (option of severityOptions; track option.value) {
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Estimated cost -->
-        <div class="form-group">
+        <div class="form-group stack-xs">
           <label [for]="'cost-' + i">Costo Estimado (USD)</label>
           <div class="cost-input-wrapper">
             <span class="currency-symbol">$</span>
@@ -125,7 +125,7 @@
         </div>
 
         <!-- Photos (optional) -->
-        <div class="form-group">
+        <div class="form-group stack-xs">
           <label [for]="'photos-' + i">Fotos de Evidencia (opcional)</label>
           <div class="photo-upload-wrapper">
             <label [for]="'photos-' + i" class="upload-photo-btn"> 📷 Subir Fotos </label>
@@ -156,29 +156,29 @@
             </div>
           }
         </div>
-      </div>
+      </article>
     }
 
     <!-- Add damage button -->
     <button class="add-damage-btn" (click)="addDamage()" [disabled]="creating()">
       ➕ Agregar Otro Daño
     </button>
-  </div>
+  </section>
 
   <!-- Notes section -->
-  <div class="notes-section">
-    <h3>Observaciones Generales (opcional)</h3>
+  <section class="notes-section stack-sm">
+    <h3 class="h3">Observaciones Generales (opcional)</h3>
     <textarea
       [(ngModel)]="notes"
       rows="3"
       placeholder="Ej: El locatario mencionó que el rayón ocurrió en un estacionamiento. Se adjuntan fotos del vehículo completo..."
       [disabled]="creating()"
     ></textarea>
-  </div>
+  </section>
 
   <!-- Summary -->
-  <div class="summary-section">
-    <h3>Resumen del Claim</h3>
+  <section class="summary-section stack-sm">
+    <h3 class="h3">Resumen del Claim</h3>
     <div class="summary-grid">
       <div class="summary-item">
         <span class="label">Total de daños:</span>
@@ -213,13 +213,13 @@
         </ul>
       </div>
     }
-  </div>
+  </section>
 
   <!-- Actions -->
   <div class="actions">
-    <button class="btn btn-secondary" (click)="cancel()" [disabled]="creating()">Cancelar</button>
+    <button class="btn-secondary" (click)="cancel()" [disabled]="creating()">Cancelar</button>
 
-    <button class="btn btn-primary" (click)="submit()" [disabled]="!isValid() || creating()">
+    <button class="btn-primary" (click)="submit()" [disabled]="!isValid() || creating()">
       @if (creating()) {
         <span class="spinner"></span>
         Creando Claim...

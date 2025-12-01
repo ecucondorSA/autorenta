@@ -13,31 +13,31 @@
 /* Grid and axes */
 .grid-line {
   fill: none;
-  stroke: #e5e7eb;
+  stroke: var(--border-default, #e5e7eb);
   stroke-width: 1;
 }
 
 .axis-line {
-  stroke: #d1d5db;
+  stroke: var(--border-muted, #d1d5db);
   stroke-width: 1;
 }
 
 /* Data visualization */
 .data-path {
   fill: none;
-  stroke: #3b82f6;
+  stroke: var(--system-blue-default, #3b82f6);
   stroke-width: 2;
   stroke-linejoin: round;
 }
 
 .data-path-fill {
-  fill: #3b82f6;
+  fill: var(--system-blue-default, #3b82f6);
   fill-opacity: 0.2;
   stroke: none;
 }
 
 .data-point {
-  fill: #3b82f6;
+  fill: var(--system-blue-default, #3b82f6);
   stroke: white;
   stroke-width: 2;
 }
@@ -49,31 +49,31 @@
 }
 
 .label-name {
-  fill: #374151;
+  fill: var(--text-primary, #374151);
   font-weight: 600;
 }
 
 .label-value {
-  fill: #6b7280;
+  fill: var(--text-secondary, #6b7280);
   font-size: 11px;
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .grid-line {
-    stroke: #374151;
+    stroke: var(--border-dark, #374151);
   }
 
   .axis-line {
-    stroke: #4b5563;
+    stroke: var(--border-muted-dark, #4b5563);
   }
 
   .label-name {
-    fill: #f3f4f6;
+    fill: var(--text-light, #f3f4f6);
   }
 
   .label-value {
-    fill: #d1d5db;
+    fill: var(--text-muted-dark, #d1d5db);
   }
 }
 

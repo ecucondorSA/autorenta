@@ -86,7 +86,7 @@ import { TranslateModule } from '@ngx-translate/core';
       }
 
       .progress-fill {
-        background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 216, 145, 1) 100%);
+        background: var(--surface-raised); /* Reemplazado gradiente con color sólido */
         box-shadow: 0 2px 12px rgba(255, 255, 255, 0.6);
       }
     `,
@@ -145,7 +145,7 @@ import { TranslateModule } from '@ngx-translate/core';
           class="text-center px-6 motion-ok tagline"
           style="animation: pulse 2s ease-in-out infinite;"
         >
-          <p class="text-[1.35rem] md:text-2xl font-light tracking-[0.15em] uppercase">
+          <p class="text-[1.15rem] md:text-xl font-light tracking-[0.15em] uppercase">
             Prendiendo los motores...
           </p>
         </div>

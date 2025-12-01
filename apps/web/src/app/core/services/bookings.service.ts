@@ -545,7 +545,7 @@ export class BookingsService {
   async chargeRentalFromWallet(
     bookingId: string,
     amountCents: number,
-    description?: string,
+    _description?: string,
   ): Promise<{ ok: boolean; error?: string }> {
     const booking = await this.getBookingById(bookingId);
     if (!booking) return { ok: false, error: 'Booking not found' };

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { NotificationSoundService } from '../../../core/services/notification-sound.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 interface NotificationPreference {
   type: string;
@@ -11,6 +12,12 @@ interface NotificationPreference {
   description: string;
   enabled: boolean;
   icon: string;
+}
+
+interface NotificationPreferencesPayload {
+  soundEnabled?: boolean;
+  browserNotificationsEnabled?: boolean;
+  types?: Record<string, boolean>;
 }
 
 /**
@@ -227,6 +234,7 @@ export class NotificationPreferencesPage implements OnInit {
   private readonly supabase = injectSupabase();
   private readonly router = inject(Router);
   private readonly notificationSound = inject(NotificationSoundService);
+  private readonly notifications = inject(NotificationManagerService);
 
   loading = signal(true);
   saving = signal(false);
@@ -318,34 +326,49 @@ export class NotificationPreferencesPage implements OnInit {
       const soundState = this.notificationSound.isSoundEnabledSignal()();
       this.soundEnabled.set(soundState);
 
-      // Load preferences from localStorage for now
-      // TODO: Move to database table if needed
-      if (!this.isBrowser) return;
-      const savedPrefs = localStorage.getItem(`notification_prefs_${user.id}`);
-      if (savedPrefs) {
-        const parsed = JSON.parse(savedPrefs);
+      // 1) Intentar cargar desde Supabase (persistencia cross-device)
+      const { data, error } = await this.supabase
+        .from('notification_settings')
+        .select('preferences')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-        // Update preferences
-        this.preferences.update((prefs) =>
-          prefs.map((p) => ({
-            ...p,
-            enabled: parsed.types?.[p.type] ?? true,
-          })),
-        );
-
-        // Sync sound state (service takes precedence)
-        if (parsed.soundEnabled !== undefined) {
-          if (parsed.soundEnabled) {
-            this.notificationSound.enableSound();
-          } else {
-            this.notificationSound.disableSound();
-          }
+      if (!error && data?.preferences) {
+        this.hydratePreferences(data.preferences as NotificationPreferencesPayload);
+      } else {
+        // 2) Fallback a localStorage para compatibilidad previa
+        if (!this.isBrowser) return;
+        const savedPrefs = localStorage.getItem(`notification_prefs_${user.id}`);
+        if (savedPrefs) {
+          this.hydratePreferences(JSON.parse(savedPrefs));
         }
       }
     } catch (error) {
       console.error('Error loading preferences:', error);
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  private hydratePreferences(parsed: NotificationPreferencesPayload) {
+    this.preferences.update((prefs) =>
+      prefs.map((p) => ({
+        ...p,
+        enabled: parsed?.types?.[p.type] ?? p.enabled,
+      })),
+    );
+
+    if (parsed?.soundEnabled !== undefined) {
+      if (parsed.soundEnabled) {
+        this.notificationSound.enableSound();
+      } else {
+        this.notificationSound.disableSound();
+      }
+      this.soundEnabled.set(!!parsed.soundEnabled);
+    }
+
+    if (parsed?.browserNotificationsEnabled !== undefined) {
+      this.browserNotificationsEnabled.set(!!parsed.browserNotificationsEnabled);
     }
   }
 
@@ -358,13 +381,14 @@ export class NotificationPreferencesPage implements OnInit {
 
   async toggleBrowserNotifications() {
     if (!('Notification' in window)) {
-      alert('Tu navegador no soporta notificaciones');
+      this.notifications.warning('Notificaciones', 'Tu navegador no soporta notificaciones');
       return;
     }
 
     if (Notification.permission === 'denied') {
-      alert(
-        'Has bloqueado las notificaciones. Por favor, habilítalas en la configuración de tu navegador.',
+      this.notifications.warning(
+        'Notificaciones bloqueadas',
+        'Habilítalas en la configuración del navegador para recibir avisos.',
       );
       return;
     }
@@ -404,7 +428,6 @@ export class NotificationPreferencesPage implements OnInit {
       } = await this.supabase.auth.getUser();
       if (!user) return;
 
-      // Save to localStorage for now
       const prefsToSave = {
         soundEnabled: this.soundEnabled(), // Already synced with service
         browserNotificationsEnabled: this.browserNotificationsEnabled(),
@@ -417,17 +440,29 @@ export class NotificationPreferencesPage implements OnInit {
         ),
       };
 
-      if (this.isBrowser)
+      // Persistencia en Supabase (si la tabla está disponible)
+      const { error } = await this.supabase
+        .from('notification_settings')
+        .upsert({
+          user_id: user.id,
+          preferences: prefsToSave,
+          updated_at: new Date().toISOString(),
+        });
+
+      if (error) {
+        console.warn('Supabase notification_settings upsert failed, fallback to localStorage', error);
+      }
+
+      // Fallback localStorage para resiliencia offline
+      if (this.isBrowser) {
         localStorage.setItem(`notification_prefs_${user.id}`, JSON.stringify(prefsToSave));
+      }
 
-      // Show success message
-      alert('✅ Preferencias guardadas correctamente');
-
-      // Go back
+      this.notifications.success('Preferencias', 'Preferencias guardadas');
       this.goBack();
     } catch (error) {
       console.error('Error saving preferences:', error);
-      alert('❌ Error al guardar las preferencias');
+      this.notifications.error('Preferencias', 'No pudimos guardar tus preferencias.');
     } finally {
       this.saving.set(false);
     }

@@ -55,23 +55,23 @@
 }
 
 .text-gray-500 {
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .text-green-600 {
-  color: #16a34a;
+  color: var(--success-text);
 }
 
 .text-yellow-600 {
-  color: #ca8a04;
+  color: var(--warning-text);
 }
 
 .text-blue-800 {
-  color: #1e40af;
+  color: var(--text-primary);
 }
 
 .bg-blue-50 {
-  background-color: #eff6ff;
+  background-color: var(--surface-raised);
 }
 
 .rounded {

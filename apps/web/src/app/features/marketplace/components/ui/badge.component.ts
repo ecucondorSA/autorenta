@@ -96,49 +96,49 @@ import { CommonModule } from '@angular/common';
 
       /* Colors - Filled */
       .badge-primary.badge-filled {
-        background: #4f46e5;
+        background: var(--cta-default, #4f46e5);
         color: white;
       }
 
       .badge-success.badge-filled {
-        background: #10b981;
+        background: var(--success-default, #10b981);
         color: white;
       }
 
       .badge-warning.badge-filled {
-        background: #f59e0b;
+        background: var(--warning-default, #f59e0b);
         color: white;
       }
 
       .badge-danger.badge-filled {
-        background: #ef4444;
+        background: var(--error-default, #ef4444);
         color: white;
       }
 
       .badge-info.badge-filled {
-        background: #3b82f6;
+        background: var(--system-blue-default, #3b82f6);
         color: white;
       }
 
       /* Colors - Outlined */
       .badge-primary.badge-outlined {
-        color: #4f46e5;
+        color: var(--cta-default, #4f46e5);
       }
 
       .badge-success.badge-outlined {
-        color: #10b981;
+        color: var(--success-default, #10b981);
       }
 
       .badge-warning.badge-outlined {
-        color: #f59e0b;
+        color: var(--warning-default, #f59e0b);
       }
 
       .badge-danger.badge-outlined {
-        color: #ef4444;
+        color: var(--error-default, #ef4444);
       }
 
       .badge-info.badge-outlined {
-        color: #3b82f6;
+        color: var(--system-blue-default, #3b82f6);
       }
 
       /* Anchored positioning */

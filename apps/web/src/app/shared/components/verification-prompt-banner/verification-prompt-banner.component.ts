@@ -106,17 +106,17 @@ import { VerificationService } from '../../../core/services/verification.service
             </div>
 
             <!-- Text Content -->
-            <div class="flex-1 min-w-0">
-              <h3 class="text-sm font-semibold mb-1">
+            <div class="flex-1 min-w-0 stack-sm">
+              <h3 class="h4 text-text-primary">
                 {{ title() }}
               </h3>
-              <p class="text-sm opacity-90 mb-3">
+              <p class="text-sm opacity-90">
                 {{ description() }}
               </p>
 
               <!-- Progress Bar (solo si no está completo) -->
-              <div *ngIf="verificationProgress() < 100" class="mb-3">
-                <div class="flex items-center justify-between text-xs mb-1">
+              <div *ngIf="verificationProgress() < 100" class="stack-xs">
+                <div class="flex items-center justify-between text-xs">
                   <span>Progreso de verificación</span>
                   <span class="font-semibold">{{ verificationProgress() }}%</span>
                 </div>
@@ -201,7 +201,7 @@ import { VerificationService } from '../../../core/services/verification.service
         (click)="$event.stopPropagation()"
       >
         <div class="flex items-start justify-between mb-4">
-          <h2 class="text-2xl font-bold text-text-primary dark:text-text-primary">
+          <h2 class="h3 text-text-primary dark:text-text-primary">
             ¿Por qué verificar tu identidad?
           </h2>
           <button

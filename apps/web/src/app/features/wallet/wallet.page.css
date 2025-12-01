@@ -63,7 +63,7 @@
 /* Mejora de accesibilidad */
 .wallet-page a:focus,
 .wallet-page button:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--system-blue-default);
   outline-offset: 2px;
 }
 

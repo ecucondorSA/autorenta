@@ -15,6 +15,8 @@ import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booki
 
 // Components
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
+import { BookingPricingBreakdownComponent } from '../../../shared/components/booking-pricing-breakdown/booking-pricing-breakdown.component';
+import { BookingInsuranceSummaryComponent } from '../../../shared/components/booking-insurance-summary/booking-insurance-summary.component';
 
 // Models
 import { Car } from '../../../core/models';
@@ -29,7 +31,7 @@ interface DualRateFxSnapshot extends FxSnapshot {
 @Component({
   selector: 'app-booking-detail-payment',
   standalone: true,
-  imports: [CommonModule, MercadopagoCardFormComponent],
+  imports: [CommonModule, MercadopagoCardFormComponent, BookingPricingBreakdownComponent, BookingInsuranceSummaryComponent],
   templateUrl: './booking-detail-payment.page.html',
   styleUrls: ['./booking-detail-payment.page.css'],
 })
@@ -353,6 +355,8 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       if (bookingError) throw bookingError;
 
+      await this.upsertPricingAndInsurance(booking.id);
+
       // Get MP Preference
       const preference = await this.mpGateway.createPreference(booking.id);
 
@@ -413,6 +417,11 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       this.logger.info('Payment processed successfully', {
         status: paymentResult.status,
       });
+
+      // Refresh pricing/insurance after payment (in case backend recalculated)
+      if (bId) {
+        await this.upsertPricingAndInsurance(bId);
+      }
 
       // If payment is approved, auto-approve the booking
       if (paymentResult.status === 'approved') {
@@ -493,6 +502,8 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       this.bookingId.set(booking.id);
       this.bookingCreated.set(true);
 
+      await this.upsertPricingAndInsurance(booking.id);
+
       this.logger.info('Booking created successfully', {
         total: this.totalArs(),
         currency: 'ARS',
@@ -501,5 +512,51 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       this.logger.error('Error creating booking', { error: err });
       throw err;
     }
+  }
+
+  private async upsertPricingAndInsurance(bookingId: string): Promise<void> {
+    const car = this.car();
+    const fx = this.fxSnapshot();
+    const nights = this.rentalDays();
+    if (!car || !fx || nights === 0) return;
+
+    const nightlyRateArs =
+      car.currency === 'USD' ? car.price_per_day * fx.binanceRate : car.price_per_day;
+    const base = nightlyRateArs * nights;
+
+    const pricingPayload = {
+      booking_id: bookingId,
+      nightly_rate_cents: Math.round(nightlyRateArs * 100),
+      days_count: nights,
+      fees_cents: 0,
+      discounts_cents: 0,
+      insurance_cents: 0,
+      subtotal_cents: Math.round(base * 100),
+      total_cents: Math.round(base * 100),
+      breakdown: {
+        nightly_rate: nightlyRateArs,
+        nights,
+        fees: 0,
+        discounts: 0,
+        insurance: 0,
+      },
+    };
+
+    const insurancePayload = {
+      booking_id: bookingId,
+      insurance_coverage_id: null,
+      insurance_premium_total: 0,
+      guarantee_type: 'hold',
+      guarantee_amount_cents: Math.round(this.PRE_AUTH_AMOUNT_USD * fx.platformRate * 100),
+      coverage_upgrade: null,
+    };
+
+    await this.supabaseClient.from('bookings_pricing').upsert(pricingPayload, {
+      onConflict: 'booking_id',
+    });
+
+    await this.supabaseClient.from('bookings_insurance').upsert(insurancePayload, {
+      onConflict: 'booking_id',
+    });
   }
 }

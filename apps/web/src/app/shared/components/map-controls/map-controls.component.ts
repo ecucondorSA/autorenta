@@ -75,23 +75,23 @@ export interface MapControlsEvent {
         width: 44px;
         height: 44px;
         position: relative;
-        color: #4b5563;
+        color: var(--text-secondary, #4b5563);
 
         &:hover {
-          background: #f9fafb;
-          color: #111827;
+          background: var(--surface-hover-light, #f9fafb);
+          color: var(--text-primary, #111827);
         }
 
         &:active {
-          background: #f3f4f6;
+          background: var(--surface-active-light, #f3f4f6);
         }
 
         &.active {
-          background: #eff6ff;
-          color: #2563eb;
+          background: var(--surface-info-light, #eff6ff);
+          color: var(--system-blue-default, #2563eb);
 
           ion-icon {
-            color: #2563eb;
+            color: var(--system-blue-default, #2563eb);
           }
         }
 
@@ -111,7 +111,7 @@ export interface MapControlsEvent {
           left: 8px;
           right: 8px;
           height: 1px;
-          background-color: #f3f4f6;
+          background-color: var(--border-light, #f3f4f6);
         }
       }
     `,

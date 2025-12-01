@@ -149,7 +149,7 @@ import { MetaService } from '../../core/services/meta.service';
                       <div
                         class="bar-fill"
                         [style.width]="getSpeedScore() + '%'"
-                        style="background: #3880ff;"
+                        [style.background]="'var(--system-blue-default, #3880ff)'"
                       ></div>
                     </div>
                     <span>Velocidad: {{ getSpeedScore() }}%</span>
@@ -159,7 +159,7 @@ import { MetaService } from '../../core/services/meta.service';
                       <div
                         class="bar-fill"
                         [style.width]="getBrakingScore() + '%'"
-                        style="background: #2dd36f;"
+                        [style.background]="'var(--success-default, #2dd36f)'"
                       ></div>
                     </div>
                     <span>Frenado: {{ getBrakingScore() }}%</span>
@@ -169,7 +169,7 @@ import { MetaService } from '../../core/services/meta.service';
                       <div
                         class="bar-fill"
                         [style.width]="getAccelerationScore() + '%'"
-                        style="background: #ffc409;"
+                        [style.background]="'var(--warning-default, #ffc409)'"
                       ></div>
                     </div>
                     <span>Aceleración: {{ getAccelerationScore() }}%</span>
@@ -361,10 +361,10 @@ import { MetaService } from '../../core/services/meta.service';
     `
       /* ===== GLOBAL VARIABLES ===== */
       :host {
-        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --gradient-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        --gradient-warning: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        --gradient-danger: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+        --gradient-primary: var(--cta-default, #667eea); /* Replaced gradient with solid color token */
+        --gradient-success: var(--success-default, #11998e); /* Replaced gradient with solid color token */
+        --gradient-warning: var(--warning-default, #f093fb); /* Replaced gradient with solid color token */
+        --gradient-danger: var(--error-default, #fc466b); /* Replaced gradient with solid color token */
         --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
         --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.12);
         --shadow-strong: 0 12px 48px rgba(0, 0, 0, 0.15);
@@ -384,7 +384,7 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       .profile-content {
-        --background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+        --background: var(--surface-base, #f8fafc); /* Replaced gradient with solid color token */
         --padding-top: 0;
         --padding-bottom: var(--spacing-lg);
         --padding-start: 0;
@@ -504,7 +504,7 @@ import { MetaService } from '../../core/services/meta.service';
         inset: -8px;
         border-radius: 50%;
         padding: 4px;
-        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        background: transparent; /* Removed gradient */
         mask:
           linear-gradient(#fff 0 0) content-box,
           linear-gradient(#fff 0 0);
@@ -523,27 +523,27 @@ import { MetaService } from '../../core/services/meta.service';
 
       .class-badge.excellent {
         border-color: #10b981;
-        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        background: var(--surface-success-light, #ecfdf5); /* Replaced gradient with solid color token */
         color: #065f46;
       }
       .class-badge.good {
         border-color: #3b82f6;
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        background: var(--surface-info-light, #eff6ff); /* Replaced gradient with solid color token */
         color: #1e40af;
       }
       .class-badge.base {
         border-color: #6b7280;
-        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        background: var(--surface-light-subtle, #f9fafb); /* Replaced gradient with solid color token */
         color: #374151;
       }
       .class-badge.risk {
         border-color: #f59e0b;
-        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        background: var(--surface-warning-light, #fffbeb); /* Replaced gradient with solid color token */
         color: #92400e;
       }
       .class-badge.high-risk {
         border-color: #ef4444;
-        background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+        background: var(--surface-error-light, #fef2f2); /* Replaced gradient with solid color token */
         color: #991b1b;
       }
 
@@ -599,31 +599,19 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       .benefit-highlight.discount {
-        background: linear-gradient(
-          135deg,
-          rgba(16, 185, 129, 0.15) 0%,
-          rgba(5, 150, 105, 0.15) 100%
-        );
+        background: var(--surface-success-light, rgba(16, 185, 129, 0.15)); /* Replaced gradient with solid color token */
         color: #059669;
         border: 1px solid rgba(16, 185, 129, 0.2);
       }
 
       .benefit-highlight.surcharge {
-        background: linear-gradient(
-          135deg,
-          rgba(239, 68, 68, 0.15) 0%,
-          rgba(220, 38, 38, 0.15) 100%
-        );
+        background: var(--surface-error-light, rgba(239, 68, 68, 0.15)); /* Replaced gradient with solid color token */
         color: #dc2626;
         border: 1px solid rgba(239, 68, 68, 0.2);
       }
 
       .benefit-highlight.neutral {
-        background: linear-gradient(
-          135deg,
-          rgba(107, 114, 128, 0.15) 0%,
-          rgba(75, 85, 99, 0.15) 100%
-        );
+        background: var(--surface-light-muted, rgba(107, 114, 128, 0.15)); /* Replaced gradient with solid color token */
         color: #4b5563;
         border: 1px solid rgba(107, 114, 128, 0.2);
       }
@@ -705,17 +693,17 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       .protection-card.protected {
-        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        background: var(--surface-success-light, #ecfdf5); /* Replaced gradient with solid color token */
         border: 2px solid #10b981;
       }
 
       .protection-card.needs-protection {
-        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        background: var(--surface-warning-light, #fffbeb); /* Replaced gradient with solid color token */
         border: 2px solid #f59e0b;
       }
 
       .protection-card.coming-soon {
-        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        background: var(--surface-light-subtle, #f3f4f6); /* Replaced gradient with solid color token */
         border: 2px solid #9ca3af;
       }
 
@@ -834,7 +822,7 @@ import { MetaService } from '../../core/services/meta.service';
 
       .category-bar {
         height: 12px;
-        background: #f1f5f9;
+        background: var(--surface-light-subtle, #f1f5f9);
         border-radius: 6px;
         overflow: hidden;
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -855,7 +843,7 @@ import { MetaService } from '../../core/services/meta.service';
         left: 0;
         right: 0;
         height: 50%;
-        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+        background: transparent; /* Removed gradient */
         border-radius: 6px 6px 0 0;
       }
 
@@ -1002,7 +990,7 @@ import { MetaService } from '../../core/services/meta.service';
       .claim-metric {
         text-align: center;
         padding: var(--spacing-lg);
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        background: var(--surface-light-subtle, #f8fafc); /* Replaced gradient with solid color token */
         border-radius: var(--border-radius);
         border: 1px solid #e2e8f0;
         transition: all 0.3s ease;
@@ -1025,13 +1013,13 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       .claim-metric:nth-child(1)::before {
-        background: #64748b;
+        background: var(--text-secondary, #64748b);
       }
       .claim-metric:nth-child(2)::before {
-        background: #dc2626;
+        background: var(--error-default, #dc2626);
       }
       .claim-metric:nth-child(3)::before {
-        background: #16a34a;
+        background: var(--success-default, #16a34a);
       }
 
       .metric-number {
@@ -1042,13 +1030,13 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       .metric-number.total {
-        color: #475569;
+        color: var(--text-primary, #475569);
       }
       .metric-number.fault {
-        color: #dc2626;
+        color: var(--error-default, #dc2626);
       }
       .metric-number.good {
-        color: #16a34a;
+        color: var(--success-default, #16a34a);
       }
 
       .claim-metric p {
@@ -1059,7 +1047,7 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       .claims-timeline {
-        border-left: 3px solid #e2e8f0;
+        border-left: 3px solid var(--border-default, #e2e8f0);
         padding-left: var(--spacing-lg);
         margin-left: var(--spacing-md);
         margin-bottom: var(--spacing-lg);
@@ -1106,7 +1094,7 @@ import { MetaService } from '../../core/services/meta.service';
       .no-claims {
         text-align: center;
         padding: var(--spacing-xl);
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        background: var(--surface-success-light, #f0fdf4); /* Replaced gradient with solid color token */
         border-radius: var(--border-radius);
         margin: var(--spacing-lg);
       }
@@ -1114,13 +1102,13 @@ import { MetaService } from '../../core/services/meta.service';
       .no-claims ion-icon {
         font-size: 3.5rem;
         margin-bottom: var(--spacing-md);
-        color: #16a34a;
+        color: var(--success-default, #16a34a);
       }
 
       .no-claims p {
         font-size: 1.1rem;
         font-weight: 600;
-        color: #166534;
+        color: var(--text-success-dark, #166534);
         margin: 0;
       }
 
@@ -1159,32 +1147,32 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       .ladder-item.current {
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        border-color: #3b82f6;
+        background: var(--surface-info-light, #eff6ff); /* Replaced gradient with solid color token */
+        border-color: var(--system-blue-default, #3b82f6);
         box-shadow: var(--shadow-soft);
       }
 
       .ladder-item.current::before {
-        background: #3b82f6;
+        background: var(--system-blue-default, #3b82f6);
         width: 8px;
       }
 
       .ladder-item.better {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        background: var(--surface-success-light, #f0fdf4); /* Replaced gradient with solid color token */
         opacity: 0.9;
       }
 
       .ladder-item.better::before {
-        background: #16a34a;
+        background: var(--success-default, #16a34a);
       }
 
       .ladder-item.worse {
-        background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+        background: var(--surface-error-light, #fef2f2); /* Replaced gradient with solid color token */
         opacity: 0.5;
       }
 
       .ladder-item.worse::before {
-        background: #dc2626;
+        background: var(--error-default, #dc2626);
       }
 
       .ladder-class {
@@ -1234,10 +1222,10 @@ import { MetaService } from '../../core/services/meta.service';
         align-items: center;
         gap: var(--spacing-md);
         padding: var(--spacing-lg);
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        background: var(--surface-info-light, #eff6ff); /* Replaced gradient with solid color token */
         border-radius: var(--border-radius);
         margin: var(--spacing-lg);
-        border: 1px solid #bfdbfe;
+        border: 1px solid var(--border-info-light, #bfdbfe);
       }
 
       .progression-message ion-icon {
@@ -1347,7 +1335,7 @@ import { MetaService } from '../../core/services/meta.service';
       /* ===== DARK MODE SUPPORT ===== */
       @media (prefers-color-scheme: dark) {
         .profile-content {
-          --background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+          --background: var(--surface-base-dark, #1e293b); /* Replaced gradient with solid color token */
         }
 
         .hero-card {
@@ -1528,10 +1516,10 @@ export class DriverProfilePage implements OnInit {
   // Score helpers
   getScoreColor(): string {
     const score = this.driverScore();
-    if (score >= 80) return '#2dd36f';
-    if (score >= 60) return '#3880ff';
-    if (score >= 40) return '#ffc409';
-    return '#eb445a';
+    if (score >= 80) return 'var(--success-default, #2dd36f)';
+    if (score >= 60) return 'var(--system-blue-default, #3880ff)';
+    if (score >= 40) return 'var(--warning-default, #ffc409)';
+    return 'var(--error-default, #eb445a)';
   }
 
   getScoreArcLength(): string {

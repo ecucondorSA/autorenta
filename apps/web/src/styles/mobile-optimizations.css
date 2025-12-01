@@ -261,7 +261,7 @@
     padding: 12px;
     font-size: 11px;
     text-align: center;
-    color: #9ca3af;
+    color: var(--text-muted, #9ca3af);
     background: rgba(156, 163, 175, 0.1);
     border-radius: 8px;
   }
@@ -663,7 +663,7 @@
   }
 
   .dark body {
-    background: #1a1a1a;
+    background: var(--surface-dark, #1a1a1a);
   }
 
   /* Reducir brillo de elementos en dark mode */

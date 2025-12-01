@@ -1,18 +1,7 @@
 <!-- 🎨 MARKETPLACE V2 - IMMERSIVE 3D EXPERIENCE -->
 
 <!-- Hero Header - Full 3D Immersion -->
-<div class="hero-immersive relative overflow-hidden min-h-[100svh] flex flex-col">
-  <!-- Pure Background - Autorentar neutral gradient -->
-  <div class="absolute inset-0 bg-gradient-to-b from-[#f8f4ec] via-[#f0ebe2] to-[#e8e4dc] -z-10">
-  </div>
-
-  <!-- Subtle Grid Pattern (very subtle, doesn't block 3D) -->
-  <div class="absolute inset-0 -z-5 opacity-[0.03]" style="
-      background-image:
-        linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-      background-size: 80px 80px;
-    "></div>
+<div class="hero-immersive relative overflow-hidden min-h-[100svh] flex flex-col bg-surface-base">
 
   <!-- TOP NAV AREA - REMOVED DUPLICATE HEADER -->
   <!-- The main app-header handles navigation. Keeping only necessary controls if needed, but removing full header to avoid duplication -->
@@ -35,7 +24,7 @@
           (partDeselected)="onPartDeselected()"></app-car-3d-viewer>
         } @placeholder {
         <div
-          class="w-full h-full flex items-center justify-center bg-gradient-to-b from-slate-900 to-slate-950">
+          class="w-full h-full flex items-center justify-center bg-surface-elevated">
           <div class="text-center">
             <div
               class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center animate-pulse">
@@ -45,14 +34,14 @@
                   d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
               </svg>
             </div>
-            <p class="text-sm text-white/30">Cargando modelo 3D...</p>
+            <p class="text-sm text-text-muted">Cargando modelo 3D...</p>
           </div>
         </div>
         } @loading (minimum 300ms) {
         <div
-          class="w-full h-full flex items-center justify-center bg-gradient-to-b from-slate-900 to-slate-950">
+          class="w-full h-full flex items-center justify-center bg-surface-elevated">
           <div
-            class="animate-spin rounded-full h-12 w-12 border-2 border-cyan-400 border-t-transparent">
+            class="animate-spin rounded-full h-12 w-12 border-2 border-cta-default border-t-transparent">
           </div>
         </div>
         }
@@ -75,7 +64,7 @@
     <div class="part-info-panel">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-3">
-          <span class="text-2xl">{{ selectedPart()!.icon }}</span>
+          <span class="text-xl">{{ selectedPart()!.icon }}</span>
           <h4 class="font-bold text-lg text-[#050505]">{{ selectedPart()!.name }}</h4>
         </div>
         <button (click)="closePartPanel()"
@@ -155,16 +144,16 @@
         </div>
 
         <!-- Main Headline -->
-        <h2
-          class="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-[#050505] leading-[0.9] tracking-tight mb-6 hero-fade-in hero-delay-1">
+        <h1
+          class="font-display h1 text-[#050505] leading-[1.05] tracking-tight mb-6 hero-fade-in hero-delay-1">
           Maneja tu
           <span class="text-gradient-celeste block sm:inline">proxima</span>
           aventura
-        </h2>
+        </h1>
 
         <!-- Subheadline -->
         <p
-          class="text-lg lg:text-xl text-[#4e4e4e] font-light leading-relaxed max-w-lg mb-8 hero-fade-in hero-delay-2">
+          class="text-lg text-[#4e4e4e] font-light leading-relaxed max-w-lg mb-8 hero-fade-in hero-delay-2">
           Conectamos personas con vehiculos verificados. Sin intermediarios,
           <span class="text-[#050505] font-medium">100% asegurado</span>.
         </p>
@@ -246,7 +235,7 @@
         <!-- Search Header -->
         <div class="flex items-center justify-between mb-6 lg:mb-8">
           <div>
-            <h3 class="font-display text-xl lg:text-2xl font-bold text-[#050505] tracking-tight"
+            <h3 class="font-display h4 text-[#050505] tracking-tight"
               data-testid="marketplace-heading">
               Encuentra tu vehículo
             </h3>
@@ -411,32 +400,22 @@
 <div class="marketplace-content bg-surface-base min-h-screen">
   <!-- COLABORADORES / PARTNERS SECTION - PREMIUM -->
   <section class="partners-section py-8 lg:py-10 relative overflow-hidden">
-    <!-- Background Effects - Using tokenized colors -->
-    <div
-      class="absolute inset-0 bg-gradient-to-b from-[#F8F4EC] via-[#F5F5F5] to-[#DFD2BF] dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
-    </div>
-    <div class="absolute inset-x-0 top-0 h-12 opacity-[0.015]" style="
-        background-image: radial-gradient(
-          circle at 1px 1px,
-          rgba(248, 244, 236, 0.3) 1px,
-          transparent 0
-        );
-        background-size: 40px 40px;
-      "></div>
+    <!-- Background plano sin gradientes -->
+    <div class="absolute inset-0 bg-surface-base"></div>
 
     <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
       <!-- Section Header -->
       <div class="text-center mb-8">
         <div
-          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/10 to-cyan-500/10 border border-cyan-500/20 mb-4">
-          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-          <span class="text-[10px] font-semibold text-cyan-400 uppercase tracking-widest">Tecnología
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-raised border border-cta-default/40 mb-4">
+          <span class="w-1.5 h-1.5 rounded-full bg-cta-default animate-pulse"></span>
+          <span class="text-[10px] font-semibold text-cta-text uppercase tracking-widest">Tecnología
             de Clase Mundial</span>
         </div>
         <h2
-          class="font-display text-2xl lg:text-3xl xl:text-4xl font-black text-text-primary dark:text-white mb-3">
+          class="font-display h3 font-black text-text-primary dark:text-white mb-3">
           Respaldados por
-          <span class="text-gradient-cyan">los mejores</span>
+          <span class="text-cta-text">los mejores</span>
         </h2>
         <p class="text-base text-text-secondary dark:text-white/50 max-w-2xl mx-auto">
           Integramos las mejores soluciones tecnológicas para brindarte una experiencia segura y
@@ -450,8 +429,8 @@
         <div class="partner-card group">
           <div class="partner-card-inner p-4">
             <div
-              class="partner-icon-wrapper bg-[#00B1EA]/10 group-hover:bg-[#00B1EA]/20 w-12 h-12 mb-3">
-              <svg class="h-6 w-auto text-[#00B1EA]" viewBox="0 0 100 30" fill="currentColor">
+              class="partner-icon-wrapper bg-cta-default/15 group-hover:bg-cta-default/25 w-12 h-12 mb-3">
+              <svg class="h-6 w-auto text-cta-default" viewBox="0 0 100 30" fill="currentColor">
                 <text x="0" y="22" font-family="system-ui" font-weight="800" font-size="18">
                   MercadoPago
                 </text>
@@ -465,8 +444,8 @@
         <div class="partner-card group">
           <div class="partner-card-inner p-4">
             <div
-              class="partner-icon-wrapper bg-[#3ECF8E]/10 group-hover:bg-[#3ECF8E]/20 w-12 h-12 mb-3">
-              <svg class="h-6 w-6 text-[#3ECF8E]" viewBox="0 0 109 113" fill="currentColor">
+              class="partner-icon-wrapper bg-success-bg group-hover:bg-success-bg-hover w-12 h-12 mb-3">
+              <svg class="h-6 w-6 text-success-text" viewBox="0 0 109 113" fill="currentColor">
                 <path
                   d="M63.7 110.3c-2.5 3.3-7.9 1.5-7.9-2.7V71.4h45.1c5.8 0 9 6.8 5.4 11.3l-42.6 27.6z" />
                 <path
@@ -484,8 +463,8 @@
         <div class="partner-card group">
           <div class="partner-card-inner p-4">
             <div
-              class="partner-icon-wrapper bg-[#F6821F]/10 group-hover:bg-[#F6821F]/20 w-12 h-12 mb-3">
-              <svg class="h-5 w-auto text-[#F6821F]" viewBox="0 0 100 30" fill="currentColor">
+              class="partner-icon-wrapper bg-warning-bg group-hover:bg-warning-bg-hover w-12 h-12 mb-3">
+              <svg class="h-5 w-auto text-warning-text" viewBox="0 0 100 30" fill="currentColor">
                 <text x="0" y="22" font-family="system-ui" font-weight="800" font-size="16">
                   Cloudflare
                 </text>
@@ -499,8 +478,8 @@
         <div class="partner-card group">
           <div class="partner-card-inner p-4">
             <div
-              class="partner-icon-wrapper bg-[#DD0031]/10 group-hover:bg-[#DD0031]/20 w-12 h-12 mb-3">
-              <svg class="h-7 w-7 text-[#DD0031]" viewBox="0 0 250 250" fill="currentColor">
+              class="partner-icon-wrapper bg-error-bg group-hover:bg-error-bg-hover w-12 h-12 mb-3">
+              <svg class="h-7 w-7 text-error-text" viewBox="0 0 250 250" fill="currentColor">
                 <path
                   d="M125 30L31.9 63.2l14.2 123.1L125 230l78.9-43.7 14.2-123.1L125 30zm0 22.2l63.1 145.6h-23.5l-12.7-31.8h-54l-12.7 31.8H61.9L125 52.2z" />
                 <path d="M145.6 156.2L125 106.6l-20.6 49.6h41.2z" />
@@ -514,8 +493,8 @@
         <div class="partner-card group">
           <div class="partner-card-inner p-4">
             <div
-              class="partner-icon-wrapper bg-[#4285F4]/10 group-hover:bg-[#4285F4]/20 w-12 h-12 mb-3">
-              <svg class="h-6 w-6 text-[#4285F4]" viewBox="0 0 24 24" fill="currentColor">
+              class="partner-icon-wrapper bg-cta-default/15 group-hover:bg-cta-default/25 w-12 h-12 mb-3">
+              <svg class="h-6 w-6 text-cta-default" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
               </svg>
@@ -528,60 +507,121 @@
       <!-- Security Badge -->
       <div class="mt-8 flex justify-center">
         <div
-          class="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-white/80 dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm shadow-sm">
+          class="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-surface-raised border border-border-muted shadow-sm">
           <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor"
+            <svg class="w-5 h-5 text-success-text" fill="none" stroke="currentColor"
               viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
-            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Datos
+            <span class="text-sm font-medium text-text-secondary">Datos
               encriptados</span>
           </div>
-          <div class="w-px h-4 bg-gray-200 dark:bg-white/10"></div>
+          <div class="w-px h-4 bg-border-muted"></div>
           <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
+            <svg class="w-5 h-5 text-cta-default" fill="none" stroke="currentColor"
               viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">SSL
+            <span class="text-sm font-medium text-text-secondary">SSL
               Certificado</span>
           </div>
-          <div class="w-px h-4 bg-white/10"></div>
+          <div class="w-px h-4 bg-border-muted"></div>
           <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor"
+            <svg class="w-5 h-5 text-cta-hover" fill="none" stroke="currentColor"
               viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="text-sm text-gray-600 dark:text-white/60">99.9% Uptime</span>
+            <span class="text-sm text-text-secondary">99.9% Uptime</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- BENEFICIOS PARA CONDUCTORES -->
+  <section class="py-14 lg:py-18 bg-surface-base">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 space-y-10">
+      <div class="text-center max-w-3xl mx-auto">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-cta-default/30 text-xs font-semibold uppercase tracking-widest text-cta-default mb-4">Para quienes alquilan</span>
+        <h2 class="font-display h2 text-text-primary dark:text-white mb-3">Súbete y maneja con tranquilidad</h2>
+        <p class="text-text-secondary dark:text-white/60 text-base">Seguro incluido, verificación rápida y soporte 24/7 para que solo te ocupes del viaje.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3">✅</div>
+          <h3 class="font-semibold text-text-primary mb-2">Verificación en minutos</h3>
+          <p class="text-sm text-text-secondary">Sube DNI y licencia, IA valida y avanza sin esperas.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3">🔒</div>
+          <h3 class="font-semibold text-text-primary mb-2">Pagos protegidos</h3>
+          <p class="text-sm text-text-secondary">MercadoPago, transferencia o Wallet. Depósitos seguros y liberación automática.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-3">🕒</div>
+          <h3 class="font-semibold text-text-primary mb-2">Entrega flexible</h3>
+          <p class="text-sm text-text-secondary">Coordina retiro y devolución cerca tuyo o a domicilio.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mb-3">🧭</div>
+          <h3 class="font-semibold text-text-primary mb-2">Soporte 24/7</h3>
+          <p class="text-sm text-text-secondary">Chat y WhatsApp en ruta para cualquier imprevisto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFICIOS PARA DUEÑOS -->
+  <section class="py-14 lg:py-18 bg-surface-base">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 space-y-10">
+      <div class="text-center max-w-3xl mx-auto">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-success-border/50 text-xs font-semibold uppercase tracking-widest text-success-text mb-4">Para dueños</span>
+        <h2 class="font-display h2 text-text-primary dark:text-white mb-3">Publica, bloquea y cobra sin fricción</h2>
+        <p class="text-text-secondary dark:text-white/60 text-base">Control total de precios y disponibilidad, con protección y depósitos garantizados.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3">💰</div>
+          <h3 class="font-semibold text-text-primary mb-2">Ingresos claros</h3>
+          <p class="text-sm text-text-secondary">Resumen por reserva y depósitos automáticos a tu cuenta.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3">📅</div>
+          <h3 class="font-semibold text-text-primary mb-2">Calendario inteligente</h3>
+          <p class="text-sm text-text-secondary">Bloquea fechas, ajusta precios por día y recibe reservas inmediatas.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-3">🛡️</div>
+          <h3 class="font-semibold text-text-primary mb-2">Protección y verificación</h3>
+          <p class="text-sm text-text-secondary">Conductores verificados, depósitos de garantía y reportes de estado.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mb-3">⚙️</div>
+          <h3 class="font-semibold text-text-primary mb-2">Herramientas pro</h3>
+          <p class="text-sm text-text-secondary">Dashboard, precios dinámicos y alertas de rendimiento.</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center justify-center gap-3 pt-4 text-center">
+        <button (click)="handleHeroQuickBook()" class="btn-primary-glow w-full md:w-auto">Explorar autos</button>
+        <button (click)="onPublishClick()" class="btn-outline-light w-full md:w-auto">Publicar mi auto</button>
+      </div>
+    </div>
+  </section>
+
   <!-- HOW IT WORKS - PREMIUM REDESIGNED -->
-  <section class="steps-section py-14 lg:py-20 relative overflow-hidden">
-    <!-- Background Pattern -->
-    <div class="absolute inset-x-0 top-0 h-12 opacity-[0.015]" style="
-        background-image: radial-gradient(
-          circle at 1px 1px,
-          rgba(248, 244, 236, 0.3) 1px,
-          transparent 0
-        );
-        background-size: 40px 40px;
-      "></div>
-    <!-- Background Gradient Orbs -->
-    <div class="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+  <section class="steps-section py-14 lg:py-20 relative overflow-hidden bg-surface-base">
 
     <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
       <!-- Section Header -->
       <div class="text-center mb-20 lg:mb-24">
         <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 mb-6">
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 mb-6">
           <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor"
             viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -591,7 +631,7 @@
             Simple</span>
         </div>
         <h2
-          class="font-display text-4xl lg:text-5xl xl:text-6xl font-black text-text-primary dark:text-white mb-6"
+          class="font-display h2 text-text-primary dark:text-white mb-6"
           data-testid="marketplace-h1">
           Alquila en
           <span class="relative">
@@ -612,7 +652,7 @@
       <div class="relative">
         <!-- Connection Line (Desktop) -->
         <div
-          class="hidden lg:block absolute top-[80px] left-[calc(12.5%+32px)] right-[calc(12.5%+32px)] h-0.5 bg-gradient-to-r from-cyan-500/20 via-cyan-500/20 to-amber-500/20">
+          class="hidden lg:block absolute top-[80px] left-[calc(12.5%+32px)] right-[calc(12.5%+32px)] h-0.5 from-cyan-500/20 via-cyan-500/20 to-amber-500/20">
         </div>
 
         <!-- Steps Grid -->
@@ -623,7 +663,7 @@
               <span class="step-number-text">01</span>
             </div>
             <div
-              class="step-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
+              class="step-icon-premium from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
               <svg class="w-8 h-8 text-cyan-400 group-hover:text-white transition-colors"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -651,7 +691,7 @@
               <span class="step-number-text">02</span>
             </div>
             <div
-              class="step-icon-premium bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600">
+              class="step-icon-premium from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600">
               <svg class="w-8 h-8 text-emerald-400 group-hover:text-white transition-colors"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -679,7 +719,7 @@
               <span class="step-number-text">03</span>
             </div>
             <div
-              class="step-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
+              class="step-icon-premium from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
               <svg class="w-8 h-8 text-cyan-400 group-hover:text-white transition-colors"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -707,7 +747,7 @@
               <span class="step-number-text">04</span>
             </div>
             <div
-              class="step-icon-premium bg-gradient-to-br from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600">
+              class="step-icon-premium from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600">
               <svg class="w-8 h-8 text-amber-400 group-hover:text-white transition-colors"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -734,7 +774,7 @@
       <!-- CTA Banner -->
       <div class="mt-20 text-center">
         <div
-          class="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-cyan-500/10 to-amber-500/10 border border-white/10">
+          class="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl from-cyan-500/10 via-cyan-500/10 to-amber-500/10 border border-white/10">
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
               <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor"
@@ -766,32 +806,23 @@
 
   <!-- TRUST FEATURES - PREMIUM REDESIGNED -->
   <section
-    class="trust-section py-12 lg:py-16 relative overflow-hidden bg-gradient-to-b from-[#F8F4EC] via-[#F5F5F5] to-[#DFD2BF] dark:from-slate-950 dark:via-slate-900/80 dark:to-slate-950">
-    <!-- Background Pattern - Using tokenized Ivory color -->
-    <div class="absolute inset-x-0 top-0 h-12 opacity-[0.015]" style="
-        background-image: radial-gradient(
-          circle at 1px 1px,
-          rgba(248, 244, 236, 0.3) 1px,
-          transparent 0
-        );
-        background-size: 40px 40px;
-      "></div>
+    class="trust-section py-12 lg:py-16 relative overflow-hidden bg-surface-base">
 
     <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
       <!-- Section Header -->
       <div class="text-center mb-16">
         <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 mb-6">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-success-border mb-6">
+          <svg class="w-4 h-4 text-success-text" fill="none" stroke="currentColor"
             viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
-          <span class="text-xs font-semibold text-emerald-400 uppercase tracking-widest">¿Por qué
+          <span class="text-xs font-semibold text-success-text uppercase tracking-widest">¿Por qué
             elegirnos?</span>
         </div>
         <h2
-          class="font-display text-3xl lg:text-4xl xl:text-5xl font-black text-text-primary dark:text-white mb-4">
+          class="font-display h2 text-text-primary dark:text-white mb-4">
           Confianza en cada
           <span class="text-gradient-cyan">kilómetro</span>
         </h2>
@@ -807,7 +838,7 @@
           <div class="trust-card-glow bg-emerald-500/20"></div>
           <div class="trust-card-content">
             <div
-              class="trust-icon-premium bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600">
+              class="trust-icon-premium from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600">
               <svg class="w-7 h-7 text-emerald-400 group-hover:text-white transition-colors"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -831,7 +862,7 @@
           <div class="trust-card-glow bg-blue-500/20"></div>
           <div class="trust-card-content">
             <div
-              class="trust-icon-premium bg-gradient-to-br from-blue-500/20 to-blue-500/5 group-hover:from-blue-500 group-hover:to-blue-600">
+              class="trust-icon-premium from-blue-500/20 to-blue-500/5 group-hover:from-blue-500 group-hover:to-blue-600">
               <svg class="w-7 h-7 text-blue-400 group-hover:text-white transition-colors"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -854,7 +885,7 @@
           <div class="trust-card-glow bg-cyan-500/20"></div>
           <div class="trust-card-content">
             <div
-              class="trust-icon-premium bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
+              class="trust-icon-premium from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
               <svg class="w-7 h-7 text-cyan-400 group-hover:text-white transition-colors"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -877,7 +908,7 @@
           <div class="trust-card-glow bg-amber-500/20"></div>
           <div class="trust-card-content">
             <div
-              class="trust-icon-premium bg-gradient-to-br from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600">
+              class="trust-icon-premium from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600">
               <svg class="w-7 h-7 text-amber-400 group-hover:text-white transition-colors"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -939,7 +970,7 @@
             class="inline-block px-3 py-1 rounded-full bg-gray-900/5 dark:bg-white/5 border border-gray-900/10 dark:border-white/10 text-xs font-medium text-gray-500 dark:text-white/50 uppercase tracking-widest mb-3">
             Marketplace
           </span>
-          <h2 class="font-display text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
+          <h2 class="font-display h2 font-bold text-gray-900 dark:text-white">
             Autos cerca de ti</h2>
         </div>
 
@@ -1029,7 +1060,7 @@
 
                 <!-- Overlay -->
                 <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                  class="absolute inset-0 from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                 </div>
 
                 <!-- Badges -->
@@ -1182,7 +1213,7 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <span class="text-2xl font-bold text-gray-900 dark:text-white">${{
+                    <span class="h4 font-bold text-gray-900 dark:text-white">${{
                       car.price_per_day | number:
                       '1.0-0' }}</span>
                     <span class="text-sm text-gray-500 dark:text-white/40 block">/ día</span>
@@ -1250,7 +1281,7 @@
 
             <!-- Overlay with CTA -->
             <div
-              class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex flex-col items-center justify-center">
+              class="absolute inset-0 from-black/60 via-black/20 to-transparent flex flex-col items-center justify-center">
               <a routerLink="/cars/map"
                 class="btn-primary-glow text-lg px-8 py-4 shadow-2xl hover:scale-105 transition-transform">
                 <svg class="w-6 h-6 mr-2 inline-block" fill="none" stroke="currentColor"
@@ -1283,7 +1314,7 @@
 
         <!-- Overlay with CTA -->
         <div
-          class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex flex-col items-center justify-center p-4">
+          class="absolute inset-0 from-black/60 via-black/20 to-transparent flex flex-col items-center justify-center p-4">
           <a routerLink="/cars/map" class="btn-primary-glow text-base px-6 py-3 shadow-2xl">
             <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor"
               viewBox="0 0 24 24">
@@ -1323,7 +1354,7 @@
     (click)="$event.stopPropagation()">
     <!-- Header con gradiente de marca -->
     <div
-      class="bg-gradient-to-r from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between">
+      class="from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div
           class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -1346,7 +1377,7 @@
 
     <!-- Contenido -->
     <div
-      class="p-5 bg-gradient-to-b from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50">
+      class="p-5 from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50">
       <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
         (rangeChange)="onDateRangeChange($event)" />
 
@@ -1358,7 +1389,7 @@
           Cancelar
         </button>
         <button (click)="closeDatePicker()"
-          class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl text-sm shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
+          class="px-6 py-2.5 from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl text-sm shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M5 13l4 4L19 7" />
@@ -1420,7 +1451,7 @@
 
       <!-- Use my location button -->
       <button (click)="onLogoClick()"
-        class="w-full mt-4 px-4 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
+        class="w-full mt-4 px-4 py-3 from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
         <span class="text-xl">📍</span>
         Usar mi ubicación
       </button>

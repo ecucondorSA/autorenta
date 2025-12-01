@@ -175,7 +175,7 @@ interface CardToken {
 
       .mp-input {
         height: 48px;
-        border: 1px solid #d1d5db;
+        border: 1px solid var(--border-default, #d1d5db);
         border-radius: 0.375rem;
         padding: 0.5rem 0.75rem;
         font-size: 16px; /* Prevent iOS zoom */
@@ -183,7 +183,7 @@ interface CardToken {
 
       .mp-input:focus {
         outline: none;
-        border-color: #3b82f6;
+        border-color: var(--system-blue-default, #3b82f6);
         box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
       }
 

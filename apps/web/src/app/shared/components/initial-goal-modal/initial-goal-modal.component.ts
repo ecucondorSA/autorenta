@@ -64,7 +64,7 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
               />
             </svg>
           </div>
-          <h2 class="text-3xl font-bold text-text-primary mb-2">
+          <h2 class="h2 text-text-primary mb-2">
             ¡Bienvenido a AutoRenta!
           </h2>
           <p class="text-text-secondary text-lg">
@@ -102,7 +102,7 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-xl font-semibold text-text-primary mb-1">
+                <h3 class="h4 text-text-primary mb-1">
                   Publicar mi auto
                 </h3>
                 <p class="text-text-secondary">
@@ -140,7 +140,7 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-xl font-semibold text-text-primary mb-1">
+                <h3 class="h4 text-text-primary mb-1">
                   Alquilar un auto
                 </h3>
                 <p class="text-text-secondary">

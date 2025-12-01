@@ -45,18 +45,18 @@
   /* Map Controls */
   --map-control-bg: rgba(255, 255, 255, 0.95);
   --map-control-border: rgba(0, 0, 0, 0.1);
-  --map-control-text: #1f2937;
+  --map-control-text: var(--text-primary, #1f2937);
   --map-control-hover-bg: rgba(0, 0, 0, 0.05);
   --map-control-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
   /* Map Popup/Tooltip */
   --map-popup-bg: #ffffff;
-  --map-popup-text: #1f2937;
+  --map-popup-text: var(--text-primary, #1f2937);
   --map-popup-border: rgba(0, 0, 0, 0.1);
   --map-popup-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
   /* User Location Marker */
-  --map-user-location-color: #3b82f6;
+  --map-user-location-color: var(--system-blue-default, #3b82f6);
   --map-user-location-border: 4px;
   --map-user-location-halo-color: rgba(59, 130, 246, 0.2);
 
@@ -70,7 +70,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Photo Mode - Dark */
-    --map-marker-photo-border-color: #1f2937;
+    --map-marker-photo-border-color: var(--text-primary-dark, #1f2937);
     --map-marker-photo-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     --map-marker-photo-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 
@@ -101,7 +101,7 @@
 
 .dark {
   /* Photo Mode - Dark (class-based override) */
-  --map-marker-photo-border-color: #1f2937;
+  --map-marker-photo-border-color: var(--text-primary-dark, #1f2937);
   --map-marker-photo-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   --map-marker-photo-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 

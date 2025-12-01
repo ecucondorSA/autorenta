@@ -84,4 +84,25 @@ export class DisputesService {
     if (error) throw error;
     return (data ?? []) as DisputeEvidence[];
   }
+
+  async getDisputeById(disputeId: string): Promise<Dispute | undefined> {
+    const { data, error } = await this.supabase
+      .from('disputes')
+      .select('*')
+      .eq('id', disputeId)
+      .single();
+    if (error) {
+      if (error.code === 'PGRST116') return undefined; // No rows found
+      throw error;
+    }
+    return data as Dispute;
+  }
+
+  async updateStatus(disputeId: string, status: DisputeStatus): Promise<void> {
+    const { error } = await this.supabase
+      .from('disputes')
+      .update({ status, resolved_at: new Date().toISOString(), resolved_by: (await this.supabase.auth.getUser()).data.user?.id })
+      .eq('id', disputeId);
+    if (error) throw error;
+  }
 }

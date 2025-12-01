@@ -60,7 +60,7 @@ import { CommonModule } from '@angular/common';
       /* Elevations */
       .card-flat {
         box-shadow: none;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--border-default, #e5e7eb);
       }
 
       .card-low {
@@ -106,7 +106,7 @@ import { CommonModule } from '@angular/common';
         width: 100%;
         aspect-ratio: 16 / 9;
         overflow: hidden;
-        background: #f3f4f6;
+        background: var(--surface-light-subtle, #f3f4f6);
       }
 
       .card-image img {

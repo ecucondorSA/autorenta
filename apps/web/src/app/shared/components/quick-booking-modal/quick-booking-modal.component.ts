@@ -63,7 +63,7 @@ interface DurationOption {
       >
         <!-- Header -->
         <div class="sticky top-0 bg-surface-raised border-b border-border-default px-6 py-4 flex items-center justify-between z-10">
-          <h2 class="text-xl font-bold text-text-primary">Reserva rápida</h2>
+          <h2 class="h3 text-text-primary">Reserva rápida</h2>
           <button
             type="button"
             (click)="handleCancel()"
@@ -81,7 +81,7 @@ interface DurationOption {
         </div>
 
         <!-- Content -->
-        <div class="px-6 py-5 space-y-6">
+        <div class="px-6 py-5 stack-lg">
           <!-- Car Info -->
           <div class="flex items-center gap-4 p-4 bg-surface-base rounded-xl">
             <img
@@ -91,18 +91,18 @@ interface DurationOption {
               class="w-20 h-20 rounded-lg object-cover"
             />
             <div class="flex-1 min-w-0">
-              <h3 class="text-base font-semibold text-text-primary truncate">
+              <h3 class="h5 text-text-primary truncate">
                 {{ carTitle() }}
               </h3>
-              <p class="text-sm text-text-secondary mt-0.5">
+              <p class="text-sm text-text-secondary">
                 {{ car.price_per_day | money: (car.currency || 'ARS') }}/día
               </p>
             </div>
           </div>
 
           <!-- Duration Selection -->
-          <div>
-            <label class="block text-sm font-semibold text-text-primary mb-3">
+          <div class="stack-xs">
+            <label class="block text-sm font-semibold text-text-primary">
               ¿Cuándo lo necesitas?
             </label>
             <div class="grid grid-cols-1 gap-2">
@@ -152,11 +152,11 @@ interface DurationOption {
           </div>
 
           <!-- Payment Method -->
-          <div>
-            <label class="block text-sm font-semibold text-text-primary mb-3">
+          <div class="stack-xs">
+            <label class="block text-sm font-semibold text-text-primary">
               Método de pago
             </label>
-            <div class="space-y-2">
+            <div class="stack-sm">
               <!-- Wallet -->
               <button
                 type="button"
@@ -183,10 +183,10 @@ interface DurationOption {
                         />
                       </svg>
                     </div>
-                    <div>
-                      <p class="text-sm font-semibold text-text-primary">Wallet AutoRenta</p>
-                      <p class="text-xs text-text-secondary">
-                        Saldo: {{ walletBalance() | money: (car.currency || 'ARS') }}
+                  <div class="stack-xs">
+                    <p class="text-sm font-semibold text-text-primary">Wallet AutoRenta</p>
+                    <p class="text-xs text-text-secondary">
+                      Saldo: {{ walletBalance() | money: (car.currency || 'ARS') }}
                       </p>
                     </div>
                   </div>
@@ -263,7 +263,7 @@ interface DurationOption {
           </div>
 
           <!-- Price Summary -->
-          <div class="bg-surface-base rounded-xl p-4 space-y-2">
+          <div class="bg-surface-base rounded-xl p-4 stack-xs">
             <div class="flex items-center justify-between text-sm">
               <span class="text-text-secondary">Subtotal</span>
               <span class="font-semibold text-text-primary">
@@ -279,7 +279,7 @@ interface DurationOption {
             <div class="border-t border-border-default pt-2 mt-2">
               <div class="flex items-center justify-between">
                 <span class="text-base font-bold text-text-primary">Total</span>
-                <span class="text-2xl font-bold text-cta-default">
+                <span class="h4 text-cta-default">
                   {{ totalWithFees() | money: (car.currency || 'ARS') }}
                 </span>
               </div>

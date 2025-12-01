@@ -646,7 +646,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           ],
           'circle-radius': ['step', ['get', 'point_count'], 20, 5, 30, 20, 40, 50, 50],
           'circle-stroke-width': 2,
-          'circle-stroke-color': '#fff',
+          'circle-stroke-color': 'var(--surface-primary, #ffffff)',
           'circle-opacity': 0.8,
         },
       });
@@ -665,7 +665,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           'text-size': 12,
         },
         paint: {
-          'text-color': '#fff',
+          'text-color': 'var(--surface-primary, #ffffff)',
         },
       });
     }
@@ -690,7 +690,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           ],
           'circle-radius': 8,
           'circle-stroke-width': 2,
-          'circle-stroke-color': '#fff',
+          'circle-stroke-color': 'var(--surface-primary, #ffffff)',
           'circle-opacity': ['case', ['==', ['get', 'availabilityStatus'], 'unavailable'], 0.5, 1],
         },
       });
@@ -1587,7 +1587,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const popupHTML = `
       <div class="user-location-popup" style="font-family: 'Inter', sans-serif; padding: 4px;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-          <div style="width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);"></div>
+          <div style="width: 8px; height: 8px; background-color: var(--success-default, #10b981); border-radius: 50%; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);"></div>
           <p class="font-semibold text-slate-800 dark:text-white" style="margin: 0; font-size: 14px;">${modeText}</p>
         </div>
 
@@ -1599,11 +1599,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
         <div class="user-location-popup-actions" style="display: flex; gap: 8px; margin-top: 8px;">
           <button class="user-location-cta" data-action="search-nearby"
-            style="flex: 1; background: #06b6d4; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
+            style="flex: 1; background: var(--cta-default, #06b6d4); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
             Buscar aquí
           </button>
           <button class="user-location-cta" data-action="view-routes"
-            style="flex: 1; background: rgba(6, 182, 212, 0.1); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.2); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
+            style="flex: 1; background: var(--cta-alpha-10, rgba(6, 182, 212, 0.1)); color: var(--cta-default, #06b6d4); border: 1px solid var(--cta-alpha-20, rgba(6, 182, 212, 0.2)); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
             Ver rutas
           </button>
         </div>
@@ -2297,7 +2297,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           type: 'line',
           source: this.routeSourceId,
           paint: {
-            'line-color': '#ffffff',
+            'line-color': 'var(--surface-primary, var(--surface-primary, #ffffff)fff)',
             'line-width': 20, // THICK outline to occupy whole street
             'line-opacity': 0.8, // High visibility for 3D effect
           },
@@ -2309,7 +2309,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       }
 
       // Add main route layer - THICK 3D styling to occupy street
-      const routeColor = '#805ad5'; // AutoRenta brand color
+      const routeColor = this.getCssVariableValue('--cta-default', '#A7D8F4'); // AutoRenta brand color
       if (!this.map.getLayer(this.routeLayerId)) {
         this.map.addLayer({
           id: this.routeLayerId,

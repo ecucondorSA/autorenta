@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { BookingsService } from '../core/services/bookings.service';
+import { CarAvailabilityService } from '../core/services/car-availability.service';
 
 @Component({
   selector: 'app-calendar',
@@ -33,8 +33,7 @@ import { BookingsService } from '../core/services/bookings.service';
 export class CalendarComponent {
   @Input() carId?: string;
   @Output() rangeSelected = new EventEmitter<{ start: string; end: string }>();
-
-  private bookingService = inject(BookingsService);
+  private availabilityService = inject(CarAvailabilityService);
 
   start?: string;
   end?: string;
@@ -55,8 +54,13 @@ export class CalendarComponent {
     try {
       const startIso = new Date(this.start).toISOString();
       const endIso = new Date(this.end).toISOString();
-      // TODO: Implement availability check when API is available
-      const ok = true; // Temporary: always available
+
+      // Consultar disponibilidad real vía RPC (Supabase)
+      const ok = await this.availabilityService.checkAvailability(
+        this.carId,
+        startIso.slice(0, 10),
+        endIso.slice(0, 10),
+      );
       this.available = !!ok;
       if (ok) this.rangeSelected.emit({ start: startIso, end: endIso });
     } catch (e) {

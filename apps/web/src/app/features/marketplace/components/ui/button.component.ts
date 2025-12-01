@@ -93,48 +93,48 @@ type ButtonSize = 'sm' | 'md' | 'lg';
 
       /* Variants */
       button.variant-primary {
-        background: #4f46e5;
+        background: var(--cta-default, #A7D8F4); /* Reemplazado hex con token semántico */
         color: white;
       }
 
       button.variant-primary:hover:not(:disabled) {
-        background: #4338ca;
+        background: var(--cta-dark, #8EC9EC); /* Reemplazado hex con token semántico */
       }
 
       button.variant-secondary {
-        background: #f3f4f6;
-        color: #374151;
+        background: var(--surface-light-subtle, #F5F5F5); /* Reemplazado hex con token semántico */
+        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
       }
 
       button.variant-secondary:hover:not(:disabled) {
-        background: #e5e7eb;
+        background: var(--surface-hover-light, #E3E3E3); /* Reemplazado hex con token semántico */
       }
 
       button.variant-ghost {
         background: transparent;
-        color: #374151;
+        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
       }
 
       button.variant-ghost:hover:not(:disabled) {
-        background: #f3f4f6;
+        background: var(--surface-hover-light, #E3E3E3); /* Reemplazado hex con token semántico */
       }
 
       button.variant-danger {
-        background: #ef4444;
+        background: var(--error-default, #B25E5E); /* Reemplazado hex con token semántico */
         color: white;
       }
 
       button.variant-danger:hover:not(:disabled) {
-        background: #dc2626;
+        background: var(--error-dark); /* Reemplazado hex con token semántico */
       }
 
       button.variant-success {
-        background: #10b981;
+        background: var(--success-default); /* Reemplazado hex con token semántico */
         color: white;
       }
 
       button.variant-success:hover:not(:disabled) {
-        background: #059669;
+        background: var(--success-dark, #0F9D58); /* Reemplazado hex con token semántico */
       }
 
       /* Full width */

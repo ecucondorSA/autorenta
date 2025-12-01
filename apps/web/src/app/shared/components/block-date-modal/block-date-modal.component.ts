@@ -209,8 +209,8 @@ export interface BlockDateRequest {
       }
 
       :host ::ng-deep .flatpickr-day.selected {
-        background: #0891b2 !important;
-        border-color: #0891b2 !important;
+        background: var(--cta-default) !important;
+        border-color: var(--cta-default) !important;
       }
     `,
   ],

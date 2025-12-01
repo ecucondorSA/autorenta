@@ -28,7 +28,7 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--surface-primary-alpha-80, rgba(255, 255, 255, 0.8));
 }
 
 .cars-map-loading-overlay {
@@ -39,8 +39,8 @@
 .cars-map-spinner {
   width: 3rem;
   height: 3rem;
-  border: 0.25rem solid #eee;
-  border-top-color: #333;
+  border: 0.25rem solid var(--surface-muted, var(--surface-muted, #eee));
+  border-top-color: var(--text-primary, #333);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -59,7 +59,7 @@
 .cars-map-error-icon {
   width: 3rem;
   height: 3rem;
-  color: #f00;
+  color: var(--error-default, var(--error-default, #f00));
 }
 
 /* 🎯 MAP MARKERS */
@@ -78,24 +78,24 @@
 
 /* Availability Status Styles - Using Tokens */
 .marker-availability--available {
-  border: 2px solid var(--map-marker-available-color, #10b981);
+  border: 2px solid var(--map-marker-available-color, var(--success-default, #10b981));
   box-shadow: 0 0 0 2px var(--map-marker-available-shadow, rgba(16, 185, 129, 0.2));
 }
 
 .marker-availability--soon_available {
-  border: 2px solid var(--map-marker-soon-available-color, #f59e0b);
+  border: 2px solid var(--map-marker-soon-available-color, var(--warning-default, #f59e0b));
   box-shadow: 0 0 0 2px var(--map-marker-soon-available-shadow, rgba(245, 158, 11, 0.2));
   animation: pulse-amber 2s ease-in-out infinite;
 }
 
 .marker-availability--in_use {
-  border: 2px solid var(--map-marker-in-use-color, #6366f1);
+  border: 2px solid var(--map-marker-in-use-color, var(--info-default, #6366f1));
   box-shadow: 0 0 0 2px var(--map-marker-in-use-shadow, rgba(99, 102, 241, 0.2));
   opacity: 0.7;
 }
 
 .marker-availability--unavailable {
-  border: 2px solid var(--map-marker-unavailable-color, #ef4444);
+  border: 2px solid var(--map-marker-unavailable-color, var(--error-default, #ef4444));
   box-shadow: 0 0 0 2px var(--map-marker-unavailable-shadow, rgba(239, 68, 68, 0.2));
   opacity: 0.5;
   filter: grayscale(0.5);
@@ -115,28 +115,28 @@
   font-size: 12px;
   font-weight: 700;
   color: white;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 3px 8px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4));
   z-index: 15;
   animation: badge-appear 0.3s ease-out;
   border: 2px solid white;
 }
 
 .marker-badge--available {
-  background: var(--map-marker-available-color, #10b981);
+  background: var(--map-marker-available-color, var(--success-default, #10b981));
 }
 
 .marker-badge--soon {
-  background: var(--map-marker-soon-available-color, #f59e0b);
+  background: var(--map-marker-soon-available-color, var(--warning-default, #f59e0b));
   font-size: 9px;
 }
 
 .marker-badge--in-use {
-  background: var(--map-marker-in-use-color, #6366f1);
+  background: var(--map-marker-in-use-color, var(--info-default, #6366f1));
   font-size: 12px;
 }
 
 .marker-badge--unavailable {
-  background: var(--map-marker-unavailable-color, #ef4444);
+  background: var(--map-marker-unavailable-color, var(--error-default, #ef4444));
 }
 
 /* Instant Booking Visual Indicator - Using Tokens */
@@ -149,7 +149,7 @@
   position: absolute;
   inset: -4px;
   border: var(--map-marker-instant-booking-border, 3px) solid
-    var(--map-marker-instant-booking-color, #10b981);
+    var(--map-marker-instant-booking-color, var(--success-default, #10b981));
   border-radius: 50%;
   animation: instant-booking-pulse 2s ease-in-out infinite;
   z-index: -1;
@@ -162,10 +162,10 @@
   right: -4px;
   width: var(--map-marker-instant-booking-indicator-size, 18px);
   height: var(--map-marker-instant-booking-indicator-size, 18px);
-  background: var(--map-marker-instant-booking-color, #10b981);
+  background: var(--map-marker-instant-booking-color, var(--success-default, #10b981));
   border: 3px solid white;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 8px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4));
   z-index: 20;
   animation: instant-booking-glow 1.5s ease-in-out infinite;
   display: flex;
@@ -194,7 +194,7 @@
 @keyframes instant-booking-glow {
   0%,
   100% {
-    box-shadow: 0 0 0 0 var(--map-marker-instant-booking-color, #10b981);
+    box-shadow: 0 0 0 0 var(--map-marker-instant-booking-color, var(--success-default, #10b981));
     opacity: 0.7;
   }
   50% {
@@ -236,8 +236,8 @@
   bottom: calc(100% + 6px);
   transform: translateX(-50%) scale(0.9);
   transform-origin: center bottom;
-  background: rgba(20, 23, 24, 0.95);
-  color: #fefefe;
+  background: var(--surface-overlay-dark, var(--surface-overlay-dark, rgba(20, 23, 24, 0.95)));
+  color: var(--text-white, #fefefe);
   padding: 6px 10px;
   border-radius: 10px;
   font-size: 0.72rem;
@@ -258,9 +258,9 @@
 }
 
 .car-marker--dark::after {
-  background: rgba(255, 255, 255, 0.92);
-  color: #0f172a;
-  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.25);
+  background: var(--surface-overlay-light, var(--surface-overlay-light, rgba(255, 255, 255, 0.92)));
+  color: var(--text-primary-dark, var(--text-primary-dark, #0f172a));
+  box-shadow: var(--shadow-lg-dark, 0 14px 34px rgba(15, 23, 42, 0.25));
 }
 
 /* Bounce animation on load */
@@ -280,22 +280,22 @@
 
 /* Enhanced active states */
 .car-marker.active.nearby .car-marker-content {
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
-  border-color: #dc2626;
+  background-color: var(--error-default); /* Replaced gradient with solid color token */
+  border-color: var(--error-default, var(--error-dark, #dc2626));
   transform: scale(1.2);
   box-shadow:
-    0 0 0 4px rgba(220, 38, 38, 0.3),
-    0 8px 24px rgba(220, 38, 38, 0.4);
+    0 0 0 4px var(--error-alpha-30, rgba(220, 38, 38, 0.3)),
+    0 8px 24px var(--error-alpha-40, rgba(220, 38, 38, 0.4));
 }
 
 /* User location marker */
 .user-location-marker {
   width: 20px;
   height: 20px;
-  background: #ffffff;
-  border: 3px solid #4285f4;
+  background: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff)fff));
+  border: 3px solid var(--system-blue-default, var(--system-blue-default, #4285f4));
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.4);
+  box-shadow: 0 2px 8px var(--system-blue-alpha-40, var(--system-blue-alpha-40, rgba(66, 133, 244, 0.4)));
   position: relative;
 }
 
@@ -307,20 +307,20 @@
   transform: translate(-50%, -50%);
   width: 8px;
   height: 8px;
-  background: #4285f4;
+  background: var(--system-blue-default, var(--system-blue-default, #4285f4));
   border-radius: 50%;
 }
 
 /* Pulse effect for user location */
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7);
+    box-shadow: 0 0 0 0 var(--system-blue-alpha-70, var(--system-blue-alpha-70, rgba(66, 133, 244, 0.7)));
   }
   70% {
-    box-shadow: 0 0 0 15px rgba(66, 133, 244, 0);
+    box-shadow: 0 0 0 15px var(--system-blue-alpha-0, rgba(66, 133, 244, 0));
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(66, 133, 244, 0);
+    box-shadow: 0 0 0 0 var(--system-blue-alpha-0, rgba(66, 133, 244, 0));
   }
 }
 
@@ -333,7 +333,7 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #ffb400;
+  background: var(--warning-default, var(--warning-default, #ffb400));
   border-radius: 50%;
   width: 18px;
   height: 18px;
@@ -341,8 +341,8 @@
   align-items: center;
   justify-content: center;
   font-size: 10px;
-  color: #1a1a1a;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: var(--text-dark, #1a1a1a);
+  box-shadow: 0 2px 4px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2));
 }
 
 /* Popup styles */
@@ -354,9 +354,9 @@
   padding: 3px 4px !important; /* Reducido 4x (antes 12px 16px) */
   border-radius: 4px !important; /* Reducido 4x (antes 16px) */
   -webkit-border-radius: 4px !important;
-  background-color: #ffffff !important; /* Fondo blanco en light mode */
-  color: #1a1a1a !important; /* Texto oscuro para contraste */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important; /* Reducido 4x */
+  background-color: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff)fff)) !important; /* Fondo blanco en light mode */
+  color: var(--text-dark, #1a1a1a) !important; /* Texto oscuro para contraste */
+  box-shadow: var(--shadow-sm-dark, 0 1px 3px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4))) !important; /* Reducido 4x */
   z-index: 1000 !important; /* Asegurar que esté por encima */
   border: none !important; /* Eliminar cualquier borde que pueda interferir */
   overflow: hidden !important; /* Asegurar que el contenido respete los bordes redondeados */
@@ -367,10 +367,10 @@
 
 /* Dark mode para popup */
 .dark .car-popup .mapboxgl-popup-content {
-  background-color: #1e1e1e !important; /* Fondo gris oscuro en dark mode */
-  color: #ffffff !important; /* Texto blanco para contraste */
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8) !important; /* Sombra más intensa */
-  border: 1px solid rgba(255, 255, 255, 0.15) !important; /* Borde sutil */
+  background-color: var(--surface-dark, #1e1e1e) !important; /* Fondo gris oscuro en dark mode */
+  color: var(--text-white, #ffffff) !important; /* Texto blanco para contraste */
+  box-shadow: var(--shadow-lg-dark, 0 6px 20px var(--shadow-dark-alpha-80, rgba(0, 0, 0, 0.8))) !important; /* Sombra más intensa */
+  border: 1px solid var(--border-light-alpha-15, var(--border-light-alpha-15, rgba(255, 255, 255, 0.15))) !important; /* Borde sutil */
 }
 
 .car-popup-content {
@@ -387,7 +387,7 @@
   -webkit-border-radius: 2.5px;
   overflow: hidden !important;
   flex-shrink: 0;
-  background: #e5e7eb;
+  background: var(--surface-light-muted, var(--surface-light-muted, #e5e7eb));
   position: relative;
   isolation: isolate;
   /* Forzar el recorte visual */
@@ -427,11 +427,11 @@ img.car-popup-image {
 }
 
 .car-popup-info {
-  color: #1a1a1a !important; /* Color base oscuro para light mode */
+  color: var(--text-dark, #1a1a1a) !important; /* Color base oscuro para light mode */
 }
 
 .dark .car-popup-info {
-  color: #ffffff !important; /* Color base blanco para dark mode */
+  color: var(--text-white, #ffffff) !important; /* Color base blanco para dark mode */
 }
 
 /* Selectores específicos para sobrescribir estilos globales de map-theme.css - REDUCIDO 4x */
@@ -444,7 +444,7 @@ img.car-popup-image {
   margin: 0 0 1px 0 !important; /* Reducido 4x (antes 0 0 4px 0) */
   font-size: 3.5px !important; /* Reducido 4x (antes 14px) */
   font-weight: 600 !important;
-  color: #1a1a1a !important; /* Oscuro para light mode */
+  color: var(--text-dark, #1a1a1a) !important; /* Oscuro para light mode */
   line-height: 1.3 !important;
   display: block !important;
   visibility: visible !important;
@@ -458,18 +458,18 @@ img.car-popup-image {
 .dark .mapboxgl-popup-content.car-popup-content h4,
 .dark .car-popup-content h4,
 .dark .car-popup-title {
-  color: #ffffff !important; /* Blanco para contraste en dark mode */
+  color: var(--text-white, #ffffff) !important; /* Blanco para contraste en dark mode */
 }
 
 .car-popup-info p:not(.car-popup-price) {
-  color: #4b4b4b !important; /* Gris medio para texto secundario en light mode */
+  color: var(--text-muted, #4b4b4b) !important; /* Gris medio para texto secundario en light mode */
   margin: 0;
   font-size: 3.25px; /* Reducido 4x (antes 13px) */
   line-height: 1.4;
 }
 
 .dark .car-popup-info p:not(.car-popup-price) {
-  color: #e5e3dd !important; /* Gris claro para texto secundario en dark mode */
+  color: var(--text-light-muted, #e5e3dd) !important; /* Gris claro para texto secundario en dark mode */
 }
 
 .car-popup-price {
@@ -481,7 +481,7 @@ img.car-popup-image {
 }
 
 .dark .car-popup-price {
-  color: #60a5fa !important; /* Azul claro para precio en dark mode */
+  color: var(--cta-light, #60a5fa) !important; /* Azul claro para precio en dark mode */
 }
 
 /* Responsive: Mejorar contraste y tamaño en móvil - REDUCCIÓN AL 1/8 (8x más pequeño) */
@@ -573,14 +573,14 @@ img.car-popup-image {
 
 /* Tip del popup - Light mode */
 .car-popup .mapboxgl-popup-tip {
-  border-top-color: #ffffff !important;
-  border-bottom-color: #ffffff !important;
+  border-top-color: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff)fff)) !important;
+  border-bottom-color: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff)fff)) !important;
 }
 
 /* Tip del popup - Dark mode */
 .dark .car-popup .mapboxgl-popup-tip {
-  border-top-color: #1e1e1e !important;
-  border-bottom-color: #1e1e1e !important;
+  border-top-color: var(--surface-dark, #1e1e1e) !important;
+  border-bottom-color: var(--surface-dark, #1e1e1e) !important;
 }
 
 /* Desktop: Asegurar visibilidad en pantallas grandes - REDUCIDO 4x */
@@ -592,8 +592,8 @@ img.car-popup-image {
   }
 
   .dark .car-popup .mapboxgl-popup-content {
-    background-color: #1e1e1e !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.9) !important; /* Reducido 4x */
+    background-color: var(--surface-dark, #1e1e1e) !important;
+    box-shadow: var(--shadow-md-dark, 0 2px 6px var(--shadow-dark-alpha-90, rgba(0, 0, 0, 0.9))) !important; /* Reducido 4x */
   }
 
   .car-popup-info h4,
@@ -602,9 +602,11 @@ img.car-popup-image {
     font-weight: 700;
   }
 
-  .dark .car-popup-info h4,
-  .dark .car-popup-title {
-    color: #ffffff !important;
+.dark .car-popup-info h4,
+.dark .car-popup-title {
+    font-size: 3.75px; /* Reducido 4x (antes 15px) */
+    font-weight: 700;
+    color: var(--text-white, #ffffff) !important;
   }
 
   .car-popup-price {
@@ -612,7 +614,7 @@ img.car-popup-image {
   }
 
   .dark .car-popup-price {
-    color: #60a5fa !important;
+    color: var(--cta-light, #60a5fa) !important;
   }
 }
 
@@ -625,12 +627,12 @@ img.car-popup-image {
   width: 36px;
   height: 36px;
   border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: #ffffff;
-  color: #222;
+  border: 1px solid var(--border-dark-alpha-10, var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)));
+  background: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff)fff));
+  color: var(--text-dark-muted, var(--text-dark-muted, #222));
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md-light, 0 2px 8px var(--shadow-dark-alpha-15, rgba(0, 0, 0, 0.15)));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -638,8 +640,8 @@ img.car-popup-image {
 
 .mapbox-ctrl-geolocate:hover {
   transform: scale(1.05);
-  background: #f8f9fa;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: var(--surface-hover-light, var(--surface-hover-light, #f8f9fa));
+  box-shadow: var(--shadow-lg-light, 0 4px 12px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2)));
 }
 
 .mapbox-ctrl-geolocate:active {
@@ -648,15 +650,15 @@ img.car-popup-image {
 
 /* Dark mode para botón de geolocalización */
 .dark .mapbox-ctrl-geolocate {
-  background: #1e1e1e !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+  background: var(--surface-dark, #1e1e1e) !important;
+  border-color: var(--border-light-alpha-20, var(--border-light-alpha-20, rgba(255, 255, 255, 0.2))) !important;
+  color: var(--text-white, #ffffff) !important;
+  box-shadow: var(--shadow-md-dark, 0 2px 8px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4))) !important;
 }
 
 .dark .mapbox-ctrl-geolocate:hover {
-  background: #2a2a2a !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+  background: var(--surface-hover-dark, #2a2a2a) !important;
+  box-shadow: var(--shadow-lg-dark, 0 4px 12px var(--shadow-dark-alpha-60, rgba(0, 0, 0, 0.6))) !important;
 }
 
 .mapbox-ctrl-geolocate svg {
@@ -679,9 +681,9 @@ img.car-popup-image {
 .car-marker-simple.car-marker--selected .marker-circle {
   transform: scale(1.2);
   box-shadow:
-    0 0 0 4px rgba(167, 216, 244, 0.3),
-    /* cta-default con opacidad */ 0 4px 12px rgba(167, 216, 244, 0.6),
-    /* cta-default con opacidad */ 0 8px 24px rgba(0, 0, 0, 0.3);
+    0 0 0 4px var(--cta-alpha-30, var(--cta-alpha-30, rgba(167, 216, 244, 0.3))),
+    /* cta-default con opacidad */ 0 4px 12px var(--cta-alpha-60, var(--cta-alpha-60, rgba(167, 216, 244, 0.6))),
+    /* cta-default con opacidad */ 0 8px 24px var(--shadow-dark-alpha-30, var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3)));
   animation: pulse-marker 2s ease-in-out infinite;
 }
 
@@ -703,7 +705,7 @@ img.car-popup-image {
   height: var(--map-marker-photo-size, 80px);
   border-radius: 50%;
   border: var(--map-marker-photo-border, 3px) solid var(--map-marker-photo-border-color, white);
-  box-shadow: var(--map-marker-photo-shadow, 0 6px 20px rgba(0, 0, 0, 0.3));
+  box-shadow: var(--map-marker-photo-shadow, 0 6px 20px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3)));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -711,7 +713,7 @@ img.car-popup-image {
   overflow: visible;
   z-index: 10;
   transition: all var(--duration-normal, 300ms) var(--easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
-  background: linear-gradient(135deg, var(--cta-default) 0%, var(--cta-hover) 100%);
+  background: var(--cta-default); /* Reemplazado gradiente con color sólido */
   background-clip: padding-box;
 }
 
@@ -720,7 +722,7 @@ img.car-popup-image {
 }
 
 .marker-circle-photo--no-image {
-  background: linear-gradient(135deg, var(--cta-default) 0%, var(--cta-hover) 100%);
+  background: var(--cta-default); /* Reemplazado gradiente con color sólido */
 }
 
 .marker-photo-image {
@@ -745,7 +747,7 @@ img.car-popup-image {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2));
   z-index: 1;
   user-select: none;
 }
@@ -760,33 +762,32 @@ img.car-popup-image {
 
 /* Price badge on photo marker - Marketplace style */
 .marker-photo-price-badge {
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--cta-default) 0%, var(--cta-hover) 100%);
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 12px;
-  white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  border: 2px solid white;
-  z-index: 15;
-  pointer-events: none;
-  letter-spacing: 0.3px;
-}
-
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--cta-default); /* Reemplazado gradiente con color sólido */
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3));
+      border: 2px solid white;
+      z-index: 15;
+      pointer-events: none;
+      letter-spacing: 0.3px;
+    }
 .car-marker-simple:hover .marker-photo-price-badge {
   transform: translateX(-50%) scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4));
 }
 
 /* Hover effects for photo marker - Using Tokens */
 .car-marker-simple:hover .marker-circle-photo {
   transform: scale(var(--map-marker-photo-hover-scale, 1.12));
-  box-shadow: var(--map-marker-photo-hover-shadow, 0 8px 16px rgba(0, 0, 0, 0.3));
+  box-shadow: var(--map-marker-photo-hover-shadow, 0 8px 16px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3)));
   border-width: calc(var(--map-marker-photo-border, 2.5px) * 1.6);
 }
 
@@ -797,9 +798,9 @@ img.car-popup-image {
 .car-marker-simple.car-marker--selected .marker-circle-photo {
   transform: scale(1.2);
   box-shadow:
-    0 0 0 4px rgba(167, 216, 244, 0.3),
-    0 4px 12px rgba(167, 216, 244, 0.6),
-    0 8px 24px rgba(0, 0, 0, 0.3);
+    0 0 0 4px var(--cta-alpha-30, rgba(167, 216, 244, 0.3)),
+    0 4px 12px var(--cta-alpha-60, rgba(167, 216, 244, 0.6)),
+    0 8px 24px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3));
   animation: pulse-marker-photo 2s ease-in-out infinite;
   border-color: var(--cta-default);
 }
@@ -822,22 +823,19 @@ img.car-popup-image {
 
 /* Gradient border effect for photo marker */
 .marker-circle-photo::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  padding: 3px;
-  background: linear-gradient(135deg, var(--cta-default), var(--cta-hover));
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      padding: 3px;
+      background: var(--cta-default); /* Reemplazado gradiente con color sólido */
+      -webkit-mask: var(--surface-primary) content-box, var(--surface-primary); /* Reemplazado gradiente con color sólido */
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 .car-marker-simple:hover .marker-circle-photo::before,
 .car-marker-simple.car-marker--selected .marker-circle-photo::before {
   opacity: 1;
@@ -856,7 +854,7 @@ img.car-popup-image {
   height: var(--circle-size, 40px);
   border-radius: 50%;
   border: 3px solid white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3));
   position: relative;
   z-index: 2;
   transition: all 0.3s ease;
@@ -878,7 +876,7 @@ img.car-popup-image {
 
 /* Estados contextuales */
 .user-location-marker--searching .user-marker-avatar {
-  border-color: #10b981; /* Verde para búsqueda activa */
+  border-color: var(--success-default, #10b981); /* Verde para búsqueda activa */
   box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);
 }
 
@@ -887,7 +885,7 @@ img.car-popup-image {
 }
 
 .user-location-marker--booking-confirmed .user-marker-avatar {
-  border-color: #f59e0b; /* Naranja para reserva confirmada */
+  border-color: var(--warning-default, #f59e0b); /* Naranja para reserva confirmada */
   box-shadow: 0 2px 12px rgba(245, 158, 11, 0.4);
 }
 
@@ -897,7 +895,7 @@ img.car-popup-image {
 
 /* Modo oscuro */
 .user-location-marker--dark .user-marker-avatar {
-  border-color: #1e293b;
+  border-color: var(--surface-raised);
   box-shadow: 0 2px 12px rgba(167, 216, 244, 0.5);
 }
 
@@ -971,19 +969,19 @@ img.car-popup-image {
 .user-location-popup .text-text-primary {
   font-weight: 600;
   font-size: 14px;
-  color: #0f172a;
+  color: var(--text-primary-dark, #0f172a);
   margin-bottom: 4px;
 }
 
 .user-location-popup .text-text-secondary {
   font-size: 12px;
-  color: #64748b;
+  color: var(--text-secondary, #64748b);
   margin-bottom: 2px;
 }
 
 .user-location-popup .text-text-tertiary {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-bottom: 8px;
 }
 
@@ -1010,7 +1008,7 @@ img.car-popup-image {
 .user-location-cta:hover {
   background: var(--cta-hover);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(167, 216, 244, 0.3);
+  box-shadow: 0 2px 8px var(--cta-alpha-30, rgba(167, 216, 244, 0.3));
 }
 
 .user-location-cta:active {
@@ -1023,20 +1021,20 @@ img.car-popup-image {
 }
 
 .dark .user-location-popup .text-text-secondary {
-  color: #cbd5e1;
+  color: var(--text-secondary);
 }
 
 .dark .user-location-popup .text-text-tertiary {
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .dark .user-location-cta {
   background: rgba(167, 216, 244, 0.2);
-  color: #e0f2fe;
+  color: var(--text-primary);
 }
 
 .dark .user-location-cta:hover {
-  background: rgba(167, 216, 244, 0.3);
+  background: var(--cta-alpha-30, rgba(167, 216, 244, 0.3));
 }
 
 /* 🎯 Tooltip Container */
@@ -1059,20 +1057,20 @@ img.car-popup-image {
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1));
   background: white;
-  color: #0f172a;
+  color: var(--text-primary-dark, #0f172a);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--shadow-dark-alpha-15, rgba(0, 0, 0, 0.15));
   transition: all 0.2s ease;
 }
 
 .map-control-button:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2));
 }
 
 .map-control-button:active {
@@ -1092,13 +1090,13 @@ img.car-popup-image {
 
 /* Modo oscuro para controles */
 .dark .map-control-button {
-  background: #1e293b;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--surface-secondary);
+  border-color: var(--border-light-alpha-20, rgba(255, 255, 255, 0.2));
   color: #f8fafc;
 }
 
 .dark .map-control-button:hover {
-  background: #334155;
+  background: var(--surface-raised);
 }
 
 .dark .map-control-button.active {
@@ -1128,19 +1126,19 @@ img.car-popup-image {
   gap: 8px;
   padding: 12px 20px;
   background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1));
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px var(--shadow-dark-alpha-15, rgba(0, 0, 0, 0.15));
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 14px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary-dark, #0f172a);
 }
 
 .feature-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2));
   background: #f8fafc;
 }
 
@@ -1172,13 +1170,13 @@ img.car-popup-image {
 
 /* Dark mode for feature buttons */
 .dark .cars-map-feature-button {
-  background: #1e293b;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--surface-secondary);
+  border-color: var(--border-light-alpha-20, rgba(255, 255, 255, 0.2));
   color: #f8fafc;
 }
 
 .dark .feature-button:hover {
-  background: #334155;
+  background: var(--surface-raised);
 }
 
 .dark .feature-button.active {
@@ -1246,25 +1244,25 @@ img.car-popup-image {
 }
 
 .info-card {
-  background: var(--surface-primary, #fff);
+  background: var(--surface-primary, var(--surface-primary, #ffffff));
   border: 1px solid var(--border-default, #e2e8f0);
   border-radius: 12px;
   padding: 16px;
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 4px 6px -1px var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   backdrop-filter: blur(8px);
   transition: all 0.3s ease;
 }
 
 .dark .info-card {
-  background: rgba(30, 41, 59, 0.95);
-  border-color: #334155;
+  background: var(--surface-dark-alpha-95, rgba(30, 41, 59, 0.95));
+  border-color: var(--border-default);
 }
 
 .info-card:hover {
   box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 10px 15px -3px var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
 }
@@ -1275,11 +1273,11 @@ img.car-popup-image {
   gap: 8px;
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--surface-muted, #f1f5f9);
 }
 
 .dark .info-card-header {
-  border-bottom-color: #334155;
+  border-bottom-color: var(--border-default);
 }
 
 .info-icon {
@@ -1328,7 +1326,7 @@ img.car-popup-image {
 }
 
 .info-label {
-  color: var(--text-secondary, #64748b);
+  color: var(--text-secondary, var(--text-secondary, #64748b));
   font-weight: 450;
   display: flex;
   align-items: center;
@@ -1350,7 +1348,7 @@ img.car-popup-image {
 
 .info-badge {
   background: var(--cta-default, #0284c7);
-  color: #fff;
+  color: var(--surface-primary, #ffffff);
   font-size: 0.75rem;
   font-weight: 550;
   padding: 2px 8px;
@@ -1367,17 +1365,17 @@ img.car-popup-image {
 }
 
 .status-available {
-  background: var(--map-marker-available-color, #10b981);
+  background: var(--map-marker-available-color, var(--success-default, #10b981));
   box-shadow: 0 0 4px rgba(16, 185, 129, 0.4);
 }
 
 .status-in-use {
-  background: var(--map-marker-in-use-color, #6366f1);
+  background: var(--map-marker-in-use-color, var(--info-default, #6366f1));
   box-shadow: 0 0 4px rgba(99, 102, 241, 0.4);
 }
 
 .status-soon {
-  background: var(--map-marker-soon-available-color, #f59e0b);
+  background: var(--map-marker-soon-available-color, var(--warning-default, #f59e0b));
   box-shadow: 0 0 4px rgba(245, 158, 11, 0.4);
   animation: pulse-subtle 2s ease-in-out infinite;
 }
@@ -1399,57 +1397,60 @@ img.car-popup-image {
 
 .legend-marker.user-marker {
   background: var(--cta-default, #0284c7);
-  border-color: #fff;
+  border-color: var(--surface-primary, #ffffff);
   box-shadow:
     0 0 0 2px var(--cta-default, #0284c7),
     0 0 8px rgba(2, 132, 199, 0.4);
 }
 
 .dark .legend-marker.user-marker {
-  border-color: var(--surface-primary, #1e293b);
+  border-color: var(--surface-primary);
 }
 
 .legend-marker.car-available {
-  background: var(--map-marker-available-color, #10b981);
-  border-color: #fff;
-  box-shadow: 0 0 0 1px var(--map-marker-available-color, #10b981);
+  background: var(--map-marker-available-color, var(--success-default, #10b981));
+  border-color: var(--surface-primary);
+  box-shadow: 0 0 0 1px var(--map-marker-available-color, var(--success-default, #10b981));
 }
 
 .dark .legend-marker.car-available {
-  border-color: var(--surface-primary, #1e293b);
+  border-color: var(--surface-primary);
 }
 
 .legend-marker.car-soon {
-  background: var(--map-marker-soon-available-color, #f59e0b);
-  border-color: #fff;
-  box-shadow: 0 0 0 1px var(--map-marker-soon-available-color, #f59e0b);
+  background: var(--map-marker-soon-available-color, var(--warning-default, #f59e0b));
+  border-color: var(--surface-primary);
+  box-shadow: 0 0 0 1px var(--map-marker-soon-available-color, var(--warning-default, #f59e0b));
   animation: pulse-subtle 2s ease-in-out infinite;
 }
 
 .dark .legend-marker.car-soon {
-  border-color: var(--surface-primary, #1e293b);
+  border-color: var(--surface-primary);
 }
 
 .legend-marker.car-in-use {
-  background: var(--map-marker-in-use-color, #6366f1);
-  border-color: #fff;
-  box-shadow: 0 0 0 1px var(--map-marker-in-use-color, #6366f1);
+  background: var(--map-marker-in-use-color, var(--info-default, #6366f1));
+  border-color: var(--surface-primary);
+  box-shadow: 0 0 0 1px var(--map-marker-in-use-color, var(--info-default, #6366f1));
   opacity: 0.7;
 }
 
 .dark .legend-marker.car-in-use {
-  border-color: var(--surface-primary, #1e293b);
+  background: var(--map-marker-in-use-color, var(--info-default, #6366f1));
+  border-color: var(--surface-primary);
+  box-shadow: 0 0 0 1px var(--map-marker-in-use-color, var(--info-default, #6366f1));
+  opacity: 0.7;
 }
 
 .legend-marker.search-radius {
-  background: rgba(167, 216, 244, 0.3);
-  border: 2px dashed rgba(167, 216, 244, 0.6);
+  background: var(--cta-alpha-30, rgba(167, 216, 244, 0.3));
+  border: 2px dashed var(--cta-alpha-60, rgba(167, 216, 244, 0.6));
   border-radius: 4px;
 }
 
 .legend-label {
   font-size: 0.8125rem;
-  color: var(--text-secondary, #64748b);
+  color: var(--text-secondary, var(--text-secondary, #64748b));
   font-weight: 450;
 }
 

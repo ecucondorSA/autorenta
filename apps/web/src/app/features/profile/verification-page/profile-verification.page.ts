@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 
@@ -7,6 +7,7 @@ import { EmailVerificationComponent } from '../../../shared/components/email-ver
 import { PhoneVerificationComponent } from '../../../shared/components/phone-verification/phone-verification.component';
 import { SelfieCaptureComponent } from '../../../shared/components/selfie-capture/selfie-capture.component';
 import { ProfileStore } from '../../../core/stores/profile.store';
+import { LicenseUploaderComponent } from './components/license-uploader.component'; // Importar uploader
 
 /**
  * Profile Verification Page
@@ -28,6 +29,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
     EmailVerificationComponent,
     PhoneVerificationComponent,
     SelfieCaptureComponent,
+    LicenseUploaderComponent // Añadir a imports
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -145,13 +147,27 @@ import { ProfileStore } from '../../../core/stores/profile.store';
                   {{ profile()?.is_driver_verified ? '✓ Verificado' : 'Pendiente' }}
                 </span>
               </div>
-              <a
-                *ngIf="!profile()?.is_driver_verified"
-                routerLink="/verification/upload-documents"
-                class="inline-block mt-2 px-4 py-2 rounded-lg bg-cta-default hover:bg-cta-hover text-cta-text text-sm font-semibold transition-all"
-              >
-                Subir Licencia
-              </a>
+              
+              <!-- Uploader Integration -->
+              <div *ngIf="!profile()?.is_driver_verified" class="mt-4">
+                <button
+                  *ngIf="!showLicenseUpload()"
+                  (click)="showLicenseUpload.set(true)"
+                  class="px-4 py-2 rounded-lg bg-cta-default hover:bg-cta-hover text-cta-text text-sm font-semibold transition-all"
+                >
+                  Subir Licencia
+                </button>
+                
+                <div *ngIf="showLicenseUpload()" class="mt-4 border-t border-border-default pt-4 animate-fade-in">
+                  <app-license-uploader></app-license-uploader>
+                  <button 
+                    (click)="showLicenseUpload.set(false)"
+                    class="btn btn-sm btn-ghost mt-2"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -237,6 +253,7 @@ export class ProfileVerificationPage implements OnInit {
 
   readonly profile = this.profileStore.profile;
   readonly loading = this.profileStore.loading;
+  readonly showLicenseUpload = signal(false); // Nuevo estado
 
   ngOnInit(): void {
     // Load profile if not already loaded

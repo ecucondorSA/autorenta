@@ -42,7 +42,7 @@ import { CommonModule } from '@angular/common';
         align-items: center;
         justify-content: center;
         gap: 0.75rem;
-        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        background: var(--cta-default, #4f46e5); /* Replaced gradient with solid color token */
         color: white;
         border: none;
         border-radius: 16px;

@@ -41,6 +41,7 @@
       [initialTo]="endDate() ? endDate()!.toISOString().split('T')[0] : null"
       [dailyPrice]="car?.price_per_day"
       [carId]="car?.id"
+      [blockedRanges]="blockedRanges()"
       (rangeChange)="onDateRangeChange($event)"
     />
 
@@ -67,6 +68,7 @@
       [initialLocation]="pickupLocation()"
       [label]="'¿Dónde quieres recoger el auto?'"
       [placeholder]="'Ej: Aeropuerto, hotel, dirección...'"
+      [suggestions]="handoverPoints()"
       (locationChange)="onPickupLocationChange($event)"
     />
   </div>
@@ -94,6 +96,7 @@
         [initialLocation]="dropoffLocation()"
         [label]="'¿Dónde quieres devolver el auto?'"
         [placeholder]="'Ej: Aeropuerto, hotel, dirección...'"
+        [suggestions]="handoverPoints()"
         (locationChange)="onDropoffLocationChange($event)"
       />
       <ion-note color="warning" class="different-location-note">

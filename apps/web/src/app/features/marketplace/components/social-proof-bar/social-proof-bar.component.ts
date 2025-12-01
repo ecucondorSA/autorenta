@@ -54,7 +54,7 @@ import type { SocialProofStat } from '../../../../core/models/marketplace.model'
   styles: [
     `
       .social-proof-bar {
-        background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+        background: var(--primary-600); /* Reemplazado gradiente con color sólido */
         padding: var(--space-6) var(--space-4);
         border-radius: var(--radius-xl);
         margin: var(--space-8) 0;
@@ -62,7 +62,7 @@ import type { SocialProofStat } from '../../../../core/models/marketplace.model'
 
         /* Dark mode */
         :host-context(.dark) & {
-          background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+          background: var(--primary-700); /* Reemplazado gradiente con color sólido */
         }
       }
 
@@ -87,13 +87,13 @@ import type { SocialProofStat } from '../../../../core/models/marketplace.model'
         align-items: baseline;
         justify-content: center;
         gap: 2px;
-        font-size: var(--text-3xl);
+        font-size: var(--text-xl);
         font-weight: 700;
         color: white;
         line-height: 1.2;
 
         @media (min-width: 768px) {
-          font-size: var(--text-4xl);
+          font-size: var(--text-lg);
         }
       }
 
@@ -139,7 +139,7 @@ import type { SocialProofStat } from '../../../../core/models/marketplace.model'
         }
 
         .stat-value {
-          font-size: var(--text-2xl);
+          font-size: var(--text-lg);
         }
 
         .stat-label {

@@ -58,7 +58,7 @@ import { AuthService } from '../../../core/services/auth.service';
             role="menuitem"
           >
             <div class="flex items-start gap-3">
-              <div class="text-2xl">🏠</div>
+              <div class="text-xl">🏠</div>
               <div class="flex-1">
                 <div class="font-semibold text-sm text-cta-default dark:text-cyan-400 mb-1">
                   Convertite en Renter

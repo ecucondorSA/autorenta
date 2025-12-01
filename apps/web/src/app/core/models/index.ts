@@ -325,6 +325,7 @@ export interface Car {
   owner?: CarOwner; // Owner profile information
   created_at: string;
   updated_at: string;
+  vehicle_type?: string | null;
 }
 
 export interface CarPhoto {

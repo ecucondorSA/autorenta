@@ -48,12 +48,12 @@ import type { UrgencyIndicator } from '../../../../core/models/marketplace.model
         animation: slideIn 0.3s ease;
 
         /* Default: High demand */
-        background: linear-gradient(90deg, var(--warning-50) 0%, var(--warning-100) 100%);
+        background: var(--warning-default); /* Reemplazado gradiente con color sólido */
         color: var(--warning-800);
         border: 1px solid var(--warning-200);
 
         :host-context(.dark) & {
-          background: linear-gradient(90deg, var(--warning-900) 0%, var(--warning-800) 100%);
+          background: var(--surface-warning-dark); /* Reemplazado gradiente con color sólido */
           color: var(--warning-100);
           border-color: var(--warning-700);
         }
@@ -61,36 +61,36 @@ import type { UrgencyIndicator } from '../../../../core/models/marketplace.model
 
       /* Variants */
       .urgency-banner.low-stock {
-        background: linear-gradient(90deg, var(--error-50) 0%, var(--error-100) 100%);
+        background: var(--surface-error-light); /* Reemplazado gradiente con color sólido */
         color: var(--error-800);
         border-color: var(--error-200);
 
         :host-context(.dark) & {
-          background: linear-gradient(90deg, var(--error-900) 0%, var(--error-800) 100%);
+          background: var(--surface-error-dark); /* Reemplazado gradiente con color sólido */
           color: var(--error-100);
           border-color: var(--error-700);
         }
       }
 
       .urgency-banner.limited-time {
-        background: linear-gradient(90deg, var(--primary-50) 0%, var(--primary-100) 100%);
+        background: var(--surface-brand-light); /* Reemplazado gradiente con color sólido */
         color: var(--primary-800);
         border-color: var(--primary-200);
 
         :host-context(.dark) & {
-          background: linear-gradient(90deg, var(--primary-900) 0%, var(--primary-800) 100%);
+          background: var(--surface-brand-dark); /* Reemplazado gradiente con color sólido */
           color: var(--primary-100);
           border-color: var(--primary-700);
         }
       }
 
       .urgency-banner.popular {
-        background: linear-gradient(90deg, var(--success-50) 0%, var(--success-100) 100%);
+        background: var(--surface-success-light); /* Reemplazado gradiente con color sólido */
         color: var(--success-800);
         border-color: var(--success-200);
 
         :host-context(.dark) & {
-          background: linear-gradient(90deg, var(--success-900) 0%, var(--success-800) 100%);
+          background: var(--surface-success-dark); /* Reemplazado gradiente con color sólido */
           color: var(--success-100);
           border-color: var(--success-700);
         }
@@ -129,13 +129,13 @@ import type { UrgencyIndicator } from '../../../../core/models/marketplace.model
       .banner-timer {
         flex-shrink: 0;
         padding: var(--space-1) var(--space-2);
-        background: rgba(0, 0, 0, 0.1);
+        background: var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1));
         border-radius: var(--radius-sm);
         font-variant-numeric: tabular-nums;
         font-weight: 600;
 
         :host-context(.dark) & {
-          background: rgba(255, 255, 255, 0.1);
+          background: var(--border-light-alpha-10, rgba(255, 255, 255, 0.1));
         }
       }
 

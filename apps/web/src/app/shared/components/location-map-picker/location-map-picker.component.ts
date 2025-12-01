@@ -78,13 +78,13 @@ export interface LocationCoordinates {
         height: 400px;
         border-radius: 0.5rem;
         overflow: hidden;
-        border: 2px solid #e5e7eb;
+        border: 2px solid var(--border-default, #e5e7eb);
       }
 
       .info-panel {
         margin-top: 1rem;
-        background: #eff6ff;
-        border: 1px solid #bfdbfe;
+        background: var(--surface-info-light, #eff6ff);
+        border: 1px solid var(--border-info-default, #bfdbfe);
         border-radius: 0.5rem;
         padding: 0.75rem;
       }
@@ -112,6 +112,12 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
   private map?: mapboxgl.Map;
   private marker?: mapboxgl.Marker;
   private mapboxgl?: typeof mapboxgl;
+
+  // Helper to get CSS variable value
+  private getCssVariableValue(variableName: string, defaultValue: string): string {
+    if (typeof document === 'undefined') return defaultValue; // Server-side rendering check
+    return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim() || defaultValue;
+  }
 
   isLoading = signal(true);
   coordinates = signal<LocationCoordinates | null>(null);
@@ -186,7 +192,7 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
     // Create draggable marker
     this.marker = new this.mapboxgl.Marker({
       draggable: true,
-      color: '#2563eb', // Blue color
+      color: this.getCssVariableValue('--system-blue-default', '#4285F4'), // Blue color
     })
       .setLngLat([lng, lat])
       .addTo(this.map);

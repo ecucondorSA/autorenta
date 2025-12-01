@@ -1,0 +1,4 @@
+mcp
+google-generativeai
+pydantic
+python-dotenv

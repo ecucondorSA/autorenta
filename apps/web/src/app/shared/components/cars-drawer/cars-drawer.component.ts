@@ -136,7 +136,7 @@ export interface CarWithDistance extends Car {
         align-items: center;
         justify-content: space-between;
         padding: 1.5rem;
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid var(--border-default, #e5e7eb);
         background: white;
         flex-shrink: 0;
       }
@@ -148,13 +148,13 @@ export interface CarWithDistance extends Car {
       .drawer-title {
         font-size: 1.25rem;
         font-weight: 700;
-        color: #1f2937;
+        color: var(--text-primary, #1f2937);
         margin: 0 0 0.25rem 0;
       }
 
       .drawer-subtitle {
         font-size: 0.875rem;
-        color: #6b7280;
+        color: var(--text-secondary, #6b7280);
         margin: 0;
       }
 
@@ -162,7 +162,7 @@ export interface CarWithDistance extends Car {
         padding: 0.5rem;
         border: none;
         background: transparent;
-        color: #6b7280;
+        color: var(--text-secondary, #6b7280);
         cursor: pointer;
         border-radius: 0.375rem;
         transition: all 0.2s ease;
@@ -172,8 +172,8 @@ export interface CarWithDistance extends Car {
       }
 
       .drawer-close-btn:hover {
-        background: #f3f4f6;
-        color: #1f2937;
+        background: var(--surface-hover-light, #f3f4f6);
+        color: var(--text-primary, #1f2937);
       }
 
       .drawer-content {
@@ -214,7 +214,7 @@ export interface CarWithDistance extends Car {
 
       .drawer-footer {
         padding: 1rem;
-        border-top: 1px solid #e5e7eb;
+        border-top: 1px solid var(--border-default, #e5e7eb);
         background: white;
         flex-shrink: 0;
       }
@@ -255,34 +255,34 @@ export interface CarWithDistance extends Car {
       /* Dark mode */
       @media (prefers-color-scheme: dark) {
         .cars-drawer {
-          background: #1f2937;
+          background: var(--surface-dark, #1f2937);
         }
 
         .drawer-header {
-          background: #1f2937;
-          border-bottom-color: #374151;
+          background: var(--surface-dark, #1f2937);
+          border-bottom-color: var(--border-dark, #374151);
         }
 
         .drawer-title {
-          color: #f9fafb;
+          color: var(--text-light, #f9fafb);
         }
 
         .drawer-subtitle {
-          color: #9ca3af;
+          color: var(--text-muted-dark, #9ca3af);
         }
 
         .drawer-close-btn {
-          color: #9ca3af;
+          color: var(--text-muted-dark, #9ca3af);
         }
 
         .drawer-close-btn:hover {
-          background: #374151;
-          color: #f9fafb;
+          background: var(--surface-hover-dark, #374151);
+          color: var(--text-light, #f9fafb);
         }
 
         .drawer-footer {
-          background: #1f2937;
-          border-top-color: #374151;
+          background: var(--surface-dark, #1f2937);
+          border-top-color: var(--border-dark, #374151);
         }
       }
     `,

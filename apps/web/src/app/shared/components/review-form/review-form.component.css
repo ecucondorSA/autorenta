@@ -22,7 +22,7 @@
 }
 
 .rating-category {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-default, #e5e7eb);
   padding-bottom: 1.5rem;
 }
 

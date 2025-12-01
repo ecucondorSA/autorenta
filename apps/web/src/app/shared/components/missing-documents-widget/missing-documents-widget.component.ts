@@ -18,8 +18,8 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
             class="bg-warning-bg dark:bg-warning-900/20 border border-warning-border dark:border-warning-800/40 rounded-lg p-4 mb-6"
           >
             <div class="flex items-start gap-4">
-              <div class="flex-shrink-0">
-                <span class="text-2xl">⚠️</span>
+              <div class="flex-shrink-0 text-xl">
+                <span>⚠️</span>
               </div>
               <div class="flex-1">
                 <h3 class="font-semibold text-warning-strong dark:text-warning-200 mb-2">
@@ -64,7 +64,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
             class="bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/40 rounded-lg p-4 mb-6"
           >
             <div class="flex items-center gap-3">
-              <span class="text-2xl">✅</span>
+              <span class="text-xl">✅</span>
               <div>
                 <p class="font-semibold text-success-light dark:text-success-light">
                   Verificación Completada
@@ -81,7 +81,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
             class="bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800/40 rounded-lg p-4 mb-6"
           >
             <div class="flex items-start gap-4">
-              <span class="text-2xl flex-shrink-0">❌</span>
+              <span class="text-xl flex-shrink-0">❌</span>
               <div class="flex-1">
                 <p class="font-semibold text-error-strong mb-2">Verificación Rechazada</p>
                 <p class="text-sm text-error-strong mb-3">

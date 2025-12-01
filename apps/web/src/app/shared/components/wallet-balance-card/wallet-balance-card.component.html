@@ -141,7 +141,7 @@
         Balance Total
       </p>
       <p
-        class="text-4xl font-bold text-text-primary dark:text-text-primary wallet-balance balance-amount"
+        class="h3 text-text-primary dark:text-text-primary wallet-balance balance-amount"
         data-testid="wallet-balance"
       >
         {{ formatCurrency(totalBalance()) }}
@@ -171,7 +171,7 @@
           </svg>
         </div>
         <p
-          class="text-2xl font-bold text-success-strong dark:text-success-100"
+          class="h4 text-success-strong dark:text-success-100"
           data-testid="available-balance"
         >
           {{ formatCurrency(availableBalance()) }}
@@ -234,7 +234,7 @@
           </svg>
         </div>
         <p
-          class="text-2xl font-bold text-warning-strong dark:text-warning-100"
+          class="h4 text-warning-strong dark:text-warning-100"
           data-testid="locked-balance"
         >
           {{ formatCurrency(lockedBalance()) }}

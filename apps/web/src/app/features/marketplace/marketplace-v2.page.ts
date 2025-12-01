@@ -1143,6 +1143,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.selectedPart.set(null);
   }
 
+  onPublishClick(): void {
+    void this.router.navigate(['/cars/publish']);
+  }
+
   /**
    * Close the selected part panel
    */

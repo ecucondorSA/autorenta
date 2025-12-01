@@ -30,12 +30,14 @@ import { Car } from '../../core/models';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import type { CarMapLocation } from '../../core/services/car-locations.service';
 import { CarsService } from '../../core/services/cars.service';
+import { CarAvailabilityService } from '../../core/services/car-availability.service';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
 import { MapDrawerComponent } from '../../shared/components/map-drawer/map-drawer.component';
 import {
   FilterState,
   MapFiltersComponent,
 } from '../../shared/components/map-filters/map-filters.component';
+import { SORT_OPTIONS, SortOption } from '../../core/models/marketplace.model';
 import { WazeLiveMapComponent } from '../../shared/components/waze-live-map/waze-live-map.component';
 
 @Component({
@@ -73,8 +75,11 @@ export class ExplorePage implements OnInit, AfterViewInit {
   readonly isMobileView;
   readonly currentFilters = signal<FilterState | null>(null);
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
-  readonly viewMode = signal<'map' | 'grid' | 'list'>('map'); // Default to map, can change based on device
+  readonly viewMode = signal<'map' | 'grid' | 'list'>('list'); // Mobile-first: lista por defecto
   readonly mapProvider = signal<'mapbox' | 'waze'>('mapbox'); // Map provider toggle
+
+  readonly sortOptions = SORT_OPTIONS;
+  readonly sortOrder = signal<SortOption>('distance');
 
   // Computed
   readonly selectedCar = computed<CarMapLocation | undefined>(() => {
@@ -107,6 +112,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
 
   constructor(
     private carsService: CarsService,
+    private availabilityService: CarAvailabilityService,
     private router: Router,
     private breakpoint: BreakpointService,
     private toastController: ToastController,
@@ -137,7 +143,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     try {
       const cars = await this.carsService.listActiveCars({});
       this.cars = cars;
-      this.filteredCars = this.cars;
+      await this.applyFiltersAndSort();
     } catch {
       /* Silenced */
     } finally {
@@ -211,9 +217,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
    */
   onFilterChange(filters: FilterState) {
     this.currentFilters.set(filters);
-    // TODO: Aplicar filtros a los coches visibles
-    // Por ahora, mantener todos los autos. En producción:
-    // this.filteredCars = applyFilters(this.cars, filters);
+    void this.applyFiltersAndSort();
   }
 
   /**
@@ -253,6 +257,11 @@ export class ExplorePage implements OnInit, AfterViewInit {
    */
   onStickyCtaClick() {
     this.isDrawerOpen.set(true);
+  }
+
+  onSortChange(sort: SortOption) {
+    this.sortOrder.set(sort);
+    this.applyFiltersAndSort();
   }
 
   onUserLocationChange(location: { lat: number; lng: number }) {
@@ -297,18 +306,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
   }
 
   onSearch() {
-    if (!this.searchQuery) {
-      this.filteredCars = this.cars;
-      return;
-    }
-
-    const query = this.searchQuery.toLowerCase();
-    this.filteredCars = this.cars.filter(
-      (car) =>
-        car.brand?.toLowerCase().includes(query) ||
-        car.model?.toLowerCase().includes(query) ||
-        car.location_city?.toLowerCase().includes(query),
-    );
+    void this.applyFiltersAndSort();
   }
 
   centerOnUser() {
@@ -337,5 +335,97 @@ export class ExplorePage implements OnInit, AfterViewInit {
     return rawPhotos
       .map((photo) => (typeof photo === 'string' ? photo : (photo?.url ?? null)))
       .filter((url): url is string => typeof url === 'string' && url.length > 0);
+  }
+
+  private async applyFiltersAndSort() {
+    const filters = this.currentFilters() ?? {
+      dateRange: null,
+      priceRange: null,
+      vehicleTypes: null,
+      immediateOnly: false,
+      transmission: null,
+    };
+
+    const query = this.searchQuery?.toLowerCase().trim();
+
+    let result = [...this.cars];
+
+    // Texto libre
+    if (query) {
+      result = result.filter((car) => {
+        const city = car.location_city?.toLowerCase() || '';
+        const brand = car.brand?.toLowerCase() || car.brand_text_backup?.toLowerCase() || '';
+        const model = car.model?.toLowerCase() || car.model_text_backup?.toLowerCase() || '';
+        return brand.includes(query) || model.includes(query) || city.includes(query);
+      });
+    }
+
+    // Rango de precio
+    if (filters.priceRange) {
+      result = result.filter((car) => {
+        const price = car.price_per_day || 0;
+        return price >= filters.priceRange!.min && price <= filters.priceRange!.max;
+      });
+    }
+
+    // Tipo de vehículo
+    if (filters.vehicleTypes && filters.vehicleTypes.length > 0) {
+      result = result.filter((car) =>
+        filters.vehicleTypes!.includes((car.vehicle_type as string | undefined) ?? ''),
+      );
+    }
+
+    // Transmisión
+    if (filters.transmission && filters.transmission.length > 0) {
+      result = result.filter((car) =>
+        filters.transmission!.includes((car.transmission as string | undefined) ?? ''),
+      );
+    }
+
+    // Entrega inmediata (instant booking flag)
+    if (filters.immediateOnly) {
+      result = result.filter((car) => {
+        const instant = (car as { instant_booking?: boolean }).instant_booking;
+        return instant === true;
+      });
+    }
+
+    // Fecha: filtrar por disponibilidad vía RPC (costoso pero necesario para consistencia)
+    if (filters.dateRange) {
+      const from = filters.dateRange.start.toISOString().slice(0, 10);
+      const to = filters.dateRange.end.toISOString().slice(0, 10);
+      const availabilityResults = await Promise.all(
+        result.map(async (car) => {
+          try {
+            const available = await this.availabilityService.checkAvailability(car.id, from, to);
+            return available ? car : null;
+          } catch {
+            return null;
+          }
+        }),
+      );
+      result = availabilityResults.filter((c): c is Car => Boolean(c));
+    }
+
+    // Ordenamiento
+    const sortOrder = this.sortOrder();
+    result.sort((a, b) => {
+      const priceA = a.price_per_day || 0;
+      const priceB = b.price_per_day || 0;
+      const ratingA = a.rating_avg || 0;
+      const ratingB = b.rating_avg || 0;
+      switch (sortOrder) {
+        case 'price_asc':
+          return priceA - priceB;
+        case 'price_desc':
+          return priceB - priceA;
+        case 'rating':
+          return ratingB - ratingA;
+        default:
+          return 0; // relevance/distance keep API order
+      }
+    });
+
+    this.filteredCars = result;
   }
 }

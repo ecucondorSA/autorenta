@@ -84,12 +84,12 @@ import { CommonModule } from '@angular/common';
       .refresh-icon {
         width: 24px;
         height: 24px;
-        fill: #2c4a52;
+        fill: var(--text-info-dark, #2c4a52);
         transition: transform 0.3s ease;
       }
 
       :host-context(.dark) .refresh-icon {
-        fill: #7aa2aa;
+        fill: var(--text-info-light, #7aa2aa);
       }
 
       .spinner.active .refresh-icon {
@@ -108,11 +108,10 @@ import { CommonModule } from '@angular/common';
       .refresh-text {
         font-size: 14px;
         font-weight: 500;
-        color: #2c4a52;
+        color: var(--text-info-dark, #2c4a52);
       }
-
       :host-context(.dark) .refresh-text {
-        color: #7aa2aa;
+        color: var(--text-info-light, #7aa2aa);
       }
 
       .content {
@@ -121,16 +120,10 @@ import { CommonModule } from '@angular/common';
       }
 
       .refresh-indicator.refreshing {
-        background: linear-gradient(180deg, rgba(44, 74, 82, 0.05) 0%, rgba(44, 74, 82, 0) 100%);
-      }
-
-      :host-context(.dark) .refresh-indicator.refreshing {
-        background: linear-gradient(
-          180deg,
-          rgba(122, 162, 170, 0.08) 0%,
-          rgba(122, 162, 170, 0) 100%
-        );
-      }
+            background: var(--surface-info-dark-alpha-05); /* Reemplazado gradiente con color sólido */
+          }:host-context(.dark) .refresh-indicator.refreshing {
+      background: var(--surface-info-light-alpha-08); /* Reemplazado gradiente con color sólido */
+    }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

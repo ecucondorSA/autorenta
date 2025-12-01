@@ -34,7 +34,7 @@ import {
           <h4 class="font-bold text-cta-default text-lg">🚀 Modo Express</h4>
         </div>
         <div class="text-right">
-          <div class="text-2xl font-bold text-cta-default">
+          <div class="h4 text-cta-default">
             {{
               quote()?.hourlyRate
                 ? (quote()!.hourlyRate | currency: 'ARS' : 'symbol' : '1.0-0')

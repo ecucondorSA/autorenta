@@ -209,25 +209,17 @@ export interface CarPartInfo {
       .loading-progress {
         height: 100%;
         width: 30%;
-        background: linear-gradient(
-          90deg,
-          var(--cta-default),
-          var(--cta-hover),
-          var(--cta-default)
-        ); /* Use CSS variables */
-        background-size: 200% 100%;
+        background-color: var(--cta-default);
         border-radius: 10px;
-        animation: loadingSlide 1.5s ease-in-out infinite;
+        animation: loadingSlide 1.2s ease-in-out infinite;
       }
 
       @keyframes loadingSlide {
         0% {
           transform: translateX(-100%);
-          background-position: 0% 50%;
         }
         100% {
           transform: translateX(400%);
-          background-position: 100% 50%;
         }
       }
 
@@ -327,23 +319,7 @@ export interface CarPartInfo {
       }
 
       /* Hover Glow Effect - Celeste Autorentar */
-      .hover-glow {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.5s ease;
-        background: radial-gradient(
-          ellipse 60% 40% at 50% 60%,
-          var(--cta-secondary),
-          transparent 70%
-        ); /* Use CSS variable */
-        z-index: 1;
-      }
-
-      .hover-glow.active {
-        opacity: 1;
-      }
+      .hover-glow { display: none; }
 
       /* Part Tooltip */
       .part-tooltip {
@@ -681,15 +657,17 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   ]);
 
   // Colors for mapping
+  // Colores alineados a la paleta del sistema de diseño (sin hex legacy)
   colors = [
-    { name: 'Rojo', hex: '#ff0000' },
-    { name: 'Azul', hex: '#0000ff' },
-    { name: 'Negro', hex: '#000000' },
-    { name: 'Blanco', hex: '#ffffff' },
-    { name: 'Plata', hex: '#c0c0c0' },
-    { name: 'Gris', hex: '#808080' },
-    { name: 'Amarillo', hex: '#ffff00' },
-    { name: 'Verde', hex: '#008000' },
+    { name: 'Celeste', hex: '#a7d8f4' }, // CTA default
+    { name: 'Celeste Hover', hex: '#8ec9ec' }, // CTA hover
+    { name: 'Marfil', hex: '#f8f4ec' }, // Surface base
+    { name: 'Beige', hex: '#dfd2bf' }, // Surface secondary
+    { name: 'Blanco', hex: '#ffffff' }, // Surface raised
+    { name: 'Gris Claro', hex: '#bcbcbc' }, // Border default
+    { name: 'Oliva', hex: '#9db38b' }, // Success token
+    { name: 'Óxido', hex: '#b25e5e' }, // Error token
+    { name: 'Negro', hex: '#050505' }, // Text primary
   ];
 
   private themeChangeListener: ((event: Event) => void) | null = null;
@@ -907,8 +885,8 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
   /** Create procedural studio environment for realistic reflections */
   private createStudioEnvironment(
-    baseColor: string = '#ffffff',
-    secondaryColor: string = '#f8f4ec',
+    baseColor: string = '#f8f4ec',
+    _secondaryColor: string = '#dfd2bf',
   ): void {
     if (!this.THREE || !this.scene || !this.renderer) return;
 
@@ -916,29 +894,24 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     const pmremGenerator = new this.THREE.PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
 
-    // Create a gradient environment texture
+    // Create a soft, flat environment texture (sin gradientes)
     const envCanvas = document.createElement('canvas');
     envCanvas.width = 256;
     envCanvas.height = 128;
     const envCtx = envCanvas.getContext('2d');
 
     if (envCtx) {
-      // Vertical gradient for sky-like reflections
-      const gradient = envCtx.createLinearGradient(0, 0, 0, 128);
-      gradient.addColorStop(0, '#ffffff'); // White top (bright sky)
-      gradient.addColorStop(0.3, baseColor);
-      gradient.addColorStop(0.6, secondaryColor);
-      gradient.addColorStop(1, '#808080'); // Grey ground
-      envCtx.fillStyle = gradient;
+      // Fondo uniforme basado en los tokens claros
+      envCtx.fillStyle = baseColor;
       envCtx.fillRect(0, 0, 256, 128);
 
-      // Add some subtle highlights for window-like reflections
-      envCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      // Destellos sutiles para simular ventanas sin recurrir a gradientes
+      envCtx.fillStyle = 'rgba(255, 255, 255, 0.25)';
       envCtx.fillRect(50, 10, 40, 30); // Left window
       envCtx.fillRect(166, 10, 40, 30); // Right window
 
-      // Add subtle warm accent (celeste Autorentar)
-      envCtx.fillStyle = 'rgba(167, 216, 244, 0.15)';
+      // Acento celeste (CTA) muy tenue
+      envCtx.fillStyle = 'rgba(167, 216, 244, 0.12)';
       envCtx.fillRect(100, 5, 56, 40); // Center accent
     }
 

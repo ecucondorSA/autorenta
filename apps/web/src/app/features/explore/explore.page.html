@@ -240,7 +240,20 @@
       <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
         {{ filteredCars.length }} vehículos encontrados
       </h2>
-      <!-- TODO: Add Sort Dropdown here -->
+      <div class="flex items-center gap-3">
+        <label class="text-sm text-slate-500 dark:text-slate-400" for="sort-select">
+          Ordenar por
+        </label>
+        <select
+          id="sort-select"
+          class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 shadow-sm"
+          (change)="onSortChange($any($event.target).value)"
+        >
+          <option *ngFor="let option of sortOptions" [value]="option.value" [selected]="sortOrder() === option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
     </div>
 
     <!-- GRID VIEW -->

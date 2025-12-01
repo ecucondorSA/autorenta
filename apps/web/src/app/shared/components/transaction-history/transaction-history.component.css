@@ -16,7 +16,7 @@ svg {
 
 /* Hover effect para transaction items */
 .transaction-item:hover {
-  background-color: #f9fafb;
+  background-color: #F5F5F5; /* Reemplazado hex con el valor de surfaceElevated */
 }
 
 /* Animación para el panel de detalles expandibles */
@@ -42,7 +42,7 @@ svg {
 /* Scrollbar personalizada para metadata JSON */
 pre {
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f7fafc;
+  scrollbar-color: var(--border-default) var(--surface-elevated); /* Reemplazado hex con tokens semánticos */
 }
 
 pre::-webkit-scrollbar {
@@ -50,16 +50,16 @@ pre::-webkit-scrollbar {
 }
 
 pre::-webkit-scrollbar-track {
-  background: #f7fafc;
+  background: var(--surface-elevated); /* Reemplazado hex con token semántico */
 }
 
 pre::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
+  background: var(--border-default); /* Reemplazado hex con token semántico */
   border-radius: 3px;
 }
 
 pre::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
+  background: var(--text-muted); /* Reemplazado hex con token semántico */
 }
 
 /* Mejora para truncate en IDs largos */
@@ -75,5 +75,5 @@ pre::-webkit-scrollbar-thumb:hover {
 }
 
 .amount-negative {
-  color: #ef4444;
+  color: var(--error-default); /* Reemplazado hex con token semántico */
 }

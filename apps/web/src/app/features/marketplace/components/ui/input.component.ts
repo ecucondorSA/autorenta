@@ -118,14 +118,14 @@ import { FormsModule } from '@angular/forms';
       .label {
         font-size: 0.875rem;
         font-weight: 600;
-        color: #374151;
+        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
         display: flex;
         align-items: center;
         gap: 0.25rem;
       }
 
       .required {
-        color: #ef4444;
+        color: var(--error-default, #B25E5E); /* Reemplazado hex con token semántico */
       }
 
       .input-container {
@@ -133,30 +133,30 @@ import { FormsModule } from '@angular/forms';
         display: flex;
         align-items: center;
         background: white;
-        border: 2px solid #e5e7eb;
+        border: 2px solid var(--border-default, #e5e7eb);
         border-radius: 12px;
         transition: all 0.2s ease;
       }
 
       .input-container:focus-within {
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        border-color: var(--cta-default, #A7D8F4); /* Reemplazado hex con token semántico */
+        box-shadow: 0 0 0 3px rgba(167, 216, 244, 0.1); /* Reemplazado rgb con token semántico */
       }
 
       .input-wrapper.has-error .input-container {
-        border-color: #ef4444;
+        border-color: var(--error-default, #B25E5E); /* Reemplazado hex con token semántico */
       }
 
       .input-wrapper.has-error .input-container:focus-within {
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        box-shadow: 0 0 0 3px rgba(178, 94, 94, 0.1); /* Reemplazado rgb con token semántico */
       }
 
       .input-wrapper.is-success .input-container {
-        border-color: #10b981;
+        border-color: var(--success-default); /* Reemplazado hex con token semántico */
       }
 
       .input-wrapper.is-disabled .input-container {
-        background: #f9fafb;
+        background: var(--surface-light-subtle, #F5F5F5); /* Reemplazado hex con token semántico */
         opacity: 0.6;
       }
 
@@ -165,7 +165,7 @@ import { FormsModule } from '@angular/forms';
         padding: 0.75rem 1rem;
         font-size: 1rem;
         font-family: inherit;
-        color: #1f2937;
+        color: var(--text-primary, #050505); /* Reemplazado hex con token semántico */
         background: transparent;
         border: none;
         outline: none;
@@ -173,7 +173,7 @@ import { FormsModule } from '@angular/forms';
       }
 
       .input-field::placeholder {
-        color: #9ca3af;
+        color: var(--text-muted, #7B7B7B); /* Reemplazado hex con token semántico */
       }
 
       .textarea-field {
@@ -188,7 +188,7 @@ import { FormsModule } from '@angular/forms';
         justify-content: center;
         width: 20px;
         height: 20px;
-        color: #6b7280;
+        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
       }
 
       .icon-leading {
@@ -208,7 +208,7 @@ import { FormsModule } from '@angular/forms';
       }
 
       .clear-btn:hover {
-        color: #ef4444;
+        color: var(--error-default, #B25E5E); /* Reemplazado hex con token semántico */
       }
 
       .icon :global(svg) {
@@ -225,16 +225,16 @@ import { FormsModule } from '@angular/forms';
       }
 
       .helper-text {
-        color: #6b7280;
+        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
       }
 
       .error-text {
-        color: #ef4444;
+        color: var(--error-default, #B25E5E); /* Reemplazado hex con token semántico */
         font-weight: 500;
       }
 
       .char-counter {
-        color: #9ca3af;
+        color: var(--text-muted, #7B7B7B); /* Reemplazado hex con token semántico */
         margin-left: auto;
       }
 

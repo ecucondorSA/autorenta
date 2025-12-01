@@ -216,14 +216,55 @@ async function evaluateOwner(env: Env, request: VerificationRequest) {
     };
   }
 
-  // TODO: Implementar análisis de DNI y cédula con Cloudflare AI
-  // Por ahora, auto-aprobar si todos los documentos están presentes
+  // Analizar DNI y cédula con IA antes de aprobar
+  try {
+    const govFrontAnalysis = govIdFront
+      ? await analyzeGenericDocument(env, govIdFront, 'DNI frontal argentino')
+      : null;
+    const govBackAnalysis = govIdBack
+      ? await analyzeGenericDocument(env, govIdBack, 'DNI dorso argentino')
+      : null;
+    const vehicleRegAnalysis = vehicleReg
+      ? await analyzeGenericDocument(env, vehicleReg, 'cédula verde / azul de vehículo')
+      : null;
 
-  return {
-    status: 'VERIFICADO' as const,
-    notes: 'Documentos de propietario verificados (análisis automático)',
-    missing_docs: [],
-  };
+    const analyses = [govFrontAnalysis, govBackAnalysis, vehicleRegAnalysis].filter(Boolean) as DocumentAnalysis[];
+
+    const anyRejected = analyses.some((a) => a.status === 'RECHAZADO');
+    const allVerified = analyses.length > 0 && analyses.every((a) => a.status === 'VERIFICADO');
+
+    if (anyRejected) {
+      return {
+        status: 'RECHAZADO' as const,
+        notes: 'Algún documento parece inválido o ilegible. Revisa las fotos y vuelve a subirlas.',
+        missing_docs,
+        extracted_data: analyses.map((a) => a.extracted_data),
+      };
+    }
+
+    if (allVerified) {
+      return {
+        status: 'VERIFICADO' as const,
+        notes: 'Documentos del propietario verificados con IA',
+        missing_docs: [],
+        extracted_data: analyses.map((a) => a.extracted_data),
+      };
+    }
+
+    return {
+      status: 'PENDIENTE' as const,
+      notes: 'No pudimos validar automáticamente todos los documentos. Revisión manual requerida.',
+      missing_docs,
+      extracted_data: analyses.map((a) => a.extracted_data),
+    };
+  } catch (error) {
+    console.error('[Doc Verifier] Error analyzing owner docs:', error);
+    return {
+      status: 'PENDIENTE' as const,
+      notes: 'Error al analizar documentos. Intenta nuevamente con fotos más nítidas.',
+      missing_docs,
+    };
+  }
 }
 
 /**
@@ -328,6 +369,72 @@ Responde SOLO en formato JSON con esta estructura:
     console.error('[Doc Verifier] AI analysis error:', error);
     throw error;
   }
+}
+
+/**
+ * Analiza documentos genéricos (DNI, cédula) usando el modelo de visión
+ */
+async function analyzeGenericDocument(env: Env, document: DocumentToVerify, context: string): Promise<DocumentAnalysis> {
+  console.log('[Doc Verifier] Analyzing document:', context, document.id);
+
+  const imageResponse = await fetch(document.url);
+  if (!imageResponse.ok) {
+    throw new Error(`Failed to fetch document image: ${imageResponse.status}`);
+  }
+
+  const imageArray = await (await imageResponse.blob()).arrayBuffer();
+
+  const prompt = `Analiza esta imagen (${context}). Extrae nombre completo, número de documento o patente si aplica y valida si el documento es legible y parece auténtico. Responde SOLO en JSON con:
+{
+  "is_valid": boolean,
+  "document_number": string | null,
+  "name": string | null,
+  "confidence": number (0-100),
+  "notes": string
+}`;
+
+  const response = await env.AI.run('@cf/meta/llama-3.2-11b-vision-instruct', {
+    prompt,
+    image: Array.from(new Uint8Array(imageArray)),
+    max_tokens: 400,
+  });
+
+  const ai = parseAIResponse(response);
+  const confidence = Number(ai.confidence ?? 0);
+
+  if (ai.is_valid && confidence >= 70) {
+    return {
+      status: 'VERIFICADO',
+      notes: ai.notes || `Documento válido con confianza ${confidence}%`,
+      extracted_data: {
+        name: ai.name,
+        document_number: ai.document_number,
+      },
+      confidence_score: confidence,
+    };
+  }
+
+  if (confidence >= 40) {
+    return {
+      status: 'PENDIENTE',
+      notes: ai.notes || 'Documento parcialmente legible, requiere revisión manual.',
+      extracted_data: {
+        name: ai.name,
+        document_number: ai.document_number,
+      },
+      confidence_score: confidence,
+    };
+  }
+
+  return {
+    status: 'RECHAZADO',
+    notes: ai.notes || 'Documento ilegible o sospechoso',
+    extracted_data: {
+      name: ai.name,
+      document_number: ai.document_number,
+    },
+    confidence_score: confidence,
+  };
 }
 
 /**
