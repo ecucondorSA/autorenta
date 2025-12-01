@@ -20,17 +20,41 @@
   --spacing-md: clamp(1rem, 2vw, 1.5rem);
   --spacing-lg: clamp(1.5rem, 3vw, 2.5rem);
   --spacing-xl: clamp(2.5rem, 5vw, 4rem);
+  --spacing-2xl: clamp(3rem, 6vw, 5rem);
+  --spacing-3xl: clamp(4rem, 8vw, 7rem);
+
+  /* Fluid Border Radius */
+  --radius-sm-fluid: clamp(0.25rem, 0.5vw, 0.5rem);
+  --radius-md-fluid: clamp(0.5rem, 1vw, 0.75rem);
+  --radius-lg-fluid: clamp(0.75rem, 1.5vw, 1rem);
+  --radius-xl-fluid: clamp(1rem, 2vw, 1.5rem);
+  --radius-2xl-fluid: clamp(1.25rem, 2.5vw, 2rem);
+
+  /* Fluid Icons */
+  --icon-xs: clamp(0.875rem, 1.5vw, 1rem);
+  --icon-sm: clamp(1rem, 2vw, 1.25rem);
+  --icon-md: clamp(1.25rem, 2.5vw, 1.5rem);
+  --icon-lg: clamp(1.5rem, 3vw, 2rem);
+  --icon-xl: clamp(2rem, 4vw, 3rem);
 
   /* Elevation & Shadows (Google Style) */
   --elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --elevation-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --elevation-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --elevation-4: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --elevation-5: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 
   /* Animation Easing */
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-entrance: cubic-bezier(0, 0, 0.2, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Fluid Gaps */
+  --gap-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+  --gap-sm: clamp(0.5rem, 1vw, 1rem);
+  --gap-md: clamp(1rem, 2vw, 1.5rem);
+  --gap-lg: clamp(1.5rem, 3vw, 2rem);
+  --gap-xl: clamp(2rem, 4vw, 3rem);
 }
 
 /* Fluid Typography Utilities */
@@ -65,4 +89,84 @@
 .text-body-medium {
   font-size: var(--font-body-medium);
   line-height: 1.5;
+}
+
+/* Fluid Spacing Utilities */
+.p-fluid-sm {
+  padding: var(--spacing-sm);
+}
+.p-fluid-md {
+  padding: var(--spacing-md);
+}
+.p-fluid-lg {
+  padding: var(--spacing-lg);
+}
+.p-fluid-xl {
+  padding: var(--spacing-xl);
+}
+
+.m-fluid-sm {
+  margin: var(--spacing-sm);
+}
+.m-fluid-md {
+  margin: var(--spacing-md);
+}
+.m-fluid-lg {
+  margin: var(--spacing-lg);
+}
+
+/* Fluid Gap Utilities */
+.gap-fluid-xs {
+  gap: var(--gap-xs);
+}
+.gap-fluid-sm {
+  gap: var(--gap-sm);
+}
+.gap-fluid-md {
+  gap: var(--gap-md);
+}
+.gap-fluid-lg {
+  gap: var(--gap-lg);
+}
+.gap-fluid-xl {
+  gap: var(--gap-xl);
+}
+
+/* Fluid Border Radius */
+.rounded-fluid-sm {
+  border-radius: var(--radius-sm-fluid);
+}
+.rounded-fluid-md {
+  border-radius: var(--radius-md-fluid);
+}
+.rounded-fluid-lg {
+  border-radius: var(--radius-lg-fluid);
+}
+.rounded-fluid-xl {
+  border-radius: var(--radius-xl-fluid);
+}
+.rounded-fluid-2xl {
+  border-radius: var(--radius-2xl-fluid);
+}
+
+/* Fluid Icon Sizes */
+.icon-fluid-xs {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+}
+.icon-fluid-sm {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+}
+.icon-fluid-md {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+.icon-fluid-lg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+}
+.icon-fluid-xl {
+  width: var(--icon-xl);
+  height: var(--icon-xl);
 }

@@ -4,7 +4,7 @@
 const themeColors = require('./src/config/theme/tailwind-colors');
 
 module.exports = {
-  darkMode: 'class', // Enable class-based dark mode
+
   content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
@@ -521,7 +521,7 @@ module.exports = {
         },
       },
 
-        'pattern': 'radial-gradient(circle, #8B7355 1px, transparent 1px)',
+      'pattern': 'radial-gradient(circle, #8B7355 1px, transparent 1px)',
       zIndex: {
         dropdown: '1000',
         sticky: '1020',

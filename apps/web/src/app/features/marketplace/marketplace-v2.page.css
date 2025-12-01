@@ -1460,24 +1460,560 @@
 }
 
 /* ===========================================
-   RESPONSIVE
+   RESPONSIVE DESIGN - PROFESSIONAL MODERN APPROACH
    =========================================== */
+
+/* ─────────────────────────────────────────────────────────────
+   Fluid Typography System - Responsive clamp()
+   ───────────────────────────────────────────────────────────── */
+
+/* Hero heading - scales from 2rem (mobile) to 5rem (desktop) */
+.hero-immersive h2 {
+  font-size: clamp(2rem, 5vw + 1rem, 5rem);
+  line-height: 1.1;
+}
+
+/* Section headings */
+.partners-section h2,
+.steps-section h2,
+.trust-section h2 {
+  font-size: clamp(1.75rem, 3vw + 1rem, 3rem);
+}
+
+/* Body text - subtly scales */
+.hero-immersive p,
+.step-description-premium,
+.trust-desc-premium {
+  font-size: clamp(0.9375rem, 0.5vw + 0.875rem, 1.125rem);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Container & Spacing System - Adaptive
+   ───────────────────────────────────────────────────────────── */
+
+/* Dynamic container padding */
+.max-w-\[1440px\],
+.max-w-\[1800px\],
+.max-w-\[2000px\] {
+  padding-left: clamp(1rem, 3vw, 3rem);
+  padding-right: clamp(1rem, 3vw, 3rem);
+}
+
+/* Section vertical spacing */
+.partners-section,
+.steps-section,
+.trust-section {
+  padding-top: clamp(2rem, 5vw, 5rem);
+  padding-bottom: clamp(2rem, 5vw, 5rem);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile Devices (320px - 640px)
+   ───────────────────────────────────────────────────────────── */
+
 @media (max-width: 640px) {
+  /* Hero Section */
   .hero-immersive {
     min-height: 100svh;
+    padding-bottom: clamp(4rem, 10vh, 6rem);
   }
 
+  .hero-immersive .max-w-2xl {
+    max-width: 100%;
+  }
+
+  /* Hide desktop stats on mobile */
+  .floating-stats-card {
+    display: none;
+  }
+
+  /* Search Card - More compact */
   .search-card-premium {
-    padding: 1.25rem;
-    border-radius: 1.25rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    margin: 0 -0.5rem; /* Extend slightly beyond container */
   }
 
-  .step-card {
+  .search-card-premium .grid {
+    gap: 1rem !important;
+  }
+
+  /* Input fields */
+  .input-premium,
+  .select-premium {
+    padding: 0.75rem 1rem;
+    font-size: 1rem; /* Prevent iOS zoom */
+  }
+
+  /* Buttons - Full width on mobile */
+  .btn-search-premium,
+  .btn-primary-glow,
+  .btn-primary-autorentar {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+  }
+
+  /* Feature pills - wrap better */
+  .feature-pill {
+    font-size: 0.8125rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* 3D View Controls - Bottom bar optimized */
+  .mobile-3d-controls {
+    padding: 0.625rem 0.5rem;
+    padding-bottom: calc(0.625rem + env(safe-area-inset-bottom));
+    gap: 0.25rem;
+  }
+
+  .mobile-view-btn {
+    min-width: 60px;
+    padding: 0.5rem 0.375rem;
+  }
+
+  .mobile-view-btn span {
+    font-size: 0.625rem;
+  }
+
+  /* Partners Grid - 2 columns on mobile */
+  .partners-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  .partner-card {
+    padding: 0.75rem;
+  }
+
+  .partner-icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Steps - Single column, more compact */
+  .step-card-premium {
     padding: 1.5rem 1rem;
   }
 
+  .step-icon-premium {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 1rem;
+  }
+
+  .step-number-badge {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Trust Cards - Stack vertically */
+  .trust-card-premium {
+    margin-bottom: 1rem;
+  }
+
+  .trust-icon-premium {
+    width: 56px;
+    height: 56px;
+  }
+
+  /* Car Cards - Optimized for mobile */
+  .car-card-premium {
+    border-radius: 1rem;
+  }
+
   .car-card-image {
-    height: 160px;
+    height: 180px;
+  }
+
+  .car-card-content {
+    padding: 0.875rem;
+  }
+
+  /* Car card specs - smaller icons */
+  .car-spec svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .car-spec {
+    font-size: 0.6875rem;
+  }
+
+  /* Empty states - more compact */
+  .empty-state-card {
+    padding: 2rem 1rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Small Mobile Devices (max 375px)
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 375px) {
+  /* Even more compact hero */
+  .hero-immersive h2 {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+
+  /* Eyebrow badge smaller */
+  .hero-immersive .inline-flex {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  /* Feature pills - stack if needed */
+  .hero-immersive .flex-wrap {
+    gap: 0.5rem !important;
+  }
+
+  /* Search card - minimal padding */
+  .search-card-premium {
+    padding: 0.875rem;
+  }
+
+  /* Partners - larger touch targets */
+  .partners-grid {
+    gap: 0.5rem !important;
+  }
+
+  /* Mobile controls - even more compact */
+  .mobile-view-btn {
+    min-width: 50px;
+    padding: 0.375rem 0.25rem;
+  }
+
+  .mobile-view-btn svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Tablets Portrait (641px - 768px)
+   ───────────────────────────────────────────────────────────── */
+
+@media (min-width: 641px) and (max-width: 768px) {
+  /* Hero - better use of space */
+  .hero-immersive .max-w-2xl {
+    max-width: 90%;
+  }
+
+  /* Search card - 2 column layout for inputs */
+  .search-card-premium .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .search-card-premium .lg\:col-span-5 {
+    grid-column: span 2;
+  }
+
+  /* Partners - 3 columns */
+  .partners-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* Steps - 2 columns */
+  .steps-section .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Trust features - 2 columns */
+  .trust-section .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Car cards - 2 columns */
+  .car-card-premium {
+    display: grid;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Tablets Landscape (769px - 1024px)
+   ───────────────────────────────────────────────────────────── */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Hero - optimal reading width */
+  .hero-immersive .max-w-2xl {
+    max-width: 75%;
+  }
+
+  /* Search card - full 3-column layout */
+  .search-card-premium .grid {
+    grid-template-columns: 2fr 1.5fr 1fr;
+  }
+
+  /* Partners - 4 columns */
+  .partners-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  /* Steps - 2 or 4 depending on content */
+  .steps-section .lg\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Trust - 2 columns for better readability */
+  .trust-section .lg\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Side-by-side map view starts here */
+  .lg\:col-span-5 {
+    grid-column: span 6;
+  }
+
+  .lg\:col-span-7 {
+    grid-column: span 6;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Desktop Small (1025px - 1280px)
+   ───────────────────────────────────────────────────────────── */
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  /* Full desktop layout kicks in */
+  .hero-immersive {
+    min-height: clamp(100vh, 100svh, 1000px);
+  }
+
+  /* Partners - full 5 columns */
+  .partners-grid {
+    grid-template-columns: repeat(5, 1fr) !important;
+  }
+
+  /* Steps - 4 columns */
+  .steps-section .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  /* Trust - 4 columns */
+  .trust-section .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  /* Car listing split view */
+  .lg\:col-span-5 {
+    grid-column: span 5;
+  }
+
+  .lg\:col-span-7 {
+    grid-column: span 7;
+  }
+
+  /* Car cards - comfortable 2 columns in left panel */
+  .car-card-premium {
+    aspect-ratio: auto;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Desktop Large (1281px+)
+   ───────────────────────────────────────────────────────────── */
+
+@media (min-width: 1281px) {
+  /* XL breakpoint optimizations */
+  .xl\:col-span-4 {
+    grid-column: span 4;
+  }
+
+  .xl\:col-span-8 {
+    grid-column: span 8;
+  }
+
+  /* Wider car cards can be 2 up */
+  .car-card-premium {
+    max-width: none;
+  }
+
+  /* Larger interactive elements */
+  .view-control-btn {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* 3D hover info panel - more spacious */
+  .part-info-panel {
+    min-width: 280px;
+    right: 32px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Landscape Orientation - All Devices
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-height: 600px) and (orientation: landscape) {
+  /* Reduce vertical spacing dramatically */
+  .hero-immersive {
+    min-height: auto;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  /* Compact search bar */
+  .search-card-premium {
+    padding: 0.875rem 1rem;
+  }
+
+  .search-card-premium .grid {
+    gap: 0.75rem !important;
+  }
+
+  /* Smaller buttons */
+  .btn-search-premium,
+  .btn-primary-glow {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  /* Hide ornamental elements */
+  .floating-stats-card,
+  .stat-pill,
+  .feature-pill {
+    display: none;
+  }
+
+  /* Sections more compact */
+  .partners-section,
+  .steps-section,
+  .trust-section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  /* Mobile 3D controls - ultra compact */
+  .mobile-3d-controls {
+    padding: 0.375rem 0.5rem;
+    padding-bottom: calc(0.375rem + env(safe-area-inset-bottom));
+  }
+
+  .mobile-view-btn {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .mobile-view-btn span {
+    display: none; /* Icons only in landscape */
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Ultra Wide Screens (1920px+)
+   ───────────────────────────────────────────────────────────── */
+
+@media (min-width: 1920px) {
+  /* Prevent excessive stretching */
+  .max-w-\[2000px\] {
+    max-width: 1800px;
+  }
+
+  /* Increase font sizes slightly for readability */
+  .hero-immersive h2 {
+    font-size: clamp(4rem, 4vw, 6rem);
+  }
+
+  /* 3-column car cards in left panel */
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* More comfortable spacing */
+  .partners-grid,
+  .steps-section .grid,
+  .trust-section .grid {
+    gap: 2rem !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Touch Device Optimizations
+   ───────────────────────────────────────────────────────────── */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  button,
+  a,
+  .filter-chip,
+  .view-toggle-premium button,
+  .car-card-premium {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Remove hover states that don't work on touch */
+  .car-card-premium:hover,
+  .step-card-premium:hover,
+  .partner-card:hover {
+    transform: none;
+  }
+
+  /* Tap highlight instead */
+  * {
+    -webkit-tap-highlight-color: rgba(167, 216, 244, 0.2);
+  }
+
+  /* Increase input padding for easier touch */
+  .input-premium,
+  .select-premium {
+    padding: 1rem;
+    font-size: 1rem; /* Prevent zoom on iOS */
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   High DPI / Retina Displays
+   ───────────────────────────────────────────────────────────── */
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Crisper text rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Thinner borders look better on retina */
+  .car-card-premium,
+  .search-card-premium,
+  .partner-card {
+    border-width: 0.5px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Container Queries (Modern Browsers)
+   ───────────────────────────────────────────────────────────── */
+
+@supports (container-type: inline-size) {
+  /* Car card container */
+  .car-card-premium {
+    container-type: inline-size;
+    container-name: car-card;
+  }
+
+  /* When card is narrow, stack content */
+  @container car-card (max-width: 280px) {
+    .car-card-content {
+      padding: 0.75rem;
+    }
+
+    .car-card-content h3 {
+      font-size: 0.9375rem;
+    }
+
+    .car-spec {
+      font-size: 0.625rem;
+    }
+  }
+
+  /* When card is wide, use more spacing */
+  @container car-card (min-width: 400px) {
+    .car-card-content {
+      padding: 1.5rem;
+    }
   }
 }
 

@@ -17,7 +17,6 @@ import {
   withPreloading,
 } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
-import { provideIonicAngular } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MessageService } from 'primeng/api';
@@ -64,9 +63,7 @@ export const appConfig: ApplicationConfig = {
       ]),
     ),
     provideNoopAnimations(),
-    provideIonicAngular({
-      mode: 'md',
-    }),
+
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',

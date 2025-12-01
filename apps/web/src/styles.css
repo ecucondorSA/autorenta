@@ -5,15 +5,11 @@
 /* 🎚️ Responsive Tokens - CSS custom properties */
 @import './styles/responsive-tokens.css';
 
-/* Ionic CSS - Required for Ionic components to render */
-@import '@ionic/angular/css/core.css';
-@import '@ionic/angular/css/normalize.css';
-@import '@ionic/angular/css/structure.css';
-@import '@ionic/angular/css/typography.css';
+/* 🎨 Fluid Design System - Modern fluid typography & spacing */
+@import './styles/fluid-design.css';
 
-/* Mapbox GL JS CSS - Required for markers and controls */
-@import 'mapbox-gl/dist/mapbox-gl.css';
-@import 'flatpickr/dist/flatpickr.css';
+/* 🔧 Responsive Utilities - Global responsive helpers */
+@import './styles/responsive-utilities.css';
 
 /* 🗺️ Map Tokens - Sistema Centralizado de Tokens */
 @import './styles/map-tokens.css';
@@ -140,87 +136,84 @@ body.no-scroll {
     --safe-area-left: env(safe-area-inset-left, 0px);
     --safe-area-right: env(safe-area-inset-right, 0px);
 
-    /* ─── Superficies (Surfaces) - Marfil / Ivory ─── */
-    --surface-base: #f8f4ec; /* Marfil - Fondo principal */
-    --surface-raised: #ffffff; /* Blanco - Tarjetas */
-    --surface-secondary: #f2efe9; /* Marfil oscuro - Paneles secundarios */
-    --surface-elevated: #f5fbfc; /* Superficies elevadas */
-    --surface-hover: #d0e9f0; /* Azul celeste hover */
-    --surface-pressed: #c1dfea; /* Azul celeste pressed */
+    /* ─── Superficies (Surfaces) ─── */
+    --surface-base: #f8f4ec; /* Ivory - Fondo principal */
+    --surface-raised: #ffffff; /* White - Tarjetas elevadas */
+    --surface-secondary: #dfd2bf; /* Beige - Paneles secundarios */
+    --surface-elevated: #f5f5f5; /* Gray G05 - Elevación */
+    --surface-hover: #f8f4ec; /* Ivory - Hover state */
+    --surface-pressed: #dfd2bf; /* Beige - Pressed state */
 
-    /* ─── Textos - High Contrast ─── */
-    --text-primary: #0a3d52; /* Azul celeste muy oscuro - Máxima legibilidad */
-    --text-secondary: #2b5f72; /* Azul celeste oscuro - Texto secundario legible */
-    --text-muted: #5a7f8a; /* Azul celeste medio - Texto deshabilitado pero visible */
-    --text-tertiary: #7a96a1; /* Azul celeste suave - Texto terciario/decorativo */
-    --text-inverse: #ffffff; /* Blanco puro - Texto sobre fondos oscuros */
-    --text-link: #0d7fa8; /* Azul celeste más profundo - Links */
-    --text-link-hover: #05536b; /* Azul celeste hover */
-    --text-placeholder: #7a96a1; /* Placeholders azul celeste */
+    /* ─── Textos ─── */
+    --text-primary: #050505; /* Black */
+    --text-secondary: #4e4e4e; /* Gray G60 */
+    --text-muted: #7b7b7b; /* Gray G40 */
+    --text-inverse: #f8f4ec; /* Ivory */
+    --text-link: #a7d8f4; /* Blue primary */
+    --text-link-hover: #8ec9ec; /* Blue hover */
+    --text-placeholder: #7b7b7b; /* Gray G40 */
 
     /* ─── Bordes ─── */
-    --border-default: #b3dce6; /* Borde azul celeste sutil pero visible */
-    --border-muted: #c7e9f0; /* Borde azul celeste muy sutil */
-    --border-subtle: #e5eff3; /* Borde muy sutil para separadores */
-    --border-focus: #0d7fa8; /* Borde de focus azul celeste */
-    --border-hover: #a4d3dd; /* Hover sobre elementos con borde */
+    --border-default: #bcbcbc; /* Gray G20 */
+    --border-muted: #e3e3e3; /* Gray G10 */
+    --border-focus: #3b6e8f; /* Blue focus */
+    --border-hover: #a7d8f4; /* Blue primary */
+    --border-error: #b25e5e; /* Rust */
+    --border-success: #9db38b; /* Olive */
 
     /* ─── CTAs y Acciones ─── */
-    --cta-default: #7dd3e0; /* Azul celeste claro pastel principal */
-    --cta-hover: #5ec7d6; /* Azul celeste hover */
-    --cta-pressed: #3fbac9; /* Azul celeste pressed */
-    --cta-text: #0a3d52; /* Azul celeste muy oscuro - Texto sobre CTAs */
-    --cta-secondary: #c8e6ee; /* Azul celeste suave - CTA secundario */
-    --cta-secondary-hover: #b3dce6; /* CTA secundario hover */
-    --cta-secondary-text: #0a3d52; /* Texto sobre CTA secundario */
+    --cta-default: #a7d8f4; /* Blue primary */
+    --cta-hover: #8ec9ec; /* Blue hover */
+    --cta-pressed: #a7d8f4; /* Blue primary */
+    --cta-text: #050505; /* Black */
+    --cta-secondary: #dfd2bf; /* Beige */
+    --cta-secondary-hover: #c9bea8; /* Beige hover */
+    --cta-secondary-text: #050505; /* Black */
 
-    /* ─── Success (Verde Oliva Refinado) ─── */
-    --success-50: #f2f7f0;
-    --success-100: #e3ebd3;
-    --success-200: #c5dcb5;
-    --success-300: #a4c48e;
-    --success-400: #85ac68;
-    --success-500: #699248;
-    --success-600: #527436;
-    --success-700: #3e582a;
-    --success-800: #2d3f1f;
-    --success-900: #1e2a15;
+    /* ─── Estados y Feedback ─── */
+    --info-50: #eff6ff;
+    --info-100: #dbeafe;
+    --info-200: #bfdbfe;
+    --info-300: #93c5fd;
+    --info-400: #60a5fa;
+    --info-500: #a7d8f4; /* Blue primary */
+    --info-600: #6ba8d4;
+    --info-700: #4f46e5;
+    --info-800: #3730a3;
+    --info-900: #1e1b4b;
 
-    /* ─── Warning (Ámbar Refinado) ─── */
-    --warning-50: #fffbeb;
-    --warning-100: #fef3c7;
-    --warning-200: #fde68a;
-    --warning-300: #fcd34d;
-    --warning-400: #fbbf24;
-    --warning-500: #f59e0b;
-    --warning-600: #d97706;
-    --warning-700: #b45309;
-    --warning-800: #92400e;
-    --warning-900: #78350f;
+    --success-50: #f0fdf4;
+    --success-100: #dcfce7;
+    --success-200: #bbf7d0;
+    --success-300: #86efac;
+    --success-400: #4ade80;
+    --success-500: #9db38b; /* Olive */
+    --success-600: #16a34a;
+    --success-700: #15803d;
+    --success-800: #166534;
+    --success-900: #14532d;
 
-    /* ─── Error (Rojo Refinado) ─── */
+    --warning-50: #fefce8;
+    --warning-100: #fef9c3;
+    --warning-200: #fef08a;
+    --warning-300: #fde047;
+    --warning-400: #facc15;
+    --warning-500: #c4a882; /* Beige cálido */
+    --warning-600: #ca8a04;
+    --warning-700: #a16207;
+    --warning-800: #854d0e;
+    --warning-900: #713f12;
+
     --error-50: #fef2f2;
     --error-100: #fee2e2;
     --error-200: #fecaca;
     --error-300: #fca5a5;
     --error-400: #f87171;
-    --error-500: #ef4444;
+    --error-500: #b25e5e; /* Rust */
     --error-600: #dc2626;
     --error-700: #b91c1c;
     --error-800: #991b1b;
     --error-900: #7f1d1d;
-
-    /* ─── Info (Azul Refinado) ─── */
-    --info-50: #f0f9ff;
-    --info-100: #e0f2fe;
-    --info-200: #bae6fd;
-    --info-300: #7dd3fc;
-    --info-400: #38bdf8;
-    --info-500: #0ea5e9;
-    --info-600: #0284c7;
-    --info-700: #0369a1;
-    --info-800: #075985;
-    --info-900: #0c4a6e;
 
     /* ─── Semantic Border Colors ─── */
     --border-error: var(--error-500);
@@ -356,108 +349,7 @@ body.no-scroll {
     --card-gap: 1.5rem; /* 24px - Gap entre cards */
   }
 
-  /* ─── Dark Mode Variables - Refined ─── */
-  .dark {
-    /* ─── Superficies (Surfaces) ─── */
-    --surface-base: #0f0f0f; /* Negro profundo neutro - Moderno */
-    --surface-raised: #1c1c1c; /* Gris muy oscuro - Tarjetas */
-    --surface-secondary: #161616; /* Gris oscuro - Paneles */
-    --surface-elevated: #262626; /* Superficies elevadas */
-    --surface-hover: #2a2a2a; /* Hover */
-    --surface-pressed: #333333; /* Pressed */
 
-    /* ─── Textos ─── */
-    --text-primary: #ffffff; /* Blanco puro - Máximo contraste */
-    --text-secondary: #a3a3a3; /* Gris claro - Secundario */
-    --text-muted: #737373; /* Gris medio - Deshabilitado */
-    --text-tertiary: #8b8b8b; /* Gris medio claro - Texto terciario */
-    --text-inverse: #0f0f0f; /* Negro - Texto sobre fondos claros */
-    --text-link: #38bdf8; /* Azul brillante accesible en dark */
-    --text-link-hover: #7dd3fc; /* Azul más claro hover */
-    --text-placeholder: #525252; /* Placeholders */
-
-    /* ─── Bordes ─── */
-    --border-default: #333333; /* Borde sutil oscuro */
-    --border-muted: #262626; /* Borde muy sutil */
-    --border-subtle: #2a2a2a; /* Borde muy sutil para separadores */
-    --border-focus: #38bdf8; /* Focus */
-    --border-hover: #404040; /* Hover */
-
-    /* ─── CTAs y Acciones ─── */
-    --cta-default: #a7d8f4; /* Azul pastel (Brand) */
-    --cta-hover: #bae6fd; /* Más claro en hover */
-    --cta-pressed: #7dd3fc; /* Pressed */
-    --cta-text: #0f172a; /* Negro para contraste */
-    --cta-secondary: #262626; /* Gris oscuro - CTA secundario */
-    --cta-secondary-hover: #333333; /* Hover */
-    --cta-secondary-text: #ffffff; /* Texto blanco */
-
-    /* ─── Semantic Colors (Dark Mode) ─── */
-    /* Usamos colores más claros/brillantes para dark mode */
-
-    /* ─── Overlays ─── */
-    --overlay-dark: rgba(0, 0, 0, 0.8);
-    --overlay-light: rgba(255, 255, 255, 0.1);
-    --surface-overlay: rgba(0, 0, 0, 0.8);
-
-    /* ─── Elevation System (Sombras en dark mode) ─── */
-    /* En dark mode, las sombras son menos visibles, usamos bordes sutiles o fondos más claros */
-    --elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-    --elevation-2: 0 2px 4px 0 rgba(0, 0, 0, 0.6);
-    --elevation-3: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
-    --elevation-4: 0 8px 16px 0 rgba(0, 0, 0, 0.8);
-    --elevation-5: 0 16px 32px 0 rgba(0, 0, 0, 0.9);
-
-    /* ─── Focus Rings en dark mode ─── */
-    --ring-focus: 0 0 0 3px rgba(56, 189, 248, 0.4);
-    --ring-error: 0 0 0 3px rgba(239, 68, 68, 0.4);
-
-    /* ─── Semantic Error/Warning/Success Tokens - Dark Mode ─── */
-    /* Error states */
-    --error-text: #f87171; /* Rojo claro */
-    --error-text-strong: #fca5a5;
-    --error-bg: rgba(127, 29, 29, 0.2);
-    --error-bg-hover: rgba(127, 29, 29, 0.3);
-    --error-border: rgba(248, 113, 113, 0.3);
-    --error-icon: #f87171;
-
-    /* Warning states */
-    --warning-text: #fbbf24; /* Ámbar claro */
-    --warning-text-strong: #fcd34d;
-    --warning-bg: rgba(120, 53, 15, 0.2);
-    --warning-bg-hover: rgba(120, 53, 15, 0.3);
-    --warning-border: rgba(251, 191, 36, 0.3);
-    --warning-icon: #fbbf24;
-
-    /* Success states */
-    --success-text: #86efac; /* Verde claro */
-    --success-text-strong: #bbf7d0;
-    --success-bg: rgba(20, 83, 45, 0.2);
-    --success-bg-hover: rgba(20, 83, 45, 0.3);
-    --success-border: rgba(134, 239, 172, 0.3);
-    --success-icon: #86efac;
-
-    /* Info states */
-    --info-text: #38bdf8; /* Azul claro */
-    --info-text-strong: #7dd3fc;
-    --info-bg: rgba(12, 74, 110, 0.2);
-    --info-bg-hover: rgba(12, 74, 110, 0.3);
-    --info-border: rgba(56, 189, 248, 0.3);
-    --info-icon: #38bdf8;
-
-    /* ─── Legacy Compatibility ─── */
-    --info-light: var(--info-500);
-    --info-dark: var(--info-700);
-    --success-light: var(--success-500);
-    --warning-light: var(--warning-500);
-    --error-light: var(--error-500);
-
-    /* ─── Variables Legacy (Compatibilidad) ─── */
-    --bg-primary: var(--surface-base);
-    --bg-secondary: var(--surface-secondary);
-    --bg-elevated: var(--surface-raised);
-    --border-color: var(--border-default);
-  }
 
   /* ─── Responsive Spacing Adjustments ─── */
   @media (min-width: 768px) {
@@ -552,13 +444,7 @@ body.no-scroll {
     font-family: inherit !important;
   }
 
-  .dark .text-text-secondary {
-    color: rgba(247, 245, 238, 0.72) !important;
-  }
 
-  .dark .text-text-muted {
-    color: rgba(247, 245, 238, 0.58) !important;
-  }
 
   /* Dark mode text-primary y bg-surface-secondary eliminados para evitar circular dependency */
   /* Tailwind maneja el dark mode automáticamente a través de las variables CSS */
@@ -617,21 +503,7 @@ body.no-scroll {
     margin: 0;
   }
 
-  /* Dark mode headings */
-  .dark h1,
-  .dark .h1,
-  .dark h2,
-  .dark .h2,
-  .dark h3,
-  .dark .h3,
-  .dark h4,
-  .dark .h4,
-  .dark h5,
-  .dark .h5,
-  .dark h6,
-  .dark .h6 {
-    color: var(--text-primary);
-  }
+
 
   /* ─────────────────────────────────────────────────────────────
      Micro-tipografía CSS Moderna - Calidad Editorial
@@ -994,22 +866,7 @@ body.no-scroll {
     letter-spacing: 0.08em;
   }
 
-  /* Dark mode text utilities */
-  .dark .text-display {
-    color: var(--text-primary);
-  }
 
-  .dark .text-body {
-    color: var(--text-secondary);
-  }
-
-  .dark .text-caption {
-    color: var(--text-muted);
-  }
-
-  .dark .text-overline {
-    color: var(--text-muted);
-  }
 
   /* ─────────────────────────────────────────────────────────────
      Sistema de Contenedores
@@ -1067,21 +924,14 @@ body.no-scroll {
     border-color: var(--border-default);
     @apply border-2 hover:bg-surface-secondary active:scale-95;
     @apply focus-visible:ring-text-secondary;
-    @apply dark:bg-surface-secondary dark:text-text-primary;
-    @apply dark:hover:bg-surface-raised;
+    @apply btn-base bg-surface-raised text-text-primary;
   }
 
   .btn-secondary:hover {
     border-color: var(--text-secondary);
   }
 
-  .dark .btn-secondary {
-    border-color: var(--text-secondary);
-  }
 
-  .dark .btn-secondary:hover {
-    border-color: var(--text-secondary);
-  }
 
   .btn-accent {
     @apply btn-base active:scale-95;
@@ -1108,8 +958,8 @@ body.no-scroll {
   /* Icon buttons - WCAG 2.5.5 compliant (44x44px minimum) */
   .icon-button {
     @apply p-3 rounded-xl;
-    @apply text-text-secondary dark:text-text-secondary;
-    @apply hover:bg-surface-secondary dark:hover:bg-surface-secondary;
+    @apply text-text-secondary;
+    @apply hover:bg-surface-secondary;
     @apply transition-all active:scale-95;
     @apply focus-visible:outline-none focus-visible:ring-2;
     --tw-ring-color: var(--cta-default);
@@ -1142,11 +992,7 @@ body.no-scroll {
     transition-timing-function: var(--easing-standard);
   }
 
-  .dark .card-premium {
-    @apply bg-surface-raised shadow-card;
-    border-color: var(--border-default);
-    color: var(--text-primary);
-  }
+
 
   .card-premium:hover {
     @apply shadow-elevated;
@@ -1154,11 +1000,7 @@ body.no-scroll {
     transform: translateY(-4px);
   }
 
-  .dark .card-premium:hover {
-    @apply shadow-elevated;
-    border-color: rgba(167, 216, 244, 0.4); /* cta-default con opacidad */
-    transform: translateY(-4px);
-  }
+
 
   .card-premium.selected {
     @apply shadow-elevated ring-4;
@@ -1186,23 +1028,13 @@ body.no-scroll {
     --tw-ring-color: rgba(167, 216, 244, 0.15);
   }
 
-  .dark .input-premium {
-    @apply bg-surface-secondary text-text-primary placeholder:text-text-muted/40;
-    border-color: rgba(188, 188, 188, 0.8); /* border-default con opacidad */
-  }
 
-  .dark .input-premium:focus {
-    border-color: rgba(167, 216, 244, 0.7); /* cta-default con opacidad */
-    --tw-ring-color: rgba(167, 216, 244, 0.2);
-  }
 
   .input-premium:hover {
     border-color: rgba(78, 78, 78, 0.3); /* text-secondary con opacidad */
   }
 
-  .dark .input-premium:hover {
-    border-color: rgba(167, 216, 244, 0.6); /* cta-default con opacidad */
-  }
+
 
   /* ─────────────────────────────────────────────────────────────
      Badges y Status - Sistema Neutral Premium
@@ -1271,15 +1103,7 @@ body.no-scroll {
     transform: translateY(-2px);
   }
 
-  .dark .info-card {
-    @apply bg-surface-raised text-text-primary shadow-card;
-    border-color: var(--border-default);
-  }
 
-  .dark .info-card:hover {
-    @apply shadow-elevated;
-    border-color: rgba(167, 216, 244, 0.4); /* cta-default/40 */
-  }
 
   /* Info card cta variant */
   .info-card-petrol {
@@ -1295,15 +1119,7 @@ body.no-scroll {
     border-color: rgba(196, 168, 130, 0.2); /* warning-light/20 */
   }
 
-  .dark .info-card-petrol {
-    background-color: rgba(167, 216, 244, 0.15); /* cta-default/15 */
-    border-color: rgba(167, 216, 244, 0.3); /* cta-default/30 */
-  }
 
-  .dark .info-card-warm {
-    background-color: rgba(196, 168, 130, 0.15); /* warning-light/15 */
-    border-color: rgba(196, 168, 130, 0.3); /* warning-light/30 */
-  }
 
   /* ─────────────────────────────────────────────────────────────
      Transiciones y Animaciones
@@ -1448,8 +1264,8 @@ body.no-scroll {
 
   .nav-link {
     @apply inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-base;
-    @apply text-text-secondary dark:text-text-secondary;
-    @apply hover:bg-surface-secondary/70 dark:hover:bg-surface-secondary/70;
+    @apply text-text-secondary;
+    @apply hover:bg-surface-secondary/70;
   }
 
   .nav-link:hover {
@@ -1495,11 +1311,11 @@ body.no-scroll {
      ───────────────────────────────────────────────────────────── */
 
   .section-alt {
-    @apply bg-surface-secondary dark:bg-surface-raised;
+    @apply bg-surface-secondary;
   }
 
   .section-elevated {
-    @apply bg-surface-raised dark:bg-surface-secondary;
+    @apply bg-surface-raised;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1511,18 +1327,14 @@ body.no-scroll {
     background-color: var(--border-default);
   }
 
-  .dark .divider-horizontal {
-    background-color: var(--border-default);
-  }
+
 
   .divider-vertical {
     @apply w-px;
     background-color: var(--border-default);
   }
 
-  .dark .divider-vertical {
-    background-color: var(--border-default);
-  }
+
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1556,173 +1368,10 @@ body.no-scroll {
    Ver: src/config/theme/colors.ts para valores fuente
    ═══════════════════════════════════════════════════════════════ */
 
-:root {
-  /* ─── Superficies (Surfaces) ─── */
-  --surface-base: #f8f4ec; /* Ivory */
-  --surface-raised: #ffffff; /* White */
-  --surface-secondary: #dfd2bf; /* Beige */
-  --surface-elevated: #f5f5f5; /* Gray G05 */
-  --surface-hover: #f0f0f0;
-  --surface-pressed: #e8e8e8;
 
-  /* ─── Textos ─── */
-  --text-primary: #050505; /* Black */
-  --text-secondary: #4e4e4e; /* Gray G60 */
-  --text-muted: #7b7b7b; /* Gray G40 */
-  --text-inverse: #f8f4ec; /* Ivory */
-  --text-link: #a7d8f4; /* Blue primary */
-  --text-link-hover: #8ec9ec; /* Blue hover */
-  --text-placeholder: #7b7b7b; /* Gray G40 */
-
-  /* ─── Bordes ─── */
-  --border-default: #bcbcbc; /* Gray G20 */
-  --border-muted: #e3e3e3; /* Gray G10 */
-  --border-focus: #3b6e8f; /* Blue focus */
-  --border-hover: #a7d8f4; /* Blue primary */
-  --border-error: #b25e5e; /* Rust */
-  --border-success: #9db38b; /* Olive */
-
-  /* ─── CTAs y Acciones ─── */
-  --cta-default: #a7d8f4; /* Blue primary */
-  --cta-hover: #8ec9ec; /* Blue hover */
-  --cta-pressed: #a7d8f4; /* Blue primary */
-  --cta-text: #050505; /* Black */
-  --cta-secondary: #dfd2bf; /* Beige */
-  --cta-secondary-hover: #c9bea8; /* Beige hover */
-  --cta-secondary-text: #050505; /* Black */
-
-  /* ─── Estados y Feedback ─── */
-  --info-50: #eff6ff;
-  --info-100: #dbeafe;
-  --info-200: #bfdbfe;
-  --info-300: #93c5fd;
-  --info-400: #60a5fa;
-  --info-500: #a7d8f4; /* Blue primary */
-  --info-600: #6ba8d4;
-  --info-700: #4f46e5;
-  --info-800: #3730a3;
-  --info-900: #1e1b4b;
-
-  --success-50: #f0fdf4;
-  --success-100: #dcfce7;
-  --success-200: #bbf7d0;
-  --success-300: #86efac;
-  --success-400: #4ade80;
-  --success-500: #9db38b; /* Olive */
-  --success-600: #16a34a;
-  --success-700: #15803d;
-  --success-800: #166534;
-  --success-900: #14532d;
-
-  --warning-50: #fefce8;
-  --warning-100: #fef9c3;
-  --warning-200: #fef08a;
-  --warning-300: #fde047;
-  --warning-400: #facc15;
-  --warning-500: #c4a882; /* Beige cálido */
-  --warning-600: #ca8a04;
-  --warning-700: #a16207;
-  --warning-800: #854d0e;
-  --warning-900: #713f12;
-
-  --error-50: #fef2f2;
-  --error-100: #fee2e2;
-  --error-200: #fecaca;
-  --error-300: #fca5a5;
-  --error-400: #f87171;
-  --error-500: #b25e5e; /* Rust */
-  --error-600: #dc2626;
-  --error-700: #b91c1c;
-  --error-800: #991b1b;
-  --error-900: #7f1d1d;
-
-  /* ─── Sombras (Elevation) ─── */
-  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --elevation-2: 0 2px 4px rgba(0, 0, 0, 0.06);
-  --elevation-3: 0 4px 8px rgba(0, 0, 0, 0.08);
-  --elevation-4: 0 8px 16px rgba(0, 0, 0, 0.1);
-  --elevation-5: 0 16px 32px rgba(0, 0, 0, 0.12);
-
-  /* ─── Focus Rings ─── */
-  --ring-focus: 0 0 0 2px rgba(167, 216, 244, 0.3);
-  --ring-error: 0 0 0 2px rgba(178, 94, 94, 0.3);
-
-  /* ─── Border Radius ─── */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 24px;
-  --radius-full: 9999px;
-
-  /* ─── Transiciones ─── */
-  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
 
 /* Dark Mode Overrides */
-.dark {
-  /* ─── Superficies ─── */
-  --surface-base: #0f0f0f;
-  --surface-raised: #111111;
-  --surface-secondary: #2b2b2b;
-  --surface-elevated: #2b2b2b;
-  --surface-hover: #1a1a1a;
-  --surface-pressed: #252525;
 
-  /* ─── Textos ─── */
-  --text-primary: #f8f4ec; /* Ivory */
-  --text-secondary: #bcbcbc; /* Gray G20 */
-  --text-muted: #7b7b7b; /* Gray G40 */
-  --text-tertiary: #9a9a9a; /* Gray - Texto terciario */
-  --text-inverse: #050505; /* Black */
-  --text-link: #a7d8f4; /* Blue primary */
-  --text-link-hover: #c1e3f7; /* Blue hover */
-  --text-placeholder: #8c7765; /* Placeholders */
-
-  /* ─── Bordes ─── */
-  --border-default: #4e4e4e; /* Gray G60 */
-  --border-muted: #7b7b7b; /* Gray G40 */
-  --border-subtle: #3a3a3a; /* Borde muy sutil para separadores */
-  --border-focus: #a7d8f4; /* Blue focus */
-  --border-hover: #6e5845; /* Hover sobre elementos con borde */
-  --border-error: #ea9d9d; /* Error en dark mode */
-  --border-success: #9db38b; /* Success en dark mode */
-  --border-warning: #f0ca8d; /* Warning en dark mode */
-
-  /* ─── Estados ─── */
-  --cta-default: #a7d8f4; /* Blue primary */
-  --cta-hover: #8ec9ec; /* Blue hover */
-  --cta-pressed: #75bae4; /* Blue pressed */
-  --cta-text: #050505; /* Black para contraste */
-  --cta-secondary: #5c4736; /* CTA secundario en dark */
-  --cta-secondary-hover: #6e5845; /* CTA secundario hover */
-  --cta-secondary-text: #f8f4ec; /* Texto sobre CTA secundario */
-
-  /* ─── Colores del Sistema ─── */
-  --success-light: #9db38b; /* Success */
-  --warning-light: #f0ca8d; /* Warning */
-  --error-light: #ea9d9d; /* Error */
-  --info-light: #a7d8f4; /* Info */
-
-  /* ─── Overlays ─── */
-  --overlay-dark: rgba(5, 5, 5, 0.85);
-  --overlay-light: rgba(15, 15, 15, 0.9);
-  --surface-overlay: rgba(252, 247, 240, 0.1);
-
-  /* ─── Elevations ─── */
-  --elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --elevation-2: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
-  --elevation-3: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
-  --elevation-4: 0 8px 16px 0 rgba(0, 0, 0, 0.6);
-  --elevation-5: 0 16px 32px 0 rgba(0, 0, 0, 0.7);
-
-  /* ─── Rings ─── */
-  --ring-focus: 0 0 0 3px rgba(167, 216, 244, 0.4);
-  --ring-error: 0 0 0 3px rgba(234, 157, 157, 0.4);
-}
 
 /* Scroll suave para el área de mensajes */
 .whatsapp-bg {
@@ -1765,9 +1414,7 @@ body.no-scroll {
 }
 
 /* Fondo de chat similar a WhatsApp */
-.dark .whatsapp-bg {
-  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiPjxwYXRoIGQ9Ik0wIDBoMTAwdjEwMEgweiIgZmlsbD0iIzBiMTQxYSIvPjxwYXRoIGQ9Ik0wIDBoNTB2NTBIMHptNTAgNTBoNTB2NTBINTB6IiBmaWxsPSIjMWYyYzMzIiBmaWxsLW9wYWNpdHk9Ii4xIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+');
-}
+
 
 /* Hide PWA install banner */
 app-pwa-install-banner,

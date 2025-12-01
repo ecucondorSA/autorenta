@@ -19,6 +19,7 @@ import {
   signal,
   SimpleChanges,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
@@ -187,6 +188,7 @@ class QuadTree {
   ],
   templateUrl: './cars-map.component.html',
   styleUrls: ['./cars-map.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
@@ -349,6 +351,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     this.isDarkMode.set(isDark);
     this.updateMarkerStyles();
     this.updateMapTheme();
+  }
+
+  /**
+   * Helper to get CSS variable value
+   */
+  private getCssVariableValue(variableName: string, defaultValue: string): string {
+    if (!this.isBrowser) return defaultValue;
+    return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim() || defaultValue;
   }
 
   /**
@@ -611,6 +621,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       });
     }
 
+    // Resolve colors from CSS variables
+    const colorAvailable = this.getCssVariableValue('--map-marker-available-color', '#9db38b'); // Olive
+    const colorSoon = this.getCssVariableValue('--map-marker-soon-available-color', '#c4a882'); // Beige
+    const colorInUse = this.getCssVariableValue('--map-marker-in-use-color', '#4e4e4e'); // Gray
+    const colorUnavailable = this.getCssVariableValue('--map-marker-unavailable-color', '#b25e5e'); // Rust
+
     // Add cluster circles layer
     if (!this.map.getLayer(this.clusterLayerId)) {
       this.map.addLayer({
@@ -622,11 +638,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           'circle-color': [
             'step',
             ['get', 'point_count'],
-            '#10b981', // Green for available
+            colorAvailable, // Green for available
             5,
-            '#f59e0b', // Amber for medium clusters
+            colorSoon, // Amber for medium clusters
             20,
-            '#6366f1', // Indigo for large clusters
+            colorInUse, // Neutral/Blue for large clusters
           ],
           'circle-radius': ['step', ['get', 'point_count'], 20, 5, 30, 20, 40, 50, 50],
           'circle-stroke-width': 2,
@@ -665,12 +681,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           'circle-color': [
             'case',
             ['==', ['get', 'availabilityStatus'], 'available'],
-            '#10b981',
+            colorAvailable,
             ['==', ['get', 'availabilityStatus'], 'soon_available'],
-            '#f59e0b',
+            colorSoon,
             ['==', ['get', 'availabilityStatus'], 'in_use'],
-            '#6366f1',
-            '#ef4444', // unavailable
+            colorInUse,
+            colorUnavailable, // unavailable
           ],
           'circle-radius': 8,
           'circle-stroke-width': 2,
@@ -1607,9 +1623,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.deg2rad(lat1)) *
-        Math.cos(this.deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
     return d;
@@ -1859,7 +1875,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     const lat2 = Math.asin(
       Math.sin(lat1) * Math.cos(distanceMeters / R) +
-        Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
+      Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
     );
 
     const lng2 =

@@ -13,6 +13,7 @@ import {
   PLATFORM_ID,
   signal,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import flatpickr from 'flatpickr';
@@ -53,6 +54,7 @@ export interface AlternativeDateSuggestion {
   templateUrl: './date-range-picker.component.html',
   styleUrls: ['./date-range-picker.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
   private readonly analytics = inject(AnalyticsService);

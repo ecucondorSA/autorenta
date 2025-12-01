@@ -19,7 +19,7 @@
   <div class="relative z-50 w-full pointer-events-none">
     <div class="max-w-[1800px] mx-auto px-6 lg:px-12 pt-6 lg:pt-8 flex justify-end">
       <!-- Live Stats Pills & Dark Mode Only -->
-          </div>
+    </div>
   </div>
 
   <!-- MAIN HERO CONTENT -->
@@ -246,7 +246,8 @@
         <!-- Search Header -->
         <div class="flex items-center justify-between mb-6 lg:mb-8">
           <div>
-            <h3 class="font-display text-xl lg:text-2xl font-bold text-[#050505] tracking-tight" data-testid="marketplace-heading">
+            <h3 class="font-display text-xl lg:text-2xl font-bold text-[#050505] tracking-tight"
+              data-testid="marketplace-heading">
               Encuentra tu vehículo
             </h3>
             <p class="text-sm text-[#4e4e4e] mt-1">Busca por ubicación o fecha</p>
@@ -410,14 +411,14 @@
 <div class="marketplace-content bg-surface-base min-h-screen">
   <!-- COLABORADORES / PARTNERS SECTION - PREMIUM -->
   <section class="partners-section py-8 lg:py-10 relative overflow-hidden">
-    <!-- Background Effects -->
+    <!-- Background Effects - Using tokenized colors -->
     <div
-      class="absolute inset-0 bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
+      class="absolute inset-0 bg-gradient-to-b from-[#F8F4EC] via-[#F5F5F5] to-[#DFD2BF] dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
     </div>
-    <div class="absolute inset-0 opacity-[0.015]" style="
+    <div class="absolute inset-x-0 top-0 h-12 opacity-[0.015]" style="
         background-image: radial-gradient(
           circle at 1px 1px,
-          rgba(255, 255, 255, 0.3) 1px,
+          rgba(248, 244, 236, 0.3) 1px,
           transparent 0
         );
         background-size: 40px 40px;
@@ -563,6 +564,15 @@
 
   <!-- HOW IT WORKS - PREMIUM REDESIGNED -->
   <section class="steps-section py-14 lg:py-20 relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-x-0 top-0 h-12 opacity-[0.015]" style="
+        background-image: radial-gradient(
+          circle at 1px 1px,
+          rgba(248, 244, 236, 0.3) 1px,
+          transparent 0
+        );
+        background-size: 40px 40px;
+      "></div>
     <!-- Background Gradient Orbs -->
     <div class="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
     <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
@@ -581,7 +591,8 @@
             Simple</span>
         </div>
         <h2
-          class="font-display text-4xl lg:text-5xl xl:text-6xl font-black text-text-primary dark:text-white mb-6" data-testid="marketplace-h1">
+          class="font-display text-4xl lg:text-5xl xl:text-6xl font-black text-text-primary dark:text-white mb-6"
+          data-testid="marketplace-h1">
           Alquila en
           <span class="relative">
             <span class="text-gradient-cyan">4 pasos</span>
@@ -755,12 +766,12 @@
 
   <!-- TRUST FEATURES - PREMIUM REDESIGNED -->
   <section
-    class="trust-section py-12 lg:py-16 relative overflow-hidden bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:from-slate-950 dark:via-slate-900/80 dark:to-slate-950">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 opacity-[0.02]" style="
+    class="trust-section py-12 lg:py-16 relative overflow-hidden bg-gradient-to-b from-[#F8F4EC] via-[#F5F5F5] to-[#DFD2BF] dark:from-slate-950 dark:via-slate-900/80 dark:to-slate-950">
+    <!-- Background Pattern - Using tokenized Ivory color -->
+    <div class="absolute inset-x-0 top-0 h-12 opacity-[0.015]" style="
         background-image: radial-gradient(
           circle at 1px 1px,
-          rgba(255, 255, 255, 0.3) 1px,
+          rgba(248, 244, 236, 0.3) 1px,
           transparent 0
         );
         background-size: 40px 40px;
@@ -1003,8 +1014,9 @@
           <div *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
             class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
-              class="car-card-premium group car-card-enhanced" [class.car-card-selected]="selectedCarId() === car.id"
-              (click)="onCarSelected(car.id)" role="button" [attr.aria-label]="
+              class="car-card-premium group car-card-enhanced"
+              [class.car-card-selected]="selectedCarId() === car.id" (click)="onCarSelected(car.id)"
+              role="button" [attr.aria-label]="
                 'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup
               " tabindex="0" (keydown.enter)="onCarSelected(car.id)"
               (keydown.space)="onCarSelected(car.id)" data-testid="car-card-enhanced">
