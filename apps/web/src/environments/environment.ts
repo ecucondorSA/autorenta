@@ -15,6 +15,10 @@ export const environment = buildEnvironment({
   googleAnalyticsMeasurementId: '', // Configurar via NG_APP_GA4_MEASUREMENT_ID
   enableAnalytics: true,
   docVerifierUrl: 'https://doc-verifier.autorentar.workers.dev',
+  // Google AI Image Generation (Gemini)
+  // IMPORTANTE: Configurar via variable de entorno en Cloudflare Pages
+  // NG_APP_GOOGLE_AI_IMAGE_URL - Endpoint completo de Gemini (incluye ?key=... si aplica)
+  googleAiImageUrl: undefined,
   // Sentry Configuration
   // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
   // NG_APP_SENTRY_DSN - Sentry Project DSN

@@ -27,6 +27,9 @@ export const environment = buildEnvironment({
   tripoApiKey: undefined, // Lee de NG_APP_TRIPO_API_KEY
   paymentsWebhookUrl: 'http://localhost:8787/webhooks/payments',
   appUrl: 'http://localhost:4200',
+  // Google AI Image Generation (Gemini)
+  // Configura NG_APP_GOOGLE_AI_IMAGE_URL en .env.local con el endpoint completo (incluye ?key=... si aplica)
+  googleAiImageUrl: undefined,
   // PayPal Sandbox Credentials
   // P0-027 FIX: Only public client ID is safe for frontend
   paypalClientId: undefined, // Lee de NG_APP_PAYPAL_CLIENT_ID

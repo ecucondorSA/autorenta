@@ -108,7 +108,10 @@ export class PublishCarPhotoService {
     }
 
     const currentPhotos = this.uploadedPhotos();
-    if (currentPhotos.length >= this.MAX_PHOTOS) {
+    // Solo generaremos hasta 2 imágenes nuevas (exterior + interior) respetando el máximo total de fotos
+    let remainingSlots = Math.min(this.MAX_PHOTOS - currentPhotos.length, 2);
+
+    if (remainingSlots <= 0) {
       alert('Ya alcanzaste el máximo de fotos permitidas.');
       return;
     }
@@ -116,47 +119,156 @@ export class PublishCarPhotoService {
     this.isGeneratingAIPhotos.set(true);
 
     try {
-      const response = await fetch(`${environment.cloudflareWorkerUrl}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          brand,
-          model,
-          year,
-          angle: '3/4-front',
-          style: 'showroom',
-          num_steps: 8,
-        }),
-      });
+      const generatedPhotos: PhotoPreview[] = [];
 
-      const result = await response.json();
+      // Generar dos imágenes con Gemini: exterior + interior (ambas <=1MB tras compresión) con escenarios aleatorios
+      const googlePrompts = this.buildGeminiPrompts(brand, model, year);
 
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || 'Error al generar fotos con IA');
+      for (const [index, prompt] of googlePrompts.entries()) {
+        if (remainingSlots <= 0) break;
+
+        try {
+          const googleRequestBody = {
+            contents: [
+              {
+                role: 'user',
+                parts: [{ text: prompt }],
+              },
+            ],
+            generationConfig: {
+              responseModalities: ['IMAGE'],
+              imageConfig: {
+                aspectRatio: '4:3', // Formato foto de móvil para look natural
+              },
+            },
+          };
+
+          const googleResponse = await fetch(`${environment.googleAiImageUrl}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(googleRequestBody),
+          });
+
+          const googleResult = await googleResponse.json();
+
+          if (!googleResponse.ok || !googleResult.candidates || !googleResult.candidates[0].content || !googleResult.candidates[0].content.parts[0].inlineData) {
+            console.error('Respuesta de Google AI inesperada:', googleResult);
+            throw new Error(googleResult.error || 'Error al generar foto con IA de Google. Respuesta inesperada.');
+          }
+
+          const inlineData = googleResult.candidates[0].content.parts[0].inlineData;
+          const mimeType = inlineData.mimeType || 'image/png';
+          const fileExtension = mimeType.split('/')[1] || 'png';
+          const googleFile = await this.base64ToFile(
+            inlineData.data,
+            `google-ai-${brand}-${model}-${Date.now()}-${index}.${fileExtension}`,
+            mimeType,
+          );
+          const googlePreview = await this.createPreview(googleFile);
+          generatedPhotos.push({ file: googleFile, preview: googlePreview });
+          remainingSlots--;
+
+        } catch (error) {
+          console.error('Error generando foto con Google AI:', error);
+          alert('No se pudo generar la foto con IA de Google. Se intentará continuar con el worker.');
+        }
       }
 
-      // Convert base64 to blob
-      const base64Data = result.image.replace(/^data:image\/\w+;base64,/, '');
-      const binaryData = atob(base64Data);
-      const bytes = new Uint8Array(binaryData.length);
-      for (let i = 0; i < binaryData.length; i++) {
-        bytes[i] = binaryData.charCodeAt(i);
+      // Generar las imágenes restantes (hasta 2) con Cloudflare Worker
+      const numCloudflarePhotos = Math.min(2, remainingSlots); // Generar hasta 2 fotos más, respetando slots disponibles
+      for (let i = 0; i < numCloudflarePhotos; i++) {
+        try {
+          const workerResponse = await fetch(`${environment.cloudflareWorkerUrl}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              brand,
+              model,
+              year,
+              angle: '3/4-front', // Puedes variar el ángulo o estilo si el worker lo soporta
+              style: 'showroom',
+              num_steps: 8,
+            }),
+          });
+
+          const workerResult = await workerResponse.json();
+
+          if (!workerResponse.ok || !workerResult.success || !workerResult.image) {
+            throw new Error(workerResult.error || 'Error al generar foto con Cloudflare Worker');
+          }
+
+          const workerFile = await this.base64ToFile(workerResult.image, `cf-worker-ai-${brand}-${model}-${Date.now()}-${i}.png`);
+          const workerPreview = await this.createPreview(workerFile);
+          generatedPhotos.push({ file: workerFile, preview: workerPreview });
+
+        } catch (error) {
+          console.error(`Error generando foto ${i + 1} con Cloudflare Worker:`, error);
+          // No mostrar alert para cada fallo si hay multiples fotos, dejar que el alert final maneje el resumen.
+        }
       }
-      const blob = new Blob([bytes], { type: 'image/png' });
-      const file = new File([blob], `ai-${brand}-${model}-${Date.now()}.png`, {
-        type: 'image/png',
-      });
-      const preview = await this.createPreview(file);
 
-      this.uploadedPhotos.set([...currentPhotos, { file, preview }]);
-
-      alert(`✨ Foto generada exitosamente con IA en ${result.metadata?.duration_ms}ms`);
-    } catch {
-      // console.error('AI photo generation failed:', error);
-      alert('No se pudo generar la foto. Intenta nuevamente o sube fotos manualmente.');
+      if (generatedPhotos.length > 0) {
+        this.uploadedPhotos.set([...currentPhotos, ...generatedPhotos]);
+        alert(`✨ Se generaron ${generatedPhotos.length} foto(s) con IA.`);
+      } else {
+        alert('No se pudo generar ninguna foto con IA. Por favor, intenta nuevamente o sube fotos manualmente.');
+      }
+    } catch (error) {
+      console.error('Error general durante la generación de fotos con IA:', error);
+      alert('Ocurrió un error inesperado al generar fotos con IA. Intenta nuevamente.');
     } finally {
       this.isGeneratingAIPhotos.set(false);
     }
+  }
+
+  // Helper function to convert base64 to File object
+  private async base64ToFile(
+    base64String: string,
+    filename: string,
+    mimeType = 'image/png',
+    maxBytes = 900_000,
+    maxDimension = 1600,
+  ): Promise<File> {
+    const dataUrl = base64String.startsWith('data:')
+      ? base64String
+      : `data:${mimeType};base64,${base64String}`;
+
+    // Cargar la imagen en un elemento <img>
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('No se pudo cargar la imagen generada'));
+      img.src = dataUrl;
+    });
+
+    // Ajustar dimensiones si excede el máximo permitido
+    const { width, height } = image;
+    const scale = Math.min(1, maxDimension / Math.max(width, height));
+    const targetWidth = Math.round(width * scale);
+    const targetHeight = Math.round(height * scale);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      throw new Error('No se pudo crear el contexto de canvas');
+    }
+    ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+
+    // Comprimir iterativamente hasta quedar debajo de maxBytes o calidad mínima
+    let quality = 0.85;
+    let compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+    while (compressedDataUrl.length > maxBytes * 1.37 && quality > 0.5) {
+      // dataURL pesa ~1.37x el binario base64
+      quality -= 0.05;
+      compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+    }
+
+    // Convertir dataURL a Blob
+    const compressedBlob = await (await fetch(compressedDataUrl)).blob();
+    const finalMime = compressedBlob.type || 'image/jpeg';
+    return new File([compressedBlob], filename.replace(/\.[^.]+$/, '.jpg'), { type: finalMime });
   }
 
   /**
@@ -344,6 +456,59 @@ export class PublishCarPhotoService {
     } finally {
       this.isProcessingPhotos.set(false);
     }
+  }
+
+  // Genera prompts variados para evitar imágenes repetidas
+  private buildGeminiPrompts(brand: string, model: string, year: number): string[] {
+    const pick = <T,>(list: T[]): T => list[Math.floor(Math.random() * list.length)];
+
+    const weather = pick([
+      'bright sunny day with soft shadows',
+      'slightly overcast day with diffused light',
+      'after-rain damp ground and cloudy sky',
+      'golden hour warm light with long shadows',
+      'early morning cool light with a bit of mist',
+    ]);
+
+    const terrain = pick([
+      'on a dirt road with light tire marks',
+      'on a gravel turnout near trees',
+      'on a rural roadside with dry grass',
+      'on a damp compacted earth surface',
+      'on a light muddy patch with puddles nearby',
+    ]);
+
+    const background = pick([
+      'trees and bushes behind the car',
+      'a distant hill line',
+      'light forest edge',
+      'open countryside',
+      'sparse shrubs and a cloudy horizon',
+    ]);
+
+    const camera = pick([
+      'handheld smartphone at eye level',
+      'handheld smartphone slightly low angle',
+      'handheld smartphone slightly high angle',
+    ]);
+
+    const interiorLight = pick([
+      'natural daylight entering through windows',
+      'soft overcast light through windshield',
+      'late afternoon warm light through side windows',
+    ]);
+
+    const interiorWeather = pick([
+      'windows slightly dusty',
+      'light reflections from cloudy sky',
+      'subtle streaks on glass from recent rain',
+    ]);
+
+    const exteriorPrompt = `Generate a realistic photo (not render, not showroom) of a ${year} ${brand} ${model} car parked ${terrain}, ${weather}, background of ${background}. Angle: 3/4 front. Style: ${camera}, natural shadows, slight imperfections, realistic reflections, no studio lighting, no advertising vibe. Vary the scene subtly each time so photos are not identical.`;
+
+    const interiorPrompt = `Generate a realistic interior photo (not render) of a ${year} ${brand} ${model} car. Show front seats, dashboard and steering wheel from driver's door perspective. Lighting: ${interiorLight}, ${interiorWeather}. Style: handheld smartphone photo, slight imperfections, realistic textures, no studio lighting, no advertising vibe. Vary small details so photos are not identical.`;
+
+    return [exteriorPrompt, interiorPrompt];
   }
 
   /**
