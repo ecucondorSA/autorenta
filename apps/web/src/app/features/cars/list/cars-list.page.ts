@@ -138,8 +138,17 @@ export class CarsListPage implements OnInit, OnDestroy {
     }),
   );
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
-  readonly hasFilters = computed(() => !!this.city() || !!this.dateRange().from);
+  readonly hasFilters = computed(() =>
+    !!this.city() ||
+    !!this.dateRange().from ||
+    !!this.searchQuery() ||
+    this.maxDistance() !== null ||
+    this.minPrice() !== null ||
+    this.maxPrice() !== null ||
+    this.minRating() !== null
+  );
   readonly selectedCarId = signal<string | null>(null);
+  readonly hoveredCarId = signal<string | null>(null); // For card ↔ map hover sync
   readonly searchExpanded = signal(false);
   readonly inventoryReady = signal(false);
   readonly drawerOpen = signal(false);
@@ -148,6 +157,9 @@ export class CarsListPage implements OnInit, OnDestroy {
     distance?: number;
     eta?: number;
   } | null>(null);
+
+  // Active car for map highlight (hover takes priority over selection)
+  readonly activeMapCarId = computed(() => this.hoveredCarId() ?? this.selectedCarId());
 
   // Airbnb-style favorites (stored in localStorage)
   readonly favoriteCars = signal<Set<string>>(new Set());
@@ -167,6 +179,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly minPrice = signal<number | null>(null);
   readonly maxPrice = signal<number | null>(null);
   readonly minRating = signal<number | null>(null); // 0-5
+  readonly searchQuery = signal<string>(''); // Búsqueda por texto
 
   // Contadores para badge de resultados
   readonly totalCount = computed(() => this.cars().length);
@@ -213,6 +226,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     const minP = this.minPrice();
     const maxP = this.maxPrice();
     const minR = this.minRating();
+    const query = this.searchQuery().toLowerCase().trim();
 
     if (!carsList.length) {
       return [] as CarWithDistance[];
@@ -269,6 +283,23 @@ export class CarsListPage implements OnInit, OnDestroy {
         if (minR !== null) {
           const rating = car.owner?.rating_avg ?? 0;
           if (rating < minR) {
+            return false;
+          }
+        }
+
+        // Filtro por búsqueda de texto
+        if (query) {
+          const brand = (car.brand_text_backup || car.brand || '').toLowerCase();
+          const model = (car.model_text_backup || car.model || '').toLowerCase();
+          const city = (car.location_city || '').toLowerCase();
+          const title = (car.title || '').toLowerCase();
+
+          const matchesBrand = brand.includes(query);
+          const matchesModel = model.includes(query);
+          const matchesCity = city.includes(query);
+          const matchesTitle = title.includes(query);
+
+          if (!matchesBrand && !matchesModel && !matchesCity && !matchesTitle) {
             return false;
           }
         }
@@ -585,6 +616,22 @@ export class CarsListPage implements OnInit, OnDestroy {
     }
   }
 
+  centerOnUserLocation(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.userLocation.set({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.warn('Error getting user location:', error);
+        }
+      );
+    }
+  }
+
   async loadCars(): Promise<void> {
     this.loading.set(true);
     try {
@@ -846,6 +893,60 @@ export class CarsListPage implements OnInit, OnDestroy {
     this.minPrice.set(null);
     this.maxPrice.set(null);
     this.minRating.set(null);
+    this.searchQuery.set('');
+  }
+
+  /**
+   * Manejar input de búsqueda
+   */
+  onSearchInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchQuery.set(value);
+  }
+
+  /**
+   * Ejecutar búsqueda (on Enter)
+   */
+  onSearchSubmit(): void {
+    // La búsqueda ya se aplica reactivamente via searchQuery signal
+    // Este método puede usarse para analytics o acciones adicionales
+  }
+
+  /**
+   * Limpiar búsqueda
+   */
+  clearSearch(): void {
+    this.searchQuery.set('');
+  }
+
+  // Card ↔ Map hover synchronization
+  onCardMouseEnter(carId: string): void {
+    this.hoveredCarId.set(carId);
+    // Smooth fly to car location on hover (desktop only)
+    if (this.isDesktop() && this.carsMapComponent) {
+      this.carsMapComponent.flyToCarLocation(carId);
+    }
+  }
+
+  onCardMouseLeave(): void {
+    this.hoveredCarId.set(null);
+  }
+
+  /**
+   * Social proof: Get simulated viewing count for a car
+   * In production, this would come from WebSocket/real-time analytics
+   */
+  getViewingCount(carId: string): number {
+    // Simulate viewing count based on car ID hash
+    // Shows 0-5 viewers, with ~30% of cars having viewers
+    const hash = carId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const seed = (hash % 100);
+    if (seed < 30) return 0; // 30% have no viewers
+    if (seed < 50) return 1;
+    if (seed < 70) return 2;
+    if (seed < 85) return 3;
+    if (seed < 95) return 4;
+    return 5;
   }
 
   onCarSelected(carId: string): void {

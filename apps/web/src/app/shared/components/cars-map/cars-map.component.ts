@@ -2426,15 +2426,18 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
-   * Public method to fly to car location
+   * Public method to fly to car location with smooth 3D animation
    */
   flyToCarLocation(carId: string): void {
     const car = this.cars.find((c) => c.carId === carId);
     if (car && this.map && car.lat && car.lng) {
       this.map.flyTo({
         center: [car.lng, car.lat],
-        zoom: 14,
-        duration: 1000,
+        zoom: 16, // Closer zoom for better focus
+        pitch: 45, // 3D tilt effect
+        bearing: -15, // Slight rotation for dramatic effect
+        duration: 1500, // Smooth animation
+        essential: true,
       });
       this.highlightSelectedCar(carId);
     }
