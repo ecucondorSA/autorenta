@@ -546,9 +546,21 @@ export class CarsListPage implements OnInit, OnDestroy {
     return recommended.length >= 3; // Mostrar mínimo 3 autos
   });
 
-  // Helper para determinar si un auto es "Top Rated"
+  // Helper para determinar si un auto es "Top Rated" (Superanfitrión)
   isTopRated(car: CarWithDistance): boolean {
     return (car.rating_avg || 0) >= 4.5 && (car.rating_count || 0) >= 5;
+  }
+
+  // Helper para determinar si un auto es "Popular" (muchas reservas)
+  isPopular(car: CarWithDistance): boolean {
+    return (car.rating_count || 0) >= 10;
+  }
+
+  // Helper para "Reserva inmediata" - basado en datos reales cuando existan
+  // Por ahora usa umbral de rating como proxy (autos bien valorados = confianza)
+  hasInstantBooking(car: CarWithDistance): boolean {
+    // TODO: Usar car.instant_booking_enabled cuando se agregue a la DB
+    return (car.rating_avg || 0) >= 4.0 && (car.rating_count || 0) >= 3;
   }
 
   // Comparación
