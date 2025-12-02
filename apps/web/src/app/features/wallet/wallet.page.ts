@@ -48,6 +48,7 @@ import { WithdrawalRequestFormComponent } from '../../shared/components/withdraw
 import { GuaranteeOptionsInfoComponent } from '../../shared/components/guarantee-options-info/guarantee-options-info.component';
 import { WalletAccountNumberCardComponent } from '../../shared/components/wallet-account-number-card/wallet-account-number-card.component';
 import { WalletFaqComponent } from './components/wallet-faq.component';
+import { WalletTransfersComponent } from './components/wallet-transfers.component';
 
 @Component({
   selector: 'app-wallet',
@@ -64,6 +65,7 @@ import { WalletFaqComponent } from './components/wallet-faq.component';
     WalletAccountNumberCardComponent,
     GuaranteeOptionsInfoComponent,
     WalletFaqComponent,
+    WalletTransfersComponent,
   ],
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],
@@ -82,7 +84,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   /**
    * Tab activa (transactions | withdrawals)
    */
-  activeTab = signal<'transactions' | 'withdrawals'>('transactions');
+  activeTab = signal<'transactions' | 'withdrawals' | 'transfers'>('transactions');
 
   /**
    * Tabs definition for the view
@@ -346,7 +348,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   /**
    * Cambia el tab activo
    */
-  setActiveTab(tab: 'transactions' | 'withdrawals'): void {
+  setActiveTab(tab: 'transactions' | 'withdrawals' | 'transfers'): void {
     this.activeTab.set(tab);
   }
 

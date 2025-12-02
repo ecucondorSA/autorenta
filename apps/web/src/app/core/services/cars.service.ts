@@ -487,7 +487,9 @@ export class CarsService {
       city?: string;
     } = {},
   ): Promise<Car[]> {
-    return this.carAvailabilityService.getAvailableCars(startDate, endDate, options);
+    const available = await this.carAvailabilityService.getAvailableCars(startDate, endDate, options);
+    // Map to Car model if needed (Supabase returns `cars` rows already compatible with `Car`).
+    return available as Car[];
   }
 
   /**
@@ -525,4 +527,130 @@ export class CarsService {
   > {
     return this.carAvailabilityService.getNextAvailableRange(carId, startDate, endDate, maxOptions);
   }
+
+  /**
+   * Get available cars using server-side RPC with PostGIS distance scoring.
+   * This method uses the `get_available_cars` Postgres function which:
+   * - Filters by availability (no overlapping bookings)
+   * - Calculates distance from user location using ST_DistanceSphere
+   * - Applies smart scoring (distance, rating, price, auto_approval)
+   * - Returns cars sorted by score (distance prioritized for nearby cars)
+   */
+  async getAvailableCarsWithDistance(
+    startDate: string,
+    endDate: string,
+    options: {
+      lat?: number;
+      lng?: number;
+      limit?: number;
+      offset?: number;
+    } = {},
+  ): Promise<CarWithScore[]> {
+    const { lat, lng, limit = 12, offset = 0 } = options;
+
+    const { data, error } = await this.supabase.rpc('get_available_cars', {
+      p_start_date: startDate,
+      p_end_date: endDate,
+      p_lat: lat ?? null,
+      p_lng: lng ?? null,
+      p_limit: limit,
+      p_offset: offset,
+    });
+
+    if (error) {
+      console.error('Error calling get_available_cars RPC:', error);
+      throw error;
+    }
+
+    return (data || []) as CarWithScore[];
+  }
+
+  /**
+   * Get cars within a specific radius from user location.
+   * Uses the `get_cars_within_radius` Postgres function.
+   */
+  async getCarsWithinRadius(
+    userLat: number,
+    userLng: number,
+    radiusKm: number,
+    options: {
+      startDate?: string;
+      endDate?: string;
+      limit?: number;
+      offset?: number;
+    } = {},
+  ): Promise<CarWithDistance[]> {
+    const { startDate, endDate, limit = 50, offset = 0 } = options;
+
+    const { data, error } = await this.supabase.rpc('get_cars_within_radius', {
+      p_user_lat: userLat,
+      p_user_lng: userLng,
+      p_radius_km: radiusKm,
+      p_start_date: startDate ?? null,
+      p_end_date: endDate ?? null,
+      p_limit: limit,
+      p_offset: offset,
+    });
+
+    if (error) {
+      console.error('Error calling get_cars_within_radius RPC:', error);
+      throw error;
+    }
+
+    return (data || []) as CarWithDistance[];
+  }
+}
+
+/**
+ * Car with score from get_available_cars RPC
+ */
+export interface CarWithScore {
+  id: string;
+  owner_id: string;
+  brand: string;
+  model: string;
+  year: number;
+  plate: string;
+  price_per_day: number;
+  currency: string;
+  status: string;
+  location: {
+    city?: string;
+    state?: string;
+    province?: string;
+    country?: string;
+    lat?: number;
+    lng?: number;
+  };
+  images: string[];
+  features: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+  total_bookings: number;
+  avg_rating: number;
+  score: number;
+}
+
+/**
+ * Car with distance from get_cars_within_radius RPC
+ */
+export interface CarWithDistance {
+  id: string;
+  owner_id: string;
+  title: string;
+  brand_text_backup: string;
+  model_text_backup: string;
+  year: number;
+  price_per_day: number;
+  currency: string;
+  value_usd: number;
+  location_city: string;
+  location_state: string;
+  location_lat: number;
+  location_lng: number;
+  location_formatted_address: string;
+  distance_km: number;
+  status: string;
+  photos_count: number;
+  avg_rating: number;
 }

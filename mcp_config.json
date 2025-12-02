@@ -44,6 +44,16 @@
         "/home/edu/autorenta/mcp/prompt-refiner/server.py"
       ],
       "description": "Gemini-powered Prompt Refiner for Logic, UI, and Production optimization"
+    },
+    "gemini-suite": {
+      "command": "node",
+      "args": [
+        "/home/edu/autorenta/tools/gemini-suite-mcp/dist/index.js"
+      ],
+      "env": {
+        "GEMINI_API_KEY": "AIzaSyCJIdveA5iCElCbfkBC9gXv24VktHRjftU"
+      },
+      "description": "Gemini AI Suite - Code Review, Test Generation, UI Analysis, Code Comparison powered by Gemini 2.5 Pro"
     }
   }
 }

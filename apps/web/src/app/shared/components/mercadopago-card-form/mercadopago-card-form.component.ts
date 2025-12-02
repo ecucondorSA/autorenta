@@ -2,11 +2,13 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  AfterViewInit,
   Output,
   EventEmitter,
   signal,
   inject,
   Input,
+  NgZone,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { environment } from '@environment';
@@ -59,7 +61,17 @@ interface CardToken {
     <div class="mp-card-form-container">
       <h3 class="text-lg font-semibold mb-4">Información de Pago</h3>
 
-      <form id="form-checkout">
+      @if (isInitializing()) {
+        <div class="flex flex-col items-center justify-center py-8">
+          <svg class="animate-spin h-8 w-8 text-cta-default mb-3" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p class="text-sm text-text-secondary">Cargando formulario de pago...</p>
+        </div>
+      }
+
+      <form id="form-checkout" [class.hidden]="isInitializing()">
         <div class="mb-4">
           <label class="block text-sm font-medium mb-2">Número de Tarjeta</label>
           <div id="form-checkout__cardNumber" class="mp-input"></div>
@@ -195,30 +207,39 @@ interface CardToken {
     `,
   ],
 })
-export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
+export class MercadopagoCardFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() amountArs = 0;
   @Output() cardTokenGenerated = new EventEmitter<{ cardToken: string; last4: string }>();
   @Output() cardError = new EventEmitter<string>();
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly isInitializing = signal(true);
 
   private cardForm: CardFormInstance | null = null;
   private mp: MercadoPagoSDK | null = null;
   private mpScriptService = inject(MercadoPagoScriptService);
+  private ngZone = inject(NgZone);
+  private initAttempts = 0;
+  private maxInitAttempts = 3;
 
   ngOnInit(): void {
-    // Ensure DOM is ready before initializing
-    if (typeof document !== 'undefined' && document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        this.initializeMercadoPago();
-      });
-    } else {
-      // DOM is already ready
+    // Preload SDK script early (don't initialize yet - wait for view)
+    this.mpScriptService.preloadSDK().catch((err) => {
+      console.warn('⚠️ MercadoPago SDK preload failed:', err);
+    });
+  }
+
+  ngAfterViewInit(): void {
+    // DOM is now ready - initialize MercadoPago after a small delay
+    // to ensure Angular has finished rendering the template
+    this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
-        this.initializeMercadoPago();
-      }, 0);
-    }
+        this.ngZone.run(() => {
+          this.initializeMercadoPago();
+        });
+      }, 200);
+    });
   }
 
   ngOnDestroy(): void {
@@ -228,7 +249,11 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
   }
 
   private async initializeMercadoPago(): Promise<void> {
+    this.initAttempts++;
+    console.log(`🔄 MercadoPago init attempt ${this.initAttempts}/${this.maxInitAttempts}`);
+
     try {
+      // Get public key from environment
       const globalEnv = (globalThis as Record<string, unknown>).__env as
         | Record<string, unknown>
         | undefined;
@@ -240,14 +265,49 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       ).trim();
       const runtimeEnvKey = windowEnvKey || buildEnvKey;
 
+      console.log('🔑 MercadoPago public key:', runtimeEnvKey ? `${runtimeEnvKey.slice(0, 20)}...` : 'NOT FOUND');
+
       if (!runtimeEnvKey.length) {
-        this.errorMessage.set('No pudimos inicializar Mercado Pago. Intenta nuevamente más tarde.');
+        this.isInitializing.set(false);
+        this.errorMessage.set('No pudimos inicializar Mercado Pago: falta la public key.');
+        this.cardError.emit('MercadoPago public key not configured');
         return;
       }
 
-      // Wait a bit to ensure DOM is ready
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Check if form element exists before proceeding
+      const formElement = document.getElementById('form-checkout');
+      if (!formElement) {
+        console.warn('⚠️ Form element not found, will retry...');
+        if (this.initAttempts < this.maxInitAttempts) {
+          setTimeout(() => this.initializeMercadoPago(), 300);
+          return;
+        }
+        throw new Error('Form element with id "form-checkout" not found after multiple attempts');
+      }
 
+      // Check all required elements exist
+      const requiredElements = [
+        'form-checkout__cardNumber',
+        'form-checkout__expirationDate',
+        'form-checkout__securityCode',
+        'form-checkout__cardholderName',
+        'form-checkout__identificationType',
+        'form-checkout__identificationNumber',
+      ];
+
+      const missingElements = requiredElements.filter((id) => !document.getElementById(id));
+      if (missingElements.length > 0) {
+        console.warn('⚠️ Missing form elements:', missingElements);
+        if (this.initAttempts < this.maxInitAttempts) {
+          setTimeout(() => this.initializeMercadoPago(), 300);
+          return;
+        }
+        throw new Error(`Missing form elements: ${missingElements.join(', ')}`);
+      }
+
+      console.log('✅ All form elements found, loading SDK...');
+
+      // Load MercadoPago SDK
       const mpInstance = await this.mpScriptService.getMercadoPago(runtimeEnvKey);
 
       if (!mpInstance) {
@@ -255,6 +315,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       }
 
       this.mp = mpInstance as unknown as MercadoPagoSDK;
+      console.log('✅ MercadoPago SDK loaded successfully');
 
       // Validate that cardForm method exists
       if (!this.mp || typeof this.mp.cardForm !== 'function') {
@@ -262,12 +323,7 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       }
 
       const normalizedAmount = this.amountArs > 0 ? Math.ceil(this.amountArs) : 1;
-
-      // Ensure form element exists before creating CardForm
-      const formElement = document.getElementById('form-checkout');
-      if (!formElement) {
-        throw new Error('Form element with id "form-checkout" not found in DOM');
-      }
+      console.log(`💰 Initializing CardForm with amount: ${normalizedAmount} ARS`);
 
       this.cardForm = this.mp.cardForm({
         amount: normalizedAmount.toString(),
@@ -310,10 +366,14 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
         },
         callbacks: {
           onFormMounted: (error: unknown) => {
+            this.isInitializing.set(false);
             if (error) {
+              console.error('❌ MercadoPago CardForm mount error:', error);
               const errorMsg = this.extractErrorMessage(error) || 'Error al cargar el formulario';
               this.errorMessage.set(errorMsg);
               this.cardError.emit(errorMsg);
+            } else {
+              console.log('✅ MercadoPago CardForm mounted successfully');
             }
           },
           onSubmit: (event: Event) => {
@@ -365,7 +425,11 @@ export class MercadopagoCardFormComponent implements OnInit, OnDestroy {
       if (!this.cardForm) {
         throw new Error('CardForm no se creó correctamente');
       }
+
+      console.log('✅ MercadoPago CardForm created successfully');
     } catch (error) {
+      console.error('❌ MercadoPago initialization error:', error);
+      this.isInitializing.set(false);
       const errorDetails = error instanceof Error ? error.message : String(error);
       const userMessage = `No pudimos cargar Mercado Pago: ${errorDetails}. Intenta recargar la página.`;
       this.errorMessage.set(userMessage);

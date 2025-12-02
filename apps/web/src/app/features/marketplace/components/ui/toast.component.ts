@@ -259,13 +259,13 @@ import { Component, effect, input, output, signal } from '@angular/core';
         padding: 0;
         background: transparent;
         border: none;
-        color: var(--text-secondary, #4E4E4E); // Reemplazado hex con token semántico
+        color: var(--text-secondary, #4E4E4E);
         cursor: pointer;
         transition: color 0.2s ease;
       }
 
       .toast-close:hover {
-        color: var(--text-secondary, #4E4E4E); // Reemplazado hex con token semántico
+        color: var(--text-secondary, #4E4E4E);
       }
 
       .toast-close svg {

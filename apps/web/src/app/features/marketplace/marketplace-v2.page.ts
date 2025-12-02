@@ -51,6 +51,7 @@ import {
 import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
 
 // SkeletonComponent - available for loading states when needed
+import { CarLatestLocation, CarLocationService } from '../../core/services/car-location.service';
 import { SeoSchemaService } from '../../core/services/seo-schema.service';
 import { ThemeService } from '../../core/services/theme.service';
 import {
@@ -70,6 +71,11 @@ export interface LatLngBoundsLiteral {
 export interface CarWithDistance extends Car {
   distance?: number;
   distanceText?: string;
+  latest_location?: {
+    lat: number;
+    lng: number;
+    recorded_at: string;
+  };
 }
 
 export type ViewMode = 'grid' | 'list' | 'map';
@@ -127,6 +133,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private readonly bookingsService = inject(BookingsService);
   private readonly analyticsService = inject(AnalyticsService);
   private readonly breakpoint = inject(BreakpointService);
+  private readonly carLocationService = inject(CarLocationService);
   private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -141,10 +148,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly error = signal<string | null>(null);
   readonly cars = signal<Car[]>([]);
   readonly selectedCarId = signal<string | null>(null);
+  readonly latestLocations = signal<Record<string, CarLatestLocation>>({});
 
-  // Pagination - Solo 2 autos iniciales para carga rápida
+  // Pagination
   readonly currentPage = signal(1);
-  readonly pageSize = signal(2);
+  readonly pageSize = signal(12);
   readonly totalCarsCount = signal(0);
   // User Location Signals
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
@@ -305,41 +313,23 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   readonly activeQuickFilters = signal<Set<string>>(new Set());
 
+  /**
+   * Visible cars with client-side enhancements.
+   * Note: Most filters are now applied server-side in loadCars().
+   * This computed only handles:
+   * - Distance sorting (requires user location)
+   * - Client-only filters (verified, no-card) that can't be done server-side
+   */
   readonly visibleCars = computed(() => {
-    // Return cars that match current filters and apply sorting
     let cars = [...this.carsWithDistance()];
-    const filters = this.mapFilters();
     const quickFilters = this.activeQuickFilters();
 
-    // 1. Filter by Map Filters
-    if (filters.priceRange) {
-      cars = cars.filter(
-        (c) =>
-          c.price_per_day >= filters.priceRange!.min && c.price_per_day <= filters.priceRange!.max,
-      );
-    }
-
-    if (filters.transmission && filters.transmission.length > 0) {
-      cars = cars.filter((c) => filters.transmission!.includes(c.transmission));
-    }
-
-    if (filters.immediateOnly) {
-      cars = cars.filter((c) => c.auto_approval);
-    }
-
-    // 2. Filter by Quick Filters
+    // Client-only filters (can't be done server-side due to nested relations)
     if (quickFilters.has('verified')) {
-      // Filter by verified owner (email + phone verified)
       cars = cars.filter((c) => c.owner?.is_email_verified && c.owner?.is_phone_verified);
     }
 
-    if (quickFilters.has('electric')) {
-      cars = cars.filter((c) => c.fuel_type === 'electric' || c.fuel === 'electric');
-    }
-
     if (quickFilters.has('no-card')) {
-      // Filter cars that accept other payment methods or don't require credit card
-      // Assuming 'debit_card', 'cash', 'transfer' in payment_methods
       cars = cars.filter(
         (c) =>
           c.payment_methods?.some((pm) =>
@@ -348,47 +338,16 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       );
     }
 
-    // 'near-me' is handled by sorting/radius, but we can enforce radius filter if needed
-    // 'immediate' is handled by mapFilters sync
-
+    // Distance sorting (requires user location - can't be done server-side)
     const sort = this.sortOrder();
-
-    // Apply sorting based on selected order
-    switch (sort) {
-      case 'distance':
-        // Sort by distance (closest first)
-        cars = cars.sort((a, b) => {
-          const distA = a.distance ?? Number.MAX_VALUE;
-          const distB = b.distance ?? Number.MAX_VALUE;
-          return distA - distB;
-        });
-        break;
-
-      case 'price_asc':
-        // Sort by price (lowest first)
-        cars = cars.sort((a, b) => a.price_per_day - b.price_per_day);
-        break;
-
-      case 'price_desc':
-        // Sort by price (highest first)
-        cars = cars.sort((a, b) => b.price_per_day - a.price_per_day);
-        break;
-
-      case 'rating':
-        // Sort by rating (highest first)
-        cars = cars.sort((a, b) => {
-          const ratingA = a.rating_avg ?? 0;
-          const ratingB = b.rating_avg ?? 0;
-          return ratingB - ratingA;
-        });
-        break;
-
-      case 'score':
-      case 'relevance':
-      default:
-        // Keep default order (relevance/score from backend)
-        break;
+    if (sort === 'distance') {
+      cars = cars.sort((a, b) => {
+        const distA = a.distance ?? Number.MAX_VALUE;
+        const distB = b.distance ?? Number.MAX_VALUE;
+        return distA - distB;
+      });
     }
+    // Other sorts are now handled server-side in loadCars()
 
     return cars;
   });
@@ -530,25 +489,68 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   /**
-   * Load available cars with filters
+   * Load available cars with filters applied server-side
    */
   async loadCars(): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
     try {
       const dateRange = this.dateRange();
+      const filters = this.mapFilters();
+      const quickFilters = this.activeQuickFilters();
       const page = this.currentPage();
       const size = this.pageSize();
       const rangeStart = (page - 1) * size;
       const rangeEnd = rangeStart + size - 1;
 
       if (dateRange.from && dateRange.to) {
-        // Use availability service for date-filtered queries
-        const items = await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
-          limit: size,
-          offset: rangeStart,
-        });
-        this.cars.set(items);
+        // Use RPC with PostGIS distance scoring when user has location
+        const userLoc = this.userLocation();
+        if (userLoc) {
+          // Server-side distance sorting with RPC
+          const items = await this.carsService.getAvailableCarsWithDistance(
+            dateRange.from,
+            dateRange.to,
+            {
+              lat: userLoc.lat,
+              lng: userLoc.lng,
+              limit: size,
+              offset: rangeStart,
+            },
+          );
+          // Map RPC result to Car format
+          const carsData = items.map((item) => ({
+            id: item.id,
+            owner_id: item.owner_id,
+            brand_text_backup: item.brand,
+            model_text_backup: item.model,
+            year: item.year,
+            plate: item.plate,
+            price_per_day: item.price_per_day,
+            currency: item.currency,
+            status: item.status,
+            location_city: item.location?.city || '',
+            location_state: item.location?.state || '',
+            location_lat: item.location?.lat || 0,
+            location_lng: item.location?.lng || 0,
+            photos: item.images?.map((url: string) => ({ url })) || [],
+            car_photos: item.images?.map((url: string) => ({ url })) || [],
+            features: item.features,
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+            rating_avg: item.avg_rating,
+            score: item.score,
+          })) as unknown as Car[];
+          this.cars.set(carsData);
+        } else {
+          // Fallback to availability service without distance
+          const items = await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
+            limit: size,
+            offset: rangeStart,
+          });
+          this.cars.set(items);
+          await this.loadLatestLocationsFor(items);
+        }
         // For date-filtered queries, we need a separate count query
         const { count } = await this.supabase
           .from('cars')
@@ -556,8 +558,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
           .eq('status', 'active');
         this.totalCarsCount.set(count || 0);
       } else {
-        // Paginated query with count for non-date-filtered
-        const { data, count, error } = await this.supabase
+        // Build query with server-side filters
+        let query = this.supabase
           .from('cars')
           .select(
             `
@@ -569,17 +571,57 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
               avatar_url,
               rating_avg,
               rating_count,
-              created_at
+              created_at,
+              is_email_verified,
+              is_phone_verified
             )
           `,
             { count: 'exact' },
           )
-          .eq('status', 'active')
-          .order('created_at', { ascending: false })
-          .range(rangeStart, rangeEnd);
+          .eq('status', 'active');
+
+        // Apply server-side filters
+        if (filters.priceRange) {
+          query = query
+            .gte('price_per_day', filters.priceRange.min)
+            .lte('price_per_day', filters.priceRange.max);
+        }
+
+        if (filters.transmission && filters.transmission.length > 0) {
+          query = query.in('transmission', filters.transmission);
+        }
+
+        if (filters.immediateOnly) {
+          query = query.eq('auto_approval', true);
+        }
+
+        // Quick filters
+        if (quickFilters.has('electric')) {
+          query = query.or('fuel_type.eq.electric,fuel.eq.electric');
+        }
+
+        // Apply sorting
+        const sort = this.sortOrder();
+        switch (sort) {
+          case 'price_asc':
+            query = query.order('price_per_day', { ascending: true });
+            break;
+          case 'price_desc':
+            query = query.order('price_per_day', { ascending: false });
+            break;
+          case 'rating':
+            query = query.order('rating_avg', { ascending: false, nullsFirst: false });
+            break;
+          default:
+            query = query.order('created_at', { ascending: false });
+        }
+
+        const { data, count, error } = await query.range(rangeStart, rangeEnd);
 
         if (error) throw error;
-        this.cars.set((data as Car[]) || []);
+        const carsData = (data as Car[]) || [];
+        this.cars.set(carsData);
+        await this.loadLatestLocationsFor(carsData);
         this.totalCarsCount.set(count || 0);
       }
 
@@ -599,15 +641,60 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     }
   }
 
+  private async loadLatestLocationsFor(cars: Car[]): Promise<void> {
+    if (!cars.length) return;
+
+    try {
+      const ids = cars.map((c) => c.id);
+      const locations = await this.carLocationService.getLatestLocations(ids);
+
+      // Map for quick template lookup
+      const map: Record<string, CarLatestLocation> = {};
+      for (const loc of locations) {
+        map[loc.car_id] = loc;
+      }
+      this.latestLocations.set(map);
+
+      // Also enrich car list so other parts can reuse coords if needed
+      const locationMap = new Map(locations.map((l) => [l.car_id, l]));
+      this.cars.update((currentCars) =>
+        currentCars.map((car) => {
+          const loc = locationMap.get(car.id);
+          if (!loc) return car;
+          return {
+            ...car,
+            latest_location: {
+              lat: loc.lat,
+              lng: loc.lng,
+              recorded_at: loc.recorded_at,
+            },
+            location_lat: loc.lat ?? car.location_lat,
+            location_lng: loc.lng ?? car.location_lng,
+          } as Car;
+        }),
+      );
+    } catch (err) {
+      console.warn('latest-locations-load', err);
+    }
+  }
+
   /**
    * Setup realtime subscription for car updates
+   * Only listen to INSERT and DELETE events to avoid excessive reloads
    */
   private setupRealtimeSubscription(): void {
     this.realtimeChannel = this.supabase
       .channel('marketplace-realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'cars' }, () => {
-        void this.loadCars();
-      })
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'cars' },
+        () => void this.loadCars(),
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'cars' },
+        () => void this.loadCars(),
+      )
       .subscribe();
   }
 

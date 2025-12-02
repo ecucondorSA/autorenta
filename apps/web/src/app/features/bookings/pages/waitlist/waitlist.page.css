@@ -288,7 +288,7 @@
 
 .btn-secondary {
   background-color: white;
-  color: #3b82f6;
+  color: var(--text-primary, #050505);
   border: 2px solid #3b82f6;
   text-decoration: none;
 }
@@ -299,7 +299,7 @@
 
 .btn-danger {
   background-color: white;
-  color: #dc2626;
+  color: var(--text-primary, #050505);
   border: 2px solid #dc2626;
 }
 

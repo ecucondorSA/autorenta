@@ -535,6 +535,12 @@
             class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition">
             Transacciones
           </button>
+          <button type="button" (click)="setActiveTab('transfers')"
+            [class.bg-cta-default]="activeTab() === 'transfers'"
+            [class.text-text-inverse]="activeTab() === 'transfers'"
+            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition">
+            Transferencias
+          </button>
           <button type="button" (click)="setActiveTab('withdrawals')"
             [class.bg-cta-default]="activeTab() === 'withdrawals'"
             [class.text-text-inverse]="activeTab() === 'withdrawals'"
@@ -547,6 +553,10 @@
       <div class="mt-6">
         @if (activeTab() === 'transactions') {
         <app-transaction-history></app-transaction-history>
+        }
+
+        @if (activeTab() === 'transfers') {
+        <app-wallet-transfers></app-wallet-transfers>
         }
 
         @if (activeTab() === 'withdrawals') {

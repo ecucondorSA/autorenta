@@ -144,8 +144,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -153,11 +153,12 @@
    ───────────────────────────────────────────────────────────── */
 
 .nav-item__icon {
-  width: 24px;
-  height: 24px;
-  color: var(--text-muted); /* Texto muted del sistema */
+  width: 26px;
+  height: 26px;
+  color: var(--text-primary); /* High contrast for WCAG AA compliance */
+  opacity: 0.7; /* Slightly higher opacity for better visibility */
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  stroke-width: 2;
+  stroke-width: 2.25; /* Thicker strokes for better visibility */
 
   /* ✅ GPU Acceleration */
   will-change: transform, filter, color;
@@ -166,6 +167,7 @@
 
 .nav-item__icon--active {
   color: var(--cta-default); /* Azul pastel del sistema */
+  opacity: 1; /* Full opacity for active state */
   stroke-width: 2.5;
   filter: drop-shadow(0 0 12px rgba(167, 216, 244, 0.6)); /* cta-default glow */
   transform: translateZ(0) scale(1.15);
@@ -185,6 +187,7 @@
 /* Hover en items no activos */
 .nav-item:not(.nav-item--active):hover .nav-item__icon {
   color: var(--cta-default);
+  opacity: 1; /* Full opacity on hover */
   transform: scale(1.1) translateZ(0);
 }
 
@@ -193,12 +196,13 @@
    ───────────────────────────────────────────────────────────── */
 
 .nav-item__label {
-  font-size: 10px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600; /* Bolder for better legibility at small size */
   line-height: 1.2;
   letter-spacing: 0.02em;
 
-  color: var(--text-muted); /* Texto muted del sistema */
+  color: var(--text-primary); /* High contrast for WCAG AA compliance */
+  opacity: 0.7; /* Higher opacity for better visibility */
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   text-align: center;
@@ -211,12 +215,14 @@
 
 .nav-item__label--active {
   color: var(--cta-default); /* Azul pastel del sistema */
+  opacity: 1; /* Full opacity for active state */
   font-weight: 700;
   transform: scale(1.05);
 }
 
 .nav-item:not(.nav-item--active):hover .nav-item__label {
   color: var(--cta-default);
+  opacity: 1; /* Full opacity on hover */
 }
 
 /* ─────────────────────────────────────────────────────────────

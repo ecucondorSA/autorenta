@@ -9716,3 +9716,99 @@ export type BookingStatus =
   | 'pending_dispute_resolution';
 export type PaymentStatus = Database['public']['Enums']['payment_status'];
 export type PaymentProvider = Database['public']['Enums']['payment_provider'];
+
+// ============================================================================
+// NEW TYPES - Added 2025-12-01
+// Disputes, Feature Flags, Organizations, Fees, Notification Settings
+// ============================================================================
+
+// Enums for new tables
+export type DisputeStatus = 'open' | 'in_review' | 'resolved' | 'rejected';
+export type DisputeKind = 'damage' | 'no_show' | 'late_return' | 'other';
+export type OrganizationType = 'fleet' | 'corporate' | 'agency';
+export type OrganizationRole = 'owner' | 'admin' | 'manager' | 'driver';
+
+// Dispute interfaces
+export interface Dispute {
+  id: string;
+  booking_id: string;
+  opened_by: string;
+  kind: DisputeKind;
+  description: string | null;
+  status: DisputeStatus;
+  created_at: string | null;
+  resolved_by: string | null;
+  resolved_at: string | null;
+}
+
+export interface DisputeEvidence {
+  id: string;
+  dispute_id: string;
+  path: string;
+  note: string | null;
+  created_at: string | null;
+}
+
+// Feature Flag interfaces
+export interface FeatureFlag {
+  id: string;
+  name: string;
+  description: string | null;
+  enabled: boolean;
+  rollout_percentage: number | null;
+  user_segments: Record<string, unknown> | null;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+  updated_at: string;
+  created_by: string | null;
+  updated_by: string | null;
+}
+
+export interface FeatureFlagOverride {
+  id: string;
+  feature_flag_id: string;
+  user_id: string;
+  enabled: boolean;
+  reason: string | null;
+  created_at: string;
+  created_by: string | null;
+}
+
+// Organization interfaces
+export interface Organization {
+  id: string;
+  owner_id: string;
+  name: string;
+  tax_id: string | null;
+  type: OrganizationType;
+  verified: boolean | null;
+  logo_url: string | null;
+  website: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface OrganizationMember {
+  organization_id: string;
+  user_id: string;
+  role: OrganizationRole;
+  joined_at: string | null;
+  commission_fixed_percent: number | null;
+}
+
+// Fee interface
+export interface Fee {
+  id: string;
+  booking_id: string;
+  kind: string;
+  amount: number;
+  refundable: boolean;
+  created_at: string | null;
+}
+
+// Notification Settings interface
+export interface NotificationSettings {
+  user_id: string;
+  preferences: Record<string, unknown>;
+  updated_at: string;
+}

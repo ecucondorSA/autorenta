@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { WalletLedgerService } from '../../../core/services/wallet-ledger.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
@@ -65,7 +65,7 @@ export class WalletTransfersComponent implements OnInit {
   readonly loading = this.ledger.loading;
   readonly error = this.ledger.error;
 
-  private currentUserId = signal<string | null>(null);
+  readonly currentUserId = signal<string | null>(null);
 
   ngOnInit(): void {
     void this.loadUserAndTransfers();

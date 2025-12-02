@@ -1,7 +1,7 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: linear-gradient(135deg, #faf4ed 0%, #fdfbf6 100%);
+  background: var(--surface-base, #faf4ed); /* Replaced gradient with solid color token */
 }
 
 /* Hero Section */
@@ -75,7 +75,7 @@
   text-align: center;
   padding: 2rem 1.5rem;
   border-radius: 16px;
-  background: linear-gradient(135deg, #faf4ed 0%, #fdfbf6 100%);
+  background: var(--surface-light-subtle, #faf4ed); /* Replaced gradient with solid color token */
   border: 1px solid rgba(167, 216, 244, 0.2);
   transition: all 0.3s ease;
 }
@@ -119,7 +119,7 @@
   font-size: 1.125rem;
   font-weight: 600;
   color: white;
-  background: linear-gradient(135deg, #a7d8f4 0%, #75bae4 100%);
+  background: var(--cta-default, #a7d8f4); /* Replaced gradient with solid color token */
   border: none;
   border-radius: 12px;
   text-decoration: none;
@@ -130,7 +130,7 @@
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(167, 216, 244, 0.4);
-  background: linear-gradient(135deg, #75bae4 0%, #5aaad9 100%);
+  background: var(--cta-hover, #75bae4); /* Replaced gradient with solid color token */
 }
 
 .btn-large {

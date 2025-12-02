@@ -148,6 +148,9 @@ export class CarsListPage implements OnInit, OnDestroy {
     distance?: number;
     eta?: number;
   } | null>(null);
+
+  // Airbnb-style favorites (stored in localStorage)
+  readonly favoriteCars = signal<Set<string>>(new Set());
   readonly expressModeSignal = signal(true);
   readonly isMobile = this.breakpoint.isMobile;
   readonly isDesktop = this.breakpoint.isDesktop;
@@ -526,6 +529,17 @@ export class CarsListPage implements OnInit, OnDestroy {
       const storedSort = localStorage.getItem(SORT_STORAGE_KEY);
       if (storedSort && this.isValidSort(storedSort)) {
         this.sortBy.set(storedSort);
+      }
+
+      // Load saved favorites from localStorage
+      const storedFavorites = localStorage.getItem('autorenta:favorites');
+      if (storedFavorites) {
+        try {
+          const parsed = JSON.parse(storedFavorites) as string[];
+          this.favoriteCars.set(new Set(parsed));
+        } catch {
+          // Invalid JSON, ignore
+        }
       }
     }
 
@@ -999,6 +1013,35 @@ export class CarsListPage implements OnInit, OnDestroy {
    */
   trackByCar(_index: number, car: CarWithDistance): string {
     return car.id;
+  }
+
+  /**
+   * Airbnb-style favorite toggle
+   * Stores favorites in localStorage for persistence
+   */
+  toggleFavorite(event: Event, carId: string): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const favorites = new Set(this.favoriteCars());
+    if (favorites.has(carId)) {
+      favorites.delete(carId);
+    } else {
+      favorites.add(carId);
+    }
+    this.favoriteCars.set(favorites);
+
+    // Persist to localStorage
+    if (this.isBrowser) {
+      localStorage.setItem('autorenta:favorites', JSON.stringify([...favorites]));
+    }
+  }
+
+  /**
+   * Check if a car is in favorites
+   */
+  isFavorite(carId: string): boolean {
+    return this.favoriteCars().has(carId);
   }
 
   /**

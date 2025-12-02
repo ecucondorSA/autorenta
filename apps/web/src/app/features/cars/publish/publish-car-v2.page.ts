@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CarsService } from '../../../core/services/cars.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { PricingService } from '../../../core/services/pricing.service';
+import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
 import { FipeAutocompleteComponent } from '../../../shared/components/fipe-autocomplete/fipe-autocomplete.component';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
@@ -70,6 +71,7 @@ export class PublishCarV2Page implements OnInit {
   private readonly mpService = inject(PublishCarMpOnboardingService);
   private readonly documentsService = inject(VehicleDocumentsService);
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
+  private readonly supabase = inject(SupabaseClientService).getClient();
 
   // Component state
   readonly isSubmitting = signal(false);
@@ -131,6 +133,7 @@ export class PublishCarV2Page implements OnInit {
   readonly suggestedPrice = signal<number | null>(null);
   readonly selectedCategoryName = signal<string>('');
   readonly isCalculatingSuggestedPrice = signal(false);
+  readonly pricingOverrides = signal<{ day: string; price_per_day: number }[]>([]);
 
   // ✅ NEW: Control submit button availability - Requiere marca, modelo, año, 3 fotos y ubicación
   // Verifica tanto valores del formulario (brand_id/model_id o brand_text_backup/model_text_backup) como signals FIPE
@@ -223,6 +226,7 @@ export class PublishCarV2Page implements OnInit {
         return;
       }
       await this.photoService.loadExistingPhotos(this.carId);
+      await this.loadPricingOverrides(this.carId);
     } else {
       // Auto-fill from last car
       await this.formService.autoFillFromLastCar();
@@ -249,6 +253,20 @@ export class PublishCarV2Page implements OnInit {
       }
     } catch (error) {
       console.error('[PublishCarV2] ❌ Error updating category name:', error);
+    }
+  }
+
+  private async loadPricingOverrides(carId: string): Promise<void> {
+    try {
+      const { data, error } = await this.supabase
+        .from('pricing_overrides')
+        .select('day, price_per_day')
+        .eq('car_id', carId)
+        .order('day', { ascending: true });
+      if (error) throw error;
+      this.pricingOverrides.set((data as { day: string; price_per_day: number }[]) || []);
+    } catch (err) {
+      console.warn('pricing-overrides-load', err);
     }
   }
 

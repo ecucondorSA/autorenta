@@ -23,8 +23,7 @@
           (partSelected)="onPartSelected($event)"
           (partDeselected)="onPartDeselected()"></app-car-3d-viewer>
         } @placeholder {
-        <div
-          class="w-full h-full flex items-center justify-center bg-surface-elevated">
+        <div class="w-full h-full flex items-center justify-center bg-surface-elevated">
           <div class="text-center">
             <div
               class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center animate-pulse">
@@ -38,8 +37,7 @@
           </div>
         </div>
         } @loading (minimum 300ms) {
-        <div
-          class="w-full h-full flex items-center justify-center bg-surface-elevated">
+        <div class="w-full h-full flex items-center justify-center bg-surface-elevated">
           <div
             class="animate-spin rounded-full h-12 w-12 border-2 border-cta-default border-t-transparent">
           </div>
@@ -54,7 +52,7 @@
       [style.top.px]="hoveredPartPosition()!.y - 10" role="tooltip">
       <div class="flex items-center gap-2">
         <span class="text-lg">{{ hoveredPart()!.icon }}</span>
-        <span class="font-medium text-[#050505]">{{ hoveredPart()!.name }}</span>
+        <span class="font-medium text-primary">{{ hoveredPart()!.name }}</span>
       </div>
     </div>
     }
@@ -65,21 +63,21 @@
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-3">
           <span class="text-xl">{{ selectedPart()!.icon }}</span>
-          <h4 class="font-bold text-lg text-[#050505]">{{ selectedPart()!.name }}</h4>
+          <h4 class="font-bold text-lg text-primary">{{ selectedPart()!.name }}</h4>
         </div>
         <button (click)="closePartPanel()"
           class="p-1.5 rounded-lg hover:bg-[#a7d8f4]/20 transition-colors"
           aria-label="Cerrar panel de información">
-          <svg class="w-5 h-5 text-[#4e4e4e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
-      <p class="text-sm text-[#4e4e4e] leading-relaxed">{{ selectedPart()!.description }}</p>
+      <p class="text-sm text-secondary leading-relaxed">{{ selectedPart()!.description }}</p>
       @if (selectedPart()!.category) {
       <div class="mt-3 pt-3 border-t border-[#a7d8f4]/20">
-        <span class="text-xs font-medium text-[#3b6e8f] uppercase tracking-wide">
+        <span class="text-xs font-medium text-cta-default uppercase tracking-wide">
           {{ selectedPart()!.category }}
         </span>
       </div>
@@ -138,14 +136,14 @@
         <!-- Eyebrow -->
         <div
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 border border-[#a7d8f4]/40 mb-6 hero-fade-in shadow-sm">
-          <span class="w-2 h-2 rounded-full bg-[#3b6e8f] animate-pulse"></span>
-          <span class="text-sm font-medium text-[#050505]/70 tracking-wide">Plataforma P2P de
+          <span class="w-2 h-2 rounded-full bg-cta-default animate-pulse"></span>
+          <span class="text-sm font-medium text-primary/90 tracking-wide">Plataforma P2P de
             Alquiler</span>
         </div>
 
         <!-- Main Headline -->
         <h1
-          class="font-display h1 text-[#050505] leading-[1.05] tracking-tight mb-6 hero-fade-in hero-delay-1">
+          class="font-display h1 text-primary leading-[1.05] tracking-tight mb-6 hero-fade-in hero-delay-1">
           Maneja tu
           <span class="text-gradient-celeste block sm:inline">proxima</span>
           aventura
@@ -153,9 +151,9 @@
 
         <!-- Subheadline -->
         <p
-          class="text-lg text-[#4e4e4e] font-light leading-relaxed max-w-lg mb-8 hero-fade-in hero-delay-2">
+          class="text-lg text-secondary font-light leading-relaxed max-w-lg mb-8 hero-fade-in hero-delay-2">
           Conectamos personas con vehiculos verificados. Sin intermediarios,
-          <span class="text-[#050505] font-medium">100% asegurado</span>.
+          <span class="text-primary font-medium">100% asegurado</span>.
         </p>
 
         <!-- Feature Pills -->
@@ -204,9 +202,9 @@
       </div>
     </div>
 
-    <!-- Floating Stats - Bottom Left -->
+    <!-- Floating Stats - Bottom Left (positioned lower to avoid overlap with hero text) -->
     <div
-      class="absolute bottom-32 lg:bottom-40 left-6 lg:left-12 z-10 hidden lg:block hero-fade-in hero-delay-3">
+      class="absolute bottom-8 lg:bottom-16 left-6 lg:left-12 z-10 hidden lg:block hero-fade-in hero-delay-3">
       <div class="floating-stats-card">
         <div class="flex items-center gap-4">
           <div class="stat-item">
@@ -235,11 +233,11 @@
         <!-- Search Header -->
         <div class="flex items-center justify-between mb-6 lg:mb-8">
           <div>
-            <h3 class="font-display h4 text-[#050505] tracking-tight"
+            <h3 class="font-display h4 text-primary tracking-tight"
               data-testid="marketplace-heading">
               Encuentra tu vehículo
             </h3>
-            <p class="text-sm text-[#4e4e4e] mt-1">Busca por ubicación o fecha</p>
+            <p class="text-sm text-secondary mt-1">Busca por ubicación o fecha</p>
           </div>
           <div
             class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
@@ -256,7 +254,7 @@
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg
-                  class="w-5 h-5 text-[#7b7b7b] group-focus-within:text-cyan-500 transition-colors"
+                  class="w-5 h-5 text-muted group-focus-within:text-cyan-500 transition-colors"
                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -412,12 +410,11 @@
           <span class="text-[10px] font-semibold text-cta-text uppercase tracking-widest">Tecnología
             de Clase Mundial</span>
         </div>
-        <h2
-          class="font-display h3 font-black text-text-primary dark:text-white mb-3">
+        <h2 class="font-display h3 font-black text-text-primary dark:text-text-primary mb-3">
           Respaldados por
-          <span class="text-cta-text">los mejores</span>
+          <span class="text-cta-default">los mejores</span>
         </h2>
-        <p class="text-base text-text-secondary dark:text-white/50 max-w-2xl mx-auto">
+        <p class="text-base text-text-secondary dark:text-text-secondary max-w-2xl mx-auto">
           Integramos las mejores soluciones tecnológicas para brindarte una experiencia segura y
           confiable.
         </p>
@@ -514,7 +511,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
-            <span class="text-sm font-medium text-text-secondary">Datos
+            <span class="text-sm font-medium text-secondary">Datos
               encriptados</span>
           </div>
           <div class="w-px h-4 bg-border-muted"></div>
@@ -524,7 +521,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            <span class="text-sm font-medium text-text-secondary">SSL
+            <span class="text-sm font-medium text-secondary">SSL
               Certificado</span>
           </div>
           <div class="w-px h-4 bg-border-muted"></div>
@@ -534,7 +531,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="text-sm text-text-secondary">99.9% Uptime</span>
+            <span class="text-sm text-secondary">99.9% Uptime</span>
           </div>
         </div>
       </div>
@@ -545,31 +542,47 @@
   <section class="py-14 lg:py-18 bg-surface-base">
     <div class="max-w-[1440px] mx-auto px-6 lg:px-12 space-y-10">
       <div class="text-center max-w-3xl mx-auto">
-        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-cta-default/30 text-xs font-semibold uppercase tracking-widest text-cta-default mb-4">Para quienes alquilan</span>
-        <h2 class="font-display h2 text-text-primary dark:text-white mb-3">Súbete y maneja con tranquilidad</h2>
-        <p class="text-text-secondary dark:text-white/60 text-base">Seguro incluido, verificación rápida y soporte 24/7 para que solo te ocupes del viaje.</p>
+        <span
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-cta-default/30 text-xs font-semibold uppercase tracking-widest text-cta-default mb-4">Para
+          quienes alquilan</span>
+        <h2 class="font-display h2 text-text-primary dark:text-text-primary mb-3">Súbete y maneja con
+          tranquilidad</h2>
+        <p class="text-text-secondary dark:text-text-secondary text-base">Seguro incluido, verificación
+          rápida y soporte 24/7 para que solo te ocupes del viaje.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3">✅</div>
-          <h3 class="font-semibold text-text-primary mb-2">Verificación en minutos</h3>
-          <p class="text-sm text-text-secondary">Sube DNI y licencia, IA valida y avanza sin esperas.</p>
+          <div
+            class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3">
+            ✅</div>
+          <h3 class="font-semibold text-primary mb-2">Verificación en minutos</h3>
+          <p class="text-sm text-secondary">Sube DNI y licencia, IA valida y avanza sin
+            esperas.</p>
         </div>
         <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3">🔒</div>
-          <h3 class="font-semibold text-text-primary mb-2">Pagos protegidos</h3>
-          <p class="text-sm text-text-secondary">MercadoPago, transferencia o Wallet. Depósitos seguros y liberación automática.</p>
+          <div
+            class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3">
+            🔒</div>
+          <h3 class="font-semibold text-primary mb-2">Pagos protegidos</h3>
+          <p class="text-sm text-secondary">MercadoPago, transferencia o Wallet. Depósitos
+            seguros y liberación automática.</p>
         </div>
         <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-3">🕒</div>
-          <h3 class="font-semibold text-text-primary mb-2">Entrega flexible</h3>
-          <p class="text-sm text-text-secondary">Coordina retiro y devolución cerca tuyo o a domicilio.</p>
+          <div
+            class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-3">
+            🕒</div>
+          <h3 class="font-semibold text-primary mb-2">Entrega flexible</h3>
+          <p class="text-sm text-secondary">Coordina retiro y devolución cerca tuyo o a
+            domicilio.</p>
         </div>
         <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mb-3">🧭</div>
-          <h3 class="font-semibold text-text-primary mb-2">Soporte 24/7</h3>
-          <p class="text-sm text-text-secondary">Chat y WhatsApp en ruta para cualquier imprevisto.</p>
+          <div
+            class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mb-3">
+            🧭</div>
+          <h3 class="font-semibold text-primary mb-2">Soporte 24/7</h3>
+          <p class="text-sm text-secondary">Chat y WhatsApp en ruta para cualquier imprevisto.
+          </p>
         </div>
       </div>
     </div>
@@ -579,37 +592,55 @@
   <section class="py-14 lg:py-18 bg-surface-base">
     <div class="max-w-[1440px] mx-auto px-6 lg:px-12 space-y-10">
       <div class="text-center max-w-3xl mx-auto">
-        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-success-border/50 text-xs font-semibold uppercase tracking-widest text-success-text mb-4">Para dueños</span>
-        <h2 class="font-display h2 text-text-primary dark:text-white mb-3">Publica, bloquea y cobra sin fricción</h2>
-        <p class="text-text-secondary dark:text-white/60 text-base">Control total de precios y disponibilidad, con protección y depósitos garantizados.</p>
+        <span
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-success-border/50 text-xs font-semibold uppercase tracking-widest text-success-text mb-4">Para
+          dueños</span>
+        <h2 class="font-display h2 text-text-primary dark:text-text-primary mb-3">Publica, bloquea y cobra
+          sin fricción</h2>
+        <p class="text-text-secondary dark:text-text-secondary text-base">Control total de precios y
+          disponibilidad, con protección y depósitos garantizados.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3">💰</div>
-          <h3 class="font-semibold text-text-primary mb-2">Ingresos claros</h3>
-          <p class="text-sm text-text-secondary">Resumen por reserva y depósitos automáticos a tu cuenta.</p>
+          <div
+            class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3">
+            💰</div>
+          <h3 class="font-semibold text-primary mb-2">Ingresos claros</h3>
+          <p class="text-sm text-secondary">Resumen por reserva y depósitos automáticos a tu
+            cuenta.</p>
         </div>
         <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3">📅</div>
-          <h3 class="font-semibold text-text-primary mb-2">Calendario inteligente</h3>
-          <p class="text-sm text-text-secondary">Bloquea fechas, ajusta precios por día y recibe reservas inmediatas.</p>
+          <div
+            class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3">
+            📅</div>
+          <h3 class="font-semibold text-primary mb-2">Calendario inteligente</h3>
+          <p class="text-sm text-secondary">Bloquea fechas, ajusta precios por día y recibe
+            reservas inmediatas.</p>
         </div>
         <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-3">🛡️</div>
-          <h3 class="font-semibold text-text-primary mb-2">Protección y verificación</h3>
-          <p class="text-sm text-text-secondary">Conductores verificados, depósitos de garantía y reportes de estado.</p>
+          <div
+            class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-3">
+            🛡️</div>
+          <h3 class="font-semibold text-primary mb-2">Protección y verificación</h3>
+          <p class="text-sm text-secondary">Conductores verificados, depósitos de garantía y
+            reportes de estado.</p>
         </div>
         <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mb-3">⚙️</div>
-          <h3 class="font-semibold text-text-primary mb-2">Herramientas pro</h3>
-          <p class="text-sm text-text-secondary">Dashboard, precios dinámicos y alertas de rendimiento.</p>
+          <div
+            class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mb-3">
+            ⚙️</div>
+          <h3 class="font-semibold text-primary mb-2">Herramientas pro</h3>
+          <p class="text-sm text-secondary">Dashboard, precios dinámicos y alertas de
+            rendimiento.</p>
         </div>
       </div>
 
       <div class="flex flex-col md:flex-row items-center justify-center gap-3 pt-4 text-center">
-        <button (click)="handleHeroQuickBook()" class="btn-primary-glow w-full md:w-auto">Explorar autos</button>
-        <button (click)="onPublishClick()" class="btn-outline-light w-full md:w-auto">Publicar mi auto</button>
+        <button (click)="handleHeroQuickBook()" class="btn-primary-glow w-full md:w-auto">Explorar
+          autos</button>
+        <button (click)="onPublishClick()" class="btn-outline-light w-full md:w-auto">Publicar mi
+          auto</button>
       </div>
     </div>
   </section>
@@ -630,8 +661,7 @@
           <span class="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Proceso
             Simple</span>
         </div>
-        <h2
-          class="font-display h2 text-text-primary dark:text-white mb-6"
+        <h2 class="font-display h2 text-text-primary dark:text-text-primary mb-6"
           data-testid="marketplace-h1">
           Alquila en
           <span class="relative">
@@ -643,7 +673,7 @@
             </svg>
           </span>
         </h2>
-        <p class="text-lg lg:text-xl text-text-secondary dark:text-white/50 max-w-2xl mx-auto">
+        <p class="text-lg lg:text-xl text-text-secondary dark:text-text-secondary max-w-2xl mx-auto">
           Sin complicaciones. Sin intermediarios. Todo desde tu celular en minutos.
         </p>
       </div>
@@ -774,18 +804,18 @@
       <!-- CTA Banner -->
       <div class="mt-20 text-center">
         <div
-          class="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl from-cyan-500/10 via-cyan-500/10 to-amber-500/10 border border-white/10">
+          class="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-cta-default/10 border border-cta-default/30">
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
-              <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor"
+            <div class="w-12 h-12 rounded-xl bg-cta-default/20 flex items-center justify-center">
+              <svg class="w-6 h-6 text-cta-default" fill="none" stroke="currentColor"
                 viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div class="text-left">
-              <p class="text-white font-semibold">Tiempo promedio: 5 minutos</p>
-              <p class="text-sm text-white/50">Desde búsqueda hasta reserva confirmada</p>
+              <p class="text-primary font-semibold">Tiempo promedio: 5 minutos</p>
+              <p class="text-sm text-secondary">Desde búsqueda hasta reserva confirmada</p>
             </div>
           </div>
           <div class="sm:pl-6 sm:border-l border-white/10">
@@ -805,8 +835,7 @@
   </section>
 
   <!-- TRUST FEATURES - PREMIUM REDESIGNED -->
-  <section
-    class="trust-section py-12 lg:py-16 relative overflow-hidden bg-surface-base">
+  <section class="trust-section py-12 lg:py-16 relative overflow-hidden bg-surface-base">
 
     <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
       <!-- Section Header -->
@@ -821,12 +850,11 @@
           <span class="text-xs font-semibold text-success-text uppercase tracking-widest">¿Por qué
             elegirnos?</span>
         </div>
-        <h2
-          class="font-display h2 text-text-primary dark:text-white mb-4">
+        <h2 class="font-display h2 text-text-primary dark:text-text-primary mb-4">
           Confianza en cada
           <span class="text-gradient-cyan">kilómetro</span>
         </h2>
-        <p class="text-lg text-text-secondary dark:text-white/50 max-w-2xl mx-auto">
+        <p class="text-lg text-text-secondary dark:text-text-secondary max-w-2xl mx-auto">
           Tu seguridad es nuestra prioridad. Cada detalle está pensado para brindarte tranquilidad.
         </p>
       </div>
@@ -961,16 +989,16 @@
   </section>
 
   <!-- CARS LISTING SECTION -->
-  <section class="py-16 lg:py-24">
+  <section class="py-16 lg:py-24 bg-surface-base">
     <div class="max-w-[2000px] mx-auto px-6 lg:px-12">
       <!-- Section Header -->
       <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6">
         <div>
           <span
-            class="inline-block px-3 py-1 rounded-full bg-gray-900/5 dark:bg-white/5 border border-gray-900/10 dark:border-white/10 text-xs font-medium text-gray-500 dark:text-white/50 uppercase tracking-widest mb-3">
+            class="inline-block px-3 py-1 rounded-full bg-gray-900/5 dark:bg-white/5 border border-gray-900/10 dark:border-white/10 text-xs font-medium text-gray-500 dark:text-text-secondary uppercase tracking-widest mb-3">
             Marketplace
           </span>
-          <h2 class="font-display h2 font-bold text-gray-900 dark:text-white">
+          <h2 class="font-display h2 font-bold text-text-primary dark:text-text-primary">
             Autos cerca de ti</h2>
         </div>
 
@@ -986,7 +1014,7 @@
               <option value="price_desc">Mayor precio</option>
               <option value="rating">Mejor valorados</option>
             </select>
-            <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/40"
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-secondary/60"
               aria-hidden="true">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1028,9 +1056,9 @@
 
           <!-- Results Count -->
           <div
-            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-            <span class="text-sm font-medium text-white/70">{{ visibleCars().length }}
+            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-cta-default/10 border border-cta-default/30">
+            <span class="w-2 h-2 rounded-full bg-cta-default"></span>
+            <span class="text-sm font-medium text-primary">{{ visibleCars().length }}
               resultados</span>
           </div>
         </div>
@@ -1072,6 +1100,18 @@
                     </svg>
                     Inmediato
                   </span>
+
+                  <!-- Real-time Location Badge -->
+                  <span *ngIf="car.latest_location"
+                    [title]="'Actualizado: ' + (car.latest_location.recorded_at | date:'shortTime')"
+                    class="px-2 py-1 rounded-full bg-blue-500/90 text-white text-xs font-medium flex items-center gap-1 backdrop-blur-md shadow-sm border border-blue-400/30 cursor-help">
+                    <span class="relative flex h-2 w-2">
+                      <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                    </span>
+                    En vivo
+                  </span>
                 </div>
               </div>
 
@@ -1098,6 +1138,18 @@
                         <span class="text-amber-400">★</span>
                         4.8
                       </span>
+                      @if (latestLocations()[car.id]) {
+                        <span>•</span>
+                        <span class="flex items-center gap-1 text-cyan-500 dark:text-cyan-300">
+                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 22s7-7.58 7-12a7 7 0 10-14 0c0 4.42 7 12 7 12z" />
+                          </svg>
+                          Última señal {{ latestLocations()[car.id].recorded_at | date: 'short' }}
+                        </span>
+                      }
                     </div>
                   </div>
                   <div class="text-right flex-shrink-0">
@@ -1154,7 +1206,7 @@
               class="empty-state-card">
               <div
                 class="w-20 h-20 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-gray-400 dark:text-white/30" fill="none"
+                <svg class="w-10 h-10 text-gray-400 dark:text-gray-400/30" fill="none"
                   stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                     d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -1174,14 +1226,14 @@
             <div *ngIf="!loading() && error()" class="empty-state-card border-red-500/20">
               <div
                 class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor"
+                <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor"
                   viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h3 class="font-display text-xl font-bold text-white mb-2">Algo salió mal</h3>
-              <p class="text-white/50 mb-6">{{ error() }}</p>
+              <h3 class="font-display text-xl font-bold text-primary mb-2">Algo salió mal</h3>
+              <p class="text-secondary mb-6">{{ error() }}</p>
               <button (click)="loadCars()" class="btn-primary-glow">Reintentar</button>
             </div>
           </div>
@@ -1353,8 +1405,7 @@
     class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-700/50 overflow-hidden transform transition-all duration-300"
     (click)="$event.stopPropagation()">
     <!-- Header con gradiente de marca -->
-    <div
-      class="from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between">
+    <div class="from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div
           class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -1363,12 +1414,12 @@
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
         </div>
-        <h3 class="text-lg font-bold text-white">Selecciona las fechas</h3>
+        <h3 class="text-lg font-bold text-text-primary dark:text-text-primary">Selecciona las fechas</h3>
       </div>
       <button (click)="closeDatePicker()"
         class="w-8 h-8 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
         aria-label="Cerrar">
-        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 text-text-primary dark:text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -1376,8 +1427,7 @@
     </div>
 
     <!-- Contenido -->
-    <div
-      class="p-5 from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50">
+    <div class="p-5 from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50">
       <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
         (rangeChange)="onDateRangeChange($event)" />
 

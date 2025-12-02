@@ -14,10 +14,14 @@
 import { readFileSync } from 'fs';
 import { spawnSync } from 'child_process';
 import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+
+// __dirname is not available in ESM; recreate it for this script
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const ROOT = resolve(__dirname, '..');
-const SUPABASE_TYPES = resolve(ROOT, 'apps/web/src/types/supabase.types.ts');
-const CODE_GLOB = 'apps/web/src/**';
+const SUPABASE_TYPES = resolve(ROOT, 'src/types/supabase.types.ts');
+const CODE_GLOB = 'src/**';
 
 function fail(msg: string): never {
   console.error(`❌ ${msg}`);
@@ -38,6 +42,7 @@ function hasLiteralUsage(table: string): boolean {
   const pattern = `['\\"]${table}['\\"]`;
   const res = spawnSync('rg', ['--no-heading', '--hidden', '--glob', CODE_GLOB, '-e', pattern, '.'], {
     encoding: 'utf8',
+    cwd: ROOT,
   });
   // rg returns 1 on no matches, 0 on matches
   return res.status === 0 && (res.stdout?.trim().length ?? 0) > 0;
@@ -57,4 +62,3 @@ function main() {
 }
 
 main();
-

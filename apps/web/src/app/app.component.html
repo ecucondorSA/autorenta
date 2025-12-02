@@ -80,7 +80,7 @@
           />
           <span class="flex flex-col leading-tight">
             <span
-              class="text-[1.05rem] font-semibold text-text-primary dark:text-white group-hover:text-cta-default dark:group-hover:text-cyan-400 transition-colors"
+              class="text-[1.05rem] font-semibold text-text-primary dark:text-text-primary group-hover:text-cta-default dark:group-hover:text-cyan-400 transition-colors"
             >
               Autorentar
             </span>
@@ -158,9 +158,9 @@
         </nav>
       </div>
 
-      <!-- Actions -->
+      <!-- Actions - improved spacing for tap targets -->
       <div
-        class="flex w-full flex-wrap lg:flex-nowrap items-center gap-2 gap-y-3 sm:gap-3 lg:gap-4 justify-between md:justify-end md:w-auto md:ml-auto border-t border-border-default/60 dark:border-slate-700/60 pt-2 md:border-none md:pt-0"
+        class="flex w-full flex-wrap lg:flex-nowrap items-center gap-3 gap-y-3 sm:gap-4 lg:gap-5 justify-between md:justify-end md:w-auto md:ml-auto border-t border-border-default/60 dark:border-slate-700/60 pt-2 md:border-none md:pt-0"
       >
         <app-verification-badge
           *ngIf="isAuthenticatedSig()"
@@ -248,7 +248,7 @@
             />
             <ng-template #profilePlaceholder>
               <svg
-                class="w-5 h-5 text-text-secondary dark:text-text-secondary"
+                class="w-5 h-5 text-secondary dark:text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -276,10 +276,10 @@
             <div
               class="sticky top-0 z-10 px-4 py-4 border-b border-border-subtle dark:border-border-subtle bg-gradient-to-br from-surface-raised to-surface-secondary/30 dark:from-surface-raised dark:to-surface-secondary/20 backdrop-blur-sm"
             >
-              <p class="text-sm font-semibold text-text-primary dark:text-text-primary mb-0.5">
+              <p class="text-sm font-semibold text-primary dark:text-primary mb-0.5">
                 {{ userProfile()?.full_name || 'Usuario' }}
               </p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/80 truncate">
+              <p class="text-xs text-secondary dark:text-secondary/80 truncate">
                 {{ userEmail() || '' }}
               </p>
             </div>
@@ -289,7 +289,7 @@
               <a
                 routerLink="/profile"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -328,7 +328,7 @@
               <a
                 routerLink="/cars/my"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -367,7 +367,7 @@
               <a
                 routerLink="/wallet"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -411,7 +411,7 @@
               <a
                 routerLink="/profile/verification"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-amber-50/80 dark:hover:bg-amber-900/20 active:bg-amber-100 dark:active:bg-amber-900/30 transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-amber-50/80 dark:hover:bg-amber-900/20 active:bg-amber-100 dark:active:bg-amber-900/30 transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -450,7 +450,7 @@
               <a
                 routerLink="/profile/driver-profile"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -489,7 +489,7 @@
               <a
                 routerLink="/bookings"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -529,11 +529,11 @@
                 *ngIf="userProfile()?.role === 'owner' || userProfile()?.role === 'both'"
                 routerLink="/cars/my"
                 (click)="closeProfileMenu()"
-                class="flex items-center gap-3 px-4 py-2.5 text-sm text-text-primary dark:text-text-primary hover:bg-surface-secondary dark:hover:bg-surface-secondary transition-colors"
+                class="flex items-center gap-3 px-4 py-2.5 text-sm text-primary dark:text-primary hover:bg-surface-secondary dark:hover:bg-surface-secondary transition-colors"
                 role="menuitem"
               >
                 <svg
-                  class="h-5 w-5 text-text-secondary dark:text-text-secondary"
+                  class="h-5 w-5 text-secondary dark:text-secondary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -556,7 +556,7 @@
               <a
                 routerLink="/profile/contact"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -595,7 +595,7 @@
               <a
                 routerLink="/profile/location-settings"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -640,7 +640,7 @@
               <a
                 routerLink="/profile/notifications-settings"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -679,7 +679,7 @@
               <a
                 routerLink="/profile/preferences"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -724,7 +724,7 @@
               <a
                 routerLink="/profile/security"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -763,7 +763,7 @@
               <a
                 routerLink="/favorites"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -802,7 +802,7 @@
               <a
                 routerLink="/messages"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -841,7 +841,7 @@
               <a
                 routerLink="/wallet/payouts"
                 (click)="closeProfileMenu()"
-                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-text-primary dark:text-text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
+                class="group flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-surface-secondary/80 dark:hover:bg-surface-secondary/80 active:bg-surface-secondary dark:active:bg-surface-secondary transition-all duration-200 rounded-lg mx-1.5 my-0.5"
                 role="menuitem"
               >
                 <div
@@ -1055,7 +1055,7 @@
             />
             <ng-template #sidebarPlaceholder>
               <svg
-                class="h-full w-full p-1.5 text-text-secondary dark:text-text-secondary"
+                class="h-full w-full p-1.5 text-secondary dark:text-secondary"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >

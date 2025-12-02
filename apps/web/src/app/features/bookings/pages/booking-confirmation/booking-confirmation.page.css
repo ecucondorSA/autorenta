@@ -375,7 +375,7 @@
 
 .btn-secondary {
   background-color: white;
-  color: #374151;
+  color: var(--text-primary, #050505);
   border: 2px solid #d1d5db;
 }
 

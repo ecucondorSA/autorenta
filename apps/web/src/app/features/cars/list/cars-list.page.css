@@ -44,7 +44,7 @@
     .marketplace-header {
       padding: 20px 24px;
       border-bottom: 1px solid var(--border-default, #e5e1d9);
-  background: #ffffff;
+  background: var(--surface-base, #ffffff);
   flex-shrink: 0;
 }
 
@@ -72,14 +72,14 @@
 .marketplace-title {
   font-size: 28px;
   font-weight: 800;
-  color: #000;
+  color: var(--text-primary, #000);
   margin: 0;
   letter-spacing: -0.02em;
 }
 
 .marketplace-subtitle {
   font-size: 14px;
-  color: #6b6b6b;
+  color: var(--text-secondary, #6b6b6b);
   margin: 0;
 }
 
@@ -148,9 +148,9 @@
 }
 
 .car-card-container.selected {
-  border-color: #0066cc;
+  border-color: var(--cta-default, #0066cc);
   box-shadow:
-    0 0 0 2px #e6f0ff,
+    0 0 0 2px var(--surface-info-light, #e6f0ff),
     0 16px 32px rgba(0, 102, 204, 0.16);
 }
 
@@ -160,7 +160,7 @@
   width: 100%;
   padding-top: 100%;
   overflow: hidden;
-  background: #f0ebe1;
+  background: var(--surface-light-subtle, #f0ebe1);
 }
 
 .car-image {
@@ -240,17 +240,17 @@
 .rating-stars {
   font-size: 13px;
   font-weight: 600;
-  color: #ffa500;
+  color: var(--warning-default, #ffa500);
 }
 
 .rating-count {
   font-size: 12px;
-  color: #6b6b6b;
+  color: var(--text-secondary, #6b6b6b);
 }
 
 .car-location {
   font-size: 13px;
-  color: #6b6b6b;
+  color: var(--text-secondary, #6b6b6b);
   margin: 0;
 }
 
@@ -258,9 +258,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
   font-size: 12px;
-  color: #6b6b6b;
+  color: var(--text-secondary, #6b6b6b);
 }
 
 .spec-item {
@@ -284,8 +283,8 @@
   font-size: 11px;
   padding: 4px 8px;
   border-radius: 6px;
-  background: #f0ebe1;
-  color: #5a5a5a;
+  background: var(--surface-light-subtle, #f0ebe1);
+  color: var(--text-secondary, #5a5a5a);
   font-weight: 500;
 }
 
@@ -297,7 +296,7 @@
   gap: 12px;
   margin-top: auto;
   padding-top: 12px;
-  border-top: 1px solid #f0ebe1;
+  border-top: 1px solid var(--surface-light-subtle, #f0ebe1);
 }
 
 .price-section {
@@ -309,19 +308,19 @@
 .price-value {
   font-size: 20px;
   font-weight: 800;
-  color: #000;
+  color: var(--text-primary, #000);
 }
 
 .price-label {
   font-size: 12px;
-  color: #6b6b6b;
+  color: var(--text-secondary, #6b6b6b);
 }
 
 .cta-button {
   padding: 8px 16px;
   border-radius: 8px;
   border: none;
-  background: #000;
+  background: var(--text-primary, #000);
   color: #ffffff;
   font-size: 13px;
   font-weight: 600;
@@ -331,7 +330,7 @@
 }
 
 .cta-button:hover {
-  background: #1a1a1a;
+  background: var(--text-primary-dark, #1a1a1a);
   transform: scale(1.02);
 }
 
@@ -343,8 +342,8 @@
 .map-sidebar {
   display: none;
   position: relative;
-  background: #ffffff;
-  border-left: 1px solid #e5e1d9;
+  background: var(--surface-base, #ffffff);
+  border-left: 1px solid var(--border-default, #e5e1d9);
   min-height: 0;
 }
 
@@ -388,19 +387,20 @@
   gap: 12px;
   padding: 60px 24px;
   text-align: center;
-  color: #6b6b6b;
+  color: var(--text-secondary, #6b6b6b);
   min-height: 400px;
 }
 
 .empty-state p {
   margin: 0;
   font-size: 16px;
+  color: var(--text-secondary, #6b6b6b);
 }
 
 /* Responsive */
 @media (max-width: 1023px) {
   .grid-section {
-    border-bottom: 1px solid #e5e1d9;
+    border-bottom: 1px solid var(--border-default, #e5e1d9);
   }
 
   .cars-grid-wrapper {
@@ -410,7 +410,7 @@
 
   .map-sidebar {
     border-left: none;
-    border-top: 1px solid #e5e1d9;
+    border-top: 1px solid var(--border-default, #e5e1d9);
     height: 400px;
     display: block;
   }
@@ -466,55 +466,55 @@
 
 /* Dark mode support */
 :host-context(.dark) .cars-marketplace {
-  background: #0d0d0d;
+  background: var(--surface-dark, #0d0d0d);
 }
 
 :host-context(.dark) .grid-section {
-  background: #1a1a1a;
-  border-color: #333;
+  background: var(--surface-base-dark, #1a1a1a);
+  border-color: var(--border-dark, #333);
 }
 
 :host-context(.dark) .marketplace-header {
-  background: #262626;
-  border-color: #333;
+  background: var(--surface-raised-dark, #262626);
+  border-color: var(--border-dark, #333);
 }
 
 :host-context(.dark) .marketplace-title {
-  color: #fff;
+  color: var(--text-light, #fff);
 }
 
 :host-context(.dark) .marketplace-subtitle {
-  color: #999;
+  color: var(--text-secondary-dark, #999);
 }
 
 :host-context(.dark) .car-card-container {
-  background: #262626;
-  border-color: #333;
+  background: var(--surface-raised-dark, #262626);
+  border-color: var(--border-dark, #333);
 }
 
 :host-context(.dark) .car-card-container:hover {
-  border-color: #444;
+  border-color: var(--border-hover-dark, #444);
 }
 
 :host-context(.dark) .car-title {
-  color: #fff;
+  color: var(--text-light, #fff);
 }
 
 :host-context(.dark) .car-location,
 :host-context(.dark) .car-specs,
 :host-context(.dark) .rating-count {
-  color: #999;
+  color: var(--text-secondary-dark, #999);
 }
 
 :host-context(.dark) .car-image-placeholder {
   background: var(--surface-subtle-dark, #2a2a2a); /* Replaced gradient with solid color token */
-  color: #666;
+  color: var(--text-muted-dark, #666);
 }
 
 :host-context(.dark) .distance-badge,
 :host-context(.dark) .available-badge {
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
+  background: var(--overlay-dark, rgba(0, 0, 0, 0.8));
+  color: var(--text-light, #fff);
 }
 
 /* Filters FAB (Mobile only) */

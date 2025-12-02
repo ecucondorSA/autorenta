@@ -110,12 +110,12 @@
   pointer-events: none;
 }
 
-/* Text Gradient */
+/* Text Gradient - High contrast for accessibility */
 .text-gradient-cyan,
 .text-gradient-celeste {
   background: none;
-  color: var(--cta-default);
-  -webkit-text-fill-color: var(--cta-default);
+  color: #0891b2; /* cyan-600 for WCAG AA compliance */
+  -webkit-text-fill-color: #0891b2;
 }
 
 /* Hero Fade In Animations */
@@ -793,7 +793,7 @@
   backdrop-filter: blur(12px);
   border: 1px solid rgba(167, 216, 244, 0.3);
   border-radius: 0.75rem;
-  color: #4e4e4e;
+  color: var(--text-secondary, #5c4736); /* Mejor contraste que #4e4e4e */
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -802,14 +802,14 @@
 .view-control-btn:hover {
   background: rgba(255, 255, 255, 0.95);
   border-color: rgba(167, 216, 244, 0.5);
-  color: #3b6e8f;
+  color: var(--cta-default, #3b6e8f);
   transform: scale(1.05);
 }
 
 .view-control-btn.active {
   background: rgba(167, 216, 244, 0.3);
   border-color: rgba(167, 216, 244, 0.6);
-  color: #3b6e8f;
+  color: var(--cta-default, #3b6e8f);
   box-shadow: 0 0 20px rgba(167, 216, 244, 0.3);
 }
 
@@ -826,15 +826,15 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(167, 216, 244, 0.3);
+  border: 1px solid rgba(167, 216, 244, 0.4);
   border-radius: 9999px;
-  color: #4e4e4e;
+  color: #2d2d2d; /* High contrast dark text */
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   transition: all 0.2s;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .feature-pill:hover {
@@ -873,9 +873,9 @@
 }
 
 .stat-label {
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: #4e4e4e;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #333333;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -891,6 +891,17 @@
    =========================================== */
 .partners-section {
   position: relative;
+}
+
+/* Forzar color oscuro en headings de partners-section */
+.partners-section h2,
+.partners-section h3 {
+  color: var(--text-primary, #050505) !important;
+}
+
+.partners-section h2.dark,
+.partners-section h3.dark {
+  color: white !important;
 }
 
 .partner-card {
@@ -1157,9 +1168,9 @@
 }
 
 .trust-stat-label {
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -2153,8 +2164,8 @@
    =========================================== */
 .pagination-btn {
   @apply flex items-center px-4 py-2 rounded-lg font-medium text-sm
-         bg-white/5 border border-white/10 text-white/80
-         hover:bg-white/10 hover:border-cyan-500/30 hover:text-white
+         bg-white/5 border border-white/10 text-text-primary dark:text-white/80
+         hover:bg-white/10 hover:border-cyan-500/30 hover:text-text-primary dark:hover:text-white
          transition-all duration-200;
 }
 

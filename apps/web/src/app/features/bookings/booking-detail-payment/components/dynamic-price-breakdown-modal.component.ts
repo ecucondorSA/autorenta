@@ -237,7 +237,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
         justify-content: space-between;
         align-items: center;
         padding: 24px;
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid var(--border-default, #e5e7eb);
       }
 
       .modal-title {
@@ -247,7 +247,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
         margin: 0;
         font-size: 24px;
         font-weight: 700;
-        color: #111827;
+        color: var(--text-primary, #111827);
       }
 
       .title-icon {
@@ -258,7 +258,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
         background: none;
         border: none;
         font-size: 24px;
-        color: #6b7280;
+        color: var(--text-secondary, #6b7280);
         cursor: pointer;
         padding: 4px 8px;
         line-height: 1;
@@ -267,8 +267,8 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
       }
 
       .btn-close:hover {
-        background: #f3f4f6;
-        color: #111827;
+        background: var(--surface-hover-light, #f3f4f6);
+        color: var(--text-primary, #111827);
       }
 
       .modal-content {
@@ -284,7 +284,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
       .section-title {
         font-size: 16px;
         font-weight: 600;
-        color: #374151;
+        color: var(--text-primary, #374151);
         margin: 0 0 12px 0;
       }
 
@@ -293,18 +293,18 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
         justify-content: space-between;
         align-items: center;
         padding: 12px 16px;
-        background: #f9fafb;
+        background: var(--surface-light-subtle, #f9fafb);
         border-radius: 8px;
       }
 
       .price-row.base {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--cta-default, #667eea); /* Replaced gradient with solid color token */
         color: white;
         font-weight: 600;
       }
 
       .price-row.total {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: var(--accent-pink-default, #f093fb); /* Replaced gradient with solid color token */
         color: white;
         font-weight: 700;
         font-size: 18px;
@@ -329,15 +329,15 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
 
       .factor-row {
         padding: 16px;
-        background: #f9fafb;
+        background: var(--surface-light-subtle, #f9fafb);
         border-radius: 8px;
         margin-bottom: 12px;
-        border-left: 4px solid #d1d5db;
+        border-left: 4px solid var(--border-default, #d1d5db);
         transition: all 0.2s;
       }
 
       .factor-row.positive {
-        border-left-color: #10b981;
+        border-left-color: var(--success-default, #10b981);
       }
 
       .factor-header {
@@ -352,7 +352,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
         align-items: center;
         gap: 8px;
         font-weight: 600;
-        color: #374151;
+        color: var(--text-primary, #374151);
       }
 
       .factor-icon {
@@ -363,14 +363,14 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
         font-family: var(--font-mono);
         font-size: 16px;
         font-weight: 700;
-        color: #6b7280;
+        color: var(--text-secondary, #6b7280);
         padding: 4px 12px;
         background: white;
         border-radius: 6px;
       }
 
       .factor-value.increase {
-        color: #dc2626;
+        color: var(--error-default, #dc2626);
       }
 
       .factor-detail {
@@ -407,7 +407,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
       }
 
       .final-price {
-        background: linear-gradient(135deg, #667eea15, #764ba215);
+        background: var(--surface-cta-alpha-15, rgba(102, 126, 234, 0.15)); /* Replaced gradient with solid color token */
         padding: 16px;
         border-radius: 12px;
         border: 2px solid #667eea;
@@ -446,7 +446,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
 
       .btn-primary {
         padding: 12px 24px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--cta-default, #667eea); /* Replaced gradient with solid color token */
         color: white;
         border: none;
         border-radius: 8px;

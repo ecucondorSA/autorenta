@@ -118,13 +118,13 @@
                 </div>
                 @for (event of getEventsForDay(day); track event.id) {
                   <div
-                    class="text-xs p-1 rounded mb-1 text-white truncate"
+                    class="text-xs p-1 rounded mb-1 truncate"
                     [ngClass]="{
-                      'bg-success-light': event.status === 'in_progress',
-                      'bg-warning-light':
+                      'bg-success-light text-primary': event.status === 'in_progress',
+                      'bg-warning-light text-primary':
                         event.status === 'pending' || event.status === 'pending_payment',
-                      'bg-primary-600': event.status === 'confirmed',
-                      'bg-gray-500': event.status === 'completed' || event.status === 'cancelled',
+                      'bg-primary-600 text-white': event.status === 'confirmed',
+                      'bg-gray-500 text-white': event.status === 'completed' || event.status === 'cancelled',
                     }"
                     [title]="event.title"
                   >

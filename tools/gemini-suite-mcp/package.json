@@ -1,0 +1,25 @@
+{
+  "name": "gemini-suite-mcp",
+  "version": "1.0.0",
+  "description": "MCP Server for Gemini AI Suite - Code Review, Test Generation, UI Analysis",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo 'No tests yet'"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.1",
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "@toon-format/toon": "^2.0.1",
+    "playwright": "^1.40.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

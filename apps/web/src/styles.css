@@ -601,6 +601,10 @@ body.no-scroll {
     background-color: var(--cta-hover);
   }
 
+  .text-primary {
+    color: var(--text-primary);
+  }
+
   .text-text-primary {
     color: var(--text-primary);
   }
@@ -992,6 +996,12 @@ body.no-scroll {
     @apply focus-visible:outline-none focus-visible:ring-2;
     --tw-ring-color: var(--cta-default);
     transition-duration: var(--duration-fast);
+    /* Ensure minimum tap target for accessibility */
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* Button states */
@@ -1045,10 +1055,20 @@ body.no-scroll {
   .input-premium {
     @apply w-full px-4 py-3 rounded-xl;
     @apply bg-surface-raised border-2;
-    @apply text-text-primary placeholder:text-text-muted;
+    @apply text-text-primary placeholder:text-text-secondary;
     @apply transition-all focus:ring-4 focus-visible:outline-none;
     border-color: var(--border-default);
     transition-duration: var(--duration-fast);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ✅ WCAG Accessibility: Darker Placeholder Text
+     ═══════════════════════════════════════════════════════════════ */
+  input::placeholder,
+  textarea::placeholder,
+  select::placeholder {
+    color: var(--text-secondary) !important;
+    opacity: 1;
   }
 
   .input-premium:focus {
@@ -1316,17 +1336,17 @@ body.no-scroll {
   }
 
   .nav-link-highlight {
-    /* Usa la escala de warning existente para mantener la identidad de color */
-    background: linear-gradient(120deg, var(--warning-300) 0%, var(--warning-500) 100%);
-    color: var(--text-primary);
-    box-shadow: 0 10px 35px rgba(196, 168, 130, 0.35); /* warning-500 con opacidad */
+    /* Consistent with primary CTA color for unified visual hierarchy */
+    background-color: var(--cta-default);
+    color: var(--cta-text);
+    box-shadow: 0 10px 35px rgba(167, 216, 244, 0.35);
     border: none;
   }
 
   .nav-link-highlight:hover {
-    background: linear-gradient(120deg, var(--warning-200) 0%, var(--warning-400) 100%);
-    box-shadow: 0 15px 40px rgba(196, 168, 130, 0.45);
-    color: var(--text-primary);
+    background-color: var(--cta-hover);
+    box-shadow: 0 15px 40px rgba(167, 216, 244, 0.45);
+    color: var(--cta-text);
   }
 
   .nav-link-active {

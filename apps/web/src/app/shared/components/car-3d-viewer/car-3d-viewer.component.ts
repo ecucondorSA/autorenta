@@ -113,18 +113,6 @@ export interface CarPartInfo {
         <span>{{ getViewModeLabel() }}</span>
       </div>
 
-      <!-- Headlights Toggle Button -->
-      <button
-        class="headlights-btn"
-        [class.active]="headlightsOn"
-        (click)="toggleHeadlights()"
-        aria-label="Encender/Apagar luces"
-      >
-        <span class="btn-icon">{{ headlightsOn ? '💡' : '🔦' }}</span>
-        <span class="btn-text">Luces</span>
-      </button>
-
-
     </div>
   `,
   styles: [
@@ -444,51 +432,6 @@ export interface CarPartInfo {
           font-size: 0.6875rem;
         }
 
-        .headlights-btn {
-          top: 1rem;
-          left: 1rem;
-          padding: 0.375rem 0.75rem;
-          font-size: 0.6875rem;
-        }
-      }
-
-      /* Headlights Button */
-      .headlights-btn {
-        position: absolute;
-        top: 1.5rem;
-        left: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        background: var(--surface-raised); /* Use CSS variable */
-        backdrop-filter: blur(12px);
-        border-radius: 9999px;
-        border: 1px solid var(--border-default); /* Use CSS variable */
-        color: var(--text-primary); /* Use CSS variable */
-        font-size: 0.75rem;
-        font-weight: 600;
-        cursor: pointer;
-        z-index: 5;
-        transition: all 0.2s ease;
-        box-shadow: var(--elevation-2); /* Use CSS variable */
-      }
-
-      .headlights-btn:hover {
-        background: var(--surface-elevated); /* Use CSS variable */
-        transform: translateY(-1px);
-        box-shadow: var(--elevation-3); /* Use CSS variable */
-      }
-
-      .headlights-btn.active {
-        background: var(--warning-50); /* Use CSS variable */
-        border-color: var(--warning-400); /* Use CSS variable */
-        color: var(--warning-600); /* Use CSS variable */
-        box-shadow: 0 0 15px var(--warning-200); /* Use CSS variable */
-      }
-
-      .btn-icon {
-        font-size: 1rem;
       }
     `,
   ],

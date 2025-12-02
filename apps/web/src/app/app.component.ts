@@ -265,10 +265,28 @@ export class AppComponent implements OnInit {
   // ...
 
   private initializeSplash(): void {
-    // Ocultar el splash después de 4 segundos
+    // Hide splash when critical initialization completes (min 1s, max 3s)
+    const minDisplayTime = 1000;
+    const maxDisplayTime = 3000;
+    const startTime = Date.now();
+
+    // Load critical resources
+    Promise.all([
+      this.loadUserProfile(),
+      // Add other critical initialization here if needed
+    ]).finally(() => {
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, minDisplayTime - elapsed);
+
+      setTimeout(() => {
+        this.showSplash.set(false);
+      }, remaining);
+    });
+
+    // Fallback: force hide after max time
     setTimeout(() => {
       this.showSplash.set(false);
-    }, 4000); // Muestra el splash por 4 segundos
+    }, maxDisplayTime);
   }
 
   private initializeTheme(): void {
@@ -325,7 +343,6 @@ export class AppComponent implements OnInit {
     // Detectar si estamos en el homepage para header transparente
     const currentUrl = this.router.url.split('?')[0]; // Ignorar query params
     const isHome = currentUrl === '/' || currentUrl === '';
-    console.log('[DEBUG] syncLayoutFromRoute - url:', currentUrl, 'isHome:', isHome);
     this.isHomePage.set(isHome);
   }
 
