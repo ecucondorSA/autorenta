@@ -11,10 +11,65 @@
     </div>
   </div>
 
-  <!-- MAIN HERO CONTENT -->
-  <div class="flex-1 flex items-center relative">
-    <!-- 3D Model -->
-    <div class="absolute inset-0 z-0">
+  <!-- MAIN HERO CONTENT - Responsive: stacked on mobile, overlay on desktop -->
+  <div class="flex-1 flex flex-col lg:flex-row lg:items-center relative">
+
+    <!-- Hero Text Content - Always visible on top for mobile -->
+    <div class="relative z-20 px-4 sm:px-6 lg:px-12 w-full pt-3 sm:pt-4 pb-4 sm:pb-6 lg:pt-0 lg:pb-0 lg:absolute lg:inset-0 lg:flex lg:items-center pointer-events-none">
+      <div class="max-w-[1800px] mx-auto w-full">
+        <div class="max-w-2xl pointer-events-auto">
+          <!-- Eyebrow -->
+          <div
+            class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/90 backdrop-blur-md border border-primary/10 mb-3 sm:mb-4 lg:mb-6 hero-fade-in shadow-lg"
+          >
+            <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-cta-default animate-pulse"></span>
+            <span class="text-xs sm:text-sm font-bold text-text-primary tracking-wide"
+              >Nueva experiencia de alquiler</span
+            >
+          </div>
+
+          <!-- Main Headline -->
+          <h1
+            class="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-text-primary leading-[1.1] tracking-tight mb-3 sm:mb-4 lg:mb-6 hero-fade-in hero-delay-1 drop-shadow-sm"
+          >
+            Maneja tu
+            <span class="text-cta-default">próxima</span>
+            aventura
+          </h1>
+
+          <!-- Subheadline - Visible on all devices with responsive text -->
+          <p
+            class="text-sm sm:text-base lg:text-xl text-text-secondary font-medium leading-relaxed max-w-lg mb-4 sm:mb-6 lg:mb-8 hero-fade-in hero-delay-2"
+          >
+            Alquila autos verificados directamente de dueños locales. Sin filas, sin papeleo y
+            <span class="text-text-primary font-bold">100% asegurado</span>.
+          </p>
+
+          <!-- CTA Buttons Mobile -->
+          <div class="flex flex-col sm:flex-row gap-4 hero-fade-in hero-delay-3 lg:hidden">
+            <button
+              (click)="handleHeroQuickBook()"
+              class="btn-primary-glow w-full sm:w-auto shadow-xl"
+            >
+              <span class="relative z-10 flex items-center justify-center gap-2 font-bold">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                Reserva Instantánea
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D Model - Below text on mobile, overlay on desktop -->
+    <div class="relative z-10 w-full h-[35vh] sm:h-[40vh] lg:absolute lg:inset-0 lg:h-full">
       <div class="w-full h-full model-3d-container">
         @defer (on idle) {
           <app-car-3d-viewer
@@ -33,10 +88,10 @@
           <div class="w-full h-full flex items-center justify-center bg-surface-elevated">
             <div class="text-center">
               <div
-                class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center animate-pulse"
+                class="w-16 h-16 lg:w-20 lg:h-20 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center animate-pulse"
               >
                 <svg
-                  class="w-10 h-10 text-primary/50"
+                  class="w-8 h-8 lg:w-10 lg:h-10 text-primary/50"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -55,7 +110,7 @@
         } @loading (minimum 300ms) {
           <div class="w-full h-full flex items-center justify-center bg-surface-elevated">
             <div
-              class="animate-spin rounded-full h-12 w-12 border-2 border-cta-default border-t-transparent"
+              class="animate-spin rounded-full h-10 w-10 lg:h-12 lg:w-12 border-2 border-cta-default border-t-transparent"
             ></div>
           </div>
         }
@@ -93,58 +148,6 @@
         <p class="text-sm text-secondary leading-relaxed">{{ selectedPart()!.description }}</p>
       </div>
     }
-
-    <!-- Hero Text Content - Left Side -->
-    <div class="relative z-10 max-w-[1800px] mx-auto px-6 lg:px-12 w-full pointer-events-none">
-      <div class="max-w-2xl pointer-events-auto">
-        <!-- Eyebrow -->
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-primary/10 mb-6 hero-fade-in shadow-lg"
-        >
-          <span class="w-2 h-2 rounded-full bg-cta-default animate-pulse"></span>
-          <span class="text-sm font-bold text-text-primary tracking-wide"
-            >Nueva experiencia de alquiler</span
-          >
-        </div>
-
-        <!-- Main Headline -->
-        <h1
-          class="font-display h1 text-text-primary leading-[1.05] tracking-tight mb-6 hero-fade-in hero-delay-1 drop-shadow-sm"
-        >
-          Maneja tu
-          <span class="text-cta-default block sm:inline">próxima</span>
-          aventura
-        </h1>
-
-        <!-- Subheadline -->
-        <p
-          class="text-xl text-text-secondary font-medium leading-relaxed max-w-lg mb-8 hero-fade-in hero-delay-2"
-        >
-          Alquila autos verificados directamente de dueños locales. Sin filas, sin papeleo y
-          <span class="text-text-primary font-bold">100% asegurado</span>.
-        </p>
-
-        <!-- CTA Buttons Mobile -->
-        <div class="flex flex-col sm:flex-row gap-4 hero-fade-in hero-delay-3 md:hidden">
-          <button
-            (click)="handleHeroQuickBook()"
-            class="btn-primary-glow w-full sm:w-auto shadow-xl"
-          >
-            <span class="relative z-10 flex items-center justify-center gap-2 font-bold">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-              Reserva Instantánea
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- SEARCH BAR - Bottom Floating -->

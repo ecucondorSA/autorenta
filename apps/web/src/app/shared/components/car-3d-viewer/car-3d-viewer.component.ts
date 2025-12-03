@@ -45,7 +45,6 @@ export interface CarPartInfo {
       (mouseleave)="onMouseLeave()"
       (mousemove)="onMouseMove($event)"
       (click)="onClick($event)"
-      (dblclick)="onDoubleClick()"
     >
       <canvas #rendererCanvas id="webgl-canvas"></canvas>
 
@@ -460,6 +459,16 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly ngZone = inject(NgZone);
 
+  // ===== MOBILE PERFORMANCE OPTIMIZATION =====
+  private readonly isMobile =
+    typeof navigator !== 'undefined' &&
+    /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  private readonly isLowEndDevice =
+    typeof navigator !== 'undefined' && (navigator.hardwareConcurrency || 8) <= 4;
+  private readonly targetFPS = this.isMobile ? 30 : 60;
+  private readonly frameInterval = 1000 / this.targetFPS;
+  private lastFrameTime = 0;
+
   isLoading = true;
   isHovered = false;
   showHints = false;
@@ -510,6 +519,11 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   private targetCameraPosition: { x: number; y: number; z: number } | null = null;
   private targetControlsTarget: { x: number; y: number; z: number } | null = null;
   private animatingCamera = false;
+
+  // Car movement animation (adelante/atrás al hacer click)
+  private carMovementAnimating = false;
+  private carMovementStartTime = 0;
+  private carOriginalPosition = { x: 0, y: 0, z: 0 };
 
   // Raycaster for part detection
   private raycaster: import('three').Raycaster | null = null;
@@ -701,27 +715,33 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     // Initial theme colors update
     this.updateThemeColors();
 
-    // 2. Camera - Más cerca y FOV más estrecho para efecto inmersivo
+    // 2. Camera - Vista 3/4 trasera fija (estilo showroom)
     const width = this.rendererCanvas.nativeElement.clientWidth;
     const height = this.rendererCanvas.nativeElement.clientHeight;
     this.camera = new this.THREE.PerspectiveCamera(45, width / height, 0.1, 1000); // FOV 45 (lente fotográfica ~50mm)
-    // Posición de cámara más cercana y centrada
-    this.camera.position.set(4, 1.5, 4); // Encuadre dramático
-    this.camera.lookAt(0, 0.8, 0);
+    // Posición de cámara 3/4 trasera - vista clásica de showroom
+    this.camera.position.set(4.5, 1.5, -5.0); // Cámara atrás-derecha del auto
+    this.camera.lookAt(0, 0.5, 0); // Centrada en el origen
 
-    // 3. Renderer - alpha: true para fondo transparente (usa el fondo del HTML)
+    // 3. Renderer - OPTIMIZED for mobile performance
     this.renderer = new this.THREE.WebGLRenderer({
       canvas: this.rendererCanvas.nativeElement,
-      antialias: true,
+      antialias: !this.isMobile, // Disable antialiasing on mobile for performance
       alpha: true,
+      powerPreference: this.isMobile ? 'low-power' : 'high-performance',
     });
     this.renderer.setSize(width, height);
-    this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = this.THREE.PCFSoftShadowMap;
+    // Limit pixel ratio: mobile max 1.5, desktop max 2
+    const maxPixelRatio = this.isMobile ? 1.5 : Math.min(window.devicePixelRatio, 2);
+    this.renderer.setPixelRatio(maxPixelRatio);
+    // Disable shadows on mobile for major performance gain
+    this.renderer.shadowMap.enabled = !this.isMobile;
+    if (!this.isMobile) {
+      this.renderer.shadowMap.type = this.THREE.PCFSoftShadowMap;
+    }
     this.renderer.outputColorSpace = this.THREE.SRGBColorSpace;
     this.renderer.toneMapping = this.THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.8; // AUMENTADO de 1.2 a 1.8 para más brillo
+    this.renderer.toneMappingExposure = this.isMobile ? 2.0 : 1.8; // Slightly brighter on mobile to compensate for fewer lights
   }
 
   private updateThemeColors(): void {
@@ -755,61 +775,57 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     this.controls.maxPolarAngle = this.THREE.MathUtils.degToRad(80); // Evita mirar por debajo del suelo
     this.controls.minAzimuthAngle = -this.THREE.MathUtils.degToRad(135); // Limitar rotación horizontal (-135 grados)
     this.controls.maxAzimuthAngle = this.THREE.MathUtils.degToRad(135);  // Limitar rotación horizontal (+135 grados)
-    this.controls.target.set(0, 0.5, 0); // Mirar ligeramente arriba del suelo
-    this.controls.autoRotate = true; // Rotación automática
-    this.controls.autoRotateSpeed = 0.3; // Rotación más lenta
+    this.controls.target.set(0, 0.5, 0); // Centrado en el origen
+    this.controls.autoRotate = false; // Vista fija - sin rotación automática
+    this.controls.autoRotateSpeed = 0; // Desactivado
+    this.controls.enableRotate = false; // DESACTIVAR rotación manual completamente
     this.controls.zoomSpeed = 0.6; // Zoom más lento y controlado
-    this.controls.rotateSpeed = 0.1; // Rotación manual más lenta y pesada (0.1)
-
-    // Detener auto-rotación cuando el usuario interactúa
-    this.controls.addEventListener('start', () => {
-      this.controls!.autoRotate = false;
-    });
-
-    // Reanudar auto-rotación después de 3 segundos de inactividad
-    this.controls.addEventListener('end', () => {
-      setTimeout(() => {
-        if (this.controls) {
-          this.controls.autoRotate = true;
-        }
-      }, 3000);
-    });
+    this.controls.rotateSpeed = 0; // Sin rotación
   }
 
   private setupLights(): void {
     if (!this.THREE || !this.scene) return;
 
-    // Ambient Light (Soft fill) - AUMENTADO para mejor visibilidad
-    const ambientLight = new this.THREE.AmbientLight(0xffffff, 1.2);
+    // ===== MOBILE OPTIMIZED LIGHTING =====
+    // Mobile: 2 lights (ambient + directional) vs Desktop: 5 lights
+
+    // Ambient Light - Higher intensity on mobile to compensate for fewer lights
+    const ambientLight = new this.THREE.AmbientLight(0xffffff, this.isMobile ? 1.8 : 1.2);
     this.scene.add(ambientLight);
 
-    // Main Directional Light (Sun/Key Light) - INTENSIDAD AUMENTADA
-    this.mainLight = new this.THREE.DirectionalLight(0xffffff, 4.0); // Aumentado a 4.0
+    // Main Directional Light (Sun/Key Light)
+    this.mainLight = new this.THREE.DirectionalLight(0xffffff, this.isMobile ? 3.5 : 4.0);
     this.mainLight.position.set(8, 12, 10);
-    this.mainLight.castShadow = true;
-    this.mainLight.shadow.mapSize.width = 2048;
-    this.mainLight.shadow.mapSize.height = 2048;
-    this.mainLight.shadow.camera.near = 0.1;
-    this.mainLight.shadow.camera.far = 50;
-    this.mainLight.shadow.bias = -0.0001;
-    this.mainLight.shadow.radius = 2; // Reducido a 2 para sombras más definidas
+    // Shadows only on desktop
+    this.mainLight.castShadow = !this.isMobile;
+    if (!this.isMobile) {
+      this.mainLight.shadow.mapSize.width = 2048;
+      this.mainLight.shadow.mapSize.height = 2048;
+      this.mainLight.shadow.camera.near = 0.1;
+      this.mainLight.shadow.camera.far = 50;
+      this.mainLight.shadow.bias = -0.0001;
+      this.mainLight.shadow.radius = 2;
+    }
     this.scene.add(this.mainLight);
 
-    // Fill Light (Cooler, from opposite side) - INTENSIDAD AUMENTADA
-    const fillLight = new this.THREE.DirectionalLight(0xddeeff, 1.8);
-    fillLight.position.set(-8, 4, -8);
-    this.scene.add(fillLight);
+    // Additional lights ONLY on desktop for premium look
+    if (!this.isMobile) {
+      // Fill Light (Cooler, from opposite side)
+      const fillLight = new this.THREE.DirectionalLight(0xddeeff, 1.8);
+      fillLight.position.set(-8, 4, -8);
+      this.scene.add(fillLight);
 
-    // Rim Light (Backlight for edge definition) - INTENSIDAD AUMENTADA
-    const rimLight = new this.THREE.SpotLight(0xffffff, 5.0);
-    rimLight.position.set(0, 8, -12);
-    rimLight.lookAt(0, 0, 0);
-    this.scene.add(rimLight);
+      // Rim Light (Backlight for edge definition)
+      const rimLight = new this.THREE.SpotLight(0xffffff, 5.0);
+      rimLight.position.set(0, 8, -12);
+      rimLight.lookAt(0, 0, 0);
+      this.scene.add(rimLight);
 
-    // Highlight Light - NUEVO PARA RESALTAR DETALLES
-    const highlightLight = new this.THREE.DirectionalLight(0xffffff, 2.0);
-    highlightLight.position.set(10, 5, 0);
-    this.scene.add(highlightLight);
+      // Highlight Light for detail emphasis
+      const highlightLight = new this.THREE.DirectionalLight(0xffffff, 2.0);
+      highlightLight.position.set(10, 5, 0);
+      this.scene.add(highlightLight);
+    }
   }
 
   private createRoad(): void {
@@ -834,6 +850,34 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   ): void {
     if (!this.THREE || !this.scene || !this.renderer) return;
 
+    // ===== MOBILE OPTIMIZATION: Skip complex environment map =====
+    // On mobile, environment reflections are expensive - use simpler approach
+    if (this.isMobile) {
+      // Simple solid color environment for basic reflections
+      const simpleEnvCanvas = document.createElement('canvas');
+      simpleEnvCanvas.width = 64; // Much smaller texture
+      simpleEnvCanvas.height = 32;
+      const ctx = simpleEnvCanvas.getContext('2d');
+      if (ctx) {
+        // Simple gradient: light top, slightly darker bottom
+        const grd = ctx.createLinearGradient(0, 32, 0, 0);
+        grd.addColorStop(0, '#e0e0e0');
+        grd.addColorStop(1, '#ffffff');
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, 64, 32);
+      }
+      const simpleEnvTexture = new this.THREE.CanvasTexture(simpleEnvCanvas);
+      simpleEnvTexture.mapping = this.THREE.EquirectangularReflectionMapping;
+
+      const pmremGenerator = new this.THREE.PMREMGenerator(this.renderer);
+      const renderTarget = pmremGenerator.fromEquirectangular(simpleEnvTexture);
+      this.scene.environment = renderTarget.texture;
+      simpleEnvTexture.dispose();
+      pmremGenerator.dispose();
+      return;
+    }
+
+    // ===== DESKTOP: Full quality environment map =====
     // Create a simple environment scene for reflections
     const pmremGenerator = new this.THREE.PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
@@ -930,7 +974,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
         // Reposicionar después de escalar para centrar correctamente
         const scaledBox = new this.THREE.Box3().setFromObject(this.carModel);
         const scaledCenter = scaledBox.getCenter(new this.THREE.Vector3());
-        this.carModel.position.x = -scaledCenter.x;
+        this.carModel.position.x = -scaledCenter.x - 2; // Mover auto hacia la derecha
         this.carModel.position.z = -scaledCenter.z;
         // Ajustar Y para que el modelo esté sobre el suelo
         // const scaledSize = scaledBox.getSize(new this.THREE.Vector3());
@@ -1004,8 +1048,17 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
       this.clock = new this.THREE!.Clock();
       let isFirstFrame = true;
 
-      const animate = () => {
+      const animate = (currentTime: number) => {
         this.animationId = requestAnimationFrame(animate);
+
+        // ===== MOBILE FPS THROTTLE =====
+        // On mobile, limit to 30fps for better battery and performance
+        if (this.isMobile) {
+          const elapsed = currentTime - this.lastFrameTime;
+          if (elapsed < this.frameInterval) return;
+          this.lastFrameTime = currentTime - (elapsed % this.frameInterval);
+        }
+
         const delta = this.clock.getDelta();
 
         // Update animations
@@ -1021,8 +1074,13 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
         // Update camera animation (smooth transitions)
         this.updateCameraAnimation();
 
-        // Update dynamic shadows based on camera angle
-        this.updateDynamicShadows();
+        // Update car movement animation (adelante/atrás al click)
+        this.updateCarMovementAnimation();
+
+        // Update dynamic shadows based on camera angle (skip on mobile)
+        if (!this.isMobile) {
+          this.updateDynamicShadows();
+        }
 
         // Update orbit controls
         if (this.controls) {
@@ -1033,7 +1091,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
           this.renderer.render(this.scene, this.camera);
         }
       };
-      animate();
+      animate(0);
     });
   }
 
@@ -1093,27 +1151,38 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
             mesh.material.opacity > 0.9 &&
             (mesh.material.color.r > 0.1 || mesh.material.color.g > 0.1 || mesh.material.color.b > 0.1)
           ) {
-            // UPGRADE to MeshPhysicalMaterial if needed for Clearcoat support
-            if (!(mesh.material instanceof this.THREE.MeshPhysicalMaterial)) {
-              const newMat = new this.THREE.MeshPhysicalMaterial();
-              this.THREE.MeshStandardMaterial.prototype.copy.call(newMat, mesh.material);
-              mesh.material = newMat;
-            }
+            // ===== MOBILE OPTIMIZATION: Skip MeshPhysicalMaterial upgrade =====
+            // On mobile, keep MeshStandardMaterial (no clearcoat) for better performance
+            if (!this.isMobile) {
+              // UPGRADE to MeshPhysicalMaterial if needed for Clearcoat support (DESKTOP ONLY)
+              if (!(mesh.material instanceof this.THREE.MeshPhysicalMaterial)) {
+                const newMat = new this.THREE.MeshPhysicalMaterial();
+                this.THREE.MeshStandardMaterial.prototype.copy.call(newMat, mesh.material);
+                mesh.material = newMat;
+              }
 
-            const physMat = mesh.material as import('three').MeshPhysicalMaterial;
-            physMat.color.set(hexColor);
+              const physMat = mesh.material as import('three').MeshPhysicalMaterial;
+              physMat.color.set(hexColor);
 
-            // Apply PBR properties if defined
-            if (applyMetalness !== undefined) physMat.metalness = applyMetalness;
-            if (applyRoughness !== undefined) physMat.roughness = applyRoughness;
-            if (applyEnvMapIntensity !== undefined) physMat.envMapIntensity = applyEnvMapIntensity;
+              // Apply PBR properties if defined
+              if (applyMetalness !== undefined) physMat.metalness = applyMetalness;
+              if (applyRoughness !== undefined) physMat.roughness = applyRoughness;
+              if (applyEnvMapIntensity !== undefined) physMat.envMapIntensity = applyEnvMapIntensity;
 
-            // Special handling for 'Negro Piano' or high-quality finishes: Enable Clearcoat
-            if (hexColor.toLowerCase() === '#050505' || hexColor.toLowerCase() === '#0a0a0a') {
-              physMat.clearcoat = 1.0; // Barniz completo
-              physMat.clearcoatRoughness = 0.03; // Barniz ultra pulido
+              // Special handling for 'Negro Piano' or high-quality finishes: Enable Clearcoat
+              if (hexColor.toLowerCase() === '#050505' || hexColor.toLowerCase() === '#0a0a0a') {
+                physMat.clearcoat = 1.0; // Barniz completo
+                physMat.clearcoatRoughness = 0.03; // Barniz ultra pulido
+              } else {
+                physMat.clearcoat = 0.0;
+              }
             } else {
-              physMat.clearcoat = 0.0;
+              // Mobile: Keep MeshStandardMaterial, just change color
+              mesh.material.color.set(hexColor);
+              // Apply simplified PBR for mobile
+              if (applyMetalness !== undefined) mesh.material.metalness = Math.min(applyMetalness, 0.7);
+              if (applyRoughness !== undefined) mesh.material.roughness = Math.max(applyRoughness, 0.2);
+              mesh.material.envMapIntensity = 1.5; // Lower env map intensity on mobile
             }
 
             mesh.material.needsUpdate = true;
@@ -1162,15 +1231,50 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
       this.hideHints();
     }
 
-    // Select hovered part if any
-    if (this.hoveredMesh) {
-      this.selectPart(this.hoveredMesh);
-    } else {
-      // Click on empty space deselects
-      if (this.selectedMesh) {
-        this.deselectPart();
-      }
+    // Toggle headlights and start car movement animation when clicking on the car
+    if (this.hoveredMesh || this.carModel) {
+      this.toggleHeadlights();
+      this.startCarMovementAnimation();
     }
+  }
+
+  /** Start car forward/backward movement animation (como si arrancara) */
+  private startCarMovementAnimation(): void {
+    if (!this.carModel || this.carMovementAnimating) return;
+
+    this.carMovementAnimating = true;
+    this.carMovementStartTime = performance.now();
+    this.carOriginalPosition = {
+      x: this.carModel.position.x,
+      y: this.carModel.position.y,
+      z: this.carModel.position.z,
+    };
+  }
+
+  /** Update car movement animation in the render loop */
+  private updateCarMovementAnimation(): void {
+    if (!this.carMovementAnimating || !this.carModel) return;
+
+    const elapsed = performance.now() - this.carMovementStartTime;
+    const duration = 800; // 800ms total animation
+
+    if (elapsed >= duration) {
+      // Animation complete - return to original position
+      this.carModel.position.set(
+        this.carOriginalPosition.x,
+        this.carOriginalPosition.y,
+        this.carOriginalPosition.z
+      );
+      this.carMovementAnimating = false;
+      return;
+    }
+
+    // Smooth forward then backward movement using sine wave
+    const progress = elapsed / duration;
+    // Mueve adelante (Z positivo) y luego regresa - efecto de "arranque"
+    const movement = Math.sin(progress * Math.PI * 2) * 0.15; // 0.15 unidades de movimiento
+
+    this.carModel.position.z = this.carOriginalPosition.z + movement;
   }
 
   onDoubleClick(): void {

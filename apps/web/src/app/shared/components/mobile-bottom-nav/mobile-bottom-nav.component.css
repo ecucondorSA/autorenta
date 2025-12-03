@@ -56,9 +56,9 @@
   -webkit-backdrop-filter: blur(20px) saturate(180%);
 
   border-top: 1px solid rgba(167, 216, 244, 0.2); /* cta-default con opacidad */
-  border-radius: 24px 24px 0 0;
+  border-radius: 16px 16px 0 0;
 
-  padding: 12px 8px max(12px, env(safe-area-inset-bottom));
+  padding: 8px 8px max(4px, env(safe-area-inset-bottom));
 
   box-shadow:
     0 -8px 32px rgba(167, 216, 244, 0.15),
@@ -385,6 +385,6 @@
 
 @supports (padding: max(0px)) {
   .nav-container {
-    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    padding-bottom: max(4px, env(safe-area-inset-bottom));
   }
 }
