@@ -753,11 +753,13 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     this.controls.maxDistance = 7; // Ajustado a 7
     this.controls.minPolarAngle = 0; // Puede ver desde arriba
     this.controls.maxPolarAngle = this.THREE.MathUtils.degToRad(80); // Evita mirar por debajo del suelo
+    this.controls.minAzimuthAngle = -this.THREE.MathUtils.degToRad(135); // Limitar rotación horizontal (-135 grados)
+    this.controls.maxAzimuthAngle = this.THREE.MathUtils.degToRad(135);  // Limitar rotación horizontal (+135 grados)
     this.controls.target.set(0, 0.5, 0); // Mirar ligeramente arriba del suelo
     this.controls.autoRotate = true; // Rotación automática
     this.controls.autoRotateSpeed = 0.3; // Rotación más lenta
-    this.controls.zoomSpeed = 1.2; // Zoom más rápido para transición suave
-    this.controls.rotateSpeed = 0.8; // Rotación manual suave
+    this.controls.zoomSpeed = 0.6; // Zoom más lento y controlado
+    this.controls.rotateSpeed = 0.1; // Rotación manual más lenta y pesada (0.1)
 
     // Detener auto-rotación cuando el usuario interactúa
     this.controls.addEventListener('start', () => {
