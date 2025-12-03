@@ -147,7 +147,7 @@
         </div>
       </div>
 
-      <!-- Depreciation & Income Charts - TODO: Re-enable when ng2-charts is configured -->
+      <!-- Depreciation & Income Charts -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <!-- Depreciation Chart -->
         <div
@@ -157,11 +157,24 @@
             📉 Depreciación Anual del Auto
           </h2>
           <div class="h-64 relative">
-            <div
-              class="flex items-center justify-center h-full text-text-secondary dark:text-text-secondary/70"
-            >
-              <p class="text-sm">Gráficos próximamente disponibles</p>
+            <!-- CSS Bar Chart -->
+            <div class="flex items-end justify-between h-full gap-1 pb-6">
+              @for (bar of depreciationChartData(); track bar.month) {
+                <div class="flex-1 flex flex-col items-center gap-1">
+                  <div
+                    class="w-full bg-error-text/80 rounded-t transition-all duration-500 min-h-[2px]"
+                    [style.height.%]="bar.percentage"
+                    [title]="(bar.value | money)"
+                  ></div>
+                  <span class="text-[10px] text-text-muted">{{ bar.month }}</span>
+                </div>
+              }
             </div>
+            @if (depreciationChartData().length === 0) {
+              <div class="absolute inset-0 flex items-center justify-center text-text-muted text-sm">
+                Sin datos de depreciación
+              </div>
+            }
           </div>
           <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-4">
             Depreciación acumulada estimada durante el año
@@ -176,11 +189,24 @@
             📈 Ingresos Proyectados
           </h2>
           <div class="h-64 relative">
-            <div
-              class="flex items-center justify-center h-full text-text-secondary dark:text-text-secondary/70"
-            >
-              <p class="text-sm">Gráficos próximamente disponibles</p>
+            <!-- CSS Bar Chart -->
+            <div class="flex items-end justify-between h-full gap-1 pb-6">
+              @for (bar of incomeChartData(); track bar.month) {
+                <div class="flex-1 flex flex-col items-center gap-1">
+                  <div
+                    class="w-full bg-success-text/80 rounded-t transition-all duration-500 min-h-[2px]"
+                    [style.height.%]="bar.percentage"
+                    [title]="(bar.value | money)"
+                  ></div>
+                  <span class="text-[10px] text-text-muted">{{ bar.month }}</span>
+                </div>
+              }
             </div>
+            @if (incomeChartData().length === 0) {
+              <div class="absolute inset-0 flex items-center justify-center text-text-muted text-sm">
+                Sin datos de ingresos
+              </div>
+            }
           </div>
           <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-4">
             Ingresos acumulados estimados durante el año

@@ -1,8 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-// import { ChartConfiguration, ChartData } from 'chart.js';
-// import { BaseChartDirective } from 'ng2-charts';
 import type { Car } from '../../../core/models';
 import type { DashboardStats } from '../../../core/models/dashboard.model';
 import { CarsService } from '../../../core/services/cars.service';
@@ -102,8 +100,12 @@ export class EarningsPage implements OnInit {
     return startDate;
   });
 
-  // Chart configurations - TODO: Re-enable when ng2-charts is properly configured
-  // depreciationChartData and incomeChartData temporarily disabled
+  // Chart data for CSS bar charts
+  readonly months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+  // CSS chart data signals
+  readonly depreciationChartData = signal<{ month: string; value: number; percentage: number }[]>([]);
+  readonly incomeChartData = signal<{ month: string; value: number; percentage: number }[]>([]);
 
   async ngOnInit(): Promise<void> {
     await Promise.all([this.loadData(), this.loadCars(), this.loadExchangeRate()]);
@@ -116,7 +118,7 @@ export class EarningsPage implements OnInit {
     this.dashboardService.getDashboardStats(false).subscribe({
       next: (stats) => {
         this.stats.set(stats);
-        // TODO: Re-enable charts: this.updateCharts();
+        this.updateCharts();
         this.loading.set(false);
       },
       error: (_err) => {
@@ -130,7 +132,7 @@ export class EarningsPage implements OnInit {
     try {
       const cars = await this.carsService.listMyCars();
       this.cars.set(cars);
-      // TODO: Re-enable charts: this.updateCharts();
+      this.updateCharts();
     } catch (error) {
       console.error('Error loading cars:', error);
     }
@@ -146,6 +148,36 @@ export class EarningsPage implements OnInit {
     }
   }
 
-  // TODO: Re-enable updateCharts when ng2-charts is properly configured
-  // private updateCharts(): void { ... }
+  private updateCharts(): void {
+    const annualDepreciation = this.totalAnnualDepreciation();
+    const monthlyDepreciation = annualDepreciation / 12;
+    const monthlyIncome = this.thisMonthEarnings();
+
+    // Generate cumulative data for each month
+    const depreciationData: { month: string; value: number; percentage: number }[] = [];
+    const incomeData: { month: string; value: number; percentage: number }[] = [];
+
+    const maxDepreciation = annualDepreciation;
+    const maxIncome = monthlyIncome * 12;
+
+    for (let i = 0; i < 12; i++) {
+      const depValue = Math.round(monthlyDepreciation * (i + 1));
+      const incValue = Math.round(monthlyIncome * (i + 1));
+
+      depreciationData.push({
+        month: this.months[i],
+        value: depValue,
+        percentage: maxDepreciation > 0 ? (depValue / maxDepreciation) * 100 : 0,
+      });
+
+      incomeData.push({
+        month: this.months[i],
+        value: incValue,
+        percentage: maxIncome > 0 ? (incValue / maxIncome) * 100 : 0,
+      });
+    }
+
+    this.depreciationChartData.set(depreciationData);
+    this.incomeChartData.set(incomeData);
+  }
 }
